@@ -21,6 +21,7 @@ import * as Yup from 'yup';
 import Link from 'next/link';
 import axios from 'axios';
 import { getStates } from '@/functions/get';
+import { toast } from 'sonner';
 
 interface AccountDetailsProps {
   user: User;
@@ -34,12 +35,17 @@ export default function AccountDetails({
   const formik = useFormik({
     initialValues: {
       user: user,
-      countries: countries.sort((a, b) => a.name.localeCompare(b.name)),
+      countries: countries?.sort((a, b) => a.name.localeCompare(b.name)),
       states: [] as StateProps[],
       cities: [] as CityProps[]
     },
     onSubmit: async (values) => {
-      console.log(values);
+      try {
+        await axios.put(`/api/users/${user._id}`, values.user);
+        toast.success('User updated successfully');
+      } catch (error) {
+        console.log(error);
+      }
     }
   });
 
@@ -56,7 +62,7 @@ export default function AccountDetails({
         );
         formik.setFieldValue(
           'states',
-          response.data.sort((a: StateProps, b: StateProps) =>
+          response.data?.sort((a: StateProps, b: StateProps) =>
             a.name.localeCompare(b.name)
           )
         );
@@ -81,7 +87,7 @@ export default function AccountDetails({
         );
         formik.setFieldValue(
           'cities',
-          response.data.sort((a: CityProps, b: CityProps) =>
+          response.data?.sort((a: CityProps, b: CityProps) =>
             a.name.localeCompare(b.name)
           )
         );
@@ -264,7 +270,12 @@ export default function AccountDetails({
         <Button radius="full" variant="bordered">
           Cancel
         </Button>
-        <Button color="primary" radius="full">
+        <Button
+          color="primary"
+          radius="full"
+          onClick={() => formik.handleSubmit()}
+          isLoading={formik.isSubmitting}
+        >
           Save Changes
         </Button>
       </CardFooter>
