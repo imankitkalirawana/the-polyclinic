@@ -1,0 +1,118 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+  :root {
+    --background: 126 65% 98%;
+    --foreground: 126 53% 4%;
+    --muted: 306 38% 88%;
+    --muted-foreground: 306 5% 38%;
+    --popover: 126 65% 97%;
+    --popover-foreground: 126 53% 3%;
+    --card: 126 65% 97%;
+    --card-foreground: 126 53% 3%;
+    --border: 126 2% 90%;
+    --input: 126 2% 90%;
+    --primary: 126 47% 63%;
+    --primary-foreground: 126 47% 3%;
+    --secondary: 306 47% 63%;
+    --secondary-foreground: 306 47% 3%;
+    --accent: 306 47% 63%;
+    --accent-foreground: 306 47% 3%;
+    --destructive: 12 100% 20%;
+    --destructive-foreground: 12 100% 80%;
+    --ring: 126 47% 63%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 126 47% 2%;
+    --foreground: 126 26% 97%;
+    --muted: 306 38% 12%;
+    --muted-foreground: 306 5% 62%;
+    --popover: 126 47% 3%;
+    --popover-foreground: 126 26% 98%;
+    --card: 126 47% 3%;
+    --card-foreground: 126 26% 98%;
+    --border: 126 2% 15%;
+    --input: 126 2% 15%;
+    --primary: 126 47% 63%;
+    --primary-foreground: 126 47% 3%;
+    --secondary: 306 47% 63%;
+    --secondary-foreground: 306 47% 3%;
+    --accent: 306 47% 63%;
+    --accent-foreground: 306 47% 3%;
+    --destructive: 12 100% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --ring: 126 47% 63%;
+  }
+}
+
+.tbl td,
+.tbl th {
+  /* padding: 0.25rem; */
+  padding: 2px !important;
+  /* padding-left: 0.5rem; */
+  border: 1px solid #000;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.tbl th {
+  white-space: nowrap;
+}
+
+.ql-toolbar {
+  display: none !important;
+}
+
+.ql-container {
+  border-top-width: 1px !important;
+  border-radius: 10px;
+  /* width: 100%; */
+}
+
+.ql-toolbar.ql-snow + .ql-container.ql-snow {
+  border-top: none;
+}
+.ql-editor {
+  background: hsl(var(--nextui-default-100));
+  padding: 8px 12px;
+  /* border-radius: 10px; */
+  font-size: 16px;
+  min-height: 70px;
+  margin-bottom: 2px;
+  /* min-width: 150px; */
+  /* width: 100%; */
+  font-size: 14px;
+}
+
+.ql-editor:hover {
+  background: hsl(var(--nextui-default-200));
+}
+
+.quill-input .ql-container {
+  border-radius: 0px;
+}
+
+.quill-input .ql-editor {
+  padding: 0px;
+}
+
+.quill-input .ql-editor {
+  background: transparent;
+}
+
+.quill-input .ql-editor:hover {
+  background: transparent;
+}
+
+:focus-visible,
+:focus {
+  outline-style: none;
+}
+
+.ql-clipboard,
+.ql-tooltip {
+  display: none;
+}
