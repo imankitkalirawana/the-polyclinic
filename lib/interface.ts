@@ -36,6 +36,8 @@ export interface User extends Base {
   address: string;
   zipcode: string;
   passwordResetToken: string;
+  dob: string;
+  gender: 'male' | 'female' | 'other';
 }
 
 export enum ServiceType {
@@ -121,4 +123,15 @@ export interface StateProps {
 export interface CityProps {
   id: number;
   name: string;
+}
+
+export interface MailOptionsProps {
+  from: {
+    name: string;
+    address: string;
+  };
+  to: string;
+  subject: string;
+  text?: string;
+  html?: string;
 }

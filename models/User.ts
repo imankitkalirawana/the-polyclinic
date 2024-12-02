@@ -21,6 +21,15 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Name is required']
     },
+    dob: {
+      type: String,
+      default: '2000-01-01'
+    },
+    gender: {
+      type: String,
+      enum: ['male', 'female', 'other'],
+      default: 'male'
+    },
     role: {
       type: String,
       enum: UserRole,
@@ -42,7 +51,9 @@ const userSchema = new mongoose.Schema(
     city: String,
     address: String,
     zipcode: String,
-    passwordResetToken: String
+    passwordResetToken: String,
+    updatedBy: String,
+    createdBy: String
   },
   {
     timestamps: true

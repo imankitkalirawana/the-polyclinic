@@ -56,7 +56,7 @@ export default function EditUser({ user, countries }: EditUserProps) {
           <p>Security</p>
         </div>
       ),
-      content: <SecuritySettings className="p-2 shadow-none" />
+      content: <SecuritySettings user={user} />
     }
   ];
   return (
@@ -65,6 +65,7 @@ export default function EditUser({ user, countries }: EditUserProps) {
         tabList: 'mx-4 text-medium',
         tabContent: 'text-small'
       }}
+      radius="full"
       aria-label="Setting Tabs"
       size="lg"
       items={tabs}
@@ -75,7 +76,7 @@ export default function EditUser({ user, countries }: EditUserProps) {
         <Tab
           key={item.key}
           title={item.title}
-          href={`/dashboard/users/${user._id}/edit?tab=${item.key}`}
+          href={`/dashboard/users/${user?._id}/edit?tab=${item.key}`}
           as={Link}
         >
           {item.content}

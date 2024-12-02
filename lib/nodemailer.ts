@@ -1,9 +1,11 @@
 import nodemailer from 'nodemailer';
-const email = process.env.NEXT_PUBLIC_GMAIL || 'divinelydeveloper@gmail.com';
-const password = process.env.NEXT_PUBLIC_GMAIL_PASSWORD;
+const email = process.env.EMAIL;
+const password = process.env.PASSWORD;
 
 export const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtpout.secureserver.net',
+  port: 465,
+  secure: true,
   auth: {
     user: email,
     pass: password

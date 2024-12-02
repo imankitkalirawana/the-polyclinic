@@ -6,8 +6,8 @@ import { transformCountries } from '@/lib/functions';
 import { User } from '@/lib/interface';
 import { cookies } from 'next/headers';
 
-async function getData(uid: string) {
-  const res = await fetch(`${API_BASE_URL}api/users/${uid}`, {
+async function getData(id: string) {
+  const res = await fetch(`${API_BASE_URL}api/users/${id}`, {
     cache: isCaching ? 'default' : 'no-cache',
     method: 'GET',
     headers: { Cookie: cookies().toString() }

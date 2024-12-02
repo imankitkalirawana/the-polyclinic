@@ -11,17 +11,28 @@ import {
   Input,
   Autocomplete,
   AutocompleteItem,
-  CardFooter
+  CardFooter,
+  Select,
+  SelectItem,
+  DatePicker
 } from '@nextui-org/react';
 import { Icon } from '@iconify/react';
+import { useSession } from 'next-auth/react';
+import { parseDate } from '@internationalized/date';
 
-import { CityProps, CountryProps, StateProps, User } from '@/lib/interface';
+import {
+  CityProps,
+  CountryProps,
+  StateProps,
+  User,
+  UserRole
+} from '@/lib/interface';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import Link from 'next/link';
 import axios from 'axios';
-import { getStates } from '@/functions/get';
 import { toast } from 'sonner';
+import { verifyEmail, verifyPhone } from '@/functions/server-actions';
+import { Genders } from '@/lib/options';
 
 interface AccountDetailsProps {
   user: User;
@@ -32,19 +43,31 @@ export default function AccountDetails({
   user,
   countries
 }: AccountDetailsProps) {
+  const { data: session } = useSession();
+
   const formik = useFormik({
     initialValues: {
       user: user,
       countries: countries?.sort((a, b) => a.name.localeCompare(b.name)),
       states: [] as StateProps[],
-      cities: [] as CityProps[]
+      cities: [] as CityProps[],
+      phoneCode: '91'
     },
     onSubmit: async (values) => {
       try {
+        if (await verifyEmail(values.user.email, values.user._id)) {
+          formik.setFieldError('user.email', 'Email already exists');
+          return;
+        }
+        if (await verifyPhone(values.user.phone, values.user._id)) {
+          formik.setFieldError('user.phone', 'Phone number already exists');
+          return;
+        }
         await axios.put(`/api/users/${user._id}`, values.user);
         toast.success('User updated successfully');
-      } catch (error) {
+      } catch (error: any) {
         console.log(error);
+        toast.error(error.response.data.message);
       }
     }
   });
@@ -60,12 +83,21 @@ export default function AccountDetails({
             }
           }
         );
+        const res2 = await axios.get(
+          `https://api.countrystatecity.in/v1/countries/${formik.values.user.country}`,
+          {
+            headers: {
+              'X-CSCAPI-KEY': process.env.NEXT_PUBLIC_CSCAPI_KEY
+            }
+          }
+        );
         formik.setFieldValue(
           'states',
           response.data?.sort((a: StateProps, b: StateProps) =>
             a.name.localeCompare(b.name)
           )
         );
+        formik.setFieldValue('phoneCode', res2.data.phonecode);
       } catch (error) {
         console.log(error);
       }
@@ -74,6 +106,7 @@ export default function AccountDetails({
       fetchStates();
     }
   }, [formik.values.user.country]);
+
   useEffect(() => {
     const fetchCities = async () => {
       try {
@@ -100,13 +133,11 @@ export default function AccountDetails({
     }
   }, [formik.values.user.state, formik.values.user.country]);
 
-  console.log(formik.values.user.country);
-
   return (
     <Card className="bg-transparent p-2 shadow-none">
       <CardHeader className="flex flex-col items-start px-4 pb-0 pt-4">
         <p className="text-large">Account Details</p>
-        <div className="flex gap-4 py-4">
+        <div className="sr-only flex gap-4 py-4">
           <Badge
             classNames={{
               badge: 'w-5 h-5'
@@ -136,7 +167,7 @@ export default function AccountDetails({
             <span className="text-small text-default-500">{user.role}</span>
           </div>
         </div>
-        <p className="text-small text-default-400">
+        <p className="sr-only text-small text-default-400">
           The photo will be used for your profile, and will be visible to other
           users of the platform.
         </p>
@@ -144,7 +175,6 @@ export default function AccountDetails({
       <CardBody className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Input
           label="Name"
-          labelPlacement="outside"
           placeholder="Enter Name"
           name="user.name"
           value={formik.values.user.name}
@@ -156,7 +186,6 @@ export default function AccountDetails({
         />
         <Input
           label="Email"
-          labelPlacement="outside"
           placeholder="Enter email"
           name="user.email"
           value={formik.values.user.email}
@@ -167,40 +196,98 @@ export default function AccountDetails({
               : false
           }
           errorMessage={formik.touched.user?.email && formik.errors.user?.email}
-          isDisabled
+          // @ts-ignore
+          isDisabled={session?.user?.role !== 'admin'}
           description={
-            <>
-              Please go to{' '}
-              <Link
-                href={`/dashboard/users/${user._id}/edit?tab=security-settings`}
-                className="underline"
-              >
-                Security tab
-              </Link>{' '}
-              to update email.
-            </>
+            // @ts-ignore
+            session?.user?.role !== 'admin' && (
+              <>
+                Please go{session?.role} to{' '}
+                <Link
+                  href={`/dashboard/users/${user._id}/edit?tab=security-settings`}
+                  className="underline"
+                >
+                  Security tab
+                </Link>{' '}
+                to update email.
+              </>
+            )
           }
         />
 
         {/* Phone Number */}
         <Input
           label="Phone Number"
-          labelPlacement="outside"
           placeholder="Enter phone number"
           name="user.phone"
-          value={formik.values.user.phone}
           onChange={formik.handleChange}
           isInvalid={
             formik.touched.user?.phone && formik.errors.user?.phone
               ? true
               : false
           }
+          errorMessage={formik.touched.user?.phone && formik.errors.user?.phone}
+          // @ts-ignore
+          isDisabled={session?.user?.role !== 'admin'}
+          value={formik.values.user.phone}
+          startContent={
+            <div className="pointer-events-none flex items-center">
+              <span className="text-small text-default-400">
+                +{formik.values.phoneCode}
+              </span>
+            </div>
+          }
+          description={
+            // @ts-ignore
+            session?.user?.role !== 'admin' && (
+              <>
+                Please go to{' '}
+                <Link
+                  href={`/dashboard/users/${user._id}/edit?tab=security-settings`}
+                  className="underline"
+                >
+                  Security tab
+                </Link>{' '}
+                to update phone number.
+              </>
+            )
+          }
         />
+        <Select
+          label="Gender"
+          placeholder="Select Gender"
+          selectedKeys={[formik.values.user.gender]}
+          name="user.gender"
+          onChange={formik.handleChange}
+          isInvalid={
+            formik.touched.user?.gender && formik.errors.user?.gender
+              ? true
+              : false
+          }
+          errorMessage={
+            formik.touched.user?.gender && formik.errors.user?.gender
+          }
+          items={Genders}
+        >
+          {(item) => <SelectItem key={item.value}>{item.label}</SelectItem>}
+        </Select>
+        {/* DOB */}
+        <DatePicker
+          label="Start Date (MM-DD-YYYY)"
+          onChange={(date) => {
+            console.log(date.toString().split('T')[0]);
+            formik.setFieldValue(`user.dob`, date.toString().split('T')[0]);
+          }}
+          value={parseDate(
+            formik.values.user.dob || new Date().toISOString().split('T')[0]
+          )}
+          showMonthAndYearPickers
+        />
+
         {/* Country */}
         <Autocomplete
           defaultItems={formik.values.countries}
           label="Country"
-          labelPlacement="outside"
           placeholder="Select country"
           showScrollIndicators={false}
           onSelectionChange={(value) => {
@@ -218,7 +305,6 @@ export default function AccountDetails({
         <Autocomplete
           defaultItems={formik.values.states}
           label="State"
-          labelPlacement="outside"
           placeholder="Select state"
           showScrollIndicators={false}
           isDisabled={formik.values?.states?.length < 1}
@@ -228,16 +314,13 @@ export default function AccountDetails({
           selectedKey={formik.values.user.state}
         >
           {(item) => (
-            <AutocompleteItem key={item.iso2} value={item.iso2}>
-              {item.name}
-            </AutocompleteItem>
+            <AutocompleteItem key={item.iso2}>{item.name}</AutocompleteItem>
           )}
         </Autocomplete>
         {/* City */}
         <Autocomplete
           defaultItems={formik.values.cities}
           label="City"
-          labelPlacement="outside"
           placeholder="Select city"
           showScrollIndicators={false}
           isDisabled={formik.values?.states?.length < 1}
@@ -247,27 +330,51 @@ export default function AccountDetails({
           selectedKey={formik.values.user.city}
         >
           {(item) => (
-            <AutocompleteItem key={item.id} value={item.id}>
-              {item.name}
-            </AutocompleteItem>
+            <AutocompleteItem key={item.name}>{item.name}</AutocompleteItem>
           )}
         </Autocomplete>
         {/* Address */}
         <Input
           label="Address"
-          labelPlacement="outside"
           placeholder="Enter address"
+          value={formik.values.user.address}
+          onChange={formik.handleChange}
+          name="user.address"
+          isInvalid={
+            formik.touched.user?.address && formik.errors.user?.address
+              ? true
+              : false
+          }
+          errorMessage={
+            formik.touched.user?.address && formik.errors.user?.address
+          }
         />
         {/* Zip Code */}
         <Input
           label="Zip Code"
-          labelPlacement="outside"
           placeholder="Enter zip code"
+          value={formik.values.user.zipcode}
+          onChange={formik.handleChange}
+          name="user.zipcode"
+          isInvalid={
+            formik.touched.user?.zipcode && formik.errors.user?.zipcode
+              ? true
+              : false
+          }
+          errorMessage={
+            formik.touched.user?.zipcode && formik.errors.user?.zipcode
+          }
         />
       </CardBody>
 
       <CardFooter className="mt-4 justify-end gap-2">
-        <Button radius="full" variant="bordered">
+        <Button
+          radius="full"
+          variant="bordered"
+          onClick={() => {
+            formik.setFieldValue('user', user);
+          }}
+        >
           Cancel
         </Button>
         <Button
