@@ -58,7 +58,7 @@ const roleColorMap: Record<string, ChipProps['color']> = {
   laboratorist: 'success'
 };
 
-interface HotelProps {
+interface Props {
   users: User[];
 }
 
@@ -72,7 +72,7 @@ const INITIAL_VISIBLE_COLUMNS = [
   'actions'
 ];
 
-export default function Users({ users }: HotelProps) {
+export default function Users({ users }: Props) {
   const deleteModal = useDisclosure();
   const router = useRouter();
   const [selected, setSelected] = React.useState<User | null>(null);
@@ -91,10 +91,10 @@ export default function Users({ users }: HotelProps) {
     direction: 'ascending'
   });
 
-  const handleDeleteHotel = async (user: User) => {
+  const handleDelete = async (user: User) => {
     setIsDeleting(true);
     try {
-      await fetch(`/api/users/id/${user._id}`, {
+      await fetch(`/api/users/${user._id}`, {
         method: 'DELETE'
       });
 
@@ -544,7 +544,7 @@ export default function Users({ users }: HotelProps) {
                   variant="flat"
                   fullWidth
                   isLoading={isDeleting}
-                  onPress={() => handleDeleteHotel(selected as User)}
+                  onPress={() => handleDelete(selected as User)}
                 >
                   Delete
                 </Button>

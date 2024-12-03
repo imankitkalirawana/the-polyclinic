@@ -64,6 +64,7 @@
     "react-medium-image-zoom": "^5.2.11",
     "react-quill": "^2.0.0",
     "recharts": "^2.13.3",
+    "slugify": "^1.6.6",
     "sonner": "^1.5.0",
     "supabase": "^1.207.9",
     "tailwind-merge": "^2.5.4",

@@ -24,8 +24,12 @@ export const userValidationSchema = Yup.object().shape({
       .required('Name is required')
       .min(3, 'Name is too short')
       .max(50, 'Name is too long'),
-    email: Yup.string().email('Invalid email').required('Email is required'),
-    role: Yup.string().required('Role is required'),
-    phone: Yup.string().required('Phone number is required')
-  })
+    email: Yup.string().matches(
+      /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+      'Invalid email'
+    ),
+    phone: Yup.string().required('Phone number is required'),
+    gender: Yup.string().required('Gender is required')
+  }),
+  age: Yup.number().required('Age is required')
 });
