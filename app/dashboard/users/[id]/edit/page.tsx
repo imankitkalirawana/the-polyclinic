@@ -27,6 +27,9 @@ interface Props {
 export default async function Page({ params }: Props) {
   const user: User = await getData(params.id);
   const countries = await getCountries();
-  console.log(user, countries?.slice(0, 5));
-  return <>{/* <EditUser user={user} countries={countries} /> */}</>;
+  return (
+    <>
+      <EditUser user={user} countries={countries} />
+    </>
+  );
 }
