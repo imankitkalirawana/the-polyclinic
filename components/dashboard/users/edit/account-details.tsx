@@ -72,11 +72,11 @@ export default function AccountDetails({
     validationSchema: userValidationSchema,
     onSubmit: async (values) => {
       try {
-        if (await verifyEmail(values.user.email, values.user._id)) {
+        if (await verifyEmail(values.user?.email, values.user?._id)) {
           formik.setFieldError('user.email', 'Email already exists');
           return;
         }
-        if (await verifyPhone(values.user.phone, values.user._id)) {
+        if (await verifyPhone(values.user?.phone, values.user?._id)) {
           formik.setFieldError('user.phone', 'Phone number already exists');
           return;
         }
@@ -93,7 +93,7 @@ export default function AccountDetails({
     const fetchStates = async () => {
       try {
         const response = await axios.get(
-          `https://api.countrystatecity.in/v1/countries/${formik.values.user.country}/states`,
+          `https://api.countrystatecity.in/v1/countries/${formik.values.user?.country}/states`,
           {
             headers: {
               'X-CSCAPI-KEY': process.env.NEXT_PUBLIC_CSCAPI_KEY
@@ -101,7 +101,7 @@ export default function AccountDetails({
           }
         );
         const res2 = await axios.get(
-          `https://api.countrystatecity.in/v1/countries/${formik.values.user.country}`,
+          `https://api.countrystatecity.in/v1/countries/${formik.values.user?.country}`,
           {
             headers: {
               'X-CSCAPI-KEY': process.env.NEXT_PUBLIC_CSCAPI_KEY
@@ -119,16 +119,16 @@ export default function AccountDetails({
         console.log(error);
       }
     };
-    if (formik.values.user.country) {
+    if (formik.values.user?.country) {
       fetchStates();
     }
-  }, [formik.values.user.country]);
+  }, [formik.values.user?.country]);
 
   useEffect(() => {
     const fetchCities = async () => {
       try {
         const response = await axios.get(
-          `https://api.countrystatecity.in/v1/countries/${formik.values.user.country}/states/${formik.values.user.state}/cities`,
+          `https://api.countrystatecity.in/v1/countries/${formik.values.user?.country}/states/${formik.values.user?.state}/cities`,
           {
             headers: {
               'X-CSCAPI-KEY': process.env.NEXT_PUBLIC_CSCAPI_KEY
@@ -145,10 +145,10 @@ export default function AccountDetails({
         console.log(error);
       }
     };
-    if (formik.values.user.country && formik.values.user.state) {
+    if (formik.values.user?.country && formik.values.user?.state) {
       fetchCities();
     }
-  }, [formik.values.user.state, formik.values.user.country]);
+  }, [formik.values.user?.state, formik.values.user?.country]);
 
   useEffect(() => {
     formik.errors?.user && scrollToError(formik.errors?.user, inputRefs);
@@ -200,7 +200,7 @@ export default function AccountDetails({
             label="Name"
             placeholder="Enter Name"
             name="user.name"
-            value={formik.values.user.name}
+            value={formik.values.user?.name}
             onChange={formik.handleChange}
             isInvalid={
               formik.touched.user?.name && formik.errors.user?.name
@@ -214,7 +214,7 @@ export default function AccountDetails({
             label="Email"
             placeholder="Enter email"
             name="user.email"
-            value={formik.values.user.email}
+            value={formik.values.user?.email}
             onChange={formik.handleChange}
             isInvalid={
               formik.touched.user?.email && formik.errors.user?.email
@@ -260,7 +260,7 @@ export default function AccountDetails({
             }
             // @ts-ignore
             isDisabled={session?.user?.role !== 'admin'}
-            value={formik.values.user.phone}
+            value={formik.values.user?.phone}
             startContent={
               <div className="pointer-events-none flex items-center">
                 <span className="text-small text-default-400">
@@ -288,7 +288,7 @@ export default function AccountDetails({
             ref={inputRefs.gender}
             label="Gender"
             placeholder="Select Gender"
-            selectedKeys={[formik.values.user.gender]}
+            selectedKeys={[formik.values.user?.gender]}
             name="user.gender"
             onChange={formik.handleChange}
             isInvalid={
@@ -334,7 +334,8 @@ export default function AccountDetails({
                 formik.setFieldValue('age', calculateAge(dob));
               }}
               value={parseDate(
-                formik.values.user.dob || new Date().toISOString().split('T')[0]
+                formik.values.user?.dob ||
+                  new Date().toISOString().split('T')[0]
               )}
               maxValue={today(getLocalTimeZone())}
               showMonthAndYearPickers
@@ -351,14 +352,14 @@ export default function AccountDetails({
             onSelectionChange={(value) => {
               formik.setFieldValue('user.country', value);
             }}
-            selectedKey={formik.values.user.country}
+            selectedKey={formik.values.user?.country}
           >
             {(item) => (
               <AutocompleteItem
                 key={item.iso2}
                 startContent={<>{item.emoji}</>}
               >
-                {item.name}
+                {item?.name}
               </AutocompleteItem>
             )}
           </Autocomplete>
@@ -372,10 +373,10 @@ export default function AccountDetails({
             onSelectionChange={(value) => {
               formik.setFieldValue('user.state', value);
             }}
-            selectedKey={formik.values.user.state}
+            selectedKey={formik.values.user?.state}
           >
             {(item) => (
-              <AutocompleteItem key={item.iso2}>{item.name}</AutocompleteItem>
+              <AutocompleteItem key={item?.iso2}>{item?.name}</AutocompleteItem>
             )}
           </Autocomplete>
           {/* City */}
@@ -388,7 +389,7 @@ export default function AccountDetails({
             onSelectionChange={(value) => {
               formik.setFieldValue('user.city', value);
             }}
-            selectedKey={formik.values.user.city}
+            selectedKey={formik.values.user?.city}
           >
             {(item) => (
               <AutocompleteItem key={item.name}>{item.name}</AutocompleteItem>
@@ -398,7 +399,7 @@ export default function AccountDetails({
           <Input
             label="Address"
             placeholder="Enter address"
-            value={formik.values.user.address}
+            value={formik.values.user?.address}
             onChange={formik.handleChange}
             name="user.address"
             isInvalid={
@@ -414,7 +415,7 @@ export default function AccountDetails({
           <Input
             label="Zip Code"
             placeholder="Enter zip code"
-            value={formik.values.user.zipcode}
+            value={formik.values.user?.zipcode}
             onChange={formik.handleChange}
             name="user.zipcode"
             isInvalid={
