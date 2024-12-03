@@ -18,7 +18,8 @@ import {
 } from '@nextui-org/react';
 import { Icon } from '@iconify/react';
 import { useSession } from 'next-auth/react';
-import { parseDate } from '@internationalized/date';
+import { parseDate, getLocalTimeZone, today } from '@internationalized/date';
+import { I18nProvider } from '@react-aria/i18n';
 
 import {
   CityProps,
@@ -272,22 +273,25 @@ export default function AccountDetails({
           {(item) => <SelectItem key={item.value}>{item.label}</SelectItem>}
         </Select>
         {/* DOB */}
-        <DatePicker
-          label="Start Date (MM-DD-YYYY)"
-          onChange={(date) => {
-            console.log(date.toString().split('T')[0]);
-            formik.setFieldValue(`user.dob`, date.toString().split('T')[0]);
-          }}
-          value={parseDate(
-            formik.values.user.dob || new Date().toISOString().split('T')[0]
-          )}
-          showMonthAndYearPickers
-        />
+        <I18nProvider locale="en-IN">
+          <DatePicker
+            label="Start Date (DD-MM-YYYY)"
+            onChange={(date) => {
+              formik.setFieldValue(`user.dob`, date.toString().split('T')[0]);
+            }}
+            value={parseDate(
+              formik.values.user.dob || new Date().toISOString().split('T')[0]
+            )}
+            maxValue={today(getLocalTimeZone())}
+            showMonthAndYearPickers
+          />
+        </I18nProvider>
 
         {/* Country */}
         <Autocomplete
           defaultItems={formik.values.countries}
           label="Country"
+          className="grid-cols-2 bg-gradient-to-b"
           placeholder="Select country"
           showScrollIndicators={false}
           onSelectionChange={(value) => {
