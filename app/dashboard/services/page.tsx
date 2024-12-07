@@ -1,29 +1,25 @@
 import Services from '@/components/dashboard/services';
-import QuillInput from '@/components/ui/quill-input';
-import { API_BASE_URL, isCaching } from '@/lib/config';
+import { API_BASE_URL } from '@/lib/config';
 import { Service } from '@/lib/interface';
-import { Input, Textarea } from '@nextui-org/react';
+import axios from 'axios';
 import { cookies } from 'next/headers';
 
-async function getServices() {
-  const res = await fetch(`${API_BASE_URL}api/services/all`, {
-    cache: isCaching ? 'default' : 'no-cache',
-    method: 'GET',
-    headers: { Cookie: cookies().toString() }
-  });
-  if (res.ok) {
-    const json = await res.json();
-    return json;
+async function getData() {
+  try {
+    const res = await axios.get(`${API_BASE_URL}api/services/all`, {
+      headers: { Cookie: cookies().toString() }
+    });
+    return res.data;
+  } catch (error: any) {
+    console.error(error);
   }
 }
 
 export default async function Page() {
-  const services: Service[] = await getServices();
+  const services: Service[] = (await getData()) || ([] as Service[]);
   return (
     <>
-      {/* <Textarea label="Title" /> */}
       <Services services={services} />
-      {/* <QuillInput label="Title" /> */}
     </>
   );
 }

@@ -1,18 +1,19 @@
 import Error from '@/app/error';
 import { auth } from '@/auth';
-import NewService from '@/components/dashboard/services/new';
 
-export default async function Page() {
+export default async function Layout({
+  children
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   const session = await auth();
-  const allowed = ['admin'];
+  const allowed = ['admin', 'receptionist', 'doctor'];
   return (
     <>
       {
         // @ts-ignore
         session && allowed.includes(session.user.role) ? (
-          <div className="max-w-8xl h-full w-full px-2">
-            <NewService />
-          </div>
+          children
         ) : (
           <Error
             code="401"

@@ -3,6 +3,7 @@ import User from '@/models/User';
 import { connectDB } from '@/lib/db';
 import mongoose from 'mongoose';
 import { auth } from '@/auth';
+import bcrypt from 'bcryptjs';
 
 // get user by id from param
 export async function GET(_request: any, context: any) {
@@ -33,6 +34,7 @@ export const PUT = auth(async function PUT(request: any, context: any) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
       }
     }
+    const data = await request.json();
 
     await connectDB();
     const userId = context.params.id;
@@ -44,7 +46,11 @@ export const PUT = auth(async function PUT(request: any, context: any) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
     }
     user.updatedBy = request.auth?.user?.email;
-    user = await User.findByIdAndUpdate(userId, await request.json(), {
+    if (data.password) {
+      user.password = await bcrypt.hash(data.password, 10);
+      console;
+    }
+    user = await User.findByIdAndUpdate(userId, data, {
       new: true
     });
     return NextResponse.json(user);

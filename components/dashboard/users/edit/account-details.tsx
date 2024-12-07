@@ -33,7 +33,7 @@ import { useFormik } from 'formik';
 import Link from 'next/link';
 import axios from 'axios';
 import { toast } from 'sonner';
-import { verifyEmail, verifyPhone } from '@/functions/server-actions';
+import { verifyEmail } from '@/functions/server-actions';
 import { Genders } from '@/lib/options';
 import { userValidationSchema } from '@/lib/validation';
 import { calculateAge, calculateDOB } from '@/lib/client-functions';
@@ -63,7 +63,9 @@ export default function AccountDetails({
   const formik = useFormik({
     initialValues: {
       user: user,
-      countries: countries?.sort((a, b) => a.name.localeCompare(b.name)),
+      countries:
+        countries?.sort((a, b) => a.name.localeCompare(b.name)) ||
+        ([] as CountryProps[]),
       states: [] as StateProps[],
       cities: [] as CityProps[],
       phoneCode: '91',
@@ -74,10 +76,6 @@ export default function AccountDetails({
       try {
         if (await verifyEmail(values.user?.email, values.user?._id)) {
           formik.setFieldError('user.email', 'Email already exists');
-          return;
-        }
-        if (await verifyPhone(values.user?.phone, values.user?._id)) {
-          formik.setFieldError('user.phone', 'Phone number already exists');
           return;
         }
         await axios.put(`/api/users/${user._id}`, values.user);
@@ -154,6 +152,8 @@ export default function AccountDetails({
     formik.errors?.user && scrollToError(formik.errors?.user, inputRefs);
   }, [formik.isSubmitting]);
 
+  const allowedRoles = ['admin', 'doctor', 'receptionist'];
+
   return (
     <Card className="bg-transparent p-2 shadow-none">
       <CardHeader className="flex flex-col items-start px-4 pb-0 pt-4">
@@ -194,7 +194,7 @@ export default function AccountDetails({
         </p>
       </CardHeader>
       <CardBody className="h-[50vh]">
-        <ScrollShadow className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <ScrollShadow className="grid grid-cols-1 gap-4 p-1 md:grid-cols-2">
           <Input
             ref={inputRefs.name}
             label="Name"
@@ -209,13 +209,19 @@ export default function AccountDetails({
             }
             errorMessage={formik.touched.user?.name && formik.errors.user?.name}
           />
+
           <Input
             ref={inputRefs.email}
             label="Email"
             placeholder="Enter email"
             name="user.email"
             value={formik.values.user?.email}
-            onChange={formik.handleChange}
+            onChange={(e) => {
+              // @ts-ignore
+              if (allowedRoles.includes(session?.user?.role)) {
+                formik.setFieldValue('user.email', e.target.value);
+              }
+            }}
             isInvalid={
               formik.touched.user?.email && formik.errors.user?.email
                 ? true
@@ -225,10 +231,10 @@ export default function AccountDetails({
               formik.touched.user?.email && formik.errors.user?.email
             }
             // @ts-ignore
-            isDisabled={session?.user?.role !== 'admin'}
+            isDisabled={!allowedRoles.includes(session?.user?.role)}
             description={
               // @ts-ignore
-              session?.user?.role !== 'admin' && (
+              !allowedRoles.includes(session?.user?.role) && (
                 <>
                   Please go{session?.role} to{' '}
                   <Link
@@ -242,14 +248,17 @@ export default function AccountDetails({
               )
             }
           />
-
-          {/* Phone Number */}
           <Input
             ref={inputRefs.phone}
             label="Phone Number"
             placeholder="Enter phone number"
             name="user.phone"
-            onChange={formik.handleChange}
+            onChange={(e) => {
+              // @ts-ignore
+              if (allowedRoles.includes(session?.user?.role)) {
+                formik.setFieldValue('user.phone', e.target.value);
+              }
+            }}
             isInvalid={
               formik.touched.user?.phone && formik.errors.user?.phone
                 ? true
@@ -258,8 +267,6 @@ export default function AccountDetails({
             errorMessage={
               formik.touched.user?.phone && formik.errors.user?.phone
             }
-            // @ts-ignore
-            isDisabled={session?.user?.role !== 'admin'}
             value={formik.values.user?.phone}
             startContent={
               <div className="pointer-events-none flex items-center">
@@ -268,18 +275,20 @@ export default function AccountDetails({
                 </span>
               </div>
             }
+            // @ts-ignore
+            isDisabled={!allowedRoles.includes(session?.user?.role)}
             description={
               // @ts-ignore
-              session?.user?.role !== 'admin' && (
+              !allowedRoles.includes(session?.user?.role) && (
                 <>
-                  Please go to{' '}
+                  Please go{session?.role} to{' '}
                   <Link
                     href={`/dashboard/users/${user._id}/edit?tab=security-settings`}
                     className="underline"
                   >
                     Security tab
                   </Link>{' '}
-                  to update phone number.
+                  to update email.
                 </>
               )
             }

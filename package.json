@@ -44,6 +44,7 @@
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "exceljs": "^4.4.0",
     "formik": "^2.4.6",
     "framer-motion": "^11.11.10",
     "input-otp": "^1.2.4",

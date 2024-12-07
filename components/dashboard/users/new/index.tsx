@@ -30,8 +30,11 @@ import { userValidationSchema } from '@/lib/validation';
 import slugify from 'slugify';
 import { scrollToError } from '@/lib/formik';
 import { calculateAge, calculateDOB } from '@/lib/client-functions';
+import { useRouter } from 'next/navigation';
+import { verifyEmail } from '@/functions/server-actions';
 
 export default function NewUser({ countries }: { countries: CountryProps[] }) {
+  const router = useRouter();
   const inputRefs = {
     name: useRef<HTMLInputElement>(null),
     email: useRef<HTMLInputElement>(null),
@@ -57,7 +60,9 @@ export default function NewUser({ countries }: { countries: CountryProps[] }) {
         zipcode: ''
       } as User,
       age: 0,
-      countries: countries?.sort((a, b) => a.name.localeCompare(b.name)),
+      countries:
+        countries?.sort((a, b) => a.name.localeCompare(b.name)) ||
+        ([] as CountryProps[]),
       states: [] as StateProps[],
       cities: [] as CityProps[],
       phoneCode: '91'
@@ -67,11 +72,15 @@ export default function NewUser({ countries }: { countries: CountryProps[] }) {
       if (!values.user.email) {
         values.user.email = `${values.user.phone}-${slugify(values.user.name, { lower: true })}@devocode.in`;
       }
+      if (await verifyEmail(values.user?.email, values.user?._id)) {
+        formik.setFieldError('user.email', 'Email already exists');
+        return;
+      }
       await axios
         .post('/api/users', values.user)
-        .then((res) => {
-          console.log(res.data);
+        .then(() => {
           toast.success('User added successfully');
+          router.push('/dashboard/users');
         })
         .catch((error: any) => {
           console.log(error);
@@ -188,7 +197,7 @@ export default function NewUser({ countries }: { countries: CountryProps[] }) {
           </p>
         </CardHeader>
         <CardBody>
-          <ScrollShadow className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <ScrollShadow className="grid grid-cols-1 gap-4 p-1 md:grid-cols-2">
             <Input
               ref={inputRefs.name}
               label="Name"

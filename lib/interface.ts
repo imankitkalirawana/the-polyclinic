@@ -135,3 +135,7 @@ export interface MailOptionsProps {
   text?: string;
   html?: string;
 }
+
+export interface Newsletter extends Base {
+  email: string;
+}

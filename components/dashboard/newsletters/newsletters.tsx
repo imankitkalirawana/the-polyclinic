@@ -1,10 +1,11 @@
 'use client';
+
+import { Newsletter } from '@/lib/interface';
 import {
   capitalize,
   humanReadableDate,
   humanReadableTime
 } from '@/lib/utility';
-import { User, UserRole } from '@/lib/interface';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import {
   TableHeader,
@@ -13,10 +14,7 @@ import {
   TableRow,
   TableCell,
   Table,
-  ChipProps,
-  Chip,
   Selection,
-  Avatar,
   Dropdown,
   DropdownTrigger,
   Button,
@@ -30,54 +28,26 @@ import {
   ModalBody,
   ModalContent,
   ModalFooter,
-  useDisclosure
+  useDisclosure,
+  Tooltip
 } from '@nextui-org/react';
-import Link from 'next/link';
+import { IconTableExport } from '@tabler/icons-react';
+import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { toast } from 'sonner';
-import axios from 'axios';
-import { CopyText } from '@/components/ui/copy';
-import { cn } from '@/lib/utils';
-// import useSWR from 'swr';
-
-const statusColorMap: Record<string, ChipProps['color']> = {
-  active: 'success',
-  inactive: 'warning',
-  blocked: 'warning',
-  deleted: 'danger'
-};
-
-const roleColorMap: Record<string, ChipProps['color']> = {
-  admin: 'danger',
-  user: 'default',
-  nurse: 'warning',
-  receptionist: 'warning',
-  doctor: 'success',
-  pharmacist: 'success',
-  laboratorist: 'success'
-};
 
 interface Props {
-  users: User[];
+  newsletters: Newsletter[];
 }
 
-const INITIAL_VISIBLE_COLUMNS = [
-  'uid',
-  'name',
-  'phone',
-  'status',
-  'role',
-  'updatedAt',
-  'actions'
-];
+const INITIAL_VISIBLE_COLUMNS = ['email', 'createdAt', 'actions'];
 
-export default function Users({ users }: Props) {
+export default function Newsletters({ newsletters }: Props) {
   const deleteModal = useDisclosure();
   const router = useRouter();
-  const [selected, setSelected] = React.useState<User | null>(null);
+  const [selected, setSelected] = React.useState<Newsletter | null>(null);
   const [filterValue, setFilterValue] = React.useState('');
-  const [isDeleting, setIsDeleting] = React.useState(false);
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
     new Set([])
   );
@@ -87,26 +57,9 @@ export default function Users({ users }: Props) {
   const [statusFilter, setStatusFilter] = React.useState<Selection>('all');
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
-    column: 'name',
+    column: 'email',
     direction: 'ascending'
   });
-
-  const handleDelete = async (user: User) => {
-    setIsDeleting(true);
-    try {
-      await fetch(`/api/users/${user._id}`, {
-        method: 'DELETE'
-      });
-
-      toast.success('User deleted successfully');
-      deleteModal.onClose();
-      router.refresh();
-    } catch (error) {
-      console.log(error);
-      toast.error('Failed to delete user');
-    }
-    setIsDeleting(false);
-  };
 
   const [page, setPage] = React.useState(1);
 
@@ -121,31 +74,16 @@ export default function Users({ users }: Props) {
   }, [visibleColumns]);
 
   const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...users];
+    let filteredNewsletters = [...newsletters];
 
     if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter(
-        (user) =>
-          (user.name &&
-            user.name.toLowerCase().includes(filterValue.toLowerCase())) ||
-          (user.email &&
-            user.email.toLowerCase().includes(filterValue.toLowerCase())) ||
-          (user.phone &&
-            user.phone.toLowerCase().includes(filterValue.toLowerCase())) ||
-          user._id.toLowerCase().includes(filterValue.toLowerCase())
-      );
-    }
-    if (
-      statusFilter !== 'all' &&
-      Array.from(statusFilter).length !== statusOptions.length
-    ) {
-      filteredUsers = filteredUsers.filter((user) =>
-        Array.from(statusFilter).includes(user.role)
+      filteredNewsletters = filteredNewsletters.filter((newsletter) =>
+        newsletter.email.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
 
-    return filteredUsers;
-  }, [users, filterValue, statusFilter]);
+    return filteredNewsletters;
+  }, [newsletters, filterValue, statusFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -157,126 +95,73 @@ export default function Users({ users }: Props) {
   }, [page, filteredItems, rowsPerPage]);
 
   const sortedItems = React.useMemo(() => {
-    return [...items].sort((a: User, b: User) => {
-      const first = a[sortDescriptor.column as keyof User] as string;
-      const second = b[sortDescriptor.column as keyof User] as string;
+    return [...items].sort((a: Newsletter, b: Newsletter) => {
+      const first = a[sortDescriptor.column as keyof Newsletter] as string;
+      const second = b[sortDescriptor.column as keyof Newsletter] as string;
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
       return sortDescriptor.direction === 'descending' ? -cmp : cmp;
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = React.useCallback((user: User, columnKey: React.Key) => {
-    const cellValue = user[columnKey as keyof User];
-    switch (columnKey) {
-      case 'uid':
-        return (
-          <>
-            <CopyText>{user._id.slice(-8).toUpperCase()}</CopyText>
-          </>
-        );
-      case 'name':
-        return (
-          <>
-            <div className="flex items-center gap-2">
-              <div className="flex flex-col">
-                <p className="text-bold whitespace-nowrap text-sm capitalize">
-                  {user.name}
-                </p>
-                <Chip
-                  variant="flat"
-                  size="sm"
-                  color={roleColorMap[user.role]}
-                  className="w-fit whitespace-nowrap rounded-full py-0.5 text-xs font-light"
-                >
-                  {user.role}
-                </Chip>
+  const renderCell = React.useCallback(
+    (newsletter: Newsletter, columnKey: React.Key) => {
+      const cellValue = newsletter[columnKey as keyof Newsletter];
+      switch (columnKey) {
+        case 'email':
+          return (
+            <>
+              <div className="flex items-center gap-2">
+                <div className="flex flex-col">
+                  <p className="text-bold whitespace-nowrap text-sm">
+                    {newsletter.email}
+                  </p>
+                </div>
               </div>
-            </div>
-          </>
-        );
-      case 'email':
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold max-w-sm overflow-hidden text-ellipsis whitespace-nowrap text-sm text-default-400">
-              {user.email}
-            </p>
-          </div>
-        );
-      case 'phone':
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold max-w-sm overflow-hidden text-ellipsis whitespace-nowrap text-sm capitalize text-default-400">
-              {user.phone}
-            </p>
-          </div>
-        );
-      case 'status':
-        return (
-          <Chip
-            className="capitalize"
-            color={statusColorMap[user.status]}
-            size="sm"
-            variant="flat"
-          >
-            {user.status}
-          </Chip>
-        );
-      case 'updatedAt':
-        return (
-          <>
-            <p className="text-bold whitespace-nowrap text-sm capitalize">
-              {humanReadableDate(user.updatedAt)}
-            </p>
-            <p className="text-bold whitespace-nowrap text-sm capitalize text-default-400">
-              {humanReadableTime(user.updatedAt)}
-            </p>
-          </>
-        );
-      case 'actions':
-        return (
-          <Dropdown>
-            <DropdownTrigger>
-              <Button variant="light" isIconOnly>
-                <Icon icon="tabler:dots-vertical" fontSize={18} />
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu>
-              <DropdownItem
-                key={'view'}
-                startContent={<Icon icon="ic:round-view-in-ar" fontSize={20} />}
-                as={Link}
-                href={`/${user._id}`}
-              >
-                View
-              </DropdownItem>
-              <DropdownItem
-                key={'edit'}
-                startContent={<Icon icon="tabler:edit" fontSize={20} />}
-                as={Link}
-                href={`/dashboard/users/${user._id}/edit`}
-              >
-                Edit
-              </DropdownItem>
-              <DropdownItem
-                key={'delete'}
-                startContent={<Icon icon="tabler:trash" fontSize={20} />}
-                className="text-danger"
-                color="danger"
-                onPress={() => {
-                  setSelected(user);
-                  deleteModal.onOpen();
-                }}
-              >
-                Delete
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-        );
-      default:
-        return cellValue;
-    }
-  }, []);
+            </>
+          );
+
+        case 'createdAt':
+          return (
+            <>
+              <p className="text-bold whitespace-nowrap text-sm capitalize">
+                {humanReadableDate(newsletter.createdAt)}
+              </p>
+              <p className="text-bold whitespace-nowrap text-sm capitalize text-default-400">
+                {humanReadableTime(newsletter.createdAt)}
+              </p>
+            </>
+          );
+        case 'actions':
+          return (
+            <Dropdown>
+              <DropdownTrigger>
+                <Button variant="light" isIconOnly>
+                  <Icon icon="tabler:dots-vertical" fontSize={18} />
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu>
+                <DropdownItem
+                  key={'delete'}
+                  startContent={<Icon icon="tabler:trash" fontSize={20} />}
+                  className="text-danger"
+                  color="danger"
+                  onPress={() => {
+                    setSelected(newsletter);
+                    deleteModal.onOpen();
+                  }}
+                >
+                  Unsubscribe
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          );
+        default:
+          return cellValue;
+      }
+    },
+    []
+  );
 
   const onNextPage = React.useCallback(() => {
     if (page < pages) {
@@ -312,6 +197,39 @@ export default function Users({ users }: Props) {
     setPage(1);
   }, []);
 
+  const handleExport = async () => {
+    try {
+      const response = await fetch('/api/newsletter/export', {
+        method: 'GET'
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to download the file');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `newsletters-${new Date().toLocaleDateString()}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      setTimeout(() => window.URL.revokeObjectURL(url), 100);
+    } catch (error) {
+      console.error('Error downloading the file:', error);
+    }
+  };
+
+  const handleDownload = async () => {
+    await toast.promise(handleExport(), {
+      loading: 'Downloading...',
+      success: 'Downloaded successfully',
+      error: 'Failed to download'
+    });
+  };
   const topContent = React.useMemo(() => {
     return (
       <div className="flex flex-col gap-4">
@@ -326,32 +244,15 @@ export default function Users({ users }: Props) {
             onValueChange={onSearchChange}
           />
           <div className="flex gap-3">
-            <Dropdown>
-              <DropdownTrigger className="hidden sm:flex">
-                <Button
-                  variant="flat"
-                  endContent={
-                    <Icon icon={'tabler:chevron-down'} fontSize={16} />
-                  }
-                >
-                  Status
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                disallowEmptySelection
-                aria-label="Table Columns"
-                closeOnSelect={false}
-                selectedKeys={statusFilter}
-                selectionMode="multiple"
-                onSelectionChange={setStatusFilter}
-              >
-                {statusOptions.map((status) => (
-                  <DropdownItem key={status.uid} className="capitalize">
-                    {capitalize(status.name)}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
+            <Tooltip content="Export to Excel">
+              <Button
+                variant="bordered"
+                isIconOnly
+                radius="full"
+                endContent={<IconTableExport size={20} />}
+                onPress={handleDownload}
+              />
+            </Tooltip>
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button
@@ -378,19 +279,11 @@ export default function Users({ users }: Props) {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Button
-              color="primary"
-              endContent={<Icon icon={'tabler:plus'} />}
-              as={Link}
-              href="/dashboard/users/new"
-            >
-              Add New
-            </Button>
           </div>
         </div>
         <div className="flex items-center justify-between">
           <span className="text-small text-default-400">
-            Total {users.length} users
+            Total {newsletters.length} newsletters
           </span>
           <label className="flex items-center text-small text-default-400">
             Rows per page:
@@ -412,7 +305,7 @@ export default function Users({ users }: Props) {
     visibleColumns,
     onSearchChange,
     onRowsPerPageChange,
-    users.length,
+    newsletters.length,
     hasSearchFilter
   ]);
 
@@ -455,10 +348,22 @@ export default function Users({ users }: Props) {
     );
   }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
 
+  const formikDelete = useFormik({
+    initialValues: {},
+    onSubmit: async () => {
+      await fetch(`/api/newsletter/${selected?.email}`, {
+        method: 'DELETE'
+      });
+      toast.success('Newsletter Unsubscribed successfully');
+      deleteModal.onClose();
+      router.refresh();
+    }
+  });
+
   return (
     <>
       <Table
-        aria-label="Users List"
+        aria-label="Newsletters List"
         isHeaderSticky
         bottomContent={bottomContent}
         bottomContentPlacement="outside"
@@ -472,19 +377,6 @@ export default function Users({ users }: Props) {
         topContentPlacement="outside"
         onSelectionChange={setSelectedKeys}
         onSortChange={setSortDescriptor}
-        onRowAction={(key) => {
-          const promise = () =>
-            new Promise((resolve) =>
-              setTimeout(() => resolve({ name: 'Sonner' }), 2000)
-            );
-
-          toast.promise(promise, {
-            loading: 'Loading...',
-            error: 'Error',
-            duration: 1500
-          });
-          router.push(`/dashboard/users/${key}`);
-        }}
         className="cursor-pointer"
       >
         <TableHeader columns={headerColumns}>
@@ -498,7 +390,7 @@ export default function Users({ users }: Props) {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody items={sortedItems} emptyContent={'No users found'}>
+        <TableBody items={sortedItems} emptyContent={'No newsletters found'}>
           {(item) => (
             <TableRow
               key={item._id}
@@ -528,7 +420,7 @@ export default function Users({ users }: Props) {
                   className="text-danger"
                 />
                 <h2 className="mt-4 max-w-xs text-center text-base">
-                  Are you sure you permanently want to delete {selected?.name}{' '}
+                  Are you sure you permanently want to delete {selected?.email}{' '}
                   from the Database?
                 </h2>
               </ModalHeader>
@@ -543,10 +435,10 @@ export default function Users({ users }: Props) {
                   color="danger"
                   variant="flat"
                   fullWidth
-                  isLoading={isDeleting}
-                  onPress={() => handleDelete(selected as User)}
+                  isLoading={formikDelete.isSubmitting}
+                  onPress={() => formikDelete.handleSubmit()}
                 >
-                  Delete
+                  Unsubscribe
                 </Button>
               </ModalFooter>
             </>
@@ -558,18 +450,7 @@ export default function Users({ users }: Props) {
 }
 
 const columns = [
-  { name: 'UID', uid: 'uid', sortable: true },
-  { name: 'NAME', uid: 'name', sortable: true },
   { name: 'EMAIL', uid: 'email', sortable: true },
-  { name: 'PHONE', uid: 'phone', sortable: true },
-  { name: 'STATUS', uid: 'status', sortable: true },
-  { name: 'UPDATED AT', uid: 'updatedAt', sortable: true },
+  { name: 'SUBSCRIBED AT', uid: 'createdAt', sortable: true },
   { name: 'ACTIONS', uid: 'actions' }
-];
-
-const statusOptions = [
-  { name: 'ACTIVE', uid: 'active' },
-  { name: 'INACTIVE', uid: 'inactive' },
-  { name: 'BLOCKED', uid: 'blocked' },
-  { name: 'DELETED', uid: 'deleted' }
 ];
