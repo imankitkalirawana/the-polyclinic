@@ -69,7 +69,7 @@ export default function Layout({
                 {session?.user?.name}
               </p>
               <p className="text-tiny capitalize text-default-400">
-                {session?.user?.role}
+                {session?.user?.uid}
               </p>
             </div>
           </Link>

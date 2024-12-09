@@ -4,28 +4,28 @@ import { getCountries } from '@/functions/get';
 import { API_BASE_URL, isCaching } from '@/lib/config';
 import { transformCountries } from '@/lib/functions';
 import { User } from '@/lib/interface';
+import axios from 'axios';
 import { cookies } from 'next/headers';
 
-async function getData(id: string) {
-  const res = await fetch(`${API_BASE_URL}api/users/${id}`, {
-    cache: isCaching ? 'default' : 'no-cache',
-    method: 'GET',
-    headers: { Cookie: cookies().toString() }
-  });
-  if (res.ok) {
-    const json = await res.json();
-    return json;
+async function getData(uid: number) {
+  try {
+    const res = await axios.get(`${API_BASE_URL}api/users/uid/${uid}`, {
+      headers: { Cookie: cookies().toString() }
+    });
+    return res.data;
+  } catch (error) {
+    console.error(error);
   }
 }
 
 interface Props {
   params: {
-    id: string;
+    uid: number;
   };
 }
 
 export default async function Page({ params }: Props) {
-  const user: User = await getData(params.id);
+  const user: User = (await getData(params.uid)) || ({} as User);
   const countries = await getCountries();
   return (
     <>

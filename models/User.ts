@@ -1,5 +1,9 @@
 import { User as IUser, UserRole, UserStatus } from '@/lib/interface';
 import mongoose, { Model } from 'mongoose';
+import mongooseSequence from 'mongoose-sequence';
+
+// @ts-ignore
+const AutoIncrement = mongooseSequence(mongoose);
 
 const userSchema = new mongoose.Schema(
   {
@@ -11,6 +15,10 @@ const userSchema = new mongoose.Schema(
         /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
         'Email is invalid'
       ]
+    },
+    uid: {
+      type: Number,
+      unique: true
     },
     phone: String,
     password: {
@@ -59,6 +67,9 @@ const userSchema = new mongoose.Schema(
     timestamps: true
   }
 );
+
+// @ts-ignore
+userSchema.plugin(AutoIncrement, { inc_field: 'uid', start_seq: 1000 });
 
 const User: Model<IUser> =
   mongoose.models.User || mongoose.model<IUser>('User', userSchema);

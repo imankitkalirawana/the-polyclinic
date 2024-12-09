@@ -172,7 +172,7 @@ export default function Users({ users }: Props) {
       case 'uid':
         return (
           <>
-            <CopyText>{user._id.slice(-8).toUpperCase()}</CopyText>
+            <CopyText>{user.uid + ''}</CopyText>
           </>
         );
       case 'name':
@@ -246,7 +246,7 @@ export default function Users({ users }: Props) {
                 key={'view'}
                 startContent={<Icon icon="ic:round-view-in-ar" fontSize={20} />}
                 as={Link}
-                href={`/${user._id}`}
+                href={`/dashboard/users/${user.uid}`}
               >
                 View
               </DropdownItem>
@@ -254,7 +254,7 @@ export default function Users({ users }: Props) {
                 key={'edit'}
                 startContent={<Icon icon="tabler:edit" fontSize={20} />}
                 as={Link}
-                href={`/dashboard/users/${user._id}/edit`}
+                href={`/dashboard/users/${user.uid}/edit`}
               >
                 Edit
               </DropdownItem>
@@ -484,8 +484,8 @@ export default function Users({ users }: Props) {
             duration: 1500
           });
           router.push(`/dashboard/users/${key}`);
+          // window.location.href = `/dashboard/users/${key}`;
         }}
-        className="cursor-pointer"
       >
         <TableHeader columns={headerColumns}>
           {(column) => (
@@ -501,7 +501,7 @@ export default function Users({ users }: Props) {
         <TableBody items={sortedItems} emptyContent={'No users found'}>
           {(item) => (
             <TableRow
-              key={item._id}
+              key={item.uid}
               className="transition-all hover:bg-default-100"
             >
               {(columnKey) => (

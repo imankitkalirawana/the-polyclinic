@@ -26,7 +26,7 @@ export default function UserCard({ user }: UserCardProps) {
         <Button
           color="primary"
           as={Link}
-          href={`/dashboard/users/${user._id}/edit`}
+          href={`/dashboard/users/${user.uid}/edit`}
         >
           Edit
         </Button>

@@ -76,7 +76,7 @@ export default function EditUser({ user, countries }: EditUserProps) {
         <Tab
           key={item.key}
           title={item.title}
-          href={`/dashboard/users/${user?._id}/edit?tab=${item.key}`}
+          href={`/dashboard/users/${user?.uid}/edit?tab=${item.key}`}
           as={Link}
         >
           {item.content}

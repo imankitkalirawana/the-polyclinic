@@ -24,6 +24,7 @@ export enum UserStatus {
 }
 
 export interface User extends Base {
+  uid: number;
   email: string;
   phone: string;
   password: string;

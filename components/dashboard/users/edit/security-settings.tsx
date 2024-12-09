@@ -82,7 +82,7 @@ export default function SecuritySettings({ user }: SecuritySettingsProps) {
         await verifyOTP(values.email, values.otp)
           .then(async () => {
             await axios
-              .put(`/api/users/${user._id}`, {
+              .put(`/api/users/uid/${user.uid}`, {
                 email: values.email
               })
               .then(() => {
@@ -132,7 +132,7 @@ export default function SecuritySettings({ user }: SecuritySettingsProps) {
     }),
     onSubmit: async (values) => {
       await axios
-        .put(`/api/users/${user._id}`, {
+        .put(`/api/users/uid/${user.uid}`, {
           password: values.password
         })
         .then(() => {
@@ -172,7 +172,7 @@ export default function SecuritySettings({ user }: SecuritySettingsProps) {
         return;
       }
       await axios
-        .put(`/api/users/${user._id}`, {
+        .put(`/api/users/uid/${user.uid}`, {
           // @ts-ignore
           status: user.status === 'active' ? 'inactive' : 'active'
         })
@@ -210,7 +210,7 @@ export default function SecuritySettings({ user }: SecuritySettingsProps) {
         return;
       }
       await axios
-        .put(`/api/users/${user._id}`, {
+        .put(`/api/users/uid/${user.uid}`, {
           // @ts-ignore
           status: user.status === 'active' ? 'deleted' : 'active'
         })
@@ -325,7 +325,7 @@ export default function SecuritySettings({ user }: SecuritySettingsProps) {
                   const selectedValue = Array.from(value)[0];
                   emailFormik.setFieldValue('user.role', selectedValue);
                   await axios
-                    .put(`/api/users/${user._id}`, {
+                    .put(`/api/users/uid/${user.uid}`, {
                       role: selectedValue
                     })
                     .then(() => {
