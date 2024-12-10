@@ -8,7 +8,7 @@ import bcrypt from 'bcryptjs';
 export async function GET(_request: any, context: any) {
   try {
     await connectDB();
-    const uid = context.params.uid;
+    const uid = parseInt(context.params.uid);
     const user = await User.findOne({ uid });
     if (!user) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
@@ -33,7 +33,7 @@ export const PUT = auth(async function PUT(request: any, context: any) {
     const data = await request.json();
 
     await connectDB();
-    const uid = context.params.uid;
+    const uid = parseInt(context.params.uid);
     let user = await User.findOne({ uid });
     if (!user) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
@@ -64,7 +64,7 @@ export const DELETE = auth(async function DELETE(request: any, context: any) {
       }
     }
     await connectDB();
-    const uid = context.params.uid;
+    const uid = parseInt(context.params.uid);
 
     let user = await User.findOne({ uid });
     if (!user) {

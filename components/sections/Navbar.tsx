@@ -55,7 +55,7 @@ const Navbar = ({ session }: NavbarProps) => {
     >
       {/* Left Content */}
       <NavbarBrand>
-        <div className="rounded-full bg-foreground text-background">
+        <div className="rounded-full bg-background text-foreground">
           <Image
             alt="logo"
             height={40}

@@ -94,3 +94,9 @@ export const getAllUsers = async (id: string) => {
     _id: user._id.toString()
   }));
 };
+
+export const getUserWithUID = async (uid: number) => {
+  await connectDB();
+  const user = await User.findOne({ uid }).lean();
+  return user;
+};
