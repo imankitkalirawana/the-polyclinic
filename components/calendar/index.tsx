@@ -26,7 +26,7 @@ export function Calendar(props: CalendarProps<DateValue>) {
   );
 
   return (
-    <div {...calendarProps} className="inline-block text-default-800">
+    <div {...calendarProps} className="inline-block text-gray-800">
       <CalendarHeader
         state={state}
         calendarProps={calendarProps}

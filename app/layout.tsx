@@ -20,7 +20,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning className="light">
-      <body>
+      <body className="no-scrollbar">
         <Providers>
           <ThemeProvider attribute="class" defaultTheme="light">
             <Navbar session={session} />

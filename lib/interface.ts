@@ -1,4 +1,4 @@
-interface Base {
+export interface Base {
   _id: string;
   createdBy: string;
   updatedBy: string;
@@ -7,20 +7,20 @@ interface Base {
 }
 
 export enum UserRole {
-  'admin',
-  'doctor',
-  'nurse',
-  'receptionist',
-  'pharmacist',
-  'laboratorist',
-  'user'
+  admin = 'admin',
+  doctor = 'doctor',
+  nurse = 'nurse',
+  receptionist = 'receptionist',
+  pharmacist = 'pharmacist',
+  laboratorist = 'laboratorist',
+  user = 'user'
 }
 
 export enum UserStatus {
-  'active',
-  'inactive',
-  'blocked',
-  'deleted'
+  active = 'active',
+  inactive = 'inactive',
+  blocked = 'blocked',
+  deleted = 'deleted'
 }
 
 export interface User extends Base {
@@ -39,6 +39,7 @@ export interface User extends Base {
   passwordResetToken: string;
   dob: string;
   gender: 'male' | 'female' | 'other';
+  image: string;
 }
 
 export enum ServiceType {
@@ -139,4 +140,30 @@ export interface MailOptionsProps {
 
 export interface Newsletter extends Base {
   email: string;
+}
+
+export interface Guest {
+  name: string;
+  connection: string;
+  phone: string;
+}
+
+export interface Appointment extends Base {
+  uid: number;
+  name: string;
+  phone: string;
+  email: string;
+  guests: Guest[];
+  notes: string;
+  date: Date | string;
+  doctor: number;
+  progerss: number;
+  status:
+    | 'booked'
+    | 'confirmed'
+    | 'in-progress'
+    | 'completed'
+    | 'cancelled'
+    | 'overdue'
+    | 'on-hold';
 }

@@ -80,8 +80,8 @@ const Navbar = ({ session }: NavbarProps) => {
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link className="text-default-500" href="/contact">
-            Contact
+          <Link className="text-default-500" href="/appointments">
+            Appointments
           </Link>
         </NavbarItem>
         <NavbarItem>

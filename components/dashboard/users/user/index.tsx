@@ -1,7 +1,14 @@
 'use client';
 
 import React from 'react';
-import { Card, CardHeader, CardBody, Button, Avatar } from '@nextui-org/react';
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  Button,
+  Avatar,
+  CardFooter
+} from '@nextui-org/react';
 
 import CellValue from './cell-value';
 import Link from 'next/link';
@@ -90,6 +97,16 @@ export default function UserCard({ user }: UserCardProps) {
           value={`${user.updatedBy || 'Admin'} on ${humanReadableDate(user.updatedAt)} at ${humanReadableTime(user.updatedAt)}`}
         />
       </CardBody>
+      <CardFooter className="justify-end">
+        <Button
+          as={Link}
+          href={`/appointments?uid=${user.uid}`}
+          variant="flat"
+          color="primary"
+        >
+          Book Appointment
+        </Button>
+      </CardFooter>
     </Card>
   );
 }

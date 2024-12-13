@@ -2,7 +2,9 @@
 
 import Service from '@/models/Service';
 import User from '@/models/User';
+import Doctor, { DoctorType } from '@/models/Doctor';
 import Otp from '@/models/Otp';
+import Appointment from '@/models/Appointment';
 import { connectDB } from '@/lib/db';
 import { transporter } from '@/lib/nodemailer';
 import { MailOptions } from 'nodemailer/lib/json-transport';
@@ -95,8 +97,40 @@ export const getAllUsers = async (id: string) => {
   }));
 };
 
+export const getAllPatients = async () => {
+  await connectDB();
+  const users = await User.find({ role: 'user' }).select('-password').lean();
+
+  return users.map((user) => ({
+    ...user,
+    _id: user._id.toString()
+  }));
+};
+
 export const getUserWithUID = async (uid: number) => {
   await connectDB();
   const user = await User.findOne({ uid }).lean();
-  return user;
+  if (!user) {
+    throw new Error('User not found');
+  }
+  return {
+    ...user,
+    _id: user?._id.toString()
+  };
+};
+
+// doctor related functions
+
+export const getDoctorWithUID = async (uid: number) => {
+  await connectDB();
+  const doctor = await Doctor.findOne({ uid })
+    .select('_id name uid email phone designation')
+    .lean();
+  if (!doctor) {
+    throw new Error('Doctor not found');
+  }
+  return {
+    ...doctor,
+    _id: doctor?._id.toString()
+  };
 };

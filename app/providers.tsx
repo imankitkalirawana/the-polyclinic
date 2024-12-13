@@ -4,7 +4,8 @@ import { NextUIProvider } from '@nextui-org/react';
 import React from 'react';
 import { SessionProvider } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-
+import { Provider as ReduxProvider } from 'react-redux';
+import { store } from '@/store';
 declare module '@react-types/shared' {
   interface RouterConfig {
     routerOptions: NonNullable<
