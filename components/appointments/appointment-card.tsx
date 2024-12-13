@@ -44,7 +44,6 @@ const AppointmentCard = ({
   const timePassed =
     (new Date() as any) - (new Date(appointment.createdAt) as any);
 
-  // percentage of progress
   useEffect(() => {
     const progress = (timePassed / totalTime) * 100;
     if (progress < 100) {

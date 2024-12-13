@@ -23,7 +23,7 @@ export default function Appointments() {
         <HoverDevCards />
         <div className="grid grid-cols-4 gap-4">
           {appointments.map((appointment) => (
-            <AppointmentCard appointment={appointment} />
+            <AppointmentCard key={appointment._id} appointment={appointment} />
           ))}
         </div>
       </div>
