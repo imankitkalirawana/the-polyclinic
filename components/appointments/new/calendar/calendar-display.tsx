@@ -20,12 +20,12 @@ export const CalendarDisplay = ({ date = new Date() }: { date?: Date }) => {
   }, [date]); // Runs whenever `date` changes
 
   return (
-    <div className="w-fit overflow-hidden rounded-xl border-2 border-primary bg-primary">
+    <div className="h-52 w-52 overflow-hidden rounded-xl border-2 border-primary bg-primary">
       <div className="flex items-center justify-between px-1.5 py-0.5 text-white">
         <span className="text-center uppercase">{format(date, 'LLLL')}</span>
         <span>{slotParam && time}</span>
       </div>
-      <div className="relative z-0 h-36 w-52 shrink-0">
+      <div className="relative z-0 h-44 w-52 shrink-0">
         <AnimatePresence mode="sync">
           {/* Animate first layer */}
           <motion.div

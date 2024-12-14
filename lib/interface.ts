@@ -158,6 +158,8 @@ export interface Appointment extends Base {
   date: Date | string;
   doctor: number;
   progerss: number;
+  type: 'online' | 'offline';
+  aid: number;
   status:
     | 'booked'
     | 'confirmed'

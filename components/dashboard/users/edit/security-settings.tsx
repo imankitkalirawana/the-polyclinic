@@ -26,6 +26,7 @@ import { User } from '@/lib/interface';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import {
+  changePassword,
   sendMail,
   sendMailWithOTP,
   verifyEmail,
@@ -131,10 +132,7 @@ export default function SecuritySettings({ user }: SecuritySettingsProps) {
         .required('Please confirm your password.')
     }),
     onSubmit: async (values) => {
-      await axios
-        .put(`/api/users/uid/${user.uid}`, {
-          password: values.password
-        })
+      await changePassword(user._id, values.password)
         .then(() => {
           toast.success('Password updated successfully.');
           editPasswordModal.onClose();

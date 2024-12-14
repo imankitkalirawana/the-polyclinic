@@ -28,14 +28,14 @@ export function LeftPanel({
   // autocomplete usememo
 
   return (
-    <div className="flex flex-col gap-4 border-r pr-6">
+    <div className="flex flex-col gap-4 border-b pb-4 pr-6 md:border-b-0 md:border-r">
       <div className="grid gap-1">
         <h1 className="text-sm font-semibold">Book New Appointment</h1>
       </div>
       <Autocomplete
         defaultItems={users}
         label="Choose Patient"
-        className="max-w-52"
+        className="md:max-w-52"
         placeholder="Search for a patient"
         showScrollIndicators={false}
         onSelectionChange={(value) => {
@@ -50,9 +50,11 @@ export function LeftPanel({
           <AutocompleteItem key={user.uid}>{user?.name}</AutocompleteItem>
         )}
       </Autocomplete>
-      {isLoading ? <LoadingSkeleton /> : user && <Profile user={user} />}
+      <div className="xs:items-start xs:flex-row flex flex-col items-center justify-center gap-10 md:flex-col">
+        {isLoading ? <LoadingSkeleton /> : user && <Profile user={user} />}
 
-      <CalendarDisplay date={currentDate} />
+        <CalendarDisplay date={currentDate} />
+      </div>
     </div>
   );
 }

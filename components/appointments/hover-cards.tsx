@@ -5,24 +5,16 @@ import { Link, Card as NextCard } from '@nextui-org/react';
 
 const HoverDevCards = () => {
   return (
-    <div className="p-4">
-      <p className="mb-2 text-xl font-semibold">Settings</p>
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <Card
-          title="Account"
-          subtitle="Manage profile"
-          href="#"
-          Icon={FiUser}
-        />
-        <Card title="Email" subtitle="Manage email" href="#" Icon={FiMail} />
-        <Card title="Team" subtitle="Manage team" href="#" Icon={FiUsers} />
-        <Card
-          title="Billing"
-          subtitle="Manage cards"
-          href="#"
-          Icon={FiCreditCard}
-        />
-      </div>
+    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <Card title="Account" subtitle="Manage profile" href="#" Icon={FiUser} />
+      <Card title="Email" subtitle="Manage email" href="#" Icon={FiMail} />
+      <Card title="Team" subtitle="Manage team" href="#" Icon={FiUsers} />
+      <Card
+        title="Billing"
+        subtitle="Manage cards"
+        href="#"
+        Icon={FiCreditCard}
+      />
     </div>
   );
 };
@@ -40,7 +32,7 @@ const Card = ({ title, subtitle, Icon, href }: CardType) => {
       as={Link}
       href={href}
       isHoverable
-      className="group relative w-full overflow-hidden rounded p-4"
+      className="group relative w-full overflow-hidden rounded-3xl p-4"
       isPressable
     >
       <div className="absolute inset-0 translate-y-[100%] bg-gradient-to-r transition-transform duration-300 group-hover:translate-y-[0%]" />

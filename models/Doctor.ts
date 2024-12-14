@@ -14,6 +14,7 @@ export interface DoctorType extends Base {
   image: string;
   shortbio: string;
   uid: number;
+  seating: string;
 }
 
 const DoctorSchema = new mongoose.Schema(
@@ -29,7 +30,8 @@ const DoctorSchema = new mongoose.Schema(
     biography: String,
     image: String,
     shortbio: String,
-    uid: Number
+    uid: Number,
+    seating: String
   },
   {
     timestamps: true

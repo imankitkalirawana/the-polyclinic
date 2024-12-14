@@ -25,7 +25,8 @@ export default function ModeToggle() {
       </DropdownTrigger>
       <DropdownMenu>
         <DropdownItem
-          onClick={() => {
+          key="light"
+          onPress={() => {
             setTheme('light');
             toast.success('Light mode enabled');
           }}
@@ -33,14 +34,17 @@ export default function ModeToggle() {
           Light
         </DropdownItem>
         <DropdownItem
-          onClick={() => {
+          key="dark"
+          onPress={() => {
             setTheme('dark');
             toast.success('Light mode enabled');
           }}
         >
           Dark
         </DropdownItem>
-        <DropdownItem onClick={() => setTheme('system')}>System</DropdownItem>
+        <DropdownItem key="system" onPress={() => setTheme('system')}>
+          System
+        </DropdownItem>
       </DropdownMenu>
     </Dropdown>
   );

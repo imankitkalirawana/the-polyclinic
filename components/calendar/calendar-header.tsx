@@ -32,12 +32,11 @@ export function CalendarHeader({
       <VisuallyHidden>
         <h2>{calendarProps['aria-label']}</h2>
       </VisuallyHidden>
-      {/* biome-ignore lint/a11y/useHeadingContent: <explanation> */}
       <h2
         aria-hidden
         className="align-center text-md text-gray-12 flex-1 font-bold"
       >
-        {monthName} <span className="text-gray-11">{year}</span>
+        {monthName} <span>{year}</span>
       </h2>
       <Button {...prevButtonProps}>
         <ChevronLeftIcon className="size-4" />

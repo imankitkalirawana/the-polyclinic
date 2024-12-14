@@ -1,5 +1,4 @@
 'use server';
-
 import Service from '@/models/Service';
 import User from '@/models/User';
 import Doctor, { DoctorType } from '@/models/Doctor';
@@ -9,6 +8,7 @@ import { connectDB } from '@/lib/db';
 import { transporter } from '@/lib/nodemailer';
 import { MailOptions } from 'nodemailer/lib/json-transport';
 import { generateOtp, sendSMS } from '@/lib/functions';
+import bcrypt from 'bcryptjs';
 
 export const verifyUID = async (uid: string, _id?: string) => {
   await connectDB();
@@ -82,6 +82,19 @@ export const verifyOTP = async (id: string, otp: string) => {
   return true;
 };
 
+export const changePassword = async (id: string, password: string) => {
+  await connectDB();
+  const user = await User.findByIdAndUpdate(
+    id,
+    { password: bcrypt.hashSync(password, 10) },
+    { new: true }
+  );
+  if (!user) {
+    throw new Error('User not found');
+  }
+  return true;
+};
+
 export const getAllUsers = async (id: string) => {
   await connectDB();
   const users = await User.find({
@@ -133,4 +146,32 @@ export const getDoctorWithUID = async (uid: number) => {
     ...doctor,
     _id: doctor?._id.toString()
   };
+};
+
+// appointment related functions
+
+export const changeAppointmentStatus = async (id: string, status: string) => {
+  await connectDB();
+  const appointment = await Appointment.findByIdAndUpdate(
+    id,
+    { status },
+    { new: true }
+  );
+  if (!appointment) {
+    throw new Error('Appointment not found');
+  }
+  return true;
+};
+
+export const rescheduleAppointment = async (id: string, date: string) => {
+  await connectDB();
+  const appointment = await Appointment.findByIdAndUpdate(
+    id,
+    { date, status: 'booked' },
+    { new: true }
+  );
+  if (!appointment) {
+    throw new Error('Appointment not found');
+  }
+  return true;
 };

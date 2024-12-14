@@ -39,7 +39,7 @@ export function CalendarCell({
         {...mergeProps(buttonProps, focusProps)}
         ref={ref}
         hidden={isOutsideMonth}
-        className="group size-14 rounded-md outline-none"
+        className="xs:size-14 group aspect-square size-10 rounded-md outline-none"
       >
         <div
           className={cn(
@@ -64,7 +64,7 @@ export function CalendarCell({
           {isDateToday && (
             <div
               className={cn(
-                'absolute bottom-4 left-1/2 size-1.5 -translate-x-1/2 translate-y-1/2 transform rounded-full bg-default-500',
+                'absolute bottom-2 left-1/2 size-1 -translate-x-1/2 translate-y-1/2 transform rounded-full bg-default-500 sm:bottom-4 sm:size-1.5',
                 isSelected && 'bg-primary'
               )}
             />

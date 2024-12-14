@@ -1,9 +1,17 @@
-import mongoose from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { Appointment as IAppointment } from '@/lib/interface';
+import mongooseSequence from 'mongoose-sequence';
 
-const AppointmentSchema = new mongoose.Schema<IAppointment>(
+// @ts-ignore
+const AutoIncrement = mongooseSequence(mongoose);
+
+const appointmentSchema = new mongoose.Schema(
   {
     uid: Number,
+    aid: {
+      type: Number,
+      unique: true
+    },
     name: String,
     phone: String,
     email: String,
@@ -30,6 +38,11 @@ const AppointmentSchema = new mongoose.Schema<IAppointment>(
         'overdue',
         'on-hold'
       ]
+    },
+    type: {
+      type: String,
+      enum: ['online', 'offline'],
+      default: 'offline'
     }
   },
   {
@@ -37,8 +50,11 @@ const AppointmentSchema = new mongoose.Schema<IAppointment>(
   }
 );
 
-const Appointment =
-  mongoose.models.appointments ||
-  mongoose.model('appointments', AppointmentSchema);
+// @ts-ignore
+appointmentSchema.plugin(AutoIncrement, { inc_field: 'aid', start_seq: 1000 });
+
+const Appointment: Model<IAppointment> =
+  mongoose.models.Appointment ||
+  mongoose.model<IAppointment>('Appointment', appointmentSchema);
 
 export default Appointment;

@@ -43,7 +43,7 @@ export default function Error({
                 variant="bordered"
                 startContent={<IconArrowNarrowLeft />}
                 // go one step back in the browser history
-                onClick={() => window.history.back()}
+                onPress={() => window.history.back()}
               >
                 Go Back
               </Button>

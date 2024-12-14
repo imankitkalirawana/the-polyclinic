@@ -41,7 +41,7 @@ export function RightPanel({
   return (
     <Tabs
       defaultValue="12"
-      className="flex w-[280px] flex-col gap-4 border-l pl-6"
+      className="ml-4 mt-4 flex w-full max-w-md flex-col gap-4 border-t pt-6 sm:border-t-0 lg:mt-0 lg:w-[280px] lg:border-l lg:pl-6 lg:pt-0"
     >
       <div className="flex items-center justify-between">
         <div className="align-center text-md text-gray-12 flex-1 font-bold">
@@ -56,16 +56,16 @@ export function RightPanel({
       {['12', '24'].map((time) => (
         <TabsContent key={time} value={time}>
           <ScrollShadow
-            className="h-full"
+            className="no-scrollbar h-full"
             style={{
               maxHeight: weeksInMonth > 5 ? '380px' : '320px'
             }}
           >
-            <div className="grid gap-2 pr-3">
+            <div className="flex gap-2 pr-3 lg:flex-col">
               {availableTimes.map((availableTime) => (
                 <Button
                   variant="flat"
-                  onClick={() =>
+                  onPress={() =>
                     handleChangeAvailableTime(
                       availableTime[time as '12' | '24']
                     )

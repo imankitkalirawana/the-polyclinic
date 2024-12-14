@@ -1,6 +1,4 @@
 'use client';
-import { Label } from '@/components/ui/label';
-import { useSearchParams } from 'next/navigation';
 
 import { UserPlus, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';

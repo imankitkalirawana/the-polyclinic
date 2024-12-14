@@ -138,10 +138,10 @@ export default function Appointments() {
 
   return (
     <div className="bg-gray-1 mx-auto w-full max-w-max rounded-md px-8 py-6">
-      <div className="flex gap-6">
+      <div className="flex flex-col gap-6 md:flex-row">
         <LeftPanel isLoading={isLoading} user={user as User} users={users} />
         {!showForm ? (
-          <>
+          <div className="flex flex-col lg:flex-row">
             <Calendar
               minValue={today(getLocalTimeZone())}
               defaultValue={today(getLocalTimeZone())}
@@ -152,7 +152,7 @@ export default function Appointments() {
             <RightPanel
               {...{ date, timeZone, weeksInMonth, handleChangeAvailableTime }}
             />
-          </>
+          </div>
         ) : (
           <FormPanel
             user={user as User}

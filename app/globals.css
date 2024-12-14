@@ -48,6 +48,12 @@
   }
 }
 
+@layer utilities {
+  .grid-cols-auto-fill {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}
+
 .tbl td,
 .tbl th {
   /* padding: 0.25rem; */
