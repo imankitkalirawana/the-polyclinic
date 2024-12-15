@@ -1,5 +1,6 @@
 'use client';
 import { saveAs } from 'file-saver';
+import { toast } from 'sonner';
 
 function AddToCalendar({ event }: { event: { title: string; date: string } }) {
   const handleAddToCalendar = () => {
@@ -36,7 +37,9 @@ END:VCALENDAR
 
   return (
     <button
-      onClick={handleAddToCalendar}
+      onClick={() => {
+        toast('Event added to calendar');
+      }}
       className="rounded bg-blue-500 p-2 text-white hover:bg-blue-700"
     >
       Add to Calendar

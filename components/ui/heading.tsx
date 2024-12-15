@@ -23,7 +23,9 @@ export default function Heading(props: HeadingProps) {
         )}
       >
         <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-semibold">{props.title || 'Title'}</h1>
+          <h1 className="text-xl font-semibold sm:text-3xl">
+            {props.title || 'Title'}
+          </h1>
           <p className="text-sm text-default-500">{props.subtitle}</p>
         </div>
         <div>{props.button}</div>

@@ -62,7 +62,7 @@ END:VCALENDAR
   });
 
   saveAs(blob, `${title}.ics`);
-  toast.success('Event added to calendar');
+  toast('Downloaded .ics file,');
 };
 
 export const addToGoogleCalendar = (event: EventType) => {

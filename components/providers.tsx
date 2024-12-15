@@ -27,7 +27,15 @@ const Sonner = () => {
         easing="ease"
         color="hsl(var(--nextui-primary))"
       />
-      <Toaster theme={theme} richColors closeButton />
+      <Toaster
+        toastOptions={{
+          className: 'bg-background/30 backdrop-blur-md'
+        }}
+        expand
+        theme={'light'}
+        richColors
+        closeButton
+      />
     </>
   );
 };

@@ -15,10 +15,15 @@ import {
   Alert,
   Avatar,
   Button,
+  ButtonGroup,
   ButtonProps,
   Card,
   Chip,
   ChipProps,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
   Input,
   Link,
   Modal,
@@ -48,6 +53,12 @@ import { RightPanel } from './new/calendar/right-panel';
 import NoResults from '../ui/no-results';
 import { AppointmentType } from '@/models/Appointment';
 import { UserType } from '@/models/User';
+import {
+  addToGoogleCalendar,
+  addToOutlookCalendar,
+  handleAddToCalendar
+} from '@/lib/client-functions';
+import { EventType } from '@/lib/interface';
 
 export default function Appointments({ session }: { session: any }) {
   const [status, setStatus] = useQueryState('status', {
@@ -113,7 +124,12 @@ export default function Appointments({ session }: { session: any }) {
         <Heading
           title="My Schedules"
           button={
-            <Button color="primary" startContent={<Icon icon="tabler:plus" />}>
+            <Button
+              color="primary"
+              as={Link}
+              href="/appointments/new"
+              startContent={<Icon icon="tabler:plus" />}
+            >
               Create Appointment
             </Button>
           }
@@ -244,18 +260,18 @@ export default function Appointments({ session }: { session: any }) {
                         return (
                           <AccordionItem
                             key={appointment.aid}
-                            aria-label="Accordion 1"
+                            aria-label="Appointments"
                             title={
                               <div className="flex w-full gap-4">
                                 <div className="flex flex-col gap-2">
-                                  <h3 className="whitespace-nowrap">
+                                  {/* <h3 className="whitespace-nowrap">
                                     <span className="hidden sm:block">
                                       {format(appointment.date, 'iii')}, &nbsp;
                                     </span>
                                     <span className="text-default-500">
                                       {format(appointment.date, 'PP')}
                                     </span>
-                                  </h3>
+                                  </h3> */}
                                   <div className="flex min-w-24 max-w-24 gap-4 sm:min-w-40 sm:max-w-40">
                                     <div className="flex flex-col gap-1 sm:gap-4">
                                       <h4 className="text-xs text-default-500">
@@ -290,8 +306,10 @@ export default function Appointments({ session }: { session: any }) {
                                   </div>
                                   <div className="flex flex-col gap-2">
                                     <h3 className="line-clamp-1 font-semibold">
-                                      Lorem ipsum dolor, sit amet consectetur
-                                      adipisicing elit.
+                                      On{' '}
+                                      <span>
+                                        {format(appointment.date, 'PPPP')}
+                                      </span>
                                     </h3>
                                     <div className="flex items-center gap-2">
                                       <Tooltip
@@ -331,8 +349,8 @@ export default function Appointments({ session }: { session: any }) {
                           >
                             <AccordionValue
                               appointment={appointment}
-                              // user={}
                               setAppointments={setAppointments}
+                              session={session}
                             />
                           </AccordionItem>
                         );
@@ -351,10 +369,12 @@ export default function Appointments({ session }: { session: any }) {
 
 function AccordionValue({
   appointment,
-  setAppointments
+  setAppointments,
+  session
 }: {
   appointment: AppointmentType;
   setAppointments: any;
+  session: any;
 }) {
   const modal = useDisclosure();
 
@@ -401,7 +421,8 @@ function AccordionValue({
         modal={modal}
         setAppointments={setAppointments}
       />
-    )
+    ),
+    addToCalendar: <AddtoCalendar appointment={appointment} />
   };
 
   function handleButtonClick(action: string) {
@@ -409,6 +430,7 @@ function AccordionValue({
       toast.success('Downloading reports');
       return;
     }
+
     setSelectedModal(action);
     modal.onOpen();
   }
@@ -422,8 +444,20 @@ function AccordionValue({
   return (
     <>
       <div className="flex w-full gap-4">
-        <div className="flex min-w-24 max-w-24 gap-8 sm:min-w-40 sm:max-w-40">
+        <div className="flex min-w-24 max-w-24 flex-col justify-between gap-8 sm:min-w-40 sm:max-w-40">
           <CellValue label="Indian Standard Time" value="UTC +05:30" />
+          {['booked', 'confirmed', 'in-progress'].includes(
+            appointment.status
+          ) && (
+            <Button
+              color="secondary"
+              variant="bordered"
+              onPress={() => handleButtonClick('addToCalendar')}
+              startContent={<Icon icon="solar:calendar-bold" />}
+            >
+              Add to Calendar
+            </Button>
+          )}
         </div>
         <div className="flex w-full flex-col border-l-1 border-l-divider pl-4">
           <div className="flex flex-col sm:flex-row sm:gap-8">
@@ -500,56 +534,61 @@ function AccordionValue({
               )}
               {['in-progress', 'confirmed', 'on-hold'].includes(
                 appointment.status
-              ) && (
-                <Button
-                  className="w-full sm:w-fit"
-                  color={buttonColorMap['complete']}
-                  variant="flat"
-                  as={Link}
-                  href={`/appointments/${appointment.uid}/complete`}
-                  endContent={<Icon icon="tabler:arrow-right" />}
-                >
-                  Proceed
-                </Button>
-              )}
+              ) &&
+                ['doctor', 'admin'].includes(session.user.role) && (
+                  <Button
+                    className="w-full sm:w-fit"
+                    color={buttonColorMap['complete']}
+                    variant="flat"
+                    as={Link}
+                    href={`/appointments/${appointment.uid}/complete`}
+                    endContent={<Icon icon="tabler:arrow-right" />}
+                  >
+                    Proceed
+                  </Button>
+                )}
 
-              {['booked'].includes(appointment.status) && (
-                <Button
-                  className="w-full sm:w-fit"
-                  color={buttonColorMap['accept']}
-                  variant="flat"
-                  isLoading={isConfirming}
-                  startContent={<Icon icon="tabler:check" />}
-                  onPress={async () => {
-                    setIsConfirming(true);
-                    await changeAppointmentStatus(appointment._id, 'confirmed')
-                      .then(() => {
-                        toast.success('Appointment confirmed');
-                        setAppointments((prev: AppointmentType[]) => {
-                          const updatedAppointments = prev.map((item) => {
-                            if (item._id === appointment._id) {
-                              return {
-                                ...item,
-                                status: 'confirmed'
-                              };
-                            }
-                            return item;
+              {['booked'].includes(appointment.status) &&
+                ['doctor', 'admin'].includes(session.user.role) && (
+                  <Button
+                    className="w-full sm:w-fit"
+                    color={buttonColorMap['accept']}
+                    variant="flat"
+                    isLoading={isConfirming}
+                    startContent={<Icon icon="tabler:check" />}
+                    onPress={async () => {
+                      setIsConfirming(true);
+                      await changeAppointmentStatus(
+                        appointment._id,
+                        'confirmed'
+                      )
+                        .then(() => {
+                          toast.success('Appointment confirmed');
+                          setAppointments((prev: AppointmentType[]) => {
+                            const updatedAppointments = prev.map((item) => {
+                              if (item._id === appointment._id) {
+                                return {
+                                  ...item,
+                                  status: 'confirmed'
+                                };
+                              }
+                              return item;
+                            });
+                            return updatedAppointments;
                           });
-                          return updatedAppointments;
+                        })
+                        .catch((error) => {
+                          console.error(error);
+                          toast.error('An error occurred');
+                        })
+                        .finally(() => {
+                          setIsConfirming(false);
                         });
-                      })
-                      .catch((error) => {
-                        console.error(error);
-                        toast.error('An error occurred');
-                      })
-                      .finally(() => {
-                        setIsConfirming(false);
-                      });
-                  }}
-                >
-                  Accept
-                </Button>
-              )}
+                    }}
+                  >
+                    Accept
+                  </Button>
+                )}
             </div>
           </div>
         </div>
@@ -815,7 +854,9 @@ function RescheduleAppointment({
                 // remove query params
                 setSlotParam(null);
                 setDateParam(null);
-                toast.success('Appointment rescheduled');
+                toast(
+                  `Appointment Rescheduled to ${format(new Date(slotParam), 'PPPPp')}`
+                );
                 modal.onClose();
               })
               .catch((error) => {
@@ -828,6 +869,109 @@ function RescheduleAppointment({
           Reschedule
         </Button>
       </ModalFooter>
+    </>
+  );
+}
+
+function AddtoCalendar({ appointment }: { appointment: AppointmentType }) {
+  type ActionType = 'google' | 'outlook' | 'download';
+
+  const [selectedOption, setSelectedOption] = useState(new Set(['google']));
+  const selectedOptionValue = Array.from(selectedOption)[0] as ActionType;
+
+  const labelsMap = {
+    google: 'Add to Google Calendar',
+    outlook: 'Add to Outlook Calendar',
+    download: 'Download ICS File'
+  };
+
+  const buttonIconMap = {
+    google: 'logos:google-calendar',
+    outlook: 'vscode-icons:file-type-outlook',
+    download: 'solar:download-square-bold'
+  };
+
+  const appointmentDate = new Date(appointment.date);
+  appointmentDate.setMinutes(appointmentDate.getMinutes() + 15);
+
+  const event: EventType = {
+    title: 'Appointment with ' + appointment.name,
+    description: 'Appointment with ' + appointment.name,
+    location: appointment.type === 'online' ? 'Online' : 'Clinic',
+    start: new Date(appointment.date),
+    end: new Date(appointmentDate),
+    duration: [1, 'hour'],
+    busy: true
+  };
+
+  const handleSubmit = (action: ActionType) => {
+    switch (action) {
+      case 'google':
+        addToGoogleCalendar(event);
+        break;
+      case 'outlook':
+        addToOutlookCalendar(event);
+        break;
+      case 'download':
+        handleAddToCalendar(event);
+        break;
+      default:
+        break;
+    }
+  };
+
+  return (
+    <>
+      <ModalHeader className="flex-col items-start gap-2">
+        <h2 className="max-w-xs text-center text-base">Add to Calendar</h2>
+        <p className="text-sm font-normal text-default-500">
+          Add this appointment to your calendar by downloading the{' '}
+          <span className="font-medium text-foreground">event file</span> or
+          adding it to your{' '}
+          <span className="font-medium text-foreground">Google</span> or{' '}
+          <span className="font-medium text-foreground">Outlook</span> calendar
+        </p>
+      </ModalHeader>
+      <ModalBody>
+        <div className="flex flex-col gap-4">
+          <ButtonGroup fullWidth variant="flat">
+            <Button
+              onPress={() => handleSubmit(selectedOptionValue)}
+              startContent={<Icon icon={buttonIconMap[selectedOptionValue]} />}
+              color="primary"
+              variant="flat"
+            >
+              {labelsMap[selectedOptionValue]}
+            </Button>
+            <Dropdown placement="bottom-end">
+              <DropdownTrigger>
+                <Button variant="solid" color="primary" isIconOnly>
+                  <Icon icon="mynaui:chevron-down-solid" />
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                disallowEmptySelection
+                autoFocus={false}
+                aria-label="Appointment Options"
+                className="max-w-[300px]"
+                selectedKeys={selectedOption}
+                selectionMode="single"
+                onSelectionChange={(keys) =>
+                  setSelectedOption(keys as Set<string>)
+                }
+              >
+                <DropdownItem key="google">{labelsMap['google']}</DropdownItem>
+                <DropdownItem key="outlook">
+                  {labelsMap['outlook']}
+                </DropdownItem>
+                <DropdownItem key="download">
+                  {labelsMap['download']}
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </ButtonGroup>
+        </div>
+      </ModalBody>
     </>
   );
 }
