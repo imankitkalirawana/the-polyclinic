@@ -1,9 +1,5 @@
 'use client';
-import {
-  ServiceTypes,
-  Service as ServiceType,
-  ServiceStatuses
-} from '@/lib/interface';
+import { ServiceTypes, ServiceStatuses } from '@/lib/interface';
 import {
   Button,
   cn,
@@ -26,6 +22,7 @@ import { serviceValidationSchema } from '@/lib/validation';
 import { useRouter } from 'next/navigation';
 import { verifyUID } from '@/functions/server-actions';
 import QuillInput from '@/components/ui/quill-input';
+import { ServiceType } from '@/models/Service';
 
 interface EditServiceProps {
   service: ServiceType;

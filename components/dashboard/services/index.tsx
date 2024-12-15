@@ -4,7 +4,6 @@ import {
   humanReadableDate,
   humanReadableTime
 } from '@/lib/utility';
-import { Service } from '@/lib/interface';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import {
   TableHeader,
@@ -39,6 +38,7 @@ import { toast } from 'sonner';
 import axios from 'axios';
 import { CopyText } from '@/components/ui/copy';
 import QuillInput from '@/components/ui/quill-input';
+import { ServiceType } from '@/models/Service';
 // import useSWR from 'swr';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
@@ -47,7 +47,7 @@ const statusColorMap: Record<string, ChipProps['color']> = {
 };
 
 interface HotelProps {
-  services: Service[];
+  services: ServiceType[];
 }
 
 const INITIAL_VISIBLE_COLUMNS = [
@@ -62,7 +62,7 @@ const INITIAL_VISIBLE_COLUMNS = [
 export default function Services({ services }: HotelProps) {
   const deleteModal = useDisclosure();
   const router = useRouter();
-  const [selected, setSelected] = React.useState<Service | null>(null);
+  const [selected, setSelected] = React.useState<ServiceType | null>(null);
   const [filterValue, setFilterValue] = React.useState('');
   const [isDeleting, setIsDeleting] = React.useState(false);
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
@@ -78,14 +78,14 @@ export default function Services({ services }: HotelProps) {
     direction: 'ascending'
   });
 
-  const handleDelete = async (service: Service) => {
+  const handleDelete = async (service: ServiceType) => {
     setIsDeleting(true);
     try {
       await fetch(`/api/services/${service._id}`, {
         method: 'DELETE'
       });
 
-      toast.success('Service deleted successfully');
+      toast.success('ServiceType deleted successfully');
       deleteModal.onClose();
       router.refresh();
     } catch (error) {
@@ -139,9 +139,9 @@ export default function Services({ services }: HotelProps) {
   }, [page, filteredItems, rowsPerPage]);
 
   const sortedItems = React.useMemo(() => {
-    return [...items].sort((a: Service, b: Service) => {
-      const first = a[sortDescriptor.column as keyof Service] as string;
-      const second = b[sortDescriptor.column as keyof Service] as string;
+    return [...items].sort((a: ServiceType, b: ServiceType) => {
+      const first = a[sortDescriptor.column as keyof ServiceType] as string;
+      const second = b[sortDescriptor.column as keyof ServiceType] as string;
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
       return sortDescriptor.direction === 'descending' ? -cmp : cmp;
@@ -149,8 +149,8 @@ export default function Services({ services }: HotelProps) {
   }, [sortDescriptor, items]);
 
   const renderCell = React.useCallback(
-    (service: Service, columnKey: React.Key) => {
-      const cellValue = service[columnKey as keyof Service];
+    (service: ServiceType, columnKey: React.Key) => {
+      const cellValue = service[columnKey as keyof ServiceType];
       switch (columnKey) {
         case 'uid':
           return (
@@ -167,6 +167,7 @@ export default function Services({ services }: HotelProps) {
                     {service.name}
                   </p>
                   <p className="whitespace-nowrap text-xs capitalize text-default-400">
+                    {/* @ts-ignore */}
                     {service.type}
                   </p>
                 </div>
@@ -520,7 +521,7 @@ export default function Services({ services }: HotelProps) {
                   variant="flat"
                   fullWidth
                   isLoading={isDeleting}
-                  onPress={() => handleDelete(selected as Service)}
+                  onPress={() => handleDelete(selected as ServiceType)}
                 >
                   Delete
                 </Button>

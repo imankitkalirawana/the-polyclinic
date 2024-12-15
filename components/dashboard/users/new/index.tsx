@@ -20,7 +20,7 @@ import {
 import { Genders } from '@/lib/options';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useFormik } from 'formik';
-import { CityProps, CountryProps, StateProps, User } from '@/lib/interface';
+import { CityProps, CountryProps, StateProps } from '@/lib/interface';
 import { parseDate, getLocalTimeZone, today } from '@internationalized/date';
 import { I18nProvider } from '@react-aria/i18n';
 import { useEffect, useRef } from 'react';
@@ -32,6 +32,7 @@ import { scrollToError } from '@/lib/formik';
 import { calculateAge, calculateDOB } from '@/lib/client-functions';
 import { useRouter } from 'next/navigation';
 import { verifyEmail } from '@/functions/server-actions';
+import { UserType } from '@/models/User';
 
 export default function NewUser({ countries }: { countries: CountryProps[] }) {
   const router = useRouter();
@@ -58,7 +59,7 @@ export default function NewUser({ countries }: { countries: CountryProps[] }) {
         city: '',
         address: '',
         zipcode: ''
-      } as User,
+      } as UserType,
       age: 0,
       countries:
         countries?.sort((a, b) => a.name.localeCompare(b.name)) ||
@@ -79,7 +80,7 @@ export default function NewUser({ countries }: { countries: CountryProps[] }) {
       await axios
         .post('/api/users', values.user)
         .then(() => {
-          toast.success('User added successfully');
+          toast.success('UserType added successfully');
           router.push('/dashboard/users');
         })
         .catch((error: any) => {
@@ -158,7 +159,7 @@ export default function NewUser({ countries }: { countries: CountryProps[] }) {
     <>
       <Card className="bg-transparent p-2 shadow-none">
         <CardHeader className="flex flex-col items-start px-4 pb-0 pt-4">
-          <p className="text-large">Add New User</p>
+          <p className="text-large">Add New UserType</p>
           <div className="sr-only flex gap-4 py-4">
             <Badge
               classNames={{

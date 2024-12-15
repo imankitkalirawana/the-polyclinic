@@ -1,6 +1,6 @@
 'use client';
 import { calculateAge } from '@/lib/client-functions';
-import { User } from '@/lib/interface';
+import { UserType } from '@/models/User';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import {
   Avatar,
@@ -26,7 +26,7 @@ export const imageMap: Record<string, string> = {
   other: 'https://i.pravatar.cc/150?u=a04258a2462d826712d'
 };
 
-export default function Profile({ user }: { user: User }) {
+export default function Profile({ user }: { user: UserType }) {
   return (
     <Card className="group relative flex h-52 w-52 flex-col items-center justify-center rounded-3xl bg-gradient-to-br from-primary-100 to-primary-200 p-4 shadow-sm transition-all duration-300">
       <Tooltip content="Edit User" delay={1000}>

@@ -1,6 +1,6 @@
 import EditService from '@/components/dashboard/services/service-item/edit';
 import { API_BASE_URL, isCaching } from '@/lib/config';
-import { Service as ServiceType } from '@/lib/interface';
+import { ServiceType } from '@/models/Service';
 import { cookies } from 'next/headers';
 
 async function getData(uid: string) {

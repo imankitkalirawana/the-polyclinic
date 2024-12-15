@@ -22,7 +22,6 @@ import { Icon } from '@iconify/react';
 
 import SwitchCell from './switch-cell';
 import CellWrapper from './cell-wrapper';
-import { User } from '@/lib/interface';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import {
@@ -37,9 +36,10 @@ import { toast } from 'sonner';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { UserRoles } from '@/lib/options';
+import { UserType } from '@/models/User';
 
 interface SecuritySettingsProps {
-  user: User;
+  user: UserType;
 }
 
 export default function SecuritySettings({ user }: SecuritySettingsProps) {
@@ -306,7 +306,7 @@ export default function SecuritySettings({ user }: SecuritySettingsProps) {
           </CellWrapper>
           <CellWrapper>
             <div>
-              <p>User Role</p>
+              <p>UserType Role</p>
               <p className="text-small text-default-500 sm:whitespace-nowrap">
                 The role assigned to this account.
               </p>

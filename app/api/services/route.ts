@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
-import Service from '@/models/Service';
+import Service, { ServiceType } from '@/models/Service';
 import { connectDB } from '@/lib/db';
 import { auth } from '@/auth';
-import { Service as ServiceType } from '@/lib/interface';
 
 export const GET = auth(async function GET(request: any) {
   try {

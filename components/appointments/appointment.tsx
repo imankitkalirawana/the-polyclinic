@@ -1,5 +1,5 @@
 'use client';
-import { Appointment as AppointmentType } from '@/lib/interface';
+import { AppointmentType } from '@/models/Appointment';
 import { AccordionItem } from '@nextui-org/react';
 
 interface AppointmentProp {

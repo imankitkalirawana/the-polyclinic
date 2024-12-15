@@ -1,9 +1,8 @@
 import { NextResponse } from 'next/server';
-import User from '@/models/User';
+import User, { UserRole } from '@/models/User';
 import Doctor from '@/models/Doctor';
 import { connectDB } from '@/lib/db';
 import { auth } from '@/auth';
-import { UserRole } from '@/lib/interface';
 import bcrypt from 'bcryptjs';
 
 export const GET = auth(async function GET(request: any, context: any) {

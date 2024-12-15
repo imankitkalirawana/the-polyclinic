@@ -1,8 +1,7 @@
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
-import Service from '@/models/Service';
+import Service, { ServiceType } from '@/models/Service';
 import { NextResponse } from 'next/server';
-import { Service as ServiceType } from '@/lib/interface';
 
 export const GET = async function GET(_request: any, context: any) {
   try {

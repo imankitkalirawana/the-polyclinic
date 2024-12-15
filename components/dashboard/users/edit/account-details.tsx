@@ -22,13 +22,7 @@ import { useSession } from 'next-auth/react';
 import { parseDate, getLocalTimeZone, today } from '@internationalized/date';
 import { I18nProvider } from '@react-aria/i18n';
 
-import {
-  CityProps,
-  CountryProps,
-  StateProps,
-  User,
-  UserRole
-} from '@/lib/interface';
+import { CityProps, CountryProps, StateProps } from '@/lib/interface';
 import { useFormik } from 'formik';
 import Link from 'next/link';
 import axios from 'axios';
@@ -38,9 +32,10 @@ import { Genders } from '@/lib/options';
 import { userValidationSchema } from '@/lib/validation';
 import { calculateAge, calculateDOB } from '@/lib/client-functions';
 import { scrollToError } from '@/lib/formik';
+import { UserType } from '@/models/User';
 
 interface AccountDetailsProps {
-  user: User;
+  user: UserType;
   countries: CountryProps[];
 }
 
@@ -79,7 +74,7 @@ export default function AccountDetails({
           return;
         }
         await axios.put(`/api/users/uid/${user.uid}`, values.user);
-        toast.success('User updated successfully');
+        toast.success('UserType updated successfully');
       } catch (error: any) {
         console.log(error);
         toast.error(error.response.data.message);

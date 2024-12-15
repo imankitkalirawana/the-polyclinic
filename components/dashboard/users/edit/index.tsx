@@ -8,11 +8,12 @@ import AccountDetails from './account-details';
 import NotificationsSettings from './notifications-settings';
 import SecuritySettings from './security-settings';
 import { useSearchParams } from 'next/navigation';
-import { CountryProps, User } from '@/lib/interface';
+import { CountryProps } from '@/lib/interface';
 import Link from 'next/link';
+import { UserType } from '@/models/User';
 
 interface EditUserProps {
-  user: User;
+  user: UserType;
   countries: CountryProps[];
 }
 

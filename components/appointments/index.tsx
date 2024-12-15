@@ -1,5 +1,4 @@
 'use client';
-import { Appointment as AppointmentType, User } from '@/lib/interface';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import {
@@ -47,6 +46,8 @@ import { toast } from 'sonner';
 import { Calendar } from '../calendar';
 import { RightPanel } from './new/calendar/right-panel';
 import NoResults from '../ui/no-results';
+import { AppointmentType } from '@/models/Appointment';
+import { UserType } from '@/models/User';
 
 export default function Appointments({ session }: { session: any }) {
   const [status, setStatus] = useQueryState('status', {
@@ -358,7 +359,7 @@ function AccordionValue({
   const modal = useDisclosure();
 
   const [doctor, setDoctor] = useState<DoctorType>();
-  const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<UserType>();
   const [selectedModal, setSelectedModal] = useState<string>('');
   const [isConfirming, setIsConfirming] = useState(false);
 
@@ -371,7 +372,7 @@ function AccordionValue({
       }
       if (appointment?.uid) {
         await getUserWithUID(appointment?.uid).then((user) => {
-          setUser(user as User);
+          setUser(user as UserType);
         });
       }
     };

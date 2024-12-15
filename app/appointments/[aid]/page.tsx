@@ -12,7 +12,7 @@ export default async function Page({ params }: Props) {
 
   return (
     <>
-      <ViewAppointment session={session} aid={params.aid} />
+      <ViewAppointment />
     </>
   );
 }

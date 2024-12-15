@@ -1,6 +1,6 @@
 import UserCard from '@/components/dashboard/users/user';
 import { API_BASE_URL, isCaching } from '@/lib/config';
-import { User } from '@/lib/interface';
+import { UserType } from '@/models/User';
 import axios from 'axios';
 import { cookies } from 'next/headers';
 
@@ -22,7 +22,7 @@ interface Props {
 }
 
 export default async function Page({ params }: Props) {
-  const user: User = (await getData(params.uid)) || ({} as User);
+  const user: UserType = (await getData(params.uid)) || ({} as UserType);
   return (
     <>
       <UserCard user={user} />

@@ -1,9 +1,30 @@
-import {
-  ServiceStatus,
-  ServiceType,
-  Service as ServiceInterface
-} from '@/lib/interface';
+import { Base } from '@/lib/interface';
 import mongoose, { Model } from 'mongoose';
+
+export enum ServiceStatus {
+  active = 'active',
+  inactive = 'inactive'
+}
+
+export enum ServiceTypes {
+  medical = 'medical',
+  surgical = 'surgical',
+  diagnostic = 'diagnostic',
+  consultation = 'consultation'
+}
+
+export interface ServiceType extends Base {
+  uniqueId: string;
+  name: string;
+  description: string;
+  summary: string;
+  price: number;
+  duration: number;
+  status: ServiceStatus;
+  type: ServiceTypes;
+  data: Record<string, string>;
+  image?: string;
+}
 
 const serviceSchema = new mongoose.Schema(
   {
@@ -37,7 +58,7 @@ const serviceSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ServiceType,
+      enum: ServiceTypes,
       required: [true, 'Type is required']
     },
     data: {
@@ -55,8 +76,8 @@ const serviceSchema = new mongoose.Schema(
   }
 );
 
-const Service: Model<ServiceInterface> =
+const Service: Model<ServiceType> =
   mongoose.models.Service ||
-  mongoose.model<ServiceInterface>('Service', serviceSchema);
+  mongoose.model<ServiceType>('Service', serviceSchema);
 
 export default Service;

@@ -20,15 +20,16 @@ import {
   Tooltip
 } from '@nextui-org/react';
 import { useFormik } from 'formik';
-import { Guest, User } from '@/lib/interface';
 import { toast } from 'sonner';
 import axios from 'axios';
 import * as Yup from 'yup';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { DoctorType } from '@/models/Doctor';
+import { UserType } from '@/models/User';
+import { GuestType } from '@/models/Appointment';
 
 interface FormPanelProps {
-  user: User;
+  user: UserType;
   date: string;
   isLoading?: boolean;
   doctors: DoctorType[];
@@ -53,7 +54,7 @@ export function FormPanel({ user, date, isLoading }: FormPanelProps) {
       uid: user?.uid,
       phone: user?.phone,
       email: user?.email,
-      guests: [] as Guest[],
+      guests: [] as GuestType[],
       notes: '',
       date: date,
       doctor: ''

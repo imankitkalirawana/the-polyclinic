@@ -4,7 +4,6 @@ import {
   humanReadableDate,
   humanReadableTime
 } from '@/lib/utility';
-import { User, UserRole } from '@/lib/interface';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import {
   TableHeader,
@@ -39,6 +38,7 @@ import { toast } from 'sonner';
 import axios from 'axios';
 import { CopyText } from '@/components/ui/copy';
 import { cn } from '@/lib/utils';
+import { UserType } from '@/models/User';
 // import useSWR from 'swr';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
@@ -59,7 +59,7 @@ const roleColorMap: Record<string, ChipProps['color']> = {
 };
 
 interface Props {
-  users: User[];
+  users: UserType[];
 }
 
 const INITIAL_VISIBLE_COLUMNS = [
@@ -75,7 +75,7 @@ const INITIAL_VISIBLE_COLUMNS = [
 export default function Users({ users }: Props) {
   const deleteModal = useDisclosure();
   const router = useRouter();
-  const [selected, setSelected] = React.useState<User | null>(null);
+  const [selected, setSelected] = React.useState<UserType | null>(null);
   const [filterValue, setFilterValue] = React.useState('');
   const [isDeleting, setIsDeleting] = React.useState(false);
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
@@ -91,14 +91,14 @@ export default function Users({ users }: Props) {
     direction: 'ascending'
   });
 
-  const handleDelete = async (user: User) => {
+  const handleDelete = async (user: UserType) => {
     setIsDeleting(true);
     try {
       await fetch(`/api/users/${user._id}`, {
         method: 'DELETE'
       });
 
-      toast.success('User deleted successfully');
+      toast.success('UserType deleted successfully');
       deleteModal.onClose();
       router.refresh();
     } catch (error) {
@@ -157,126 +157,131 @@ export default function Users({ users }: Props) {
   }, [page, filteredItems, rowsPerPage]);
 
   const sortedItems = React.useMemo(() => {
-    return [...items].sort((a: User, b: User) => {
-      const first = a[sortDescriptor.column as keyof User] as string;
-      const second = b[sortDescriptor.column as keyof User] as string;
+    return [...items].sort((a: UserType, b: UserType) => {
+      const first = a[sortDescriptor.column as keyof UserType] as string;
+      const second = b[sortDescriptor.column as keyof UserType] as string;
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
       return sortDescriptor.direction === 'descending' ? -cmp : cmp;
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = React.useCallback((user: User, columnKey: React.Key) => {
-    const cellValue = user[columnKey as keyof User];
-    switch (columnKey) {
-      case 'uid':
-        return (
-          <>
-            <CopyText>{user.uid + ''}</CopyText>
-          </>
-        );
-      case 'name':
-        return (
-          <>
-            <div className="flex items-center gap-2">
-              <div className="flex flex-col">
-                <p className="text-bold whitespace-nowrap text-sm capitalize">
-                  {user.name}
-                </p>
-                <Chip
-                  variant="flat"
-                  size="sm"
-                  color={roleColorMap[user.role]}
-                  className="w-fit whitespace-nowrap rounded-full py-0.5 text-xs font-light"
-                >
-                  {user.role}
-                </Chip>
+  const renderCell = React.useCallback(
+    (user: UserType, columnKey: React.Key) => {
+      const cellValue = user[columnKey as keyof UserType];
+      switch (columnKey) {
+        case 'uid':
+          return (
+            <>
+              <CopyText>{user.uid + ''}</CopyText>
+            </>
+          );
+        case 'name':
+          return (
+            <>
+              <div className="flex items-center gap-2">
+                <div className="flex flex-col">
+                  <p className="text-bold whitespace-nowrap text-sm capitalize">
+                    {user.name}
+                  </p>
+                  <Chip
+                    variant="flat"
+                    size="sm"
+                    color={roleColorMap[user.role]}
+                    className="w-fit whitespace-nowrap rounded-full py-0.5 text-xs font-light"
+                  >
+                    {user.role}
+                  </Chip>
+                </div>
               </div>
+            </>
+          );
+        case 'email':
+          return (
+            <div className="flex flex-col">
+              <p className="text-bold max-w-sm overflow-hidden text-ellipsis whitespace-nowrap text-sm text-default-400">
+                {user.email}
+              </p>
             </div>
-          </>
-        );
-      case 'email':
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold max-w-sm overflow-hidden text-ellipsis whitespace-nowrap text-sm text-default-400">
-              {user.email}
-            </p>
-          </div>
-        );
-      case 'phone':
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold max-w-sm overflow-hidden text-ellipsis whitespace-nowrap text-sm capitalize text-default-400">
-              {user.phone}
-            </p>
-          </div>
-        );
-      case 'status':
-        return (
-          <Chip
-            className="capitalize"
-            color={statusColorMap[user.status]}
-            size="sm"
-            variant="flat"
-          >
-            {user.status}
-          </Chip>
-        );
-      case 'updatedAt':
-        return (
-          <>
-            <p className="text-bold whitespace-nowrap text-sm capitalize">
-              {humanReadableDate(user.updatedAt)}
-            </p>
-            <p className="text-bold whitespace-nowrap text-sm capitalize text-default-400">
-              {humanReadableTime(user.updatedAt)}
-            </p>
-          </>
-        );
-      case 'actions':
-        return (
-          <Dropdown>
-            <DropdownTrigger>
-              <Button variant="light" isIconOnly>
-                <Icon icon="tabler:dots-vertical" fontSize={18} />
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu>
-              <DropdownItem
-                key={'view'}
-                startContent={<Icon icon="ic:round-view-in-ar" fontSize={20} />}
-                as={Link}
-                href={`/dashboard/users/${user.uid}`}
-              >
-                View
-              </DropdownItem>
-              <DropdownItem
-                key={'edit'}
-                startContent={<Icon icon="tabler:edit" fontSize={20} />}
-                as={Link}
-                href={`/dashboard/users/${user.uid}/edit`}
-              >
-                Edit
-              </DropdownItem>
-              <DropdownItem
-                key={'delete'}
-                startContent={<Icon icon="tabler:trash" fontSize={20} />}
-                className="text-danger"
-                color="danger"
-                onPress={() => {
-                  setSelected(user);
-                  deleteModal.onOpen();
-                }}
-              >
-                Delete
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-        );
-      default:
-        return cellValue;
-    }
-  }, []);
+          );
+        case 'phone':
+          return (
+            <div className="flex flex-col">
+              <p className="text-bold max-w-sm overflow-hidden text-ellipsis whitespace-nowrap text-sm capitalize text-default-400">
+                {user.phone}
+              </p>
+            </div>
+          );
+        case 'status':
+          return (
+            <Chip
+              className="capitalize"
+              color={statusColorMap[user.status]}
+              size="sm"
+              variant="flat"
+            >
+              {user.status}
+            </Chip>
+          );
+        case 'updatedAt':
+          return (
+            <>
+              <p className="text-bold whitespace-nowrap text-sm capitalize">
+                {humanReadableDate(user.updatedAt)}
+              </p>
+              <p className="text-bold whitespace-nowrap text-sm capitalize text-default-400">
+                {humanReadableTime(user.updatedAt)}
+              </p>
+            </>
+          );
+        case 'actions':
+          return (
+            <Dropdown>
+              <DropdownTrigger>
+                <Button variant="light" isIconOnly>
+                  <Icon icon="tabler:dots-vertical" fontSize={18} />
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu>
+                <DropdownItem
+                  key={'view'}
+                  startContent={
+                    <Icon icon="ic:round-view-in-ar" fontSize={20} />
+                  }
+                  as={Link}
+                  href={`/dashboard/users/${user.uid}`}
+                >
+                  View
+                </DropdownItem>
+                <DropdownItem
+                  key={'edit'}
+                  startContent={<Icon icon="tabler:edit" fontSize={20} />}
+                  as={Link}
+                  href={`/dashboard/users/${user.uid}/edit`}
+                >
+                  Edit
+                </DropdownItem>
+                <DropdownItem
+                  key={'delete'}
+                  startContent={<Icon icon="tabler:trash" fontSize={20} />}
+                  className="text-danger"
+                  color="danger"
+                  onPress={() => {
+                    setSelected(user);
+                    deleteModal.onOpen();
+                  }}
+                >
+                  Delete
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          );
+        default:
+          return cellValue;
+      }
+    },
+    []
+  );
 
   const onNextPage = React.useCallback(() => {
     if (page < pages) {
@@ -544,7 +549,7 @@ export default function Users({ users }: Props) {
                   variant="flat"
                   fullWidth
                   isLoading={isDeleting}
-                  onPress={() => handleDelete(selected as User)}
+                  onPress={() => handleDelete(selected as UserType)}
                 >
                   Delete
                 </Button>

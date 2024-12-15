@@ -1,6 +1,6 @@
 import Services from '@/components/dashboard/services';
 import { API_BASE_URL } from '@/lib/config';
-import { Service } from '@/lib/interface';
+import { ServiceType } from '@/models/Service';
 import axios from 'axios';
 import { cookies } from 'next/headers';
 
@@ -16,7 +16,7 @@ async function getData() {
 }
 
 export default async function Page() {
-  const services: Service[] = (await getData()) || ([] as Service[]);
+  const services: ServiceType[] = (await getData()) || ([] as ServiceType[]);
   return (
     <>
       <Services services={services} />

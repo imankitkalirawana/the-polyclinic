@@ -13,7 +13,6 @@ import {
 import { Icon } from '@iconify/react';
 
 import { CircleChartCard } from './graph';
-import { ServiceStatuses, Service as ServiceType } from '@/lib/interface';
 import {
   convertMinutesToHoursAndMinutes,
   formatPrice,
@@ -21,6 +20,7 @@ import {
   humanReadableTime
 } from '@/lib/utility';
 import DataTable from './data-table';
+import { ServiceType } from '@/models/Service';
 
 type ProductViewItem = {
   service: ServiceType;

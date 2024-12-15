@@ -1,7 +1,11 @@
+import { Base } from '@/lib/interface';
 import mongoose from 'mongoose';
-import { Newsletter as INewsletter } from '@/lib/interface';
 
-const NewsletterSchema = new mongoose.Schema<INewsletter>(
+export interface NewsletterType extends Base {
+  email: string;
+}
+
+const NewsletterSchema = new mongoose.Schema<NewsletterType>(
   {
     email: {
       type: String,

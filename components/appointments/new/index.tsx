@@ -17,10 +17,10 @@ import { LeftPanel } from './calendar/left-panel';
 import { RightPanel } from './calendar/right-panel';
 import { FormPanel } from './calendar/form-panel';
 import { getAllPatients, getUserWithUID } from '@/functions/server-actions';
-import { User } from '@/lib/interface';
 import { toast } from 'sonner';
 import { DoctorType } from '@/models/Doctor';
 import axios from 'axios';
+import { UserType } from '@/models/User';
 
 export default function Appointments() {
   const router = useRouter();
@@ -36,8 +36,8 @@ export default function Appointments() {
   const [focusedDate, setFocusedDate] = React.useState<CalendarDate | null>(
     date
   );
-  const [user, setUser] = React.useState<User | null>(null);
-  const [users, setUsers] = React.useState<User[]>([]);
+  const [user, setUser] = React.useState<UserType | null>(null);
+  const [users, setUsers] = React.useState<UserType[]>([]);
   const [doctors, setDoctors] = React.useState<DoctorType[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
 
@@ -114,7 +114,7 @@ export default function Appointments() {
         await getUserWithUID(parseInt(uid))
           .then((user) => {
             if (!user) return;
-            setUser(user as User);
+            setUser(user as UserType);
           })
           .finally(() => setIsLoading(false));
       }
@@ -139,7 +139,11 @@ export default function Appointments() {
   return (
     <div className="bg-gray-1 mx-auto w-full max-w-max rounded-md px-8 py-6">
       <div className="flex flex-col gap-6 md:flex-row">
-        <LeftPanel isLoading={isLoading} user={user as User} users={users} />
+        <LeftPanel
+          isLoading={isLoading}
+          user={user as UserType}
+          users={users}
+        />
         {!showForm ? (
           <div className="flex flex-col lg:flex-row">
             <Calendar
@@ -155,7 +159,7 @@ export default function Appointments() {
           </div>
         ) : (
           <FormPanel
-            user={user as User}
+            user={user as UserType}
             date={slotParam}
             isLoading={isLoading}
             doctors={doctors}

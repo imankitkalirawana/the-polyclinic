@@ -12,11 +12,11 @@ import {
 
 import CellValue from './cell-value';
 import Link from 'next/link';
-import { User } from '@/lib/interface';
 import { humanReadableDate, humanReadableTime } from '@/lib/utility';
+import { UserType } from '@/models/User';
 
 interface UserCardProps {
-  user: User;
+  user: UserType;
 }
 
 export default function UserCard({ user }: UserCardProps) {

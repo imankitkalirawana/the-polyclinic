@@ -1,6 +1,42 @@
-import { User as IUser, UserRole, UserStatus } from '@/lib/interface';
+import { Base } from '@/lib/interface';
 import mongoose, { Model } from 'mongoose';
 import mongooseSequence from 'mongoose-sequence';
+
+export enum UserStatus {
+  active = 'active',
+  inactive = 'inactive',
+  blocked = 'blocked',
+  deleted = 'deleted'
+}
+
+export enum UserRole {
+  admin = 'admin',
+  doctor = 'doctor',
+  nurse = 'nurse',
+  receptionist = 'receptionist',
+  pharmacist = 'pharmacist',
+  laboratorist = 'laboratorist',
+  user = 'user'
+}
+
+export interface UserType extends Base {
+  uid: number;
+  email: string;
+  phone: string;
+  password: string;
+  name: string;
+  role: UserRole;
+  status: UserStatus;
+  country: string;
+  state: string;
+  city: string;
+  address: string;
+  zipcode: string;
+  passwordResetToken: string;
+  dob: string;
+  gender: 'male' | 'female' | 'other';
+  image: string;
+}
 
 // @ts-ignore
 const AutoIncrement = mongooseSequence(mongoose);
@@ -71,6 +107,6 @@ const userSchema = new mongoose.Schema(
 // @ts-ignore
 userSchema.plugin(AutoIncrement, { inc_field: 'uid', start_seq: 1000 });
 
-const User: Model<IUser> =
-  mongoose.models.User || mongoose.model<IUser>('User', userSchema);
+const User: Model<UserType> =
+  mongoose.models.User || mongoose.model<UserType>('User', userSchema);
 export default User;

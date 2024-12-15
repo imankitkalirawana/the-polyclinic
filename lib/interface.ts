@@ -6,49 +6,6 @@ export interface Base {
   updatedAt: Date;
 }
 
-export enum UserRole {
-  admin = 'admin',
-  doctor = 'doctor',
-  nurse = 'nurse',
-  receptionist = 'receptionist',
-  pharmacist = 'pharmacist',
-  laboratorist = 'laboratorist',
-  user = 'user'
-}
-
-export enum UserStatus {
-  active = 'active',
-  inactive = 'inactive',
-  blocked = 'blocked',
-  deleted = 'deleted'
-}
-
-export interface User extends Base {
-  uid: number;
-  email: string;
-  phone: string;
-  password: string;
-  name: string;
-  role: UserRole;
-  status: UserStatus;
-  country: string;
-  state: string;
-  city: string;
-  address: string;
-  zipcode: string;
-  passwordResetToken: string;
-  dob: string;
-  gender: 'male' | 'female' | 'other';
-  image: string;
-}
-
-export enum ServiceType {
-  'medical',
-  'surgical',
-  'diagnostic',
-  'consultation'
-}
-
 export const ServiceTypes = [
   {
     label: 'Medical',
@@ -68,11 +25,6 @@ export const ServiceTypes = [
   }
 ];
 
-export enum ServiceStatus {
-  'active',
-  'inactive'
-}
-
 export const ServiceStatuses = [
   {
     label: 'Available',
@@ -85,19 +37,6 @@ export const ServiceStatuses = [
     color: 'danger'
   }
 ];
-
-export interface Service extends Base {
-  uniqueId: string;
-  name: string;
-  description: string;
-  summary: string;
-  price: number;
-  duration: number;
-  status: ServiceStatus;
-  type: ServiceType;
-  data: Record<string, string>;
-  image?: string;
-}
 
 export interface CountryProps {
   id: number;
@@ -136,38 +75,6 @@ export interface MailOptionsProps {
   subject: string;
   text?: string;
   html?: string;
-}
-
-export interface Newsletter extends Base {
-  email: string;
-}
-
-export interface Guest {
-  name: string;
-  connection: string;
-  phone: string;
-}
-
-export interface Appointment extends Base {
-  uid: number;
-  name: string;
-  phone: string;
-  email: string;
-  guests: Guest[];
-  notes: string;
-  date: Date | string;
-  doctor: number;
-  progerss: number;
-  type: 'online' | 'offline';
-  aid: number;
-  status:
-    | 'booked'
-    | 'confirmed'
-    | 'in-progress'
-    | 'completed'
-    | 'cancelled'
-    | 'overdue'
-    | 'on-hold';
 }
 
 // event type

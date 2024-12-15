@@ -1,11 +1,11 @@
 'use client';
 
-import { Newsletter } from '@/lib/interface';
 import {
   capitalize,
   humanReadableDate,
   humanReadableTime
 } from '@/lib/utility';
+import { NewsletterType } from '@/models/Newsletter';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import {
   TableHeader,
@@ -38,7 +38,7 @@ import React from 'react';
 import { toast } from 'sonner';
 
 interface Props {
-  newsletters: Newsletter[];
+  newsletters: NewsletterType[];
 }
 
 const INITIAL_VISIBLE_COLUMNS = ['email', 'createdAt', 'actions'];
@@ -46,7 +46,7 @@ const INITIAL_VISIBLE_COLUMNS = ['email', 'createdAt', 'actions'];
 export default function Newsletters({ newsletters }: Props) {
   const deleteModal = useDisclosure();
   const router = useRouter();
-  const [selected, setSelected] = React.useState<Newsletter | null>(null);
+  const [selected, setSelected] = React.useState<NewsletterType | null>(null);
   const [filterValue, setFilterValue] = React.useState('');
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
     new Set([])
@@ -95,9 +95,9 @@ export default function Newsletters({ newsletters }: Props) {
   }, [page, filteredItems, rowsPerPage]);
 
   const sortedItems = React.useMemo(() => {
-    return [...items].sort((a: Newsletter, b: Newsletter) => {
-      const first = a[sortDescriptor.column as keyof Newsletter] as string;
-      const second = b[sortDescriptor.column as keyof Newsletter] as string;
+    return [...items].sort((a: NewsletterType, b: NewsletterType) => {
+      const first = a[sortDescriptor.column as keyof NewsletterType] as string;
+      const second = b[sortDescriptor.column as keyof NewsletterType] as string;
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
       return sortDescriptor.direction === 'descending' ? -cmp : cmp;
@@ -105,8 +105,8 @@ export default function Newsletters({ newsletters }: Props) {
   }, [sortDescriptor, items]);
 
   const renderCell = React.useCallback(
-    (newsletter: Newsletter, columnKey: React.Key) => {
-      const cellValue = newsletter[columnKey as keyof Newsletter];
+    (newsletter: NewsletterType, columnKey: React.Key) => {
+      const cellValue = newsletter[columnKey as keyof NewsletterType];
       switch (columnKey) {
         case 'email':
           return (
@@ -354,7 +354,7 @@ export default function Newsletters({ newsletters }: Props) {
       await fetch(`/api/newsletter/${selected?.email}`, {
         method: 'DELETE'
       });
-      toast.success('Newsletter Unsubscribed successfully');
+      toast.success('NewsletterType Unsubscribed successfully');
       deleteModal.onClose();
       router.refresh();
     }

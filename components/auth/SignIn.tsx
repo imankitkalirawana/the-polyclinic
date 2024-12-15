@@ -18,9 +18,9 @@ import { AnimatePresence, domAnimation, LazyMotion, m } from 'framer-motion';
 import UserRadio from './user-radio';
 import axios from 'axios';
 import { getAllUsers } from '@/functions/server-actions';
-import { User } from '@/lib/interface';
 import { signIn } from 'next-auth/react';
 import { toast } from 'sonner';
+import { UserType } from '@/models/User';
 
 const SignIn = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -57,7 +57,7 @@ const SignIn = () => {
     initialValues: {
       id: '',
       password: '',
-      users: [] as User[]
+      users: [] as UserType[]
     },
     onSubmit: async (values) => {
       if (page === 0) {

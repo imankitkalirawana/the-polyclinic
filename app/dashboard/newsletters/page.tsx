@@ -1,7 +1,7 @@
 import Error from '@/app/error';
 import Newsletters from '@/components/dashboard/newsletters/newsletters';
 import { API_BASE_URL } from '@/lib/config';
-import { Newsletter } from '@/lib/interface';
+import { NewsletterType } from '@/models/Newsletter';
 import axios from 'axios';
 import { cookies } from 'next/headers';
 
@@ -17,7 +17,8 @@ async function getData() {
 }
 
 export default async function Page() {
-  const newsletters: Newsletter[] = (await getData()) || ([] as Newsletter[]);
+  const newsletters: NewsletterType[] =
+    (await getData()) || ([] as NewsletterType[]);
   console.log(newsletters);
   return (
     <>

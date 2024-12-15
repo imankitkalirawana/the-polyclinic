@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import Appointment from '@/models/Appointment';
 import { connectDB } from '@/lib/db';
-import mongoose from 'mongoose';
 import { auth } from '@/auth';
 
 // get appointment by id from param

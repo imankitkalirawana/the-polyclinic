@@ -1,6 +1,6 @@
 import Users from '@/components/dashboard/users';
 import { API_BASE_URL } from '@/lib/config';
-import { User } from '@/lib/interface';
+import { UserType } from '@/models/User';
 import axios from 'axios';
 import { cookies } from 'next/headers';
 
@@ -16,7 +16,7 @@ async function getData() {
 }
 
 export default async function Page() {
-  const users: User[] = (await getData()) || ([] as User[]);
+  const users: UserType[] = (await getData()) || ([] as UserType[]);
   return (
     <>
       <Users users={users} />

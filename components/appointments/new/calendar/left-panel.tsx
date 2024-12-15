@@ -1,21 +1,21 @@
 import { useLocale } from '@react-aria/i18n';
 import { CalendarIcon } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { User } from '@/lib/interface';
 import { calculateAge } from '@/lib/client-functions';
 import Skeleton from '@/components/ui/skeleton';
 import { CalendarDisplay } from './calendar-display';
 import { Autocomplete, AutocompleteItem, Chip } from '@nextui-org/react';
 import Profile from './profile';
+import { UserType } from '@/models/User';
 
 export function LeftPanel({
   user,
   isLoading = false,
   users
 }: {
-  user?: User;
+  user?: UserType;
   isLoading?: boolean;
-  users?: User[];
+  users?: UserType[];
 }) {
   const { locale } = useLocale();
   const searchParams = useSearchParams();

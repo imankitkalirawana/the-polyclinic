@@ -3,7 +3,7 @@ import Heading from '@/components/ui/heading';
 import Skeleton from '@/components/ui/skeleton';
 import SubHeading from '@/components/ui/sub-heading';
 import { getUserWithUID } from '@/functions/server-actions';
-import { Appointment, EventType, User } from '@/lib/interface';
+import { EventType } from '@/lib/interface';
 import {
   Avatar,
   Button,
@@ -28,6 +28,8 @@ import {
 } from '@/lib/client-functions';
 import ListTitle from '@/components/ui/list-title';
 import { format } from 'date-fns';
+import { AppointmentType } from '@/models/Appointment';
+import { UserType } from '@/models/User';
 
 interface Props {
   session: any;
@@ -35,10 +37,10 @@ interface Props {
 }
 
 export default function ViewAppointment({ session, aid }: Props) {
-  const [appointment, setAppointment] = useState<Appointment | null>(
-    {} as Appointment
+  const [appointment, setAppointment] = useState<AppointmentType | null>(
+    {} as AppointmentType
   );
-  const [user, setUser] = useState<User | null>({} as User);
+  const [user, setUser] = useState<UserType | null>({} as UserType);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

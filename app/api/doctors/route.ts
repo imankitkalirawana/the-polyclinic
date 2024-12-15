@@ -1,9 +1,8 @@
 import { NextResponse } from 'next/server';
-import User from '@/models/User';
+import User, { UserRole, UserStatus } from '@/models/User';
 import Doctor from '@/models/Doctor';
 import { connectDB } from '@/lib/db';
 import { auth } from '@/auth';
-import { UserRole, UserStatus } from '@/lib/interface';
 
 export const GET = auth(async function GET(request: any) {
   try {
