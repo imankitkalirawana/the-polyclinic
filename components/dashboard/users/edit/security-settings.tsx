@@ -257,7 +257,7 @@ export default function SecuritySettings({ user }: SecuritySettingsProps) {
                 endContent={<Icon icon="solar:pen-2-linear" />}
                 radius="full"
                 variant="bordered"
-                onClick={editEmailModal.onOpen}
+                onPress={editEmailModal.onOpen}
               >
                 Edit
               </Button>
@@ -281,7 +281,7 @@ export default function SecuritySettings({ user }: SecuritySettingsProps) {
                 endContent={<Icon icon="solar:pen-2-linear" />}
                 radius="full"
                 variant="bordered"
-                onClick={() => {
+                onPress={() => {
                   toast.warning("This feature isn't available yet.");
                 }}
               >
@@ -299,7 +299,7 @@ export default function SecuritySettings({ user }: SecuritySettingsProps) {
             <Button
               radius="full"
               variant="bordered"
-              onClick={editPasswordModal.onOpen}
+              onPress={editPasswordModal.onOpen}
             >
               Change
             </Button>
@@ -372,7 +372,7 @@ export default function SecuritySettings({ user }: SecuritySettingsProps) {
             <Button
               radius="full"
               variant="bordered"
-              onClick={deactivateModal.onOpen}
+              onPress={deactivateModal.onOpen}
             >
               {/* @ts-ignore */}
               {user.status === 'active' ? 'Deactivate' : 'Activate'}
@@ -394,7 +394,7 @@ export default function SecuritySettings({ user }: SecuritySettingsProps) {
               color={user.status === 'deleted' ? 'success' : 'danger'}
               radius="full"
               variant="flat"
-              onClick={deleteModal.onOpen}
+              onPress={deleteModal.onOpen}
             >
               {/* @ts-ignore */}
               {user.status === 'deleted' ? 'Recover' : 'Delete'}
@@ -412,7 +412,7 @@ export default function SecuritySettings({ user }: SecuritySettingsProps) {
           <Button
             color="primary"
             fullWidth
-            onClick={() => emailFormik.handleSubmit()}
+            onPress={() => emailFormik.handleSubmit()}
             isLoading={emailFormik.isSubmitting}
           >
             {emailFormik.values.isSent ? 'Verify OTP' : 'Send OTP'}
@@ -426,7 +426,7 @@ export default function SecuritySettings({ user }: SecuritySettingsProps) {
               fullWidth
               isDisabled={emailFormik.isSubmitting}
               isLoading={emailFormik.values.isResending}
-              onClick={async () => {
+              onPress={async () => {
                 emailFormik.setFieldValue('isResending', true);
                 await sendMailWithOTP(emailFormik.values.email, mailOptions)
                   .then(() => {
@@ -490,7 +490,7 @@ export default function SecuritySettings({ user }: SecuritySettingsProps) {
           <Button
             color="primary"
             fullWidth
-            onClick={() => passwordFormik.handleSubmit()}
+            onPress={() => passwordFormik.handleSubmit()}
             isLoading={passwordFormik.isSubmitting}
           >
             Change Password
@@ -561,7 +561,7 @@ export default function SecuritySettings({ user }: SecuritySettingsProps) {
             // @ts-ignore
             color={user.status === 'active' ? 'danger' : 'success'}
             fullWidth
-            onClick={() => deactivateFormik.handleSubmit()}
+            onPress={() => deactivateFormik.handleSubmit()}
             isLoading={deactivateFormik.isSubmitting}
             isDisabled={
               deactivateFormik.values.email !== user.email ? true : false
@@ -610,7 +610,7 @@ export default function SecuritySettings({ user }: SecuritySettingsProps) {
             // @ts-ignore
             color={user.status === 'deleted' ? 'success' : 'danger'}
             fullWidth
-            onClick={() => deleteFormik.handleSubmit()}
+            onPress={() => deleteFormik.handleSubmit()}
             isLoading={deleteFormik.isSubmitting}
             isDisabled={deleteFormik.values.email !== user.email ? true : false}
           >
@@ -691,7 +691,7 @@ const EditModal = ({
                   <Button
                     color="primary"
                     fullWidth
-                    onClick={() => {
+                    onPress={() => {
                       onSubmit && onSubmit();
                     }}
                   >

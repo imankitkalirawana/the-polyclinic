@@ -146,7 +146,7 @@ export default function EditableDataTable({
                         color="danger"
                         variant="light"
                         size="sm"
-                        onClick={() => handleDeleteColumn(colIndex)}
+                        onPress={() => handleDeleteColumn(colIndex)}
                       >
                         <IconX size={16} />
                       </Button>
@@ -164,7 +164,7 @@ export default function EditableDataTable({
                       color="primary"
                       variant="light"
                       size="sm"
-                      onClick={() => handleAddColumn(colIndex)}
+                      onPress={() => handleAddColumn(colIndex)}
                     >
                       <IconPlus size={16} />
                     </Button>
@@ -214,7 +214,7 @@ export default function EditableDataTable({
                       showArrow
                     >
                       <Button
-                        onClick={() => handleDeleteRow(rowIndex)}
+                        onPress={() => handleDeleteRow(rowIndex)}
                         isIconOnly
                         radius="full"
                         color="danger"
@@ -233,7 +233,7 @@ export default function EditableDataTable({
                     showArrow
                   >
                     <Button
-                      onClick={() => handleAddRow(rowIndex)}
+                      onPress={() => handleAddRow(rowIndex)}
                       isIconOnly
                       radius="full"
                       color="primary"

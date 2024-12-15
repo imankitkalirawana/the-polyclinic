@@ -171,7 +171,7 @@ export function FormPanel({ user, date, isLoading }: FormPanelProps) {
                         size="sm"
                         variant="light"
                         color="danger"
-                        onClick={() => removeGuest(index)}
+                        onPress={() => removeGuest(index)}
                       >
                         <Icon icon="tabler:x" />
                       </Button>
@@ -205,7 +205,7 @@ export function FormPanel({ user, date, isLoading }: FormPanelProps) {
           <Button
             type="button"
             variant="light"
-            onClick={() => addGuest()}
+            onPress={() => addGuest()}
             className="w-fit"
           >
             <UserPlus className="mr-2 size-4" />
@@ -222,7 +222,7 @@ export function FormPanel({ user, date, isLoading }: FormPanelProps) {
       <div className="flex justify-end gap-2">
         <Button
           variant="light"
-          onClick={() => {
+          onPress={() => {
             router.back();
           }}
           fullWidth
@@ -230,7 +230,7 @@ export function FormPanel({ user, date, isLoading }: FormPanelProps) {
           Back
         </Button>
         <Button
-          onClick={() => formik.handleSubmit()}
+          onPress={() => formik.handleSubmit()}
           isLoading={formik.isSubmitting}
           color="primary"
           fullWidth

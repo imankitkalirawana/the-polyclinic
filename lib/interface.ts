@@ -169,3 +169,15 @@ export interface Appointment extends Base {
     | 'overdue'
     | 'on-hold';
 }
+
+// event type
+
+export interface EventType {
+  title: string;
+  description: string;
+  location: string;
+  start: Date;
+  end: Date;
+  duration: [number, string];
+  busy: boolean;
+}

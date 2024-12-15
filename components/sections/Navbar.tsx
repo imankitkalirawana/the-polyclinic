@@ -105,7 +105,7 @@ const Navbar = ({ session }: NavbarProps) => {
               color="danger"
               radius="full"
               variant="light"
-              onClick={() => signOut()}
+              onPress={() => signOut()}
             >
               Logout
             </Button>

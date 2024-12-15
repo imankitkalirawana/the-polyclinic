@@ -1,43 +1,60 @@
 'use client';
-import React from 'react';
-import Image from 'next/image';
-import { Button, Code, Input } from '@nextui-org/react';
-import { useQueryState, parseAsInteger } from 'nuqs';
+import { saveAs } from 'file-saver';
 
-export default function Home() {
-  const [name, setName] = useQueryState('name');
-  const [count, setCount] = useQueryState('count', parseAsInteger);
+function AddToCalendar({ event }: { event: { title: string; date: string } }) {
+  const handleAddToCalendar = () => {
+    const { title, date } = event;
+    const startDate = new Date(date)
+      .toISOString()
+      .replace(/[-:]/g, '')
+      .split('.')[0]; // Format: YYYYMMDDTHHmmss
+    const endDate = new Date(new Date(date).getTime() + 60 * 60 * 1000)
+      .toISOString()
+      .replace(/[-:]/g, '')
+      .split('.')[0]; // Add 1 hour to the event for demo purposes
+
+    const icsContent = `
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Your App Name//NONSGML v1.0//EN
+BEGIN:VEVENT
+UID:${Date.now()}@yourapp.com
+DTSTAMP:${startDate}Z
+DTSTART:${startDate}Z
+DTEND:${endDate}Z
+SUMMARY:${title}
+DESCRIPTION:Event created from Your App.
+END:VEVENT
+END:VCALENDAR
+`.trim();
+
+    const blob = new Blob([icsContent], {
+      type: 'text/calendar;charset=utf-8'
+    });
+    saveAs(blob, `${title}.ics`);
+  };
 
   return (
-    <>
-      <div className="flex h-screen flex-col items-center justify-center space-y-10">
-        <Image
-          width={512}
-          height={512}
-          src="/logo.png"
-          alt="Platforms on Vercel"
-          className="w-48"
-        />
-        <Input
-          value={name || ''}
-          onChange={(e) => {
-            setName(e.target.value || null);
-          }}
-        />
-        <h1>
-          Edit this page on
-          <Code>app/home/page.tsx</Code>
-        </h1>
-        <p>Hello, {name || 'anonymous visitor'}!</p>
-        <div>
-          <pre>count: {count}</pre>
-          <Button onClick={() => setCount(0)}>Reset</Button>
-          {/* handling null values in setCount is annoying: */}
-          <Button onClick={() => setCount((c) => (c ?? 0) + 1)}>+</Button>
-          <Button onClick={() => setCount((c) => (c ?? 0) - 1)}>-</Button>
-          <Button onClick={() => setCount(null)}>Clear</Button>
-        </div>
-      </div>
-    </>
+    <button
+      onClick={handleAddToCalendar}
+      className="rounded bg-blue-500 p-2 text-white hover:bg-blue-700"
+    >
+      Add to Calendar
+    </button>
+  );
+}
+
+export default function Home() {
+  const event = {
+    title: 'My Next.js Event',
+    date: '2024-12-25T10:00:00'
+  };
+
+  return (
+    <div className="flex flex-col items-center space-y-4">
+      <h1 className="text-xl font-bold">Event: {event.title}</h1>
+      <p>Date: {new Date(event.date).toLocaleString()}</p>
+      <AddToCalendar event={event} />
+    </div>
   );
 }

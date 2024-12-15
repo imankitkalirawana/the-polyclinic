@@ -443,7 +443,7 @@ export default function AccountDetails({
         <Button
           radius="full"
           variant="bordered"
-          onClick={() => {
+          onPress={() => {
             formik.setFieldValue('user', user);
           }}
         >
@@ -452,7 +452,7 @@ export default function AccountDetails({
         <Button
           color="primary"
           radius="full"
-          onClick={() => formik.handleSubmit()}
+          onPress={() => formik.handleSubmit()}
           isLoading={formik.isSubmitting}
         >
           Save Changes

@@ -395,7 +395,7 @@ export default function NewUser({ countries }: { countries: CountryProps[] }) {
           <Button
             radius="full"
             variant="bordered"
-            onClick={() => {
+            onPress={() => {
               formik.setFieldValue('user', user);
             }}
           >
@@ -404,7 +404,7 @@ export default function NewUser({ countries }: { countries: CountryProps[] }) {
           <Button
             color="primary"
             radius="full"
-            onClick={() => formik.handleSubmit()}
+            onPress={() => formik.handleSubmit()}
             isLoading={formik.isSubmitting}
           >
             Save Changes

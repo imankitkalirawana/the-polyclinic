@@ -363,7 +363,7 @@ export default function NewService() {
                                   showArrow
                                 >
                                   <Button
-                                    onClick={() => handleDeleteColumn(colIndex)}
+                                    onPress={() => handleDeleteColumn(colIndex)}
                                     isIconOnly
                                     radius="full"
                                     color="danger"
@@ -381,7 +381,7 @@ export default function NewService() {
                                 showArrow
                               >
                                 <Button
-                                  onClick={() => handleAddColumn(colIndex)}
+                                  onPress={() => handleAddColumn(colIndex)}
                                   isIconOnly
                                   radius="full"
                                   color="primary"
@@ -409,7 +409,7 @@ export default function NewService() {
                               radius="full"
                               color="primary"
                               variant="light"
-                              onClick={() => handleAddColumn(numCols)}
+                              onPress={() => handleAddColumn(numCols)}
                             >
                               <IconPlus size={16} />
                             </Button>
@@ -480,7 +480,7 @@ export default function NewService() {
                                   showArrow
                                 >
                                   <Button
-                                    onClick={() => handleDeleteRow(rowIndex)}
+                                    onPress={() => handleDeleteRow(rowIndex)}
                                     isIconOnly
                                     radius="full"
                                     color="danger"
@@ -499,7 +499,7 @@ export default function NewService() {
                                 showArrow
                               >
                                 <Button
-                                  onClick={() => handleAddRow(rowIndex)}
+                                  onPress={() => handleAddRow(rowIndex)}
                                   isIconOnly
                                   radius="full"
                                   color="warning"
@@ -532,7 +532,7 @@ export default function NewService() {
                     radius="full"
                     color="warning"
                     variant="light"
-                    onClick={() => handleAddRow(numRows)}
+                    onPress={() => handleAddRow(numRows)}
                   >
                     <IconPlus size={16} />
                   </Button>

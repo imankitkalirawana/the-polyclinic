@@ -10,9 +10,9 @@ export const AdminDashboard = () => {
       <h1>This is Admin dashboard</h1>
       {session && <p>Welcome, {session?.user?.name}! You are logged in.</p>}
       {session ? (
-        <Button onClick={() => signOut()}>Logout</Button>
+        <Button onPress={() => signOut()}>Logout</Button>
       ) : (
-        <Button onClick={() => signIn()}>Login</Button>
+        <Button onPress={() => signIn()}>Login</Button>
       )}
     </>
   );
