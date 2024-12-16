@@ -72,6 +72,11 @@ export const GET = auth(async function GET(request: any) {
 
 export const POST = auth(async function POST(request: any) {
   try {
+    if(request.auth?.user?.role !== 'admin') {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
+
     await connectDB();
     const data = await request.json();
 

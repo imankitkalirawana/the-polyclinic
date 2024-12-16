@@ -115,10 +115,10 @@ export const sectionItems: SidebarItem[] = [
         title: 'Newsletters'
       },
       {
-        key: 'rooms',
-        href: '/dashboard/rooms',
-        icon: 'lucide:bed',
-        title: 'Rooms'
+        key: 'drugs',
+        href: '/dashboard/drugs',
+        icon: 'mdi:drugs',
+        title: 'Drugs'
       },
       {
         key: 'room-types',
