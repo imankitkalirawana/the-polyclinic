@@ -93,31 +93,31 @@ export const sectionItems: SidebarItem[] = [
       {
         key: 'home',
         href: '/',
-        icon: 'lucide:home',
+        icon: 'solar:home-2-broken',
         title: 'Home'
       },
       {
         key: 'users',
         href: '/dashboard/users',
-        icon: 'lucide:users',
+        icon: 'solar:users-group-rounded-broken',
         title: 'Users'
       },
       {
         key: 'services',
         href: '/dashboard/services',
-        icon: 'solar:test-tube-broken',
+        icon: 'solar:test-tube-minimalistic-broken',
         title: 'Services'
       },
       {
         key: 'newsletters',
         href: '/dashboard/newsletters',
-        icon: 'fluent:news-16-regular',
+        icon: 'solar:inbox-broken',
         title: 'Newsletters'
       },
       {
         key: 'drugs',
         href: '/dashboard/drugs',
-        icon: 'mdi:drugs',
+        icon: 'solar:pills-broken',
         title: 'Drugs'
       },
       {
@@ -129,7 +129,7 @@ export const sectionItems: SidebarItem[] = [
       {
         key: 'website',
         href: '/dashboard/website',
-        icon: 'gg:website',
+        icon: 'solar:card-broken',
         title: 'Website'
       }
     ]

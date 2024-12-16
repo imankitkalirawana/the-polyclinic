@@ -2,8 +2,13 @@
 import { ServiceTypes, ServiceStatuses } from '@/lib/interface';
 import {
   Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
   cn,
   Input,
+  ScrollShadow,
   Select,
   SelectItem,
   SelectItemProps,
@@ -137,17 +142,24 @@ export default function EditService({ service }: EditServiceProps) {
 
   return (
     <>
-      <div className="pb-12">
-        <div className="mt-4 px-4 sm:px-0">
-          <h3 className="text-base font-semibold leading-7 text-gray-900">
+      <Card
+        as="form"
+        onSubmit={(e) => {
+          e.preventDefault();
+          formik.handleSubmit();
+        }}
+        className="bg-transparent shadow-none"
+      >
+        <CardHeader className="flex-col items-start p-0">
+          <h3 className="text-base font-semibold leading-7 text-default-900">
             Edit Service
           </h3>
-          <p className="max-w-2xl text-sm leading-6 text-gray-500">
+          <p className="max-w-2xl text-sm leading-6 text-default-500">
             Edit the service details below.
           </p>
-        </div>
-        <form onSubmit={formik.handleSubmit}>
-          <div className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-2">
+        </CardHeader>
+        <CardBody className="px-0" as={ScrollShadow}>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
               <Input
                 label="Unique ID"
@@ -541,24 +553,24 @@ export default function EditService({ service }: EditServiceProps) {
               </div>
             </div>
           </div>
-          <div className="mt-8 flex items-center justify-end">
-            <Button
-              color="primary"
-              isLoading={formik.isSubmitting}
-              type="submit"
-              startContent={
-                <Icon
-                  icon={'tabler:check'}
-                  className={formik.isSubmitting ? 'hidden' : ''}
-                  fontSize={18}
-                />
-              }
-            >
-              {formik.isSubmitting ? 'Saving...' : 'Save'}
-            </Button>
-          </div>
-        </form>
-      </div>
+        </CardBody>
+        <CardFooter className="mt-8 flex items-center justify-end">
+          <Button
+            color="primary"
+            isLoading={formik.isSubmitting}
+            type="submit"
+            startContent={
+              <Icon
+                icon={'tabler:check'}
+                className={formik.isSubmitting ? 'hidden' : ''}
+                fontSize={18}
+              />
+            }
+          >
+            {formik.isSubmitting ? 'Saving...' : 'Save'}
+          </Button>
+        </CardFooter>
+      </Card>
     </>
   );
 }

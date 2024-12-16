@@ -8,11 +8,11 @@ export interface DrugType extends Base {
   description?: string;
   manufacturer?: string;
   dosage?: string;
-  form: string;
+  form?: string;
+  frequency?: string;
   strength?: number;
   quantity?: number;
   price?: number;
-  frequency?: string;
 }
 
 const drugSchema = new mongoose.Schema<DrugType>(
