@@ -30,7 +30,9 @@ export default function Layout({
     }
   }, [status, session]);
 
-  const [isHidden, setIsHidden] = useState(false);
+  const [isHidden, setIsHidden] = useState(
+    localStorage.getItem('isHidden') === 'true'
+  );
 
   const pathname = usePathname();
   let currentPath = pathname.split('/')?.[2];
@@ -126,7 +128,12 @@ export default function Layout({
               isIconOnly
               size="sm"
               variant="light"
-              onPress={() => setIsHidden(!isHidden)}
+              onPress={() =>
+                setIsHidden((prev) => {
+                  localStorage.setItem('isHidden', !prev ? 'true' : 'false');
+                  return !prev;
+                })
+              }
             >
               <Icon
                 className="text-default-500"

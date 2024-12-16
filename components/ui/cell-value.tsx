@@ -1,3 +1,4 @@
+import { Divider } from '@nextui-org/react';
 import React from 'react';
 
 export type CellValueProps = React.HTMLAttributes<HTMLDivElement> & {
@@ -9,11 +10,18 @@ const CellValue = React.forwardRef<HTMLDivElement, CellValueProps>(
   ({ label, value, children, ...props }, ref) => (
     <div
       ref={ref}
-      className="flex items-center justify-between py-2"
+      className="flex items-center justify-between gap-2 py-2"
       {...props}
     >
-      <div className="text-small text-default-500">{label}</div>
-      <div className="text-small font-medium">{value || children}</div>
+      <div className="line-clamp-1 max-w-48 text-small text-default-500 sm:max-w-full">
+        {label}
+      </div>
+      <div
+        title={value?.toString()}
+        className="line-clamp-1 max-w-72 text-small font-medium"
+      >
+        {value || children}
+      </div>
     </div>
   )
 );

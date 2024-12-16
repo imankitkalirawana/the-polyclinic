@@ -1,6 +1,7 @@
 'use client';
 import {
   capitalize,
+  formatPrice,
   humanReadableDate,
   humanReadableTime
 } from '@/lib/utility';
@@ -43,20 +44,20 @@ const statusColorMap: Record<string, ChipProps['color']> = {
   inactive: 'danger'
 };
 
-interface HotelProps {
+interface Props {
   drugs: DrugType[];
 }
 
 const INITIAL_VISIBLE_COLUMNS = [
-  'uid',
-  'name',
+  'did',
+  'brandName',
+  'description',
+  'manufacturer',
   'price',
-  'status',
-  'updatedAt',
   'actions'
 ];
 
-export default function Drugs({ drugs }: HotelProps) {
+export default function Drugs({ drugs }: Props) {
   const deleteModal = useDisclosure();
   const router = useRouter();
   const [selected, setSelected] = React.useState<DrugType | null>(null);
@@ -110,8 +111,19 @@ export default function Drugs({ drugs }: HotelProps) {
     if (hasSearchFilter) {
       filteredHotels = filteredHotels.filter(
         (drug) =>
-          drug.brandName.toLowerCase().includes(filterValue.toLowerCase()) ||
-          drug.did.toString().includes(filterValue.toLowerCase())
+          (drug.brandName &&
+            drug.brandName.toLowerCase().includes(filterValue.toLowerCase())) ||
+          drug.did.toString().includes(filterValue.toLowerCase()) ||
+          (drug.genericName &&
+            drug.genericName
+              .toLowerCase()
+              .includes(filterValue.toLowerCase())) ||
+          (drug.description &&
+            drug.description
+              .toLowerCase()
+              .includes(filterValue.toLowerCase())) ||
+          (drug.manufacturer &&
+            drug.manufacturer.toLowerCase().includes(filterValue.toLowerCase()))
       );
     }
     if (
@@ -149,45 +161,50 @@ export default function Drugs({ drugs }: HotelProps) {
     (drug: DrugType, columnKey: React.Key) => {
       const cellValue = drug[columnKey as keyof DrugType];
       switch (columnKey) {
-        case 'uid':
+        case 'did':
           return (
             <>
               <CopyText>{`${drug.did}`}</CopyText>
             </>
           );
-        case 'name':
+        case 'brandName':
           return (
             <>
               <div className="flex items-center gap-2">
                 <div className="flex flex-col">
-                  <p className="text-bold whitespace-nowrap text-sm capitalize">
+                  <p className="text-bold line-clamp-1 whitespace-nowrap text-sm capitalize">
                     {drug.brandName}
                   </p>
                   <p className="whitespace-nowrap text-xs capitalize text-default-400">
                     {/* @ts-ignore */}
-                    {drug.type}
+                    {drug.genericName}
                   </p>
                 </div>
               </div>
             </>
           );
-        case 'price':
+        case 'description':
           return (
             <div className="flex flex-col">
               <p className="text-bold max-w-sm overflow-hidden text-ellipsis whitespace-nowrap text-sm capitalize text-default-400">
-                {drug.price}
+                {drug.description}
+              </p>
+            </div>
+          );
+        case 'manufacturer':
+          return (
+            <div className="flex flex-col">
+              <p className="text-bold max-w-sm overflow-hidden text-ellipsis whitespace-nowrap text-sm capitalize text-default-400">
+                {drug.manufacturer}
               </p>
             </div>
           );
 
-        case 'updatedAt':
+        case 'price':
           return (
             <>
               <p className="text-bold whitespace-nowrap text-sm capitalize">
-                {humanReadableDate(drug.updatedAt)}
-              </p>
-              <p className="whitespace-nowrap text-xs capitalize text-default-400">
-                {humanReadableTime(drug.updatedAt)}
+                {drug.price ? formatPrice(drug.price) : '-'}
               </p>
             </>
           );
@@ -522,11 +539,11 @@ export default function Drugs({ drugs }: HotelProps) {
 }
 
 const columns = [
-  { name: 'UID', uid: 'uid', sortable: true },
-  { name: 'NAME', uid: 'name', sortable: true },
+  { name: 'DRUG ID', uid: 'did', sortable: true },
+  { name: 'BRAND NAME', uid: 'brandName', sortable: true },
+  { name: 'DESCRIPTION', uid: 'description', sortable: true },
+  { name: 'MANUFACTURER', uid: 'manufacturer', sortable: true },
   { name: 'PRICE', uid: 'price', sortable: true },
-  { name: 'STATUS', uid: 'status', sortable: true },
-  { name: 'UPDATED AT', uid: 'updatedAt', sortable: true },
   { name: 'ACTIONS', uid: 'actions' }
 ];
 
