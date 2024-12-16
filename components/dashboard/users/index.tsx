@@ -58,10 +58,6 @@ const roleColorMap: Record<string, ChipProps['color']> = {
   laboratorist: 'success'
 };
 
-interface Props {
-  users: UserType[];
-}
-
 const INITIAL_VISIBLE_COLUMNS = [
   'uid',
   'name',
@@ -72,9 +68,11 @@ const INITIAL_VISIBLE_COLUMNS = [
   'actions'
 ];
 
-export default function Users({ users }: Props) {
+export default function Users() {
   const deleteModal = useDisclosure();
   const router = useRouter();
+  const [users, setUsers] = useState<UserType[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [selected, setSelected] = React.useState<UserType | null>(null);
   const [filterValue, setFilterValue] = React.useState('');
   const [isDeleting, setIsDeleting] = React.useState(false);
@@ -90,6 +88,24 @@ export default function Users({ users }: Props) {
     column: 'name',
     direction: 'ascending'
   });
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      await axios
+        .get('/api/users/all')
+        .then((res) => {
+          setUsers(res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    };
+
+    fetchUsers();
+  }, []);
 
   const handleDelete = async (user: UserType) => {
     setIsDeleting(true);
@@ -503,7 +519,11 @@ export default function Users({ users }: Props) {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody items={sortedItems} emptyContent={'No users found'}>
+        <TableBody
+          items={sortedItems}
+          isLoading={isLoading}
+          emptyContent={'No users found'}
+        >
           {(item) => (
             <TableRow
               key={item.uid}
