@@ -1,5 +1,5 @@
-import ServiceSkeleton from '@/components/skeletons/services/service-skeleton';
+import FormSkeleton from '@/components/skeletons/form-skeleton';
 
 export default function Page() {
-  return <ServiceSkeleton />;
+  return <FormSkeleton />;
 }
