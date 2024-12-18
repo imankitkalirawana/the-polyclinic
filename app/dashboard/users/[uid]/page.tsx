@@ -3,6 +3,7 @@ import { API_BASE_URL, isCaching } from '@/lib/config';
 import { UserType } from '@/models/User';
 import axios from 'axios';
 import { cookies } from 'next/headers';
+import { Suspense } from 'react';
 
 async function getData(uid: number) {
   try {
