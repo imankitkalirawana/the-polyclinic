@@ -9,6 +9,8 @@ import { transporter } from '@/lib/nodemailer';
 import { MailOptions } from 'nodemailer/lib/json-transport';
 import { generateOtp, sendSMS } from '@/lib/functions';
 import bcrypt from 'bcryptjs';
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
 export const verifyUID = async (uid: string, _id?: string) => {
   await connectDB();
@@ -174,4 +176,9 @@ export const rescheduleAppointment = async (id: string, date: string) => {
     throw new Error('Appointment not found');
   }
   return true;
+};
+
+export const redirectTo = (url: string) => {
+  revalidatePath(url);
+  redirect(url);
 };

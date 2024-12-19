@@ -32,13 +32,15 @@ import {
   useDisclosure
 } from '@nextui-org/react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import axios from 'axios';
 import { CopyText } from '@/components/ui/copy';
 import { cn } from '@/lib/utils';
 import { UserType } from '@/models/User';
+import { revalidatePath } from 'next/cache';
+import { redirectTo } from '@/functions/server-actions';
 // import useSWR from 'swr';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
@@ -68,11 +70,9 @@ const INITIAL_VISIBLE_COLUMNS = [
   'actions'
 ];
 
-export default function Users() {
+export default function Users({ users }: { users: UserType[] }) {
   const deleteModal = useDisclosure();
   const router = useRouter();
-  const [users, setUsers] = useState<UserType[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [selected, setSelected] = React.useState<UserType | null>(null);
   const [filterValue, setFilterValue] = React.useState('');
   const [isDeleting, setIsDeleting] = React.useState(false);
@@ -88,24 +88,6 @@ export default function Users() {
     column: 'name',
     direction: 'ascending'
   });
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      await axios
-        .get('/api/users/all')
-        .then((res) => {
-          setUsers(res.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    };
-
-    fetchUsers();
-  }, []);
 
   const handleDelete = async (user: UserType) => {
     setIsDeleting(true);
@@ -494,18 +476,7 @@ export default function Users() {
         onSelectionChange={setSelectedKeys}
         onSortChange={setSortDescriptor}
         onRowAction={(key) => {
-          const promise = () =>
-            new Promise((resolve) =>
-              setTimeout(() => resolve({ name: 'Sonner' }), 2000)
-            );
-
-          toast.promise(promise, {
-            loading: 'Loading...',
-            error: 'Error',
-            duration: 1500
-          });
-          router.push(`/dashboard/users/${key}`);
-          // window.location.href = `/dashboard/users/${key}`;
+          redirectTo(`/dashboard/users/${key}`);
         }}
       >
         <TableHeader columns={headerColumns}>
@@ -519,11 +490,7 @@ export default function Users() {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody
-          items={sortedItems}
-          isLoading={isLoading}
-          emptyContent={'No users found'}
-        >
+        <TableBody items={sortedItems} emptyContent={'No users found'}>
           {(item) => (
             <TableRow
               key={item.uid}

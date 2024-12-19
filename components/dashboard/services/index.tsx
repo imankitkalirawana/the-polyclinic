@@ -15,7 +15,6 @@ import {
   ChipProps,
   Chip,
   Selection,
-  Avatar,
   Dropdown,
   DropdownTrigger,
   Button,
@@ -33,12 +32,11 @@ import {
 } from '@nextui-org/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { toast } from 'sonner';
-import axios from 'axios';
 import { CopyText } from '@/components/ui/copy';
-import QuillInput from '@/components/ui/quill-input';
 import { ServiceType } from '@/models/Service';
+import { redirectTo } from '@/functions/server-actions';
 // import useSWR from 'swr';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
@@ -443,24 +441,14 @@ export default function Services({ services }: HotelProps) {
           wrapper: 'max-h-[382px]'
         }}
         selectedKeys={selectedKeys}
-        //   selectionMode="multiple"
+        selectionMode="multiple"
         sortDescriptor={sortDescriptor}
         topContent={topContent}
         topContentPlacement="outside"
         onSelectionChange={setSelectedKeys}
         onSortChange={setSortDescriptor}
         onRowAction={(key) => {
-          const promise = () =>
-            new Promise((resolve) =>
-              setTimeout(() => resolve({ name: 'Sonner' }), 2000)
-            );
-
-          toast.promise(promise, {
-            loading: 'Loading...',
-            error: 'Error',
-            duration: 1500
-          });
-          router.push(`/dashboard/services/${key}`);
+          redirectTo(`/dashboard/services/${key}`);
         }}
         className="cursor-pointer"
       >

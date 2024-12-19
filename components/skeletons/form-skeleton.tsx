@@ -17,9 +17,9 @@ export default function FormSkeleton() {
           ))}
         </div>
 
-        <div className="flex justify-end gap-4 pt-4">
+        <div className="mt-4 flex justify-end gap-4">
           <Skeleton className="h-10 w-24" /> {/* Cancel button */}
-          <Skeleton className="h-10 w-32" /> {/* Save Changes button */}
+          <Skeleton className="h-10 w-24" /> {/* Save Changes button */}
         </div>
       </div>
     </div>

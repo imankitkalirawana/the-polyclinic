@@ -37,6 +37,7 @@ import React from 'react';
 import { toast } from 'sonner';
 import { CopyText } from '@/components/ui/copy';
 import { DrugType } from '@/models/Drug';
+import { redirectTo } from '@/functions/server-actions';
 // import useSWR from 'swr';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
@@ -454,17 +455,7 @@ export default function Drugs({ drugs }: Props) {
         onSelectionChange={setSelectedKeys}
         onSortChange={setSortDescriptor}
         onRowAction={(key) => {
-          const promise = () =>
-            new Promise((resolve) =>
-              setTimeout(() => resolve({ name: 'Sonner' }), 2000)
-            );
-
-          toast.promise(promise, {
-            loading: 'Loading...',
-            error: 'Error',
-            duration: 1500
-          });
-          router.push(`/dashboard/drugs/${key}`);
+          redirectTo(`/dashboard/drugs/${key}`);
         }}
         className="cursor-pointer"
       >
