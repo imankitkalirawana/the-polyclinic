@@ -68,7 +68,10 @@ export default function ServiceSkeleton() {
             </div>
             {/* Table Row */}
             {Array.from({ length: 5 }).map((_, index) => (
-              <div className="grid grid-cols-5 gap-4 p-4">
+              <div
+                key={`table-row-${index}`}
+                className="grid grid-cols-5 gap-4 p-4"
+              >
                 <Skeleton className="h-4 w-20" />
                 <Skeleton className="h-4 w-16" />
                 <Skeleton className="h-4 w-32" />
