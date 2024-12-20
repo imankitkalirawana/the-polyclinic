@@ -16,7 +16,7 @@ export const POST = async function POST(request: any, context: any) {
     for (const appointment of appointments) {
       await Appointment.findOneAndUpdate(
         { aid: appointment.aid },
-        {},
+        { status: 'overdue' },
         { new: true }
       ).then(async () => {
         await sendHTMLMail(
