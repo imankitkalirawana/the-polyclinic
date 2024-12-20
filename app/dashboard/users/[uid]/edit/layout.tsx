@@ -10,7 +10,7 @@ interface Props {
   };
 }
 
-export default async function Layout({
+export default function Layout({
   children,
   params
 }: Readonly<{
