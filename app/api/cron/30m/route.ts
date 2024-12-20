@@ -11,7 +11,9 @@ export const POST = async function POST(request: any) {
     await connectDB();
     const appointments = await Appointment.find({
       date: { $lt: new Date().toISOString() },
-      status: { $nin: ['overdue', 'cancelled', 'completed', 'on-hold'] }
+      status: {
+        $nin: ['overdue', 'cancelled', 'completed', 'on-hold', 'in-progress']
+      }
     }).lean();
 
     for (const appointment of appointments) {
