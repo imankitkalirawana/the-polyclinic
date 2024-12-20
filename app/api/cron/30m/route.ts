@@ -11,13 +11,13 @@ export const POST = async function POST(request: any) {
     await connectDB();
     const appointments = await Appointment.find({
       date: { $lt: new Date().toISOString() },
-      status: { $nin: ['overdue', 'cancelled', 'completed'] }
+      status: { $nin: ['overdue', 'cancelled', 'completed', 'on-hold'] }
     }).lean();
 
     for (const appointment of appointments) {
       await Appointment.findOneAndUpdate(
         { aid: appointment.aid },
-        {},
+        { status: 'overdue' },
         { new: true }
       ).then(async () => {
         await checkDomainMx('contact@divinely.dev')
