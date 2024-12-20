@@ -32,7 +32,8 @@ export const POST = async function POST(request: any, context: any) {
     }
 
     return NextResponse.json({
-      message: `Affected ${appointments.length} items`
+      message: `Affected ${appointments.length} items`,
+      appointments
     });
   } catch (error: any) {
     console.error(error);
