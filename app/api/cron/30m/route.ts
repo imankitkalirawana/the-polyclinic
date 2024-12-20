@@ -31,7 +31,9 @@ export const POST = async function POST(request: any, context: any) {
       });
     }
 
-    return NextResponse.json({ message: 'Successfull' });
+    return NextResponse.json({
+      message: `Affected ${appointments.length} items`
+    });
   } catch (error: any) {
     console.error(error);
     return NextResponse.json({ message: error.message }, { status: 500 });
