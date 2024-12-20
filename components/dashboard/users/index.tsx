@@ -15,7 +15,6 @@ import {
   ChipProps,
   Chip,
   Selection,
-  Avatar,
   Dropdown,
   DropdownTrigger,
   Button,
@@ -32,16 +31,12 @@ import {
   useDisclosure
 } from '@nextui-org/react';
 import Link from 'next/link';
-import { redirect, useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import React from 'react';
 import { toast } from 'sonner';
-import axios from 'axios';
 import { CopyText } from '@/components/ui/copy';
-import { cn } from '@/lib/utils';
 import { UserType } from '@/models/User';
-import { revalidatePath } from 'next/cache';
 import { redirectTo } from '@/functions/server-actions';
-// import useSWR from 'swr';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   active: 'success',

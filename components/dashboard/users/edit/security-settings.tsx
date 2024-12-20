@@ -43,7 +43,6 @@ interface SecuritySettingsProps {
 }
 
 export default function SecuritySettings({ user }: SecuritySettingsProps) {
-  const router = useRouter();
   const editEmailModal = useDisclosure();
   const editPasswordModal = useDisclosure();
   const deactivateModal = useDisclosure();

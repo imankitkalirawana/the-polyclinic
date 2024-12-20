@@ -1,4 +1,3 @@
-import AccountDetails from '@/components/dashboard/users/edit/account-details';
 import SecuritySettings from '@/components/dashboard/users/edit/security-settings';
 import { API_BASE_URL } from '@/lib/config';
 import axios from 'axios';
@@ -25,7 +24,7 @@ export default async function Page({ params }: Props) {
   const user = await getData(params.uid);
   return (
     <>
-      <AccountDetails user={user} />
+      <SecuritySettings user={user} />
     </>
   );
 }

@@ -94,10 +94,6 @@ export default function NewService() {
     setNumRows(numRows + 1);
     console.log('formik.values.service.data', formik.values.service.data);
     formik.setFieldValue('service.data', newValues);
-    console.log(
-      'formik.values.service.data After:',
-      formik.values.service.data
-    );
   };
 
   const handleAddColumn = (colIndex: number) => {
@@ -417,7 +413,7 @@ export default function NewService() {
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="">
+                    <tbody>
                       {Array.from({ length: numRows }).map((_, rowIndex) => (
                         <tr
                           key={rowIndex}

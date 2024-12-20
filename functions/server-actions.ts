@@ -1,16 +1,18 @@
 'use server';
 import Service from '@/models/Service';
 import User from '@/models/User';
-import Doctor, { DoctorType } from '@/models/Doctor';
+import Doctor from '@/models/Doctor';
+import Drug from '@/models/Drug';
 import Otp from '@/models/Otp';
 import Appointment from '@/models/Appointment';
 import { connectDB } from '@/lib/db';
 import { transporter } from '@/lib/nodemailer';
 import { MailOptions } from 'nodemailer/lib/json-transport';
-import { generateOtp, sendSMS } from '@/lib/functions';
+import { generateOtp, sendSMS, sendMail as sendEmail } from '@/lib/functions';
 import bcrypt from 'bcryptjs';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { format } from 'date-fns';
 
 export const verifyUID = async (uid: string, _id?: string) => {
   await connectDB();
@@ -153,6 +155,16 @@ export const getDoctorWithUID = async (uid: number) => {
 // appointment related functions
 
 export const changeAppointmentStatus = async (id: string, status: string) => {
+  const emailMessageMap: Record<string, string> = {
+    booked: 'Your appointment has been booked',
+    confirmed: 'Your appointment has been confirmed',
+    'in-progress': 'Your appointment is in progress',
+    completed: 'Your appointment has been completed',
+    cancelled: 'Your appointment has been cancelled',
+    overdue: 'Your appointment is overdue',
+    'on-hold': 'Your appointment is on hold'
+  };
+
   await connectDB();
   const appointment = await Appointment.findByIdAndUpdate(
     id,
@@ -161,24 +173,71 @@ export const changeAppointmentStatus = async (id: string, status: string) => {
   );
   if (!appointment) {
     throw new Error('Appointment not found');
+  } else {
+    await sendEmail(
+      appointment.email,
+      'Appointment Status',
+      emailMessageMap[status]
+    );
   }
   return true;
 };
 
-export const rescheduleAppointment = async (id: string, date: string) => {
+export const rescheduleAppointment = async (aid: number, date: string) => {
   await connectDB();
-  const appointment = await Appointment.findByIdAndUpdate(
-    id,
-    { date, status: 'booked' },
+  const appointment = await Appointment.findOneAndUpdate(
+    { aid },
+    { date },
     { new: true }
   );
   if (!appointment) {
     throw new Error('Appointment not found');
+  } else {
+    await sendEmail(
+      appointment.email,
+      `Appointment Rescheduled for ${appointment.name}`,
+      `Dear, ${appointment.name} your appointment with ID:#${aid} been rescheduled to ${format(new Date(date), 'PPPPp')}`
+    );
   }
   return true;
+};
+
+// drugs
+
+export const getAllDrugs = async () => {
+  await connectDB();
+  const drugs = await Drug.find()
+    .select('brandName genericName frequency did')
+    .lean();
+  return drugs.map((drug) => ({
+    ...drug,
+    _id: drug._id.toString()
+  }));
 };
 
 export const redirectTo = (url: string) => {
   revalidatePath(url);
   redirect(url);
+};
+export const overdueAppointments = async () => {
+  // find appointments that are in past and status is not overdue, cancelled or completed
+  await connectDB();
+  const appointments = await Appointment.find({
+    date: { $lt: new Date().toISOString() },
+    status: { $nin: ['overdue', 'cancelled', 'completed'] }
+  }).lean();
+
+  for (const appointment of appointments) {
+    await Appointment.findOneAndUpdate(
+      { aid: appointment.aid },
+      { status: 'overdue' },
+      { new: true }
+    ).then(async () => {
+      await sendEmail(
+        appointment.email,
+        'Appointment Status',
+        'Your appointment is overdue'
+      );
+    });
+  }
 };

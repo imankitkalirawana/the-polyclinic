@@ -1,4 +1,5 @@
 'use client';
+import { overdueAppointments } from '@/functions/server-actions';
 import { saveAs } from 'file-saver';
 import { toast } from 'sonner';
 
@@ -37,8 +38,10 @@ END:VCALENDAR
 
   return (
     <button
-      onClick={() => {
-        toast('Event added to calendar');
+      onClick={async () => {
+        await overdueAppointments().then(() =>
+          toast.success('Appointments are overdue')
+        );
       }}
       className="rounded bg-blue-500 p-2 text-white hover:bg-blue-700"
     >

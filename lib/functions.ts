@@ -19,14 +19,41 @@ export const sendMail = async (
     subject: subject,
     text: message
   };
-  try {
-    return await transporter.sendMail(mailOptions).then(() => {
+  return await transporter
+    .sendMail(mailOptions)
+    .then(() => {
       console.log('Email sent');
+    })
+    .catch((err) => {
+      console.error('Failed to send email');
+      console.error(err);
     });
-  } catch (error) {
-    console.error('Failed to send email', error);
-    return new Error('Failed to send email');
-  }
+};
+
+export const sendHTMLMail = async (
+  to: string,
+  subject: string,
+  message: string,
+  title?: string
+) => {
+  const mailOptions = {
+    from: {
+      name: title ? `${title} - The Polyclinic` : 'The Polyclinic',
+      address: email
+    },
+    to: to,
+    subject: subject,
+    html: message
+  };
+  return await transporter
+    .sendMail(mailOptions)
+    .then(() => {
+      console.log('Email sent');
+    })
+    .catch((err) => {
+      console.error('Failed to send email');
+      console.error(err);
+    });
 };
 
 export const sendSMS = async (phone: string, message: string) => {

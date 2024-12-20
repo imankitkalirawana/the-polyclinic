@@ -836,7 +836,7 @@ function RescheduleAppointment({
               return;
             }
             setIsLoading(true);
-            await rescheduleAppointment(appointment._id, slotParam)
+            await rescheduleAppointment(appointment.aid, slotParam)
               .then(() => {
                 setAppointments((prev: AppointmentType[]) => {
                   const updatedAppointments = prev.map((item) => {

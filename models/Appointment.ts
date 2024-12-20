@@ -1,6 +1,7 @@
 import mongoose, { Model } from 'mongoose';
 import { Base } from '@/lib/interface';
 import mongooseSequence from 'mongoose-sequence';
+import { sendMail } from '@/lib/functions';
 
 export interface GuestType {
   name: string;
@@ -28,6 +29,9 @@ export interface AppointmentType extends Base {
     | 'cancelled'
     | 'overdue'
     | 'on-hold';
+  description: string;
+  data?: Record<string, string>;
+  instructions: string;
 }
 
 // @ts-ignore
@@ -71,7 +75,13 @@ const appointmentSchema = new mongoose.Schema(
       type: String,
       enum: ['online', 'offline'],
       default: 'offline'
-    }
+    },
+    description: String,
+    data: {
+      type: Map,
+      of: String
+    },
+    instructions: String
   },
   {
     timestamps: true
