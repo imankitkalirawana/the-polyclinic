@@ -1,4 +1,4 @@
-import { transporter } from './nodemailer';
+import { checkDomainMx, transporter } from './nodemailer';
 const email = process.env.EMAIL || 'contact@divinely.dev';
 import Otp from '@/models/Otp';
 import { connectDB } from './db';
@@ -19,14 +19,20 @@ export const sendMail = async (
     subject: subject,
     text: message
   };
-  return await transporter
-    .sendMail(mailOptions)
-    .then(() => {
-      console.log('Email sent');
+  return await checkDomainMx(to)
+    .then(async () => {
+      await transporter
+        .sendMail(mailOptions)
+        .then(() => {
+          console.log('Email sent');
+        })
+        .catch((err) => {
+          console.error('Failed to send email');
+          console.error(err);
+        });
     })
-    .catch((err) => {
-      console.error('Failed to send email');
-      console.error(err);
+    .catch((error) => {
+      console.error(error);
     });
 };
 
@@ -45,14 +51,20 @@ export const sendHTMLMail = async (
     subject: subject,
     html: message
   };
-  return await transporter
-    .sendMail(mailOptions)
-    .then(() => {
-      console.log('Email sent');
+  return await checkDomainMx(to)
+    .then(async () => {
+      await transporter
+        .sendMail(mailOptions)
+        .then(() => {
+          console.log('Email sent');
+        })
+        .catch((err) => {
+          console.error('Failed to send email');
+          console.error(err);
+        });
     })
-    .catch((err) => {
-      console.error('Failed to send email');
-      console.error(err);
+    .catch((error) => {
+      console.error(error);
     });
 };
 
