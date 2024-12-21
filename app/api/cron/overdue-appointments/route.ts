@@ -3,7 +3,8 @@ import { NextResponse } from 'next/server';
 import Appointment from '@/models/Appointment';
 import { connectDB } from '@/lib/db';
 import { format } from 'date-fns';
-import { OverdueEmail } from '@/utils/email-template';
+import { AppointmentStatus } from '@/utils/email-template';
+import { getDoctorWithUID } from '@/functions/server-actions';
 
 export const POST = async function POST(request: any) {
   try {
@@ -21,15 +22,19 @@ export const POST = async function POST(request: any) {
         { status: 'overdue' },
         { new: true }
       ).then(async () => {
-        await sendHTMLMail(
-          appointment.email,
-          'Action Needed: Reschedule Your Missed Appointment',
-          OverdueEmail(
-            appointment.aid,
-            appointment.name,
-            format(appointment.date, 'PPPPp')
-          )
-        );
+        await getDoctorWithUID(appointment.doctor)
+          .then(async (doctor) => {
+            await sendHTMLMail(
+              appointment.email,
+              'Action Needed: Reschedule Your Missed Appointment',
+              AppointmentStatus(appointment, `${doctor.name} (#${doctor.uid})`)
+            ).catch((error) => {
+              console.error(error);
+            });
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       });
     }
 

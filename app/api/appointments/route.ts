@@ -85,18 +85,12 @@ export const POST = auth(async function POST(request: any) {
 
     const appointment = new Appointment(data);
     await appointment.save().then(async () => {
-      await getDoctorWithUID(data.doctor)
+      getDoctorWithUID(data.doctor)
         .then(async (doctor) => {
           await sendHTMLMail(
             data.email,
             'Booked: Appointment Confirmation',
-            AppointmentStatus(
-              appointment.aid,
-              appointment.name,
-              format(appointment.date, 'PPPPp'),
-              'booked',
-              `${doctor.name} (#${doctor.uid})`
-            )
+            AppointmentStatus(appointment, `${doctor.name} (#${doctor.uid})`)
           ).catch((error) => {
             console.error(error);
           });

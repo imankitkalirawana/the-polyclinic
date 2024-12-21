@@ -18,7 +18,10 @@ import bcrypt from 'bcryptjs';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { format } from 'date-fns';
-import { AppointmentStatus } from '@/utils/email-template';
+import {
+  AppointmentStatus,
+  RescheduledAppointment
+} from '@/utils/email-template';
 
 export const verifyUID = async (uid: string, _id?: string) => {
   await connectDB();
@@ -175,25 +178,29 @@ export const changeAppointmentStatus = async (id: string, status: string) => {
   if (!appointment) {
     throw new Error('Appointment not found');
   } else {
-    await getDoctorWithUID(appointment.doctor).then(async (doctor) => {
-      await sendHTMLMail(
-        appointment.email,
-        `Appointment Status: ${emailMessageMap[status]}`,
-        AppointmentStatus(
-          appointment.aid,
-          appointment.name,
-          format(appointment.date, 'PPPPp'),
-          status as 'confirmed' | 'cancelled',
-          `${doctor.name} (#${doctor.uid})`
-        )
-      );
-    });
+    getDoctorWithUID(appointment.doctor)
+      .then(async (doctor) => {
+        await sendHTMLMail(
+          appointment.email,
+          `Appointment Status: ${emailMessageMap[status]}`,
+          AppointmentStatus(appointment, `${doctor.name} (#${doctor.uid})`)
+        ).catch((error) => {
+          console.error(error);
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
   return true;
 };
 
 export const rescheduleAppointment = async (aid: number, date: string) => {
   await connectDB();
+  const previousAppointment = await Appointment.findOne({ aid })
+    .select('date aid')
+    .lean();
+  const previousDate = previousAppointment?.date;
   const appointment = await Appointment.findOneAndUpdate(
     { aid },
     { date },
@@ -202,11 +209,23 @@ export const rescheduleAppointment = async (aid: number, date: string) => {
   if (!appointment) {
     throw new Error('Appointment not found');
   } else {
-    await sendEmail(
-      appointment.email,
-      `Appointment Rescheduled for ${appointment.name}`,
-      `Dear, ${appointment.name} your appointment with ID:#${aid} been rescheduled to ${format(new Date(date), 'PPPPp')}`
-    );
+    getDoctorWithUID(appointment.doctor)
+      .then(async (doctor) => {
+        await sendHTMLMail(
+          appointment.email,
+          'Appointment Rescheduled',
+          RescheduledAppointment(
+            appointment,
+            previousDate as Date,
+            `${doctor.name} (#${doctor.uid})`
+          )
+        ).catch((error) => {
+          console.error(error);
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
   return true;
 };
