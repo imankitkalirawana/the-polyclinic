@@ -2,6 +2,10 @@ import { NextResponse } from 'next/server';
 import Appointment from '@/models/Appointment';
 import { connectDB } from '@/lib/db';
 import { auth } from '@/auth';
+import { sendHTMLMail } from '@/lib/functions';
+import { AppointmentStatus } from '@/utils/email-template';
+import { format } from 'date-fns';
+import { getDoctorWithUID } from '@/functions/server-actions';
 
 export const GET = auth(async function GET(request: any) {
   try {
@@ -80,7 +84,27 @@ export const POST = auth(async function POST(request: any) {
     const data = await request.json();
 
     const appointment = new Appointment(data);
-    await appointment.save();
+    await appointment.save().then(async () => {
+      await getDoctorWithUID(data.doctor)
+        .then(async (doctor) => {
+          await sendHTMLMail(
+            data.email,
+            'Booked: Appointment Confirmation',
+            AppointmentStatus(
+              appointment.aid,
+              appointment.name,
+              format(appointment.date, 'PPPPp'),
+              'booked',
+              `${doctor.name} (#${doctor.uid})`
+            )
+          ).catch((error) => {
+            console.error(error);
+          });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    });
     return NextResponse.json(appointment);
   } catch (error) {
     console.error(error);

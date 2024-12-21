@@ -18,7 +18,7 @@ import bcrypt from 'bcryptjs';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { format } from 'date-fns';
-import { ConfirmedEmail, OverdueEmail } from '@/utils/email-template';
+import { AppointmentStatus } from '@/utils/email-template';
 
 export const verifyUID = async (uid: string, _id?: string) => {
   await connectDB();
@@ -179,7 +179,7 @@ export const changeAppointmentStatus = async (id: string, status: string) => {
       await sendHTMLMail(
         appointment.email,
         `Appointment Status: ${emailMessageMap[status]}`,
-        ConfirmedEmail(
+        AppointmentStatus(
           appointment.aid,
           appointment.name,
           format(appointment.date, 'PPPPp'),
