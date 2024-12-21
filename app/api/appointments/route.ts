@@ -85,7 +85,7 @@ export const POST = auth(async function POST(request: any) {
 
     const appointment = new Appointment(data);
     await appointment.save().then(async () => {
-      getDoctorWithUID(data.doctor)
+      await getDoctorWithUID(data.doctor)
         .then(async (doctor) => {
           await sendHTMLMail(
             data.email,

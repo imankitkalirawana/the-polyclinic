@@ -178,7 +178,7 @@ export const changeAppointmentStatus = async (id: string, status: string) => {
   if (!appointment) {
     throw new Error('Appointment not found');
   } else {
-    getDoctorWithUID(appointment.doctor)
+    await getDoctorWithUID(appointment.doctor)
       .then(async (doctor) => {
         await sendHTMLMail(
           appointment.email,
@@ -209,7 +209,7 @@ export const rescheduleAppointment = async (aid: number, date: string) => {
   if (!appointment) {
     throw new Error('Appointment not found');
   } else {
-    getDoctorWithUID(appointment.doctor)
+    await getDoctorWithUID(appointment.doctor)
       .then(async (doctor) => {
         await sendHTMLMail(
           appointment.email,
