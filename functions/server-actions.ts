@@ -8,11 +8,17 @@ import Appointment from '@/models/Appointment';
 import { connectDB } from '@/lib/db';
 import { transporter } from '@/lib/nodemailer';
 import { MailOptions } from 'nodemailer/lib/json-transport';
-import { generateOtp, sendSMS, sendMail as sendEmail } from '@/lib/functions';
+import {
+  generateOtp,
+  sendSMS,
+  sendMail as sendEmail,
+  sendHTMLMail
+} from '@/lib/functions';
 import bcrypt from 'bcryptjs';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { format } from 'date-fns';
+import { ConfirmedEmail, OverdueEmail } from '@/utils/email-template';
 
 export const verifyUID = async (uid: string, _id?: string) => {
   await connectDB();
@@ -156,13 +162,8 @@ export const getDoctorWithUID = async (uid: number) => {
 
 export const changeAppointmentStatus = async (id: string, status: string) => {
   const emailMessageMap: Record<string, string> = {
-    booked: 'Your appointment has been booked',
-    confirmed: 'Your appointment has been confirmed',
-    'in-progress': 'Your appointment is in progress',
-    completed: 'Your appointment has been completed',
-    cancelled: 'Your appointment has been cancelled',
-    overdue: 'Your appointment is overdue',
-    'on-hold': 'Your appointment is on hold'
+    confirmed: 'Your Appointment is Confirmed',
+    cancelled: 'Your Appointment is Cancelled'
   };
 
   await connectDB();
@@ -170,15 +171,23 @@ export const changeAppointmentStatus = async (id: string, status: string) => {
     id,
     { status },
     { new: true }
-  );
+  ).lean();
   if (!appointment) {
     throw new Error('Appointment not found');
   } else {
-    await sendEmail(
-      appointment.email,
-      'Appointment Status',
-      emailMessageMap[status]
-    );
+    await getDoctorWithUID(appointment.doctor).then(async (doctor) => {
+      await sendHTMLMail(
+        appointment.email,
+        `Appointment Status: ${emailMessageMap[status]}`,
+        ConfirmedEmail(
+          appointment.aid,
+          appointment.name,
+          format(appointment.date, 'PPPPp'),
+          status as 'confirmed' | 'cancelled',
+          `${doctor.name} (#${doctor.uid})`
+        )
+      );
+    });
   }
   return true;
 };

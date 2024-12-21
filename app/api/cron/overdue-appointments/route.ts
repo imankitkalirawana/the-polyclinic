@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import Appointment from '@/models/Appointment';
 import { connectDB } from '@/lib/db';
 import { format } from 'date-fns';
-import { OverdueEmail } from '@/utils/email-template/overdue-email';
+import { OverdueEmail } from '@/utils/email-template';
 
 export const POST = async function POST(request: any) {
   try {
