@@ -1,18 +1,25 @@
+'use client';
 import Error from '@/app/error';
-import { auth } from '@/auth';
+import LoadingPage from '@/components/ui/loading-page';
+import { useSession } from 'next-auth/react';
 
-export default async function Layout({
+export default function Layout({
   children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
+  const { status } = useSession({
+    required: true
+  });
+
   return (
     <>
       {
         // @ts-ignore
-        session ? (
+        status === 'authenticated' ? (
           <div className="mx-auto max-w-7xl px-4">{children}</div>
+        ) : status === 'loading' ? (
+          <LoadingPage />
         ) : (
           <Error
             code="401"

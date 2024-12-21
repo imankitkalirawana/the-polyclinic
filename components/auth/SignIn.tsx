@@ -21,10 +21,12 @@ import { getAllUsers } from '@/functions/server-actions';
 import { signIn } from 'next-auth/react';
 import { toast } from 'sonner';
 import { UserType } from '@/models/User';
+import { useQueryState } from 'nuqs';
 
 const SignIn = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [[page, direction], setPage] = useState([0, 0]);
+  const [callbackUrl] = useQueryState('callbackUrl');
 
   const toggleVisibility = () => setIsVisible(!isVisible);
   const searchParams = useSearchParams();
@@ -77,12 +79,12 @@ const SignIn = () => {
         await signIn('credentials', {
           id: values.id,
           password: values.password,
-          redirect: false
+          redirect: true,
+          redirectTo: callbackUrl || '/'
         }).then((res) => {
           if (res?.error) {
-            toast.error(res.code);
-          } else if (res?.ok) {
-            window.location.href = '/dashboard';
+            console.error(res);
+            res.code && toast.error(res.code);
           }
         });
       }
