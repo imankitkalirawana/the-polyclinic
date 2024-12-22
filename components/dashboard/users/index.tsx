@@ -129,6 +129,7 @@ export default function Users({ users }: { users: UserType[] }) {
           user._id.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
+
     if (
       statusFilter !== 'all' &&
       Array.from(statusFilter).length !== statusOptions.length

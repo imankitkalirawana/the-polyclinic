@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import {
   type CalendarDate,
@@ -59,9 +59,13 @@ import {
   handleAddToCalendar
 } from '@/lib/client-functions';
 import { EventType } from '@/lib/interface';
+import { capitalize } from '@/lib/utility';
 
 export default function Appointments({ session }: { session: any }) {
   const [status, setStatus] = useQueryState('status', {
+    defaultValue: 'upcoming'
+  });
+  const [sort, setSort] = useQueryState('sort', {
     defaultValue: 'upcoming'
   });
   const [aid, setAid] = useQueryState('aid');
@@ -97,26 +101,65 @@ export default function Appointments({ session }: { session: any }) {
     cancelled: 'danger'
   };
 
-  const filteredAppointment = appointments.filter((appointment) => {
+  const filteredAppointment = useMemo(() => {
+    let filteredItems = [...appointments];
+
     if (searchQuery) {
-      return (
-        (appointment.name &&
-          appointment.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        (appointment.email &&
-          appointment.email
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase())) ||
-        (appointment.phone &&
-          appointment.phone
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase())) ||
-        appointment.aid.toString().includes(searchQuery) ||
-        (appointment.status &&
-          appointment.status.toLowerCase().includes(searchQuery.toLowerCase()))
-      );
+      filteredItems = filteredItems.filter((item) => {
+        const searchValue = searchQuery.toLowerCase();
+        return (
+          item.name.toLowerCase().includes(searchValue) ||
+          item.email.toLowerCase().includes(searchValue) ||
+          item.phone.toLowerCase().includes(searchValue)
+        );
+      });
     }
-    return true;
-  });
+
+    return filteredItems;
+  }, [appointments, searchQuery]);
+
+  const sortedItems = useMemo(() => {
+    return [...filteredAppointment].sort((a, b) => {
+      const statusOrder = [
+        'confirmed',
+        'booked',
+        'overdue',
+        'in-progress',
+        'completed',
+        'cancelled'
+      ];
+
+      if (sort === 'date') {
+        return new Date(a.date).getTime() - new Date(b.date).getTime();
+      }
+      if (sort === 'createdAt') {
+        return (
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+      }
+      if (sort === 'name') {
+        return a.name.localeCompare(b.name);
+      }
+      if (sort === 'status') {
+        return statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
+      }
+      if (sort === 'upcoming') {
+        // For "upcoming", prioritize by status order and then by appointment date
+        const statusComparison =
+          statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
+        if (statusComparison !== 0) return statusComparison;
+        return new Date(a.date).getTime() - new Date(b.date).getTime();
+      }
+      return 0; // Default case
+    });
+  }, [filteredAppointment, sort]);
+
+  const noAppointmentMap: Record<string, string> = {
+    all: 'There are no appointments to show. Create a new appointment to get started.',
+    upcoming: 'There are no upcoming appointments to show.',
+    overdue: 'There are no overdue appointments.',
+    past: 'There are no past appointments.'
+  };
 
   return (
     <>
@@ -173,7 +216,7 @@ export default function Appointments({ session }: { session: any }) {
             </div>
           ) : (
             <div className="flex flex-col gap-4">
-              <div>
+              <div className="flex items-center justify-between gap-4">
                 <Input
                   placeholder="Search by name, email, phone"
                   value={searchQuery || ''}
@@ -189,165 +232,200 @@ export default function Appointments({ session }: { session: any }) {
                   className="max-w-md"
                   startContent={<Icon icon="fluent:search-24-regular" />}
                 />
+                <Dropdown>
+                  <DropdownTrigger className="hidden sm:flex">
+                    <Button
+                      variant="flat"
+                      endContent={
+                        <Icon icon={'tabler:chevron-down'} fontSize={16} />
+                      }
+                    >
+                      Sort By
+                    </Button>
+                  </DropdownTrigger>
+                  <DropdownMenu
+                    disallowEmptySelection
+                    aria-label="Sort Appointments"
+                    closeOnSelect={false}
+                    selectionMode="single"
+                    selectedKeys={new Set([sort])}
+                    onSelectionChange={(selectedKeys) => {
+                      const selectedValue = String(Array.from(selectedKeys)[0]);
+                      setSort(selectedValue);
+                    }}
+                  >
+                    {sortOptions.map((sort) => (
+                      <DropdownItem key={sort.uid} className="capitalize">
+                        {capitalize(sort.name)}
+                      </DropdownItem>
+                    ))}
+                  </DropdownMenu>
+                </Dropdown>
               </div>
               {appointments.length === 0 ? (
-                <NoResults description="There are no appointments to show. Create a new appointment to get started." />
+                <NoResults description={noAppointmentMap[status]} />
               ) : (
                 <>
-                  {filteredAppointment.length === 0 ? (
+                  {sortedItems.length === 0 ? (
                     <NoResults />
                   ) : (
-                    <Accordion
-                      motionProps={{
-                        variants: {
-                          enter: {
-                            y: 0,
-                            opacity: 1,
-                            height: 'auto',
-                            overflowY: 'unset',
-                            transition: {
-                              height: {
-                                type: 'spring',
-                                stiffness: 500,
-                                damping: 30,
-                                duration: 1
-                              },
-                              opacity: {
-                                easings: 'ease',
-                                duration: 1,
-                                delay: 0.2
+                    <div className="flex flex-col gap-2">
+                      <p className="pl-2 text-xs text-default-500">
+                        Total {sortedItems.length} Appointments
+                      </p>
+                      <Accordion
+                        motionProps={{
+                          variants: {
+                            enter: {
+                              y: 0,
+                              opacity: 1,
+                              height: 'auto',
+                              overflowY: 'unset',
+                              transition: {
+                                height: {
+                                  type: 'spring',
+                                  stiffness: 500,
+                                  damping: 30,
+                                  duration: 1
+                                },
+                                opacity: {
+                                  easings: 'ease',
+                                  duration: 1,
+                                  delay: 0.2
+                                }
                               }
-                            }
-                          },
-                          exit: {
-                            y: -10,
-                            opacity: 0,
-                            height: 0,
-                            overflowY: 'hidden',
-                            transition: {
-                              height: {
-                                easings: 'ease',
-                                duration: 0.25
-                              },
-                              opacity: {
-                                easings: 'ease',
-                                duration: 0.3
+                            },
+                            exit: {
+                              y: -10,
+                              opacity: 0,
+                              height: 0,
+                              overflowY: 'hidden',
+                              transition: {
+                                height: {
+                                  easings: 'ease',
+                                  duration: 0.25
+                                },
+                                opacity: {
+                                  easings: 'ease',
+                                  duration: 0.3
+                                }
                               }
                             }
                           }
-                        }
-                      }}
-                      variant="splitted"
-                      defaultSelectedKeys={[aid || appointments[0]?.aid]}
-                      onSelectionChange={(selectedKeys) => {
-                        const selectedValue = String(
-                          Array.from(selectedKeys)[0]
-                        );
-                        console.log(selectedValue);
-                        if (selectedValue !== 'undefined') {
-                          setAid(selectedValue);
-                        } else {
-                          setAid(null);
-                        }
-                      }}
-                    >
-                      {filteredAppointment.map((appointment) => {
-                        const appointmentDate = new Date(appointment.date);
-                        appointmentDate.setMinutes(
-                          appointmentDate.getMinutes() + 15
-                        );
+                        }}
+                        variant="splitted"
+                        defaultSelectedKeys={[aid || appointments[0]?.aid]}
+                        onSelectionChange={(selectedKeys) => {
+                          const selectedValue = String(
+                            Array.from(selectedKeys)[0]
+                          );
+                          if (selectedValue !== 'undefined') {
+                            setAid(selectedValue);
+                          } else {
+                            setAid(null);
+                          }
+                        }}
+                      >
+                        {sortedItems.map((appointment) => {
+                          const appointmentDate = new Date(appointment.date);
+                          appointmentDate.setMinutes(
+                            appointmentDate.getMinutes() + 15
+                          );
 
-                        return (
-                          <AccordionItem
-                            key={appointment.aid}
-                            aria-label="Appointments"
-                            title={
-                              <div className="flex w-full gap-4">
-                                <div className="flex flex-col gap-2">
-                                  <div className="flex min-w-24 max-w-24 flex-col gap-4 sm:min-w-40 sm:max-w-40">
-                                    <div className="flex-col gap-4">
-                                      <h4 className="text-xs text-default-500">
-                                        On
-                                      </h4>
-                                      <p className="whitespace-nowrap font-semibold">
-                                        {format(appointmentDate, 'PP')}
-                                      </p>
-                                    </div>
-                                    <div className="flex flex-col gap-1">
-                                      <h4 className="text-xs text-default-500">
-                                        At
-                                      </h4>
-                                      <p className="whitespace-nowrap font-semibold">
-                                        {format(appointment.date, 'p')}
-                                      </p>
+                          return (
+                            <AccordionItem
+                              key={appointment.aid}
+                              aria-label="Appointments"
+                              title={
+                                <div className="flex w-full gap-4">
+                                  <div className="flex flex-col gap-2">
+                                    <div className="flex min-w-24 max-w-24 flex-col gap-4 sm:min-w-40 sm:max-w-40">
+                                      <div className="flex-col gap-4">
+                                        <h4 className="text-xs text-default-500">
+                                          On
+                                        </h4>
+                                        <p className="whitespace-nowrap font-semibold">
+                                          {format(appointmentDate, 'PP')}
+                                        </p>
+                                      </div>
+                                      <div className="flex flex-col gap-1">
+                                        <h4 className="text-xs text-default-500">
+                                          At
+                                        </h4>
+                                        <p className="whitespace-nowrap font-semibold">
+                                          {format(appointment.date, 'p')}
+                                        </p>
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
 
-                                <div className="flex w-full flex-col gap-2 border-l-1 border-l-divider pl-4">
-                                  <div className="flex items-center gap-2">
-                                    {/* avatar for future use */}
-                                    {/* <Avatar
+                                  <div className="flex w-full flex-col gap-2 border-l-1 border-l-divider pl-4">
+                                    <div className="flex items-center gap-2">
+                                      {/* avatar for future use */}
+                                      {/* <Avatar
                                       size="sm"
                                       radius="lg"
                                       src="https://i.pravatar.cc/150?u=a04258114e29026302d"
                                     /> */}
 
-                                    <h4 className="text-default-500">
-                                      {appointment.name}
-                                    </h4>
-                                  </div>
-                                  <div className="flex flex-col gap-2">
-                                    <h3 className="line-clamp-1 font-semibold">
-                                      <span>
-                                        {format(appointment.date, 'PP')}
-                                      </span>
-                                    </h3>
-                                    <div className="flex items-center gap-2">
-                                      <Tooltip
-                                        showArrow
-                                        content="Appointment ID"
-                                        delay={500}
-                                      >
-                                        <Chip variant="bordered" radius="sm">
-                                          #{appointment.aid}
-                                        </Chip>
-                                      </Tooltip>
-                                      <Tooltip
-                                        showArrow
-                                        color={ChipColorMap[appointment.status]}
-                                        content="Appointment Status"
-                                        delay={500}
-                                      >
-                                        <Chip
+                                      <h4 className="text-default-500">
+                                        {appointment.name}
+                                      </h4>
+                                    </div>
+                                    <div className="flex flex-col gap-2">
+                                      <h3 className="line-clamp-1 font-semibold">
+                                        <span>
+                                          {format(appointment.date, 'PP')}
+                                        </span>
+                                      </h3>
+                                      <div className="flex items-center gap-2">
+                                        <Tooltip
+                                          showArrow
+                                          content="Appointment ID"
+                                          delay={500}
+                                        >
+                                          <Chip variant="bordered" radius="sm">
+                                            #{appointment.aid}
+                                          </Chip>
+                                        </Tooltip>
+                                        <Tooltip
+                                          showArrow
                                           color={
                                             ChipColorMap[appointment.status]
                                           }
-                                          radius="sm"
-                                          variant="flat"
-                                          className="capitalize"
+                                          content="Appointment Status"
+                                          delay={500}
                                         >
-                                          {appointment.status}
-                                        </Chip>
-                                      </Tooltip>
+                                          <Chip
+                                            color={
+                                              ChipColorMap[appointment.status]
+                                            }
+                                            radius="sm"
+                                            variant="flat"
+                                            className="capitalize"
+                                          >
+                                            {appointment.status}
+                                          </Chip>
+                                        </Tooltip>
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                            }
-                            classNames={{
-                              base: 'bg-background shadow-none border-divider border'
-                            }}
-                          >
-                            <AccordionValue
-                              appointment={appointment}
-                              setAppointments={setAppointments}
-                              session={session}
-                            />
-                          </AccordionItem>
-                        );
-                      })}
-                    </Accordion>
+                              }
+                              classNames={{
+                                base: 'bg-background shadow-none border-divider border'
+                              }}
+                            >
+                              <AccordionValue
+                                appointment={appointment}
+                                setAppointments={setAppointments}
+                                session={session}
+                              />
+                            </AccordionItem>
+                          );
+                        })}
+                      </Accordion>
+                    </div>
                   )}
                 </>
               )}
@@ -476,7 +554,9 @@ function AccordionValue({
               value={<p className="capitalize">{appointment.type}</p>}
             />
           </div>
-          <CellValue label="Appointment Notes" value={appointment?.notes} />
+          {appointment.notes && (
+            <CellValue label="Appointment Notes" value={appointment?.notes} />
+          )}
           <CellValue
             label={`Created at: ${format(appointment?.createdAt as Date, 'PPp')}`}
             value={null}
@@ -968,3 +1048,11 @@ function AddtoCalendar({ appointment }: { appointment: AppointmentType }) {
     </>
   );
 }
+
+const sortOptions = [
+  { name: 'UPCOMING', uid: 'upcoming' },
+  { name: 'APPOINTMENT DATE', uid: 'date' },
+  { name: 'NAME', uid: 'name' },
+  { name: 'STATUS', uid: 'status' },
+  { name: 'BOOKING DATE', uid: 'createdAt' }
+];
