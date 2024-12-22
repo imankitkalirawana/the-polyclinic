@@ -173,7 +173,7 @@ export default function ViewAppointment({ session, aid }: Props) {
                       icon={<Icon icon="solar:calendar-bold" />}
                     />
                     <p className="text-default-500">
-                      {format(appointment?.date as Date, 'PPPPp')}
+                      {format(appointment?.date as Date, 'PPp')}
                     </p>
                   </div>
                   <div>

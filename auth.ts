@@ -23,7 +23,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           user = await User.findOne({ phone: credentials.id });
         } else {
           user = await User.findOne({ email: credentials.id });
-          console.log(user);
         }
         if (!user) {
           throw new InvalidCredentialsError();

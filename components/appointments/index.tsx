@@ -264,29 +264,21 @@ export default function Appointments({ session }: { session: any }) {
                             title={
                               <div className="flex w-full gap-4">
                                 <div className="flex flex-col gap-2">
-                                  {/* <h3 className="whitespace-nowrap">
-                                    <span className="hidden sm:block">
-                                      {format(appointment.date, 'iii')}, &nbsp;
-                                    </span>
-                                    <span className="text-default-500">
-                                      {format(appointment.date, 'PP')}
-                                    </span>
-                                  </h3> */}
-                                  <div className="flex min-w-24 max-w-24 gap-4 sm:min-w-40 sm:max-w-40">
-                                    <div className="flex flex-col gap-1 sm:gap-4">
+                                  <div className="flex min-w-24 max-w-24 flex-col gap-4 sm:min-w-40 sm:max-w-40">
+                                    <div className="flex-col gap-4">
                                       <h4 className="text-xs text-default-500">
-                                        Start
+                                        On
+                                      </h4>
+                                      <p className="whitespace-nowrap font-semibold">
+                                        {format(appointmentDate, 'PP')}
+                                      </p>
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                      <h4 className="text-xs text-default-500">
+                                        At
                                       </h4>
                                       <p className="whitespace-nowrap font-semibold">
                                         {format(appointment.date, 'p')}
-                                      </p>
-                                    </div>
-                                    <div className="hidden flex-col gap-4 sm:flex">
-                                      <h4 className="text-xs text-default-500">
-                                        End
-                                      </h4>
-                                      <p className="whitespace-nowrap font-semibold">
-                                        {format(appointmentDate, 'p')}
                                       </p>
                                     </div>
                                   </div>
@@ -294,11 +286,12 @@ export default function Appointments({ session }: { session: any }) {
 
                                 <div className="flex w-full flex-col gap-2 border-l-1 border-l-divider pl-4">
                                   <div className="flex items-center gap-2">
-                                    <Avatar
+                                    {/* avatar for future use */}
+                                    {/* <Avatar
                                       size="sm"
                                       radius="lg"
                                       src="https://i.pravatar.cc/150?u=a04258114e29026302d"
-                                    />
+                                    /> */}
 
                                     <h4 className="text-default-500">
                                       {appointment.name}
@@ -306,9 +299,8 @@ export default function Appointments({ session }: { session: any }) {
                                   </div>
                                   <div className="flex flex-col gap-2">
                                     <h3 className="line-clamp-1 font-semibold">
-                                      On{' '}
                                       <span>
-                                        {format(appointment.date, 'PPPP')}
+                                        {format(appointment.date, 'PP')}
                                       </span>
                                     </h3>
                                     <div className="flex items-center gap-2">
@@ -448,16 +440,17 @@ function AccordionValue({
           <CellValue label="Indian Standard Time" value="UTC +05:30" />
           {['booked', 'confirmed', 'in-progress'].includes(
             appointment.status
-          ) && (
-            <Button
-              color="secondary"
-              variant="bordered"
-              onPress={() => handleButtonClick('addToCalendar')}
-              startContent={<Icon icon="solar:calendar-bold" />}
-            >
-              Add to Calendar
-            </Button>
-          )}
+          ) &&
+            ['doctor', 'user'].includes(session.user.role) && (
+              <Button
+                color="secondary"
+                variant="bordered"
+                onPress={() => handleButtonClick('addToCalendar')}
+                startContent={<Icon icon="solar:calendar-bold" />}
+              >
+                Add to Calendar
+              </Button>
+            )}
         </div>
         <div className="flex w-full flex-col border-l-1 border-l-divider pl-4">
           <div className="flex flex-col sm:flex-row sm:gap-8">
@@ -485,7 +478,7 @@ function AccordionValue({
           </div>
           <CellValue label="Appointment Notes" value={appointment?.notes} />
           <CellValue
-            label={`Created at: ${format(appointment?.createdAt as Date, 'PPPPp')}`}
+            label={`Created at: ${format(appointment?.createdAt as Date, 'PPp')}`}
             value={null}
           />
           <div className="flex flex-col items-center justify-between gap-2 sm:flex-row">
@@ -855,7 +848,7 @@ function RescheduleAppointment({
                 setSlotParam(null);
                 setDateParam(null);
                 toast(
-                  `Appointment Rescheduled to ${format(new Date(slotParam), 'PPPPp')}`
+                  `Appointment Rescheduled to ${format(new Date(slotParam), 'PPp')}`
                 );
                 modal.onClose();
               })

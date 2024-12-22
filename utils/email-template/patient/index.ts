@@ -60,7 +60,7 @@ export function AppointmentStatus(
               
               <p style="font-size: 18px; color: #333; margin-bottom: 16px; line-height: 1.6;">
                   <strong style="color: #1d1b48; display: inline-block; width: 180px;">Appointment Date:</strong> 
-                  ${format(appointment.date, 'PPPPp')}
+                  ${format(appointment.date, 'PPp')}
               </p>
               
               <p style="font-size: 18px; color: #333; margin-bottom: 16px; line-height: 1.6;">

@@ -250,8 +250,8 @@ export default function Users({ users }: { users: UserType[] }) {
                 <DropdownItem
                   key={'edit'}
                   startContent={<Icon icon="tabler:edit" fontSize={20} />}
-                  as={Link}
                   href={`/dashboard/users/${user.uid}/edit`}
+                  as={Link}
                 >
                   Edit
                 </DropdownItem>

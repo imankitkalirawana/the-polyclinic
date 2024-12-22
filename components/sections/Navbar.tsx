@@ -30,14 +30,11 @@ const Navbar = ({ session }: NavbarProps) => {
     return null;
 
   const menuItems = [
-    'About',
-    'Blog',
-    'Customers',
-    'Pricing',
-    'Enterprise',
-    'Changelog',
-    'Documentation',
-    'Contact Us'
+    { label: 'Home', url: '/' },
+    { label: 'Dashboard', url: '/dashboard' },
+    { label: 'Appointments', url: '/appointments' },
+    { label: 'About Us', url: '/about' },
+    { label: 'Integrations', url: '/integration' }
   ];
 
   return (
@@ -69,31 +66,13 @@ const Navbar = ({ session }: NavbarProps) => {
 
       {/* Center Content */}
       <NavbarContent justify="center">
-        <NavbarItem>
-          <Link className="text-default-500" href="/">
-            Home
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link className="text-default-500" href="/dashboard">
-            Dashboard
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link className="text-default-500" href="/appointments">
-            Appointments
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link className="text-default-500" href="/about">
-            About Us
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link className="text-default-500" href="/integration">
-            Integrations
-          </Link>
-        </NavbarItem>
+        {menuItems.map((item, index) => (
+          <NavbarItem key={`${item}-${index}`}>
+            <Link className="text-default-500" href={item.url}>
+              {item.label}
+            </Link>
+          </NavbarItem>
+        ))}
       </NavbarContent>
 
       {/* Right Content */}
@@ -150,7 +129,7 @@ const Navbar = ({ session }: NavbarProps) => {
         }}
       >
         <NavbarMenuItem>
-          <Button fullWidth as={Link} href="/auth/register" variant="faded">
+          <Button fullWidth as={Link} href="/auth/login" variant="faded">
             Sign In
           </Button>
         </NavbarMenuItem>
@@ -166,8 +145,8 @@ const Navbar = ({ session }: NavbarProps) => {
         </NavbarMenuItem>
         {menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item}-${index}`}>
-            <Link className="mb-2 w-full text-default-500" href="#">
-              {item}
+            <Link className="mb-2 w-full text-default-500" href={item.url}>
+              {item.label}
             </Link>
             {index < menuItems.length - 1 && <Divider className="opacity-50" />}
           </NavbarMenuItem>

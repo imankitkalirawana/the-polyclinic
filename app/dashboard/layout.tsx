@@ -168,17 +168,15 @@ export default function Layout({
   }, [breadcrumbItems, isHidden]);
 
   return (
-    <div>
-      <div className="flex h-dvh w-full overflow-hidden">
-        {sidebar}
-        <div className="w-[80vw] flex-1 flex-col p-4">
-          {header}
-          <main className="mt-4 h-full w-full overflow-visible">
-            <div className="flex h-[85vh] flex-col gap-4 overflow-scroll rounded-medium border-small border-divider p-4 pb-12 pt-4">
-              {children}
-            </div>
-          </main>
-        </div>
+    <div className="flex h-dvh w-full overflow-hidden">
+      {sidebar}
+      <div className="w-[80vw] flex-1 flex-col md:p-4">
+        {header}
+        <main className="mt-4 h-full w-full overflow-visible">
+          <div className="flex h-[85vh] flex-col gap-4 overflow-scroll rounded-medium border-small border-divider p-2 pb-12 pt-4 md:p-4">
+            {children}
+          </div>
+        </main>
       </div>
     </div>
   );

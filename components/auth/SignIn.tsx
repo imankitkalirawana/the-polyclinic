@@ -49,7 +49,6 @@ const SignIn = () => {
   };
 
   const paginate = (newDirection: number) => {
-    console.log('newDirection', newDirection, 'page', page);
     setPage([page + newDirection, newDirection]);
   };
 

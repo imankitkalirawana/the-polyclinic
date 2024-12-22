@@ -3,6 +3,7 @@ import { sendHTMLMail } from '@/lib/functions';
 import { EmailType } from '@/models/Email';
 import { Button, Chip, Input } from '@nextui-org/react';
 import axios from 'axios';
+import { format } from 'date-fns';
 import { Clock, Link2, Maximize2, Plus, Send, X } from 'lucide-react';
 import { cookies } from 'next/headers';
 import { toast } from 'sonner';
@@ -30,10 +31,19 @@ export default async function Page({ params }: Props) {
     <>
       <div className="mx-auto w-full">
         {/* Header */}
-        <div className="flex items-center justify-between border-b p-4">
-          <div className="flex items-center gap-2">
-            #<h1 className="text-lg font-medium">{email._id}</h1>
-          </div>
+        <div className="flex flex-wrap items-center justify-between border-b p-4">
+          <h1
+            title={email.subject}
+            className="line-clamp-1 text-lg font-medium"
+          >
+            {email.subject}
+          </h1>
+          <span
+            title={format(email.createdAt, 'PPp')}
+            className="line-clamp-1 text-xs text-default-500"
+          >
+            {format(email.createdAt, 'PPp')}
+          </span>
         </div>
 
         {/* Email Form */}
@@ -51,10 +61,6 @@ export default async function Page({ params }: Props) {
               <Chip variant="flat">
                 <span className="text-sm">{email.to}</span>
               </Chip>
-            </div>
-            <div className="flex items-center gap-8">
-              <span className="w-8 text-sm text-default-500">Subject:</span>
-              <span className="text-sm font-medium">{email.subject}</span>
             </div>
           </div>
 
