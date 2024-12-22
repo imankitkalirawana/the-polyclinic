@@ -59,6 +59,7 @@ const INITIAL_VISIBLE_COLUMNS = [
   'uid',
   'name',
   'phone',
+  'email',
   'status',
   'role',
   'updatedAt',
