@@ -3,9 +3,10 @@ import Appointment from '@/models/Appointment';
 import { connectDB } from '@/lib/db';
 import { auth } from '@/auth';
 import { sendHTMLMail } from '@/lib/functions';
-import { AppointmentStatus } from '@/utils/email-template';
+import { AppointmentStatus } from '@/utils/email-template/patient';
 import { format } from 'date-fns';
 import { getDoctorWithUID } from '@/functions/server-actions';
+import { NewAppointment } from '@/utils/email-template/doctor';
 
 export const GET = auth(async function GET(request: any) {
   try {
@@ -76,7 +77,9 @@ export const GET = auth(async function GET(request: any) {
 
 export const POST = auth(async function POST(request: any) {
   try {
-    if (request.auth?.user?.role !== 'admin') {
+    const allowedRoles = ['admin', 'doctor', 'receptionist', 'user'];
+    // @ts-ignore
+    if (!allowedRoles.includes(request.auth?.user?.role)) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
@@ -84,24 +87,36 @@ export const POST = auth(async function POST(request: any) {
     const data = await request.json();
 
     const appointment = new Appointment(data);
-    await appointment.save().then(async () => {
-      await getDoctorWithUID(data.doctor)
-        .then(async (doctor) => {
-          await sendHTMLMail(
-            data.email,
-            'Booked: Appointment Confirmation',
-            AppointmentStatus(appointment, `${doctor.name} (#${doctor.uid})`)
-          ).catch((error) => {
-            console.error(error);
-          });
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+    await appointment.save();
+
+    const doctor = await getDoctorWithUID(data.doctor);
+    const emailTasks = [
+      sendHTMLMail(
+        data.email,
+        'Booked: Appointment Confirmation',
+        AppointmentStatus(appointment, `${doctor.name} (#${doctor.uid})`)
+      ).catch((error) => {
+        console.error('Failed to send patient email:', error);
+      }),
+      sendHTMLMail(
+        doctor.email,
+        `New Appointment Requested by ${data.name}`,
+        NewAppointment(appointment)
+      ).catch((error) => {
+        console.error('Failed to send doctor email:', error);
+      })
+    ];
+
+    Promise.all(emailTasks).catch((error) => {
+      console.error('Error in email sending:', error);
     });
+
     return NextResponse.json(appointment);
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
+    console.error('API Error:', error);
+    return NextResponse.json(
+      { message: 'An error occurred while processing your request' },
+      { status: 500 }
+    );
   }
 });

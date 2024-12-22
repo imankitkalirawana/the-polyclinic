@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import Appointment from '@/models/Appointment';
 import { connectDB } from '@/lib/db';
 import { format } from 'date-fns';
-import { AppointmentStatus } from '@/utils/email-template';
+import { AppointmentStatus } from '@/utils/email-template/patient';
 import { getDoctorWithUID } from '@/functions/server-actions';
 
 export const POST = async function POST(request: any) {

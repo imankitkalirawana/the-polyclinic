@@ -108,12 +108,7 @@ export const sectionItems: SidebarItem[] = [
         icon: 'solar:test-tube-minimalistic-broken',
         title: 'Services'
       },
-      {
-        key: 'newsletters',
-        href: '/dashboard/newsletters',
-        icon: 'solar:inbox-broken',
-        title: 'Newsletters'
-      },
+
       {
         key: 'drugs',
         href: '/dashboard/drugs',
@@ -121,10 +116,16 @@ export const sectionItems: SidebarItem[] = [
         title: 'Drugs'
       },
       {
-        key: 'room-types',
-        href: '/dashboard/room-types',
-        icon: 'mynaui:filter',
-        title: 'Room Types'
+        key: 'emails',
+        href: '/dashboard/emails',
+        icon: 'solar:mailbox-broken',
+        title: 'Emails'
+      },
+      {
+        key: 'newsletters',
+        href: '/dashboard/newsletters',
+        icon: 'solar:inbox-broken',
+        title: 'Newsletters'
       },
       {
         key: 'website',

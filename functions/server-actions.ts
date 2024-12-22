@@ -21,7 +21,7 @@ import { format } from 'date-fns';
 import {
   AppointmentStatus,
   RescheduledAppointment
-} from '@/utils/email-template';
+} from '@/utils/email-template/patient';
 
 export const verifyUID = async (uid: string, _id?: string) => {
   await connectDB();
@@ -178,21 +178,23 @@ export const changeAppointmentStatus = async (id: string, status: string) => {
   if (!appointment) {
     throw new Error('Appointment not found');
   } else {
-    await getDoctorWithUID(appointment.doctor)
-      .then(async (doctor) => {
-        await sendHTMLMail(
-          appointment.email,
-          `Appointment Status: ${emailMessageMap[status]}`,
-          AppointmentStatus(appointment, `${doctor.name} (#${doctor.uid})`)
-        ).catch((error) => {
-          console.error(error);
-        });
-      })
-      .catch((error) => {
+    const doctor = await getDoctorWithUID(appointment.doctor);
+    const emailTasks = [
+      sendHTMLMail(
+        appointment.email,
+        `Appointment Status: ${emailMessageMap[status]}`,
+        AppointmentStatus(appointment, `${doctor.name} (#${doctor.uid})`)
+      ).catch((error) => {
         console.error(error);
-      });
+      })
+    ];
+
+    Promise.all(emailTasks).catch((error) => {
+      console.error('Error in email sending:', error);
+    });
+
+    return true;
   }
-  return true;
 };
 
 export const rescheduleAppointment = async (aid: number, date: string) => {
@@ -209,25 +211,28 @@ export const rescheduleAppointment = async (aid: number, date: string) => {
   if (!appointment) {
     throw new Error('Appointment not found');
   } else {
-    await getDoctorWithUID(appointment.doctor)
-      .then(async (doctor) => {
-        await sendHTMLMail(
-          appointment.email,
-          'Appointment Rescheduled',
-          RescheduledAppointment(
-            appointment,
-            previousDate as Date,
-            `${doctor.name} (#${doctor.uid})`
-          )
-        ).catch((error) => {
-          console.error(error);
-        });
-      })
-      .catch((error) => {
+    const doctor = await getDoctorWithUID(appointment.doctor);
+
+    const emailTasks = [
+      sendHTMLMail(
+        appointment.email,
+        'Appointment Rescheduled',
+        RescheduledAppointment(
+          appointment,
+          previousDate as Date,
+          `${doctor.name} (#${doctor.uid})`
+        )
+      ).catch((error) => {
         console.error(error);
-      });
+      })
+    ];
+
+    Promise.all(emailTasks).catch((error) => {
+      console.error('Error in email sending:', error);
+    });
+
+    return true;
   }
-  return true;
 };
 
 // drugs

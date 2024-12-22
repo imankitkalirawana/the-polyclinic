@@ -3,6 +3,8 @@ const email = process.env.EMAIL || 'contact@divinely.dev';
 import Otp from '@/models/Otp';
 import { connectDB } from './db';
 import { countryProp } from '@/components/dashboard/users/edit/countries';
+import axios from 'axios';
+import { API_BASE_URL } from './config';
 
 export const sendMail = async (
   to: string,
@@ -55,8 +57,18 @@ export const sendHTMLMail = async (
     .then(async () => {
       await transporter
         .sendMail(mailOptions)
-        .then(() => {
-          console.log('Email sent');
+        .then(async () => {
+          console.log(`Email sent to ${to}`);
+          await axios
+            .post(`${API_BASE_URL}api/emails`, {
+              from: mailOptions.from.address,
+              to: mailOptions.to,
+              subject: mailOptions.subject,
+              message: mailOptions.html
+            })
+            .catch((error) => {
+              console.error('Failed to save email:', error);
+            });
         })
         .catch((err) => {
           console.error('Failed to send email');

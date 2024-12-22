@@ -73,7 +73,7 @@ export function AppointmentStatus(
               ${statusDescriptionMap[appointment.status]}
           </p>
           
-          <a href="${API_BASE_URL}appointments?aid=${appointment.aid}&status=all" style="display: inline-block; background-color: ${statusColorMap[appointment.status]}; color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-size: 20px; font-weight: 500; transition: background-color 0.3s ease;">
+          <a href="${API_BASE_URL}appointments?aid=${appointment.aid}&status=all&query=${appointment.aid}" style="display: inline-block; background-color: ${statusColorMap[appointment.status]}; color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-size: 20px; font-weight: 500; transition: background-color 0.3s ease;">
               ${statusButtonMap[appointment.status]}
           </a>
           
@@ -132,7 +132,7 @@ export function RescheduledAppointment(
             Your appointment has been successfully rescheduled. If you need to make any changes, please use the button below.
         </p>
         
-        <a href="${API_BASE_URL}appointments?aid=${appointment.aid}&status=all" style="display: inline-block; background-color: #73CD7D; color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-size: 20px; font-weight: 500; transition: background-color 0.3s ease;">
+        <a href="${API_BASE_URL}appointments?aid=${appointment.aid}&status=all&query=${appointment.aid}" style="display: inline-block; background-color: #73CD7D; color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-size: 20px; font-weight: 500; transition: background-color 0.3s ease;">
             Manage Appointment
         </a>
         
