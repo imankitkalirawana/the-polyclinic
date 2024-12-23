@@ -51,33 +51,47 @@ export default function Layout({
     return (
       <div
         className={cn(
-          'relative flex h-full w-72 max-w-[288px] flex-1 flex-col !border-r-small border-divider p-6 transition-[transform,opacity,margin] duration-250 ease-in-out',
+          'relative flex h-full w-72 max-w-[288px] flex-1 flex-col !border-r-small border-divider transition-[transform,opacity,margin] duration-250 ease-in-out',
           {
             '-ml-72 -translate-x-72': isHidden
           }
         )}
       >
-        <Spacer y={8} />
-        <Link
-          href={'/dashboard/profile'}
-          className="flex items-center gap-3 rounded-xl p-2 px-3 transition-all hover:bg-default"
+        <div
+          style={{
+            background: "url('/assets/sidebar-profile.png')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'start'
+          }}
+          className="relative aspect-square w-full text-white"
         >
-          <Avatar
-            isBordered
-            size="sm"
-            //   src="https://i.pravatar.cc/150?u=a04258114e29026708c"
-            name={session?.user?.name || 'Anonymous'}
-          />
-          <div className="flex flex-col">
-            <p className="text-small font-medium text-default-600">
-              {session?.user?.name}
-            </p>
-            <p className="text-tiny capitalize text-default-400">
-              {session?.user?.uid}
-            </p>
+          <div className="absolute h-full w-full bg-black/50 backdrop-blur-sm"></div>
+          <div className="absolute left-0 top-0 flex h-full w-full flex-col items-center gap-8 p-4">
+            <div className="flex w-full items-center justify-between">
+              <h2>My Profile</h2>
+              <Button
+                radius="full"
+                className="bg-white/40 text-white backdrop-blur-sm"
+                isIconOnly
+              >
+                <Icon icon="mingcute:edit-line" width={20} />
+              </Button>
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <Avatar
+                className="h-20 w-20"
+                size="lg"
+                src="https://i.pravatar.cc/150?u=a04258114e29026708c"
+                name={session?.user?.name || 'Anonymous'}
+              />
+              <p className="text-lg font-medium">{session?.user?.name}</p>
+              <p className="text-sm font-light capitalize">
+                {session?.user?.role}
+              </p>
+            </div>
           </div>
-        </Link>
-        <ScrollShadow className="-mr-6 h-full max-h-full py-6 pr-6">
+        </div>
+        <ScrollShadow className="h-full max-h-full pr-6">
           <Sidebar
             defaultSelectedKey="home"
             items={sectionItemsWithTeams}
@@ -85,7 +99,7 @@ export default function Layout({
           />
         </ScrollShadow>
         <Spacer y={8} />
-        <div className="mt-auto flex flex-col">
+        <div className="mt-auto hidden flex-col">
           <Button
             aria-label="Help & Information"
             fullWidth
