@@ -1,9 +1,5 @@
 'use client';
-import {
-  capitalize,
-  humanReadableDate,
-  humanReadableTime
-} from '@/lib/utility';
+
 import { Icon } from '@iconify/react/dist/iconify.js';
 import {
   TableHeader,
@@ -12,9 +8,9 @@ import {
   TableRow,
   TableCell,
   Table,
-  ChipProps,
   Chip,
   Selection,
+  Avatar,
   Dropdown,
   DropdownTrigger,
   Button,
@@ -28,29 +24,34 @@ import {
   ModalBody,
   ModalContent,
   ModalFooter,
-  useDisclosure
+  useDisclosure,
+  Spinner,
+  ChipProps
 } from '@nextui-org/react';
+import { useFormik } from 'formik';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { toast } from 'sonner';
-import { CopyText } from '@/components/ui/copy';
+import { signOut } from 'next-auth/react';
+import axios from 'axios';
+import { useQueryState, parseAsInteger } from 'nuqs';
+import useDebounce from '@/hooks/useDebounce';
 import { UserType } from '@/models/User';
-import { redirectTo } from '@/functions/server-actions';
-import {
-  parseAsFloat,
-  parseAsInteger,
-  useQueryState,
-  useQueryStates
-} from 'nuqs';
+import { CopyText } from '@/components/ui/copy';
 
+import {
+  capitalize,
+  humanReadableDate,
+  humanReadableTime
+} from '@/lib/utility';
+import { redirectTo } from '@/functions/server-actions';
 const statusColorMap: Record<string, ChipProps['color']> = {
   active: 'success',
   inactive: 'warning',
   blocked: 'warning',
   deleted: 'danger'
 };
-
 const roleColorMap: Record<string, ChipProps['color']> = {
   admin: 'danger',
   user: 'default',
@@ -60,74 +61,67 @@ const roleColorMap: Record<string, ChipProps['color']> = {
   pharmacist: 'success',
   laboratorist: 'success'
 };
-
 const INITIAL_VISIBLE_COLUMNS = [
   'uid',
   'name',
-  'phone',
   'email',
+  'phone',
   'status',
-  'role',
   'updatedAt',
   'actions'
 ];
 
 export default function Users() {
-  const deleteModal = useDisclosure();
-  const router = useRouter();
-
+  const [users, setUsers] = React.useState<UserType[]>([]);
+  const [pages, setPages] = React.useState(1);
   const [pagination, setPagination] = React.useState({
-    page: 1,
-    limit: 20,
     totalLinks: 0,
     totalPages: 0
   });
-  const [users, setUsers] = React.useState<UserType[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
 
+  const deleteModal = useDisclosure();
+  const router = useRouter();
   const [selected, setSelected] = React.useState<UserType | null>(null);
-
-  const [isDeleting, setIsDeleting] = React.useState(false);
-  const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
-    new Set([])
-  );
-
-  const [visibleColumns, setVisibleColumns] = React.useState<Selection>(
-    new Set(INITIAL_VISIBLE_COLUMNS)
-  );
-  const [statusFilter, setStatusFilter] = React.useState<Selection>('all');
-  const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
-    column: 'name',
-    direction: 'ascending'
-  });
-
   const [filterValue, setFilterValue] = useQueryState('query', {
     defaultValue: ''
   });
+  const debouncedSearchTerm = useDebounce(filterValue, 500);
+
+  const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
+    new Set([])
+  );
+  const [visibleColumns, setVisibleColumns] = React.useState<Selection>(
+    new Set(INITIAL_VISIBLE_COLUMNS)
+  );
   const [rowsPerPage, setRowsPerPage] = useQueryState(
     'rows',
     parseAsInteger.withDefault(20)
   );
+  const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
+    column: 'name',
+    direction: 'ascending'
+  });
   const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1));
 
-  const handleDelete = async (user: UserType) => {
-    setIsDeleting(true);
-    try {
-      await fetch(`/api/users/${user._id}`, {
-        method: 'DELETE'
+  useEffect(() => {
+    const getData = async () => {
+      setIsLoading(true);
+      const res = await axios.get(`/api/users`, {
+        params: {
+          page,
+          limit: rowsPerPage,
+          search: filterValue
+        }
       });
-
-      toast.success('UserType deleted successfully');
-      deleteModal.onClose();
-      router.refresh();
-    } catch (error) {
-      console.log(error);
-      toast.error('Failed to delete user');
-    }
-    setIsDeleting(false);
-  };
-
-  const hasSearchFilter = Boolean(filterValue);
+      const data = res.data.users;
+      setUsers(data);
+      setPages(res.data.pagination.totalPages);
+      setPagination(res.data.pagination);
+      setIsLoading(false);
+    };
+    getData();
+  }, [debouncedSearchTerm, rowsPerPage, page]);
 
   const headerColumns = React.useMemo(() => {
     if (visibleColumns === 'all') return columns;
@@ -137,52 +131,15 @@ export default function Users() {
     );
   }, [visibleColumns]);
 
-  const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...users];
-
-    if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter(
-        (user) =>
-          (user.name &&
-            user.name.toLowerCase().includes(filterValue.toLowerCase())) ||
-          (user.email &&
-            user.email.toLowerCase().includes(filterValue.toLowerCase())) ||
-          (user.phone &&
-            user.phone.toLowerCase().includes(filterValue.toLowerCase())) ||
-          user._id.toLowerCase().includes(filterValue.toLowerCase())
-      );
-    }
-
-    if (
-      statusFilter !== 'all' &&
-      Array.from(statusFilter).length !== statusOptions.length
-    ) {
-      filteredUsers = filteredUsers.filter((user) =>
-        Array.from(statusFilter).includes(user.role)
-      );
-    }
-
-    return filteredUsers;
-  }, [users, filterValue, statusFilter]);
-
-  const pages = Math.ceil(filteredItems.length / rowsPerPage);
-
-  const items = React.useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
-
-    return filteredItems.slice(start, end);
-  }, [page, filteredItems, rowsPerPage]);
-
   const sortedItems = React.useMemo(() => {
-    return [...items].sort((a: UserType, b: UserType) => {
+    return [...users].sort((a: UserType, b: UserType) => {
       const first = a[sortDescriptor.column as keyof UserType] as string;
       const second = b[sortDescriptor.column as keyof UserType] as string;
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
       return sortDescriptor.direction === 'descending' ? -cmp : cmp;
     });
-  }, [sortDescriptor, items]);
+  }, [sortDescriptor, users]);
 
   const renderCell = React.useCallback(
     (user: UserType, columnKey: React.Key) => {
@@ -267,15 +224,15 @@ export default function Users() {
                     <Icon icon="ic:round-view-in-ar" fontSize={20} />
                   }
                   as={Link}
-                  href={`/dashboard/users/${user.uid}`}
+                  href={`/${user._id}`}
                 >
                   View
                 </DropdownItem>
                 <DropdownItem
                   key={'edit'}
                   startContent={<Icon icon="tabler:edit" fontSize={20} />}
-                  href={`/dashboard/users/${user.uid}/edit`}
                   as={Link}
+                  href={`/${user._id}/edit`}
                 >
                   Edit
                 </DropdownItem>
@@ -342,39 +299,13 @@ export default function Users() {
           <Input
             isClearable
             className="w-full sm:max-w-[44%]"
-            placeholder="Search by name..."
-            // startContent={<SearchIcon />}
+            placeholder="Search anything..."
+            startContent={<Icon icon="tabler:search" />}
             value={filterValue}
             onClear={() => onClear()}
             onValueChange={onSearchChange}
           />
           <div className="flex gap-3">
-            <Dropdown>
-              <DropdownTrigger className="hidden sm:flex">
-                <Button
-                  variant="flat"
-                  endContent={
-                    <Icon icon={'tabler:chevron-down'} fontSize={16} />
-                  }
-                >
-                  Status
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                disallowEmptySelection
-                aria-label="Table Columns"
-                closeOnSelect={false}
-                selectedKeys={statusFilter}
-                selectionMode="multiple"
-                onSelectionChange={setStatusFilter}
-              >
-                {statusOptions.map((status) => (
-                  <DropdownItem key={status.uid} className="capitalize">
-                    {capitalize(status.name)}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button
@@ -405,7 +336,7 @@ export default function Users() {
               color="primary"
               endContent={<Icon icon={'tabler:plus'} />}
               as={Link}
-              href="/dashboard/users/new"
+              href="/new"
             >
               Add New
             </Button>
@@ -413,7 +344,7 @@ export default function Users() {
         </div>
         <div className="flex items-center justify-between">
           <span className="text-small text-default-400">
-            Total {users.length} users
+            Total {pagination.totalLinks} users
           </span>
           <label className="flex items-center text-small text-default-400">
             Rows per page:
@@ -421,9 +352,11 @@ export default function Users() {
               className="bg-transparent text-small text-default-400 outline-none"
               onChange={onRowsPerPageChange}
             >
-              <option value="10">10</option>
-              <option value="20">20</option>
-              <option value="50">50</option>
+              {rows.map((row) => (
+                <option key={row.label} value={row.value}>
+                  {row.label}
+                </option>
+              ))}
             </select>
           </label>
         </div>
@@ -431,12 +364,10 @@ export default function Users() {
     );
   }, [
     filterValue,
-    statusFilter,
     visibleColumns,
     onSearchChange,
     onRowsPerPageChange,
-    users.length,
-    hasSearchFilter
+    users.length
   ]);
 
   const bottomContent = React.useMemo(() => {
@@ -445,7 +376,7 @@ export default function Users() {
         <span className="w-[30%] text-small text-default-400">
           {selectedKeys === 'all'
             ? 'All items selected'
-            : `${selectedKeys.size} of ${filteredItems.length} selected`}
+            : `${selectedKeys.size} of ${users.length} selected`}
         </span>
         <Pagination
           isCompact
@@ -476,7 +407,25 @@ export default function Users() {
         </div>
       </div>
     );
-  }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
+  }, [selectedKeys, users.length, page, pages]);
+
+  const formik = useFormik({
+    initialValues: {},
+    onSubmit: async () => {
+      try {
+        await fetch(`/api/user/${selected?._id}`, {
+          method: 'DELETE'
+        });
+        toast.success('Link deleted successfully');
+        deleteModal.onClose();
+        // refresh data
+        router.refresh();
+      } catch (e) {
+        toast.error('Failed to delete');
+        console.error(e);
+      }
+    }
+  });
 
   return (
     <>
@@ -498,6 +447,7 @@ export default function Users() {
         onRowAction={(key) => {
           redirectTo(`/dashboard/users/${key}`);
         }}
+        className="cursor-pointer"
       >
         <TableHeader columns={headerColumns}>
           {(column) => (
@@ -510,7 +460,12 @@ export default function Users() {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody items={sortedItems} emptyContent={'No users found'}>
+        <TableBody
+          items={sortedItems}
+          loadingContent={<Spinner />}
+          loadingState={isLoading ? 'loading' : 'idle'}
+          emptyContent={'No users found'}
+        >
           {(item) => (
             <TableRow
               key={item.uid}
@@ -539,9 +494,10 @@ export default function Users() {
                   fontSize={54}
                   className="text-danger"
                 />
-                <h2 className="mt-4 max-w-xs text-center text-base">
-                  Are you sure you permanently want to delete {selected?.name}{' '}
-                  from the Database?
+                <h2 className="mt-4 max-w-xs text-center text-sm font-[400]">
+                  Are you sure you permanently want to delete{' '}
+                  <span className="font-semibold">{selected?.name}</span> from
+                  the Database?
                 </h2>
               </ModalHeader>
               <ModalBody className="items-center text-sm">
@@ -555,8 +511,8 @@ export default function Users() {
                   color="danger"
                   variant="flat"
                   fullWidth
-                  isLoading={isDeleting}
-                  onPress={() => handleDelete(selected as UserType)}
+                  isLoading={formik.isSubmitting}
+                  onPress={() => formik.handleSubmit()}
                 >
                   Delete
                 </Button>
@@ -572,16 +528,28 @@ export default function Users() {
 const columns = [
   { name: 'UID', uid: 'uid', sortable: true },
   { name: 'NAME', uid: 'name', sortable: true },
-  { name: 'EMAIL', uid: 'email', sortable: true },
-  { name: 'PHONE', uid: 'phone', sortable: true },
+  { name: 'EMAIL', uid: 'email' },
+  { name: 'PHONE', uid: 'phone' },
   { name: 'STATUS', uid: 'status', sortable: true },
   { name: 'UPDATED AT', uid: 'updatedAt', sortable: true },
   { name: 'ACTIONS', uid: 'actions' }
 ];
 
-const statusOptions = [
-  { name: 'ACTIVE', uid: 'active' },
-  { name: 'INACTIVE', uid: 'inactive' },
-  { name: 'BLOCKED', uid: 'blocked' },
-  { name: 'DELETED', uid: 'deleted' }
+const rows = [
+  {
+    label: '20',
+    value: 20
+  },
+  {
+    label: '50',
+    value: 50
+  },
+  {
+    label: '100',
+    value: 100
+  },
+  {
+    label: '1000',
+    value: 1000
+  }
 ];

@@ -4,8 +4,9 @@ import { NextUIProvider } from '@nextui-org/react';
 import React from 'react';
 import { SessionProvider } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { Provider as ReduxProvider } from 'react-redux';
-import { store } from '@/store';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
 declare module '@react-types/shared' {
   interface RouterConfig {
     routerOptions: NonNullable<
@@ -16,9 +17,23 @@ declare module '@react-types/shared' {
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        // With SSR, we usually want to set some default staleTime
+        // above 0 to avoid refetching immediately on the client
+        staleTime: 60 * 1000
+      }
+    }
+  });
   return (
     <NextUIProvider navigate={router.push}>
-      <SessionProvider>{children}</SessionProvider>
+      <QueryClientProvider client={queryClient}>
+        <SessionProvider>
+          {children}
+          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+        </SessionProvider>
+      </QueryClientProvider>
     </NextUIProvider>
   );
 }

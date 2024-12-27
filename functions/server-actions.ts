@@ -17,7 +17,6 @@ import {
 import bcrypt from 'bcryptjs';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { format } from 'date-fns';
 import {
   AppointmentStatus,
   RescheduledAppointment
@@ -132,6 +131,8 @@ export const getAllPatients = async () => {
     _id: user._id.toString()
   }));
 };
+
+// user related functions
 
 export const getUserWithUID = async (uid: number) => {
   await connectDB();

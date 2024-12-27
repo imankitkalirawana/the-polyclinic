@@ -17,29 +17,36 @@ export const GET = auth(async function GET(request: any) {
     const searchQuery = search
       ? {
           $or: [
-            { uid: { $regex: search, $options: 'i' } },
             { name: { $regex: search, $options: 'i' } },
             { phone: { $regex: search, $options: 'i' } },
             { email: { $regex: search, $options: 'i' } },
-            { tags: { $elemMatch: { $regex: search, $options: 'i' } } }
+            { tags: { $elemMatch: { $regex: search, $options: 'i' } } },
+            {
+              $expr: {
+                $regexMatch: {
+                  input: { $toString: '$uid' },
+                  regex: search,
+                  options: 'i'
+                }
+              }
+            }
           ]
         }
       : {};
-
     await connectDB();
     const users = await User.find(searchQuery)
       .skip((page - 1) * limit)
       .limit(limit);
 
-    const totalLinks = await User.countDocuments(searchQuery);
-    const totalPages = Math.ceil(totalLinks / limit);
+    const totalUsers = await User.countDocuments(searchQuery);
+    const totalPages = Math.ceil(totalUsers / limit);
 
     return NextResponse.json({
       users,
       pagination: {
         page,
         limit,
-        totalLinks,
+        totalUsers,
         totalPages
       }
     });
