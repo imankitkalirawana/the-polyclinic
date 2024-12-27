@@ -26,6 +26,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import {
   changePassword,
+  getUserWithUID,
   sendMail,
   sendMailWithOTP,
   verifyEmail,
@@ -34,15 +35,21 @@ import {
 import { MailOptions } from 'nodemailer/lib/sendmail-transport';
 import { toast } from 'sonner';
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
 import { UserRoles } from '@/lib/options';
 import { UserType } from '@/models/User';
+import { useQuery } from '@tanstack/react-query';
 
-interface SecuritySettingsProps {
-  user: UserType;
-}
+export default function SecuritySettings({ uid }: { uid: number }) {
+  const { data: user, isError } = useQuery<UserType>({
+    queryKey: ['user', uid],
+    queryFn: () => getUserWithUID(uid)
+  });
 
-export default function SecuritySettings({ user }: SecuritySettingsProps) {
+  if (isError) {
+    return <p>Error fetching user data</p>;
+  }
+
+  if (!user) return null;
   const editEmailModal = useDisclosure();
   const editPasswordModal = useDisclosure();
   const deactivateModal = useDisclosure();

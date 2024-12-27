@@ -27,18 +27,30 @@ import { useFormik } from 'formik';
 import Link from 'next/link';
 import axios from 'axios';
 import { toast } from 'sonner';
-import { verifyEmail } from '@/functions/server-actions';
+import { getUserWithUID, verifyEmail } from '@/functions/server-actions';
 import { Genders } from '@/lib/options';
 import { userValidationSchema } from '@/lib/validation';
 import { calculateAge, calculateDOB } from '@/lib/client-functions';
 import { scrollToError } from '@/lib/formik';
 import { UserType } from '@/models/User';
+import { useQuery } from '@tanstack/react-query';
 
-interface AccountDetailsProps {
-  user: UserType;
-}
+export default function AccountDetails({ uid }: { uid: number }) {
+  const {
+    data: user,
+    isError,
+    refetch
+  } = useQuery<UserType>({
+    queryKey: ['user', uid],
+    queryFn: () => getUserWithUID(uid)
+  });
 
-export default function AccountDetails({ user }: AccountDetailsProps) {
+  if (isError) {
+    return <p>Error fetching user data</p>;
+  }
+
+  if (!user) return null;
+
   const inputRefs = {
     name: useRef<HTMLInputElement>(null),
     email: useRef<HTMLInputElement>(null),
@@ -65,7 +77,8 @@ export default function AccountDetails({ user }: AccountDetailsProps) {
           return;
         }
         await axios.put(`/api/users/uid/${user.uid}`, values.user);
-        toast.success('UserType updated successfully');
+        toast.success('User updated successfully');
+        refetch();
       } catch (error: any) {
         console.log(error);
         toast.error(error.response.data.message);

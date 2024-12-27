@@ -1,6 +1,6 @@
 'use client';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { Card, CardBody, Tab, Tabs } from '@nextui-org/react';
+import { Tab, Tabs } from '@nextui-org/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 

@@ -1,19 +1,10 @@
 import AccountDetails from '@/components/dashboard/users/edit/account-details';
-import SecuritySettings from '@/components/dashboard/users/edit/security-settings';
-import { API_BASE_URL } from '@/lib/config';
-import axios from 'axios';
-import { cookies } from 'next/headers';
-
-async function getData(uid: number) {
-  try {
-    const res = await axios.get(`${API_BASE_URL}api/users/uid/${uid}`, {
-      headers: { Cookie: cookies().toString() }
-    });
-    return res.data;
-  } catch (error) {
-    console.error('Error fetching user data');
-  }
-}
+import { getUserWithUID } from '@/functions/server-actions';
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient
+} from '@tanstack/react-query';
 
 interface Props {
   params: {
@@ -22,10 +13,17 @@ interface Props {
 }
 
 export default async function Page({ params }: Props) {
-  const user = await getData(params.uid);
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ['user', params.uid],
+    queryFn: () => getUserWithUID(params.uid)
+  });
+
   return (
     <>
-      <AccountDetails user={user} />
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <AccountDetails uid={params.uid} />
+      </HydrationBoundary>
     </>
   );
 }
