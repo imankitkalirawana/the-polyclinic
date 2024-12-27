@@ -37,6 +37,12 @@ import { toast } from 'sonner';
 import { CopyText } from '@/components/ui/copy';
 import { UserType } from '@/models/User';
 import { redirectTo } from '@/functions/server-actions';
+import {
+  parseAsFloat,
+  parseAsInteger,
+  useQueryState,
+  useQueryStates
+} from 'nuqs';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   active: 'success',
@@ -66,24 +72,43 @@ const INITIAL_VISIBLE_COLUMNS = [
   'actions'
 ];
 
-export default function Users({ users }: { users: UserType[] }) {
+export default function Users() {
   const deleteModal = useDisclosure();
   const router = useRouter();
+
+  const [pagination, setPagination] = React.useState({
+    page: 1,
+    limit: 20,
+    totalLinks: 0,
+    totalPages: 0
+  });
+  const [users, setUsers] = React.useState<UserType[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+
   const [selected, setSelected] = React.useState<UserType | null>(null);
-  const [filterValue, setFilterValue] = React.useState('');
+
   const [isDeleting, setIsDeleting] = React.useState(false);
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
     new Set([])
   );
+
   const [visibleColumns, setVisibleColumns] = React.useState<Selection>(
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
   const [statusFilter, setStatusFilter] = React.useState<Selection>('all');
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: 'name',
     direction: 'ascending'
   });
+
+  const [filterValue, setFilterValue] = useQueryState('query', {
+    defaultValue: ''
+  });
+  const [rowsPerPage, setRowsPerPage] = useQueryState(
+    'rows',
+    parseAsInteger.withDefault(20)
+  );
+  const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1));
 
   const handleDelete = async (user: UserType) => {
     setIsDeleting(true);
@@ -101,8 +126,6 @@ export default function Users({ users }: { users: UserType[] }) {
     }
     setIsDeleting(false);
   };
-
-  const [page, setPage] = React.useState(1);
 
   const hasSearchFilter = Boolean(filterValue);
 

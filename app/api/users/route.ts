@@ -8,9 +8,41 @@ export const GET = auth(async function GET(request: any) {
     if (request.auth?.user?.role !== 'admin') {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
+
+    const { searchParams } = new URL(request.url);
+    const page = Number(searchParams.get('page')) || 1;
+    const limit = Number(searchParams.get('limit')) || 20;
+    const search = searchParams.get('search');
+
+    const searchQuery = search
+      ? {
+          $or: [
+            { uid: { $regex: search, $options: 'i' } },
+            { name: { $regex: search, $options: 'i' } },
+            { phone: { $regex: search, $options: 'i' } },
+            { email: { $regex: search, $options: 'i' } },
+            { tags: { $elemMatch: { $regex: search, $options: 'i' } } }
+          ]
+        }
+      : {};
+
     await connectDB();
-    const users = await User.find();
-    return NextResponse.json(users);
+    const users = await User.find(searchQuery)
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    const totalLinks = await User.countDocuments(searchQuery);
+    const totalPages = Math.ceil(totalLinks / limit);
+
+    return NextResponse.json({
+      users,
+      pagination: {
+        page,
+        limit,
+        totalLinks,
+        totalPages
+      }
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
