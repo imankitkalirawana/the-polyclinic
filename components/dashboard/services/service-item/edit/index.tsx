@@ -61,10 +61,6 @@ export default function EditService({ uid }: { uid: string }) {
     }
   });
 
-  if (isError) {
-    return <div>Service not found</div>;
-  }
-
   const [numRows, setNumRows] = useState(
     Math.max(
       ...Object.keys(formik.values.service.data).map((key) =>
@@ -80,6 +76,10 @@ export default function EditService({ uid }: { uid: string }) {
       )
     ) + 1
   );
+
+  if (isError) {
+    return <div>Service not found</div>;
+  }
 
   const handleInputChange = (key: string, value: string) => {
     formik.setFieldValue(`service.data.${key}`, value);

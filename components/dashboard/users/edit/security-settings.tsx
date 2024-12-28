@@ -319,6 +319,7 @@ export default function SecuritySettings({ uid }: { uid: number }) {
             </div>
             <div className="flex w-full items-center justify-end gap-6">
               <Select
+                aria-label="User Role"
                 variant="bordered"
                 isLoading={emailFormik.values.isUpdatingRole}
                 radius="full"
