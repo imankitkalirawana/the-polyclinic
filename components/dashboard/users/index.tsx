@@ -46,6 +46,7 @@ import {
   humanReadableTime
 } from '@/lib/utility';
 import { redirectTo } from '@/functions/server-actions';
+import { rowOptions } from '@/lib/config';
 const statusColorMap: Record<string, ChipProps['color']> = {
   active: 'success',
   inactive: 'warning',
@@ -352,7 +353,7 @@ export default function Users() {
               className="bg-transparent text-small text-default-400 outline-none"
               onChange={onRowsPerPageChange}
             >
-              {rows.map((row) => (
+              {rowOptions.map((row) => (
                 <option key={row.label} value={row.value}>
                   {row.label}
                 </option>
@@ -533,23 +534,4 @@ const columns = [
   { name: 'STATUS', uid: 'status', sortable: true },
   { name: 'UPDATED AT', uid: 'updatedAt', sortable: true },
   { name: 'ACTIONS', uid: 'actions' }
-];
-
-const rows = [
-  {
-    label: '20',
-    value: 20
-  },
-  {
-    label: '50',
-    value: 50
-  },
-  {
-    label: '100',
-    value: 100
-  },
-  {
-    label: '1000',
-    value: 1000
-  }
 ];

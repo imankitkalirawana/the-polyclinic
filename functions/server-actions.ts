@@ -132,6 +132,21 @@ export const getAllPatients = async () => {
   }));
 };
 
+// server related functions
+
+export const getServiceWithUID = async (uid: string) => {
+  await connectDB();
+  const service = await Service.findOne({ uniqueId: uid }).lean();
+
+  if (!service) {
+    throw new Error('Service not found');
+  }
+  return {
+    ...service,
+    _id: service?._id.toString()
+  };
+};
+
 // user related functions
 
 export const getUserWithUID = async (uid: number) => {

@@ -11,7 +11,7 @@ export const GET = auth(async function GET(request: any) {
 
     const { searchParams } = new URL(request.url);
     const page = Number(searchParams.get('page')) || 1;
-    const limit = Number(searchParams.get('limit')) || 20;
+    const limit = Number(searchParams.get('rows')) || 20;
     const search = searchParams.get('search');
 
     const searchQuery = search

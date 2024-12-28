@@ -25,25 +25,36 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import ReactQuill from 'react-quill';
 import { serviceValidationSchema } from '@/lib/validation';
 import { useRouter } from 'next/navigation';
-import { verifyUID } from '@/functions/server-actions';
+import { getServiceWithUID, verifyUID } from '@/functions/server-actions';
 import QuillInput from '@/components/ui/quill-input';
 import { ServiceType } from '@/models/Service';
+import { useQuery } from '@tanstack/react-query';
 
-interface EditServiceProps {
-  service: ServiceType;
-}
+export default function EditService({ uid }: { uid: string }) {
+  const {
+    data: service,
+    isError,
+    refetch
+  } = useQuery<ServiceType>({
+    queryKey: ['service', uid],
+    queryFn: () => getServiceWithUID(uid)
+  });
 
-export default function EditService({ service }: EditServiceProps) {
+  if (isError) {
+    return <div>Service not found</div>;
+  }
+
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
-      service: service
+      service: service as ServiceType
     },
     validationSchema: serviceValidationSchema,
     onSubmit: async (values) => {
       try {
-        await axios.put(`/api/services/${service._id}`, values.service);
+        await axios.put(`/api/services/${values.service._id}`, values.service);
         toast.success('Service updated successfully');
+        refetch();
         router.push(`/dashboard/services/${values.service.uniqueId}`);
       } catch (error) {
         toast.error('Failed to update service');
@@ -170,7 +181,7 @@ export default function EditService({ service }: EditServiceProps) {
                 }}
                 onBlur={async () => {
                   const uid = formik.values.service.uniqueId;
-                  if (await verifyUID(uid, service._id)) {
+                  if (await verifyUID(uid, service?._id)) {
                     formik.setErrors({
                       service: {
                         uniqueId: 'This Unique ID is already taken'

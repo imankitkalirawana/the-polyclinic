@@ -131,6 +131,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
               )
             }
             title={isCompact || isNestType ? null : item.title}
+            aria-label={item.title}
           >
             {isCompact ? (
               <Tooltip content={item.title} placement="right">
@@ -313,6 +314,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
               classNames={sectionClasses}
               showDivider={isCompact}
               title={item.title}
+              aria-label="section"
             >
               {item.items.map(renderItem)}
             </ListboxSection>

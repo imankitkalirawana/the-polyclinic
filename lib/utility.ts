@@ -4,7 +4,9 @@ export const formatPrice = (price: number) => {
     currency: 'INR',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0
-  }).format(price);
+  })
+    .format(price)
+    .toString();
 };
 
 // function to check if the file type is an image or not

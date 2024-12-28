@@ -37,6 +37,7 @@ import { toast } from 'sonner';
 import { CopyText } from '@/components/ui/copy';
 import { ServiceType } from '@/models/Service';
 import { redirectTo } from '@/functions/server-actions';
+import { rowOptions } from '@/lib/config';
 // import useSWR from 'swr';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
@@ -371,11 +372,11 @@ export default function Services({ services }: HotelProps) {
               className="bg-transparent text-small text-default-400 outline-none"
               onChange={onRowsPerPageChange}
             >
-              <option value="10">10</option>
-              <option value="20">20</option>
-              <option value="50" selected>
-                50
-              </option>
+              {rowOptions.map((row) => (
+                <option key={row.label} value={row.value}>
+                  {row.label}
+                </option>
+              ))}
             </select>
           </label>
         </div>

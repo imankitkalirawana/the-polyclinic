@@ -45,15 +45,16 @@ export default function SecuritySettings({ uid }: { uid: number }) {
     queryFn: () => getUserWithUID(uid)
   });
 
+  const editEmailModal = useDisclosure();
+  const editPasswordModal = useDisclosure();
+  const deactivateModal = useDisclosure();
+  const deleteModal = useDisclosure();
+
   if (isError) {
     return <p>Error fetching user data</p>;
   }
 
   if (!user) return null;
-  const editEmailModal = useDisclosure();
-  const editPasswordModal = useDisclosure();
-  const deactivateModal = useDisclosure();
-  const deleteModal = useDisclosure();
 
   const mailOptions: MailOptions = {
     from: {
