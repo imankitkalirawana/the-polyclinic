@@ -99,7 +99,7 @@ export default function UserCard({ uid }: { uid: number }) {
             as={Link}
             href={`/appointments?uid=${user.uid}`}
             variant="flat"
-            color="primary"
+            color="secondary"
           >
             Book Appointment
           </Button>

@@ -132,7 +132,7 @@ export default function ServiceViewItem({ uid }: { uid: string }) {
             <div className="mt-2 flex gap-2">
               <Button
                 fullWidth
-                color="primary"
+                color="secondary"
                 variant="flat"
                 startContent={<Icon icon="lets-icons:send" width={24} />}
               >

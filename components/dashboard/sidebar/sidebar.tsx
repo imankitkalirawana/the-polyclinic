@@ -12,11 +12,12 @@ import {
   Listbox,
   Tooltip,
   ListboxItem,
-  ListboxSection
+  ListboxSection,
+  Link
 } from '@nextui-org/react';
 import { Icon } from '@iconify/react';
 import { cn } from '@nextui-org/react';
-import Link from 'next/link';
+// import Link from 'next/link';
 
 export enum SidebarItemType {
   Nest = 'nest'

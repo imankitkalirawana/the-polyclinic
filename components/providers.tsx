@@ -29,11 +29,20 @@ const Sonner = () => {
       />
       <Toaster
         toastOptions={{
-          className: 'bg-background/30 backdrop-blur-md'
+          className: 'bg-background/20 backdrop-blur-md',
+          style: { borderRadius: 'var(--nextui-radius-large)' },
+          classNames: {
+            error: 'text-danger-500 bg-danger-300/10 border-danger-300/30',
+            success: 'text-success-500 bg-success-300/10 border-success-300/30',
+            warning: 'text-warning-500 bg-warning-300/10 border-warning-300/30',
+            info: 'text-blue-500 bg-blue-300/10 border-blue-300/30',
+            closeButton:
+              'hover:text-default-700 bg-background/20 border-default-500 text-slate-500 backdrop-blur-sm'
+          }
         }}
-        expand
+        // expand
         theme={'light'}
-        richColors
+        duration={5000}
         closeButton
       />
     </>

@@ -43,22 +43,57 @@ const config = {
               '900': '#233e26',
               foreground: '#000',
               DEFAULT: '#73cd7d'
+            },
+            secondary: {
+              '50': '#e2e6df',
+              '100': '#b9c4b3',
+              '200': '#90a186',
+              '300': '#677f5a',
+              '400': '#3e5c2d',
+              '500': '#153a01',
+              '600': '#113001',
+              '700': '#0e2601',
+              '800': '#0a1c00',
+              '900': '#061100',
+              foreground: '#fff',
+              DEFAULT: '#153a01'
             }
           }
         },
         dark: {
           colors: {
+            default: {
+              '50': '#121414',
+              '100': '#1e2223',
+              '200': '#2a2f31',
+              '300': '#363d3f',
+              '400': '#63696a',
+              '500': '#909495',
+              '600': '#bec0c1',
+              '700': '#ebecec',
+              foreground: '#fff',
+              DEFAULT: '#2a2f31'
+            },
             primary: {
-              '50': '#254329',
-              '100': '#3f7145',
-              '200': '#599f61',
-              '300': '#73cd7d',
-              '400': '#93d89a',
-              '500': '#b2e4b8',
-              '600': '#d2efd5',
-              '700': '#f1faf2',
+              '50': '#174631',
+              '100': '#277654',
+              '200': '#37a676',
+              '300': '#47d698',
+              '400': '#70dfaf',
+              '500': '#9ae8c6',
+              '600': '#c3f2de',
+              '700': '#edfbf5',
               foreground: '#000',
-              DEFAULT: '#599f61'
+              DEFAULT: '#37a676'
+            },
+            background: '#081012',
+            content1: {
+              DEFAULT: '#1B2325',
+              foreground: '#fff'
+            },
+            content2: {
+              DEFAULT: '#1B2325',
+              foreground: '#fff'
             }
           }
         }
@@ -77,9 +112,9 @@ const config = {
           large: '1.75rem'
         },
         radius: {
-          small: '0.5rem',
-          medium: '0.75rem',
-          large: '0.875rem'
+          small: '0.75rem',
+          medium: '1rem',
+          large: '1.25rem'
         },
         borderWidth: {
           small: '1px',

@@ -22,9 +22,9 @@ export default function DashboardTableSkeleton() {
         </div>
 
         {/* Table */}
-        <Card className="w-full">
+        <Card className="w-full divide-y divide-default-200">
           {/* Table Header */}
-          <div className="grid grid-cols-6 gap-4 border-b bg-gray-50 p-4">
+          <div className="grid grid-cols-6 gap-4 bg-default-100 p-4">
             <Skeleton className="h-5 w-16" /> {/* Checkbox column */}
             <Skeleton className="h-5 w-16" /> {/* UID */}
             <Skeleton className="h-5 w-24" /> {/* Name */}
@@ -35,7 +35,7 @@ export default function DashboardTableSkeleton() {
 
           {/* Table Rows */}
           {[...Array(5)].map((_, index) => (
-            <div key={index} className="grid grid-cols-6 gap-4 border-b p-4">
+            <div key={index} className="grid grid-cols-6 gap-4 p-4">
               <Skeleton className="h-5 w-16" /> {/* Checkbox column */}
               <Skeleton className="h-5 w-20" /> {/* UID */}
               <Skeleton className="h-5 w-32" /> {/* Name */}

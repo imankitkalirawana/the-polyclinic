@@ -1,8 +1,9 @@
-import { Chip } from '@nextui-org/react';
+import { Button, Chip } from '@nextui-org/react';
 import { Icon } from '@iconify/react';
 
 import { type SidebarItem, SidebarItemType } from './sidebar';
 import TeamAvatar from './team-avatar';
+import ModeToggle from '@/components/mode-toggle';
 
 export const items: SidebarItem[] = [
   {
@@ -132,6 +133,19 @@ export const sectionItems: SidebarItem[] = [
         href: '/dashboard/website',
         icon: 'solar:card-broken',
         title: 'Website'
+      }
+    ]
+  },
+  {
+    key: 'configure',
+    title: 'Configure',
+    items: [
+      {
+        key: 'theme',
+        href: undefined,
+        icon: 'solar:moon-broken',
+        title: 'Dark Mode',
+        endContent: <ModeToggle />
       }
     ]
   }
