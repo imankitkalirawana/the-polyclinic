@@ -1,8 +1,6 @@
 'use client';
 
-import DashboardTableSkeleton from '@/components/skeletons/dashboard-table-skeleton';
-import FormSkeleton from '@/components/skeletons/form-skeleton';
-import ListSkeleton from '@/components/skeletons/list-skeleton';
+import CommandMenu from '@/components/command-menu';
 import { Button } from '@nextui-org/react';
 import { toast } from 'sonner';
 
