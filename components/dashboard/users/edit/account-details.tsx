@@ -33,18 +33,14 @@ import { userValidationSchema } from '@/lib/validation';
 import { calculateAge, calculateDOB } from '@/lib/client-functions';
 import { scrollToError } from '@/lib/formik';
 import { UserType } from '@/models/User';
-import { useQuery } from '@tanstack/react-query';
 
-export default function AccountDetails({ uid }: { uid: number }) {
-  const {
-    data: user,
-    isError,
-    refetch
-  } = useQuery<UserType>({
-    queryKey: ['user', uid],
-    queryFn: () => getUserWithUID(uid)
-  });
-
+export default function AccountDetails({
+  user,
+  refetch
+}: {
+  user: UserType;
+  refetch: () => void;
+}) {
   const inputRefs = {
     name: useRef<HTMLInputElement>(null),
     email: useRef<HTMLInputElement>(null),
@@ -71,8 +67,8 @@ export default function AccountDetails({ uid }: { uid: number }) {
           return;
         }
         await axios.put(`/api/users/uid/${user?.uid}`, values.user);
-        toast.success('User updated successfully');
         refetch();
+        toast.success('User updated successfully');
       } catch (error: any) {
         console.log(error);
         toast.error(error.response.data.message);
@@ -85,10 +81,6 @@ export default function AccountDetails({ uid }: { uid: number }) {
   }, [formik.isSubmitting]);
 
   const allowedRoles = ['admin', 'doctor', 'receptionist'];
-
-  if (isError) {
-    return <p>Error fetching user data</p>;
-  }
 
   if (!user) return null;
 

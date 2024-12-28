@@ -1,36 +1,47 @@
 'use client';
+import { getUserWithUID } from '@/functions/server-actions';
+import { UserType } from '@/models/User';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { Tab, Tabs } from '@nextui-org/react';
-import Link from 'next/link';
+import { Link, Tab, Tabs } from '@nextui-org/react';
+import { useQuery } from '@tanstack/react-query';
 import { usePathname } from 'next/navigation';
+import { useQueryState } from 'nuqs';
+import AccountDetails from './account-details';
+import NotificationsSettings from './notifications-settings';
+import SecuritySettings from './security-settings';
 
-interface Props {
-  params: {
-    uid: number;
-  };
-}
+export default function EditUser({ uid }: { uid: number }) {
+  const [tab, setTab] = useQueryState('tab', {
+    defaultValue: 'account'
+  });
 
-export default function Layout({
-  children,
-  params
-}: Readonly<{
-  children: React.ReactNode;
-  params: { uid: number };
-}>) {
-  const pathname = usePathname();
-  // get the last part of the pathname
-  const lastPath =
-    pathname.split('/').pop() === 'edit' ? '' : pathname.split('/').pop();
+  const {
+    data: user,
+    isError,
+    refetch
+  } = useQuery<UserType>({
+    queryKey: ['user', uid],
+    queryFn: () => getUserWithUID(uid)
+  });
+
+  if (isError) {
+    return <p>Error fetching user data</p>;
+  }
+
+  if (!user) {
+    return <p>Loading...</p>;
+  }
 
   const tabs = [
     {
-      key: '',
+      key: 'account',
       title: (
         <div className="flex items-center gap-1.5">
           <Icon icon="solar:user-id-bold" width={20} />
           <p>Account</p>
         </div>
-      )
+      ),
+      content: <AccountDetails user={user} refetch={refetch} />
     },
     {
       key: 'notifications-settings',
@@ -39,7 +50,8 @@ export default function Layout({
           <Icon icon="solar:bell-bold" width={20} />
           <p>Notifications</p>
         </div>
-      )
+      ),
+      content: <NotificationsSettings />
     },
     {
       key: 'security-settings',
@@ -48,7 +60,8 @@ export default function Layout({
           <Icon icon="solar:shield-keyhole-bold" width={20} />
           <p>Security</p>
         </div>
-      )
+      ),
+      content: <SecuritySettings user={user} refetch={refetch} />
     }
   ];
   return (
@@ -62,17 +75,16 @@ export default function Layout({
         color="primary"
         items={tabs}
         aria-label="Options"
-        selectedKey={lastPath}
+        selectedKey={tab}
+        onSelectionChange={(key) => setTab(String(key))}
       >
         {(tab) => (
           <Tab
             key={tab.key}
-            as={Link}
-            href={`/dashboard/users/${params.uid}/edit/${tab.key}`}
             title={tab.title}
             className="no-scrollbar overflow-y-scroll"
           >
-            {children}
+            {tab.content}
           </Tab>
         )}
       </Tabs>

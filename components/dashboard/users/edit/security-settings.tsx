@@ -38,12 +38,13 @@ import { UserRoles } from '@/lib/options';
 import { UserType } from '@/models/User';
 import { useQuery } from '@tanstack/react-query';
 
-export default function SecuritySettings({ uid }: { uid: number }) {
-  const { data: user, isError } = useQuery<UserType>({
-    queryKey: ['user', uid],
-    queryFn: () => getUserWithUID(uid)
-  });
-
+export default function SecuritySettings({
+  user,
+  refetch
+}: {
+  user: UserType;
+  refetch: () => void;
+}) {
   const editEmailModal = useDisclosure();
   const editPasswordModal = useDisclosure();
   const deactivateModal = useDisclosure();
@@ -87,9 +88,9 @@ export default function SecuritySettings({ uid }: { uid: number }) {
                 email: values.email
               })
               .then(() => {
+                refetch();
                 toast.success('Email updated successfully.');
                 editEmailModal.onClose();
-                window.location.reload();
               })
               .catch((err) => {
                 toast.error(err.message);
@@ -134,9 +135,9 @@ export default function SecuritySettings({ uid }: { uid: number }) {
     onSubmit: async (values) => {
       await changePassword(user?._id as string, values.password)
         .then(() => {
+          refetch();
           toast.success('Password updated successfully.');
           editPasswordModal.onClose();
-          // window.location.reload();
           passwordFormik.resetForm();
         })
         .catch((err) => {
@@ -175,14 +176,15 @@ export default function SecuritySettings({ uid }: { uid: number }) {
           status: user.status === 'active' ? 'inactive' : 'active'
         })
         .then(() => {
+          refetch();
           toast.success(
             `Account ${
               // @ts-ignore
               user.status === 'inactive' ? 'activated' : 'deactivated'
             } successfully.`
           );
-          deleteModal.onClose();
-          window.location.reload();
+          deactivateFormik.resetForm();
+          deactivateModal.onClose();
         })
         .catch((err) => {
           toast.error(err.message);
@@ -213,6 +215,7 @@ export default function SecuritySettings({ uid }: { uid: number }) {
           status: user.status === 'active' ? 'deleted' : 'active'
         })
         .then(() => {
+          refetch();
           toast.success(
             `Account ${
               // @ts-ignore
@@ -220,19 +223,12 @@ export default function SecuritySettings({ uid }: { uid: number }) {
             } successfully.`
           );
           deleteModal.onClose();
-          window.location.reload();
         })
         .catch((err) => {
           toast.error(err.message);
         });
     }
   });
-
-  if (isError) {
-    return <p>Error fetching user data</p>;
-  }
-
-  if (!user) return null;
 
   return (
     <>
@@ -334,6 +330,7 @@ export default function SecuritySettings({ uid }: { uid: number }) {
                       role: selectedValue
                     })
                     .then(() => {
+                      refetch();
                       toast.success('Role updated successfully.');
                     })
                     .catch((err) => {

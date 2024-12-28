@@ -1,4 +1,4 @@
-import AccountDetails from '@/components/dashboard/users/edit/account-details';
+import EditUser from '@/components/dashboard/users/edit';
 import { getUserWithUID } from '@/functions/server-actions';
 import {
   dehydrate,
@@ -22,7 +22,7 @@ export default async function Page({ params }: Props) {
   return (
     <>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <AccountDetails uid={params.uid} />
+        <EditUser uid={params.uid} />
       </HydrationBoundary>
     </>
   );
