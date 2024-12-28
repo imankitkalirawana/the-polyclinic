@@ -45,12 +45,6 @@ export default function AccountDetails({ uid }: { uid: number }) {
     queryFn: () => getUserWithUID(uid)
   });
 
-  if (isError) {
-    return <p>Error fetching user data</p>;
-  }
-
-  if (!user) return null;
-
   const inputRefs = {
     name: useRef<HTMLInputElement>(null),
     email: useRef<HTMLInputElement>(null),
@@ -65,7 +59,7 @@ export default function AccountDetails({ uid }: { uid: number }) {
 
   const formik = useFormik({
     initialValues: {
-      user: user,
+      user: user as UserType,
       phoneCode: '91',
       age: 0
     },
@@ -76,7 +70,7 @@ export default function AccountDetails({ uid }: { uid: number }) {
           formik.setFieldError('user.email', 'Email already exists');
           return;
         }
-        await axios.put(`/api/users/uid/${user.uid}`, values.user);
+        await axios.put(`/api/users/uid/${user?.uid}`, values.user);
         toast.success('User updated successfully');
         refetch();
       } catch (error: any) {
@@ -91,6 +85,12 @@ export default function AccountDetails({ uid }: { uid: number }) {
   }, [formik.isSubmitting]);
 
   const allowedRoles = ['admin', 'doctor', 'receptionist'];
+
+  if (isError) {
+    return <p>Error fetching user data</p>;
+  }
+
+  if (!user) return null;
 
   return (
     <Card className="bg-transparent p-2 shadow-none">

@@ -40,11 +40,9 @@ export default function EditService({ uid }: { uid: string }) {
     queryFn: () => getServiceWithUID(uid)
   });
 
-  if (isError) {
-    return <div>Service not found</div>;
-  }
-
   const router = useRouter();
+  const [hoveredColIndex, setHoveredColIndex] = useState<number | null>(null);
+
   const formik = useFormik({
     initialValues: {
       service: service as ServiceType
@@ -62,6 +60,10 @@ export default function EditService({ uid }: { uid: string }) {
       }
     }
   });
+
+  if (isError) {
+    return <div>Service not found</div>;
+  }
 
   const [numRows, setNumRows] = useState(
     Math.max(
@@ -148,8 +150,6 @@ export default function EditService({ uid }: { uid: string }) {
     setNumCols(numCols - 1);
     formik.setFieldValue('service.data', newValues);
   };
-
-  const [hoveredColIndex, setHoveredColIndex] = useState<number | null>(null);
 
   return (
     <>

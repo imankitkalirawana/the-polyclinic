@@ -27,7 +27,6 @@ import * as Yup from 'yup';
 import {
   changePassword,
   getUserWithUID,
-  sendMail,
   sendMailWithOTP,
   verifyEmail,
   verifyOTP
@@ -50,18 +49,12 @@ export default function SecuritySettings({ uid }: { uid: number }) {
   const deactivateModal = useDisclosure();
   const deleteModal = useDisclosure();
 
-  if (isError) {
-    return <p>Error fetching user data</p>;
-  }
-
-  if (!user) return null;
-
   const mailOptions: MailOptions = {
     from: {
       name: 'The Polyclinic - Devocode',
       address: 'contact@divinely.dev'
     },
-    to: user.email,
+    to: user?.email,
     subject: 'Email Verification',
     text: 'Your OTP is 123456'
   };
@@ -69,7 +62,7 @@ export default function SecuritySettings({ uid }: { uid: number }) {
   const emailFormik = useFormik({
     initialValues: {
       user: user,
-      email: user.email,
+      email: user?.email,
       isSent: false,
       otp: '',
       isResending: false,
@@ -82,15 +75,15 @@ export default function SecuritySettings({ uid }: { uid: number }) {
     }),
     onSubmit: async (values) => {
       mailOptions.to = values.email;
-      if (values.email === user.email) {
+      if (values.email === user?.email) {
         emailFormik.setFieldError('email', 'Please enter a different email.');
         return;
       }
       if (values.isSent) {
-        await verifyOTP(values.email, values.otp)
+        await verifyOTP(values?.email as string, values.otp)
           .then(async () => {
             await axios
-              .put(`/api/users/uid/${user.uid}`, {
+              .put(`/api/users/uid/${user?.uid}`, {
                 email: values.email
               })
               .then(() => {
@@ -107,11 +100,11 @@ export default function SecuritySettings({ uid }: { uid: number }) {
           });
         return;
       } else {
-        if (await verifyEmail(values.email, user._id)) {
+        if (await verifyEmail(values.email as string, user?._id)) {
           emailFormik.setFieldError('email', 'Email already exists.');
           return;
         }
-        await sendMailWithOTP(values.email, mailOptions)
+        await sendMailWithOTP(values?.email as string, mailOptions)
           .then(() => {
             emailFormik.setFieldValue('isSent', true);
             toast.success('OTP sent successfully.');
@@ -139,7 +132,7 @@ export default function SecuritySettings({ uid }: { uid: number }) {
         .required('Please confirm your password.')
     }),
     onSubmit: async (values) => {
-      await changePassword(user._id, values.password)
+      await changePassword(user?._id as string, values.password)
         .then(() => {
           toast.success('Password updated successfully.');
           editPasswordModal.onClose();
@@ -162,14 +155,14 @@ export default function SecuritySettings({ uid }: { uid: number }) {
         .required('Please enter your Email.')
     }),
     onSubmit: async (values) => {
-      if (user.email === 'contact@divinely.dev') {
+      if (user?.email === 'contact@divinely.dev') {
         deactivateFormik.setFieldError(
           'email',
           'You cannot deactivate this account.'
         );
         return;
       }
-      if (values.email !== user.email) {
+      if (values.email !== user?.email) {
         deactivateFormik.setFieldError(
           'email',
           'The email addresses do not match.'
@@ -177,7 +170,7 @@ export default function SecuritySettings({ uid }: { uid: number }) {
         return;
       }
       await axios
-        .put(`/api/users/uid/${user.uid}`, {
+        .put(`/api/users/uid/${user?.uid}`, {
           // @ts-ignore
           status: user.status === 'active' ? 'inactive' : 'active'
         })
@@ -207,7 +200,7 @@ export default function SecuritySettings({ uid }: { uid: number }) {
         .required('Please enter your Email.')
     }),
     onSubmit: async (values) => {
-      if (values.email !== user.email) {
+      if (values.email !== user?.email) {
         deleteFormik.setFieldError(
           'email',
           'The email addresses do not match.'
@@ -234,6 +227,12 @@ export default function SecuritySettings({ uid }: { uid: number }) {
         });
     }
   });
+
+  if (isError) {
+    return <p>Error fetching user data</p>;
+  }
+
+  if (!user) return null;
 
   return (
     <>
@@ -324,7 +323,7 @@ export default function SecuritySettings({ uid }: { uid: number }) {
                 isLoading={emailFormik.values.isUpdatingRole}
                 radius="full"
                 className="max-w-36"
-                selectedKeys={[emailFormik.values.user.role]}
+                selectedKeys={[emailFormik?.values?.user?.role] as string[]}
                 onSelectionChange={async (value) => {
                   emailFormik.setFieldValue('isUpdatingRole', true);
                   const selectedValue = Array.from(value)[0];
@@ -435,7 +434,10 @@ export default function SecuritySettings({ uid }: { uid: number }) {
               isLoading={emailFormik.values.isResending}
               onPress={async () => {
                 emailFormik.setFieldValue('isResending', true);
-                await sendMailWithOTP(emailFormik.values.email, mailOptions)
+                await sendMailWithOTP(
+                  emailFormik.values.email as string,
+                  mailOptions
+                )
                   .then(() => {
                     toast.success('OTP sent successfully.');
                   })
