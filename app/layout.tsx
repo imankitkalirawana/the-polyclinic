@@ -2,10 +2,11 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import Sonner from '@/components/providers';
-import Navbar from '@/components/sections/Navbar';
 import { Providers } from './providers';
 import { auth } from '@/auth';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
+// @ts-ignore
+import Navbar from '@/components/sections/navbar';
 
 export const metadata: Metadata = {
   title: 'The Polyclinic',

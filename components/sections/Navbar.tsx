@@ -1,123 +1,104 @@
 'use client';
+
 import React from 'react';
-import { Icon } from '@iconify/react/dist/iconify.js';
 import {
-  cn,
-  Navbar as NextNavbar,
+  Navbar,
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  Button,
-  NavbarMenuToggle,
   NavbarMenu,
   NavbarMenuItem,
-  Divider,
-  Link
+  NavbarMenuToggle,
+  Link,
+  Button,
+  Image
 } from '@nextui-org/react';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
+import ModeToggle from '../mode-toggle';
 
 interface NavbarProps {
   session: any;
 }
 
-const Navbar = ({ session }: NavbarProps) => {
+const menuItems = [
+  {
+    name: 'Home',
+    href: '/'
+  },
+  {
+    name: 'Dashboard',
+    href: '/dashboard'
+  },
+  {
+    name: 'Appointments',
+    href: '/'
+  },
+  {
+    name: 'About Us',
+    href: '#'
+  },
+  {
+    name: 'Integrations',
+    href: '#'
+  }
+];
+
+export default function Nav({ session }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const pathname = usePathname();
   if (pathname.includes('/auth') || pathname.includes('/dashboard'))
     return null;
-
-  const menuItems = [
-    { label: 'Home', url: '/' },
-    { label: 'Dashboard', url: '/dashboard' },
-    { label: 'Appointments', url: '/appointments' },
-    { label: 'About Us', url: '/about' },
-    { label: 'Integrations', url: '/integration' }
-  ];
-
   return (
-    <NextNavbar
+    <Navbar
       classNames={{
-        base: cn('border-default-100', {
-          'bg-default-200/50 dark:bg-default-100/50': isMenuOpen
-        }),
-        wrapper: 'w-full justify-center',
+        base: 'py-4 backdrop-filter-none bg-transparent',
+        wrapper: 'px-0 w-full justify-center bg-transparent',
         item: 'hidden md:flex'
       }}
-      height="60px"
-      isMenuOpen={isMenuOpen}
-      onMenuOpenChange={setIsMenuOpen}
+      className="fixed top-0 bg-transparent backdrop-filter-none"
+      height="54px"
     >
-      {/* Left Content */}
-      <NavbarBrand>
-        <div className="rounded-full bg-background text-foreground">
-          <Image
-            alt="logo"
-            height={40}
-            src="/logo.svg"
-            className="p-2"
-            width={40}
-          />
-        </div>
-        <span className="ml-2 text-small font-medium">Devocode</span>
-      </NavbarBrand>
+      <NavbarContent
+        className="gap-4 rounded-full border-small border-default-200/20 bg-background/70 px-2 shadow-medium backdrop-blur-lg backdrop-saturate-150"
+        justify="center"
+      >
+        {/* Toggle */}
+        <NavbarMenuToggle className="ml-2 text-default-400 md:hidden" />
 
-      {/* Center Content */}
-      <NavbarContent justify="center">
+        {/* Logo */}
+        <NavbarBrand className="mr-2 w-[40vw] md:w-auto md:max-w-fit">
+          <div className="rounded-full bg-foreground text-background">
+            <Image isBlurred src="/logo.png" width={36} />
+          </div>
+          <span className="ml-2 font-medium">Devocode</span>
+        </NavbarBrand>
+
+        {/* Items */}
         {menuItems.map((item, index) => (
-          <NavbarItem key={`${item}-${index}`}>
-            <Link className="text-default-500" href={item.url}>
-              {item.label}
+          <NavbarItem
+            key={`desktop-${item.name}-${index}`}
+            className="hidden md:flex"
+          >
+            <Link className="text-default-700" href={item.href} size="sm">
+              {item.name}
             </Link>
           </NavbarItem>
         ))}
-      </NavbarContent>
-
-      {/* Right Content */}
-      <NavbarContent className="hidden md:flex" justify="end">
-        <NavbarItem className="ml-2 !flex gap-2">
-          {session?.user ? (
-            <Button
-              className="text-default-500"
-              color="danger"
-              radius="full"
-              variant="light"
-              onPress={() => signOut()}
-            >
-              Logout
-            </Button>
-          ) : (
-            <>
-              <Button
-                className="text-default-500"
-                as={Link}
-                href="/auth/login"
-                radius="full"
-                variant="light"
-              >
-                Login
-              </Button>
-              <Button
-                color="primary"
-                endContent={<Icon icon="solar:alt-arrow-right-linear" />}
-                radius="full"
-                variant="flat"
-                as={Link}
-                href="/auth/register"
-              >
-                Get Started
-              </Button>
-            </>
-          )}
+        <NavbarItem>
+          <ModeToggle />
+        </NavbarItem>
+        <NavbarItem>
+          <Button radius="lg" variant="flat">
+            Login
+          </Button>
         </NavbarItem>
       </NavbarContent>
 
-      <NavbarMenuToggle className="text-default-400 md:hidden" />
-
+      {/* Menu */}
       <NavbarMenu
-        className="top-[calc(var(--navbar-height)_-_1px)] max-h-fit bg-default-200/50 pb-6 pt-6 shadow-medium backdrop-blur-md backdrop-saturate-150 dark:bg-default-100/50"
+        className="top-[calc(var(--navbar-height)/2)] mx-auto mt-16 max-h-[40vh] max-w-[80vw] rounded-large border-small border-default-200/20 bg-background/60 py-6 shadow-medium backdrop-blur-md backdrop-saturate-150 dark:bg-default-100/50"
         motionProps={{
           initial: { opacity: 0, y: -20 },
           animate: { opacity: 1, y: 0 },
@@ -128,32 +109,18 @@ const Navbar = ({ session }: NavbarProps) => {
           }
         }}
       >
-        <NavbarMenuItem>
-          <Button fullWidth as={Link} href="/auth/login" variant="faded">
-            Sign In
-          </Button>
-        </NavbarMenuItem>
-        <NavbarMenuItem className="mb-4">
-          <Button
-            fullWidth
-            as={Link}
-            className="bg-foreground text-background"
-            href="/auth/register"
-          >
-            Get Started
-          </Button>
-        </NavbarMenuItem>
         {menuItems.map((item, index) => (
-          <NavbarMenuItem key={`${item}-${index}`}>
-            <Link className="mb-2 w-full text-default-500" href={item.url}>
-              {item.label}
+          <NavbarMenuItem key={`mobile-${item.name}-${index}`}>
+            <Link
+              className="w-full text-default-500"
+              href={item.href}
+              size="md"
+            >
+              {item.name}
             </Link>
-            {index < menuItems.length - 1 && <Divider className="opacity-50" />}
           </NavbarMenuItem>
         ))}
       </NavbarMenu>
-    </NextNavbar>
+    </Navbar>
   );
-};
-
-export default Navbar;
+}
