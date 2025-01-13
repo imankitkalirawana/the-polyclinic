@@ -5,7 +5,7 @@ import Sonner from '@/components/providers';
 import { Providers } from './providers';
 import { auth } from '@/auth';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
-import Navbar from '@/components/sections/navbar';
+import Nav from '@/components/sections/nav';
 
 export const metadata: Metadata = {
   title: 'The Polyclinic',
@@ -25,7 +25,7 @@ export default async function RootLayout({
         <Providers>
           <NuqsAdapter>
             <ThemeProvider attribute="class" defaultTheme="light">
-              <Navbar session={session} />
+              <Nav session={session} />
               {children}
               <Sonner />
             </ThemeProvider>
