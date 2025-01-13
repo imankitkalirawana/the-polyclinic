@@ -14,7 +14,6 @@ import {
   Image
 } from '@nextui-org/react';
 import { usePathname } from 'next/navigation';
-import { signOut } from 'next-auth/react';
 import ModeToggle from '../mode-toggle';
 
 interface NavbarProps {
@@ -44,7 +43,7 @@ const menuItems = [
   }
 ];
 
-export default function Navbar({ session }: NavbarProps) {
+export default function Nav({ session }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const pathname = usePathname();
