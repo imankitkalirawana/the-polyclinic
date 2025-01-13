@@ -4,7 +4,6 @@ import { connectDB } from '@/lib/db';
 import { auth } from '@/auth';
 import { sendHTMLMail } from '@/lib/functions';
 import { AppointmentStatus } from '@/utils/email-template/patient';
-import { format } from 'date-fns';
 import { getDoctorWithUID } from '@/functions/server-actions';
 import { NewAppointment } from '@/utils/email-template/doctor';
 
