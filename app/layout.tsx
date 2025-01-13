@@ -5,7 +5,6 @@ import Sonner from '@/components/providers';
 import { Providers } from './providers';
 import { auth } from '@/auth';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
-// @ts-ignore
 import Navbar from '@/components/sections/navbar';
 
 export const metadata: Metadata = {

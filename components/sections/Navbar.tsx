@@ -2,7 +2,7 @@
 
 import React from 'react';
 import {
-  Navbar,
+  Navbar as NextNavbar,
   NavbarBrand,
   NavbarContent,
   NavbarItem,
@@ -44,14 +44,14 @@ const menuItems = [
   }
 ];
 
-export default function Nav({ session }: NavbarProps) {
+export default function Navbar({ session }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const pathname = usePathname();
   if (pathname.includes('/auth') || pathname.includes('/dashboard'))
     return null;
   return (
-    <Navbar
+    <NextNavbar
       classNames={{
         base: 'py-4 backdrop-filter-none bg-transparent',
         wrapper: 'px-0 w-full justify-center bg-transparent',
@@ -121,6 +121,6 @@ export default function Nav({ session }: NavbarProps) {
           </NavbarMenuItem>
         ))}
       </NavbarMenu>
-    </Navbar>
+    </NextNavbar>
   );
 }
