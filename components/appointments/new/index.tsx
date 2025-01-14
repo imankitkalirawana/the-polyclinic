@@ -2,107 +2,73 @@
 
 import {
   type CalendarDate,
-  CalendarDate as CalendarDateClass,
   getLocalTimeZone,
-  getWeeksInMonth,
   today,
-  isWeekend
+  isWeekend,
+  Time,
+  parseAbsoluteToLocal
 } from '@internationalized/date';
 import type { DateValue } from '@react-aria/calendar';
-import { useLocale } from '@react-aria/i18n';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useLocale, useDateFormatter } from '@react-aria/i18n';
+import { useRouter } from 'next/navigation';
 import * as React from 'react';
 import { LeftPanel } from './calendar/left-panel';
-import { RightPanel } from './calendar/right-panel';
-import { FormPanel } from './calendar/form-panel';
-import { getAllPatients, getUserWithUID } from '@/functions/server-actions';
-import { toast } from 'sonner';
-import { DoctorType } from '@/models/Doctor';
-import axios from 'axios';
+import { getUserWithUID } from '@/functions/server-actions';
 import { UserType } from '@/models/User';
-import { Calendar } from '@nextui-org/react';
+import { Calendar, TimeInput, TimeInputValue } from '@nextui-org/react';
+import { useQueryState } from 'nuqs';
 
 export default function Appointments() {
   const router = useRouter();
   const { locale } = useLocale();
 
-  const searchParams = useSearchParams();
-  const dateParam = searchParams.get('date');
-  const slotParam = searchParams.get('slot');
-  const uid = searchParams.get('uid');
-  const timeZone = getLocalTimeZone();
+  const [dateParam, setDateParam] = useQueryState('date', {
+    defaultValue: today(getLocalTimeZone()).toString()
+  });
+  const [slotParam, setSlotParam] = useQueryState('slot', {
+    defaultValue: new Date()
+      .toLocaleTimeString('en-IN', { hour12: false })
+      .split(' ')[0]
+  });
+  const [uid, setUIDParam] = useQueryState('uid');
 
   const [date, setDate] = React.useState(today(getLocalTimeZone()));
-  const [focusedDate, setFocusedDate] = React.useState<CalendarDate | null>(
-    date
+  const [time, setTime] = React.useState<TimeInputValue | null>(
+    (() => {
+      const localDateTime = new Date(`${dateParam}T${slotParam}`); // Interpret as local time
+      const currentHour = localDateTime.getHours();
+      const currentMinute = localDateTime.getMinutes();
+
+      // Default to 09:00 AM if current time is earlier than 09:00 AM
+      if (currentHour < 9 || (currentHour === 9 && currentMinute === 0)) {
+        return new Time(9, 0);
+      }
+
+      // Default to 05:00 PM if current time is later than 05:00 PM
+      if (currentHour > 17 || (currentHour === 17 && currentMinute === 0)) {
+        return new Time(17, 0);
+      }
+
+      // Use current time otherwise
+      return new Time(currentHour, currentMinute);
+    })()
   );
+
   const [user, setUser] = React.useState<UserType | null>(null);
   const [users, setUsers] = React.useState<UserType[]>([]);
-  const [doctors, setDoctors] = React.useState<DoctorType[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
-
-  const weeksInMonth = getWeeksInMonth(focusedDate as DateValue, locale);
 
   const handleChangeDate = (date: DateValue) => {
     setDate(date as CalendarDate);
     const formattedDate = `${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}`;
-
-    const url = new URL(window.location.href);
-    url.searchParams.set('date', formattedDate);
-    router.push(url.toString());
+    setDateParam(formattedDate);
   };
 
-  React.useEffect(() => {
-    if (dateParam) {
-      const [year, month, day] = dateParam.split('-').map(Number);
-      const calendarDate = new CalendarDateClass(year, month, day);
-      setDate(calendarDate);
-    } else {
-      const url = new URL(window.location.href);
-      const formattedDate = `${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}`;
-      url.searchParams.set('date', formattedDate);
-      router.push(url.toString());
-    }
-  }, []);
-
-  const handleChangeAvailableTime = (time: string) => {
-    const timeValue = time.split(':').join(' ');
-
-    const match = timeValue.match(/^(\d{1,2}) (\d{2})([ap]m)?$/i);
-    if (!match) {
-      console.error('Invalid time format');
-      return null;
-    }
-
-    let hours = Number.parseInt(match[1]);
-    const minutes = Number.parseInt(match[2]);
-    const isPM = match[3] && match[3].toLowerCase() === 'pm';
-
-    if (isPM && (hours < 1 || hours > 12)) {
-      console.error('Time out of range (1-12) in 12-hour format');
-      return null;
-    }
-
-    if (isPM && hours !== 12) {
-      hours += 12;
-    } else if (!isPM && hours === 12) {
-      hours = 0;
-    }
-
-    const currentDate = date.toDate(timeZone);
-    currentDate.setHours(hours, minutes);
-
-    if (currentDate.toISOString() < new Date().toISOString()) {
-      toast.error('Cannot book appointments in the past');
-      return;
-    }
-
-    const url = new URL(window.location.href);
-    url.searchParams.set('slot', currentDate.toISOString());
-    router.push(url.toString());
+  const handleChangeTime = (time: TimeInputValue) => {
+    setTime(time);
+    const formattedTime = `${String(time.hour).padStart(2, '0')}:${String(time.minute).padStart(2, '0')}:00`;
+    setSlotParam(formattedTime);
   };
-
-  const showForm = !!dateParam && !!slotParam;
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -119,22 +85,8 @@ export default function Appointments() {
           .finally(() => setIsLoading(false));
       }
     };
-    fetchData();
+    // fetchData();
   }, [uid]);
-
-  React.useEffect(() => {
-    const fetchData = async () => {
-      await axios.get('/api/doctors').then((res) => {
-        setDoctors(res.data);
-      });
-      await getAllPatients()
-        .then((users) => {
-          setUsers(users);
-        })
-        .finally(() => setIsLoading(false));
-    };
-    fetchData();
-  }, []);
 
   return (
     <div className="bg-gray-1 mx-auto w-full max-w-max rounded-md px-8 py-6">
@@ -144,38 +96,44 @@ export default function Appointments() {
           user={user as UserType}
           users={users}
         />
-        {!showForm ? (
-          <div className="flex flex-col lg:flex-row">
-            <Calendar
-              aria-label="Date (Min Date Value)"
-              defaultValue={today(getLocalTimeZone())}
-              minValue={today(getLocalTimeZone())}
-              value={date}
-              onChange={handleChangeDate}
-              onFocusChange={(focused) => setFocusedDate(focused)}
-              isInvalid={isWeekend(date!, locale)}
-              errorMessage={
-                isWeekend(date!, locale) ? 'We are closed on weekends' : ''
-              }
-              showMonthAndYearPickers
-              showHelper
-              isDateUnavailable={(date) => {
-                // not available on weekends
-                return isWeekend(date, locale);
-              }}
-            />
-            <RightPanel
-              {...{ date, timeZone, weeksInMonth, handleChangeAvailableTime }}
-            />
-          </div>
-        ) : (
-          <FormPanel
-            user={user as UserType}
-            date={slotParam}
-            isLoading={isLoading}
-            doctors={doctors}
+        <div className="flex flex-col gap-4">
+          <Calendar
+            aria-label="Date (Min Date Value)"
+            defaultValue={today(getLocalTimeZone())}
+            minValue={today(getLocalTimeZone())}
+            value={date}
+            onChange={handleChangeDate}
+            isInvalid={isWeekend(date!, locale)}
+            errorMessage={
+              isWeekend(date!, locale) ? 'We are closed on weekends' : ''
+            }
+            showMonthAndYearPickers
+            showHelper
+            isDateUnavailable={(date) => {
+              return isWeekend(date, locale);
+            }}
           />
-        )}
+          <TimeInput
+            label="Appointment Time"
+            minValue={new Time(9)}
+            maxValue={new Time(17)}
+            isRequired
+            errorMessage={(value) => {
+              if (value) {
+                return 'We are closed at this time';
+              }
+              return '';
+            }}
+            value={time}
+            onChange={(value) => handleChangeTime(value as TimeInputValue)}
+          />
+        </div>
+        {/* <FormPanel
+          user={user as UserType}
+          date={slotParam as string}
+          isLoading={isLoading}
+          doctors={doctors}
+        /> */}
       </div>
     </div>
   );

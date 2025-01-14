@@ -1,10 +1,6 @@
-import { useLocale } from '@react-aria/i18n';
-import { CalendarIcon } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { calculateAge } from '@/lib/client-functions';
 import Skeleton from '@/components/ui/skeleton';
-import { CalendarDisplay } from './calendar-display';
-import { Autocomplete, AutocompleteItem, Chip } from '@nextui-org/react';
+import { Autocomplete, AutocompleteItem } from '@nextui-org/react';
 import Profile from './profile';
 import { UserType } from '@/models/User';
 
@@ -17,10 +13,8 @@ export function LeftPanel({
   isLoading?: boolean;
   users?: UserType[];
 }) {
-  const { locale } = useLocale();
   const searchParams = useSearchParams();
   const dateParam = searchParams.get('date');
-  const slotParam = searchParams.get('slot');
 
   const currentDate = dateParam ? new Date(dateParam) : new Date();
   const router = useRouter();
@@ -52,8 +46,6 @@ export function LeftPanel({
       </Autocomplete>
       <div className="flex flex-col items-center justify-center gap-10 xs:flex-row xs:items-start md:flex-col">
         {isLoading ? <LoadingSkeleton /> : user && <Profile user={user} />}
-
-        <CalendarDisplay date={currentDate} />
       </div>
     </div>
   );
