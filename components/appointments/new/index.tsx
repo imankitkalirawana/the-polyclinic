@@ -16,11 +16,15 @@ import { LeftPanel } from './calendar/left-panel';
 import { getUserWithUID } from '@/functions/server-actions';
 import { UserType } from '@/models/User';
 import { Calendar, TimeInput, TimeInputValue } from '@nextui-org/react';
-import { useQueryState } from 'nuqs';
+import { parseAsInteger, useQueryState } from 'nuqs';
+import HorizontalSteps from './horizontal-steps';
+import PatientSelection from './patient-selection';
 
 export default function Appointments() {
   const router = useRouter();
   const { locale } = useLocale();
+
+  const [step, setStep] = useQueryState('step', parseAsInteger.withDefault(0));
 
   const [dateParam, setDateParam] = useQueryState('date', {
     defaultValue: today(getLocalTimeZone()).toString()
@@ -30,6 +34,7 @@ export default function Appointments() {
       .toLocaleTimeString('en-IN', { hour12: false })
       .split(' ')[0]
   });
+
   const [uid, setUIDParam] = useQueryState('uid');
 
   const [date, setDate] = React.useState(today(getLocalTimeZone()));
@@ -54,10 +59,6 @@ export default function Appointments() {
     })()
   );
 
-  const [user, setUser] = React.useState<UserType | null>(null);
-  const [users, setUsers] = React.useState<UserType[]>([]);
-  const [isLoading, setIsLoading] = React.useState(true);
-
   const handleChangeDate = (date: DateValue) => {
     setDate(date as CalendarDate);
     const formattedDate = `${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}`;
@@ -71,63 +72,82 @@ export default function Appointments() {
   };
 
   React.useEffect(() => {
-    const fetchData = async () => {
-      if (!uid) {
-        setIsLoading(false);
-        return;
-      } else {
-        setIsLoading(true);
-        await getUserWithUID(parseInt(uid))
-          .then((user) => {
-            if (!user) return;
-            setUser(user as UserType);
-          })
-          .finally(() => setIsLoading(false));
-      }
-    };
-    // fetchData();
-  }, [uid]);
+    if (step > 0 && !uid) {
+      setStep(0);
+    }
+    if (step > 1 && !(date && time)) {
+      setStep(1);
+    }
+  }, [step]);
+
+  const stepMap: Record<number, React.ReactNode> = {
+    0: <PatientSelection />,
+    1: (
+      <div className="flex flex-col gap-4">
+        <Calendar
+          aria-label="Date (Min Date Value)"
+          defaultValue={today(getLocalTimeZone())}
+          minValue={today(getLocalTimeZone())}
+          value={date}
+          onChange={handleChangeDate}
+          isInvalid={isWeekend(date!, locale)}
+          errorMessage={
+            isWeekend(date!, locale) ? 'We are closed on weekends' : ''
+          }
+          showMonthAndYearPickers
+          showHelper
+          isDateUnavailable={(date) => {
+            return isWeekend(date, locale);
+          }}
+        />
+        <TimeInput
+          label="Appointment Time"
+          minValue={new Time(9)}
+          maxValue={new Time(17)}
+          isRequired
+          errorMessage={(value) => {
+            if (value) {
+              return 'We are closed at this time';
+            }
+            return '';
+          }}
+          value={time}
+          onChange={(value) => handleChangeTime(value as TimeInputValue)}
+        />
+      </div>
+    ),
+    2: <div>Step 3</div>,
+    3: <div>Step 4</div>
+  };
 
   return (
-    <div className="bg-gray-1 mx-auto w-full max-w-max rounded-md px-8 py-6">
-      <div className="flex flex-col gap-6 md:flex-row">
-        <LeftPanel
-          isLoading={isLoading}
-          user={user as UserType}
-          users={users}
-        />
-        <div className="flex flex-col gap-4">
-          <Calendar
-            aria-label="Date (Min Date Value)"
-            defaultValue={today(getLocalTimeZone())}
-            minValue={today(getLocalTimeZone())}
-            value={date}
-            onChange={handleChangeDate}
-            isInvalid={isWeekend(date!, locale)}
-            errorMessage={
-              isWeekend(date!, locale) ? 'We are closed on weekends' : ''
+    <div className="mx-auto w-full p-4">
+      <div className="flex flex-col items-center gap-6">
+        <HorizontalSteps
+          onStepChange={(value) => {
+            if (value < step) {
+              setStep(value);
             }
-            showMonthAndYearPickers
-            showHelper
-            isDateUnavailable={(date) => {
-              return isWeekend(date, locale);
-            }}
-          />
-          <TimeInput
-            label="Appointment Time"
-            minValue={new Time(9)}
-            maxValue={new Time(17)}
-            isRequired
-            errorMessage={(value) => {
-              if (value) {
-                return 'We are closed at this time';
-              }
-              return '';
-            }}
-            value={time}
-            onChange={(value) => handleChangeTime(value as TimeInputValue)}
-          />
-        </div>
+          }}
+          currentStep={step}
+          steps={[
+            {
+              title: 'Choose a Patient'
+            },
+            {
+              title: 'Date & Time'
+            },
+            {
+              title: 'Fill in Details'
+            },
+            {
+              title: 'Complete Payment'
+            }
+          ]}
+        />
+
+        {stepMap[step]}
+
         {/* <FormPanel
           user={user as UserType}
           date={slotParam as string}
