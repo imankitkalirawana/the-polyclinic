@@ -1,13 +1,12 @@
 'use client';
 
-import { Calendar } from '@/components/calendar';
-
 import {
   type CalendarDate,
   CalendarDate as CalendarDateClass,
   getLocalTimeZone,
   getWeeksInMonth,
-  today
+  today,
+  isWeekend
 } from '@internationalized/date';
 import type { DateValue } from '@react-aria/calendar';
 import { useLocale } from '@react-aria/i18n';
@@ -21,6 +20,7 @@ import { toast } from 'sonner';
 import { DoctorType } from '@/models/Doctor';
 import axios from 'axios';
 import { UserType } from '@/models/User';
+import { Calendar } from '@nextui-org/react';
 
 export default function Appointments() {
   const router = useRouter();
@@ -147,11 +147,22 @@ export default function Appointments() {
         {!showForm ? (
           <div className="flex flex-col lg:flex-row">
             <Calendar
-              minValue={today(getLocalTimeZone())}
+              aria-label="Date (Min Date Value)"
               defaultValue={today(getLocalTimeZone())}
+              minValue={today(getLocalTimeZone())}
               value={date}
               onChange={handleChangeDate}
               onFocusChange={(focused) => setFocusedDate(focused)}
+              isInvalid={isWeekend(date!, locale)}
+              errorMessage={
+                isWeekend(date!, locale) ? 'We are closed on weekends' : ''
+              }
+              showMonthAndYearPickers
+              showHelper
+              isDateUnavailable={(date) => {
+                // not available on weekends
+                return isWeekend(date, locale);
+              }}
             />
             <RightPanel
               {...{ date, timeZone, weeksInMonth, handleChangeAvailableTime }}

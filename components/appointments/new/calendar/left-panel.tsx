@@ -50,7 +50,7 @@ export function LeftPanel({
           <AutocompleteItem key={user.uid}>{user?.name}</AutocompleteItem>
         )}
       </Autocomplete>
-      <div className="xs:items-start xs:flex-row flex flex-col items-center justify-center gap-10 md:flex-col">
+      <div className="flex flex-col items-center justify-center gap-10 xs:flex-row xs:items-start md:flex-col">
         {isLoading ? <LoadingSkeleton /> : user && <Profile user={user} />}
 
         <CalendarDisplay date={currentDate} />

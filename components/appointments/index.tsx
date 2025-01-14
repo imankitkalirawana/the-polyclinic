@@ -6,6 +6,7 @@ import {
   DateValue,
   getLocalTimeZone,
   getWeeksInMonth,
+  isWeekend,
   today
 } from '@internationalized/date';
 import { useLocale } from '@react-aria/i18n';
@@ -17,6 +18,7 @@ import {
   Button,
   ButtonGroup,
   ButtonProps,
+  Calendar,
   Card,
   Chip,
   ChipProps,
@@ -48,7 +50,6 @@ import {
 } from '@/functions/server-actions';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
-import { Calendar } from '../calendar';
 import { RightPanel } from './new/calendar/right-panel';
 import NoResults from '../ui/no-results';
 import { AppointmentType } from '@/models/Appointment';
@@ -878,14 +879,22 @@ function RescheduleAppointment({
       </ModalHeader>
       <ModalBody className="flex w-full flex-col items-center lg:flex-row">
         <Calendar
-          minValue={today(getLocalTimeZone())}
+          aria-label="Date (Min Date Value)"
           defaultValue={today(getLocalTimeZone())}
+          minValue={today(getLocalTimeZone())}
           value={date}
           onChange={handleChangeDate}
           onFocusChange={(focused) => setFocusedDate(focused)}
-        />
-        <RightPanel
-          {...{ date, timeZone, weeksInMonth, handleChangeAvailableTime }}
+          isInvalid={isWeekend(date!, locale)}
+          errorMessage={
+            isWeekend(date!, locale) ? 'We are closed on weekends' : ''
+          }
+          showMonthAndYearPickers
+          showHelper
+          isDateUnavailable={(date) => {
+            // not available on weekends
+            return isWeekend(date, locale);
+          }}
         />
       </ModalBody>
       <ModalFooter>
