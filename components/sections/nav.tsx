@@ -15,6 +15,7 @@ import {
 } from '@nextui-org/react';
 import { usePathname } from 'next/navigation';
 import ModeToggle from '../mode-toggle';
+import ProfileDropdown from './profile-dropdown';
 
 interface NavbarProps {
   session: any;
@@ -31,7 +32,7 @@ const menuItems = [
   },
   {
     name: 'Appointments',
-    href: '/'
+    href: '/appointments'
   },
   {
     name: 'About Us',
@@ -85,13 +86,15 @@ export default function Nav({ session }: NavbarProps) {
             </Link>
           </NavbarItem>
         ))}
+
         <NavbarItem>
-          <ModeToggle />
-        </NavbarItem>
-        <NavbarItem>
-          <Button radius="lg" variant="flat">
-            Login
-          </Button>
+          {session ? (
+            <ProfileDropdown session={session} />
+          ) : (
+            <Button as={Link} href="/auth/login" radius="lg" variant="flat">
+              Login
+            </Button>
+          )}
         </NavbarItem>
       </NavbarContent>
 

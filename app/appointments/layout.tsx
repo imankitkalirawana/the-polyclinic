@@ -14,20 +14,22 @@ export default function Layout({
 
   return (
     <>
-      {
-        // @ts-ignore
-        status === 'authenticated' ? (
-          <div className="mx-auto max-w-7xl px-4">{children}</div>
-        ) : status === 'loading' ? (
-          <LoadingPage />
-        ) : (
-          <Error
-            code="401"
-            title="Whoops, Not So Fast"
-            description="You're trying to peek behind the curtain, but authorization is required. Let's set things right."
-          />
-        )
-      }
+      <main className="mt-24">
+        {
+          // @ts-ignore
+          status === 'authenticated' ? (
+            <div className="mx-auto max-w-7xl px-4">{children}</div>
+          ) : status === 'loading' ? (
+            <LoadingPage />
+          ) : (
+            <Error
+              code="401"
+              title="Whoops, Not So Fast"
+              description="You're trying to peek behind the curtain, but authorization is required. Let's set things right."
+            />
+          )
+        }
+      </main>
     </>
   );
 }
