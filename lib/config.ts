@@ -1,8 +1,6 @@
 // export const isCaching = process.env.NODE_ENV === 'production' ? true : false;
 export const isCaching = false;
 export const API_BASE_URL = process.env.NEXTAUTH_URL;
-export const VIDEOMAXSIZE = 10 * 1024 * 1024;
-export const PHOTOMAXSIZE = 1 * 1024 * 1024;
 
 export const rowOptions = [
   {
@@ -22,3 +20,14 @@ export const rowOptions = [
     value: 1000
   }
 ];
+
+export const TIMINGS = {
+  appointment: {
+    start: 9,
+    end: 17
+  },
+  booking: {
+    maximum: 30 // in days
+  },
+  holidays: ['2025-01-17', '2025-01-26', '2024-03-30', '2024-04-15']
+};
