@@ -12,6 +12,9 @@ const config = {
   theme: {
     extend: {
       screens: { xs: '512px' },
+      maxWidth: {
+        '8xl': '96rem'
+      },
       keyframes: {
         'caret-blink': {
           '0%,70%,100%': { opacity: '1' },

@@ -47,9 +47,13 @@ const menuItems = [
 export default function Nav({ session }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
+  const DISABLED_PATHS = ['/auth', '/dashboard', '/appointments/new'];
+
   const pathname = usePathname();
-  if (pathname.includes('/auth') || pathname.includes('/dashboard'))
-    return null;
+  const isDisabled = DISABLED_PATHS.some((path) => pathname.startsWith(path));
+
+  if (isDisabled) return null;
+
   return (
     <NextNavbar
       classNames={{

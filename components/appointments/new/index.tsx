@@ -1,19 +1,22 @@
 'use client';
 
-import { getLocalTimeZone, today } from '@internationalized/date';
+import {
+  CalendarDate,
+  getLocalTimeZone,
+  Time,
+  today
+} from '@internationalized/date';
 import * as React from 'react';
 import { parseAsInteger, useQueryState } from 'nuqs';
 import HorizontalSteps from './horizontal-steps';
 import PatientSelection from './patient-selection';
 import DateTimePicker from './date-time-picker';
 import PatientProfile from './patient-profile';
-import { UserType } from '@/models/User';
-import { useQuery } from '@tanstack/react-query';
-import { getUserWithUID } from '@/functions/server-actions';
-import { cn } from '@nextui-org/react';
-import { FormPanel } from './calendar/form-panel';
+import { cn, TimeInputValue } from '@nextui-org/react';
 import AppointmentSummary from './summary';
 import DoctorSelection from './doctor-selection';
+import Sidebar from './sidebar';
+import { TIMINGS } from '@/lib/config';
 
 export default function Appointments() {
   const [step, setStep] = useQueryState('step', parseAsInteger.withDefault(0));
@@ -27,24 +30,6 @@ export default function Appointments() {
       .split(' ')[0]
   });
 
-  const [uid] = useQueryState('uid');
-
-  const {
-    data: user,
-    isError,
-    isLoading
-  } = useQuery<UserType>({
-    queryKey: ['user', uid],
-    queryFn: () => {
-      if (!uid) {
-        console.error('Invalid UID');
-        return Promise.reject('Invalid UID');
-      }
-      return getUserWithUID(parseInt(uid));
-    },
-    enabled: !!uid
-  });
-
   const stepMap: Record<number, React.ReactNode> = {
     0: (
       <div
@@ -56,7 +41,7 @@ export default function Appointments() {
         )}
       >
         <PatientSelection />
-        {<PatientProfile user={user} />}
+        {<PatientProfile />}
       </div>
     ),
     1: (
@@ -68,7 +53,7 @@ export default function Appointments() {
           }
         )}
       >
-        <PatientProfile user={user} />
+        <PatientProfile />
         <DateTimePicker />
       </div>
     ),
@@ -81,7 +66,7 @@ export default function Appointments() {
           }
         )}
       >
-        <PatientProfile user={user} />
+        <PatientProfile />
         <DateTimePicker />
         <DoctorSelection />
       </div>
@@ -95,7 +80,7 @@ export default function Appointments() {
           }
         )}
       >
-        <PatientProfile user={user} />
+        <PatientProfile />
         <DateTimePicker />
         <AppointmentSummary />
       </div>
@@ -103,32 +88,8 @@ export default function Appointments() {
   };
 
   return (
-    <div className="mx-auto w-full p-4">
-      <div className="flex flex-col items-center gap-6">
-        <HorizontalSteps
-          onStepChange={(value) => {
-            // if (value < step) {
-            setStep(value);
-            // }
-          }}
-          currentStep={step}
-          steps={[
-            {
-              title: 'Choose a Patient'
-            },
-            {
-              title: 'Date & Time'
-            },
-            {
-              title: 'Fill in Details'
-            },
-            {
-              title: 'Complete Payment'
-            }
-          ]}
-        />
-        {stepMap[step]}
-      </div>
+    <div className="mx-auto flex max-w-8xl">
+      <Sidebar />
     </div>
   );
 }

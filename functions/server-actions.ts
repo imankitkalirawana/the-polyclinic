@@ -132,6 +132,16 @@ export const getAllPatients = async () => {
   }));
 };
 
+export const getAllDoctors = async () => {
+  await connectDB();
+  const doctors = await Doctor.find().select('-password').lean();
+
+  return doctors.map((doctor) => ({
+    ...doctor,
+    _id: doctor._id.toString()
+  }));
+};
+
 // server related functions
 
 export const getServiceWithUID = async (uid: string) => {
