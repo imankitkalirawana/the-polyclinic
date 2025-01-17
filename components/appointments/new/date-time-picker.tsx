@@ -9,11 +9,10 @@ import {
 import type { DateValue } from '@react-aria/calendar';
 import { useLocale } from '@react-aria/i18n';
 import * as React from 'react';
-import { Calendar, TimeInput, TimeInputValue } from '@nextui-org/react';
+import { Button, Calendar, TimeInput, TimeInputValue } from '@nextui-org/react';
 import { parseAsInteger, useQueryState } from 'nuqs';
-import HorizontalSteps from './horizontal-steps';
-import PatientSelection from './patient-selection';
 import { TIMINGS } from '@/lib/config';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 export default function DateTimePicker() {
   const { locale } = useLocale();
@@ -28,8 +27,6 @@ export default function DateTimePicker() {
       .toLocaleTimeString('en-IN', { hour12: false })
       .split(' ')[0]
   });
-
-  const [uid] = useQueryState('uid');
 
   const [date, setDate] = React.useState<CalendarDate>(
     (() => {
@@ -83,10 +80,30 @@ export default function DateTimePicker() {
     const formattedTime = `${String(time.hour).padStart(2, '0')}:${String(time.minute).padStart(2, '0')}:00`;
     setSlotParam(formattedTime);
   };
+
   return (
     <>
-      <div className="flex flex-col gap-4">
+      <div className="flex w-full max-w-sm flex-col gap-4">
+        {step === 1 && (
+          <Button
+            fullWidth
+            color="primary"
+            endContent={<Icon icon={'tabler:arrow-right'} />}
+            isDisabled={
+              isWeekend(date!, locale) ||
+              disabledDates[0].map((d) => d.compare(date!)).includes(0) ||
+              // if selected time is before 9 AM or after 5 PM
+              time!.hour < TIMINGS.appointment.start ||
+              time!.hour >= TIMINGS.appointment.end
+            }
+            variant="flat"
+            onPress={() => setStep(step + 1)}
+          >
+            Proceed
+          </Button>
+        )}
         <Calendar
+          calendarWidth={384}
           aria-label="Date (Min Date Value)"
           defaultValue={today(getLocalTimeZone())}
           minValue={today(getLocalTimeZone())}
@@ -95,7 +112,10 @@ export default function DateTimePicker() {
           })}
           value={date}
           onChange={handleChangeDate}
-          isInvalid={isWeekend(date!, locale)}
+          isInvalid={
+            isWeekend(date!, locale) ||
+            disabledDates[0].map((d) => d.compare(date!)).includes(0)
+          }
           errorMessage={
             isWeekend(date!, locale) ? 'We are closed on weekends' : ''
           }
@@ -107,14 +127,10 @@ export default function DateTimePicker() {
               disabledDates[0].map((d) => d.compare(date)).includes(0)
             );
           }}
-          onError={(error) => {
-            console.error(error);
-          }}
         />
-
         <TimeInput
           label="Appointment Time"
-          className="max-w-64"
+          className="max-w-96"
           minValue={new Time(TIMINGS.appointment.start)}
           maxValue={new Time(TIMINGS.appointment.end)}
           isRequired
