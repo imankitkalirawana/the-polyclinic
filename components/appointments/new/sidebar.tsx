@@ -21,6 +21,7 @@ import { useEffect, useState } from 'react';
 import { TIMINGS } from '@/lib/config';
 import { disabledDates } from '@/lib/appointments/new';
 import { useLocale } from '@react-aria/i18n';
+import DoctorSelection from './doctor-selection';
 
 export default function Sidebar() {
   const { locale } = useLocale();
@@ -29,7 +30,8 @@ export default function Sidebar() {
   const [isInvalidTime, setIsInvalidTime] = useState(false);
 
   const [step, setStep] = useQueryState('step', parseAsInteger.withDefault(0));
-  const [uid, setUIDParam] = useQueryState('uid');
+  const [uid] = useQueryState('uid');
+  const [did] = useQueryState('did');
   const [dateParam, setDateParam] = useQueryState('date', {
     defaultValue: today(getLocalTimeZone()).toString()
   });
@@ -119,15 +121,14 @@ export default function Sidebar() {
         }}
       />
     ),
-    2: <PatientSelection />,
+    2: <DoctorSelection />,
     3: <PatientSelection />
   };
 
   const disabledMap: Record<number, boolean> = {
     0: !uid,
     1: !dateParam || !slotParam || isInvalidDate || isInvalidTime,
-
-    2: false,
+    2: !did,
     3: false
   };
 
