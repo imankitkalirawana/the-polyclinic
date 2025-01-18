@@ -60,7 +60,7 @@ export default function PatientSelection() {
               isHoverable
               key={user.uid}
               className={cn(
-                'flex flex-row justify-between rounded-2xl border p-3 shadow-none transition-all',
+                'flex flex-row justify-between rounded-2xl border border-divider p-3 shadow-none transition-all',
                 {
                   'border-2 border-primary-400': user.uid.toString() === uid,
                   'min-w-[200px]': user
@@ -143,7 +143,7 @@ export const LoadingList = () => {
       {Array.from({ length: 5 }).map((_, index) => (
         <Card
           key={`skeleton-${index}`}
-          className="flex flex-row justify-between rounded-2xl border p-3 shadow-none transition-all"
+          className="flex flex-row justify-between rounded-2xl border border-divider p-3 shadow-none transition-all"
         >
           <div className="flex flex-col items-start justify-between gap-4">
             <div className="flex flex-col gap-2">

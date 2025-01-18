@@ -73,7 +73,7 @@ const config = {
             },
             // background: '#E0F5E8',
             foreground: '#07170E',
-            divider: '#E0F5E8'
+            divider: '#E5E7EB'
           }
         },
         dark: {
@@ -156,7 +156,7 @@ const config = {
             content4: {
               DEFAULT: '#11291E'
             },
-            divider: '#2E2E2E'
+            divider: '#2A2F31'
           }
         }
       },

@@ -142,7 +142,7 @@ export default function Sidebar() {
 
   return (
     <>
-      <div className="relative flex h-screen w-96 min-w-96 max-w-96 flex-col justify-between border-r shadow-lg">
+      <div className="relative flex h-screen w-96 min-w-96 max-w-96 flex-col justify-between border-r border-r-divider shadow-lg">
         <div className="flex flex-col">
           <div className="flex flex-col gap-4 p-4">
             <div>
@@ -155,13 +155,13 @@ export default function Sidebar() {
               <h2 className="text-xl font-semibold">Book An Appointment</h2>
             </div>
           </div>
-          <Divider className="w-full border-t border-solid" />
+          <Divider className="w-full border-t border-solid border-divider" />
           <div className="flex flex-col p-4">
             <div className="mb-2 text-sm font-semibold">{titleMap[step]}</div>
             <div>{stepMap[step]}</div>
           </div>
         </div>
-        <div className="fixed bottom-0 flex w-[382px] justify-end gap-2 border-t border-solid bg-background/60 p-4 backdrop-blur-lg">
+        <div className="fixed bottom-0 flex w-[382px] justify-end gap-2 border-t border-solid border-divider bg-background/60 p-4 backdrop-blur-lg">
           {step > 0 && (
             <Button
               onPress={() => {

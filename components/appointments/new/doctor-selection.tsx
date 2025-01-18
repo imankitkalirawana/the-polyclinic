@@ -1,7 +1,6 @@
 'use client';
 
 import { getAllDoctors } from '@/functions/server-actions';
-import { UserType } from '@/models/User';
 import {
   Button,
   Card,
@@ -17,8 +16,8 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { humanReadableDate } from '@/lib/utility';
 import { cn } from '@/lib/utils';
 import NoResults from '@/components/ui/no-results';
-import Skeleton from '@/components/ui/skeleton';
 import { DoctorType } from '@/models/Doctor';
+import { LoadingList } from './patient-selection';
 
 export default function DoctorSelection() {
   const [did, setDidParam] = useQueryState('did');
@@ -61,7 +60,7 @@ export default function DoctorSelection() {
               isHoverable
               key={doctor.uid}
               className={cn(
-                'flex flex-row justify-between rounded-2xl border p-3 shadow-none transition-all',
+                'flex flex-row justify-between rounded-2xl border border-divider p-3 shadow-none transition-all',
                 {
                   'border-2 border-primary-400': doctor.uid.toString() === did,
                   'min-w-[200px]': doctor
@@ -137,29 +136,3 @@ export default function DoctorSelection() {
     </div>
   );
 }
-
-export const LoadingList = () => {
-  return (
-    <>
-      {Array.from({ length: 5 }).map((_, index) => (
-        <Card
-          key={`skeleton-${index}`}
-          className="flex flex-row justify-between rounded-2xl border p-3 shadow-none transition-all"
-        >
-          <div className="flex flex-col items-start justify-between gap-4">
-            <div className="flex flex-col gap-2">
-              <Skeleton className="h-5 w-24" />
-              <Skeleton className="h-4 w-36" />
-            </div>
-            <div>
-              <Skeleton className="h-4 w-24" />
-            </div>
-          </div>
-          <div className="flex flex-col justify-between">
-            <Skeleton className="h-6 w-6" />
-          </div>
-        </Card>
-      ))}
-    </>
-  );
-};

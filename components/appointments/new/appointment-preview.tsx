@@ -1,9 +1,38 @@
+'use client';
+import Skeleton from '@/components/ui/skeleton';
+import { getDoctorWithUID, getUserWithUID } from '@/functions/server-actions';
+import { DoctorType } from '@/models/Doctor';
+import { UserType } from '@/models/User';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { Button, Card, CardBody, Chip } from '@nextui-org/react';
+import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useQueryState } from 'nuqs';
+import { format } from 'date-fns';
+import { useMemo } from 'react';
 
 export default function AppointmentPreview() {
+  const [uid] = useQueryState('uid');
+  const [did] = useQueryState('did');
+  const [date] = useQueryState('date');
+  const [time] = useQueryState('slot'); // HH:MM:SS ( 2:52:00 )
+
+  const { data: user, isLoading: isUserLoading } = useQuery<UserType>({
+    queryKey: ['user', uid],
+    queryFn: () => {
+      return getUserWithUID(parseInt(uid as string));
+    },
+    enabled: !!uid
+  });
+  const { data: doctor, isLoading: isDoctorLoading } = useQuery<DoctorType>({
+    queryKey: ['doctor', did],
+    queryFn: () => {
+      return getDoctorWithUID(parseInt(did as string));
+    },
+    enabled: !!did
+  });
+
   return (
     <>
       <div className="w-full px-[5%] py-8">
@@ -14,29 +43,45 @@ export default function AppointmentPreview() {
           <div className="flex flex-col gap-4 p-4">
             <div className="flex flex-col gap-2">
               <h4>Personal Details</h4>
-              <Card className="rounded-xl border shadow-none">
+              <Card className="rounded-xl border border-divider shadow-none">
                 <CardBody className="space-y-6">
                   <div className="flex items-center gap-4">
                     <Image
                       src={'/assets/placeholder-avatar.jpeg'}
-                      alt="Profile picture"
+                      alt={`${user?.name}`}
                       width={80}
                       height={80}
                       className="rounded-full"
                     />
                     <div className="space-y-1">
-                      <h2 className="text-xl font-semibold">
-                        Jerome Bellingham
-                      </h2>
+                      {isUserLoading ? (
+                        <Skeleton className="h-6 w-40" />
+                      ) : (
+                        <h2 className="text-xl font-semibold">
+                          {user ? user.name : '-'}
+                        </h2>
+                      )}
                       <div className="flex flex-col gap-2 text-sm text-default-500 sm:flex-row sm:gap-4">
-                        <div className="flex items-center gap-1">
-                          <Icon icon="solar:phone-rounded-linear" width={18} />
-                          <span>+91 9876543210</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Icon icon="iconoir:mail" width={18} />
-                          <span>jeromebellingham93@mail.com</span>
-                        </div>
+                        {isUserLoading ? (
+                          <div className="flex items-center gap-1">
+                            <Skeleton className="h-4 w-20" />
+                            <Skeleton className="h-4 w-24" />
+                          </div>
+                        ) : (
+                          <>
+                            <div className="flex items-center gap-1">
+                              <Icon
+                                icon="solar:phone-rounded-linear"
+                                width={18}
+                              />
+                              <span>+91 {user?.phone}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Icon icon="iconoir:mail" width={18} />
+                              <span>{user?.email}</span>
+                            </div>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -91,33 +136,37 @@ export default function AppointmentPreview() {
             </div>
             <div className="flex flex-col gap-2">
               <h4>Appointment Details</h4>
-              <Card className="rounded-xl border shadow-none">
+              <Card className="rounded-xl border border-divider shadow-none">
                 <CardBody className="space-y-6">
                   <div className="grid gap-6 sm:grid-cols-2">
                     <div className="flex flex-col gap-2 rounded-lg bg-default-100 p-2">
                       <h3 className="font-medium">Date & Time</h3>
                       <div className="flex flex-col text-sm">
-                        <span>Monday, 15th March 2021</span>
-                        <span>10:00 AM</span>
+                        <span>{format(date as string, 'PPPP')}</span>
+                        <span>{format(new Date(`${date}T${time}`), 'p')}</span>
                       </div>
                     </div>
 
                     <div className="flex flex-col gap-2 rounded-lg bg-default-100 p-2">
                       <h3 className="font-medium">Doctor</h3>
-                      <div>
-                        <Button
-                          variant="bordered"
-                          radius="sm"
-                          size="sm"
-                          as={Link}
-                          target="_blank"
-                          href="/doctors/1"
-                          className="capitalize"
-                          endContent={<Icon icon="fluent:open-20-filled" />}
-                        >
-                          Dr. Kitti
-                        </Button>
-                      </div>
+                      {isDoctorLoading ? (
+                        <Skeleton className="h-8 w-20" />
+                      ) : (
+                        <div>
+                          <Button
+                            variant="bordered"
+                            radius="sm"
+                            size="sm"
+                            as={Link}
+                            target="_blank"
+                            href="/doctors/1"
+                            className="capitalize"
+                            endContent={<Icon icon="fluent:open-20-filled" />}
+                          >
+                            {doctor ? doctor.name : '-'}
+                          </Button>
+                        </div>
+                      )}
                     </div>
                     <div className="flex flex-col gap-2 rounded-lg bg-default-100 p-2">
                       <h3 className="font-medium">Appointment Mode</h3>
@@ -139,3 +188,7 @@ export default function AppointmentPreview() {
     </>
   );
 }
+
+const PreviewSkeleton = () => {
+  return <></>;
+};
