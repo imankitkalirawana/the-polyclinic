@@ -1,28 +1,21 @@
 'use client';
 
-import { getAllPatients, getUserWithUID } from '@/functions/server-actions';
+import { getAllPatients } from '@/functions/server-actions';
 import { UserType } from '@/models/User';
-import { motion } from 'framer-motion';
 import {
-  Autocomplete,
-  AutocompleteItem,
   Button,
   Card,
   Dropdown,
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
-  Input,
-  Tooltip
+  Input
 } from '@nextui-org/react';
-import { parseAsInteger, useQueryState } from 'nuqs';
-import React, { useEffect, useMemo, useState } from 'react';
-import PatientProfile from './patient-profile';
-import { useQuery } from '@tanstack/react-query';
+import { useQueryState } from 'nuqs';
+import React, { useEffect, useMemo } from 'react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { humanReadableDate } from '@/lib/utility';
 import { cn } from '@/lib/utils';
-import DateTimePicker from './date-time-picker';
 import NoResults from '@/components/ui/no-results';
 import Skeleton from '@/components/ui/skeleton';
 
@@ -61,8 +54,9 @@ export default function PatientSelection() {
         {filteredUsers.length === 0 ? (
           <NoResults />
         ) : (
-          filteredUsers.map((user) => (
+          filteredUsers.map((user: UserType) => (
             <Card
+              isPressable
               isHoverable
               key={user.uid}
               className={cn(

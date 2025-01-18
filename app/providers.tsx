@@ -5,7 +5,8 @@ import React from 'react';
 import { SessionProvider } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { Provider as ReduxProvider } from 'react-redux';
+import { store } from '@/store';
 
 declare module '@react-types/shared' {
   interface RouterConfig {
@@ -30,7 +31,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <NextUIProvider navigate={router.push}>
       <QueryClientProvider client={queryClient}>
         <SessionProvider>
-          {children}
+          <ReduxProvider store={store}>{children}</ReduxProvider>
           {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         </SessionProvider>
       </QueryClientProvider>

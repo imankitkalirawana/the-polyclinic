@@ -16,6 +16,7 @@ export interface AppointmentType extends Base {
   email: string;
   guests: GuestType[];
   notes: string;
+  symptoms: string;
   date: Date | string;
   doctor: number;
   progerss: number;
@@ -54,6 +55,7 @@ const appointmentSchema = new mongoose.Schema(
         phone: String
       }
     ],
+    symptoms: String,
     notes: String,
     date: String,
     doctor: Number,

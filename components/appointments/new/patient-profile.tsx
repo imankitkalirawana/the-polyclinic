@@ -137,17 +137,6 @@ export default React.memo(function PatientProfile() {
                   </Button>
                 </Tooltip>
               </div>
-              {step === 0 && (
-                <Button
-                  color="primary"
-                  variant="flat"
-                  endContent={<Icon icon={'tabler:arrow-right'} />}
-                  onPress={() => setStep(1)}
-                  fullWidth={step > 0}
-                >
-                  Proceed
-                </Button>
-              )}
             </div>
           </div>
           <div>

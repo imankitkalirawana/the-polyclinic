@@ -22,6 +22,7 @@ import { TIMINGS } from '@/lib/config';
 import { disabledDates } from '@/lib/appointments/new';
 import { useLocale } from '@react-aria/i18n';
 import DoctorSelection from './doctor-selection';
+import AdditionalDetails from './additional-details';
 
 export default function Sidebar() {
   const { locale } = useLocale();
@@ -122,7 +123,7 @@ export default function Sidebar() {
       />
     ),
     2: <DoctorSelection />,
-    3: <PatientSelection />
+    3: <AdditionalDetails />
   };
 
   const disabledMap: Record<number, boolean> = {
@@ -136,7 +137,7 @@ export default function Sidebar() {
     0: 'Select Patient',
     1: 'Select Date & Time',
     2: 'Select Doctor',
-    3: 'Confirm Appointment'
+    3: 'Addional Details'
   };
 
   return (

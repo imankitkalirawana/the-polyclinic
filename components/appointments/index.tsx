@@ -366,7 +366,7 @@ export default function Appointments({ session }: { session: any }) {
                                       {/* <Avatar
                                       size="sm"
                                       radius="lg"
-                                      src="https://i.pravatar.cc/150?u=a04258114e29026302d"
+                                      // src="https://i.pravatar.cc/150?u=a04258114e29026302d"
                                     /> */}
 
                                       <h4 className="text-default-500">

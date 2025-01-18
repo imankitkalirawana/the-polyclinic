@@ -31,3 +31,71 @@ export const TIMINGS = {
   },
   holidays: ['2025-01-17', '2025-01-26', '2024-03-30', '2024-04-15']
 };
+
+export const CLINIC_INFO = {
+  name: 'The Poly Clinic',
+  phone: '+0000000000000000',
+  email: 'XXXXXXXXXXXXXXXXXXX',
+  website: 'www.polyclinic.com',
+  social: {
+    facebook: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+    twitter: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+    instagram: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+    linkedin: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+    youtube: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+  },
+  location: {
+    coordinates: {
+      lat: 0,
+      lng: 0
+    },
+    address: '123 Main St, Anytown, USA',
+    city: 'Anytown',
+    state: 'US',
+    country: 'USA',
+    zip: '12345'
+  }
+};
+
+export const APPOINTMENT = {
+  fees: 500,
+  duration: 30,
+  cancellation: {
+    allowed: true,
+    time: 24
+  },
+  reschedule: {
+    allowed: true,
+    time: 24
+  },
+  payment: {
+    allowed: true,
+    time: 24
+  },
+  reminder: {
+    allowed: true,
+    time: 24
+  },
+  paymentMethods: [
+    {
+      label: 'Credit Card',
+      value: 'credit-card'
+    },
+    {
+      label: 'Debit Card',
+      value: 'debit-card'
+    },
+    {
+      label: 'Net Banking',
+      value: 'net-banking'
+    },
+    {
+      label: 'UPI',
+      value: 'upi'
+    },
+    {
+      label: 'Wallet',
+      value: 'wallet'
+    }
+  ]
+};
