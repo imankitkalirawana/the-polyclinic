@@ -10,13 +10,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useQueryState } from 'nuqs';
 import { format } from 'date-fns';
-import {
-  today,
-  getLocalTimeZone,
-  Time,
-  CalendarDate,
-  isWeekend
-} from '@internationalized/date';
+import { today, getLocalTimeZone } from '@internationalized/date';
 
 export default function AppointmentPreview() {
   const [uid] = useQueryState('uid');
@@ -98,8 +92,10 @@ export default function AppointmentPreview() {
                     </div>
                   </div>
 
-                  <div className="flex flex-col gap-1 rounded-lg bg-default-100 p-2">
-                    <h3 className="font-medium">Appointment Note</h3>
+                  <div className="flex flex-col gap-1 rounded-lg bg-default-100 p-2 text-default-500">
+                    <h3 className="font-medium text-foreground">
+                      Appointment Note
+                    </h3>
                     <p className="text-sm text-default-500">
                       Eating sweet foods, not brushing your teeth regularly.
                       often drink cold water when eating food that is still hot.
@@ -160,10 +156,10 @@ export default function AppointmentPreview() {
                     </div>
 
                     <div className="flex flex-col gap-2 rounded-lg bg-default-100 p-2">
-                      <h3 className="font-medium">Doctor</h3>
+                      <h3 className="font-medium text-foreground">Doctor</h3>
                       {isDoctorLoading ? (
                         <Skeleton className="h-8 w-20" />
-                      ) : (
+                      ) : doctor ? (
                         <div>
                           <Button
                             variant="bordered"
@@ -175,8 +171,12 @@ export default function AppointmentPreview() {
                             className="capitalize"
                             endContent={<Icon icon="fluent:open-20-filled" />}
                           >
-                            {doctor ? doctor.name : '-'}
+                            {doctor.name}
                           </Button>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col text-sm">
+                          No doctor selected
                         </div>
                       )}
                     </div>
