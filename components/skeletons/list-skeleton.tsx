@@ -1,5 +1,5 @@
 import Skeleton from '../ui/skeleton';
-import { Card } from '@nextui-org/react';
+import { Card } from "@heroui/react";
 
 export default function ListSkeleton() {
   return (

@@ -16,7 +16,7 @@ import {
   Select,
   SelectItem,
   user
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { Genders } from '@/lib/options';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useFormik } from 'formik';

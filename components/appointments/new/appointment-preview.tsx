@@ -4,7 +4,7 @@ import { getDoctorWithUID, getUserWithUID } from '@/functions/server-actions';
 import { DoctorType } from '@/models/Doctor';
 import { UserType } from '@/models/User';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { Button, Card, CardBody, Chip } from '@nextui-org/react';
+import { Button, Card, CardBody, Chip } from "@heroui/react";
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';

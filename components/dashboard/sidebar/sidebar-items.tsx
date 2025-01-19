@@ -1,4 +1,4 @@
-import { Button, Chip } from '@nextui-org/react';
+import { Button, Chip } from "@heroui/react";
 import { Icon } from '@iconify/react';
 
 import { type SidebarItem, SidebarItemType } from './sidebar';

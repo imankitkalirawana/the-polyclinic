@@ -1,4 +1,4 @@
-import { Skeleton as NextSkeleton, cn } from '@nextui-org/react';
+import { Skeleton as NextSkeleton, cn } from "@heroui/react";
 
 export default function Skeleton({ className }: { className?: string }) {
   return (

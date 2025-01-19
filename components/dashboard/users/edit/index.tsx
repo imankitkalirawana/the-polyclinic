@@ -2,7 +2,7 @@
 import { getUserWithUID } from '@/functions/server-actions';
 import { UserType } from '@/models/User';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { Link, Tab, Tabs } from '@nextui-org/react';
+import { Link, Tab, Tabs } from "@heroui/react";
 import { useQuery } from '@tanstack/react-query';
 import { usePathname } from 'next/navigation';
 import { useQueryState } from 'nuqs';

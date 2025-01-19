@@ -1,5 +1,5 @@
 import Skeleton from '@/components/ui/skeleton';
-import { Card, cn } from '@nextui-org/react';
+import { Card, cn } from "@heroui/react";
 
 export default function ProfileSkeleton({ step = 0 }: { step?: number }) {
   return (

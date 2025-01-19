@@ -1,10 +1,10 @@
 'use client';
 
-import type { SwitchProps } from '@nextui-org/react';
+import type { SwitchProps } from "@heroui/react";
 
 import React from 'react';
-import { extendVariants, Switch } from '@nextui-org/react';
-import { cn } from '@nextui-org/react';
+import { extendVariants, Switch } from "@heroui/react";
+import { cn } from "@heroui/react";
 
 const CustomSwitch = extendVariants(Switch, {
   variants: {

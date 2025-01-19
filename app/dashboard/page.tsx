@@ -1,7 +1,7 @@
 'use client';
 
 import CommandMenu from '@/components/command-menu';
-import { Button } from '@nextui-org/react';
+import { Button } from "@heroui/react";
 import { toast } from 'sonner';
 
 export default function Dashboard() {

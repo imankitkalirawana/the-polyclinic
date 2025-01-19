@@ -1,9 +1,9 @@
 'use client';
 
-import type { CardProps } from '@nextui-org/react';
+import type { CardProps } from "@heroui/react";
 
 import React from 'react';
-import { Card, CardHeader, CardBody, Button } from '@nextui-org/react';
+import { Card, CardHeader, CardBody, Button } from "@heroui/react";
 
 import SwitchCell from './switch-cell';
 

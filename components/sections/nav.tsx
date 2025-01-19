@@ -12,7 +12,7 @@ import {
   Link,
   Button,
   Image
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { usePathname } from 'next/navigation';
 import ModeToggle from '../mode-toggle';
 import ProfileDropdown from './profile-dropdown';

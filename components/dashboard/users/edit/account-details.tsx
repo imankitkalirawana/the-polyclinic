@@ -16,7 +16,7 @@ import {
   SelectItem,
   DatePicker,
   ScrollShadow
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { Icon } from '@iconify/react';
 import { useSession } from 'next-auth/react';
 import { parseDate, getLocalTimeZone, today } from '@internationalized/date';

@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
-import { cn } from '@nextui-org/react';
+import { cn } from "@heroui/react";
 
 const Popover = PopoverPrimitive.Root;
 

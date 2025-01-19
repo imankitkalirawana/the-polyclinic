@@ -9,7 +9,7 @@ import {
   Input,
   RadioGroup,
   Tooltip
-} from '@nextui-org/react';
+} from "@heroui/react";
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { useFormik } from 'formik';

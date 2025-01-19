@@ -5,7 +5,7 @@ import {
   Avatar,
   DropdownMenu,
   DropdownItem
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import ModeToggle from '../mode-toggle';

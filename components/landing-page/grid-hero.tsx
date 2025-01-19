@@ -3,7 +3,7 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import { AnimationProps, motion } from 'framer-motion';
 import { FiArrowRight } from 'react-icons/fi';
 import { twMerge } from 'tailwind-merge';
-import { Button } from '@nextui-org/react';
+import { Button } from "@heroui/react";
 
 export default function GridHero() {
   return (

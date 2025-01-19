@@ -15,7 +15,7 @@ import {
   TimeInput,
   TimeInputProps,
   TimeInputValue
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { useQueryState } from 'nuqs';
 import { TIMINGS } from '@/lib/config';
 import { disabledDates } from '@/lib/appointments/new';

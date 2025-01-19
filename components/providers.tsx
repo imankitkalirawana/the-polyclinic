@@ -25,12 +25,12 @@ const Sonner = () => {
         showSpinner={false}
         shadow="false"
         easing="ease"
-        color="hsl(var(--nextui-primary))"
+        color="hsl(var(--heroui-primary))"
       />
       <Toaster
         toastOptions={{
           className: 'bg-background/20 backdrop-blur-md',
-          style: { borderRadius: 'var(--nextui-radius-large)' },
+          style: { borderRadius: 'var(--heroui-radius-large)' },
           classNames: {
             error: 'text-danger-500 bg-danger-300/10 border-danger-300/30',
             success: 'text-success-500 bg-success-300/10 border-success-300/30',

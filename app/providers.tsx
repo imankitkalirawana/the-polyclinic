@@ -1,6 +1,6 @@
 'use client';
 
-import { NextUIProvider } from '@nextui-org/react';
+import { HeroUIProvider } from '@heroui/react';
 import React from 'react';
 import { SessionProvider } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -28,13 +28,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
     }
   });
   return (
-    <NextUIProvider navigate={router.push}>
+    <HeroUIProvider navigate={router.push}>
       <QueryClientProvider client={queryClient}>
         <SessionProvider>
           <ReduxProvider store={store}>{children}</ReduxProvider>
           {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         </SessionProvider>
       </QueryClientProvider>
-    </NextUIProvider>
+    </HeroUIProvider>
   );
 }

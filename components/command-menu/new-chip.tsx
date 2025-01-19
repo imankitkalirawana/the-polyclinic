@@ -1,8 +1,8 @@
 'use client';
 
-import { Chip } from '@nextui-org/chip';
+import { Chip } from "@heroui/chip";
 import { startsWith } from 'lodash';
-import { cn } from '@nextui-org/react';
+import { cn } from "@heroui/react";
 
 type NewChipProps = React.HTMLAttributes<HTMLDivElement>;
 

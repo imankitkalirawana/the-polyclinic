@@ -6,7 +6,7 @@ import {
   type ListboxProps,
   type ListboxSectionProps,
   type Selection
-} from '@nextui-org/react';
+} from "@heroui/react";
 import React from 'react';
 import {
   Listbox,
@@ -14,9 +14,9 @@ import {
   ListboxItem,
   ListboxSection,
   Link
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { Icon } from '@iconify/react';
-import { cn } from '@nextui-org/react';
+import { cn } from "@heroui/react";
 // import Link from 'next/link';
 
 export enum SidebarItemType {

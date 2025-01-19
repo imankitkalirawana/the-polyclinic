@@ -1,5 +1,5 @@
 import Skeleton from '@/components/ui/skeleton';
-import { Card, CardBody } from '@nextui-org/react';
+import { Card, CardBody } from "@heroui/react";
 
 export default function ServiceSkeleton() {
   return (

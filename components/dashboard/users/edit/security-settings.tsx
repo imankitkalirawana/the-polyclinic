@@ -17,7 +17,7 @@ import {
   Divider,
   Select,
   SelectItem
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { Icon } from '@iconify/react';
 
 import SwitchCell from './switch-cell';

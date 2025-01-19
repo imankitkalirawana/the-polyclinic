@@ -1,5 +1,5 @@
 'use client';
-import { Avatar, Button, Input } from '@nextui-org/react';
+import { Avatar, Button, Input } from "@heroui/react";
 import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';

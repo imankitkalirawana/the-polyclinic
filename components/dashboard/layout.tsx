@@ -9,7 +9,7 @@ import {
   Breadcrumbs as NextUIBreadcrumbs,
   BreadcrumbItem,
   Image
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { Icon } from '@iconify/react';
 import React, { useEffect, useMemo, useState } from 'react';
 import Sidebar from '@/components/dashboard/sidebar/sidebar';

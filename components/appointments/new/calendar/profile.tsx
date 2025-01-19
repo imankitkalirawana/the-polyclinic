@@ -12,7 +12,7 @@ import {
   Image,
   Link,
   Tooltip
-} from '@nextui-org/react';
+} from "@heroui/react";
 
 const genderMap: Record<string, string> = {
   male: 'fluent-emoji:male-sign',

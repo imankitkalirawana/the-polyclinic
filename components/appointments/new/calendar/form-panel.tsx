@@ -18,7 +18,7 @@ import {
   ScrollShadow,
   Textarea,
   Tooltip
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { useFormik } from 'formik';
 import { toast } from 'sonner';
 import axios from 'axios';

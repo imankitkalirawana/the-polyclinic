@@ -10,7 +10,7 @@ import {
   CardFooter,
   Button,
   ScrollShadow
-} from '@nextui-org/react';
+} from "@heroui/react";
 
 import { DrugType } from '@/models/Drug';
 import { useRouter } from 'next/navigation';

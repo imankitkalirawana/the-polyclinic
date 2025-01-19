@@ -35,7 +35,7 @@ import {
   ModalHeader,
   Tooltip,
   useDisclosure
-} from '@nextui-org/react';
+} from "@heroui/react";
 import Skeleton from '../ui/skeleton';
 import Heading from '../ui/heading';
 import { Icon } from '@iconify/react/dist/iconify.js';

@@ -1,6 +1,6 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import Skeleton from '@/components/ui/skeleton';
-import { Autocomplete, AutocompleteItem } from '@nextui-org/react';
+import { Autocomplete, AutocompleteItem } from "@heroui/react";
 import Profile from './profile';
 import { UserType } from '@/models/User';
 

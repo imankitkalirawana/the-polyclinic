@@ -27,7 +27,7 @@ import {
   useDisclosure,
   Spinner,
   ChipProps
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { useFormik } from 'formik';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -428,102 +428,100 @@ export default function Users() {
     }
   });
 
-  return (
-    <>
-      <Table
-        aria-label="Users List"
-        isHeaderSticky
-        bottomContent={bottomContent}
-        bottomContentPlacement="outside"
-        classNames={{
-          wrapper: 'max-h-[382px]'
-        }}
-        selectedKeys={selectedKeys}
-        //   selectionMode="multiple"
-        sortDescriptor={sortDescriptor}
-        topContent={topContent}
-        topContentPlacement="outside"
-        onSelectionChange={setSelectedKeys}
-        onSortChange={setSortDescriptor}
-        onRowAction={(key) => {
-          redirectTo(`/dashboard/users/${key}`);
-        }}
-        className="cursor-pointer"
+  return (<>
+    <Table
+      aria-label="Users List"
+      isHeaderSticky
+      bottomContent={bottomContent}
+      bottomContentPlacement="outside"
+      classNames={{
+        wrapper: 'max-h-[382px]'
+      }}
+      selectedKeys={selectedKeys}
+      //   selectionMode="multiple"
+      sortDescriptor={sortDescriptor}
+      topContent={topContent}
+      topContentPlacement="outside"
+      onSelectionChange={setSelectedKeys}
+      onSortChange={setSortDescriptor}
+      onRowAction={(key) => {
+        redirectTo(`/dashboard/users/${key}`);
+      }}
+      className="cursor-pointer"
+    >
+      <TableHeader columns={headerColumns}>
+        {(column) => (
+          <TableColumn
+            key={column.uid}
+            align={column.uid === 'actions' ? 'center' : 'start'}
+            allowsSorting={column.sortable}
+          >
+            {column.name}
+          </TableColumn>
+        )}
+      </TableHeader>
+      <TableBody
+        items={sortedItems}
+        loadingContent={<Spinner />}
+        loadingState={isLoading ? 'loading' : 'idle'}
+        emptyContent={'No users found'}
       >
-        <TableHeader columns={headerColumns}>
-          {(column) => (
-            <TableColumn
-              key={column.uid}
-              align={column.uid === 'actions' ? 'center' : 'start'}
-              allowsSorting={column.sortable}
-            >
-              {column.name}
-            </TableColumn>
-          )}
-        </TableHeader>
-        <TableBody
-          items={sortedItems}
-          loadingContent={<Spinner />}
-          loadingState={isLoading ? 'loading' : 'idle'}
-          emptyContent={'No users found'}
-        >
-          {(item) => (
-            <TableRow
-              key={item.uid}
-              className="transition-all hover:bg-default-100"
-            >
-              {(columnKey) => (
-                // @ts-ignore
-                <TableCell>{renderCell(item, columnKey)}</TableCell>
-              )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-      <Modal
-        backdrop="blur"
-        scrollBehavior="inside"
-        isOpen={deleteModal.isOpen}
-        onOpenChange={deleteModal.onOpenChange}
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex-col items-center">
-                <Icon
-                  icon="tabler:trash-x"
-                  fontSize={54}
-                  className="text-danger"
-                />
-                <h2 className="mt-4 max-w-xs text-center text-sm font-[400]">
-                  Are you sure you permanently want to delete{' '}
-                  <span className="font-semibold">{selected?.name}</span> from
-                  the Database?
-                </h2>
-              </ModalHeader>
-              <ModalBody className="items-center text-sm">
-                You can&apos;t undo this action.
-              </ModalBody>
-              <ModalFooter className="flex-col-reverse sm:flex-row">
-                <Button fullWidth variant="flat" onPress={onClose}>
-                  Close
-                </Button>
-                <Button
-                  color="danger"
-                  variant="flat"
-                  fullWidth
-                  isLoading={formik.isSubmitting}
-                  onPress={() => formik.handleSubmit()}
-                >
-                  Delete
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
-    </>
-  );
+        {(item) => (
+          <TableRow
+            key={item.uid}
+            className="transition-all hover:bg-default-100"
+          >
+            {(columnKey) => (
+              // @ts-ignore
+              (<TableCell>{renderCell(item, columnKey)}</TableCell>)
+            )}
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
+    <Modal
+      backdrop="blur"
+      scrollBehavior="inside"
+      isOpen={deleteModal.isOpen}
+      onOpenChange={deleteModal.onOpenChange}
+    >
+      <ModalContent>
+        {(onClose) => (
+          <>
+            <ModalHeader className="flex-col items-center">
+              <Icon
+                icon="tabler:trash-x"
+                fontSize={54}
+                className="text-danger"
+              />
+              <h2 className="mt-4 max-w-xs text-center text-sm font-[400]">
+                Are you sure you permanently want to delete{' '}
+                <span className="font-semibold">{selected?.name}</span> from
+                the Database?
+              </h2>
+            </ModalHeader>
+            <ModalBody className="items-center text-sm">
+              You can&apos;t undo this action.
+            </ModalBody>
+            <ModalFooter className="flex-col-reverse sm:flex-row">
+              <Button fullWidth variant="flat" onPress={onClose}>
+                Close
+              </Button>
+              <Button
+                color="danger"
+                variant="flat"
+                fullWidth
+                isLoading={formik.isSubmitting}
+                onPress={() => formik.handleSubmit()}
+              >
+                Delete
+              </Button>
+            </ModalFooter>
+          </>
+        )}
+      </ModalContent>
+    </Modal>
+  </>);
 }
 
 const columns = [

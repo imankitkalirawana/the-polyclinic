@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Button, Tooltip } from '@nextui-org/react';
+import { Button, Tooltip } from "@heroui/react";
 import { IconPlus, IconX } from '@tabler/icons-react';
 import { useFormik } from 'formik';
 import { useState } from 'react';

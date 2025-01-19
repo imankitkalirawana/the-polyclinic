@@ -6,7 +6,7 @@ import {
   Input,
   Select,
   SelectItem
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { useFormik } from 'formik';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useRouter } from 'next/navigation';

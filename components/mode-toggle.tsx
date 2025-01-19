@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useTheme } from 'next-themes';
 
-import { Switch } from '@nextui-org/react';
+import { Switch } from "@heroui/react";
 
 export default function ModeToggle() {
   const { setTheme, theme } = useTheme();

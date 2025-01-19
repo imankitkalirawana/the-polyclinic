@@ -30,7 +30,7 @@ import {
   ModalContent,
   ModalFooter,
   useDisclosure
-} from '@nextui-org/react';
+} from "@heroui/react";
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
@@ -437,96 +437,94 @@ export default function Drugs({ drugs }: Props) {
     );
   }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
 
-  return (
-    <>
-      <Table
-        aria-label="Drugs List"
-        isHeaderSticky
-        bottomContent={bottomContent}
-        bottomContentPlacement="outside"
-        classNames={{
-          wrapper: 'max-h-[382px]'
-        }}
-        selectedKeys={selectedKeys}
-        //   selectionMode="multiple"
-        sortDescriptor={sortDescriptor}
-        topContent={topContent}
-        topContentPlacement="outside"
-        onSelectionChange={setSelectedKeys}
-        onSortChange={setSortDescriptor}
-        onRowAction={(key) => {
-          redirectTo(`/dashboard/drugs/${key}`);
-        }}
-        className="cursor-pointer"
-      >
-        <TableHeader columns={headerColumns}>
-          {(column) => (
-            <TableColumn
-              key={column.uid}
-              align={column.uid === 'actions' ? 'center' : 'start'}
-              allowsSorting={column.sortable}
-            >
-              {column.name}
-            </TableColumn>
-          )}
-        </TableHeader>
-        <TableBody items={sortedItems} emptyContent={'No drugs found'}>
-          {(item) => (
-            <TableRow
-              key={item.did}
-              className="transition-all hover:bg-default-100"
-            >
-              {(columnKey) => (
-                // @ts-ignore
-                <TableCell>{renderCell(item, columnKey)}</TableCell>
-              )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-      <Modal
-        backdrop="blur"
-        scrollBehavior="inside"
-        isOpen={deleteModal.isOpen}
-        onOpenChange={deleteModal.onOpenChange}
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex-col items-center">
-                <Icon
-                  icon="tabler:trash-x"
-                  fontSize={54}
-                  className="text-danger"
-                />
-                <h2 className="mt-4 max-w-xs text-center text-base">
-                  Are you sure you permanently want to delete{' '}
-                  {selected?.brandName} from the Database?
-                </h2>
-              </ModalHeader>
-              <ModalBody className="items-center text-sm">
-                You can&apos;t undo this action.
-              </ModalBody>
-              <ModalFooter className="flex-col-reverse sm:flex-row">
-                <Button fullWidth variant="flat" onPress={onClose}>
-                  Close
-                </Button>
-                <Button
-                  color="danger"
-                  variant="flat"
-                  fullWidth
-                  isLoading={isDeleting}
-                  onPress={() => handleDelete(selected as DrugType)}
-                >
-                  Delete
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
-    </>
-  );
+  return (<>
+    <Table
+      aria-label="Drugs List"
+      isHeaderSticky
+      bottomContent={bottomContent}
+      bottomContentPlacement="outside"
+      classNames={{
+        wrapper: 'max-h-[382px]'
+      }}
+      selectedKeys={selectedKeys}
+      //   selectionMode="multiple"
+      sortDescriptor={sortDescriptor}
+      topContent={topContent}
+      topContentPlacement="outside"
+      onSelectionChange={setSelectedKeys}
+      onSortChange={setSortDescriptor}
+      onRowAction={(key) => {
+        redirectTo(`/dashboard/drugs/${key}`);
+      }}
+      className="cursor-pointer"
+    >
+      <TableHeader columns={headerColumns}>
+        {(column) => (
+          <TableColumn
+            key={column.uid}
+            align={column.uid === 'actions' ? 'center' : 'start'}
+            allowsSorting={column.sortable}
+          >
+            {column.name}
+          </TableColumn>
+        )}
+      </TableHeader>
+      <TableBody items={sortedItems} emptyContent={'No drugs found'}>
+        {(item) => (
+          <TableRow
+            key={item.did}
+            className="transition-all hover:bg-default-100"
+          >
+            {(columnKey) => (
+              // @ts-ignore
+              (<TableCell>{renderCell(item, columnKey)}</TableCell>)
+            )}
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
+    <Modal
+      backdrop="blur"
+      scrollBehavior="inside"
+      isOpen={deleteModal.isOpen}
+      onOpenChange={deleteModal.onOpenChange}
+    >
+      <ModalContent>
+        {(onClose) => (
+          <>
+            <ModalHeader className="flex-col items-center">
+              <Icon
+                icon="tabler:trash-x"
+                fontSize={54}
+                className="text-danger"
+              />
+              <h2 className="mt-4 max-w-xs text-center text-base">
+                Are you sure you permanently want to delete{' '}
+                {selected?.brandName} from the Database?
+              </h2>
+            </ModalHeader>
+            <ModalBody className="items-center text-sm">
+              You can&apos;t undo this action.
+            </ModalBody>
+            <ModalFooter className="flex-col-reverse sm:flex-row">
+              <Button fullWidth variant="flat" onPress={onClose}>
+                Close
+              </Button>
+              <Button
+                color="danger"
+                variant="flat"
+                fullWidth
+                isLoading={isDeleting}
+                onPress={() => handleDelete(selected as DrugType)}
+              >
+                Delete
+              </Button>
+            </ModalFooter>
+          </>
+        )}
+      </ModalContent>
+    </Modal>
+  </>);
 }
 
 const columns = [

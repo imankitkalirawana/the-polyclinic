@@ -15,7 +15,7 @@ import {
   Link,
   Textarea,
   Tooltip
-} from '@nextui-org/react';
+} from "@heroui/react";
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';

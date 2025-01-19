@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { Avatar, Button, Link, Input } from '@nextui-org/react';
+import { Avatar, Button, Link, Input } from "@heroui/react";
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { toast } from 'sonner';

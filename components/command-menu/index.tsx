@@ -9,7 +9,7 @@ import {
   type Selection,
   Badge,
   Tooltip
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { Command } from 'cmdk';
 import { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import { matchSorter } from 'match-sorter';
@@ -23,7 +23,7 @@ import {
   ModalContent,
   ScrollShadow,
   cn
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { tv } from 'tailwind-variants';
 import MultiRef from 'react-multi-ref';
 import scrollIntoView from 'scroll-into-view-if-needed';
@@ -156,7 +156,7 @@ const cmdk = tv({
 });
 
 const MATCH_KEYS = ['content', 'group', 'category'] as const;
-const RECENT_SEARCHES_KEY = 'recent-searches--nextui-pro';
+const RECENT_SEARCHES_KEY = 'recent-searches--heroui-pro';
 const MAX_RECENT_SEARCHES = 10;
 const MAX_RESULTS = 20;
 const CATEGORY_ICON_MAP = {

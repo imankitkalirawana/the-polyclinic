@@ -1,10 +1,10 @@
 'use client';
 
-import type { RadioProps } from '@nextui-org/react';
+import type { RadioProps } from "@heroui/react";
 
 import React from 'react';
-import { Radio } from '@nextui-org/react';
-import { cn } from '@nextui-org/react';
+import { Radio } from "@heroui/react";
+import { cn } from "@heroui/react";
 
 export type UserRadioProps = RadioProps & {
   icon?: React.ReactNode;

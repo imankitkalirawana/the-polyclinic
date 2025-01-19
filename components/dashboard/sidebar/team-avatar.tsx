@@ -1,10 +1,10 @@
 'use client';
 
-import type { AvatarProps } from '@nextui-org/react';
+import type { AvatarProps } from "@heroui/react";
 
 import React from 'react';
-import { Avatar } from '@nextui-org/react';
-import { cn } from '@nextui-org/react';
+import { Avatar } from "@heroui/react";
+import { cn } from "@heroui/react";
 
 const TeamAvatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
   ({ name, className, classNames = {}, ...props }, ref) => (

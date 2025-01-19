@@ -9,7 +9,7 @@ import {
   DropdownMenu,
   DropdownTrigger,
   Input
-} from '@nextui-org/react';
+} from "@heroui/react";
 import { useQueryState } from 'nuqs';
 import React, { useEffect, useMemo } from 'react';
 import { Icon } from '@iconify/react/dist/iconify.js';

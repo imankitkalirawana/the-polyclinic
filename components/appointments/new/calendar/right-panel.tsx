@@ -1,12 +1,12 @@
 'use client';
 
-import { Button } from '@nextui-org/react';
+import { Button } from "@heroui/react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { DateValue } from '@react-aria/calendar';
 import { useLocale } from '@react-aria/i18n';
 import { useEffect, useState } from 'react';
 import { availableTimes } from './available-times';
-import { ScrollShadow } from '@nextui-org/react';
+import { ScrollShadow } from "@heroui/react";
 import Skeleton from '@/components/ui/skeleton';
 import { useQueryState } from 'nuqs';
 import { format } from 'date-fns';

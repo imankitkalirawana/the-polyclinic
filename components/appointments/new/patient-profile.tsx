@@ -9,7 +9,7 @@ import {
   Card,
   Link,
   Tooltip
-} from '@nextui-org/react';
+} from "@heroui/react";
 
 import { humanReadableDate } from '@/lib/utility';
 import { UserType } from '@/models/User';

@@ -1,4 +1,4 @@
-import { Card, CardBody, CardFooter, CardHeader } from '@nextui-org/react';
+import { Card, CardBody, CardFooter, CardHeader } from "@heroui/react";
 import Skeleton from '../ui/skeleton';
 
 export default function DashboardDetailsSkeleton() {

@@ -7,7 +7,7 @@ import {
   CardBody,
   Button,
   ScrollShadow
-} from '@nextui-org/react';
+} from "@heroui/react";
 
 import Link from 'next/link';
 import { humanReadableDate, humanReadableTime } from '@/lib/utility';

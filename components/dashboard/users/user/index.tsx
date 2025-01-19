@@ -9,7 +9,7 @@ import {
   Avatar,
   CardFooter,
   ScrollShadow
-} from '@nextui-org/react';
+} from "@heroui/react";
 
 import CellValue from '../../../ui/cell-value';
 import Link from 'next/link';
