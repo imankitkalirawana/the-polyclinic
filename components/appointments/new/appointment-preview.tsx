@@ -10,13 +10,25 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useQueryState } from 'nuqs';
 import { format } from 'date-fns';
-import { useMemo } from 'react';
+import {
+  today,
+  getLocalTimeZone,
+  Time,
+  CalendarDate,
+  isWeekend
+} from '@internationalized/date';
 
 export default function AppointmentPreview() {
   const [uid] = useQueryState('uid');
   const [did] = useQueryState('did');
-  const [date] = useQueryState('date');
-  const [time] = useQueryState('slot'); // HH:MM:SS ( 2:52:00 )
+  const [date] = useQueryState('date', {
+    defaultValue: today(getLocalTimeZone()).toString()
+  });
+  const [time] = useQueryState('slot', {
+    defaultValue: new Date()
+      .toLocaleTimeString('en-IN', { hour12: false })
+      .split(' ')[0]
+  });
 
   const { data: user, isLoading: isUserLoading } = useQuery<UserType>({
     queryKey: ['user', uid],

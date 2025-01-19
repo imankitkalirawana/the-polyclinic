@@ -1,12 +1,5 @@
 import { Icon } from '@iconify/react/dist/iconify.js';
-import {
-  Autocomplete,
-  AutocompleteItem,
-  Button,
-  Divider,
-  Link,
-  TimeInputValue
-} from '@nextui-org/react';
+import { Button, Divider, Link, TimeInputValue } from '@nextui-org/react';
 import PatientSelection from './patient-selection';
 import { parseAsInteger, useQueryState } from 'nuqs';
 import {

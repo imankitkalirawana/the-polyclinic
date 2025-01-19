@@ -37,61 +37,6 @@ export default function DateTimePicker({
 }) {
   const { locale } = useLocale();
 
-  // const [dateParam, setDateParam] = useQueryState('date', {
-  //   defaultValue: today(getLocalTimeZone()).toString()
-  // });
-  // const [slotParam, setSlotParam] = useQueryState('slot', {
-  //   defaultValue: new Date()
-  //     .toLocaleTimeString('en-IN', { hour12: false })
-  //     .split(' ')[0]
-  // });
-
-  // const [date, setDate] = React.useState<CalendarDate>(
-  //   (() => {
-  //     const localDateTime = new Date(`${dateParam}T${slotParam}`);
-
-  //     // if current time is after 5 PM, set the date to tomorrow
-  //     if (localDateTime.getHours() >= TIMINGS.appointment.end) {
-  //       localDateTime.setDate(localDateTime.getDate() + 1);
-  //     }
-
-  //     return new CalendarDate(
-  //       localDateTime.getFullYear(),
-  //       localDateTime.getMonth() + 1,
-  //       localDateTime.getDate()
-  //     );
-  //   })()
-  // );
-
-  // const [time, setTime] = React.useState<TimeInputValue | null>(
-  //   (() => {
-  //     const localDateTime = new Date(`${dateParam}T${slotParam}`);
-  //     const currentHour = localDateTime.getHours();
-  //     const currentMinute = localDateTime.getMinutes();
-
-  //     if (
-  //       currentHour < TIMINGS.appointment.start ||
-  //       currentHour >= TIMINGS.appointment.end
-  //     ) {
-  //       return new Time(TIMINGS.appointment.start);
-  //     }
-
-  //     return new Time(currentHour, currentMinute);
-  //   })()
-  // );
-
-  // const handleChangeDate = (date: DateValue) => {
-  //   setDate(date as CalendarDate);
-  //   const formattedDate = `${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}`;
-  //   setDateParam(formattedDate);
-  // };
-
-  // const handleChangeTime = (time: TimeInputValue) => {
-  //   setTime(time);
-  //   const formattedTime = `${String(time.hour).padStart(2, '0')}:${String(time.minute).padStart(2, '0')}:00`;
-  //   setSlotParam(formattedTime);
-  // };
-
   return (
     <>
       <div className="flex w-full flex-col items-center gap-4">
