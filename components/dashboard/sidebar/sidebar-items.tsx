@@ -1,4 +1,4 @@
-import { Button, Chip } from "@heroui/react";
+import { Button, Chip } from '@heroui/react';
 import { Icon } from '@iconify/react';
 
 import { type SidebarItem, SidebarItemType } from './sidebar';
@@ -93,7 +93,7 @@ export const sectionItems: SidebarItem[] = [
     items: [
       {
         key: 'home',
-        href: '/',
+        href: '/home',
         icon: 'solar:home-2-broken',
         title: 'Home'
       },

@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { Avatar, Button, Link, Input } from "@heroui/react";
+import { Avatar, Button, Link, Input } from '@heroui/react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { toast } from 'sonner';
@@ -14,6 +14,8 @@ import {
   InputOTPGroup,
   InputOTPSlot
 } from '@/components/ui/input-otp';
+import { WEBSITE_SETTING } from '@/lib/config';
+import Error from '@/app/error';
 
 export default function Register() {
   const [isOtpSent, setIsOtpSent] = useState(false);
@@ -103,6 +105,16 @@ export default function Register() {
       toast.error(error.response.data.message);
     }
   };
+
+  if (!WEBSITE_SETTING.status.registration) {
+    return (
+      <Error
+        code="403"
+        title="Registration is closed!"
+        description="Registration for this event or service is currently closed. Please check back later or contact support for more details."
+      />
+    );
+  }
 
   return (
     <>

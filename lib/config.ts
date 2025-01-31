@@ -99,3 +99,15 @@ export const APPOINTMENT = {
     }
   ]
 };
+
+export const WEBSITE_SETTING = {
+  status: {
+    maintainance: false,
+    registration: false,
+    login: true
+  },
+  appearance: {
+    theme: 'light',
+    logo: '/images/logo.png'
+  }
+};

@@ -12,7 +12,7 @@ import {
   Link,
   Button,
   Image
-} from "@heroui/react";
+} from '@heroui/react';
 import { usePathname } from 'next/navigation';
 import ModeToggle from '../mode-toggle';
 import ProfileDropdown from './profile-dropdown';
@@ -24,7 +24,7 @@ interface NavbarProps {
 const menuItems = [
   {
     name: 'Home',
-    href: '/'
+    href: '/home'
   },
   {
     name: 'Dashboard',
@@ -45,9 +45,7 @@ const menuItems = [
 ];
 
 export default function Nav({ session }: NavbarProps) {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-
-  const DISABLED_PATHS = ['/auth', '/dashboard'];
+  const DISABLED_PATHS = ['/auth', '/dashboard', '/appointment/new'];
 
   const pathname = usePathname();
   const isDisabled = DISABLED_PATHS.some((path) => pathname.startsWith(path));

@@ -1,5 +1,5 @@
 'use client';
-import { Button, Card, Link as NextLink } from "@heroui/react";
+import { Button, Card, Link as NextLink } from '@heroui/react';
 import Link from 'next/link';
 import {
   IconArrowNarrowLeft,
@@ -15,13 +15,30 @@ interface Props {
   code?: string;
   title?: string;
   description?: string;
+  primaryButton?: React.ReactNode;
+  secondaryButton?: React.ReactNode;
 }
 
 export default function Error({
   className,
   code = '404',
   title = 'We lost this page',
-  description = "We searched high and low, but couldn't find what you're looking for. Let's find a better place for you to go."
+  description = "We searched high and low, but couldn't find what you're looking for. Let's find a better place for you to go.",
+  primaryButton = (
+    <Button
+      variant="bordered"
+      startContent={<IconArrowNarrowLeft />}
+      // go one step back in the browser history
+      onPress={() => window.history.back()}
+    >
+      Go Back
+    </Button>
+  ),
+  secondaryButton = (
+    <Button variant="flat" color="primary" as={Link} href="/">
+      Take me home
+    </Button>
+  )
 }: Props) {
   return (
     <>
@@ -39,18 +56,8 @@ export default function Error({
             <h1 className="mt-3 text-2xl font-semibold md:text-3xl">{title}</h1>
             <p className="mt-4 text-foreground-400">{description}</p>
             <div className="mt-6 flex w-full shrink-0 items-center gap-x-3 sm:w-auto">
-              <Button
-                variant="bordered"
-                startContent={<IconArrowNarrowLeft />}
-                // go one step back in the browser history
-                onPress={() => window.history.back()}
-              >
-                Go Back
-              </Button>
-
-              <Button variant="flat" color="primary" as={Link} href="/">
-                Take me home
-              </Button>
+              {primaryButton}
+              {secondaryButton}
             </div>
           </div>
 

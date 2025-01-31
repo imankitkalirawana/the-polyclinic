@@ -3,7 +3,7 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import { AnimationProps, motion } from 'framer-motion';
 import { FiArrowRight } from 'react-icons/fi';
 import { twMerge } from 'tailwind-merge';
-import { Button } from "@heroui/react";
+import { Button } from '@heroui/react';
 
 export default function GridHero() {
   return (
@@ -51,7 +51,7 @@ const Content = () => {
         }}
         className="mb-3 text-center text-3xl font-bold leading-tight text-foreground sm:text-4xl sm:leading-tight md:text-5xl md:leading-tight lg:text-7xl lg:leading-tight"
       >
-        A landing page template that works for you
+        Integrated hospital services under one roof.
       </motion.h1>
       <motion.p
         initial={{
@@ -69,8 +69,8 @@ const Content = () => {
         }}
         className="mb-9 max-w-2xl text-center text-base leading-relaxed text-default-500 sm:text-lg md:text-lg md:leading-relaxed"
       >
-        Build beautiful landing pages for your startups, clients, and side
-        projects, without having to think about design.
+        An integrated, streamlined system for hospital and polyclinic resource
+        management.
       </motion.p>
       <motion.div
         initial={{
