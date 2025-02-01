@@ -217,7 +217,7 @@ const IdInput = () => {
           label="Email / Phone Number"
           name="id"
           variant="bordered"
-          onChange={(e) => {
+          onChange={(e: any) => {
             handleIdInput(e.target.value);
             formik.setFieldValue('id', e.target.value);
           }}
@@ -294,7 +294,7 @@ const DetailForm = () => {
           label="Email / Phone Number"
           name="id"
           variant="bordered"
-          onChange={(e) => {
+          onChange={(e: any) => {
             formik.setFieldValue('id', e.target.value);
           }}
           value={formik.values.id}
