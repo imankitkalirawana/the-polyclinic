@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/input-otp';
 import { WEBSITE_SETTING } from '@/lib/config';
 import Error from '@/app/error';
+import { IconArrowNarrowLeft } from '@tabler/icons-react';
 
 export default function Register() {
   const [isOtpSent, setIsOtpSent] = useState(false);
@@ -110,8 +111,18 @@ export default function Register() {
     return (
       <Error
         code="403"
-        title="Registration is closed!"
-        description="Registration for this event or service is currently closed. Please check back later or contact support for more details."
+        title="Registration Is Closed!"
+        description="Registration for this service is currently closed. Please check back later or contact support for more details."
+        primaryButton={
+          <Button
+            variant="bordered"
+            onPress={() => {
+              window.location.href = '/auth/login';
+            }}
+          >
+            Login
+          </Button>
+        }
       />
     );
   }
