@@ -1,10 +1,10 @@
 'use client';
 
-import type { SwitchProps } from "@heroui/react";
+import type { SwitchProps } from '@heroui/react';
 
-import React from 'react';
-import { extendVariants, Switch } from "@heroui/react";
-import { cn } from "@heroui/react";
+import React, { ReactElement } from 'react';
+import { extendVariants, Switch } from '@heroui/react';
+import { cn } from '@heroui/react';
 
 const CustomSwitch = extendVariants(Switch, {
   variants: {
@@ -28,7 +28,7 @@ export type SwitchCellProps = Omit<SwitchProps, 'color'> & {
   };
 };
 
-const SwitchCell = React.forwardRef<HTMLInputElement, SwitchCellProps>(
+const SwitchCell = React.forwardRef<ReactElement, SwitchCellProps>(
   ({ label, description, classNames, ...props }, ref) => (
     <CustomSwitch
       ref={ref}
