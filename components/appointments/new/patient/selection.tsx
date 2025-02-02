@@ -182,8 +182,8 @@ export default function Selection({ session }: { session?: any }) {
                     dispatch(
                       setSelectedUser({
                         ...user,
-                        createdAt: null,
-                        updatedAt: null
+                        createdAt: '',
+                        updatedAt: ''
                       })
                     );
                   }}
@@ -346,8 +346,8 @@ export default function Selection({ session }: { session?: any }) {
                     dispatch(
                       setSelectedDoctor({
                         ...doctor,
-                        createdAt: null,
-                        updatedAt: null
+                        createdAt: '',
+                        updatedAt: ''
                       })
                     );
                   }}

@@ -76,9 +76,6 @@ export default function PatientSelection() {
               )}
               onPress={() => {
                 setUIDParam(user.uid.toString());
-                dispatch(
-                  setSelectedUser({ ...user, createdAt: null, updatedAt: null })
-                );
               }}
             >
               <div className="flex flex-col items-start justify-between gap-4 overflow-hidden">

@@ -1,4 +1,3 @@
-import ChooseUser from './choose-user';
 import Selection from './selection';
 
 export default function PatientAppointment({ session }: { session?: any }) {
