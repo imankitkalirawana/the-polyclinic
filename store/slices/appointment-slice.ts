@@ -1,31 +1,41 @@
-import { AppointmentType } from '@/models/Appointment';
-import { DoctorType } from '@/models/Doctor';
+// appointment-slice.ts
 import { UserType } from '@/models/User';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface AppointmentWithUserAndDoctor extends AppointmentType {
-  doctorData: DoctorType;
-  user: UserType;
+interface BookAppointmentType {
+  user: UserType | null; // Allow null for initial state
+  doctor: UserType | null;
+  date: string;
+  time: string;
 }
 
+const initialState: BookAppointmentType = {
+  user: null,
+  doctor: null,
+  date: '',
+  time: ''
+};
+
 const appointmentSlice = createSlice({
-  name: 'appointment',
-  initialState: {} as AppointmentWithUserAndDoctor,
+  name: 'book-appointment',
+  initialState,
   reducers: {
-    setAppointment(state, action: PayloadAction<AppointmentWithUserAndDoctor>) {
-      return action.payload;
+    bookAppointment(state, action: PayloadAction<BookAppointmentType>) {
+      state = action.payload;
     },
-    clearAppointment(state) {
-      return {} as AppointmentWithUserAndDoctor;
-    },
-    updateAppointment(state, action: PayloadAction<Partial<AppointmentType>>) {
-      console.log('action.payload', action.payload);
+    updateAppointment(
+      state,
+      action: PayloadAction<Partial<BookAppointmentType>>
+    ) {
       return { ...state, ...action.payload };
+    },
+    setSelectedUser(state, action: PayloadAction<UserType>) {
+      state.user = action.payload; // Update the user in the state
     }
   }
 });
 
-export const { setAppointment, clearAppointment, updateAppointment } =
+export const { bookAppointment, updateAppointment, setSelectedUser } =
   appointmentSlice.actions;
 
 export default appointmentSlice.reducer;

@@ -4,15 +4,19 @@ import { getDoctorWithUID, getUserWithUID } from '@/functions/server-actions';
 import { DoctorType } from '@/models/Doctor';
 import { UserType } from '@/models/User';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { Button, Card, CardBody, Chip } from "@heroui/react";
+import { Button, Card, CardBody, Chip } from '@heroui/react';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useQueryState } from 'nuqs';
 import { format } from 'date-fns';
 import { today, getLocalTimeZone } from '@internationalized/date';
+import { useSelector } from 'react-redux';
 
 export default function AppointmentPreview() {
+  const appointment = useSelector((state: any) => state.appointment);
+  console.log(appointment);
+
   const [uid] = useQueryState('uid');
   const [did] = useQueryState('did');
   const [date] = useQueryState('date', {
@@ -27,21 +31,29 @@ export default function AppointmentPreview() {
   const { data: user, isLoading: isUserLoading } = useQuery<UserType>({
     queryKey: ['user', uid],
     queryFn: () => {
-      return getUserWithUID(parseInt(uid as string));
+      if (!appointment.user) {
+        return getUserWithUID(parseInt(uid as string));
+      }
+      return Promise.resolve(appointment.user);
     },
     enabled: !!uid
   });
+
   const { data: doctor, isLoading: isDoctorLoading } = useQuery<DoctorType>({
     queryKey: ['doctor', did],
     queryFn: () => {
-      return getDoctorWithUID(parseInt(did as string));
+      if (!appointment.doctor) {
+        return getDoctorWithUID(parseInt(did as string));
+      }
+      return Promise.resolve(appointment.doctor);
     },
-    enabled: !!did
+    enabled: !!did && !appointment.doctor,
+    initialData: appointment.doctor
   });
 
   return (
     <>
-      <div className="w-full px-[5%] py-8">
+      <div className="ml-96 w-full px-[5%] py-8">
         <div className="flex w-full flex-col overflow-hidden rounded-2xl shadow-lg">
           <div className="w-full bg-foreground px-4 py-2 text-background">
             <h3>This is a preview.</h3>
@@ -75,17 +87,21 @@ export default function AppointmentPreview() {
                           </div>
                         ) : (
                           <>
-                            <div className="flex items-center gap-1">
-                              <Icon
-                                icon="solar:phone-rounded-linear"
-                                width={18}
-                              />
-                              <span>+91 {user?.phone}</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Icon icon="iconoir:mail" width={18} />
-                              <span>{user?.email}</span>
-                            </div>
+                            {user?.phone && (
+                              <div className="flex items-center gap-1">
+                                <Icon
+                                  icon="solar:phone-rounded-linear"
+                                  width={18}
+                                />
+                                <span>+91 {user?.phone}</span>
+                              </div>
+                            )}
+                            {user?.email && (
+                              <div className="flex items-center gap-2">
+                                <Icon icon="iconoir:mail" width={18} />
+                                <span>{user?.email}</span>
+                              </div>
+                            )}
                           </>
                         )}
                       </div>

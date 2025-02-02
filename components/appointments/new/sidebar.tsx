@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { Button, Divider, Link, TimeInputValue } from "@heroui/react";
+import { Button, Divider, Link, TimeInputValue } from '@heroui/react';
 import PatientSelection from './patient-selection';
 import { parseAsInteger, useQueryState } from 'nuqs';
 import {
@@ -135,7 +135,7 @@ export default function Sidebar() {
 
   return (
     <>
-      <div className="relative flex h-screen w-96 min-w-96 max-w-96 flex-col justify-between border-r border-r-divider shadow-lg">
+      <div className="fixed flex h-screen w-96 min-w-96 max-w-96 flex-col justify-between border-r border-r-divider shadow-lg">
         <div className="flex flex-col">
           <div className="flex flex-col gap-4 p-4">
             <div>

@@ -45,13 +45,12 @@ const menuItems = [
 ];
 
 export default function Nav({ session }: NavbarProps) {
-  const DISABLED_PATHS = ['/auth', '/dashboard', '/appointment/new'];
+  const DISABLED_PATHS = ['/auth', '/dashboard', '/appointments/new'];
 
   const pathname = usePathname();
   const isDisabled = DISABLED_PATHS.some((path) => pathname.startsWith(path));
 
   if (isDisabled) return null;
-
   return (
     <NextNavbar
       classNames={{
@@ -59,7 +58,7 @@ export default function Nav({ session }: NavbarProps) {
         wrapper: 'px-0 w-full justify-center bg-transparent',
         item: 'hidden md:flex'
       }}
-      className="fixed top-0 bg-transparent backdrop-filter-none"
+      className="fixed top-0 z-50 bg-transparent backdrop-filter-none"
       height="54px"
     >
       <NavbarContent
@@ -102,7 +101,7 @@ export default function Nav({ session }: NavbarProps) {
 
       {/* Menu */}
       <NavbarMenu
-        className="top-[calc(var(--navbar-height)/2)] mx-auto mt-16 max-h-[40vh] max-w-[80vw] rounded-large border-small border-default-200/20 bg-background/60 py-6 shadow-medium backdrop-blur-md backdrop-saturate-150 dark:bg-default-100/50"
+        className="top-[calc(var(--navbar-height)/2)] mx-auto mt-16 max-h-[40vh] max-w-[80vw] rounded-large border-small border-default-200/20 bg-background/60 py-6 shadow-medium backdrop-blur-md backdrop-saturate-150"
         motionProps={{
           initial: { opacity: 0, y: -20 },
           animate: { opacity: 1, y: 0 },

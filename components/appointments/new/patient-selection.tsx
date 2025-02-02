@@ -9,8 +9,9 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
-  Input
-} from "@heroui/react";
+  Input,
+  ScrollShadow
+} from '@heroui/react';
 import { useQueryState } from 'nuqs';
 import React, { useEffect, useMemo } from 'react';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -18,12 +19,18 @@ import { humanReadableDate } from '@/lib/utility';
 import { cn } from '@/lib/utils';
 import NoResults from '@/components/ui/no-results';
 import Skeleton from '@/components/ui/skeleton';
+import { useDispatch } from 'react-redux';
+import { setSelectedUser } from '@/store/slices/appointment-slice';
+import useDebounce from '@/hooks/useDebounce';
 
 export default function PatientSelection() {
+  const dispatch = useDispatch();
+
   const [uid, setUIDParam] = useQueryState('uid');
   const [users, setUsers] = React.useState<UserType[]>([]);
   const [query, setQuery] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(true);
+  const debounce = useDebounce(query, 500);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,9 +50,10 @@ export default function PatientSelection() {
     const filteredUsers = users.filter((user) => {
       if (query === '') return true;
       return (
-        user.name.toLowerCase().includes(query.toLowerCase()) ||
-        user.email.toLowerCase().includes(query.toLowerCase()) ||
-        user.phone.toLowerCase().includes(query.toLowerCase()) ||
+        (user.name && user.name.toLowerCase().includes(query.toLowerCase())) ||
+        (user.email &&
+          user.email.toLowerCase().includes(query.toLowerCase())) ||
+        user?.phone?.toLowerCase().includes(query.toLowerCase()) ||
         user.uid.toString().includes(query.toLowerCase())
       );
     });
@@ -68,6 +76,9 @@ export default function PatientSelection() {
               )}
               onPress={() => {
                 setUIDParam(user.uid.toString());
+                dispatch(
+                  setSelectedUser({ ...user, createdAt: null, updatedAt: null })
+                );
               }}
             >
               <div className="flex flex-col items-start justify-between gap-4 overflow-hidden">
@@ -81,7 +92,7 @@ export default function PatientSelection() {
                   </p>
                 </div>
                 <div className="text-sm text-default-500">
-                  <p>{humanReadableDate(user.createdAt)}</p>
+                  <p>{humanReadableDate(user.createdAt as string)}</p>
                 </div>
               </div>
               <div className="flex flex-col justify-between">
@@ -101,7 +112,7 @@ export default function PatientSelection() {
         )}
       </>
     );
-  }, [users, query, uid]);
+  }, [users, debounce, uid]);
 
   return (
     <div className="flex flex-col gap-2">
@@ -110,11 +121,11 @@ export default function PatientSelection() {
           value={query}
           onValueChange={setQuery}
           placeholder="Search by UID, Name, Email and Phone"
-          endContent={
-            <Button isIconOnly variant="light">
-              <Icon icon="tabler:search" width="24" height="24" />
-            </Button>
-          }
+          // endContent={
+          //   <Button isIconOnly variant="light">
+          //     <Icon icon="tabler:search" width="24" height="24" />
+          //   </Button>
+          // }
           isDisabled={isLoading}
         />
         <Dropdown placement="bottom-end">
@@ -130,9 +141,9 @@ export default function PatientSelection() {
           </DropdownMenu>
         </Dropdown>
       </div>
-      <div className="no-scrollbar grid max-h-[70vh] grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4 overflow-scroll transition-all">
+      <ScrollShadow className="no-scrollbar grid max-h-[70vh] grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4 overflow-scroll pb-48 transition-all">
         {isLoading ? <LoadingList /> : FilteredUsers}
-      </div>
+      </ScrollShadow>
     </div>
   );
 }

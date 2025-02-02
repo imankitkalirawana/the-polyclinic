@@ -1,8 +1,9 @@
 'use client';
 import * as React from 'react';
 import { useTheme } from 'next-themes';
+import { Switch } from './switch';
 
-import { Switch } from "@heroui/react";
+// import { Switch } from '@heroui/react';
 
 export default function ModeToggle() {
   const { setTheme, theme } = useTheme();
@@ -13,8 +14,9 @@ export default function ModeToggle() {
   return (
     mounted && (
       <Switch
-        isSelected={theme === 'dark'}
-        onValueChange={(checked) => setTheme(checked ? 'dark' : 'light')}
+        className="bg-default"
+        checked={theme === 'dark'}
+        onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
         color="secondary"
       />
     )
