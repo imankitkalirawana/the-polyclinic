@@ -7,7 +7,7 @@ import {
   CardBody,
   Button,
   ScrollShadow
-} from "@heroui/react";
+} from '@heroui/react';
 
 import Link from 'next/link';
 import { humanReadableDate, humanReadableTime } from '@/lib/utility';
@@ -54,11 +54,11 @@ export default function DrugCard({ drug }: Props) {
 
           <CellValue
             label="Created By"
-            value={`${drug.createdBy || 'Admin'} on ${humanReadableDate(drug.createdAt)} at ${humanReadableTime(drug.createdAt)}`}
+            value={`${drug.createdBy || 'Admin'} on ${humanReadableDate(drug.createdAt as Date)} at ${humanReadableTime(drug.createdAt as Date)}`}
           />
           <CellValue
             label="Updated By"
-            value={`${drug.updatedBy || 'Admin'} on ${humanReadableDate(drug.updatedAt)} at ${humanReadableTime(drug.updatedAt)}`}
+            value={`${drug.updatedBy || 'Admin'} on ${humanReadableDate(drug.updatedAt as Date)} at ${humanReadableTime(drug.updatedAt as Date)}`}
           />
         </ScrollShadow>
       </CardBody>

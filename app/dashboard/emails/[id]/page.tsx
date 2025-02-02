@@ -1,7 +1,7 @@
 import { API_BASE_URL } from '@/lib/config';
 import { sendHTMLMail } from '@/lib/functions';
 import { EmailType } from '@/models/Email';
-import { Button, Chip, Input } from "@heroui/react";
+import { Button, Chip, Input } from '@heroui/react';
 import axios from 'axios';
 import { format } from 'date-fns';
 import { Clock, Link2, Maximize2, Plus, Send, X } from 'lucide-react';
@@ -39,10 +39,10 @@ export default async function Page({ params }: Props) {
             {email.subject}
           </h1>
           <span
-            title={format(email.createdAt, 'PPp')}
+            title={format(email.createdAt as Date, 'PPp')}
             className="line-clamp-1 text-xs text-default-500"
           >
-            {format(email.createdAt, 'PPp')}
+            {format(email.createdAt as Date, 'PPp')}
           </span>
         </div>
 

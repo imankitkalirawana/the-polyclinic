@@ -2,8 +2,8 @@ export interface Base {
   _id: string;
   createdBy: string;
   updatedBy: string;
-  createdAt: Date | string | null;
-  updatedAt: Date | string | null;
+  createdAt: Date | string;
+  updatedAt: Date | string;
 }
 
 export const ServiceTypes = [

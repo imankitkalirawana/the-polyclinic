@@ -9,7 +9,7 @@ import {
   DropdownMenu,
   DropdownTrigger,
   Input
-} from "@heroui/react";
+} from '@heroui/react';
 import { useQueryState } from 'nuqs';
 import React, { useEffect, useMemo } from 'react';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -81,7 +81,7 @@ export default function DoctorSelection() {
                   </p>
                 </div>
                 <div className="text-sm text-default-500">
-                  <p>{humanReadableDate(doctor.createdAt)}</p>
+                  <p>{humanReadableDate(doctor.createdAt as Date)}</p>
                 </div>
               </div>
               <div className="flex flex-col justify-between">
