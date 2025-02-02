@@ -45,7 +45,7 @@ const menuItems = [
 ];
 
 export default function Nav({ session }: NavbarProps) {
-  const DISABLED_PATHS = ['/auth', '/dashboard', '/appointments/new'];
+  const DISABLED_PATHS = ['/auth', '/dashboard'];
 
   const pathname = usePathname();
   const isDisabled = DISABLED_PATHS.some((path) => pathname.startsWith(path));

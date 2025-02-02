@@ -14,7 +14,6 @@ import {
   Accordion,
   AccordionItem,
   Alert,
-  Avatar,
   Button,
   ButtonGroup,
   ButtonProps,
@@ -35,7 +34,7 @@ import {
   ModalHeader,
   Tooltip,
   useDisclosure
-} from "@heroui/react";
+} from '@heroui/react';
 import Skeleton from '../ui/skeleton';
 import Heading from '../ui/heading';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -135,7 +134,8 @@ export default function Appointments({ session }: { session: any }) {
       }
       if (sort === 'createdAt') {
         return (
-          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          new Date(a.createdAt as string).getTime() -
+          new Date(b.createdAt as string).getTime()
         );
       }
       if (sort === 'name') {

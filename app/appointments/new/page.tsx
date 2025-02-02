@@ -1,9 +1,9 @@
-import Appointments from '@/components/appointments/new';
+import NewAppointment from '@/components/appointments/new';
 
 export default function Page() {
   return (
     <>
-      <Appointments />
+      <NewAppointment />
     </>
   );
 }

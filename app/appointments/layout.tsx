@@ -17,7 +17,9 @@ export default function Layout({
       {
         // @ts-ignore
         status === 'authenticated' ? (
-          children
+          <main className="mx-auto mt-24 max-w-8xl px-4 md:px-8 lg:px-12">
+            {children}
+          </main>
         ) : status === 'loading' ? (
           <LoadingPage />
         ) : (

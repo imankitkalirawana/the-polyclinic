@@ -6,7 +6,6 @@ import {
   isWeekend,
   Time
 } from '@internationalized/date';
-import type { DateValue } from '@react-aria/calendar';
 import { useLocale } from '@react-aria/i18n';
 import * as React from 'react';
 import {
@@ -15,8 +14,7 @@ import {
   TimeInput,
   TimeInputProps,
   TimeInputValue
-} from "@heroui/react";
-import { useQueryState } from 'nuqs';
+} from '@heroui/react';
 import { TIMINGS } from '@/lib/config';
 import { disabledDates } from '@/lib/appointments/new';
 
@@ -39,10 +37,9 @@ export default function DateTimePicker({
 
   return (
     <>
-      <div className="flex w-full flex-col items-center gap-4">
+      <div className="flex flex-col gap-4">
         <Calendar
           {...dateProps}
-          calendarWidth={384 - 36}
           aria-label="Date (Min Date Value)"
           defaultValue={today(getLocalTimeZone())}
           minValue={today(getLocalTimeZone())}
@@ -70,7 +67,7 @@ export default function DateTimePicker({
         <TimeInput
           {...timeProps}
           label="Appointment Time"
-          className="max-w-96"
+          className="max-w-64"
           minValue={new Time(TIMINGS.appointment.start)}
           maxValue={new Time(TIMINGS.appointment.end)}
           isRequired

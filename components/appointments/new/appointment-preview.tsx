@@ -15,7 +15,6 @@ import { useSelector } from 'react-redux';
 
 export default function AppointmentPreview() {
   const appointment = useSelector((state: any) => state.appointment);
-  console.log(appointment);
 
   const [uid] = useQueryState('uid');
   const [did] = useQueryState('did');
