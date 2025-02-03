@@ -16,7 +16,6 @@ import {
   Alert,
   Button,
   ButtonGroup,
-  ButtonProps,
   Calendar,
   Card,
   Chip,
@@ -49,7 +48,6 @@ import {
 } from '@/functions/server-actions';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
-import { RightPanel } from './new/calendar/right-panel';
 import NoResults from '../ui/no-results';
 import { AppointmentType } from '@/models/Appointment';
 import { UserType } from '@/models/User';
@@ -60,6 +58,7 @@ import {
 } from '@/lib/client-functions';
 import { EventType } from '@/lib/interface';
 import { capitalize } from '@/lib/utility';
+import { buttonColorMap, ChipColorMap, genderMap } from '@/lib/maps';
 
 export default function Appointments({ session }: { session: any }) {
   const [status, setStatus] = useQueryState('status', {
@@ -91,15 +90,6 @@ export default function Appointments({ session }: { session: any }) {
     };
     fetchData();
   }, [status]);
-
-  const ChipColorMap: Record<string, ChipProps['color']> = {
-    booked: 'default',
-    confirmed: 'success',
-    'in-progress': 'warning',
-    overdue: 'danger',
-    completed: 'success',
-    cancelled: 'danger'
-  };
 
   const filteredAppointment = useMemo(() => {
     let filteredItems = [...appointments];
@@ -470,13 +460,6 @@ function AccordionValue({
     fetchData();
   }, []);
 
-  const buttonColorMap: Record<string, ButtonProps['color']> = {
-    cancel: 'danger',
-    reschedule: 'warning',
-    download: 'default',
-    complete: 'success',
-    accept: 'success'
-  };
   const modalMap: Record<string, JSX.Element> = {
     cancel: (
       <CancelAppointment
@@ -505,12 +488,6 @@ function AccordionValue({
     setSelectedModal(action);
     modal.onOpen();
   }
-
-  const genderMap: Record<string, string> = {
-    male: 'fluent-emoji:male-sign',
-    female: 'fluent-emoji:female-sign',
-    other: 'fluent-emoji:transgender-symbol'
-  };
 
   return (
     <>

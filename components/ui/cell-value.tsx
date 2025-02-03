@@ -13,12 +13,12 @@ const CellValue = React.forwardRef<HTMLDivElement, CellValueProps>(
       className="flex items-center justify-between gap-2 py-2"
       {...props}
     >
-      <div className="line-clamp-1 max-w-48 text-small text-default-500 sm:max-w-full">
+      <div className="max-w-48 text-small text-default-500 sm:max-w-full">
         {label}
       </div>
       <div
         title={value?.toString()}
-        className="line-clamp-2 max-w-72 text-small font-medium"
+        className="max-w-72 text-small font-medium"
       >
         {value || children}
       </div>

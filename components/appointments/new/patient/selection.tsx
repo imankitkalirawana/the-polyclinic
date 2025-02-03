@@ -3,8 +3,6 @@ import {
   Accordion,
   AccordionItem,
   Button,
-  Chip,
-  Divider,
   Link,
   Modal,
   ModalBody,
@@ -26,11 +24,15 @@ import AdditionalDetailsSelection, {
 import CellValue from '@/components/ui/cell-value';
 import { format } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import ConfirmationModal from './confirmation-modal';
+import axios from 'axios';
+import { AppointmentType } from '@/models/Appointment';
 
 export default function Selection({ session }: { session?: any }) {
   const dispatch = useDispatch();
   const appointment = useSelector((state: any) => state.appointment);
   const [selectedKeys, setSelectedKeys] = useState(new Set(['user']));
+  const [apt, setApt] = useState<AppointmentType>();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -39,10 +41,30 @@ export default function Selection({ session }: { session?: any }) {
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsSubmitting(false);
-    summaryModal.onClose();
-    submittionModal.onOpenChange();
+    await axios
+      .post('/api/appointments', {
+        uid: appointment.user.uid,
+        name: appointment.user.name,
+        phone: appointment.user.phone,
+        email: appointment.user.email,
+        date: appointment.date,
+        notes: appointment.additionalInfo.notes,
+        symptoms: appointment.additionalInfo.symptoms,
+        type: appointment.additionalInfo.type,
+        doctor: appointment.doctor.uid
+      })
+      .then((res) => {
+        console.log(res.data);
+        setApt(res.data);
+        summaryModal.onClose();
+        submittionModal.onOpenChange();
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
   };
 
   return (
@@ -200,74 +222,11 @@ export default function Selection({ session }: { session?: any }) {
           )}
         </ModalContent>
       </Modal>
-      <Modal
-        // isOpen={submittionModal.isOpen}
-        isOpen
+      <ConfirmationModal
+        isOpen={submittionModal.isOpen}
         onOpenChange={submittionModal.onOpenChange}
-        isDismissable={false}
-        backdrop="blur"
-        hideCloseButton
-        isKeyboardDismissDisabled
-      >
-        <ModalContent className="px-4">
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex-col items-center justify-center gap-2">
-                <div className="flex w-fit rounded-full bg-success-50 p-4">
-                  <Icon
-                    icon="solar:check-circle-bold"
-                    className="text-success"
-                    width="36"
-                  />
-                </div>
-                <h3>Appointment Booked!</h3>
-              </ModalHeader>
-              <ModalBody className="gap-0 rounded-2xl bg-default-100">
-                <CellValue label="Appointment ID" value="#876" />
-                <CellValue
-                  label="Date & Time"
-                  value={format(appointment?.date, 'PPPp') || '-'}
-                />
-                <CellValue
-                  label="Status"
-                  value={
-                    <Chip size="sm" color="success" variant="flat">
-                      Success
-                    </Chip>
-                  }
-                />
-                <Divider className="my-2 border-dashed border-divider" />
-                <CellValue label="Patient" value={appointment?.user?.name} />
-                <CellValue
-                  label="Doctor"
-                  value={appointment?.doctor?.name || '-'}
-                />
-                <Divider className="my-2 border-dashed border-divider" />
-                <CellValue
-                  label="Booked On"
-                  value={format(new Date(), 'PPPp')}
-                />
-              </ModalBody>
-              <ModalFooter className="flex-col-reverse px-0 sm:flex-row">
-                <Button
-                  fullWidth
-                  variant="bordered"
-                  startContent={<Icon icon="tabler:download" width={18} />}
-                >
-                  Download Receipt
-                </Button>
-                <Button
-                  fullWidth
-                  color="primary"
-                  endContent={<Icon icon="tabler:arrow-up-right" width={18} />}
-                >
-                  Track Appointment
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+        appointment={apt}
+      />
     </>
   );
 }
