@@ -118,7 +118,7 @@ export default function ConfirmationModal({
                       label="Doctor"
                       value={
                         <AsyncComponent
-                          fetchData={() => getDoctorWithUID(appointment.uid)}
+                          fetchData={() => getDoctorWithUID(appointment.doctor)}
                           fallback={<Skeleton className="h-5 w-20" />}
                           render={(doctor) => (
                             <span>{doctor?.name || '-'}</span>
