@@ -1,5 +1,18 @@
 'use client';
-import { Accordion, AccordionItem, Link } from '@heroui/react';
+import {
+  Accordion,
+  AccordionItem,
+  Button,
+  Chip,
+  Divider,
+  Link,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  useDisclosure
+} from '@heroui/react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { removeSelectedDoctor } from '@/store/slices/appointment-slice';
@@ -7,125 +20,254 @@ import { useState } from 'react';
 import DoctorSelection, { DoctorSelectionTitle } from './doctor-selection';
 import UserSelection, { UserSelectionTitle } from './user-selection';
 import DateSelection, { DateSelectionTitle } from './date-selection';
+import AdditionalDetailsSelection, {
+  AdditionalDetailsSelectionTitle
+} from './additional-details-selection';
+import CellValue from '@/components/ui/cell-value';
+import { format } from 'date-fns';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 export default function Selection({ session }: { session?: any }) {
   const dispatch = useDispatch();
   const appointment = useSelector((state: any) => state.appointment);
-  const [selectedKeys, setSelectedKeys] = useState(new Set(['user-selection']));
+  const [selectedKeys, setSelectedKeys] = useState(new Set(['user']));
 
-  const accordions = [
-    {
-      key: 'user-selection',
-      textValue: 'User Selection',
-      title: (
-        <UserSelectionTitle
-          selectedKeys={selectedKeys}
-          setSelectedKeys={setSelectedKeys}
-          session={session}
-        />
-      ),
-      component: (
-        <UserSelection
-          session={session}
-          onConfirm={() => {
-            setSelectedKeys(new Set(['time-selection']));
-          }}
-        />
-      )
-    },
-    {
-      key: 'time-selection',
-      title: 'Time Selection',
-      component: DateSelection,
-      onConfirm: () => {
-        setSelectedKeys(new Set(['doctor-selection']));
-      }
-    },
-    {
-      key: 'doctor-selection',
-      title: 'Doctor Selection',
-      component: DoctorSelection
-    }
-  ];
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const summaryModal = useDisclosure();
+  const submittionModal = useDisclosure();
+
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setIsSubmitting(false);
+    summaryModal.onClose();
+    submittionModal.onOpenChange();
+  };
 
   return (
-    <Accordion
-      defaultSelectedKeys={['user-selection']}
-      className="divide-y-2 divide-divider border-b border-divider py-4"
-      selectedKeys={selectedKeys}
-      hideIndicator
-      aria-label="User and Doctor Selection"
-    >
-      <AccordionItem
-        key="user-selection"
-        textValue="User Selection"
-        title={
-          <UserSelectionTitle
-            selectedKeys={selectedKeys}
-            setSelectedKeys={setSelectedKeys}
+    <>
+      <Accordion
+        defaultSelectedKeys={['user']}
+        className="divide-y-2 divide-divider border-b border-divider py-4"
+        selectedKeys={selectedKeys}
+        hideIndicator
+        aria-label="User and Doctor Selection"
+      >
+        <AccordionItem
+          key="user"
+          textValue="User Selection"
+          title={
+            <UserSelectionTitle
+              selectedKeys={selectedKeys}
+              setSelectedKeys={setSelectedKeys}
+              session={session}
+            />
+          }
+        >
+          <UserSelection
             session={session}
+            onConfirm={() => {
+              setSelectedKeys(new Set(['time']));
+            }}
           />
-        }
-      >
-        <UserSelection
-          session={session}
-          onConfirm={() => {
-            setSelectedKeys(new Set(['time-selection']));
-          }}
-        />
-      </AccordionItem>
-      <AccordionItem
-        textValue="Time Selection"
-        isDisabled={!appointment.user}
-        key="time-selection"
-        indicator={
-          <Link
-            href="#"
-            onPress={() => {
-              setSelectedKeys(new Set(['time-selection']));
-              dispatch(removeSelectedDoctor());
+        </AccordionItem>
+        <AccordionItem
+          textValue="Time Selection"
+          isDisabled={!appointment.user}
+          key="time"
+          indicator={
+            <Link
+              href="#"
+              onPress={() => {
+                setSelectedKeys(new Set(['time']));
+              }}
+            >
+              Change
+            </Link>
+          }
+          hideIndicator={
+            !appointment.date || selectedKeys.has('time') || !appointment.user
+          }
+          title={<DateSelectionTitle selectedKeys={selectedKeys} />}
+        >
+          <DateSelection
+            onConfirm={() => {
+              setSelectedKeys(new Set(['doctor']));
             }}
-          >
-            Change
-          </Link>
-        }
-        hideIndicator={
-          !appointment.date ||
-          selectedKeys.has('time-selection') ||
-          !appointment.user
-        }
-        title={<DateSelectionTitle selectedKeys={selectedKeys} />}
-      >
-        <DateSelection
-          onConfirm={() => {
-            setSelectedKeys(new Set(['doctor-selection']));
-          }}
-        />
-      </AccordionItem>
-      <AccordionItem
-        textValue="Doctor Selection"
-        isDisabled={!appointment.user}
-        key="doctor-selection"
-        indicator={
-          <Link
-            href="#"
-            onPress={() => {
-              setSelectedKeys(new Set(['doctor-selection']));
-              dispatch(removeSelectedDoctor());
+          />
+        </AccordionItem>
+        <AccordionItem
+          textValue="Doctor Selection"
+          isDisabled={!appointment.user || !appointment.date}
+          key="doctor"
+          indicator={
+            <Link
+              href="#"
+              onPress={() => {
+                setSelectedKeys(new Set(['doctor']));
+                dispatch(removeSelectedDoctor());
+              }}
+            >
+              Change
+            </Link>
+          }
+          hideIndicator={
+            !appointment.doctor ||
+            selectedKeys.has('doctor') ||
+            !appointment.user
+          }
+          title={<DoctorSelectionTitle selectedKeys={selectedKeys} />}
+        >
+          <DoctorSelection
+            onConfirm={() => {
+              setSelectedKeys(new Set(['additional-details']));
             }}
-          >
-            Change
-          </Link>
-        }
-        hideIndicator={
-          !appointment.doctor ||
-          selectedKeys.has('doctor-selection') ||
-          !appointment.user
-        }
-        title={<DoctorSelectionTitle selectedKeys={selectedKeys} />}
+          />
+        </AccordionItem>
+        <AccordionItem
+          textValue="Additional Details"
+          isDisabled={!appointment.user || !appointment.date}
+          key="additional-details"
+          title={<AdditionalDetailsSelectionTitle />}
+        >
+          <AdditionalDetailsSelection
+            onConfirm={() => {
+              summaryModal.onOpenChange();
+            }}
+          />
+        </AccordionItem>
+      </Accordion>
+      <Modal
+        isOpen={summaryModal.isOpen}
+        onOpenChange={summaryModal.onOpenChange}
+        isDismissable={false}
+        backdrop="blur"
+        hideCloseButton
+        isKeyboardDismissDisabled
       >
-        <DoctorSelection />
-      </AccordionItem>
-    </Accordion>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader>
+                <h3 className="text-xl font-semibold">Appointment Summary</h3>
+              </ModalHeader>
+              <ModalBody>
+                <CellValue
+                  label="Patient"
+                  value={appointment?.user?.name || '-'}
+                />
+                <CellValue
+                  label="Date & Time"
+                  value={format(appointment?.date, 'PPPp') || '-'}
+                />
+                <CellValue
+                  label="Doctor"
+                  value={appointment?.doctor?.name || '-'}
+                />
+                <CellValue
+                  label="Appointment Type"
+                  value={
+                    appointment?.additionalInfo?.type === 'online'
+                      ? 'Online'
+                      : 'Clinic'
+                  }
+                />
+                <CellValue
+                  label="Symptoms"
+                  value={appointment?.additionalInfo?.symptoms || '-'}
+                />
+                <CellValue
+                  label="Notes"
+                  value={appointment?.additionalInfo?.notes || '-'}
+                />
+              </ModalBody>
+              <ModalFooter className="flex-col-reverse sm:flex-row">
+                <Button fullWidth onPress={onClose} variant="bordered">
+                  Cancel
+                </Button>
+                <Button
+                  fullWidth
+                  color="primary"
+                  endContent={<Icon icon="tabler:chevron-right" />}
+                  onPress={handleSubmit}
+                  isLoading={isSubmitting}
+                >
+                  Proceed
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+      <Modal
+        // isOpen={submittionModal.isOpen}
+        isOpen
+        onOpenChange={submittionModal.onOpenChange}
+        isDismissable={false}
+        backdrop="blur"
+        hideCloseButton
+        isKeyboardDismissDisabled
+      >
+        <ModalContent className="px-4">
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex-col items-center justify-center gap-2">
+                <div className="flex w-fit rounded-full bg-success-50 p-4">
+                  <Icon
+                    icon="solar:check-circle-bold"
+                    className="text-success"
+                    width="36"
+                  />
+                </div>
+                <h3>Appointment Booked!</h3>
+              </ModalHeader>
+              <ModalBody className="gap-0 rounded-2xl bg-default-100">
+                <CellValue label="Appointment ID" value="#876" />
+                <CellValue
+                  label="Date & Time"
+                  value={format(appointment?.date, 'PPPp') || '-'}
+                />
+                <CellValue
+                  label="Status"
+                  value={
+                    <Chip size="sm" color="success" variant="flat">
+                      Success
+                    </Chip>
+                  }
+                />
+                <Divider className="my-2 border-dashed border-divider" />
+                <CellValue label="Patient" value={appointment?.user?.name} />
+                <CellValue
+                  label="Doctor"
+                  value={appointment?.doctor?.name || '-'}
+                />
+                <Divider className="my-2 border-dashed border-divider" />
+                <CellValue
+                  label="Booked On"
+                  value={format(new Date(), 'PPPp')}
+                />
+              </ModalBody>
+              <ModalFooter className="flex-col-reverse px-0 sm:flex-row">
+                <Button
+                  fullWidth
+                  variant="bordered"
+                  startContent={<Icon icon="tabler:download" width={18} />}
+                >
+                  Download Receipt
+                </Button>
+                <Button
+                  fullWidth
+                  color="primary"
+                  endContent={<Icon icon="tabler:arrow-up-right" width={18} />}
+                >
+                  Track Appointment
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+    </>
   );
 }

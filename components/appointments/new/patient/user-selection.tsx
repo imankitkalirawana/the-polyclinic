@@ -90,14 +90,13 @@ export default function UserSelection({
                         isPressable
                         key={user.uid}
                         className={cn(
-                          'no-scrollbar min-w-80 rounded-xl border border-divider shadow-none',
+                          'no-scrollbar min-w-64 rounded-xl border border-divider shadow-none',
                           {
                             'border-2 border-primary-400':
                               user.uid === appointment.user?.uid
                           }
                         )}
                         onPress={() => {
-                          //   setSelectedKeys(new Set(['time-selection']));
                           dispatch(
                             setSelectedUser({
                               ...user,
@@ -143,7 +142,7 @@ export default function UserSelection({
                   <Button
                     color="primary"
                     radius="lg"
-                    className="w-full max-w-64 xs:w-fit"
+                    className="w-full xs:w-fit"
                     endContent={<Icon icon="tabler:chevron-right" />}
                     onPress={onConfirm}
                     isDisabled={!appointment.user}
@@ -173,7 +172,7 @@ export function UserSelectionTitle({
   const dispatch = useDispatch();
   const appointment = useSelector((state: any) => state.appointment);
 
-  return appointment.user && !selectedKeys.has('user-selection') ? (
+  return appointment.user && !selectedKeys.has('user') ? (
     <div className="flex items-center gap-4">
       <div>
         <Image
@@ -191,7 +190,7 @@ export function UserSelectionTitle({
           className="hover:underline"
           href="#"
           onPress={() => {
-            setSelectedKeys(new Set(['user-selection']));
+            setSelectedKeys(new Set(['user']));
             dispatch(removeSelectedUser());
           }}
         >

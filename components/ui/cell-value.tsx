@@ -1,4 +1,4 @@
-import { Divider } from "@heroui/react";
+import { Divider } from '@heroui/react';
 import React from 'react';
 
 export type CellValueProps = React.HTMLAttributes<HTMLDivElement> & {
@@ -18,7 +18,7 @@ const CellValue = React.forwardRef<HTMLDivElement, CellValueProps>(
       </div>
       <div
         title={value?.toString()}
-        className="line-clamp-1 max-w-72 text-small font-medium"
+        className="line-clamp-2 max-w-72 text-small font-medium"
       >
         {value || children}
       </div>

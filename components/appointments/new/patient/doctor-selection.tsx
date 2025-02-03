@@ -10,7 +10,10 @@ import {
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useDispatch, useSelector } from 'react-redux';
-import { setSelectedDoctor } from '@/store/slices/appointment-slice';
+import {
+  removeSelectedDoctor,
+  setSelectedDoctor
+} from '@/store/slices/appointment-slice';
 import { useQuery } from '@tanstack/react-query';
 import { DoctorType } from '@/models/Doctor';
 import { getAllDoctors } from '@/functions/server-actions/doctor';
@@ -19,7 +22,11 @@ import useDebounce from '@/hooks/useDebounce';
 import NoResults from '@/components/ui/no-results';
 import { LoadingUsers } from './loading-user';
 
-export default function DoctorSelection() {
+export default function DoctorSelection({
+  onConfirm
+}: {
+  onConfirm: () => void;
+}) {
   const dispatch = useDispatch();
   const appointment = useSelector((state: any) => state.appointment);
   const [query, setQuery] = useState('');
@@ -75,20 +82,24 @@ export default function DoctorSelection() {
                     isPressable
                     key={doctor.uid}
                     className={cn(
-                      'no-scrollbar min-w-80 rounded-xl border border-divider shadow-none',
+                      'no-scrollbar min-w-64 rounded-xl border border-divider shadow-none',
                       {
                         'border-2 border-primary-400':
                           doctor.uid === appointment.doctor?.uid
                       }
                     )}
                     onPress={() => {
-                      dispatch(
-                        setSelectedDoctor({
-                          ...doctor,
-                          createdAt: '',
-                          updatedAt: ''
-                        })
-                      );
+                      if (appointment.doctor?.uid === doctor.uid) {
+                        dispatch(removeSelectedDoctor());
+                      } else {
+                        dispatch(
+                          setSelectedDoctor({
+                            ...doctor,
+                            createdAt: '',
+                            updatedAt: ''
+                          })
+                        );
+                      }
                     }}
                   >
                     <CardBody className="items-center gap-4 p-8">
@@ -118,8 +129,18 @@ export default function DoctorSelection() {
               <Button
                 color="primary"
                 radius="lg"
-                className="w-full max-w-64 xs:w-fit"
+                className="w-full xs:w-fit"
                 endContent={<Icon icon="tabler:chevron-right" />}
+                onPress={() => {
+                  if (!appointment.doctor) {
+                    dispatch(
+                      setSelectedDoctor({
+                        uid: 0
+                      } as DoctorType)
+                    );
+                  }
+                  onConfirm();
+                }}
               >
                 Continue
               </Button>
@@ -137,8 +158,12 @@ export function DoctorSelectionTitle({
   selectedKeys: Set<string>;
 }) {
   const appointment = useSelector((state: any) => state.appointment);
-  return appointment.doctor && !selectedKeys.has('doctor-selection') ? (
-    <h3 className="text-2xl font-semibold">{appointment.doctor.name}</h3>
+  return appointment.doctor && !selectedKeys.has('doctor') ? (
+    <h3 className="text-2xl font-semibold">
+      {appointment.doctor.uid === 0
+        ? 'No Doctor Selected'
+        : appointment.doctor.name}
+    </h3>
   ) : (
     <div className="space-y-4">
       <h3 className="text-2xl font-semibold">Choose a doctor (Optional)</h3>

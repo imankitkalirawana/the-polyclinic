@@ -107,7 +107,7 @@ export default function DateSelection({
           maxValue: new Time(TIMINGS.appointment.end)
         }}
       />
-      <div className="mt-4">
+      <div className="mt-4 flex justify-center xs:justify-start">
         <Button
           color="primary"
           radius="lg"
@@ -155,7 +155,7 @@ export function DateSelectionTitle({
 }) {
   const appointment = useSelector((state: any) => state.appointment);
 
-  return appointment.date && !selectedKeys.has('time-selection') ? (
+  return appointment.date && !selectedKeys.has('time') ? (
     <h3 className="text-2xl font-semibold">
       {format(appointment.date, 'PPPp')}
     </h3>
