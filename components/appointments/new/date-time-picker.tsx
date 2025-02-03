@@ -71,12 +71,6 @@ export default function DateTimePicker({
           minValue={new Time(TIMINGS.appointment.start)}
           maxValue={new Time(TIMINGS.appointment.end)}
           isRequired
-          errorMessage={(value) => {
-            if (value) {
-              return 'We are closed at this time';
-            }
-            return '';
-          }}
           value={time}
           // onChange={(value) => handleChangeTime(value as TimeInputValue)}
           onChange={onTimeChange as any}

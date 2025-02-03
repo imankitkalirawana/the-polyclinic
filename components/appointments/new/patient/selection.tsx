@@ -7,6 +7,7 @@ import {
   Card,
   CardBody,
   Image,
+  Input,
   Link,
   ScrollShadow,
   TimeInputValue
@@ -79,9 +80,9 @@ export default function Selection({ session }: { session?: any }) {
 
   const [time, setTime] = useState<TimeInputValue | null>(
     (() => {
-      const localDateTime = new Date();
-      const currentHour = localDateTime.getHours();
-      const currentMinute = localDateTime.getMinutes();
+      // let localDateTime = date.toDate(getLocalTimeZone());
+      const currentHour = new Date().getHours();
+      const currentMinute = new Date().getMinutes() + 5;
 
       if (
         currentHour < TIMINGS.appointment.start ||
@@ -269,6 +270,20 @@ export default function Selection({ session }: { session?: any }) {
               isWeekend(date!, locale) ||
               disabledDates[0].map((d) => d.compare(date!)).includes(0)
           }}
+          timeProps={{
+            // invalid time if the time is in past
+            isInvalid: convertTimeToDate(time)
+              ? convertTimeToDate(time)! < new Date()
+              : false,
+            errorMessage: (value) => {
+              if (value) {
+                return convertTimeToDate(time)
+                  ? 'Time cannot be in past'
+                  : 'We are closed at this time';
+              }
+              return '';
+            }
+          }}
         />
         <div className="mt-4">
           <Button
@@ -326,57 +341,81 @@ export default function Selection({ session }: { session?: any }) {
           )
         }
       >
-        {appointment.user && (
-          <ScrollShadow orientation="horizontal" className="mt-8 flex gap-4">
-            {isLoading ? (
-              <LoadingUsers />
-            ) : (
-              doctors?.map((doctor) => (
-                <Card
-                  isPressable
-                  key={doctor.uid}
-                  className={cn(
-                    'no-scrollbar min-w-80 rounded-xl border border-divider shadow-none',
-                    {
-                      'border-2 border-primary-400':
-                        doctor.uid === appointment.doctor?.uid
-                    }
-                  )}
-                  onPress={() => {
-                    dispatch(
-                      setSelectedDoctor({
-                        ...doctor,
-                        createdAt: '',
-                        updatedAt: ''
-                      })
-                    );
+        {appointment.user &&
+          (isLoading ? (
+            <LoadingUsers />
+          ) : (
+            <div className="flex flex-col gap-4">
+              <div className="xs:max-w-sm">
+                <Input
+                  placeholder="Search for a doctor"
+                  // icon={<Icon icon="tabler:search" />}
+                  className="w-full"
+                  onChange={(e) => {
+                    console.log(e.target.value);
                   }}
+                />
+              </div>
+              <ScrollShadow
+                orientation="horizontal"
+                className="mt-8 flex gap-4"
+              >
+                {doctors?.map((doctor) => (
+                  <Card
+                    isPressable
+                    key={doctor.uid}
+                    className={cn(
+                      'no-scrollbar min-w-80 rounded-xl border border-divider shadow-none',
+                      {
+                        'border-2 border-primary-400':
+                          doctor.uid === appointment.doctor?.uid
+                      }
+                    )}
+                    onPress={() => {
+                      dispatch(
+                        setSelectedDoctor({
+                          ...doctor,
+                          createdAt: '',
+                          updatedAt: ''
+                        })
+                      );
+                    }}
+                  >
+                    <CardBody className="items-center gap-4 p-8">
+                      <div>
+                        <Image
+                          src="/assets/placeholder-avatar.jpeg"
+                          alt="User"
+                          width={80}
+                          height={80}
+                          className="rounded-full"
+                          isBlurred
+                        />
+                      </div>
+                      <div>
+                        <h2 className="text-center text-lg font-semibold">
+                          {doctor.name}
+                        </h2>
+                        <p className="text-sm font-light text-default-500">
+                          {doctor.email}
+                        </p>
+                      </div>
+                    </CardBody>
+                  </Card>
+                ))}
+              </ScrollShadow>
+              <div className="mt-4">
+                <Button
+                  color="primary"
+                  radius="lg"
+                  className="w-full max-w-64 xs:w-fit"
+                  endContent={<Icon icon="tabler:chevron-right" />}
                 >
-                  <CardBody className="items-center gap-4 p-8">
-                    <div>
-                      <Image
-                        src="/assets/placeholder-avatar.jpeg"
-                        alt="User"
-                        width={80}
-                        height={80}
-                        className="rounded-full"
-                        isBlurred
-                      />
-                    </div>
-                    <div>
-                      <h2 className="text-center text-lg font-semibold">
-                        {doctor.name}
-                      </h2>
-                      <p className="text-sm font-light text-default-500">
-                        {doctor.email}
-                      </p>
-                    </div>
-                  </CardBody>
-                </Card>
-              ))
-            )}
-          </ScrollShadow>
-        )}
+                  Continue
+                </Button>
+              </div>
+            </div>
+          ))}
       </AccordionItem>
     </Accordion>
   );
