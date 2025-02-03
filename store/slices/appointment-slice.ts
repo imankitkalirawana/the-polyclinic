@@ -1,20 +1,17 @@
 import { DoctorType } from '@/models/Doctor';
 import { UserType } from '@/models/User';
-import { CalendarDate, TimeInputValue } from '@heroui/react';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface BookAppointmentType {
   user: UserType | null;
   doctor: DoctorType | null;
-  date: CalendarDate | null;
-  time: TimeInputValue | null;
+  date: Date | null;
 }
 
 const initialState: BookAppointmentType = {
   user: null,
   doctor: null,
-  date: null,
-  time: null
+  date: null
 };
 
 const appointmentSlice = createSlice({
@@ -27,18 +24,14 @@ const appointmentSlice = createSlice({
     removeSelectedUser: (state) => {
       state.user = null;
     },
-    setSelectedDate: (state, { payload }: PayloadAction<CalendarDate>) => {
+    setSelectedDate: (state, { payload }: PayloadAction<Date>) => {
       state.date = payload;
     },
-    setSelectedTime: (state, { payload }: PayloadAction<TimeInputValue>) => {
-      state.time = payload;
-    },
+
     removeSelectedDate: (state) => {
       state.date = null;
     },
-    removeSelectedTime: (state) => {
-      state.time = null;
-    },
+
     setSelectedDoctor: (state, { payload }: PayloadAction<DoctorType>) => {
       state.doctor = payload;
     },
@@ -52,9 +45,7 @@ export const {
   setSelectedUser,
   removeSelectedUser,
   setSelectedDate,
-  setSelectedTime,
   removeSelectedDate,
-  removeSelectedTime,
   setSelectedDoctor,
   removeSelectedDoctor
 } = appointmentSlice.actions;

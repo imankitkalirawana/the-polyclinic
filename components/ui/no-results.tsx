@@ -1,4 +1,4 @@
-import { Image } from "@heroui/react";
+import { Image } from '@heroui/react';
 
 interface Props {
   message?: string;
@@ -7,7 +7,7 @@ interface Props {
 
 export default function NoResults({
   message = 'No Results Found',
-  description = "We couldn't find what you searched for. Try searching again."
+  description
 }: Props) {
   return (
     <>

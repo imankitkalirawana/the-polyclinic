@@ -1,113 +1,22 @@
 'use client';
-import Skeleton from '@/components/ui/skeleton';
-import {
-  Accordion,
-  AccordionItem,
-  Button,
-  Card,
-  CardBody,
-  Image,
-  Input,
-  Link,
-  ScrollShadow,
-  TimeInputValue
-} from '@heroui/react';
+import { Accordion, AccordionItem, Image, Link } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useQuery } from '@tanstack/react-query';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  CalendarDate,
-  getLocalTimeZone,
-  today,
-  Time,
-  isWeekend
-} from '@internationalized/date';
-import { useLocale } from '@react-aria/i18n';
 
 import {
-  setSelectedDoctor,
   removeSelectedDoctor,
-  setSelectedDate,
-  setSelectedTime,
-  setSelectedUser,
   removeSelectedUser
 } from '@/store/slices/appointment-slice';
-import { getAllDoctors } from '@/functions/server-actions';
-import { DoctorType } from '@/models/Doctor';
-import { UserType } from '@/models/User';
-import { getAllPatientsWithEmail } from '@/functions/server-actions/user';
 import { useState } from 'react';
-import { cn } from '@/lib/utils';
-import DateTimePicker from '../date-time-picker';
-import { TIMINGS } from '@/lib/config';
-import { disabledDates } from '@/lib/appointments/new';
+import DoctorSelection from './doctor-selection';
+import UserSelection from './user-selection';
+import DateSelection from './date-selection';
 import { format } from 'date-fns';
 
 export default function Selection({ session }: { session?: any }) {
   const dispatch = useDispatch();
-  const { locale } = useLocale();
   const appointment = useSelector((state: any) => state.appointment);
   const [selectedKeys, setSelectedKeys] = useState(new Set(['user-selection']));
-
-  const { data: doctors, isLoading } = useQuery<DoctorType[]>({
-    queryKey: ['doctors'],
-    queryFn: () => getAllDoctors(),
-    enabled: !!appointment.user
-  });
-
-  const { data: users, isLoading: isUserLoading } = useQuery<UserType[]>({
-    queryKey: ['userwithemail', session?.user?.email],
-    queryFn: () => getAllPatientsWithEmail(session?.user?.email),
-    enabled: !!session?.user?.email
-  });
-
-  const [date, setDate] = useState<CalendarDate>(
-    (() => {
-      const localDateTime = new Date();
-
-      // if current time is after 5 PM, set the date to tomorrow
-      if (localDateTime.getHours() >= TIMINGS.appointment.end) {
-        localDateTime.setDate(localDateTime.getDate() + 1);
-      }
-
-      return new CalendarDate(
-        localDateTime.getFullYear(),
-        localDateTime.getMonth() + 1,
-        localDateTime.getDate()
-      );
-    })()
-  );
-
-  const [time, setTime] = useState<TimeInputValue | null>(
-    (() => {
-      // let localDateTime = date.toDate(getLocalTimeZone());
-      const currentHour = new Date().getHours();
-      const currentMinute = new Date().getMinutes() + 5;
-
-      if (
-        currentHour < TIMINGS.appointment.start ||
-        currentHour >= TIMINGS.appointment.end
-      ) {
-        return new Time(TIMINGS.appointment.start);
-      }
-
-      return new Time(currentHour, currentMinute);
-    })()
-  );
-
-  const convertTimeToDate = (time: TimeInputValue | null): Date | null => {
-    if (!time) return null;
-
-    const { hour, minute, second, millisecond } = time;
-
-    const newDate = date.toDate(getLocalTimeZone());
-    newDate.setHours(hour);
-    newDate.setMinutes(minute);
-    newDate.setSeconds(second);
-    newDate.setMilliseconds(millisecond);
-
-    return newDate;
-  };
 
   return (
     <Accordion
@@ -121,7 +30,7 @@ export default function Selection({ session }: { session?: any }) {
         key="user-selection"
         textValue="User Selection"
         title={
-          appointment.user ? (
+          appointment.user && !selectedKeys.has('user-selection') ? (
             <div className="flex items-center gap-4">
               <div>
                 <Image
@@ -162,66 +71,12 @@ export default function Selection({ session }: { session?: any }) {
           )
         }
       >
-        <div className="space-y-4">
-          <ScrollShadow orientation="horizontal" className="mt-8 flex gap-4">
-            {isUserLoading ? (
-              <LoadingUsers />
-            ) : (
-              users?.map((user) => (
-                <Card
-                  isPressable
-                  key={user.uid}
-                  className={cn(
-                    'no-scrollbar min-w-80 rounded-xl border border-divider shadow-none',
-                    {
-                      'border-2 border-primary-400':
-                        user.uid === appointment.user?.uid
-                    }
-                  )}
-                  onPress={() => {
-                    setSelectedKeys(new Set(['time-selection']));
-                    dispatch(
-                      setSelectedUser({
-                        ...user,
-                        createdAt: '',
-                        updatedAt: ''
-                      })
-                    );
-                  }}
-                >
-                  <CardBody className="items-center gap-4 p-8">
-                    <div>
-                      <Image
-                        src="/assets/placeholder-avatar.jpeg"
-                        alt="User"
-                        width={80}
-                        height={80}
-                        className="rounded-full"
-                        isBlurred
-                      />
-                    </div>
-                    <div>
-                      <h2 className="text-center text-lg font-semibold">
-                        {user.name}
-                      </h2>
-                      <p className="text-sm font-light text-default-500">
-                        {user.email}
-                      </p>
-                    </div>
-                  </CardBody>
-                </Card>
-              ))
-            )}
-          </ScrollShadow>
-          {!isLoading && (
-            <div>
-              Patient not shown?{' '}
-              <Link href="#">
-                Register <Icon icon="tabler:chevron-right" />
-              </Link>
-            </div>
-          )}
-        </div>
+        <UserSelection
+          session={session}
+          onConfirm={() => {
+            setSelectedKeys(new Set(['time-selection']));
+          }}
+        />
       </AccordionItem>
       <AccordionItem
         textValue="Time Selection"
@@ -239,15 +94,14 @@ export default function Selection({ session }: { session?: any }) {
           </Link>
         }
         hideIndicator={
-          !appointment.time ||
+          !appointment.date ||
           selectedKeys.has('time-selection') ||
           !appointment.user
         }
         title={
-          appointment.time && !selectedKeys.has('time-selection') ? (
+          appointment.date && !selectedKeys.has('time-selection') ? (
             <h3 className="text-2xl font-semibold">
-              {format(convertTimeToDate(time) as Date, 'iii, MMM do')} at{' '}
-              {format(convertTimeToDate(time) as Date, 'h:mm a')}
+              {format(appointment.date, 'PPPp')}
             </h3>
           ) : (
             <div className="space-y-4">
@@ -256,56 +110,11 @@ export default function Selection({ session }: { session?: any }) {
           )
         }
       >
-        <DateTimePicker
-          date={date}
-          time={time as TimeInputValue}
-          onDateChange={(date) => {
-            setDate(date as CalendarDate);
-          }}
-          onTimeChange={(time) => {
-            setTime(time);
-          }}
-          dateProps={{
-            isInvalid:
-              isWeekend(date!, locale) ||
-              disabledDates[0].map((d) => d.compare(date!)).includes(0)
-          }}
-          timeProps={{
-            // invalid time if the time is in past
-            isInvalid: convertTimeToDate(time)
-              ? convertTimeToDate(time)! < new Date()
-              : false,
-            errorMessage: (value) => {
-              if (value) {
-                return convertTimeToDate(time)
-                  ? 'Time cannot be in past'
-                  : 'We are closed at this time';
-              }
-              return '';
-            }
+        <DateSelection
+          onConfirm={() => {
+            setSelectedKeys(new Set(['doctor-selection']));
           }}
         />
-        <div className="mt-4">
-          <Button
-            color="primary"
-            radius="lg"
-            className="w-full max-w-64 xs:w-fit"
-            endContent={<Icon icon="tabler:chevron-right" />}
-            isDisabled={
-              !date ||
-              !time ||
-              isWeekend(date, locale) ||
-              disabledDates[0].map((d) => d.compare(date)).includes(0)
-            }
-            onPress={() => {
-              setSelectedKeys(new Set(['doctor-selection']));
-              dispatch(setSelectedDate(date));
-              dispatch(setSelectedTime(time as TimeInputValue));
-            }}
-          >
-            Continue
-          </Button>
-        </div>
       </AccordionItem>
       <AccordionItem
         textValue="Doctor Selection"
@@ -341,105 +150,8 @@ export default function Selection({ session }: { session?: any }) {
           )
         }
       >
-        {appointment.user &&
-          (isLoading ? (
-            <LoadingUsers />
-          ) : (
-            <div className="flex flex-col gap-4">
-              <div className="xs:max-w-sm">
-                <Input
-                  placeholder="Search for a doctor"
-                  // icon={<Icon icon="tabler:search" />}
-                  className="w-full"
-                  onChange={(e) => {
-                    console.log(e.target.value);
-                  }}
-                />
-              </div>
-              <ScrollShadow
-                orientation="horizontal"
-                className="mt-8 flex gap-4"
-              >
-                {doctors?.map((doctor) => (
-                  <Card
-                    isPressable
-                    key={doctor.uid}
-                    className={cn(
-                      'no-scrollbar min-w-80 rounded-xl border border-divider shadow-none',
-                      {
-                        'border-2 border-primary-400':
-                          doctor.uid === appointment.doctor?.uid
-                      }
-                    )}
-                    onPress={() => {
-                      dispatch(
-                        setSelectedDoctor({
-                          ...doctor,
-                          createdAt: '',
-                          updatedAt: ''
-                        })
-                      );
-                    }}
-                  >
-                    <CardBody className="items-center gap-4 p-8">
-                      <div>
-                        <Image
-                          src="/assets/placeholder-avatar.jpeg"
-                          alt="User"
-                          width={80}
-                          height={80}
-                          className="rounded-full"
-                          isBlurred
-                        />
-                      </div>
-                      <div>
-                        <h2 className="text-center text-lg font-semibold">
-                          {doctor.name}
-                        </h2>
-                        <p className="text-sm font-light text-default-500">
-                          {doctor.email}
-                        </p>
-                      </div>
-                    </CardBody>
-                  </Card>
-                ))}
-              </ScrollShadow>
-              <div className="mt-4">
-                <Button
-                  color="primary"
-                  radius="lg"
-                  className="w-full max-w-64 xs:w-fit"
-                  endContent={<Icon icon="tabler:chevron-right" />}
-                >
-                  Continue
-                </Button>
-              </div>
-            </div>
-          ))}
+        <DoctorSelection />
       </AccordionItem>
     </Accordion>
   );
 }
-
-const LoadingUsers = () => {
-  return (
-    <>
-      {Array.from({ length: 5 }).map((_, index) => (
-        <Card
-          key={`skeleton-${index}`}
-          className="flex min-w-80 flex-row justify-between rounded-2xl border border-divider p-3 shadow-none transition-all"
-        >
-          <CardBody className="items-center gap-2 p-8">
-            <div>
-              <Skeleton className="h-20 w-20 rounded-full" />
-            </div>
-            <div className="flex flex-col items-center gap-2">
-              <Skeleton className="h-6 w-28" />
-              <Skeleton className="h-4 w-40" />
-            </div>
-          </CardBody>
-        </Card>
-      ))}
-    </>
-  );
-};
