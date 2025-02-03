@@ -17,7 +17,10 @@ import useDebounce from '@/hooks/useDebounce';
 import { useQuery } from '@tanstack/react-query';
 import { UserType } from '@/models/User';
 import { getAllPatientsWithEmail } from '@/functions/server-actions/user';
-import { setSelectedUser } from '@/store/slices/appointment-slice';
+import {
+  removeSelectedUser,
+  setSelectedUser
+} from '@/store/slices/appointment-slice';
 import NoResults from '@/components/ui/no-results';
 import { LoadingUsers } from './loading-user';
 
@@ -155,5 +158,56 @@ export default function UserSelection({
         )}
       </div>
     </>
+  );
+}
+
+export function UserSelectionTitle({
+  setSelectedKeys,
+  selectedKeys,
+  session
+}: {
+  setSelectedKeys: any;
+  selectedKeys: Set<string>;
+  session: any;
+}) {
+  const dispatch = useDispatch();
+  const appointment = useSelector((state: any) => state.appointment);
+
+  return appointment.user && !selectedKeys.has('user-selection') ? (
+    <div className="flex items-center gap-4">
+      <div>
+        <Image
+          src="/assets/placeholder-avatar.jpeg"
+          alt="User"
+          width={80}
+          height={80}
+          className="rounded-full"
+        />
+      </div>
+      <div>
+        <h2 className="text-lg font-semibold">{appointment.user.name}</h2>
+        <p>{appointment.user.email}</p>
+        <Link
+          className="hover:underline"
+          href="#"
+          onPress={() => {
+            setSelectedKeys(new Set(['user-selection']));
+            dispatch(removeSelectedUser());
+          }}
+        >
+          Change <Icon icon="tabler:chevron-right" />
+        </Link>
+      </div>
+    </div>
+  ) : (
+    <div className="space-y-4">
+      <h3 className="text-2xl font-semibold">
+        Please select for whom you want to book an appointment?
+      </h3>
+      <p>
+        You have following patients associated with{' '}
+        <strong>{session?.user?.email || '-'}</strong>
+      </p>
+    </div>
   );
 }

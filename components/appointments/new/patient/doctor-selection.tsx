@@ -130,3 +130,18 @@ export default function DoctorSelection() {
     ))
   );
 }
+
+export function DoctorSelectionTitle({
+  selectedKeys
+}: {
+  selectedKeys: Set<string>;
+}) {
+  const appointment = useSelector((state: any) => state.appointment);
+  return appointment.doctor && !selectedKeys.has('doctor-selection') ? (
+    <h3 className="text-2xl font-semibold">{appointment.doctor.name}</h3>
+  ) : (
+    <div className="space-y-4">
+      <h3 className="text-2xl font-semibold">Choose a doctor (Optional)</h3>
+    </div>
+  );
+}

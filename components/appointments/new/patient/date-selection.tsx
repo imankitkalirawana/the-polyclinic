@@ -1,5 +1,5 @@
 'use client';
-import { Button, TimeInputValue } from '@heroui/react';
+import { Button } from '@heroui/react';
 import DateTimePicker from '../date-time-picker';
 import {
   CalendarDate,
@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { disabledDates } from '@/lib/appointments/new';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { setSelectedDate } from '@/store/slices/appointment-slice';
+import { format } from 'date-fns';
 
 export default function DateSelection({
   onConfirm
@@ -144,5 +145,23 @@ export default function DateSelection({
         </Button>
       </div>
     </>
+  );
+}
+
+export function DateSelectionTitle({
+  selectedKeys
+}: {
+  selectedKeys: Set<string>;
+}) {
+  const appointment = useSelector((state: any) => state.appointment);
+
+  return appointment.date && !selectedKeys.has('time-selection') ? (
+    <h3 className="text-2xl font-semibold">
+      {format(appointment.date, 'PPPp')}
+    </h3>
+  ) : (
+    <div className="space-y-4">
+      <h3 className="text-2xl font-semibold">Choose Date & Time</h3>
+    </div>
   );
 }
