@@ -42,15 +42,6 @@ import { useQuery } from '@tanstack/react-query';
 import { getAllDrugs } from '@/functions/server-actions/drugs';
 // import useSWR from 'swr';
 
-const statusColorMap: Record<string, ChipProps['color']> = {
-  active: 'success',
-  inactive: 'danger'
-};
-
-interface Props {
-  drugs: DrugType[];
-}
-
 const INITIAL_VISIBLE_COLUMNS = [
   'did',
   'brandName',
@@ -61,11 +52,7 @@ const INITIAL_VISIBLE_COLUMNS = [
 ];
 
 export default function Drugs() {
-  const {
-    data: drugs,
-    isError,
-    error
-  } = useQuery<DrugType[]>({
+  const { data: drugs } = useQuery<DrugType[]>({
     queryKey: ['drugs'],
     queryFn: () => getAllDrugs(),
     initialData: [] as DrugType[]

@@ -28,8 +28,13 @@ import { ChipColorMap } from '@/lib/maps';
 import AppointmentDetail from './appointment-detail';
 import AsyncComponent from '@/hooks/useAsyncLoading';
 import { getDoctorWithUID } from '@/functions/server-actions';
+import { useSession } from 'next-auth/react';
 
 export default function Appointments({ session }: { session: any }) {
+  // useSession({
+  //   required: true
+  // });
+
   const [status, setStatus] = useQueryState('status', {
     defaultValue: 'upcoming'
   });
