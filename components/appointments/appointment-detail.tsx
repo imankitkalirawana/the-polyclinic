@@ -89,9 +89,10 @@ export default function AppointmentDetail({
         <div className="hidden min-w-24 max-w-24 flex-col justify-between gap-8 sm:flex sm:min-w-40 sm:max-w-40">
           <CellValue label="Indian Standard Time" value="UTC +05:30" />
           <div className="flex flex-col-reverse gap-2">
-            {['booked', 'confirmed', 'in-progress'].includes(
-              appointment.status
-            ) &&
+            {new Date() < new Date(appointment.date) &&
+              ['booked', 'confirmed', 'in-progress'].includes(
+                appointment.status
+              ) &&
               ['doctor', 'user'].includes(session.user.role) && (
                 <Button
                   color="secondary"
