@@ -15,8 +15,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useMemo, useState } from 'react';
 import useDebounce from '@/hooks/useDebounce';
 import { useQuery } from '@tanstack/react-query';
-import { UserType } from '@/models/User';
-import { getAllPatientsWithEmail } from '@/functions/server-actions/user';
+import { UserRole, UserType } from '@/models/User';
+import {
+  getAllPatients,
+  getAllPatientsWithEmail
+} from '@/functions/server-actions/user';
 import {
   removeSelectedUser,
   setSelectedUser
@@ -36,10 +39,14 @@ export default function UserSelection({
   const [query, setQuery] = useState('');
   const debounce = useDebounce(query, 500);
 
+  const fetchFunctionMap: Record<string, () => Promise<UserType[]>> = {
+    user: () => getAllPatientsWithEmail(session?.user?.email),
+    admin: () => getAllPatients()
+  };
+
   const { data: users, isLoading } = useQuery<UserType[]>({
-    queryKey: ['userwithemail', session?.user?.email],
-    queryFn: () => getAllPatientsWithEmail(session?.user?.email),
-    enabled: !!session?.user?.email
+    queryKey: ['user', session?.user?.uid],
+    queryFn: fetchFunctionMap[session?.user?.role as UserRole]
   });
 
   const filteredUsers = useMemo(() => {

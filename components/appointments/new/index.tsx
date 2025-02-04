@@ -9,7 +9,7 @@ export default async function NewAppointment() {
   const RoleMap: Record<string, React.ReactNode> = {
     user: <PatientAppointment session={session} />,
     doctor: <div>Doctor Appointment</div>,
-    admin: <div>Admin Appointment</div>
+    admin: <PatientAppointment session={session} />
   };
 
   return (
