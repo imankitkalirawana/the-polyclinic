@@ -27,6 +27,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import AsyncComponent from '@/hooks/useAsyncLoading';
 import Skeleton from '../ui/skeleton';
 import html2canvas from 'html2canvas';
+import DownloadButton from './buttons/download';
 
 export default function AppointmentDetail({
   appointment,
@@ -88,20 +89,34 @@ export default function AppointmentDetail({
       <div className="flex w-full gap-4" id="appointment-detail">
         <div className="hidden min-w-24 max-w-24 flex-col justify-between gap-8 sm:flex sm:min-w-40 sm:max-w-40">
           <CellValue label="Indian Standard Time" value="UTC +05:30" />
-          {['booked', 'confirmed', 'in-progress'].includes(
-            appointment.status
-          ) &&
-            ['doctor', 'user'].includes(session.user.role) && (
-              <Button
-                color="secondary"
-                variant="bordered"
-                onPress={() => handleButtonClick('addToCalendar')}
-                startContent={<Icon icon="solar:calendar-bold" />}
+          <div className="flex flex-col-reverse gap-2">
+            {['booked', 'confirmed', 'in-progress'].includes(
+              appointment.status
+            ) &&
+              ['doctor', 'user'].includes(session.user.role) && (
+                <Button
+                  color="secondary"
+                  variant="bordered"
+                  onPress={() => handleButtonClick('addToCalendar')}
+                  startContent={<Icon icon="solar:calendar-bold" />}
+                >
+                  Add to Calendar
+                </Button>
+              )}
+            {!['completed'].includes(appointment.status) && (
+              <DownloadButton
+                aid={appointment.aid}
+                variant="flat"
+                startContent={
+                  <Icon icon="solar:download-minimalistic-bold" width={18} />
+                }
               >
-                Add to Calendar
-              </Button>
+                Receipt
+              </DownloadButton>
             )}
+          </div>
         </div>
+
         <div className="grid w-full grid-cols-1 flex-col gap-x-4 border-l-divider sm:border-l sm:pl-4 md:grid-cols-2">
           <CellValue
             label="Appointment ID"
@@ -284,12 +299,11 @@ export default function AppointmentDetail({
                 )}
               <Tooltip content="View">
                 <Button
-                  //   as={Link}
-                  //   href={`/appointments/${appointment.aid}`}
+                  as={Link}
+                  href={`/appointments/${appointment.aid}`}
                   variant="flat"
                   startContent={<Icon icon="tabler:arrow-up-right" />}
                   isIconOnly
-                  onPress={captureAndDownload}
                 />
               </Tooltip>
             </div>
@@ -309,18 +323,3 @@ export default function AppointmentDetail({
     </>
   );
 }
-
-const captureAndDownload = async () => {
-  const modalContent = document.getElementById('appointment-detail'); // Ensure this ID matches the ModalContent div
-
-  if (!modalContent) return;
-
-  const canvas = await html2canvas(modalContent, { scale: 2 });
-  const image = canvas.toDataURL('image/png');
-
-  // Create a download link
-  const link = document.createElement('a');
-  link.href = image;
-  link.download = 'appointment-receipt.png';
-  link.click();
-};

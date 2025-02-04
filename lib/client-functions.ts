@@ -2,6 +2,7 @@
 import { saveAs } from 'file-saver';
 import { EventType } from './interface';
 import { toast } from 'sonner';
+import { printAppointmentReceipt } from '@/functions/server-actions/receipt';
 
 export const calculateAge = (dob: string) => {
   const birthDate = new Date(dob);
@@ -103,4 +104,31 @@ export const addToOutlookCalendar = (event: EventType) => {
 
   // Open Outlook Calendar link in a new tab
   window.open(outlookCalendarUrl.toString(), '_blank');
+};
+
+export const downloadAppointmentReceipt = async (aid: number) => {
+  try {
+    if (!aid) throw new Error('Invalid appointment ID');
+    const res = await printAppointmentReceipt(aid);
+    if (!res || !res.pdf) throw new Error('Invalid PDF response');
+
+    const pdfBlob = new Blob(
+      [Uint8Array.from(atob(res.pdf), (c) => c.charCodeAt(0))],
+      {
+        type: 'application/pdf'
+      }
+    );
+
+    const url = window.URL.createObjectURL(pdfBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'appointment-receipt.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    toast.success('Downloaded appointment receipt');
+  } catch (err: any) {
+    console.error(err);
+    toast.error(err.message);
+  }
 };

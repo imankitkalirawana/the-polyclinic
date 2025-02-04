@@ -21,6 +21,7 @@ import Skeleton from '@/components/ui/skeleton';
 import AsyncComponent from '@/hooks/useAsyncLoading';
 import Link from 'next/link';
 import { ChipColorMap } from '@/lib/maps';
+import { downloadAppointmentReceipt } from '@/lib/client-functions';
 
 export default function ConfirmationModal({
   appointment,
@@ -85,7 +86,7 @@ export default function ConfirmationModal({
                   <div ref={modalRef} className="p-4">
                     <CellValue
                       label="Appointment ID"
-                      value={`#${appointment.uid}`}
+                      value={`#${appointment.aid}`}
                     />
                     <CellValue
                       label="Date & Time"
@@ -144,7 +145,9 @@ export default function ConfirmationModal({
                     fullWidth
                     variant="bordered"
                     startContent={<Icon icon="tabler:download" width={18} />}
-                    onPress={captureAndDownload}
+                    onPress={async () => {
+                      await downloadAppointmentReceipt(appointment.aid);
+                    }}
                   >
                     Download Receipt
                   </Button>

@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '@/lib/config';
+import { API_BASE_URL, CLINIC_INFO } from '@/lib/config';
 import { AppointmentType } from '@/models/Appointment';
 import { format } from 'date-fns';
 
@@ -78,7 +78,7 @@ export function AppointmentStatus(
           </a>
           
           <p style="font-size: 16px; color: #6b7280; margin-top: 32px;">
-              If you need assistance, please contact our support team at contact@divinely.dev
+              If you need assistance, please contact our support team at ${CLINIC_INFO.email}
           </p>
       </div>
   </body>`;

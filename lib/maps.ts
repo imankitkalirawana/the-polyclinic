@@ -22,3 +22,12 @@ export const ChipColorMap: Record<string, ChipProps['color']> = {
   completed: 'success',
   cancelled: 'danger'
 };
+
+export const statusColorMap: Record<string, string> = {
+  booked: '#73CD7D',
+  confirmed: '#73CD7D',
+  cancelled: '#F31260',
+  overdue: '#F31260',
+  completed: '#10793C',
+  'on-hold': '#936316'
+};

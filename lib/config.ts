@@ -35,8 +35,9 @@ export const TIMINGS = {
 export const CLINIC_INFO = {
   name: 'The Poly Clinic',
   phone: '+0000000000000000',
-  email: 'XXXXXXXXXXXXXXXXXXX',
+  email: 'contact@divinely.dev',
   website: 'www.polyclinic.com',
+  logo: '/logo.png',
   social: {
     facebook: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
     twitter: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
