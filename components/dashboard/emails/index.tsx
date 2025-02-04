@@ -37,6 +37,9 @@ import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { toast } from 'sonner';
+import { useQuery } from '@tanstack/react-query';
+import { getAllEmails } from '@/functions/server-actions/emails';
+import NoResults from '@/components/ui/no-results';
 
 interface Props {
   emails: EmailType[];
@@ -50,7 +53,18 @@ const INITIAL_VISIBLE_COLUMNS = [
   'actions'
 ];
 
-export default function Emails({ emails }: Props) {
+export default function Emails() {
+  const {
+    data: emails,
+    isError,
+    error,
+    isLoading
+  } = useQuery<EmailType[]>({
+    queryKey: ['emails'],
+    queryFn: () => getAllEmails(),
+    initialData: [] as EmailType[]
+  });
+
   const deleteModal = useDisclosure();
   const router = useRouter();
   const [selected, setSelected] = React.useState<EmailType | null>(null);
@@ -394,6 +408,10 @@ export default function Emails({ emails }: Props) {
     }
   });
 
+  if (isError) {
+    return <NoResults message={error.message} />;
+  }
+
   return (
     <>
       <Table
@@ -427,7 +445,12 @@ export default function Emails({ emails }: Props) {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody items={sortedItems} emptyContent={'No emails found'}>
+        <TableBody
+          isLoading={isLoading}
+          loadingContent="Loading emails..."
+          items={sortedItems}
+          emptyContent={'No emails found'}
+        >
           {(item) => (
             <TableRow
               key={item._id}

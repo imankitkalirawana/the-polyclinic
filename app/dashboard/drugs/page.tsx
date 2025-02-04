@@ -1,25 +1,23 @@
 import Drugs from '@/components/dashboard/drugs';
-import { API_BASE_URL } from '@/lib/config';
-import { DrugType } from '@/models/Drug';
-import axios from 'axios';
-import { cookies } from 'next/headers';
-
-async function getData() {
-  try {
-    const res = await axios.get(`${API_BASE_URL}api/drugs`, {
-      headers: { Cookie: cookies().toString() }
-    });
-    return res.data;
-  } catch (error: any) {
-    console.error(error);
-  }
-}
+import { getAllDrugs } from '@/functions/server-actions/drugs';
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient
+} from '@tanstack/react-query';
 
 export default async function Page() {
-  const drugs: DrugType[] = (await getData()) || ([] as DrugType[]);
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ['drugs'],
+    queryFn: () => getAllDrugs()
+  });
+
   return (
     <>
-      <Drugs drugs={drugs} />
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <Drugs />
+      </HydrationBoundary>
     </>
   );
 }

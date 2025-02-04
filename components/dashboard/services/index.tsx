@@ -29,7 +29,7 @@ import {
   ModalContent,
   ModalFooter,
   useDisclosure
-} from "@heroui/react";
+} from '@heroui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
@@ -38,16 +38,15 @@ import { CopyText } from '@/components/ui/copy';
 import { ServiceType } from '@/models/Service';
 import { redirectTo } from '@/functions/server-actions';
 import { rowOptions } from '@/lib/config';
+import { useQuery } from '@tanstack/react-query';
+import { EmailType } from '@/models/Email';
+import { getAllServices } from '@/functions/server-actions/services';
 // import useSWR from 'swr';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   active: 'success',
   inactive: 'danger'
 };
-
-interface HotelProps {
-  services: ServiceType[];
-}
 
 const INITIAL_VISIBLE_COLUMNS = [
   'uid',
@@ -58,7 +57,13 @@ const INITIAL_VISIBLE_COLUMNS = [
   'actions'
 ];
 
-export default function Services({ services }: HotelProps) {
+export default function Services() {
+  const { data: services } = useQuery<ServiceType[]>({
+    queryKey: ['services'],
+    queryFn: () => getAllServices(),
+    initialData: [] as ServiceType[]
+  });
+
   const deleteModal = useDisclosure();
   const router = useRouter();
   const [selected, setSelected] = React.useState<ServiceType | null>(null);
@@ -431,94 +436,96 @@ export default function Services({ services }: HotelProps) {
     );
   }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
 
-  return (<>
-    <Table
-      aria-label="Services List"
-      isHeaderSticky
-      bottomContent={bottomContent}
-      bottomContentPlacement="outside"
-      classNames={{
-        wrapper: 'max-h-[382px]'
-      }}
-      selectedKeys={selectedKeys}
-      selectionMode="multiple"
-      sortDescriptor={sortDescriptor}
-      topContent={topContent}
-      topContentPlacement="outside"
-      onSelectionChange={setSelectedKeys}
-      onSortChange={setSortDescriptor}
-      onRowAction={(key) => {
-        redirectTo(`/dashboard/services/${key}`);
-      }}
-      className="cursor-pointer"
-    >
-      <TableHeader columns={headerColumns}>
-        {(column) => (
-          <TableColumn
-            key={column.uid}
-            align={column.uid === 'actions' ? 'center' : 'start'}
-            allowsSorting={column.sortable}
-          >
-            {column.name}
-          </TableColumn>
-        )}
-      </TableHeader>
-      <TableBody items={sortedItems} emptyContent={'No services found'}>
-        {(item) => (
-          <TableRow
-            key={item.uniqueId}
-            className="transition-all hover:bg-default-100"
-          >
-            {(columnKey) => (
-              // @ts-ignore
-              (<TableCell>{renderCell(item, columnKey)}</TableCell>)
-            )}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
-    <Modal
-      backdrop="blur"
-      scrollBehavior="inside"
-      isOpen={deleteModal.isOpen}
-      onOpenChange={deleteModal.onOpenChange}
-    >
-      <ModalContent>
-        {(onClose) => (
-          <>
-            <ModalHeader className="flex-col items-center">
-              <Icon
-                icon="tabler:trash-x"
-                fontSize={54}
-                className="text-danger"
-              />
-              <h2 className="mt-4 max-w-xs text-center text-base">
-                Are you sure you permanently want to delete {selected?.name}{' '}
-                from the Database?
-              </h2>
-            </ModalHeader>
-            <ModalBody className="items-center text-sm">
-              You can&apos;t undo this action.
-            </ModalBody>
-            <ModalFooter className="flex-col-reverse sm:flex-row">
-              <Button fullWidth variant="flat" onPress={onClose}>
-                Close
-              </Button>
-              <Button
-                color="danger"
-                variant="flat"
-                fullWidth
-                isLoading={isDeleting}
-                onPress={() => handleDelete(selected as ServiceType)}
-              >
-                Delete
-              </Button>
-            </ModalFooter>
-          </>
-        )}
-      </ModalContent>
-    </Modal>
-  </>);
+  return (
+    <>
+      <Table
+        aria-label="Services List"
+        isHeaderSticky
+        bottomContent={bottomContent}
+        bottomContentPlacement="outside"
+        classNames={{
+          wrapper: 'max-h-[382px]'
+        }}
+        selectedKeys={selectedKeys}
+        selectionMode="multiple"
+        sortDescriptor={sortDescriptor}
+        topContent={topContent}
+        topContentPlacement="outside"
+        onSelectionChange={setSelectedKeys}
+        onSortChange={setSortDescriptor}
+        onRowAction={(key) => {
+          redirectTo(`/dashboard/services/${key}`);
+        }}
+        className="cursor-pointer"
+      >
+        <TableHeader columns={headerColumns}>
+          {(column) => (
+            <TableColumn
+              key={column.uid}
+              align={column.uid === 'actions' ? 'center' : 'start'}
+              allowsSorting={column.sortable}
+            >
+              {column.name}
+            </TableColumn>
+          )}
+        </TableHeader>
+        <TableBody items={sortedItems} emptyContent={'No services found'}>
+          {(item) => (
+            <TableRow
+              key={item.uniqueId}
+              className="transition-all hover:bg-default-100"
+            >
+              {(columnKey) => (
+                // @ts-ignore
+                <TableCell>{renderCell(item, columnKey)}</TableCell>
+              )}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+      <Modal
+        backdrop="blur"
+        scrollBehavior="inside"
+        isOpen={deleteModal.isOpen}
+        onOpenChange={deleteModal.onOpenChange}
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex-col items-center">
+                <Icon
+                  icon="tabler:trash-x"
+                  fontSize={54}
+                  className="text-danger"
+                />
+                <h2 className="mt-4 max-w-xs text-center text-base">
+                  Are you sure you permanently want to delete {selected?.name}{' '}
+                  from the Database?
+                </h2>
+              </ModalHeader>
+              <ModalBody className="items-center text-sm">
+                You can&apos;t undo this action.
+              </ModalBody>
+              <ModalFooter className="flex-col-reverse sm:flex-row">
+                <Button fullWidth variant="flat" onPress={onClose}>
+                  Close
+                </Button>
+                <Button
+                  color="danger"
+                  variant="flat"
+                  fullWidth
+                  isLoading={isDeleting}
+                  onPress={() => handleDelete(selected as ServiceType)}
+                >
+                  Delete
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+    </>
+  );
 }
 
 const columns = [

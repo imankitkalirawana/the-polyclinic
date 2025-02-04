@@ -1,25 +1,27 @@
 import Services from '@/components/dashboard/services';
+import { getAllServices } from '@/functions/server-actions/services';
 import { API_BASE_URL } from '@/lib/config';
 import { ServiceType } from '@/models/Service';
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient
+} from '@tanstack/react-query';
 import axios from 'axios';
 import { cookies } from 'next/headers';
 
-async function getData() {
-  try {
-    const res = await axios.get(`${API_BASE_URL}api/services/all`, {
-      headers: { Cookie: cookies().toString() }
-    });
-    return res.data;
-  } catch (error: any) {
-    console.error(error);
-  }
-}
-
 export default async function Page() {
-  const services: ServiceType[] = (await getData()) || ([] as ServiceType[]);
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ['services'],
+    queryFn: () => getAllServices()
+  });
+
   return (
     <>
-      <Services services={services} />
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <Services />
+      </HydrationBoundary>
     </>
   );
 }

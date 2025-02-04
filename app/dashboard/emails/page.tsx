@@ -1,25 +1,23 @@
 import Emails from '@/components/dashboard/emails';
-import { API_BASE_URL } from '@/lib/config';
-import { EmailType } from '@/models/Email';
-import axios from 'axios';
-import { cookies } from 'next/headers';
-
-async function getData() {
-  try {
-    const res = await axios.get(`${API_BASE_URL}api/emails`, {
-      headers: { Cookie: cookies().toString() }
-    });
-    return res.data;
-  } catch (error: any) {
-    console.error(error);
-  }
-}
+import { getAllEmails } from '@/functions/server-actions/emails';
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient
+} from '@tanstack/react-query';
 
 export default async function Page() {
-  const emails: EmailType[] = (await getData()) || ([] as EmailType[]);
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ['emails'],
+    queryFn: () => getAllEmails()
+  });
+
   return (
     <>
-      <Emails emails={emails} />
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <Emails />
+      </HydrationBoundary>
     </>
   );
 }
