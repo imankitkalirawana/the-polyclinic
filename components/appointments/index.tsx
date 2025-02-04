@@ -281,7 +281,7 @@ export default function Appointments({ session }: { session: any }) {
                               aria-label="Appointments"
                               title={
                                 <div className="flex w-full gap-4">
-                                  <div className="flex flex-col gap-2">
+                                  <div className="hidden flex-col gap-2 sm:flex">
                                     <div className="flex min-w-24 max-w-24 flex-col gap-4 sm:min-w-40 sm:max-w-40">
                                       <div className="flex-col gap-4">
                                         <h4 className="text-xs text-default-500">
@@ -302,7 +302,7 @@ export default function Appointments({ session }: { session: any }) {
                                     </div>
                                   </div>
 
-                                  <div className="flex w-full flex-col gap-2 border-l-1 border-l-divider pl-4">
+                                  <div className="flex w-full flex-col gap-2 border-l-divider sm:border-l sm:pl-4">
                                     <div className="flex items-center gap-2">
                                       {/* avatar for future use */}
                                       {/* <Avatar
@@ -338,9 +338,12 @@ export default function Appointments({ session }: { session: any }) {
                                     </div>
                                     <div className="flex flex-col gap-2">
                                       <h3 className="line-clamp-1 font-semibold">
-                                        <span>
+                                        <span className="hidden sm:block">
                                           Booked on{' '}
                                           {format(appointment.createdAt, 'PP')}
+                                        </span>
+                                        <span className="sm:hidden">
+                                          On {format(appointment.date, 'PPp')}
                                         </span>
                                       </h3>
                                       <div className="flex items-center gap-2">

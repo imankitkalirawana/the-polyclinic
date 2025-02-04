@@ -26,6 +26,7 @@ import { format } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import AsyncComponent from '@/hooks/useAsyncLoading';
 import Skeleton from '../ui/skeleton';
+import html2canvas from 'html2canvas';
 
 export default function AppointmentDetail({
   appointment,
@@ -84,8 +85,8 @@ export default function AppointmentDetail({
 
   return (
     <>
-      <div className="flex w-full gap-4">
-        <div className="flex min-w-24 max-w-24 flex-col justify-between gap-8 sm:min-w-40 sm:max-w-40">
+      <div className="flex w-full gap-4" id="appointment-detail">
+        <div className="hidden min-w-24 max-w-24 flex-col justify-between gap-8 sm:flex sm:min-w-40 sm:max-w-40">
           <CellValue label="Indian Standard Time" value="UTC +05:30" />
           {['booked', 'confirmed', 'in-progress'].includes(
             appointment.status
@@ -101,7 +102,17 @@ export default function AppointmentDetail({
               </Button>
             )}
         </div>
-        <div className="grid w-full grid-cols-1 flex-col gap-x-4 border-l-1 border-l-divider pl-4 md:grid-cols-2">
+        <div className="grid w-full grid-cols-1 flex-col gap-x-4 border-l-divider sm:border-l sm:pl-4 md:grid-cols-2">
+          <CellValue
+            label="Appointment ID"
+            value={`#${appointment.aid}`}
+            className="justify-start gap-4"
+          />
+          <CellValue
+            label="Patient"
+            value={appointment.name}
+            className="justify-start gap-4"
+          />
           <CellValue
             label="Gender"
             value={
@@ -134,6 +145,11 @@ export default function AppointmentDetail({
             className="justify-start gap-4"
           />
           <CellValue
+            label="Date & Time"
+            value={format(appointment.date, 'PPp')}
+            className="justify-start gap-4"
+          />
+          <CellValue
             label="Location"
             value={<p className="capitalize">{appointment.type}</p>}
             className="justify-start gap-4"
@@ -146,7 +162,7 @@ export default function AppointmentDetail({
             />
           )}
           <CellValue
-            label={`Created at: ${format(appointment?.createdAt as Date, 'PPp')}`}
+            label={`Booked on: ${format(appointment?.createdAt as Date, 'PPp')}`}
             value={null}
           />
           <div className="col-span-full flex flex-col items-center justify-between gap-2 sm:flex-row">
@@ -164,6 +180,22 @@ export default function AppointmentDetail({
                   Reschedule
                 </Button>
               )}
+              {['booked', 'confirmed', 'in-progress'].includes(
+                appointment.status
+              ) &&
+                ['doctor', 'user'].includes(session.user.role) && (
+                  <div className="sm:hidden">
+                    <Tooltip content="Add to Calendar" color="secondary">
+                      <Button
+                        color="secondary"
+                        variant="bordered"
+                        onPress={() => handleButtonClick('addToCalendar')}
+                        startContent={<Icon icon="solar:calendar-bold" />}
+                        isIconOnly
+                      />
+                    </Tooltip>
+                  </div>
+                )}
             </div>
             <div className="flex w-full items-center gap-2 sm:w-fit">
               {['completed'].includes(appointment.status) && (
@@ -252,11 +284,12 @@ export default function AppointmentDetail({
                 )}
               <Tooltip content="View">
                 <Button
-                  as={Link}
-                  href={`/appointments/${appointment.aid}`}
+                  //   as={Link}
+                  //   href={`/appointments/${appointment.aid}`}
                   variant="flat"
                   startContent={<Icon icon="tabler:arrow-up-right" />}
                   isIconOnly
+                  onPress={captureAndDownload}
                 />
               </Tooltip>
             </div>
@@ -276,3 +309,18 @@ export default function AppointmentDetail({
     </>
   );
 }
+
+const captureAndDownload = async () => {
+  const modalContent = document.getElementById('appointment-detail'); // Ensure this ID matches the ModalContent div
+
+  if (!modalContent) return;
+
+  const canvas = await html2canvas(modalContent, { scale: 2 });
+  const image = canvas.toDataURL('image/png');
+
+  // Create a download link
+  const link = document.createElement('a');
+  link.href = image;
+  link.download = 'appointment-receipt.png';
+  link.click();
+};
