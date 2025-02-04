@@ -21,7 +21,8 @@ import Skeleton from '@/components/ui/skeleton';
 import AsyncComponent from '@/hooks/useAsyncLoading';
 import Link from 'next/link';
 import { ChipColorMap } from '@/lib/maps';
-import { downloadAppointmentReceipt } from '@/lib/client-functions';
+import AsyncButton from '@/components/ui/buttons/async-button';
+import { downloadAppointmentReceipt } from '@/functions/client/appointment/receipt';
 
 export default function ConfirmationModal({
   appointment,
@@ -141,16 +142,22 @@ export default function ConfirmationModal({
                   </div>
                 </ModalBody>
                 <ModalFooter className="flex-col-reverse px-0 sm:flex-row">
-                  <Button
-                    fullWidth
-                    variant="bordered"
-                    startContent={<Icon icon="tabler:download" width={18} />}
-                    onPress={async () => {
+                  <AsyncButton
+                    aid={appointment.aid}
+                    variant="flat"
+                    startContent={
+                      <Icon
+                        icon="solar:download-minimalistic-bold"
+                        width={18}
+                      />
+                    }
+                    fn={async () => {
                       await downloadAppointmentReceipt(appointment.aid);
                     }}
+                    whileSubmitting="Downloading..."
                   >
                     Download Receipt
-                  </Button>
+                  </AsyncButton>
                   <Button
                     fullWidth
                     color="primary"

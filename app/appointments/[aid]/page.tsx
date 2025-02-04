@@ -20,10 +20,12 @@ export default async function Page({ params }: Props) {
     queryFn: () => getAppointmentWithAID(params.aid)
   });
 
+  const session = await auth();
+
   return (
     <>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <Appointment aid={params.aid} />
+        <Appointment aid={params.aid} session={session} />
       </HydrationBoundary>
     </>
   );

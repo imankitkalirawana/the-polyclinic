@@ -1,7 +1,7 @@
 'use client';
 
+import { downloadAppointmentReceipt } from '@/functions/client/appointment/receipt';
 import { printAppointmentReceipt } from '@/functions/server-actions/receipt';
-import { downloadAppointmentReceipt } from '@/lib/client-functions';
 import { Button } from '@heroui/react';
 import { useState } from 'react';
 

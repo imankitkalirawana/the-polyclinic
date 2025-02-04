@@ -5,7 +5,6 @@ import {
   getUserWithUID
 } from '@/functions/server-actions';
 import { AppointmentType } from '@/models/Appointment';
-import { DoctorType } from '@/models/Doctor';
 import { UserType } from '@/models/User';
 import {
   Button,
@@ -26,8 +25,8 @@ import { format } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import AsyncComponent from '@/hooks/useAsyncLoading';
 import Skeleton from '../ui/skeleton';
-import html2canvas from 'html2canvas';
-import DownloadButton from './buttons/download';
+import AsyncButton from '../ui/buttons/async-button';
+import { downloadAppointmentReceipt } from '@/functions/client/appointment/receipt';
 
 export default function AppointmentDetail({
   appointment,
@@ -35,7 +34,7 @@ export default function AppointmentDetail({
   session
 }: {
   appointment: AppointmentType;
-  setAppointments: any;
+  setAppointments?: any;
   session: any;
 }) {
   const modal = useDisclosure();
@@ -86,7 +85,7 @@ export default function AppointmentDetail({
 
   return (
     <>
-      <div className="flex w-full gap-4" id="appointment-detail">
+      <div className="flex w-full gap-4">
         <div className="hidden min-w-24 max-w-24 flex-col justify-between gap-8 sm:flex sm:min-w-40 sm:max-w-40">
           <CellValue label="Indian Standard Time" value="UTC +05:30" />
           <div className="flex flex-col-reverse gap-2">
@@ -104,15 +103,19 @@ export default function AppointmentDetail({
                 </Button>
               )}
             {!['completed'].includes(appointment.status) && (
-              <DownloadButton
+              <AsyncButton
                 aid={appointment.aid}
                 variant="flat"
                 startContent={
                   <Icon icon="solar:download-minimalistic-bold" width={18} />
                 }
+                fn={async () => {
+                  await downloadAppointmentReceipt(appointment.aid);
+                }}
+                whileSubmitting="Downloading..."
               >
                 Receipt
-              </DownloadButton>
+              </AsyncButton>
             )}
           </div>
         </div>
@@ -297,6 +300,26 @@ export default function AppointmentDetail({
                     Accept
                   </Button>
                 )}
+              <div className="sm:hidden">
+                {!['completed'].includes(appointment.status) && (
+                  <Tooltip content="Download Receipt">
+                    <AsyncButton
+                      aid={appointment.aid}
+                      variant="flat"
+                      startContent={
+                        <Icon
+                          icon="solar:download-minimalistic-bold"
+                          width={18}
+                        />
+                      }
+                      fn={async () => {
+                        await downloadAppointmentReceipt(appointment.aid);
+                      }}
+                      isIconOnly
+                    />
+                  </Tooltip>
+                )}
+              </div>
               <Tooltip content="View">
                 <Button
                   as={Link}
