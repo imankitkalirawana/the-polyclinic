@@ -1,5 +1,5 @@
 import { auth } from '@/auth';
-import ViewAppointment from '@/components/appointments/id';
+import Appointment from '@/components/appointments/id';
 import { getAppointmentWithAID } from '@/functions/server-actions/appointment';
 import {
   dehydrate,
@@ -23,7 +23,7 @@ export default async function Page({ params }: Props) {
   return (
     <>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <ViewAppointment aid={params.aid} />
+        <Appointment aid={params.aid} />
       </HydrationBoundary>
     </>
   );

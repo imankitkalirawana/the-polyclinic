@@ -139,7 +139,11 @@ export default function AppointmentDetail({
             className="justify-start gap-4"
           />
           {appointment.notes && (
-            <CellValue label="Appointment Notes" value={appointment?.notes} />
+            <CellValue
+              label="Appointment Notes"
+              value={appointment?.notes}
+              className="items-start justify-start gap-4"
+            />
           )}
           <CellValue
             label={`Created at: ${format(appointment?.createdAt as Date, 'PPp')}`}

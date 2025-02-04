@@ -119,7 +119,7 @@ export default function Appointment({ aid }: AppointmentProps) {
                     label="Doctor"
                     value={
                       <AsyncComponent
-                        fetchData={() => getDoctorWithUID(appointment.uid)}
+                        fetchData={() => getDoctorWithUID(appointment.doctor)}
                         fallback={<Skeleton className="h-5 w-20" />}
                         render={(doctor) => <span>{doctor?.name || '-'}</span>}
                       />
@@ -128,6 +128,7 @@ export default function Appointment({ aid }: AppointmentProps) {
                   <CellValue
                     label="Location"
                     value={<p className="capitalize">{appointment.type}</p>}
+                    className="justify-start gap-4"
                   />
                 </div>
                 {appointment.notes && (
