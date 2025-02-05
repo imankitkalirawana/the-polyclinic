@@ -64,7 +64,7 @@ export default function VerifyId() {
                 }
               />
               <div className="flex items-center gap-2 text-sm">
-                <p>Didn't receive the code?</p>
+                <p>Didn&apos;t receive the code?</p>
                 <Link href="#" isDisabled className="text-sm hover:underline">
                   Resend
                 </Link>

@@ -61,7 +61,7 @@ export const FormProvider = ({ children }: { children: React.ReactNode }) => {
     initialValues: {
       firstName: '',
       lastName: '',
-      dob: { day: '1', month: '1', year: '2000' },
+      dob: { day: '', month: '', year: '' },
       id: '',
       otp: '',
       password: '',
