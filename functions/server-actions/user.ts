@@ -22,7 +22,7 @@ export const getAllPatientsWithEmail = async (email: string) => {
     throw new Error('User not found');
   }
 
-  let users = await User.find({ phone: user?.phone })
+  let users = await User.find(user?.phone ? { phone: user.phone } : { email })
     .select('-password')
     .lean();
 

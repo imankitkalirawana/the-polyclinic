@@ -75,6 +75,7 @@ export const sendMailWithOTP = async (id: string, mailOptions: MailOptions) => {
     await Otp.create({ id, otp });
   }
   if (id.includes('@')) {
+    mailOptions.to = id;
     mailOptions.text = `Your OTP is: ${otp}`;
     return await sendMail(mailOptions);
   } else {
@@ -82,13 +83,13 @@ export const sendMailWithOTP = async (id: string, mailOptions: MailOptions) => {
   }
 };
 
-export const verifyOTP = async (id: string, otp: string) => {
+export const verifyOTP = async (id: string, otp: number) => {
   await connectDB();
   const res = await Otp.findOne({ id });
   if (!res) {
     throw new Error('OTP Expired');
   }
-  if (res.otp !== otp) {
+  if (res.otp != otp) {
     throw new Error('Invalid OTP');
   }
   return true;

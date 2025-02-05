@@ -1,13 +1,10 @@
 'use client';
-import AsyncButton from '@/components/ui/buttons/async-button';
 import {
-  Avatar,
   Button,
   Card,
   CardBody,
   CardFooter,
   CardHeader,
-  Divider,
   Image,
   Input,
   Link,
@@ -17,30 +14,22 @@ import {
   Tooltip
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useFormik } from 'formik';
 import { signIn } from 'next-auth/react';
-import VerifyId from './verify-id';
+import VerifyId from './modals/verify-id';
+import { useForm } from './form-context';
+import { verifyEmail } from '@/functions/server-actions';
 
 export default function DetailsInput() {
-  const formik = useFormik({
-    initialValues: {
-      name: '',
-      dob: {
-        day: '',
-        month: '',
-        year: ''
-      },
-      id: '',
-      reason: ''
-    },
-    onSubmit: async (values) => {
-      console.log(values);
-    }
-  });
+  const { formik } = useForm();
+
+  const ModalMap: Record<number, React.ReactNode> = {
+    2: <VerifyId />,
+    4: <>Step 3</>
+  };
 
   return (
     <>
-      <Card className="mx-auto flex max-w-2xl flex-col">
+      <Card className="mx-auto flex max-w-2xl flex-col px-2 py-4 lg:px-8">
         <CardHeader className="flex-col gap-2">
           <div>
             <Image src="/logo.png" className="p-2" radius="full" width={72} />
@@ -63,29 +52,30 @@ export default function DetailsInput() {
           </div>
         </CardHeader>
         <CardBody>
-          <ScrollShadow className="md:px4 grid grid-cols-6 gap-4 px-2 py-4 lg:px-8">
+          <ScrollShadow className="grid grid-cols-6 gap-4 p-2">
             <Input
               label="First Name"
-              value={formik.values.name.split(' ')[0] || ''}
-              name="firstname"
-              onChange={(e) => {
-                formik.setFieldValue(
-                  'name',
-                  `${e.target.value} ${formik.values.name.split(' ')[1]}`
-                );
-              }}
+              value={formik.values.firstName}
+              name="firstName"
+              onChange={formik.handleChange}
               className="col-span-3"
+              isInvalid={
+                formik.touched.firstName && formik.errors.firstName
+                  ? true
+                  : false
+              }
+              errorMessage={
+                <div className="flex items-center gap-1">
+                  <Icon icon="solar:info-circle-bold" width="14" />
+                  <span>{formik.errors.firstName}</span>
+                </div>
+              }
             />
             <Input
               label="Last Name"
-              value={formik.values.name.split(' ')[1] || ''}
-              name="lastname"
-              onChange={(e) => {
-                formik.setFieldValue(
-                  'name',
-                  `${formik.values.name.split(' ')[0]} ${e.target.value}`
-                );
-              }}
+              name="lastName"
+              value={formik.values.lastName}
+              onChange={formik.handleChange}
               className="col-span-3"
             />
             <div className="col-span-full flex items-center gap-2 font-medium">
@@ -109,6 +99,15 @@ export default function DetailsInput() {
               selectedKeys={[formik.values.dob.day]}
               name="dob.day"
               onChange={formik.handleChange}
+              isInvalid={
+                formik.touched.dob?.day && formik.errors.dob?.day ? true : false
+              }
+              errorMessage={
+                <div className="flex items-center gap-1">
+                  <Icon icon="solar:info-circle-bold" width="14" />
+                  <span>{formik.errors.dob?.day}</span>
+                </div>
+              }
             >
               {Array.from({ length: 31 }, (_, i) => (
                 <SelectItem key={`${i + 1}`} textValue={`${i + 1}`}>
@@ -123,6 +122,17 @@ export default function DetailsInput() {
               selectedKeys={[formik.values.dob.month]}
               name="dob.month"
               onChange={formik.handleChange}
+              isInvalid={
+                formik.touched.dob?.month && formik.errors.dob?.month
+                  ? true
+                  : false
+              }
+              errorMessage={
+                <div className="flex items-center gap-1">
+                  <Icon icon="solar:info-circle-bold" width="14" />
+                  <span>{formik.errors.dob?.month}</span>
+                </div>
+              }
             >
               {Array.from({ length: 12 }, (_, i) => {
                 const month = new Date(0, i).toLocaleString('default', {
@@ -142,6 +152,17 @@ export default function DetailsInput() {
               selectedKeys={[formik.values.dob.year]}
               name="dob.year"
               onChange={formik.handleChange}
+              isInvalid={
+                formik.touched.dob?.year && formik.errors.dob?.year
+                  ? true
+                  : false
+              }
+              errorMessage={
+                <div className="flex items-center gap-1">
+                  <Icon icon="solar:info-circle-bold" width="14" />
+                  <span>{formik.errors.dob?.year}</span>
+                </div>
+              }
             >
               {Array.from(
                 { length: new Date().getFullYear() - 1875 + 1 },
@@ -159,13 +180,13 @@ export default function DetailsInput() {
             <Input
               label="Email / Phone"
               name="id"
+              isReadOnly={formik.values.step > 1}
               value={formik.values.id}
               onChange={formik.handleChange}
               className="col-span-full"
               startContent={
                 // automaitcally detect if email or phone number after 3 characters are entered and show +91 for phone number and empty for email also check if the entered character is a number or not before showing +91
                 formik.values.id.length > 3 &&
-                formik.values.id.length < 10 &&
                 !isNaN(Number(formik.values.id)) ? (
                   <select
                     className="border-0 bg-transparent text-small text-default-400 outline-none"
@@ -177,25 +198,89 @@ export default function DetailsInput() {
                   </select>
                 ) : null
               }
-              //   endContent={
-              //     <Button variant="light" color="primary" size="sm">
-              //       Verify
-              //     </Button>
-              //   }
+              isInvalid={formik.touched.id && formik.errors.id ? true : false}
+              errorMessage={
+                <div className="flex items-center gap-1">
+                  <Icon icon="solar:info-circle-bold" width="14" />
+                  <span>{formik.errors.id}</span>
+                </div>
+              }
+              description={
+                formik.values.step > 2 && (
+                  <>
+                    <Link
+                      href="#"
+                      onPress={() => {
+                        formik.setValues({
+                          ...formik.values,
+                          step: 1,
+                          otp: ''
+                        });
+                      }}
+                      className="text-xs"
+                    >
+                      Change
+                    </Link>
+                  </>
+                )
+              }
             />
             <hr className="col-span-full my-2 border-t border-divider" />
+            <Input
+              label="Password"
+              name="password"
+              type="password"
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              className="col-span-full"
+              isInvalid={
+                formik.touched.password && formik.errors.password ? true : false
+              }
+              errorMessage={
+                <div className="flex items-center gap-1">
+                  <Icon icon="solar:info-circle-bold" width="14" />
+                  <span>{formik.errors.password}</span>
+                </div>
+              }
+            />
+            <Input
+              label="Confirm Password"
+              name="confirmPassword"
+              type="password"
+              value={formik.values.confirmPassword}
+              onChange={formik.handleChange}
+              className="col-span-full"
+              isInvalid={
+                formik.touched.confirmPassword && formik.errors.confirmPassword
+                  ? true
+                  : false
+              }
+              errorMessage={
+                <div className="flex items-center gap-1">
+                  <Icon icon="solar:info-circle-bold" width="14" />
+                  <span>{formik.errors.confirmPassword}</span>
+                </div>
+              }
+            />
           </ScrollShadow>
         </CardBody>
         <CardFooter className="justify-end gap-4">
           <Button radius="lg" variant="bordered">
             Cancel
           </Button>
-          <AsyncButton radius="lg" color="primary">
+          <Button
+            radius="lg"
+            color="primary"
+            onPress={() => {
+              formik.handleSubmit();
+            }}
+            isLoading={formik.isSubmitting}
+          >
             Continue
-          </AsyncButton>
+          </Button>
         </CardFooter>
       </Card>
-      <VerifyId />
+      {ModalMap[formik.values.step]}
     </>
   );
 }

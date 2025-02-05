@@ -33,7 +33,7 @@ export const TIMINGS = {
 };
 
 export const CLINIC_INFO = {
-  name: 'The Poly Clinic',
+  name: 'The Polyclinic',
   phone: '+0000000000000000',
   email: 'contact@divinely.dev',
   website: 'www.polyclinic.com',

@@ -143,7 +143,7 @@ export default function ConfirmationModal({
                 </ModalBody>
                 <ModalFooter className="flex-col-reverse px-0 sm:flex-row">
                   <AsyncButton
-                    aid={appointment.aid}
+                    fullWidth
                     variant="flat"
                     startContent={
                       <Icon

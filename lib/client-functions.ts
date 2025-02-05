@@ -2,7 +2,6 @@
 import { saveAs } from 'file-saver';
 import { EventType } from './interface';
 import { toast } from 'sonner';
-import { printAppointmentReceipt } from '@/functions/server-actions/receipt';
 
 export const calculateAge = (dob: string) => {
   const birthDate = new Date(dob);
@@ -19,6 +18,20 @@ export const calculateAge = (dob: string) => {
       ? 1
       : 0);
   return age;
+};
+
+export const dobFormat = (date: {
+  day: string;
+  month: string;
+  year: string;
+}) => {
+  if (date.day.length === 1) {
+    date.day = `0${date.day}`;
+  }
+  if (date.month.length === 1) {
+    date.month = `0${date.month}`;
+  }
+  return `${date.year}-${date.month}-${date.day}`;
 };
 
 export const calculateDOB = (age: number) => {
@@ -105,5 +118,3 @@ export const addToOutlookCalendar = (event: EventType) => {
   // Open Outlook Calendar link in a new tab
   window.open(outlookCalendarUrl.toString(), '_blank');
 };
-
-

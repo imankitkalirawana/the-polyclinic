@@ -16,7 +16,6 @@ import {
 } from '@/components/ui/input-otp';
 import { WEBSITE_SETTING } from '@/lib/config';
 import Error from '@/app/error';
-import { IconArrowNarrowLeft } from '@tabler/icons-react';
 
 export default function Register() {
   const [isOtpSent, setIsOtpSent] = useState(false);
@@ -37,8 +36,6 @@ export default function Register() {
       setIsOtpSent(false);
     }
   }, [searchParams.get('otp')]);
-
-  const router = useRouter();
 
   const formik = useFormik({
     initialValues: {

@@ -17,7 +17,7 @@ import {
   Divider,
   Select,
   SelectItem
-} from "@heroui/react";
+} from '@heroui/react';
 import { Icon } from '@iconify/react';
 
 import SwitchCell from './switch-cell';
@@ -81,7 +81,7 @@ export default function SecuritySettings({
         return;
       }
       if (values.isSent) {
-        await verifyOTP(values?.email as string, values.otp)
+        await verifyOTP(values?.email as string, parseInt(values.otp))
           .then(async () => {
             await axios
               .put(`/api/users/uid/${user?.uid}`, {
