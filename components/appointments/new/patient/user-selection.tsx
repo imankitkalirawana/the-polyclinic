@@ -97,7 +97,7 @@ export default function UserSelection({
                         isPressable
                         key={user.uid}
                         className={cn(
-                          'no-scrollbar min-w-64 rounded-xl border border-divider shadow-none',
+                          'no-scrollbar min-w-64 rounded-xl border border-divider shadow-none sm:min-w-72',
                           {
                             'border-2 border-primary-400':
                               user.uid === appointment.user?.uid
