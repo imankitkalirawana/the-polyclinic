@@ -21,21 +21,17 @@ import { useMemo, useState } from 'react';
 import useDebounce from '@/hooks/useDebounce';
 import NoResults from '@/components/ui/no-results';
 import { LoadingUsers } from './loading-user';
+import { useForm } from '../context';
 
-export default function DoctorSelection({
-  onConfirm
-}: {
-  onConfirm: () => void;
-}) {
-  const dispatch = useDispatch();
-  const appointment = useSelector((state: any) => state.appointment);
+export default function DoctorSelection() {
+  const { formik } = useForm();
   const [query, setQuery] = useState('');
   const debounce = useDebounce(query, 500);
 
   const { data: doctors, isLoading } = useQuery<DoctorType[]>({
     queryKey: ['doctors'],
     queryFn: () => getAllDoctors(),
-    enabled: !!appointment.user
+    enabled: !!formik.values.user
   });
 
   const filteredDoctors = useMemo(() => {
@@ -52,7 +48,7 @@ export default function DoctorSelection({
   }, [debounce, doctors]);
 
   return (
-    appointment.user &&
+    formik.values.doctor &&
     (isLoading ? (
       <div className="flex gap-4 overflow-hidden">
         <LoadingUsers />
@@ -85,20 +81,14 @@ export default function DoctorSelection({
                       'no-scrollbar min-w-64 rounded-xl border border-divider shadow-none sm:min-w-72',
                       {
                         'border-2 border-primary-400':
-                          doctor.uid === appointment.doctor?.uid
+                          doctor.uid === formik.values.doctor?.uid
                       }
                     )}
                     onPress={() => {
-                      if (appointment.doctor?.uid === doctor.uid) {
-                        dispatch(removeSelectedDoctor());
+                      if (formik.values.doctor?.uid === doctor.uid) {
+                        formik.setFieldValue('doctor', {});
                       } else {
-                        dispatch(
-                          setSelectedDoctor({
-                            ...doctor,
-                            createdAt: '',
-                            updatedAt: ''
-                          })
-                        );
+                        formik.setFieldValue('doctor', doctor);
                       }
                     }}
                   >
@@ -132,14 +122,12 @@ export default function DoctorSelection({
                 className="w-full xs:w-fit"
                 endContent={<Icon icon="tabler:chevron-right" />}
                 onPress={() => {
-                  if (!appointment.doctor) {
-                    dispatch(
-                      setSelectedDoctor({
-                        uid: 0
-                      } as DoctorType)
-                    );
+                  if (!formik.values.doctor?.uid) {
+                    formik.setFieldValue('doctor', {
+                      uid: 0
+                    });
                   }
-                  onConfirm();
+                  formik.setFieldValue('step', 4);
                 }}
               >
                 Continue
@@ -152,17 +140,13 @@ export default function DoctorSelection({
   );
 }
 
-export function DoctorSelectionTitle({
-  selectedKeys
-}: {
-  selectedKeys: Set<string>;
-}) {
-  const appointment = useSelector((state: any) => state.appointment);
-  return appointment.doctor && !selectedKeys.has('doctor') ? (
+export function DoctorSelectionTitle() {
+  const { formik } = useForm();
+  return formik.values.doctor && formik.values.step > 3 ? (
     <h3 className="text-2xl font-semibold">
-      {appointment.doctor.uid === 0
+      {formik.values.doctor?.uid === 0
         ? 'No Doctor Selected'
-        : appointment.doctor.name}
+        : formik.values.doctor?.name}
     </h3>
   ) : (
     <div className="space-y-4">

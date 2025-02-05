@@ -1,6 +1,8 @@
 import * as React from 'react';
 import PatientAppointment from './patient';
 import NoSession from './no-session';
+import { FormProvider } from './context';
+import Selection from './selection';
 
 export default async function NewAppointment({ session }: { session: any }) {
   const RoleMap: Record<string, React.ReactNode> = {
@@ -14,6 +16,10 @@ export default async function NewAppointment({ session }: { session: any }) {
   }
 
   return (
-    <div className="mx-auto max-w-7xl">{RoleMap[session?.user?.role]}</div>
+    <FormProvider session={session}>
+      <div className="mx-auto max-w-7xl">
+        <Selection session={session} />
+      </div>
+    </FormProvider>
   );
 }

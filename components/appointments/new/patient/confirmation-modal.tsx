@@ -33,32 +33,10 @@ export default function ConfirmationModal({
   isOpen?: boolean;
   onOpenChange?: (isOpen: boolean) => void;
 }) {
-  const modalRef = useRef<HTMLDivElement | null>(null);
-
-  const captureAndDownload = async () => {
-    if (!modalRef.current) return;
-
-    const canvas = await html2canvas(modalRef.current, {
-      scale: 2,
-      useCORS: true,
-      logging: true,
-      allowTaint: true
-    });
-
-    const image = canvas.toDataURL('image/png');
-
-    // Create a download link
-    const link = document.createElement('a');
-    link.href = image;
-    link.download = 'appointment-receipt.png';
-    link.click();
-  };
-
   return (
     <>
       <Modal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
+        isOpen
         isDismissable={false}
         backdrop="blur"
         hideCloseButton
@@ -84,7 +62,7 @@ export default function ConfirmationModal({
                   </p>
                 </ModalHeader>
                 <ModalBody className="gap-0 rounded-2xl bg-default-100">
-                  <div ref={modalRef} className="p-4">
+                  <div className="p-4">
                     <CellValue
                       label="Appointment ID"
                       value={`#${appointment.aid}`}

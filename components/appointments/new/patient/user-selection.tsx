@@ -11,7 +11,6 @@ import {
   Input
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useDispatch, useSelector } from 'react-redux';
 import { useMemo, useState } from 'react';
 import useDebounce from '@/hooks/useDebounce';
 import { useQuery } from '@tanstack/react-query';
@@ -20,22 +19,14 @@ import {
   getAllPatients,
   getAllPatientsWithEmail
 } from '@/functions/server-actions/user';
-import {
-  removeSelectedUser,
-  setSelectedUser
-} from '@/store/slices/appointment-slice';
+
 import NoResults from '@/components/ui/no-results';
 import { LoadingUsers } from './loading-user';
+import { useForm } from '../context';
 
-export default function UserSelection({
-  session,
-  onConfirm
-}: {
-  session?: any;
-  onConfirm: () => void;
-}) {
-  const dispatch = useDispatch();
-  const appointment = useSelector((state: any) => state.appointment);
+export default function UserSelection() {
+  const { formik, session } = useForm();
+
   const [query, setQuery] = useState('');
   const debounce = useDebounce(query, 500);
 
@@ -100,17 +91,11 @@ export default function UserSelection({
                           'no-scrollbar min-w-64 rounded-xl border border-divider shadow-none sm:min-w-72',
                           {
                             'border-2 border-primary-400':
-                              user.uid === appointment.user?.uid
+                              user.uid === formik.values.user?.uid
                           }
                         )}
                         onPress={() => {
-                          dispatch(
-                            setSelectedUser({
-                              ...user,
-                              createdAt: '',
-                              updatedAt: ''
-                            })
-                          );
+                          formik.setFieldValue('user', user);
                         }}
                       >
                         <CardBody className="items-center gap-4 p-8">
@@ -151,9 +136,9 @@ export default function UserSelection({
                     radius="lg"
                     className="w-full xs:w-fit"
                     endContent={<Icon icon="tabler:chevron-right" />}
-                    onPress={onConfirm}
-                    isDisabled={!appointment.user}
-                    variant={appointment.user ? 'solid' : 'flat'}
+                    onPress={() => formik.setFieldValue('step', 2)}
+                    isDisabled={!formik.values.user}
+                    variant={formik.values.user ? 'solid' : 'flat'}
                   >
                     Continue
                   </Button>
@@ -167,19 +152,10 @@ export default function UserSelection({
   );
 }
 
-export function UserSelectionTitle({
-  setSelectedKeys,
-  selectedKeys,
-  session
-}: {
-  setSelectedKeys: any;
-  selectedKeys: Set<string>;
-  session: any;
-}) {
-  const dispatch = useDispatch();
-  const appointment = useSelector((state: any) => state.appointment);
+export function UserSelectionTitle() {
+  const { formik, session } = useForm();
 
-  return appointment.user && !selectedKeys.has('user') ? (
+  return formik.values.user && formik.values.step > 1 ? (
     <div className="flex items-center gap-4">
       <div>
         <Image
@@ -191,14 +167,13 @@ export function UserSelectionTitle({
         />
       </div>
       <div>
-        <h2 className="text-lg font-semibold">{appointment.user.name}</h2>
-        <p>{appointment.user.email}</p>
+        <h2 className="text-lg font-semibold">{formik.values.user?.name}</h2>
+        <p>{formik.values.user?.email}</p>
         <Link
           className="hover:underline"
           href="#"
           onPress={() => {
-            setSelectedKeys(new Set(['user']));
-            dispatch(removeSelectedUser());
+            formik.setFieldValue('step', 1);
           }}
         >
           Change <Icon icon="tabler:chevron-right" />

@@ -15,20 +15,26 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { removeSelectedDoctor } from '@/store/slices/appointment-slice';
 import { useState } from 'react';
-import DoctorSelection, { DoctorSelectionTitle } from './doctor-selection';
-import UserSelection, { UserSelectionTitle } from './user-selection';
-import DateSelection, { DateSelectionTitle } from './date-selection';
+import DoctorSelection, {
+  DoctorSelectionTitle
+} from './patient/doctor-selection';
+import UserSelection, { UserSelectionTitle } from './patient/user-selection';
+import DateSelection, { DateSelectionTitle } from './patient/date-selection';
 import AdditionalDetailsSelection, {
   AdditionalDetailsSelectionTitle
-} from './additional-details-selection';
+} from './patient/additional-details-selection';
 import CellValue from '@/components/ui/cell-value';
 import { format } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import ConfirmationModal from './confirmation-modal';
 import axios from 'axios';
 import { AppointmentType } from '@/models/Appointment';
+import { useForm } from './context';
+import ConfirmationModal from './modals/confirmation-modal';
+import SummaryModal from './modals/summary-modal';
 
 export default function Selection({ session }: { session?: any }) {
+  const { formik } = useForm();
+
   const dispatch = useDispatch();
   const appointment = useSelector((state: any) => state.appointment);
   const [selectedKeys, setSelectedKeys] = useState(new Set(['user']));
@@ -67,97 +73,80 @@ export default function Selection({ session }: { session?: any }) {
       });
   };
 
+  const ModalMap: Record<number, React.ReactNode> = {
+    5: <SummaryModal />,
+    6: <ConfirmationModal />
+  };
+
+  const KeyMap: Record<number, string> = {
+    1: 'user',
+    2: 'time',
+    3: 'doctor',
+    4: 'additional-details'
+  };
+
   return (
     <>
       <Accordion
         defaultSelectedKeys={['user']}
         className="divide-y-2 divide-divider border-b border-divider py-4"
-        selectedKeys={selectedKeys}
+        // selectedKeys={selectedKeys}
+        selectedKeys={[KeyMap[formik.values.step]]}
         hideIndicator
         aria-label="User and Doctor Selection"
       >
         <AccordionItem
           key="user"
           textValue="User Selection"
-          title={
-            <UserSelectionTitle
-              selectedKeys={selectedKeys}
-              setSelectedKeys={setSelectedKeys}
-              session={session}
-            />
-          }
+          title={<UserSelectionTitle />}
         >
-          <UserSelection
-            session={session}
-            onConfirm={() => {
-              setSelectedKeys(new Set(['time']));
-            }}
-          />
+          <UserSelection />
         </AccordionItem>
         <AccordionItem
           textValue="Time Selection"
-          isDisabled={!appointment.user}
+          isDisabled={formik.values.step < 2}
           key="time"
           indicator={
             <Link
               href="#"
               onPress={() => {
-                setSelectedKeys(new Set(['time']));
+                formik.setFieldValue('step', 2);
               }}
             >
               Change
             </Link>
           }
-          hideIndicator={
-            !appointment.date || selectedKeys.has('time') || !appointment.user
-          }
-          title={<DateSelectionTitle selectedKeys={selectedKeys} />}
+          hideIndicator={formik.values.step <= 2}
+          title={<DateSelectionTitle />}
         >
-          <DateSelection
-            onConfirm={() => {
-              setSelectedKeys(new Set(['doctor']));
-            }}
-          />
+          <DateSelection />
         </AccordionItem>
         <AccordionItem
           textValue="Doctor Selection"
-          isDisabled={!appointment.user || !appointment.date}
+          isDisabled={formik.values.step < 3}
           key="doctor"
           indicator={
             <Link
               href="#"
               onPress={() => {
-                setSelectedKeys(new Set(['doctor']));
-                dispatch(removeSelectedDoctor());
+                formik.setFieldValue('step', 3);
               }}
             >
               Change
             </Link>
           }
-          hideIndicator={
-            !appointment.doctor ||
-            selectedKeys.has('doctor') ||
-            !appointment.user
-          }
-          title={<DoctorSelectionTitle selectedKeys={selectedKeys} />}
+          hideIndicator={formik.values.step <= 3}
+          title={<DoctorSelectionTitle />}
         >
-          <DoctorSelection
-            onConfirm={() => {
-              setSelectedKeys(new Set(['additional-details']));
-            }}
-          />
+          <DoctorSelection />
         </AccordionItem>
         <AccordionItem
           textValue="Additional Details"
-          isDisabled={!appointment.user || !appointment.date}
+          isDisabled={formik.values.step < 4}
           key="additional-details"
           title={<AdditionalDetailsSelectionTitle />}
         >
-          <AdditionalDetailsSelection
-            onConfirm={() => {
-              summaryModal.onOpenChange();
-            }}
-          />
+          <AdditionalDetailsSelection />
         </AccordionItem>
       </Accordion>
       <Modal
@@ -222,11 +211,8 @@ export default function Selection({ session }: { session?: any }) {
           )}
         </ModalContent>
       </Modal>
-      <ConfirmationModal
-        isOpen={submittionModal.isOpen}
-        onOpenChange={submittionModal.onOpenChange}
-        appointment={apt}
-      />
+
+      {ModalMap[formik.values.step]}
     </>
   );
 }

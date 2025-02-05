@@ -15,19 +15,15 @@ import { disabledDates } from '@/lib/appointments/new';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { setSelectedDate } from '@/store/slices/appointment-slice';
 import { format } from 'date-fns';
+import { useForm } from '../context';
 
-export default function DateSelection({
-  onConfirm
-}: {
-  onConfirm: () => void;
-}) {
-  const dispatch = useDispatch();
+export default function DateSelection() {
+  const { formik } = useForm();
   const { locale } = useLocale();
-  const appointment = useSelector((state: any) => state.appointment);
 
   const [timing, setTiming] = useState<Date>(() => {
-    if (appointment.date) {
-      return appointment.date;
+    if (formik.values.date) {
+      return formik.values.date;
     }
     const date = new Date(
       new Date().toLocaleString('en-US', { timeZone: getLocalTimeZone() })
@@ -114,8 +110,8 @@ export default function DateSelection({
           className="w-full max-w-64 xs:w-fit"
           endContent={<Icon icon="tabler:chevron-right" />}
           onPress={() => {
-            dispatch(setSelectedDate(timing));
-            onConfirm();
+            formik.setFieldValue('date', timing);
+            formik.setFieldValue('step', 3);
           }}
           isDisabled={
             isWeekend(
@@ -148,16 +144,12 @@ export default function DateSelection({
   );
 }
 
-export function DateSelectionTitle({
-  selectedKeys
-}: {
-  selectedKeys: Set<string>;
-}) {
-  const appointment = useSelector((state: any) => state.appointment);
+export function DateSelectionTitle() {
+  const { formik } = useForm();
 
-  return appointment.date && !selectedKeys.has('time') ? (
+  return formik.values.date && formik.values.step > 2 ? (
     <h3 className="text-2xl font-semibold">
-      {format(appointment.date, 'PPPp')}
+      {format(formik.values.date, 'PPPp')}
     </h3>
   ) : (
     <div className="space-y-4">

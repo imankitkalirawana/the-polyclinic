@@ -6,13 +6,10 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setAdditionalInfo } from '@/store/slices/appointment-slice';
+import { useForm } from '../context';
 
-export default function AdditionalDetailsSelection({
-  onConfirm
-}: {
-  onConfirm: () => void;
-}) {
-  const dispatch = useDispatch();
+export default function AdditionalDetailsSelection() {
+  const { formik } = useForm();
   const [data, setData] = useState<AddionalInfo>({
     notes: '',
     type: 'offline',
@@ -24,16 +21,18 @@ export default function AdditionalDetailsSelection({
       <div className="grid gap-4 sm:grid-cols-2">
         <Input
           label="Symptoms"
-          value={data.symptoms}
-          onChange={(e) => setData({ ...data, symptoms: e.target.value })}
+          value={formik.values.additionalInfo?.symptoms}
           placeholder='e.g. "Headache, Fever, etc."'
           className="col-span-2 sm:col-span-1"
+          name="additionalInfo.symptoms"
+          onChange={formik.handleChange}
         />
         <Select
           label="Appointment Type"
-          value={data.symptoms}
-          onChange={(e) => setData({ ...data, symptoms: e.target.value })}
-          selectedKeys={[data.type]}
+          // onChange={(e) => setData({ ...data, symptoms: e.target.value })}
+          selectedKeys={[formik.values.additionalInfo?.type]}
+          onChange={formik.handleChange}
+          name="additionalInfo.type"
           className="col-span-2 sm:col-span-1"
           disabledKeys={['online']}
         >
@@ -43,10 +42,11 @@ export default function AdditionalDetailsSelection({
 
         <Textarea
           label="Additional Notes"
-          value={data.notes}
-          onChange={(e) => setData({ ...data, notes: e.target.value })}
           placeholder="Any additional notes for the doctor"
           className="col-span-2"
+          name="additionalInfo.notes"
+          value={formik.values.additionalInfo?.notes}
+          onChange={formik.handleChange}
         />
         <div className="col-span-2 mt-4">
           <Button
@@ -55,8 +55,7 @@ export default function AdditionalDetailsSelection({
             className="w-full xs:w-fit"
             endContent={<Icon icon="tabler:chevron-right" />}
             onPress={() => {
-              dispatch(setAdditionalInfo(data));
-              onConfirm();
+              formik.setFieldValue('step', 5);
             }}
           >
             Continue
