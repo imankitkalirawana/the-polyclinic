@@ -154,11 +154,15 @@ export default function AppointmentDetail({
           <CellValue
             label="Doctor"
             value={
-              <AsyncComponent
-                fetchData={() => getDoctorWithUID(appointment.doctor)}
-                fallback={<Skeleton className="h-5 w-20" />}
-                render={(doctor) => <span>{doctor?.name || '-'}</span>}
-              />
+              appointment.doctor ? (
+                <AsyncComponent
+                  fetchData={() => getDoctorWithUID(appointment.doctor)}
+                  fallback={<Skeleton className="h-5 w-20" />}
+                  render={(doctor) => <span>{doctor?.name || '-'}</span>}
+                />
+              ) : (
+                '-'
+              )
             }
             className="justify-start gap-4"
           />
