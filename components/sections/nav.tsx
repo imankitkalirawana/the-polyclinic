@@ -2,20 +2,17 @@
 
 import React from 'react';
 import {
-  Navbar as NextNavbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-  NavbarMenu,
-  NavbarMenuItem,
-  NavbarMenuToggle,
-  Link,
+  Avatar,
   Button,
-  Image
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Link
 } from '@heroui/react';
 import { usePathname } from 'next/navigation';
+import { signIn, signOut } from 'next-auth/react';
 import ModeToggle from '../mode-toggle';
-import ProfileDropdown from './profile-dropdown';
 
 interface NavbarProps {
   session: any;
@@ -52,78 +49,80 @@ export default function Nav({ session }: NavbarProps) {
 
   if (isDisabled) return null;
   return (
-    <NextNavbar
-      classNames={{
-        base: 'py-4 backdrop-filter-none bg-transparent',
-        wrapper: 'px-0 w-full justify-center bg-transparent',
-        item: 'hidden md:flex'
-      }}
-      className="fixed top-0 z-50 bg-transparent backdrop-filter-none"
-      height="54px"
-    >
-      <NavbarContent
-        className="gap-4 rounded-full border-small border-default-200/20 bg-background/70 px-2 shadow-medium backdrop-blur-lg backdrop-saturate-150"
-        justify="center"
-      >
-        {/* Toggle */}
-        <NavbarMenuToggle className="ml-2 text-default-400 md:hidden" />
+    <div className="fixed left-0 top-0 z-[999] w-full bg-background/80 px-12 shadow-sm backdrop-blur-lg">
+      <div className="mx-auto flex max-w-7xl items-center justify-between py-2">
+        <Link href="/" className="flex items-center gap-2 text-foreground">
+          {/* <Avatar size="sm" src="/logo.png" /> */}
+          <h2 className="font-semibold">The Polyclinic</h2>
+        </Link>
+        <div>
+          <ul className="flex gap-6">
+            {menuItems.map((item) => (
+              <li key={item.name}>
+                <Link
+                  className="text-sm font-light text-foreground hover:text-primary-500"
+                  href={item.href}
+                >
+                  {item.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+        {session ? (
+          <div className="flex items-center gap-2">
+            <h3 className="text-small font-light text-default-500">
+              {session.user?.name}
+            </h3>
+            <Dropdown placement="bottom-end" size="sm">
+              <DropdownTrigger>
+                <Avatar
+                  as="button"
+                  className="transition-transform"
+                  src="/assets/placeholder-avatar.jpeg"
+                  size="sm"
+                />
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Profile Actions" variant="flat">
+                <DropdownItem key="dashboard" href="/dashboard">
+                  My Dashboard
+                </DropdownItem>
+                <DropdownItem key="appointments" href="/appointments">
+                  My Appointments
+                </DropdownItem>
 
-        {/* Logo */}
-        <NavbarBrand className="mr-2 w-[40vw] md:w-auto md:max-w-fit">
-          <div className="rounded-full bg-foreground text-background">
-            <Image isBlurred src="/logo.png" width={36} />
+                <DropdownItem key="theme">
+                  <div className="flex items-center justify-between">
+                    <span>Dark Mode</span>
+                    <ModeToggle />
+                  </div>
+                </DropdownItem>
+                <DropdownItem key="configurations">Configurations</DropdownItem>
+                <DropdownItem key="help_and_feedback">
+                  Help & Feedback
+                </DropdownItem>
+                <DropdownItem
+                  color="danger"
+                  onPress={() => signOut()}
+                  key="help_and_feedback"
+                >
+                  Logout
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
           </div>
-          <span className="ml-2 font-medium">Devocode</span>
-        </NavbarBrand>
-
-        {/* Items */}
-        {menuItems.map((item, index) => (
-          <NavbarItem
-            key={`desktop-${item.name}-${index}`}
-            className="hidden md:flex"
+        ) : (
+          <Button
+            radius="lg"
+            color="primary"
+            size="sm"
+            onPress={() => signIn()}
+            className="text-sm"
           >
-            <Link className="text-default-700" href={item.href} size="sm">
-              {item.name}
-            </Link>
-          </NavbarItem>
-        ))}
-
-        <NavbarItem>
-          {session ? (
-            <ProfileDropdown session={session} />
-          ) : (
-            <Button as={Link} href="/auth/login" radius="lg" variant="flat">
-              Login
-            </Button>
-          )}
-        </NavbarItem>
-      </NavbarContent>
-
-      {/* Menu */}
-      <NavbarMenu
-        className="top-[calc(var(--navbar-height)/2)] mx-auto mt-16 max-h-[40vh] max-w-[80vw] rounded-large border-small border-default-200/20 bg-background/60 py-6 shadow-medium backdrop-blur-md backdrop-saturate-150"
-        motionProps={{
-          initial: { opacity: 0, y: -20 },
-          animate: { opacity: 1, y: 0 },
-          exit: { opacity: 0, y: -20 },
-          transition: {
-            ease: 'easeInOut',
-            duration: 0.2
-          }
-        }}
-      >
-        {menuItems.map((item, index) => (
-          <NavbarMenuItem key={`mobile-${item.name}-${index}`}>
-            <Link
-              className="w-full text-default-500"
-              href={item.href}
-              size="md"
-            >
-              {item.name}
-            </Link>
-          </NavbarMenuItem>
-        ))}
-      </NavbarMenu>
-    </NextNavbar>
+            Sign in
+          </Button>
+        )}
+      </div>
+    </div>
   );
 }

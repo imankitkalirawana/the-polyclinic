@@ -5,32 +5,29 @@ import React from 'react';
 import { useState } from 'react';
 
 const AsyncButton = React.forwardRef<
-  HTMLDivElement,
+  HTMLButtonElement,
   ButtonProps & {
-    aid: number;
     fn?: () => Promise<void>;
     whileSubmitting?: string;
   }
 >(
-  ({
-    isLoading: propIsLoading,
-    aid,
-    fn,
-    whileSubmitting = 'Loading...',
-    ...props
-  }) => {
+  (
+    { isLoading: propIsLoading, fn, whileSubmitting = 'Loading...', ...props },
+    ref
+  ) => {
     const [isLoading, setIsLoading] = useState(false);
 
     const handleSubmit = async () => {
       setIsLoading(true);
-      fn &&
-        (await fn().finally(() => {
-          setIsLoading(false);
-        }));
+      fn
+        ? await fn()
+        : await new Promise((resolve) => setTimeout(resolve, 2000));
+      setIsLoading(false);
     };
 
     return (
       <Button
+        ref={ref}
         {...props}
         className={cn('btn btn-primary', props.className)}
         isLoading={isLoading || propIsLoading}

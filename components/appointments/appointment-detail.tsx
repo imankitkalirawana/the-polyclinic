@@ -105,7 +105,6 @@ export default function AppointmentDetail({
               )}
             {!['completed'].includes(appointment.status) && (
               <AsyncButton
-                aid={appointment.aid}
                 variant="flat"
                 startContent={
                   <Icon icon="solar:download-minimalistic-bold" width={18} />
@@ -305,7 +304,6 @@ export default function AppointmentDetail({
                 {!['completed'].includes(appointment.status) && (
                   <Tooltip content="Download Receipt">
                     <AsyncButton
-                      aid={appointment.aid}
                       variant="flat"
                       startContent={
                         <Icon
