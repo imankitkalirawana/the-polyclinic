@@ -9,8 +9,13 @@ export default async function Login() {
     redirect('/dashboard');
   }
   return (
-    <>
+    <div
+      className="mt-0 min-h-screen w-full bg-cover bg-center bg-no-repeat object-cover pt-24"
+      style={{
+        backgroundImage: 'url(/assets/chromatic_light_2.heic)'
+      }}
+    >
       <SignIn />
-    </>
+    </div>
   );
 }

@@ -104,7 +104,7 @@ export const APPOINTMENT = {
 export const WEBSITE_SETTING = {
   status: {
     maintainance: false,
-    registration: false,
+    registration: true,
     login: true
   },
   appearance: {

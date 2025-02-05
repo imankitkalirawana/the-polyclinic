@@ -70,7 +70,7 @@ export default function VerifyId() {
                 </Link>
               </div>
             </ModalBody>
-            <ModalFooter className="justify-center gap-4">
+            <ModalFooter className="flex-col-reverse justify-center gap-2 sm:flex-row sm:gap-4">
               <Button
                 radius="lg"
                 fullWidth
