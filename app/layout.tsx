@@ -6,6 +6,7 @@ import { Providers } from './providers';
 import { auth } from '@/auth';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import Nav from '@/components/sections/nav';
+import Navbar from '@/components/sections/navbar';
 
 export const metadata: Metadata = {
   title: 'The Polyclinic',
@@ -25,7 +26,8 @@ export default async function RootLayout({
         <Providers>
           <NuqsAdapter>
             <ThemeProvider attribute="class" defaultTheme="light">
-              <Nav session={session} />
+              {/* <Nav session={session} /> */}
+              <Navbar session={session} />
               {children}
               <Sonner />
             </ThemeProvider>
