@@ -21,50 +21,15 @@ import {
 import { usePathname } from 'next/navigation';
 import { signIn, signOut } from 'next-auth/react';
 import ModeToggle from '../mode-toggle';
-import type { NavbarProps } from '@heroui/react';
-
-// Update the menuItems array to include an optional "subItems" property.
-const menuItems = [
-  {
-    name: 'Home',
-    href: '/home'
-  },
-  {
-    name: 'Dashboard',
-    href: '/dashboard',
-    subItems: [
-      { name: 'Overview', href: '/dashboard/overview' },
-      { name: 'Stats', href: '/dashboard/stats' },
-      { name: 'Settings', href: '/dashboard/settings' }
-    ]
-  },
-  {
-    name: 'Appointments',
-    href: '/appointments',
-    subItems: [
-      { name: 'New Appointment', href: '/appointments/new' },
-      { name: 'All Appointments', href: '/appointments/all' },
-      { name: 'Appointment Status', href: '/appointments/status' }
-    ]
-  },
-  {
-    name: 'About Us',
-    href: '/about'
-  },
-  {
-    name: 'Integrations',
-    href: '/integrations'
-  }
-];
+import { AnimatePresence, motion } from 'framer-motion';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 export default function Nav({ session }: { session: any }) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  // activeMenu holds the menu item that currently has its sub-menu open
   const [activeMenu, setActiveMenu] = React.useState<
     null | (typeof menuItems)[0]
   >(null);
 
-  // Create a ref to store the timeout so that it persists between renders.
   const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
   const DISABLED_PATHS = ['/auth', '/dashboard'];
@@ -73,7 +38,6 @@ export default function Nav({ session }: { session: any }) {
 
   if (isDisabled) return null;
 
-  // Helper function to clear any existing timeout.
   const clearTimeoutRef = () => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
@@ -81,13 +45,68 @@ export default function Nav({ session }: { session: any }) {
     }
   };
 
-  // Handler to start the closing timeout (500ms delay)
   const startCloseTimeout = () => {
     clearTimeoutRef();
     timeoutRef.current = setTimeout(() => {
       setActiveMenu(null);
     }, 200);
   };
+
+  const menuItems = [
+    {
+      name: 'Home',
+      href: '/home'
+    },
+    {
+      name: 'Dashboard',
+      href: '/dashboard',
+      subItems: [
+        {
+          title: 'My Dashboard',
+          items: [
+            { name: 'Overview', href: '/dashboard/overview' },
+            { name: 'Stats', href: '/dashboard/stats' },
+            { name: 'Settings', href: '/dashboard/settings' }
+          ]
+        },
+        {
+          title: 'Admin Dashboard',
+          items: [
+            { name: 'Overview', href: '/dashboard/admin/overview' },
+            { name: 'Stats', href: '/dashboard/admin/stats' },
+            { name: 'Settings', href: '/dashboard/admin/settings' }
+          ]
+        }
+      ]
+    },
+    {
+      name: 'Appointments',
+      href: '/appointments',
+      subItems: [
+        {
+          title: 'Appointments',
+          items: [{ name: 'Create New', href: '/appointments/new' }]
+        },
+        {
+          title: 'My Appointments',
+          items: [
+            { name: 'Upcoming', href: '/appointments' },
+            { name: 'Overdue', href: '/appointments?status=overdue' },
+            { name: 'Past', href: '/appointments?status=past' },
+            { name: 'All Appointments', href: '/appointments?status=all' }
+          ]
+        }
+      ]
+    },
+    {
+      name: 'About Us',
+      href: '/about'
+    },
+    {
+      name: 'Integrations',
+      href: '/integrations'
+    }
+  ];
 
   return (
     <>
@@ -118,13 +137,14 @@ export default function Nav({ session }: { session: any }) {
           {menuItems.map((item, index) => (
             <NavbarItem key={`${item.name}-${index}`}>
               {item.subItems ? (
-                // For items with sub-items, attach mouse events.
                 <Link
-                  href={item.href}
-                  className="text-sm text-default-500"
+                  // href={item.href}
+                  className="cursor-pointer text-sm text-default-500"
                   onMouseEnter={() => {
                     clearTimeoutRef();
-                    setActiveMenu(item);
+                    timeoutRef.current = setTimeout(() => {
+                      setActiveMenu(item);
+                    }, 200);
                   }}
                   onMouseLeave={() => {
                     startCloseTimeout();
@@ -133,7 +153,6 @@ export default function Nav({ session }: { session: any }) {
                   {item.name}
                 </Link>
               ) : (
-                // Otherwise, render a normal Link.
                 <Link className="text-default-500" href={item.href} size="sm">
                   {item.name}
                 </Link>
@@ -229,27 +248,62 @@ export default function Nav({ session }: { session: any }) {
           ))}
         </NavbarMenu>
 
-        {/* Render the sub-menu if an item is active and it has sub-items */}
-        {activeMenu && activeMenu.subItems && (
-          <NavbarMenu
-            className="top-[calc(var(--navbar-height)_-_1px)] bg-default-200/50 pt-6 shadow-medium backdrop-blur-md backdrop-saturate-150 md:max-h-fit md:min-h-[30vh]"
-            onMouseEnter={clearTimeoutRef}
-            onMouseLeave={startCloseTimeout}
-          >
-            <div className="mx-auto flex w-full max-w-[78rem] flex-col gap-4 px-4 py-2">
+        <NavbarMenu
+          className="top-[calc(var(--navbar-height)_-_1px)] hidden bg-default-200/80 pt-6 shadow-medium backdrop-blur-xl backdrop-saturate-150 md:flex md:max-h-fit md:min-h-[30vh]"
+          onMouseEnter={clearTimeoutRef}
+          onMouseLeave={startCloseTimeout}
+          motionProps={{
+            initial: { opacity: 0, y: -20 },
+            animate: { opacity: 1, y: 0 },
+            exit: { opacity: 0, y: -20 },
+            transition: {
+              ease: 'easeInOut',
+              duration: 0.2
+            }
+          }}
+        >
+          {activeMenu && activeMenu.subItems && (
+            <div className="mx-auto flex w-full max-w-[78rem] gap-8 px-4 py-2 lg:gap-16">
               {activeMenu.subItems.map((subItem, idx) => (
-                <NavbarMenuItem key={`${subItem.name}-${idx}`}>
-                  <Link
-                    href={subItem.href}
-                    className="text-sm text-default-500 hover:underline"
+                <div key={`${subItem.title}-${idx}`}>
+                  <motion.h3
+                    className="mb-4 text-xs font-light text-default-500"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
                   >
-                    {subItem.name}
-                  </Link>
-                </NavbarMenuItem>
+                    {subItem.title}
+                  </motion.h3>
+                  <motion.div
+                    className="flex flex-col gap-2"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                  >
+                    {subItem.items.map((subMenuItem, index) => (
+                      <div
+                        className="flex items-center gap-1"
+                        key={`${subMenuItem.name}-${index}`}
+                      >
+                        <Link
+                          key={`${subMenuItem.name}-${index}`}
+                          href={subMenuItem.href}
+                          className="text-sm font-medium text-foreground hover:text-primary hover:underline"
+                          onPress={() => {
+                            // wait for 200ms before closing the sub-menu
+                            setTimeout(() => {
+                              setActiveMenu(null);
+                            }, 200);
+                          }}
+                        >
+                          {subMenuItem.name}
+                        </Link>
+                      </div>
+                    ))}
+                  </motion.div>
+                </div>
               ))}
             </div>
-          </NavbarMenu>
-        )}
+          )}
+        </NavbarMenu>
       </Navbar>
     </>
   );

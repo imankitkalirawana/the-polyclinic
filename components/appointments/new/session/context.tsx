@@ -80,8 +80,6 @@ export const FormProvider = ({
     }
   });
 
-  console.log('formik', formik.values);
-
   return (
     <FormContext.Provider value={{ formik, session }}>
       {children}
