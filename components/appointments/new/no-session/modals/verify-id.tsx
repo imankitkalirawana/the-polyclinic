@@ -10,7 +10,7 @@ import {
   InputOtp,
   Button
 } from '@heroui/react';
-import { useForm } from '../form-context';
+import { useForm } from '../context';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 export default function VerifyId() {
@@ -62,6 +62,7 @@ export default function VerifyId() {
                     <span>{formik.errors.otp}</span>
                   </div>
                 }
+                onComplete={() => formik.handleSubmit()}
               />
               <div className="flex items-center gap-2 text-sm">
                 <p>Didn&apos;t receive the code?</p>

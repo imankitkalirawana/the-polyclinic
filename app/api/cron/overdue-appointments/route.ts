@@ -1,8 +1,8 @@
-import { sendHTMLMail } from '@/lib/functions';
 import { NextResponse } from 'next/server';
 import Appointment from '@/models/Appointment';
 import { connectDB } from '@/lib/db';
 import { AppointmentStatus } from '@/utils/email-template/patient';
+import { sendHTMLEmail } from '@/functions/server-actions/emails/send-email';
 
 export const POST = async function POST(request: any) {
   try {
@@ -20,11 +20,11 @@ export const POST = async function POST(request: any) {
         { status: 'overdue' },
         { new: true }
       ).then(async () => {
-        await sendHTMLMail(
-          appointment.patient.email,
-          'Action Needed: Reschedule Your Missed Appointment',
-          AppointmentStatus(appointment)
-        );
+        await sendHTMLEmail({
+          to: appointment.patient.email,
+          subject: 'Action Needed: Reschedule Your Missed Appointment',
+          html: AppointmentStatus(appointment)
+        });
       });
     }
 

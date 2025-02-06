@@ -7,7 +7,7 @@ import Appointment from '@/models/Appointment';
 import { connectDB } from '@/lib/db';
 import { transporter } from '@/lib/nodemailer';
 import { MailOptions } from 'nodemailer/lib/json-transport';
-import { generateOtp, sendSMS, sendHTMLMail } from '@/lib/functions';
+import { generateOtp, sendSMS } from '@/lib/functions';
 import bcrypt from 'bcryptjs';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
@@ -15,6 +15,7 @@ import {
   AppointmentStatus,
   RescheduledAppointment
 } from '@/utils/email-template/patient';
+import { sendHTMLEmail } from './server-actions/emails/send-email';
 
 export const verifyUID = async (uid: string, _id?: string) => {
   await connectDB();
@@ -71,7 +72,7 @@ export const sendMailWithOTP = async (id: string, mailOptions: MailOptions) => {
   if (id.includes('@')) {
     mailOptions.to = id;
     mailOptions.text = `Your OTP is: ${otp}`;
-    return await sendMail(mailOptions);
+    return await sendHTMLEmail(mailOptions);
   } else {
     return await sendSMS(id, `Your OTP is: ${otp}`);
   }
@@ -200,11 +201,11 @@ export const changeAppointmentStatus = async (id: string, status: string) => {
     throw new Error('Appointment not found');
   } else {
     const emailTasks = [
-      sendHTMLMail(
-        appointment.patient.email,
-        `Appointment Status: ${emailMessageMap[status]}`,
-        AppointmentStatus(appointment)
-      ).catch((error) => {
+      sendHTMLEmail({
+        to: appointment.patient.email,
+        subject: `Appointment Status: ${emailMessageMap[status]}`,
+        html: AppointmentStatus(appointment)
+      }).catch((error) => {
         console.error(error);
       })
     ];

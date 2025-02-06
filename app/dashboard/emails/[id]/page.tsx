@@ -1,5 +1,4 @@
 import { API_BASE_URL } from '@/lib/config';
-import { sendHTMLMail } from '@/lib/functions';
 import { EmailType } from '@/models/Email';
 import { Button, Chip, Input } from '@heroui/react';
 import axios from 'axios';

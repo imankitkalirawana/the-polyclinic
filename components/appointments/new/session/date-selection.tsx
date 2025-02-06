@@ -1,6 +1,6 @@
 'use client';
 import { Button } from '@heroui/react';
-import DateTimePicker from '../date-time-picker';
+import DateTimePicker from './date-time-picker';
 import {
   CalendarDate,
   getLocalTimeZone,
@@ -15,7 +15,7 @@ import { disabledDates } from '@/lib/appointments/new';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { setSelectedDate } from '@/store/slices/appointment-slice';
 import { format } from 'date-fns';
-import { useForm } from '../context';
+import { useForm } from './context';
 
 export default function DateSelection() {
   const { formik } = useForm();

@@ -1,9 +1,9 @@
 'use server';
 
 import { connectDB } from '@/lib/db';
-import { sendHTMLMail, sendMail } from '@/lib/functions';
 import Appointment from '@/models/Appointment';
 import { RescheduledAppointment } from '@/utils/email-template/patient';
+import { sendHTMLEmail } from './emails/send-email';
 
 export const getAllAppointments = async () => {
   await connectDB();
@@ -44,11 +44,11 @@ export const rescheduleAppointment = async (aid: number, date: string) => {
     throw new Error('Appointment not found');
   } else {
     const emailTasks = [
-      sendHTMLMail(
-        appointment.patient.email,
-        'Appointment Rescheduled',
-        RescheduledAppointment(appointment, previousDate as Date)
-      ).catch((error) => {
+      sendHTMLEmail({
+        to: appointment.patient.email,
+        subject: 'Appointment Rescheduled',
+        html: RescheduledAppointment(appointment, previousDate as Date)
+      }).catch((error) => {
         console.error(error);
       })
     ];
@@ -77,11 +77,11 @@ export const overdueAppointments = async () => {
       { status: 'overdue' },
       { new: true }
     ).then(async () => {
-      await sendMail(
-        appointment.patient.email,
-        'Appointment Status',
-        'Your appointment is overdue'
-      );
+      await sendHTMLEmail({
+        to: appointment.patient.email,
+        subject: 'Appointment Status',
+        html: 'Your appointment is overdue'
+      });
     });
   }
 };

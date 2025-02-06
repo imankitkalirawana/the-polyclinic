@@ -1,25 +1,16 @@
 import * as React from 'react';
-import PatientAppointment from './patient';
 import NoSession from './no-session';
-import { FormProvider } from './context';
-import Selection from './selection';
+
+import Session from './session';
 
 export default async function NewAppointment({ session }: { session: any }) {
-  const RoleMap: Record<string, React.ReactNode> = {
-    user: <PatientAppointment session={session} />,
-    doctor: <div>Doctor Appointment</div>,
-    admin: <PatientAppointment session={session} />
-  };
-
   if (!session) {
     return <NoSession />;
   }
 
   return (
-    <FormProvider session={session}>
-      <div className="mx-auto max-w-7xl">
-        <Selection session={session} />
-      </div>
-    </FormProvider>
+    <div className="mx-auto max-w-7xl">
+      <Session session={session} />
+    </div>
   );
 }

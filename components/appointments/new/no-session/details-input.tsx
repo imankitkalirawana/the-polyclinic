@@ -16,7 +16,7 @@ import {
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { signIn } from 'next-auth/react';
 import VerifyId from './modals/verify-id';
-import { useForm } from './form-context';
+import { useForm } from './context';
 import { verifyEmail } from '@/functions/server-actions';
 
 export default function DetailsInput() {

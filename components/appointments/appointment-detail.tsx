@@ -143,7 +143,11 @@ export default function AppointmentDetail({
           />
           <CellValue
             label="Phone"
-            value={`+91 ${appointment.patient?.phone}`}
+            value={
+              appointment.patient?.phone
+                ? `+91 ${appointment.patient.phone}`
+                : 'N/A'
+            }
             className="justify-start gap-4"
           />
           <CellValue

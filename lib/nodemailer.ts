@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import dns from 'dns';
+import { Address } from 'nodemailer/lib/mailer';
 const email = process.env.EMAIL;
 const password = process.env.PASSWORD;
 
@@ -13,9 +14,15 @@ export const transporter = nodemailer.createTransport({
   }
 });
 
-export function checkDomainMx(email: string) {
+export function checkDomainMx(
+  email: string | Address | (string | Address)[] | undefined
+) {
+  console.log('email', email);
   return new Promise((resolve, reject) => {
-    const domain = email.split('@')[1];
+    if (!email) {
+      reject('Invalid email');
+    }
+    const domain = email?.toString().split('@')[1] || '';
     dns.resolveMx(domain, (err, addresses) => {
       if (err) {
         reject('Invalid domain');

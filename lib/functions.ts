@@ -3,8 +3,7 @@ const email = process.env.EMAIL || 'contact@divinely.dev';
 import Otp from '@/models/Otp';
 import { connectDB } from './db';
 import { countryProp } from '@/components/dashboard/users/edit/countries';
-import axios from 'axios';
-import { API_BASE_URL } from './config';
+import { sendHTMLEmail } from '@/functions/server-actions/emails/send-email';
 
 export const sendMail = async (
   to: string,
@@ -38,48 +37,6 @@ export const sendMail = async (
     });
 };
 
-export const sendHTMLMail = async (
-  to: string,
-  subject: string,
-  message: string,
-  title?: string
-) => {
-  const mailOptions = {
-    from: {
-      name: title ? `${title} - The Polyclinic` : 'The Polyclinic',
-      address: email
-    },
-    to: to,
-    subject: subject,
-    html: message
-  };
-  return await checkDomainMx(to)
-    .then(async () => {
-      await transporter
-        .sendMail(mailOptions)
-        .then(async () => {
-          console.log(`Email sent to ${to}`);
-          await axios
-            .post(`${API_BASE_URL}api/emails`, {
-              from: mailOptions.from.address,
-              to: mailOptions.to,
-              subject: mailOptions.subject,
-              message: mailOptions.html
-            })
-            .catch((error) => {
-              console.error('Failed to save email:', error);
-            });
-        })
-        .catch((err) => {
-          console.error('Failed to send email');
-          console.error(err);
-        });
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-};
-
 export const sendSMS = async (phone: string, message: string) => {
   console.log(`Your otp for ${phone} is ${message}`);
   return `Your otp for ${phone} is ${message}`;
@@ -100,12 +57,11 @@ export const sendOTP = async (id: string) => {
     await Otp.create({ id, otp });
   }
   if (id.includes('@')) {
-    await sendMail(
-      id,
-      'OTP for Registration',
-      `Your OTP is: ${otp}`,
-      'Verification'
-    );
+    await sendHTMLEmail({
+      to: id,
+      subject: 'OTP for Registration',
+      html: `Your OTP is: ${otp}`
+    });
   } else {
     await sendSMS(id, `Your OTP is: ${otp}`);
   }

@@ -7,7 +7,7 @@ import React from 'react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import { AppointmentType } from '@/models/Appointment';
-import DateTimePicker from '../new/date-time-picker';
+import DateTimePicker from '../new/session/date-time-picker';
 import { TIMINGS } from '@/lib/config';
 import { rescheduleAppointment } from '@/functions/server-actions/appointment';
 

@@ -2,10 +2,9 @@ import { NextResponse } from 'next/server';
 import Appointment from '@/models/Appointment';
 import { connectDB } from '@/lib/db';
 import { auth } from '@/auth';
-import { sendHTMLMail } from '@/lib/functions';
 import { AppointmentStatus } from '@/utils/email-template/patient';
-import { getDoctorWithUID } from '@/functions/server-actions';
 import { NewAppointment } from '@/utils/email-template/doctor';
+import { sendHTMLEmail } from '@/functions/server-actions/emails/send-email';
 
 export const GET = auth(async function GET(request: any) {
   try {
@@ -36,11 +35,11 @@ export const GET = auth(async function GET(request: any) {
     const queryMap: Record<string, object> = {
       doctor: {
         status: statusMap[status],
-        doctor: request.auth?.user?.uid
+        'doctor.uid': request.auth?.user?.uid
       },
       user: {
         status: statusMap[status],
-        uid: request.auth?.user?.uid
+        'patient.email': request.auth?.user?.email
       },
       admin: {
         status: statusMap[status]
@@ -89,19 +88,19 @@ export const POST = auth(async function POST(request: any) {
     await appointment.save();
 
     const emailTasks = [
-      sendHTMLMail(
-        data.email,
-        'Booked: Appointment Confirmation',
-        AppointmentStatus(appointment)
-      ).catch((error) => {
+      sendHTMLEmail({
+        to: data.patient.email,
+        subject: 'Booked: Appointment Confirmation',
+        html: AppointmentStatus(appointment)
+      }).catch((error) => {
         console.error('Failed to send patient email:', error);
       }),
       data.doctor?.email &&
-        sendHTMLMail(
-          data.doctor.email,
-          `New Appointment Requested by ${data.name}`,
-          NewAppointment(appointment)
-        ).catch((error) => {
+        sendHTMLEmail({
+          to: data.doctor.email,
+          subject: `New Appointment Requested by ${data.patient.name}`,
+          html: NewAppointment(appointment)
+        }).catch((error) => {
           console.error('Failed to send doctor email:', error);
         })
     ];

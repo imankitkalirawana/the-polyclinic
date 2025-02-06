@@ -11,7 +11,7 @@ import {
   Image,
   Link
 } from '@heroui/react';
-import { useForm } from '../context';
+import { useForm } from '../session/context';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import CellValue from '@/components/ui/cell-value';
 import AsyncButton from '@/components/ui/buttons/async-button';
@@ -20,7 +20,7 @@ import { ChipColorMap } from '@/lib/maps';
 import { downloadAppointmentReceipt } from '@/functions/client/appointment/receipt';
 
 export default function ConfirmationModal() {
-  const { formik } = useForm();
+  const { formik, session } = useForm();
 
   return (
     <>
@@ -28,9 +28,12 @@ export default function ConfirmationModal() {
         isOpen
         isDismissable={false}
         backdrop="blur"
-        hideCloseButton
+        hideCloseButton={session.user?.role === 'user'}
         isKeyboardDismissDisabled
         scrollBehavior="inside"
+        onClose={() => {
+          formik.resetForm();
+        }}
       >
         <ModalContent className="px-4">
           <>

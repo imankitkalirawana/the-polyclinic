@@ -22,7 +22,7 @@ import {
 
 import NoResults from '@/components/ui/no-results';
 import { LoadingUsers } from './loading-user';
-import { useForm } from '../context';
+import { useForm } from './context';
 
 export default function UserSelection() {
   const { formik, session } = useForm();
@@ -32,6 +32,7 @@ export default function UserSelection() {
 
   const fetchFunctionMap: Record<string, () => Promise<UserType[]>> = {
     user: () => getAllPatientsWithEmail(session?.user?.email),
+    receptionist: () => getAllPatients(),
     admin: () => getAllPatients()
   };
 
@@ -137,7 +138,7 @@ export default function UserSelection() {
                     className="w-full xs:w-fit"
                     endContent={<Icon icon="tabler:chevron-right" />}
                     onPress={() => formik.setFieldValue('step', 2)}
-                    isDisabled={!formik.values.patient}
+                    isDisabled={!formik.values.patient?.uid}
                     variant={formik.values.patient ? 'solid' : 'flat'}
                   >
                     Continue
@@ -185,10 +186,12 @@ export function UserSelectionTitle() {
       <h3 className="text-2xl font-semibold">
         Please select for whom you want to book an appointment?
       </h3>
-      <p>
-        You have following patients associated with{' '}
-        <strong>{session?.user?.email || '-'}</strong>
-      </p>
+      {session?.user?.role === 'user' && (
+        <p>
+          You have following patients associated with{' '}
+          <strong>{session?.user?.email || '-'}</strong>
+        </p>
+      )}
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { transporter } from '@/lib/nodemailer';
 import { generateOtp, sendSMS } from '@/lib/functions';
 import { CLINIC_INFO } from '@/lib/config';
 import User from '@/models/User';
+import { sendHTMLEmail } from '../emails/send-email';
 
 export const sendMail = async (mailOptions: MailOptions) => {
   return await transporter.sendMail(mailOptions);
@@ -33,7 +34,7 @@ export const sendMailWithOTP = async (id: string) => {
     },
     to: id.includes('@') ? id : '',
     subject: `Email Verification - ${CLINIC_INFO.name}`,
-    text: `Your OTP is ${otp}`
+    html: `Your OTP is ${otp}`
   };
 
   await connectDB();
@@ -47,7 +48,7 @@ export const sendMailWithOTP = async (id: string) => {
     await Otp.create({ id, otp });
   }
   if (id.includes('@')) {
-    return await sendMail(mailOptions);
+    return await sendHTMLEmail(mailOptions);
   } else {
     return await sendSMS(id, `Your OTP is: ${otp}`);
   }

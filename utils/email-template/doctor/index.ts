@@ -17,7 +17,7 @@ export function NewAppointment(appointment: AppointmentType) {
                 </div>
                 <div style="flex: 1; min-width: 200px;">
                     <p style="font-size: 16px; color: #6b7280; margin: 0 0 4px;">Phone</p>
-                    <p style="font-size: 18px; color: #1d1b48; font-weight: 500; margin: 0;">${appointment.patient?.phone}</p>
+                    <p style="font-size: 18px; color: #1d1b48; font-weight: 500; margin: 0;">${appointment.patient?.phone || '-'}</p>
                 </div>
                 <div style="flex: 1; min-width: 200px;">
                     <p style="font-size: 16px; color: #6b7280; margin: 0 0 4px;">Email</p>
@@ -60,7 +60,7 @@ export function NewAppointment(appointment: AppointmentType) {
             <a href="${API_BASE_URL}appointments?aid=${appointment.aid}&status=all&query=${appointment.aid}" style="display: inline-block; background-color: #73CD7D; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-size: 18px; font-weight: 500; transition: background-color 0.3s ease;">
                 Confirm Appointment
             </a>
-            <a href="${API_BASE_URL}appointments?aid=${appointment.aid}&status=all&query=${appointment.aid}" style="display: inline-block; background-color: #ffffff; color: #F31260; border: 1px solid #F31260; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-size: 18px; font-weight: 500; transition: background-color 0.3s ease;">
+            <a href="${API_BASE_URL}appointments?aid=${appointment.aid}&status=all&query=${appointment.aid}" style="display: inline-block; background-color: #ffffff; color: #F31260; border: 1px solid #F31260; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-size: 18px; font-weight: 500; transition: background-color 0.3s ease; margin-left: 8px;">
                 Reschedule
             </a>
         </div>

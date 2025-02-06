@@ -4,9 +4,7 @@ import { AddionalInfo } from '@/store/slices/appointment-slice';
 import { Button, Input, Select, SelectItem, Textarea } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { setAdditionalInfo } from '@/store/slices/appointment-slice';
-import { useForm } from '../context';
+import { useForm } from './context';
 
 export default function AdditionalDetailsSelection() {
   const { formik } = useForm();
