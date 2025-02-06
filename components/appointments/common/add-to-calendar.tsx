@@ -45,9 +45,10 @@ export default function AddtoCalendar({
   appointmentDate.setMinutes(appointmentDate.getMinutes() + 15);
 
   const event: EventType = {
-    title: 'Appointment with ' + appointment.name,
-    description: 'Appointment with ' + appointment.name,
-    location: appointment.type === 'online' ? 'Online' : 'Clinic',
+    title: 'Appointment with ' + appointment.patient?.name,
+    description: 'Appointment with ' + appointment.patient?.name,
+    location:
+      appointment.additionalInfo.type === 'online' ? 'Online' : 'Clinic',
     start: new Date(appointment.date),
     end: new Date(appointmentDate),
     duration: [1, 'hour'],

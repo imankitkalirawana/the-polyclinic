@@ -1,27 +1,32 @@
 import mongoose, { Model } from 'mongoose';
 import { Base } from '@/lib/interface';
 import mongooseSequence from 'mongoose-sequence';
-import { sendMail } from '@/lib/functions';
-
-export interface GuestType {
-  name: string;
-  connection: string;
-  phone: string;
-}
 
 export interface AppointmentType extends Base {
-  uid: number;
-  name: string;
-  phone: string;
-  email: string;
-  guests: GuestType[];
-  notes: string;
-  symptoms: string;
-  date: Date | string;
-  doctor: number;
-  progerss: number;
-  type: 'online' | 'offline';
   aid: number;
+  date: Date | string;
+  patient: {
+    uid: number;
+    name: string;
+    phone?: string;
+    email: string;
+    gender?: 'male' | 'female' | 'other';
+    age?: number;
+  };
+  doctor?: {
+    uid: number;
+    name: string;
+    email: string;
+    sitting?: string;
+  };
+  additionalInfo: {
+    notes?: string;
+    symptoms?: string;
+    type: 'online' | 'offline';
+    description?: string;
+    instructions?: string;
+  };
+  progerss?: number;
   status:
     | 'booked'
     | 'confirmed'
@@ -30,9 +35,7 @@ export interface AppointmentType extends Base {
     | 'cancelled'
     | 'overdue'
     | 'on-hold';
-  description: string;
   data?: Record<string, string>;
-  instructions: string;
 }
 
 // @ts-ignore
@@ -40,25 +43,39 @@ const AutoIncrement = mongooseSequence(mongoose);
 
 const appointmentSchema = new mongoose.Schema(
   {
-    uid: Number,
     aid: {
       type: Number,
       unique: true
     },
-    name: String,
-    phone: String,
-    email: String,
-    guests: [
-      {
-        name: String,
-        connection: String,
-        phone: String
-      }
-    ],
-    symptoms: String,
-    notes: String,
     date: String,
-    doctor: Number,
+    patient: {
+      uid: Number,
+      name: String,
+      phone: String,
+      email: String,
+      gender: {
+        type: String,
+        enum: ['male', 'female', 'other']
+      },
+      age: Number
+    },
+    doctor: {
+      uid: Number,
+      name: String,
+      email: String,
+      sitting: String
+    },
+    additionalInfo: {
+      type: {
+        type: String,
+        enum: ['online', 'offline'],
+        default: 'offline'
+      },
+      notes: String,
+      symptoms: String,
+      description: String,
+      instructions: String
+    },
     progerss: Number,
     status: {
       type: String,
@@ -73,17 +90,10 @@ const appointmentSchema = new mongoose.Schema(
         'on-hold'
       ]
     },
-    type: {
-      type: String,
-      enum: ['online', 'offline'],
-      default: 'offline'
-    },
-    description: String,
     data: {
       type: Map,
       of: String
-    },
-    instructions: String
+    }
   },
   {
     timestamps: true

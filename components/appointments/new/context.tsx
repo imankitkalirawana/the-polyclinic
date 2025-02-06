@@ -8,7 +8,7 @@ import axios from 'axios';
 import { toast } from 'sonner';
 
 interface AppointmentForm {
-  user: UserType;
+  patient: UserType;
   doctor: DoctorType;
   date: Date;
   additionalInfo: {
@@ -36,7 +36,7 @@ export const FormProvider = ({
 }) => {
   const formik = useFormik<AppointmentForm>({
     initialValues: {
-      user: {} as UserType,
+      patient: {} as UserType,
       doctor: {} as DoctorType,
       appointment: {} as AppointmentType,
       date: new Date(),
@@ -50,15 +50,24 @@ export const FormProvider = ({
     onSubmit: async (values) => {
       await axios
         .post('/api/appointments', {
-          uid: values.user?.uid,
-          name: values.user?.name,
-          phone: values.user?.phone,
-          email: values.user?.email,
           date: values.date,
-          notes: values.additionalInfo?.notes,
-          symptoms: values.additionalInfo?.symptoms,
-          type: values.additionalInfo?.type,
-          doctor: values.doctor ? values.doctor?.uid : null
+          patient: {
+            uid: values.patient.uid,
+            name: values.patient.name,
+            phone: values.patient.phone,
+            email: values.patient.email
+          },
+          doctor: {
+            uid: values.doctor.uid,
+            name: values.doctor.name,
+            email: values.doctor.email,
+            sitting: values.doctor?.sitting
+          },
+          additionalInfo: {
+            notes: values.additionalInfo.notes,
+            symptoms: values.additionalInfo.symptoms,
+            type: values.additionalInfo.type
+          }
         })
         .then((res) => {
           values.appointment = res.data;
@@ -70,6 +79,8 @@ export const FormProvider = ({
         });
     }
   });
+
+  console.log('Formik:', formik.values);
 
   return (
     <FormContext.Provider value={{ formik, session }}>

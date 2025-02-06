@@ -13,7 +13,6 @@ import {
 } from '@heroui/react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { removeSelectedDoctor } from '@/store/slices/appointment-slice';
 import { useState } from 'react';
 import DoctorSelection, {
   DoctorSelectionTitle

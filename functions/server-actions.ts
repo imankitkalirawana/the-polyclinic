@@ -2,18 +2,12 @@
 import Service from '@/models/Service';
 import User from '@/models/User';
 import Doctor from '@/models/Doctor';
-import Drug from '@/models/Drug';
 import Otp from '@/models/Otp';
 import Appointment from '@/models/Appointment';
 import { connectDB } from '@/lib/db';
 import { transporter } from '@/lib/nodemailer';
 import { MailOptions } from 'nodemailer/lib/json-transport';
-import {
-  generateOtp,
-  sendSMS,
-  sendMail as sendEmail,
-  sendHTMLMail
-} from '@/lib/functions';
+import { generateOtp, sendSMS, sendHTMLMail } from '@/lib/functions';
 import bcrypt from 'bcryptjs';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
@@ -205,50 +199,11 @@ export const changeAppointmentStatus = async (id: string, status: string) => {
   if (!appointment) {
     throw new Error('Appointment not found');
   } else {
-    const doctor = await getDoctorWithUID(appointment.doctor);
     const emailTasks = [
       sendHTMLMail(
-        appointment.email,
+        appointment.patient.email,
         `Appointment Status: ${emailMessageMap[status]}`,
-        AppointmentStatus(appointment, `${doctor.name} (#${doctor.uid})`)
-      ).catch((error) => {
-        console.error(error);
-      })
-    ];
-
-    Promise.all(emailTasks).catch((error) => {
-      console.error('Error in email sending:', error);
-    });
-
-    return true;
-  }
-};
-
-export const rescheduleAppointment = async (aid: number, date: string) => {
-  await connectDB();
-  const previousAppointment = await Appointment.findOne({ aid })
-    .select('date aid')
-    .lean();
-  const previousDate = previousAppointment?.date;
-  const appointment = await Appointment.findOneAndUpdate(
-    { aid },
-    { date },
-    { new: true }
-  );
-  if (!appointment) {
-    throw new Error('Appointment not found');
-  } else {
-    const doctor = await getDoctorWithUID(appointment.doctor);
-
-    const emailTasks = [
-      sendHTMLMail(
-        appointment.email,
-        'Appointment Rescheduled',
-        RescheduledAppointment(
-          appointment,
-          previousDate as Date,
-          `${doctor.name} (#${doctor.uid})`
-        )
+        AppointmentStatus(appointment)
       ).catch((error) => {
         console.error(error);
       })
@@ -264,40 +219,7 @@ export const rescheduleAppointment = async (aid: number, date: string) => {
 
 // drugs
 
-export const getAllDrugs = async () => {
-  await connectDB();
-  const drugs = await Drug.find()
-    .select('brandName genericName frequency did')
-    .lean();
-  return drugs.map((drug) => ({
-    ...drug,
-    _id: drug._id.toString()
-  }));
-};
-
 export const redirectTo = (url: string) => {
   revalidatePath(url);
   redirect(url);
-};
-export const overdueAppointments = async () => {
-  // find appointments that are in past and status is not overdue, cancelled or completed
-  await connectDB();
-  const appointments = await Appointment.find({
-    date: { $lt: new Date().toISOString() },
-    status: { $nin: ['overdue', 'cancelled', 'completed'] }
-  }).lean();
-
-  for (const appointment of appointments) {
-    await Appointment.findOneAndUpdate(
-      { aid: appointment.aid },
-      { status: 'overdue' },
-      { new: true }
-    ).then(async () => {
-      await sendEmail(
-        appointment.email,
-        'Appointment Status',
-        'Your appointment is overdue'
-      );
-    });
-  }
 };

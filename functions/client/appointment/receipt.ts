@@ -22,7 +22,7 @@ export const downloadAppointmentReceipt = async (aid: number) => {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    toast.success('Downloaded appointment receipt');
+    toast('Downloaded appointment receipt');
   } catch (err: any) {
     console.error(err);
     toast.error(err.message);

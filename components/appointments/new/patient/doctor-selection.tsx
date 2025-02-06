@@ -31,7 +31,7 @@ export default function DoctorSelection() {
   const { data: doctors, isLoading } = useQuery<DoctorType[]>({
     queryKey: ['doctors'],
     queryFn: () => getAllDoctors(),
-    enabled: !!formik.values.user
+    enabled: !!formik.values.patient?.uid
   });
 
   const filteredDoctors = useMemo(() => {

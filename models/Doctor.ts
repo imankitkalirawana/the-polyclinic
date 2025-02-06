@@ -7,6 +7,7 @@ export interface DoctorType extends Base {
   phone: string;
   designation: string;
   department: string;
+  sitting?: string;
   experience: string;
   education: string;
   patients: number;

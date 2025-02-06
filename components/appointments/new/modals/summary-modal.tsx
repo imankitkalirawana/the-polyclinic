@@ -42,7 +42,7 @@ export default function SummaryModal() {
             <ModalBody>
               <CellValue
                 label="Patient"
-                value={formik.values.user?.name || '-'}
+                value={formik.values.patient?.name || '-'}
               />
               <CellValue
                 label="Date & Time"
@@ -72,8 +72,8 @@ export default function SummaryModal() {
             <ModalFooter className="flex-col-reverse sm:flex-row">
               <Button
                 fullWidth
-                //    onPress={onClose}
                 variant="bordered"
+                onPress={() => formik.setFieldValue('step', 4)}
               >
                 Cancel
               </Button>

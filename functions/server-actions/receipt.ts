@@ -13,12 +13,10 @@ export const printAppointmentReceipt = async (aid: number) => {
     throw new Error('Appointment not found');
   }
 
-  const doctor = await Doctor.findOne({ uid: appointment.doctor }).lean();
-
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
-  const htmlContent = Receipt(appointment, doctor?.name);
+  const htmlContent = Receipt(appointment);
   await page.setContent(htmlContent);
   const pdfBuffer = await page.pdf({ format: 'A5' });
 

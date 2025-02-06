@@ -2,7 +2,7 @@ import { statusColorMap } from '@/lib/maps';
 import { AppointmentType } from '@/models/Appointment';
 import { format } from 'date-fns';
 
-export function Receipt(appointment: AppointmentType, doctor?: string) {
+export function Receipt(appointment: AppointmentType) {
   return `<html lang="en">
     <head>
         <meta charset="UTF-8">
@@ -84,17 +84,17 @@ export function Receipt(appointment: AppointmentType, doctor?: string) {
             
             <div class="receipt-row">
                 <span class="label">Patient</span>
-                <span class="value">${appointment.name}</span>
+                <span class="value">${appointment.patient.name}</span>
             </div>
             
             <div class="receipt-row">
                 <span class="label">Phone Number</span>
-                <span class="value">${appointment.phone}</span>
+                <span class="value">${appointment.patient?.phone || '-'}</span>
             </div>
             
             <div class="receipt-row">
                 <span class="label">Doctor</span>
-                <span class="value">${doctor}</span>
+                <span class="value">${appointment.doctor?.name || '-'}</span>
             </div>
             
             <div class="receipt-row">

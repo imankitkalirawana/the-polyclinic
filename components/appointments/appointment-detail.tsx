@@ -45,8 +45,8 @@ export default function AppointmentDetail({
 
   useEffect(() => {
     const fetchData = async () => {
-      if (appointment?.uid) {
-        await getUserWithUID(appointment?.uid).then((user) => {
+      if (appointment?.patient?.uid) {
+        await getUserWithUID(appointment?.patient.uid).then((user) => {
           setUser(user as UserType);
         });
       }
@@ -128,7 +128,7 @@ export default function AppointmentDetail({
           />
           <CellValue
             label="Patient"
-            value={appointment.name}
+            value={appointment.patient.name}
             className="justify-start gap-4"
           />
           <CellValue
@@ -143,27 +143,17 @@ export default function AppointmentDetail({
           />
           <CellValue
             label="Phone"
-            value={`+91 ${appointment.phone}`}
+            value={`+91 ${appointment.patient?.phone}`}
             className="justify-start gap-4"
           />
           <CellValue
             label="Email"
-            value={appointment.email}
+            value={appointment.patient.email}
             className="justify-start gap-4"
           />
           <CellValue
             label="Doctor"
-            value={
-              appointment.doctor ? (
-                <AsyncComponent
-                  fetchData={() => getDoctorWithUID(appointment.doctor)}
-                  fallback={<Skeleton className="h-5 w-20" />}
-                  render={(doctor) => <span>{doctor?.name || '-'}</span>}
-                />
-              ) : (
-                '-'
-              )
-            }
+            value={appointment.doctor?.name || 'N/A'}
             className="justify-start gap-4"
           />
           <CellValue
@@ -173,13 +163,15 @@ export default function AppointmentDetail({
           />
           <CellValue
             label="Location"
-            value={<p className="capitalize">{appointment.type}</p>}
+            value={
+              <p className="capitalize">{appointment.additionalInfo.type}</p>
+            }
             className="justify-start gap-4"
           />
-          {appointment.notes && (
+          {appointment.additionalInfo.notes && (
             <CellValue
               label="Appointment Notes"
-              value={appointment?.notes}
+              value={appointment?.additionalInfo.notes}
               className="items-start justify-start gap-4"
             />
           )}
@@ -256,7 +248,7 @@ export default function AppointmentDetail({
                     color={buttonColorMap['complete']}
                     variant="flat"
                     as={Link}
-                    href={`/appointments/${appointment.uid}/complete`}
+                    href={`/appointments/${appointment.patient.uid}/complete`}
                     endContent={<Icon icon="tabler:arrow-right" />}
                   >
                     Proceed

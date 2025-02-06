@@ -18,7 +18,7 @@ import { UserRole, UserType } from '@/models/User';
 import {
   getAllPatients,
   getAllPatientsWithEmail
-} from '@/functions/server-actions/user';
+} from '@/functions/server-actions/users';
 
 import NoResults from '@/components/ui/no-results';
 import { LoadingUsers } from './loading-user';
@@ -91,11 +91,11 @@ export default function UserSelection() {
                           'no-scrollbar min-w-64 rounded-xl border border-divider shadow-none sm:min-w-72',
                           {
                             'border-2 border-primary-400':
-                              user.uid === formik.values.user?.uid
+                              user.uid === formik.values.patient?.uid
                           }
                         )}
                         onPress={() => {
-                          formik.setFieldValue('user', user);
+                          formik.setFieldValue('patient', user);
                         }}
                       >
                         <CardBody className="items-center gap-4 p-8">
@@ -137,8 +137,8 @@ export default function UserSelection() {
                     className="w-full xs:w-fit"
                     endContent={<Icon icon="tabler:chevron-right" />}
                     onPress={() => formik.setFieldValue('step', 2)}
-                    isDisabled={!formik.values.user}
-                    variant={formik.values.user ? 'solid' : 'flat'}
+                    isDisabled={!formik.values.patient}
+                    variant={formik.values.patient ? 'solid' : 'flat'}
                   >
                     Continue
                   </Button>
@@ -155,7 +155,7 @@ export default function UserSelection() {
 export function UserSelectionTitle() {
   const { formik, session } = useForm();
 
-  return formik.values.user && formik.values.step > 1 ? (
+  return formik.values.patient && formik.values.step > 1 ? (
     <div className="flex items-center gap-4">
       <div>
         <Image
@@ -167,8 +167,8 @@ export function UserSelectionTitle() {
         />
       </div>
       <div>
-        <h2 className="text-lg font-semibold">{formik.values.user?.name}</h2>
-        <p>{formik.values.user?.email}</p>
+        <h2 className="text-lg font-semibold">{formik.values.patient?.name}</h2>
+        <p>{formik.values.patient?.email}</p>
         <Link
           className="hover:underline"
           href="#"

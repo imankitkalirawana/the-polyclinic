@@ -2,10 +2,7 @@ import { API_BASE_URL, CLINIC_INFO } from '@/lib/config';
 import { AppointmentType } from '@/models/Appointment';
 import { format } from 'date-fns';
 
-export function AppointmentStatus(
-  appointment: AppointmentType,
-  doctor?: string
-) {
+export function AppointmentStatus(appointment: AppointmentType) {
   const statusDescriptionMap: Record<string, string> = {
     booked:
       "We've received your appointment request. Your appointment is currently booked and awaiting confirmation. Stay tuned for updates!",
@@ -51,11 +48,11 @@ export function AppointmentStatus(
               
               <p style="font-size: 18px; color: #333; margin-bottom: 16px; line-height: 1.6;">
                   <strong style="color: #1d1b48; display: inline-block; width: 180px;">Patient Name:</strong> 
-                  ${appointment.name}
+                  ${appointment.patient.name}
               </p>
               <p style="font-size: 18px; color: #333; margin-bottom: 16px; line-height: 1.6;">
                   <strong style="color: #1d1b48; display: inline-block; width: 180px;">Doctor:</strong> 
-                  ${doctor}
+                  ${appointment.doctor?.name || 'Not Assigned'}
               </p>
               
               <p style="font-size: 18px; color: #333; margin-bottom: 16px; line-height: 1.6;">
@@ -86,8 +83,7 @@ export function AppointmentStatus(
 
 export function RescheduledAppointment(
   appointment: AppointmentType,
-  previousDate: Date,
-  doctor?: string
+  previousDate: Date
 ) {
   return `<body style="margin: 0; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; background-color: #ffffff; color: #1a1a1a; line-height: 1.5;">
     <div style="max-width: 800px; margin: 0 auto; text-align: center;">
@@ -101,11 +97,11 @@ export function RescheduledAppointment(
             
             <p style="font-size: 18px; color: #333; margin-bottom: 16px; line-height: 1.6;">
                 <strong style="color: #1d1b48; display: inline-block; width: 180px;">Patient Name:</strong> 
-                ${appointment.name}
+                ${appointment.patient?.name}
             </p>
             <p style="font-size: 18px; color: #333; margin-bottom: 16px; line-height: 1.6;">
                 <strong style="color: #1d1b48; display: inline-block; width: 180px;">Doctor:</strong> 
-                ${doctor}
+                ${appointment.doctor?.name || 'Not Assigned'}
             </p>
             
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; background-color: #f3f4f6; border-radius: 8px; padding: 16px;">

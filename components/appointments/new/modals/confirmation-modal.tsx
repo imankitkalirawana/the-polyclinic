@@ -45,7 +45,7 @@ export default function ConfirmationModal() {
               <h3>Appointment Booked!</h3>
               <p className="text-center text-xs font-light text-default-500">
                 Confirmation email has been sent to:{' '}
-                <strong>{formik.values.user?.email}</strong>
+                <strong>{formik.values.patient?.email}</strong>
               </p>
             </ModalHeader>
             <ModalBody className="gap-0 rounded-2xl bg-default-100">
@@ -75,10 +75,10 @@ export default function ConfirmationModal() {
                 }
               />
               <Divider className="my-2 border-dashed border-divider" />
-              <CellValue label="Patient" value={formik.values.user?.name} />
+              <CellValue label="Patient" value={formik.values.patient?.name} />
               <CellValue
                 label="Phone Number"
-                value={formik.values.user?.phone || '-'}
+                value={formik.values.patient?.phone || '-'}
               />
               <CellValue
                 label="Doctor"

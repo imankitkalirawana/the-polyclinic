@@ -84,28 +84,21 @@ export const POST = auth(async function POST(request: any) {
 
     await connectDB();
     const data = await request.json();
-    console.log('Data:', data);
 
     const appointment = new Appointment(data);
     await appointment.save();
-    let doctor;
-    if (data.doctor) {
-      doctor = await getDoctorWithUID(data.doctor);
-    }
+
     const emailTasks = [
       sendHTMLMail(
         data.email,
         'Booked: Appointment Confirmation',
-        AppointmentStatus(
-          appointment,
-          doctor ? `${doctor?.name} (#${doctor?.uid})` : '-'
-        )
+        AppointmentStatus(appointment)
       ).catch((error) => {
         console.error('Failed to send patient email:', error);
       }),
-      doctor?.email &&
+      data.doctor?.email &&
         sendHTMLMail(
-          doctor.email,
+          data.doctor.email,
           `New Appointment Requested by ${data.name}`,
           NewAppointment(appointment)
         ).catch((error) => {

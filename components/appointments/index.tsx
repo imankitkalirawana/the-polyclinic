@@ -71,9 +71,9 @@ export default function Appointments({ session }: { session: any }) {
       filteredItems = filteredItems.filter((item) => {
         const searchValue = searchQuery.toLowerCase();
         return (
-          item?.name?.toLowerCase().includes(searchValue) ||
-          item?.email?.toLowerCase().includes(searchValue) ||
-          item?.phone?.toLowerCase().includes(searchValue)
+          item.patient?.name?.toLowerCase().includes(searchValue) ||
+          item.patient?.email?.toLowerCase().includes(searchValue) ||
+          item.patient?.phone?.toLowerCase().includes(searchValue)
         );
       });
     }
@@ -102,7 +102,7 @@ export default function Appointments({ session }: { session: any }) {
         );
       }
       if (sort === 'name') {
-        return a.name.localeCompare(b.name);
+        return a.patient?.name.localeCompare(b.patient?.name);
       }
       if (sort === 'status') {
         return statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
@@ -317,26 +317,12 @@ export default function Appointments({ session }: { session: any }) {
                                     /> */}
 
                                       <h4 className="line-clamp-1 text-default-500">
-                                        {appointment.name}
+                                        {appointment.patient?.name}
                                         {appointment.doctor && (
                                           <span className="text-default-500">
                                             {' '}
-                                            with{' '}
-                                            <AsyncComponent
-                                              fetchData={() =>
-                                                getDoctorWithUID(
-                                                  appointment.doctor
-                                                )
-                                              }
-                                              // fallback={
-                                              //   <Skeleton className="h-5 w-20" />
-                                              // }
-                                              render={(doctor) => (
-                                                <span>
-                                                  {doctor?.name || '-'}
-                                                </span>
-                                              )}
-                                            />
+                                            {appointment.doctor?.name &&
+                                              ` with  ${appointment.doctor?.name}`}
                                           </span>
                                         )}
                                       </h4>

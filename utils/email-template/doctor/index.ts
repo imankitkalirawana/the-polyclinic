@@ -13,15 +13,15 @@ export function NewAppointment(appointment: AppointmentType) {
             <div style="display: flex; flex-wrap: wrap; gap: 16px;">
                 <div style="flex: 1; min-width: 200px;">
                     <p style="font-size: 16px; color: #6b7280; margin: 0 0 4px;">Name</p>
-                    <p style="font-size: 18px; color: #1d1b48; font-weight: 500; margin: 0;">${appointment?.name}</p>
+                    <p style="font-size: 18px; color: #1d1b48; font-weight: 500; margin: 0;">${appointment.patient.name}</p>
                 </div>
                 <div style="flex: 1; min-width: 200px;">
                     <p style="font-size: 16px; color: #6b7280; margin: 0 0 4px;">Phone</p>
-                    <p style="font-size: 18px; color: #1d1b48; font-weight: 500; margin: 0;">${appointment?.phone}</p>
+                    <p style="font-size: 18px; color: #1d1b48; font-weight: 500; margin: 0;">${appointment.patient?.phone}</p>
                 </div>
                 <div style="flex: 1; min-width: 200px;">
                     <p style="font-size: 16px; color: #6b7280; margin: 0 0 4px;">Email</p>
-                    <p style="font-size: 18px; color: #1d1b48; font-weight: 500; margin: 0;">${appointment.email}</p>
+                    <p style="font-size: 18px; color: #1d1b48; font-weight: 500; margin: 0;">${appointment.patient.email}</p>
                 </div>
             </div>
             
@@ -44,12 +44,12 @@ export function NewAppointment(appointment: AppointmentType) {
                 </div>
             </div>
             ${
-              appointment?.notes &&
+              appointment.additionalInfo.notes &&
               `
             <div style="background-color: #f3f4f6; border-radius: 8px; padding: 16px;">
                 <p style="font-size: 16px; color: #6b7280; margin: 0 0 8px;">Appointment Notes</p>
                 <p style="font-size: 16px; color: #1d1b48; margin: 0; line-height: 1.6;">
-                    ${appointment.notes}
+                    ${appointment.additionalInfo.notes}
                 </p>
             </div>
             `
