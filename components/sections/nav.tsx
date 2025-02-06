@@ -21,8 +21,7 @@ import {
 import { usePathname } from 'next/navigation';
 import { signIn, signOut } from 'next-auth/react';
 import ModeToggle from '../mode-toggle';
-import { AnimatePresence, motion } from 'framer-motion';
-import { Icon } from '@iconify/react/dist/iconify.js';
+import { motion } from 'framer-motion';
 
 export default function Nav({ session }: { session: any }) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -35,8 +34,6 @@ export default function Nav({ session }: { session: any }) {
   const DISABLED_PATHS = ['/auth', '/dashboard'];
   const pathname = usePathname();
   const isDisabled = DISABLED_PATHS.some((path) => pathname.startsWith(path));
-
-  if (isDisabled) return null;
 
   const clearTimeoutRef = () => {
     if (timeoutRef.current) {
@@ -107,6 +104,8 @@ export default function Nav({ session }: { session: any }) {
       href: '/integrations'
     }
   ];
+
+  if (isDisabled) return null;
 
   return (
     <>
