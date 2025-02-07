@@ -179,7 +179,7 @@ export default function Nav({ session }: { session: any }) {
                     className="h-14 gap-2"
                   >
                     <p className="text-xs text-default-500">Signed in as</p>
-                    <p className="font-semibold">{session.user.name}</p>
+                    <p className="font-semibold">{session.user?.name}</p>
                   </DropdownItem>
                   <DropdownItem key="dashboard" href="/dashboard">
                     My Dashboard

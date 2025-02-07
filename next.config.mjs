@@ -1,21 +1,34 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     swcMinify: true,
+    experimental: {
+        serverActions: {
+            allowedOrigins: process.env.NODE_ENV === 'development' ? [
+                'localhost:3000', // localhost
+                'silver-sniffle-rx6wpjvrw4j257wq-3000.app.github.dev', // Codespaces
+            ] : [],
+        },
+    },
     async headers() {
-        return [
-            {
-                // matching all API routes
-                source: "/api/:path*",
-                headers: [
-                    { key: "Access-Control-Allow-Credentials", value: "true" },
-                    { key: "Access-Control-Allow-Origin", value: "*" },
-                    { key: "Access-Control-Allow-Methods", value: "GET,OPTIONS,PATCH,DELETE,POST,PUT" },
-                    { key: "Access-Control-Allow-Headers", value: "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version" },
-                ],
-
-            }
-        ]
-    }
+        if (process.env.NODE_ENV === 'development') {
+            return [
+                {
+                    source: "/(.*)",
+                    headers: [
+                        {
+                            key: "Access-Control-Allow-Origin",
+                            value: "*", // Or specify the exact origin instead of "*"
+                        },
+                        {
+                            key: "Access-Control-Allow-Headers",
+                            value: "X-Requested-With, Content-Type, X-Forwarded-Host",
+                        },
+                    ],
+                },
+            ];
+        }
+        return [];
+    },
 };
 
 export default nextConfig;
