@@ -14,10 +14,10 @@ export default async function Page() {
   const session = await auth();
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery({
-    queryKey: ['appointments'],
-    queryFn: () => getAllAppointments()
-  });
+  // await queryClient.prefetchQuery({
+  //   queryKey: ['appointments'],
+  //   queryFn: () => getAllAppointments()
+  // });
 
   if (!session) {
     return <UseRedirect />;
@@ -29,9 +29,9 @@ export default async function Page() {
 
   return (
     <>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <TabularView session={session} />
-      </HydrationBoundary>
+      {/* <HydrationBoundary state={dehydrate(queryClient)}> */}
+      <TabularView session={session} />
+      {/* </HydrationBoundary> */}
     </>
   );
 }

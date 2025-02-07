@@ -33,17 +33,18 @@ import {
 } from '@heroui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { CopyText } from '@/components/ui/copy';
 import { AppointmentType } from '@/models/Appointment';
 import { redirectTo } from '@/functions/server-actions';
 import { rowOptions } from '@/lib/config';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getAllAppointments } from '@/functions/server-actions/appointment';
-import { format } from 'date-fns';
 import FormatTimeInTable from '@/components/ui/format-time-in-table';
 import Skeleton from '@/components/ui/skeleton';
-// import useSWR from 'swr';
+import axios from 'axios';
+import { useQueryState } from 'nuqs';
+import { totalmem } from 'os';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   booked: 'default',
@@ -68,11 +69,17 @@ const INITIAL_VISIBLE_COLUMNS = [
 ];
 
 export default function TabularView({ session }: { session: any }) {
-  const { data: appointments } = useQuery<AppointmentType[]>({
-    queryKey: ['appointments'],
-    queryFn: () => getAllAppointments(),
-    initialData: [] as AppointmentType[]
+  // const [appointments, setAppointments] = React.useState<AppointmentType[]>([]);
+  const [status, setStatus] = useQueryState('status', {
+    defaultValue: 'all'
   });
+
+  const { data } = useQuery({
+    queryKey: ['appointments'],
+    queryFn: () => getAllAppointments()
+  });
+
+  const appointments = data?.appointments || [];
 
   const deleteModal = useDisclosure();
   const router = useRouter();
@@ -134,7 +141,8 @@ export default function TabularView({ session }: { session: any }) {
     return filteredItems;
   }, [appointments, filterValue, statusFilter]);
 
-  const pages = Math.ceil(filteredItems.length / rowsPerPage);
+  const pages =
+    data?.totalPages || Math.ceil(filteredItems.length / rowsPerPage);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;

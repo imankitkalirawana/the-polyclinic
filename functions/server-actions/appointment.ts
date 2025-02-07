@@ -4,16 +4,43 @@ import { connectDB } from '@/lib/db';
 import Appointment, { AppointmentType } from '@/models/Appointment';
 import { RescheduledAppointment } from '@/utils/email-template/patient';
 import { sendHTMLEmail } from './emails/send-email';
-import axios from 'axios';
 
-export const getAllAppointments = async () => {
+export const getAllAppointments = async (options?: {
+  limit?: number;
+  page?: number;
+  status?: string;
+}) => {
+  const limit = options?.limit || 25;
+  const page = options?.page || 1;
+  const status = options?.status || 'all';
+
   await connectDB();
-  const appointments = await Appointment.find().lean();
 
-  return appointments.map((appointment) => ({
-    ...appointment,
-    _id: appointment._id.toString()
-  }));
+  const appointments = await Appointment.find()
+    .sort({ date: 1 })
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .lean()
+    .catch((error) => {
+      throw new Error(error);
+    });
+
+  const total = await Appointment.countDocuments();
+  const totalPages = Math.ceil(total / limit);
+
+  // convert _id to string
+  const formattedAppointments = appointments.map((appointment) => {
+    return {
+      ...appointment,
+      _id: appointment._id.toString()
+    };
+  });
+
+  return {
+    appointments: formattedAppointments,
+    total,
+    totalPages: 3
+  };
 };
 
 export const getAppointmentWithAID = async (aid: number) => {
