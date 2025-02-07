@@ -9,7 +9,7 @@ import {
   Input,
   RadioGroup,
   Tooltip
-} from "@heroui/react";
+} from '@heroui/react';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
@@ -154,6 +154,7 @@ const SignIn = () => {
                       : false
                   }
                   errorMessage={formik.errors.id}
+                  autoFocus
                 />
               ) : page === 1 ? (
                 <>
@@ -185,6 +186,20 @@ const SignIn = () => {
               ) : (
                 <>
                   <Input
+                    label="Email / Phone Number"
+                    name="id"
+                    className="sr-only"
+                    onChange={formik.handleChange}
+                    value={formik.values.id}
+                    isInvalid={
+                      (formik.touched.id && formik.errors.id ? true : false) ||
+                      search
+                        ? true
+                        : false
+                    }
+                    errorMessage={formik.errors.id}
+                  />
+                  <Input
                     endContent={
                       <button type="button" onClick={toggleVisibility}>
                         {isVisible ? (
@@ -213,6 +228,7 @@ const SignIn = () => {
                         : false
                     }
                     errorMessage={formik.errors.password || search}
+                    autoFocus
                   />
                   <div className="flex items-center justify-between px-1 py-2">
                     <Link

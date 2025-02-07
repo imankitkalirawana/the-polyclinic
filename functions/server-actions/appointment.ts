@@ -1,9 +1,10 @@
 'use server';
 
 import { connectDB } from '@/lib/db';
-import Appointment from '@/models/Appointment';
+import Appointment, { AppointmentType } from '@/models/Appointment';
 import { RescheduledAppointment } from '@/utils/email-template/patient';
 import { sendHTMLEmail } from './emails/send-email';
+import axios from 'axios';
 
 export const getAllAppointments = async () => {
   await connectDB();

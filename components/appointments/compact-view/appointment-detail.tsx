@@ -1,7 +1,6 @@
 'use client';
 import {
   changeAppointmentStatus,
-  getDoctorWithUID,
   getUserWithUID
 } from '@/functions/server-actions';
 import { AppointmentType } from '@/models/Appointment';
@@ -15,17 +14,15 @@ import {
   useDisclosure
 } from '@heroui/react';
 import { useEffect, useState } from 'react';
-import CancelAppointment from './common/cancel-appointement';
-import RescheduleAppointment from './common/reschedule-appointment';
-import AddtoCalendar from './common/add-to-calendar';
+import CancelAppointment from '../common/cancel-appointement';
+import RescheduleAppointment from '../common/reschedule-appointment';
+import AddtoCalendar from '../common/add-to-calendar';
 import { toast } from 'sonner';
-import CellValue from '../ui/cell-value';
+import CellValue from '../../ui/cell-value';
 import { genderMap, buttonColorMap } from '@/lib/maps';
 import { format } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import AsyncComponent from '@/hooks/useAsyncLoading';
-import Skeleton from '../ui/skeleton';
-import AsyncButton from '../ui/buttons/async-button';
+import AsyncButton from '../../ui/buttons/async-button';
 import { downloadAppointmentReceipt } from '@/functions/client/appointment/receipt';
 
 export default function AppointmentDetail({

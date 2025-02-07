@@ -4,7 +4,7 @@ import { AppointmentType } from '@/models/Appointment';
 import { useQuery } from '@tanstack/react-query';
 import { getAppointmentWithAID } from '@/functions/server-actions/appointment';
 import NoResults from '@/components/ui/no-results';
-import AppointmentDetail from '../appointment-detail';
+import AppointmentDetail from '../compact-view/appointment-detail';
 
 interface AppointmentProps {
   aid: number;

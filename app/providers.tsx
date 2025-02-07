@@ -33,7 +33,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <QueryClientProvider client={queryClient}>
         <SessionProvider>
           <ReduxProvider store={store}>{children}</ReduxProvider>
-          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+          <ReactQueryDevtools initialIsOpen={false} />
         </SessionProvider>
       </QueryClientProvider>
     </HeroUIProvider>

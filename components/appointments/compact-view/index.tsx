@@ -15,22 +15,19 @@ import {
   Link,
   Tooltip
 } from '@heroui/react';
-import Skeleton from '../ui/skeleton';
-import Heading from '../ui/heading';
+import Skeleton from '../../ui/skeleton';
+import Heading from '../../ui/heading';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useQueryState } from 'nuqs';
 import React from 'react';
 import { format } from 'date-fns';
-import NoResults from '../ui/no-results';
+import NoResults from '../../ui/no-results';
 import { AppointmentType } from '@/models/Appointment';
 import { capitalize } from '@/lib/utility';
 import { ChipColorMap } from '@/lib/maps';
 import AppointmentDetail from './appointment-detail';
-import AsyncComponent from '@/hooks/useAsyncLoading';
-import { getDoctorWithUID } from '@/functions/server-actions';
-import { useSession } from 'next-auth/react';
 
-export default function Appointments({ session }: { session: any }) {
+export default function CompactView({ session }: { session: any }) {
   // useSession({
   //   required: true
   // });

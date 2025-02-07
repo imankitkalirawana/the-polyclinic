@@ -7,14 +7,19 @@ import { NewAppointment } from '@/utils/email-template/doctor';
 import { sendHTMLEmail } from '@/functions/server-actions/emails/send-email';
 
 export const GET = auth(async function GET(request: any) {
+  console.log('get request');
   try {
+    const role = request.auth?.user?.role;
+
     if (!request.auth?.user) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
+    const referer = request.headers.get('referer');
+    const refererStatus = new URL(referer).searchParams.get('status');
+
     const { searchParams } = new URL(request.url);
-    const status = searchParams.get('status') || 'all';
-    const role = request.auth?.user?.role;
+    let status = refererStatus || searchParams.get('status') || 'all';
 
     const statusMap: Record<string, string[]> = {
       upcoming: ['booked', 'in-progress', 'confirmed'],
