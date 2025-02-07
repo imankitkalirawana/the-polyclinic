@@ -66,17 +66,41 @@ export default function Navbar({ session }: { session: any }) {
         {
           title: 'My Dashboard',
           items: [
-            { name: 'Overview', href: '/dashboard' },
-            { name: 'Stats', href: '/dashboard/stats' },
-            { name: 'Settings', href: '/dashboard/settings' }
+            {
+              name: 'Overview',
+              href: '/dashboard',
+              icon: 'solar:window-frame-linear'
+            },
+            {
+              name: 'Profile',
+              href: '/dashboard/profile',
+              icon: 'solar:user-linear'
+            },
+            {
+              name: 'Services',
+              href: '/dashboard/services',
+              icon: 'solar:test-tube-minimalistic-linear'
+            },
+            {
+              name: 'Drugs',
+              href: '/dashboard/drugs',
+              icon: 'solar:pills-linear'
+            }
           ]
         },
         {
           title: 'Admin Dashboard',
           items: [
-            { name: 'Overview', href: '/dashboard/admin/overview' },
-            { name: 'Stats', href: '/dashboard/admin/stats' },
-            { name: 'Settings', href: '/dashboard/admin/settings' }
+            {
+              name: 'Stats',
+              href: '/dashboard/admin/stats',
+              icon: 'solar:graph-linear'
+            },
+            {
+              name: 'Settings',
+              href: '/dashboard/admin/settings',
+              icon: 'solar:settings-linear'
+            }
           ]
         }
       ]
@@ -301,10 +325,7 @@ export default function Navbar({ session }: { session: any }) {
                     >
                       {subItem.title}
                     </motion.h3>
-                    <Listbox
-                    // initial={{ opacity: 0 }}
-                    // animate={{ opacity: 1 }}
-                    >
+                    <Listbox>
                       {subItem.items.map((subMenuItem, index) => (
                         <ListboxItem
                           className="pl-2 pr-4 text-default-500"
@@ -314,18 +335,14 @@ export default function Navbar({ session }: { session: any }) {
                               <Icon icon={subMenuItem?.icon} width={18} />
                             )
                           }
-                          //   as={Link}
                           href={subMenuItem.href}
                           onPress={() => {
-                            // wait for 200ms before closing the sub-menu
                             setTimeout(() => {
                               setActiveMenu(null);
                             }, 200);
                           }}
                         >
-                          {/* <Link className="text-sm font-medium text-foreground hover:text-primary hover:underline"> */}
                           {subMenuItem.name}
-                          {/* </Link> */}
                         </ListboxItem>
                       ))}
                     </Listbox>

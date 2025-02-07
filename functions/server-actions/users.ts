@@ -6,7 +6,7 @@ import { connectDB } from '@/lib/db';
 // get all patients
 export const getAllPatients = async () => {
   await connectDB();
-  const users = await User.find().select('-password').lean();
+  const users = await User.find({ role: 'user' }).select('-password').lean();
   return users.map((user) => ({
     ...user,
     _id: user._id.toString()
