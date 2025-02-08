@@ -4,8 +4,8 @@ export const API_BASE_URL = process.env.NEXTAUTH_URL;
 
 export const rowOptions = [
   {
-    label: '20',
-    value: 20
+    label: '10',
+    value: 10
   },
   {
     label: '50',

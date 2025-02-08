@@ -1,5 +1,9 @@
 'use client';
-import { capitalize } from '@/lib/utility';
+import {
+  capitalize,
+  humanReadableDate,
+  humanReadableTime
+} from '@/lib/utility';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import {
   TableHeader,
@@ -19,22 +23,27 @@ import {
   SortDescriptor,
   Input,
   Pagination,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
   useDisclosure,
   Tooltip,
   Spinner
 } from '@heroui/react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { CopyText } from '@/components/ui/copy';
 import { AppointmentType } from '@/models/Appointment';
 import { redirectTo } from '@/functions/server-actions';
 import { rowOptions } from '@/lib/config';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getAllAppointments } from '@/functions/server-actions/appointment';
 import FormatTimeInTable from '@/components/ui/format-time-in-table';
 import Skeleton from '@/components/ui/skeleton';
 import { useQueryState } from 'nuqs';
-import useDebounce from '@/hooks/useDebounce';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   booked: 'default',
@@ -49,68 +58,53 @@ const statusColorMap: Record<string, ChipProps['color']> = {
 const INITIAL_VISIBLE_COLUMNS = [
   'status',
   'aid',
-  'patient.name',
+  'name',
   'date',
-  'doctor.name',
+  'doctor',
   'createdAt',
   // 'phone',
   // 'email',
   'actions'
 ];
 
-const INITIAL_VISIBLE_STATUS = [
-  'booked',
-  'confirmed',
-  'in-progress',
-  'completed',
-  'cancelled',
-  'overdue',
-  'on-hold'
-];
-
 export default function TabularView({ session }: { session: any }) {
   // const [appointments, setAppointments] = React.useState<AppointmentType[]>([]);
-
-  const [searchQuery, setSearchQuery] = React.useState('');
-  const query = useDebounce(searchQuery, 500);
+  const [status, setStatus] = useQueryState('status', {
+    defaultValue: 'all'
+  });
 
   const [page, setPage] = React.useState(1);
   const [limit, setLimit] = React.useState(10);
-  const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
-    column: 'date',
-    direction: 'ascending'
-  });
-  const [status, setStatus] = React.useState<Selection>(
-    new Set(INITIAL_VISIBLE_STATUS)
-  );
 
   const { data, refetch, isRefetching, isLoading } = useQuery({
-    queryKey: ['appointments', page, limit, sortDescriptor, query],
+    queryKey: ['appointments', status, page, limit],
     queryFn: () =>
-      getAllAppointments({
-        limit,
-        page,
-        sort: sortDescriptor,
-        query
+      getAllAppointments({ limit, status, page }).then((res) => {
+        setPages(res.totalPages);
+        return res;
       })
   });
 
-  useEffect(() => {
-    if (data) {
-      setPages(data?.totalPages); // Update pages when data changes
-    }
-  }, [data]);
-
-  const [pages, setPages] = React.useState(1);
+  const [pages, setPages] = React.useState(data?.totalPages || 1);
 
   const appointments = data?.appointments || [];
 
+  const deleteModal = useDisclosure();
+  const [selected, setSelected] = React.useState<AppointmentType | null>(null);
+  const [filterValue, setFilterValue] = React.useState('');
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
     new Set([])
   );
   const [visibleColumns, setVisibleColumns] = React.useState<Selection>(
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
+  const [statusFilter, setStatusFilter] = React.useState<Selection>('all');
+  const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
+    column: 'name',
+    direction: 'ascending'
+  });
+
+  const hasSearchFilter = Boolean(filterValue);
 
   const headerColumns = React.useMemo(() => {
     if (visibleColumns === 'all') return columns;
@@ -119,6 +113,49 @@ export default function TabularView({ session }: { session: any }) {
       Array.from(visibleColumns).includes(column.uid)
     );
   }, [visibleColumns]);
+
+  const FilteredItems = React.useMemo(() => {
+    let filteredItems = [...appointments];
+
+    if (hasSearchFilter) {
+      filteredItems = filteredItems.filter(
+        (appointment) =>
+          appointment.patient.name
+            .toLowerCase()
+            .includes(filterValue.toLowerCase()) ||
+          appointment.patient.email
+            .toLowerCase()
+            .includes(filterValue.toLowerCase()) ||
+          (appointment.patient?.phone &&
+            appointment.patient?.phone
+              .toLowerCase()
+              .includes(filterValue.toLowerCase())) ||
+          appointment.aid.toString().includes(filterValue)
+      );
+    }
+    if (
+      statusFilter !== 'all' &&
+      Array.from(statusFilter).length !== statusOptions.length
+    ) {
+      filteredItems = filteredItems.filter((appointment) =>
+        Array.from(statusFilter).includes(appointment.status)
+      );
+    }
+
+    return filteredItems;
+  }, [appointments, filterValue, statusFilter]);
+
+  const sortedItems = React.useMemo(() => {
+    return [...appointments].sort((a: AppointmentType, b: AppointmentType) => {
+      const first = a[sortDescriptor.column as keyof AppointmentType] as string;
+      const second = b[
+        sortDescriptor.column as keyof AppointmentType
+      ] as string;
+      const cmp = first < second ? -1 : first > second ? 1 : 0;
+
+      return sortDescriptor.direction === 'descending' ? -cmp : cmp;
+    });
+  }, [sortDescriptor]);
 
   const renderCell = React.useCallback(
     (appointment: AppointmentType, columnKey: React.Key) => {
@@ -143,7 +180,7 @@ export default function TabularView({ session }: { session: any }) {
               <CopyText>{appointment.aid.toString()}</CopyText>
             </>
           );
-        case 'patient.name':
+        case 'name':
           return (
             <>
               <div className="flex items-center gap-2">
@@ -170,7 +207,7 @@ export default function TabularView({ session }: { session: any }) {
               />
             </div>
           );
-        case 'doctor.name':
+        case 'doctor':
           return (
             <div className="flex flex-col">
               <p className="text-bold max-w-sm overflow-hidden text-ellipsis whitespace-nowrap text-sm capitalize text-default-400">
@@ -178,7 +215,7 @@ export default function TabularView({ session }: { session: any }) {
               </p>
             </div>
           );
-        case 'patient.phone':
+        case 'phone':
           return (
             <div className="flex flex-col">
               <p className="text-bold max-w-sm overflow-hidden text-ellipsis whitespace-nowrap text-sm text-default-400">
@@ -186,7 +223,7 @@ export default function TabularView({ session }: { session: any }) {
               </p>
             </div>
           );
-        case 'patient.email':
+        case 'email':
           return (
             <div className="flex flex-col">
               <p className="text-bold max-w-sm overflow-hidden text-ellipsis whitespace-nowrap text-sm text-default-400">
@@ -245,6 +282,10 @@ export default function TabularView({ session }: { session: any }) {
                   startContent={<Icon icon="tabler:trash" fontSize={20} />}
                   className="text-danger"
                   color="danger"
+                  onPress={() => {
+                    setSelected(appointment);
+                    deleteModal.onOpen();
+                  }}
                 >
                   Delete
                 </DropdownItem>
@@ -266,12 +307,19 @@ export default function TabularView({ session }: { session: any }) {
     []
   );
 
-  // filter appointments based on status
-  const filteredAppointments = React.useMemo(() => {
-    return appointments.filter(
-      (appointment) => status === 'all' || status.has(appointment.status)
-    );
-  }, [appointments, status]);
+  const onSearchChange = React.useCallback((value?: string) => {
+    if (value) {
+      setFilterValue(value);
+      setPage(1);
+    } else {
+      setFilterValue('');
+    }
+  }, []);
+
+  const onClear = React.useCallback(() => {
+    setFilterValue('');
+    setPage(1);
+  }, []);
 
   const topContent = React.useMemo(() => {
     return (
@@ -281,41 +329,12 @@ export default function TabularView({ session }: { session: any }) {
             isClearable
             className="w-full sm:max-w-[44%]"
             placeholder="Search by name..."
-            startContent={<Icon icon="tabler:search" />}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onClear={() => setSearchQuery('')}
+            // startContent={<SearchIcon />}
+            value={filterValue}
+            onClear={() => onClear()}
+            onValueChange={onSearchChange}
           />
           <div className="flex gap-3">
-            <Dropdown>
-              <DropdownTrigger className="hidden sm:flex">
-                <Button
-                  endContent={
-                    <Icon icon={'tabler:chevron-down'} fontSize={16} />
-                  }
-                  variant="flat"
-                >
-                  Status
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                disallowEmptySelection
-                aria-label="Status Dropdown"
-                closeOnSelect={false}
-                selectedKeys={status}
-                selectionMode="multiple"
-                onSelectionChange={(keys) => {
-                  setStatus(keys);
-                  setPage(1); // Reset to first page when status changes
-                }}
-              >
-                {statusOptions.map((column) => (
-                  <DropdownItem key={column.uid} className="capitalize">
-                    {capitalize(column.name)}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button
@@ -373,11 +392,13 @@ export default function TabularView({ session }: { session: any }) {
       </div>
     );
   }, [
+    filterValue,
+    statusFilter,
     visibleColumns,
+    onSearchChange,
     onRowsPerPageChange,
     appointments.length,
-    searchQuery,
-    status
+    hasSearchFilter
   ]);
 
   const bottomContent = React.useMemo(() => {
@@ -386,7 +407,7 @@ export default function TabularView({ session }: { session: any }) {
         <span className="w-[30%] text-small text-default-400">
           {selectedKeys === 'all'
             ? 'All items selected'
-            : `${selectedKeys.size} of ${appointments.length} selected`}
+            : `${selectedKeys.size} of ${FilteredItems.length} selected`}
         </span>
         <Pagination
           page={page}
@@ -415,7 +436,7 @@ export default function TabularView({ session }: { session: any }) {
         </div>
       </div>
     );
-  }, [selectedKeys, appointments.length, page, pages]);
+  }, [selectedKeys, FilteredItems.length, page, pages, hasSearchFilter]);
 
   return (
     <>
@@ -451,8 +472,8 @@ export default function TabularView({ session }: { session: any }) {
           )}
         </TableHeader>
         <TableBody
-          items={filteredAppointments}
-          isLoading={isLoading}
+          items={FilteredItems}
+          isLoading={isLoading || isRefetching}
           loadingContent={<Spinner />}
           emptyContent={'No appointments found'}
         >
@@ -476,11 +497,11 @@ export default function TabularView({ session }: { session: any }) {
 const columns = [
   { name: 'STATUS', uid: 'status', sortable: true },
   { name: 'AID', uid: 'aid', sortable: true },
-  { name: 'NAME', uid: 'patient.name', sortable: true },
+  { name: 'NAME', uid: 'name', sortable: true },
   { name: 'Date', uid: 'date', sortable: true },
-  { name: 'Doctor', uid: 'doctor.name', sortable: true },
-  { name: 'Phone', uid: 'patient.phone', sortable: true },
-  { name: 'Email', uid: 'patient.email', sortable: true },
+  { name: 'Doctor', uid: 'doctor', sortable: true },
+  { name: 'Phone', uid: 'phone', sortable: true },
+  { name: 'Email', uid: 'email', sortable: true },
   { name: 'Booked On', uid: 'createdAt', sortable: true },
   { name: 'ACTIONS', uid: 'actions' }
 ];

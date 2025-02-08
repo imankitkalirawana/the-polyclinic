@@ -4,31 +4,79 @@ import { connectDB } from '@/lib/db';
 import Appointment, { AppointmentType } from '@/models/Appointment';
 import { RescheduledAppointment } from '@/utils/email-template/patient';
 import { sendHTMLEmail } from './emails/send-email';
+import { SortDescriptor } from '@heroui/react';
 
 export const getAllAppointments = async (options?: {
   limit?: number;
   page?: number;
   status?: string;
+  query?: string;
+  sort?: SortDescriptor;
 }) => {
   const limit = options?.limit || 25;
   const page = options?.page || 1;
   const status = options?.status || 'all';
+  const query = options?.query || '';
+  const sort = options?.sort || { column: 'date', direction: 'ascending' }; // Default sorting by "date" in ascending order
+
+  const searchQuery = {
+    ...(query
+      ? {
+          $or: [
+            { 'patient.name': { $regex: new RegExp(query.trim(), 'ig') } },
+            { 'patient.email': { $regex: new RegExp(query.trim(), 'ig') } },
+            { 'patient.phone': { $regex: new RegExp(query.trim(), 'ig') } },
+            { 'doctor.name': { $regex: new RegExp(query.trim(), 'ig') } },
+            { status: { $regex: new RegExp(query.trim(), 'ig') } },
+            { aid: isNaN(parseInt(query)) ? undefined : parseInt(query, 10) },
+            { date: { $regex: new RegExp(query.trim(), 'ig') } }
+          ].filter(Boolean) as any[]
+        }
+      : {})
+  };
+
+  const statusMap: Record<string, string[]> = {
+    upcoming: ['booked', 'in-progress', 'confirmed'],
+    overdue: ['overdue', 'on-hold'],
+    past: ['completed', 'cancelled'],
+    all: [
+      'booked',
+      'in-progress',
+      'confirmed',
+      'completed',
+      'cancelled',
+      'overdue',
+      'on-hold'
+    ]
+  };
 
   await connectDB();
 
-  const appointments = await Appointment.find()
-    .sort({ date: 1 })
+  // Build the sort object dynamically
+  const sortObject: Record<string, 1 | -1> = {
+    [sort.column]: (sort.direction === 'ascending' ? 1 : -1) as 1 | -1
+  };
+
+  const appointments = await Appointment.find({
+    status: { $in: statusMap[status] },
+    ...searchQuery
+  })
+    .sort(sortObject) // Apply dynamic sorting
     .skip((page - 1) * limit)
     .limit(limit)
     .lean()
     .catch((error) => {
-      throw new Error(error);
+      throw new Error(error.message);
     });
 
-  const total = await Appointment.countDocuments();
+  const total = await Appointment.countDocuments({
+    status: { $in: statusMap[status] },
+    ...searchQuery
+  });
+
   const totalPages = Math.ceil(total / limit);
 
-  // convert _id to string
+  // Convert _id to string
   const formattedAppointments = appointments.map((appointment) => {
     return {
       ...appointment,
@@ -39,7 +87,7 @@ export const getAllAppointments = async (options?: {
   return {
     appointments: formattedAppointments,
     total,
-    totalPages: 3
+    totalPages
   };
 };
 
