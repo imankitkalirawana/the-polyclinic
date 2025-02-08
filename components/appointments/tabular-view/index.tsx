@@ -85,13 +85,14 @@ export default function TabularView({ session }: { session: any }) {
   );
 
   const { data, refetch, isRefetching, isLoading } = useQuery({
-    queryKey: ['appointments', page, limit, sortDescriptor, query],
+    queryKey: ['appointments', page, limit, sortDescriptor, query, status],
     queryFn: () =>
       getAllAppointments({
         limit,
         page,
         sort: sortDescriptor,
-        query
+        query,
+        status: Array.from(status) as string[]
       })
   });
 
@@ -310,7 +311,11 @@ export default function TabularView({ session }: { session: any }) {
                 }}
               >
                 {statusOptions.map((column) => (
-                  <DropdownItem key={column.uid} className="capitalize">
+                  <DropdownItem
+                    key={column.uid}
+                    color={statusColorMap[column.uid]}
+                    className="capitalize"
+                  >
                     {capitalize(column.name)}
                   </DropdownItem>
                 ))}

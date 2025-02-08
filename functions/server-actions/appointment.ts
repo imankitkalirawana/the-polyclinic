@@ -9,13 +9,13 @@ import { SortDescriptor } from '@heroui/react';
 export const getAllAppointments = async (options?: {
   limit?: number;
   page?: number;
-  status?: string;
+  status?: string[];
   query?: string;
   sort?: SortDescriptor;
 }) => {
   const limit = options?.limit || 25;
   const page = options?.page || 1;
-  const status = options?.status || 'all';
+  const status = options?.status || ['all']; //can be  'booked', 'confirmed', 'in-progress', 'completed', 'cancelled', 'overdue', 'on-hold'
   const query = options?.query || '';
   const sort = options?.sort || { column: 'date', direction: 'ascending' }; // Default sorting by "date" in ascending order
 
@@ -32,22 +32,10 @@ export const getAllAppointments = async (options?: {
             { date: { $regex: new RegExp(query.trim(), 'ig') } }
           ].filter(Boolean) as any[]
         }
+      : {}),
+    ...(status.length && !status.includes('all')
+      ? { status: { $in: status } }
       : {})
-  };
-
-  const statusMap: Record<string, string[]> = {
-    upcoming: ['booked', 'in-progress', 'confirmed'],
-    overdue: ['overdue', 'on-hold'],
-    past: ['completed', 'cancelled'],
-    all: [
-      'booked',
-      'in-progress',
-      'confirmed',
-      'completed',
-      'cancelled',
-      'overdue',
-      'on-hold'
-    ]
   };
 
   await connectDB();
@@ -57,10 +45,7 @@ export const getAllAppointments = async (options?: {
     [sort.column]: (sort.direction === 'ascending' ? 1 : -1) as 1 | -1
   };
 
-  const appointments = await Appointment.find({
-    status: { $in: statusMap[status] },
-    ...searchQuery
-  })
+  const appointments = await Appointment.find(searchQuery)
     .sort(sortObject) // Apply dynamic sorting
     .skip((page - 1) * limit)
     .limit(limit)
@@ -69,10 +54,7 @@ export const getAllAppointments = async (options?: {
       throw new Error(error.message);
     });
 
-  const total = await Appointment.countDocuments({
-    status: { $in: statusMap[status] },
-    ...searchQuery
-  });
+  const total = await Appointment.countDocuments(searchQuery);
 
   const totalPages = Math.ceil(total / limit);
 
