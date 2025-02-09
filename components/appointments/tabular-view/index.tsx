@@ -33,8 +33,19 @@ import { useQuery } from '@tanstack/react-query';
 import { getAllAppointments } from '@/functions/server-actions/appointment';
 import FormatTimeInTable from '@/components/ui/format-time-in-table';
 import Skeleton from '@/components/ui/skeleton';
-import { useQueryState } from 'nuqs';
 import useDebounce from '@/hooks/useDebounce';
+import defaultConfig from '@/lib/config.json';
+import { UserConfigType } from '@/models/UserConfig';
+
+const getConfig = async () => {
+  const res = await fetch(`/api/config`, {
+    method: 'GET'
+  });
+  if (res.ok) {
+    const json = await res.json();
+    return json.config;
+  }
+};
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   booked: 'default',
@@ -81,7 +92,7 @@ export default function TabularView({ session }: { session: any }) {
     direction: 'ascending'
   });
   const [status, setStatus] = React.useState<Selection>(
-    new Set(INITIAL_VISIBLE_STATUS)
+    new Set(defaultConfig.config['data-table'].appointments.status)
   );
 
   const { data, refetch, isRefetching, isLoading } = useQuery({
@@ -94,6 +105,12 @@ export default function TabularView({ session }: { session: any }) {
         query,
         status: Array.from(status) as string[]
       })
+  });
+
+  const { data: config } = useQuery({
+    queryKey: ['config'],
+    queryFn: () => getConfig(),
+    initialData: defaultConfig.config
   });
 
   useEffect(() => {
