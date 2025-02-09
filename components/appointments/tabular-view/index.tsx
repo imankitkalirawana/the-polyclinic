@@ -36,15 +36,6 @@ import FormatTimeInTable from '@/components/ui/format-time-in-table';
 import Skeleton from '@/components/ui/skeleton';
 import useDebounce from '@/hooks/useDebounce';
 
-const getConfig = async () => {
-  const res = await fetch(`/api/config`, {
-    method: 'GET'
-  });
-  if (res.ok) {
-    const json = await res.json();
-    return json.config;
-  }
-};
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   booked: 'default',
