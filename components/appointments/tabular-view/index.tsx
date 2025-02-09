@@ -296,8 +296,8 @@ export default function TabularView({ session }: { session: any }) {
         <div className="flex items-end justify-between gap-3">
           <Input
             isClearable
-            className="w-full sm:max-w-[44%]"
-            placeholder="Search by name..."
+            className="w-full sm:max-w-sm"
+            placeholder="Search by name, phone, email, etc."
             startContent={<Icon icon="tabler:search" />}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -367,15 +367,15 @@ export default function TabularView({ session }: { session: any }) {
               color="primary"
               endContent={<Icon icon={'tabler:plus'} />}
               as={Link}
-              href="/dashboard/appointments/new"
+              href="/appointments/new"
             >
-              Add New
+              New Appointment
             </Button>
           </div>
         </div>
         <div className="flex items-center justify-between">
           <span className="text-small text-default-400">
-            Total {appointments.length} appointments
+            Total {data?.total} appointments
           </span>
           <label className="flex items-center text-small text-default-400">
             Rows per page:
@@ -498,10 +498,10 @@ const columns = [
   { name: 'STATUS', uid: 'status', sortable: true },
   { name: 'AID', uid: 'aid', sortable: true },
   { name: 'NAME', uid: 'patient.name', sortable: true },
-  { name: 'Date', uid: 'date', sortable: true },
-  { name: 'Doctor', uid: 'doctor.name', sortable: true },
-  { name: 'Phone', uid: 'patient.phone', sortable: true },
-  { name: 'Email', uid: 'patient.email', sortable: true },
+  { name: 'DATE', uid: 'date', sortable: true },
+  { name: 'DOCTOR', uid: 'doctor.name', sortable: true },
+  { name: 'PHONE', uid: 'patient.phone', sortable: true },
+  { name: 'EMAIL', uid: 'patient.email', sortable: true },
   { name: 'Booked On', uid: 'createdAt', sortable: true },
   { name: 'ACTIONS', uid: 'actions' }
 ];

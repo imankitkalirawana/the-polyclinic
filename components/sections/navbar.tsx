@@ -172,6 +172,7 @@ export default function Navbar({ session }: { session: any }) {
         }}
         height="56px"
         isMenuOpen={isMenuOpen || activeMenu ? true : false}
+        // isMenuOpen={true}
         onMenuOpenChange={setIsMenuOpen}
         maxWidth="xl"
       >
@@ -302,7 +303,7 @@ export default function Navbar({ session }: { session: any }) {
         </NavbarMenu>
 
         <NavbarMenu
-          className="top-[calc(var(--navbar-height)_+_8px)] mx-auto hidden max-w-4xl rounded-3xl bg-default-200/80 py-6 shadow-xl backdrop-blur-md backdrop-saturate-150 md:flex md:max-h-fit"
+          className="top-[calc(var(--navbar-height)_+_8px)] mx-auto hidden max-h-72 max-w-4xl rounded-3xl bg-default-200/80 py-6 shadow-xl backdrop-blur-md backdrop-saturate-150 md:flex"
           onMouseEnter={clearTimeoutRef}
           onMouseLeave={startCloseTimeout}
           motionProps={{
