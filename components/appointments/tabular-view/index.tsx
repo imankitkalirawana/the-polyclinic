@@ -19,8 +19,6 @@ import {
   SortDescriptor,
   Input,
   Pagination,
-
-  
   Tooltip,
   Spinner
 } from '@heroui/react';
@@ -35,7 +33,7 @@ import { getAllAppointments } from '@/functions/server-actions/appointment';
 import FormatTimeInTable from '@/components/ui/format-time-in-table';
 import Skeleton from '@/components/ui/skeleton';
 import useDebounce from '@/hooks/useDebounce';
-
+import { saveTableConfig, loadTableConfig } from '@/utils/localStorageUtil';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   booked: 'default',
@@ -47,19 +45,21 @@ const statusColorMap: Record<string, ChipProps['color']> = {
   'on-hold': 'warning'
 };
 
-const INITIAL_VISIBLE_COLUMNS = [
+const tableKey = 'appointments';
+
+const savedConfig = loadTableConfig(tableKey);
+
+const INITIAL_VISIBLE_COLUMNS = savedConfig?.columns || [
   'status',
   'aid',
   'patient.name',
   'date',
   'doctor.name',
   'createdAt',
-  // 'phone',
-  // 'email',
   'actions'
 ];
 
-const INITIAL_VISIBLE_STATUS = [
+const INITIAL_VISIBLE_STATUS = savedConfig?.status || [
   'booked',
   'confirmed',
   'in-progress',
@@ -69,6 +69,13 @@ const INITIAL_VISIBLE_STATUS = [
   'on-hold'
 ];
 
+const INITIAL_SORT_DESCRIPTOR = savedConfig?.sortDescriptor || {
+  column: 'date',
+  direction: 'ascending'
+};
+
+const INITIAL_LIMIT = savedConfig?.limit || 10;
+
 export default function TabularView({ session }: { session: any }) {
   // const [appointments, setAppointments] = React.useState<AppointmentType[]>([]);
 
@@ -76,11 +83,10 @@ export default function TabularView({ session }: { session: any }) {
   const query = useDebounce(searchQuery, 500);
 
   const [page, setPage] = React.useState(1);
-  const [limit, setLimit] = React.useState(10);
-  const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
-    column: 'date',
-    direction: 'ascending'
-  });
+  const [limit, setLimit] = React.useState(INITIAL_LIMIT);
+  const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>(
+    INITIAL_SORT_DESCRIPTOR
+  );
   const [status, setStatus] = React.useState<Selection>(
     new Set(INITIAL_VISIBLE_STATUS)
   );
@@ -113,6 +119,15 @@ export default function TabularView({ session }: { session: any }) {
   const [visibleColumns, setVisibleColumns] = React.useState<Selection>(
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
+
+  useEffect(() => {
+    saveTableConfig(tableKey, {
+      columns: Array.from(visibleColumns),
+      status: Array.from(status),
+      sortDescriptor,
+      limit
+    });
+  }, [visibleColumns, status, sortDescriptor, limit]);
 
   const headerColumns = React.useMemo(() => {
     if (visibleColumns === 'all') return columns;
