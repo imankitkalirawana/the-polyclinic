@@ -1,26 +1,8 @@
 'use client';
-import {
-  Accordion,
-  AccordionItem,
-  Button,
-  Link,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  useDisclosure
-} from '@heroui/react';
-import { useDispatch, useSelector } from 'react-redux';
+import { Accordion, AccordionItem, Link } from '@heroui/react';
 
-import { useState } from 'react';
 import DoctorSelection, { DoctorSelectionTitle } from './doctor-selection';
 
-import CellValue from '@/components/ui/cell-value';
-import { format } from 'date-fns';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import axios from 'axios';
-import { AppointmentType } from '@/models/Appointment';
 import { useForm } from './context';
 import ConfirmationModal from '../modals/confirmation-modal';
 import SummaryModal from '../modals/summary-modal';
@@ -29,15 +11,15 @@ import AdditionalDetailsSelection, {
 } from './additional-details-selection';
 import DateSelection, { DateSelectionTitle } from './date-selection';
 import UserSelection, { UserSelectionTitle } from './user-selection';
+import NewUserModal from '../modals/new-user-modal';
 
 export default function Selection() {
   const { formik } = useForm();
 
-  const summaryModal = useDisclosure();
-
   const ModalMap: Record<number, React.ReactNode> = {
     5: <SummaryModal />,
-    6: <ConfirmationModal />
+    6: <ConfirmationModal />,
+    7: <NewUserModal />
   };
 
   const KeyMap: Record<number, string> = {

@@ -78,52 +78,76 @@ export default function UserSelection() {
               </div>
             ) : (
               <>
-                <ScrollShadow
-                  orientation="horizontal"
-                  className="mt-8 flex gap-4"
-                >
-                  {filteredUsers
-                    .sort((a, b) => a.name.localeCompare(b.name))
-                    .map((user) => (
-                      <Card
-                        isPressable
-                        key={user.uid}
-                        className={cn(
-                          'no-scrollbar min-w-64 rounded-xl border border-divider shadow-none sm:min-w-72',
-                          {
-                            'border-2 border-primary-400':
-                              user.uid === formik.values.patient?.uid
-                          }
-                        )}
-                        onPress={() => {
-                          formik.setFieldValue('patient', user);
-                        }}
-                      >
-                        <CardBody className="items-center gap-4 p-8">
-                          <div>
-                            <Image
-                              src="/assets/placeholder-avatar.jpeg"
-                              alt="User"
-                              width={80}
-                              height={80}
-                              className="rounded-full"
-                              isBlurred
-                            />
-                          </div>
-                          <div>
-                            <h2 className="text-center text-lg font-semibold">
-                              {user.name}
-                            </h2>
-                            <p className="text-sm font-light text-default-500">
-                              {user.email}
-                            </p>
-                          </div>
-                        </CardBody>
-                      </Card>
-                    ))}
-                </ScrollShadow>
-
-                {!isLoading && (
+                <div className="mt-8 flex gap-4">
+                  <Card
+                    isPressable
+                    className={cn(
+                      'no-scrollbar min-w-64 rounded-xl border border-divider shadow-none sm:min-w-72'
+                    )}
+                    onPress={() => formik.setFieldValue('step', 7)}
+                  >
+                    <CardBody className="items-center gap-4 p-8">
+                      <div>
+                        <Icon
+                          icon="solar:add-circle-line-duotone"
+                          width={80}
+                          height={80}
+                          className="text-default-500"
+                        />
+                      </div>
+                      <div>
+                        <h2 className="text-center text-lg font-semibold text-primary">
+                          Register New Patient
+                        </h2>
+                        <p className="text-sm font-light text-default-500">
+                          Add a new patient to your list
+                        </p>
+                      </div>
+                    </CardBody>
+                  </Card>
+                  <ScrollShadow orientation="horizontal" className="flex gap-4">
+                    {filteredUsers
+                      .sort((a, b) => a.name.localeCompare(b.name))
+                      .map((user) => (
+                        <Card
+                          isPressable
+                          key={user.uid}
+                          className={cn(
+                            'no-scrollbar min-w-64 rounded-xl border border-divider shadow-none sm:min-w-72',
+                            {
+                              'border-2 border-primary-400':
+                                user.uid === formik.values.patient?.uid
+                            }
+                          )}
+                          onPress={() => {
+                            formik.setFieldValue('patient', user);
+                          }}
+                        >
+                          <CardBody className="items-center gap-4 p-8">
+                            <div>
+                              <Image
+                                src="/assets/placeholder-avatar.jpeg"
+                                alt="User"
+                                width={80}
+                                height={80}
+                                className="rounded-full"
+                                isBlurred
+                              />
+                            </div>
+                            <div>
+                              <h2 className="text-center text-lg font-semibold">
+                                {user.name}
+                              </h2>
+                              <p className="text-sm font-light text-default-500">
+                                {user.email}
+                              </p>
+                            </div>
+                          </CardBody>
+                        </Card>
+                      ))}
+                  </ScrollShadow>
+                </div>
+                {!isLoading && session.user.role === 'user' && (
                   <div>
                     Patient not shown?{' '}
                     <Link href="#">

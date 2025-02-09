@@ -6,6 +6,7 @@ import { DoctorType } from '@/models/Doctor';
 import { AppointmentType } from '@/models/Appointment';
 import axios from 'axios';
 import { toast } from 'sonner';
+import { subYears } from 'date-fns';
 
 interface AppointmentForm {
   patient: UserType;
@@ -20,8 +21,19 @@ interface AppointmentForm {
   appointment: AppointmentType;
 }
 
+interface RegisterFormType {
+  firstName: string;
+  lastName: string;
+  age: number;
+  email?: string;
+  phone: string;
+  otp: string;
+  step: number;
+}
+
 interface FormContextType {
   formik: ReturnType<typeof useFormik<AppointmentForm>>;
+  register: ReturnType<typeof useFormik<RegisterFormType>>;
   session: any;
 }
 
@@ -80,8 +92,23 @@ export const FormProvider = ({
     }
   });
 
+  const register = useFormik<RegisterFormType>({
+    initialValues: {
+      firstName: '',
+      lastName: '',
+      age: 1,
+      email: '',
+      phone: '',
+      otp: '',
+      step: 1
+    },
+    onSubmit: async (values) => {
+      console.log(values);
+    }
+  });
+
   return (
-    <FormContext.Provider value={{ formik, session }}>
+    <FormContext.Provider value={{ formik, session, register }}>
       {children}
     </FormContext.Provider>
   );
