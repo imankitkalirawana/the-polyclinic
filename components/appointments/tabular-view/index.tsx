@@ -19,7 +19,8 @@ import {
   SortDescriptor,
   Input,
   Pagination,
-  useDisclosure,
+
+  
   Tooltip,
   Spinner
 } from '@heroui/react';
@@ -34,8 +35,6 @@ import { getAllAppointments } from '@/functions/server-actions/appointment';
 import FormatTimeInTable from '@/components/ui/format-time-in-table';
 import Skeleton from '@/components/ui/skeleton';
 import useDebounce from '@/hooks/useDebounce';
-import defaultConfig from '@/lib/config.json';
-import { UserConfigType } from '@/models/UserConfig';
 
 const getConfig = async () => {
   const res = await fetch(`/api/config`, {
@@ -92,7 +91,7 @@ export default function TabularView({ session }: { session: any }) {
     direction: 'ascending'
   });
   const [status, setStatus] = React.useState<Selection>(
-    new Set(defaultConfig.config['data-table'].appointments.status)
+    new Set(INITIAL_VISIBLE_STATUS)
   );
 
   const { data, refetch, isRefetching, isLoading } = useQuery({
@@ -105,12 +104,6 @@ export default function TabularView({ session }: { session: any }) {
         query,
         status: Array.from(status) as string[]
       })
-  });
-
-  const { data: config } = useQuery({
-    queryKey: ['config'],
-    queryFn: () => getConfig(),
-    initialData: defaultConfig.config
   });
 
   useEffect(() => {
