@@ -4,14 +4,14 @@ import { Accordion, AccordionItem, Link } from '@heroui/react';
 import DoctorSelection, { DoctorSelectionTitle } from './doctor-selection';
 
 import { useForm } from './context';
-import ConfirmationModal from '../modals/confirmation-modal';
-import SummaryModal from '../modals/summary-modal';
+import ConfirmationModal from './modals/confirmation-modal';
+import SummaryModal from './modals/summary-modal';
 import AdditionalDetailsSelection, {
   AdditionalDetailsSelectionTitle
 } from './additional-details-selection';
 import DateSelection, { DateSelectionTitle } from './date-selection';
 import UserSelection, { UserSelectionTitle } from './user-selection';
-import NewUserModal from '../modals/new-user-modal';
+import NewUserModal from './modals/new-user-modal';
 
 export default function Selection() {
   const { formik } = useForm();

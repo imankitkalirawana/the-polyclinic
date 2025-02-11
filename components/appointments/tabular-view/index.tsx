@@ -382,6 +382,7 @@ export default function TabularView({ session }: { session: any }) {
             <select
               className="bg-transparent text-small text-default-400 outline-none"
               onChange={onRowsPerPageChange}
+              value={limit}
             >
               {rowOptions.map((row) => (
                 <option key={row.label} value={row.value}>
@@ -405,9 +406,7 @@ export default function TabularView({ session }: { session: any }) {
     return (
       <div className="flex items-center justify-between px-2 py-2">
         <span className="w-[30%] text-small text-default-400">
-          {selectedKeys === 'all'
-            ? 'All items selected'
-            : `${selectedKeys.size} of ${appointments.length} selected`}
+          Showing {appointments.length} of {data?.total} appointments
         </span>
         <Pagination
           page={page}

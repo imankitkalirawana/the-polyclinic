@@ -75,7 +75,6 @@ export const FormProvider = ({ children }: { children: React.ReactNode }) => {
       }
       if (values.step === 2) {
         if (values.otp.length < 4) {
-          console.log('Here is the error');
           formik.setFieldError('otp', 'Enter a valid OTP');
           return;
         }

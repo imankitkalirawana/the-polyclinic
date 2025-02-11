@@ -7,6 +7,24 @@ import { AppointmentType } from '@/models/Appointment';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { subYears } from 'date-fns';
+import {
+  sendMailWithOTP,
+  verifyEmail,
+  verifyOTP
+} from '@/functions/server-actions/auth/verification';
+import * as Yup from 'yup';
+import registerUser from '@/functions/server-actions/auth/register';
+
+const validationSchema = Yup.object({
+  firstName: Yup.string()
+    .required('Enter your first name.')
+    .min(3, 'Too short')
+    .max(50, 'Too long'),
+  age: Yup.number().max(120, 'Max age can be 120.'),
+  id: Yup.string().required(
+    'Enter a valid email / phone. OTP will be sent to this.'
+  )
+});
 
 interface AppointmentForm {
   patient: UserType;
@@ -25,8 +43,9 @@ interface RegisterFormType {
   firstName: string;
   lastName: string;
   age: number;
-  email?: string;
-  phone: string;
+  dob: { day: string; month: string; year: string };
+  gender: 'male' | 'female' | 'other';
+  id: string;
   otp: string;
   step: number;
 }
@@ -97,15 +116,72 @@ export const FormProvider = ({
       firstName: '',
       lastName: '',
       age: 1,
-      email: '',
-      phone: '',
+      dob: { day: '', month: '', year: '' },
+      gender: 'other',
+      id: '',
       otp: '',
       step: 1
     },
+    validationSchema,
     onSubmit: async (values) => {
-      console.log(values);
+      if (values.step === 1) {
+        await handeVerification();
+      }
     }
   });
+
+  const handeVerification = async () => {
+    if (register.values.id?.includes('@')) {
+      await verifyEmail(register.values.id).then(async (res) => {
+        if (res) {
+          register.setFieldError('id', 'Email already exists');
+          return;
+        } else {
+          register.setFieldError('id', '');
+          await handleRegister();
+        }
+      });
+    } else {
+      register.setFieldError(
+        'id',
+        'Phone number not supported yet, use email instead.'
+      );
+      return;
+    }
+  };
+
+  const handleRegister = async () => {
+    const calculatedAge = subYears(new Date(), register.values.age);
+    const day = calculatedAge.getDate().toString();
+    const month = (calculatedAge.getMonth() + 1).toString();
+    const year = calculatedAge.getFullYear().toString();
+
+    const data = {
+      ...register.values,
+      name: register.values.firstName + ' ' + register.values.lastName,
+      dob: {
+        day: day.length === 1 ? '0' + day : day,
+        month: month.length === 1 ? '0' + month : month,
+        year
+      }
+    };
+    await registerUser(data)
+      .then(async (user) => {
+        toast('Please choose date and time for appointment');
+        formik.setValues(
+          {
+            ...formik.values,
+            patient: user,
+            step: 2
+          },
+          true
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error(err.message);
+      });
+  };
 
   return (
     <FormContext.Provider value={{ formik, session, register }}>

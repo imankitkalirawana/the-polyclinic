@@ -11,7 +11,7 @@ import {
   Divider,
   Chip
 } from '@heroui/react';
-import { useForm } from '../session/context';
+import { useForm } from '../context';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import CellValue from '@/components/ui/cell-value';
 import { format } from 'date-fns';
@@ -36,8 +36,18 @@ export default function SummaryModal() {
       >
         <ModalContent>
           <>
-            <ModalHeader>
-              <h3 className="text-xl font-semibold">Appointment Summary</h3>
+            <ModalHeader className="flex-col items-center justify-center gap-2">
+              <div className="flex w-fit rounded-full bg-primary-100 p-4">
+                <Icon
+                  icon="solar:list-down-bold"
+                  className="text-primary"
+                  width="36"
+                />
+              </div>
+              <h3>Appointment Summary</h3>
+              <p className="text-center text-xs font-light text-default-500">
+                Please check the details below before proceeding.
+              </p>
             </ModalHeader>
             <ModalBody>
               <CellValue

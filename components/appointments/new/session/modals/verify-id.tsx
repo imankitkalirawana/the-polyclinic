@@ -14,7 +14,7 @@ import { useForm } from '../context';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 export default function VerifyId() {
-  const { formik } = useForm();
+  const { register } = useForm();
   return (
     <>
       <Modal isOpen isDismissable={false} backdrop="blur" hideCloseButton>
@@ -31,7 +31,7 @@ export default function VerifyId() {
               </div>
               <h2 className="text-2xl font-semibold">
                 Verify{' '}
-                {formik.values.id?.includes('@')
+                {register.values.id?.includes('@')
                   ? 'Email Address'
                   : 'Phone Number'}
               </h2>
@@ -40,29 +40,29 @@ export default function VerifyId() {
               <p className="text-center">
                 Enter the verification code sent to:{' '}
                 <strong>
-                  {formik.values.id.includes('@')
-                    ? formik.values.id
-                    : `+91 ${formik.values.id}`}
+                  {register.values.id.includes('@')
+                    ? register.values.id
+                    : `+91 ${register.values.id}`}
                 </strong>
               </p>
               <InputOtp
                 length={4}
-                value={formik.values.otp}
+                value={register.values.otp}
                 name="otp"
                 autoFocus
                 onValueChange={(value) => {
-                  formik.setFieldValue('otp', value);
+                  register.setFieldValue('otp', value);
                 }}
                 isInvalid={
-                  formik.touched.otp && formik.errors.otp ? true : false
+                  register.touched.otp && register.errors.otp ? true : false
                 }
                 errorMessage={
                   <div className="flex items-center gap-1">
                     <Icon icon="solar:info-circle-bold" width="14" />
-                    <span>{formik.errors.otp}</span>
+                    <span>{register.errors.otp}</span>
                   </div>
                 }
-                onComplete={() => formik.handleSubmit()}
+                onComplete={() => register.handleSubmit()}
               />
               <div className="flex items-center gap-2 text-sm">
                 <p>Didn&apos;t receive the code?</p>
@@ -76,7 +76,9 @@ export default function VerifyId() {
                 radius="lg"
                 fullWidth
                 variant="bordered"
-                onPress={() => formik.setValues({ ...formik.values, step: 1 })}
+                onPress={() =>
+                  register.setValues({ ...register.values, step: 1 })
+                }
               >
                 Cancel
               </Button>
@@ -85,8 +87,8 @@ export default function VerifyId() {
                 fullWidth
                 color="primary"
                 endContent={<Icon icon="tabler:chevron-right" width={18} />}
-                onPress={() => formik.handleSubmit()}
-                isLoading={formik.isSubmitting}
+                onPress={() => register.handleSubmit()}
+                isLoading={register.isSubmitting}
               >
                 Continue
               </Button>

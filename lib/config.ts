@@ -15,10 +15,6 @@ export const rowOptions = [
     label: '100',
     value: 100
   },
-  {
-    label: '1000',
-    value: 1000
-  }
 ];
 
 export const TIMINGS = {
@@ -37,6 +33,7 @@ export const CLINIC_INFO = {
   phone: '+0000000000000000',
   email: 'contact@divinely.dev',
   website: 'www.polyclinic.com',
+  url: 'https://polyclinic.devocode.in/',
   logo: '/logo.png',
   social: {
     facebook: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',

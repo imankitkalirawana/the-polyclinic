@@ -33,7 +33,11 @@ export interface UserType extends Base {
   address: string;
   zipcode: string;
   passwordResetToken: string;
-  dob: string;
+  dob: {
+    day: string;
+    month: string;
+    year: string
+  };
   gender: 'male' | 'female' | 'other';
   image: string;
 }
@@ -66,8 +70,18 @@ const userSchema = new mongoose.Schema(
       required: [true, 'Name is required']
     },
     dob: {
-      type: String,
-      default: '2000-01-01'
+      day: {
+        type: String,
+        default: '01'
+      },
+      month: {
+        type: String,
+        default: '01'
+      },
+      year: {
+        type: String,
+        default: '2000'
+      }
     },
     gender: {
       type: String,

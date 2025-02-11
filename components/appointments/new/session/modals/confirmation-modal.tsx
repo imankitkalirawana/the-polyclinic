@@ -11,7 +11,7 @@ import {
   Image,
   Link
 } from '@heroui/react';
-import { useForm } from '../session/context';
+import { useForm } from '../context';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import CellValue from '@/components/ui/cell-value';
 import AsyncButton from '@/components/ui/buttons/async-button';
@@ -37,7 +37,7 @@ export default function ConfirmationModal() {
       >
         <ModalContent className="px-4">
           <>
-            <ModalHeader className="flex-col items-center justify-center gap-2">
+            <ModalHeader className="w-full flex-col items-center justify-center gap-2">
               <div className="flex w-fit rounded-full bg-success-50 p-4">
                 <Icon
                   icon="solar:check-circle-bold"
