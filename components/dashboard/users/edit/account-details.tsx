@@ -16,7 +16,7 @@ import {
   SelectItem,
   DatePicker,
   ScrollShadow
-} from "@heroui/react";
+} from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { useSession } from 'next-auth/react';
 import { parseDate, getLocalTimeZone, today } from '@internationalized/date';
@@ -265,9 +265,7 @@ export default function AccountDetails({
               formik.setFieldValue('user.dob', dob);
               formik.setFieldValue('age', calculateAge(dob));
             }}
-            value={parseDate(
-              formik.values.user?.dob || new Date().toISOString().split('T')[0]
-            )}
+            // value={}
             maxValue={today(getLocalTimeZone())}
             showMonthAndYearPickers
           />

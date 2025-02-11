@@ -16,7 +16,7 @@ import {
   Select,
   SelectItem,
   user
-} from "@heroui/react";
+} from '@heroui/react';
 import { Genders } from '@/lib/options';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useFormik } from 'formik';
@@ -52,7 +52,11 @@ export default function NewUser({ countries }: { countries: CountryProps[] }) {
         name: '',
         email: '',
         phone: '',
-        dob: new Date().toISOString().split('T')[0],
+        dob: {
+          day: '01',
+          month: '01',
+          year: '2000'
+        },
         gender: 'male',
         country: 'IN',
         state: '',
@@ -301,10 +305,6 @@ export default function NewUser({ countries }: { countries: CountryProps[] }) {
                   formik.setFieldValue('user.dob', dob);
                   formik.setFieldValue('age', calculateAge(dob));
                 }}
-                value={parseDate(
-                  formik.values.user.dob ||
-                    new Date().toISOString().split('T')[0]
-                )}
                 maxValue={today(getLocalTimeZone())}
                 showMonthAndYearPickers
               />

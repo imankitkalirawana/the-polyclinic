@@ -6,7 +6,8 @@ export enum UserStatus {
   active = 'active',
   inactive = 'inactive',
   blocked = 'blocked',
-  deleted = 'deleted'
+  deleted = 'deleted',
+  unverified = 'unverified'
 }
 
 export enum UserRole {
@@ -36,7 +37,7 @@ export interface UserType extends Base {
   dob: {
     day: string;
     month: string;
-    year: string
+    year: string;
   };
   gender: 'male' | 'female' | 'other';
   image: string;

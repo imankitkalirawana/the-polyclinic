@@ -58,11 +58,12 @@ const INITIAL_VISIBLE_COLUMNS = [
 ];
 
 export default function Services() {
-  const { data: services } = useQuery<ServiceType[]>({
+  const { data } = useQuery({
     queryKey: ['services'],
-    queryFn: () => getAllServices(),
-    initialData: [] as ServiceType[]
+    queryFn: () => getAllServices()
   });
+
+  const services = data?.services || [];
 
   const deleteModal = useDisclosure();
   const router = useRouter();

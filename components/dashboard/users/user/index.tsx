@@ -49,10 +49,10 @@ export default function UserCard({ uid }: { uid: number }) {
         <CardBody className="space-y-2 px-0">
           <ScrollShadow className="pr-4">
             <CellValue label="Full Name" value={user.name} />
-            <CellValue
+            {/* <CellValue
               label="Date of Birth"
-              value={user.dob ? humanReadableDate(user.dob) : "Have't born yet"}
-            />
+              // value={user.dob ? humanReadableDate(user.dob) : "Have't born yet"}
+            /> */}
             <CellValue
               label="Country"
               value={
