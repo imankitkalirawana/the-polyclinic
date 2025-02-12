@@ -185,7 +185,9 @@ export default function Users({ session }: { session: any }) {
                   <p className="text-bold whitespace-nowrap text-sm capitalize">
                     {user.name}
                   </p>
-                  <Chip size="sm">{user.role}</Chip>
+                  <p className="whitespace-nowrap text-xs text-default-400">
+                    {user.role || ''}
+                  </p>
                 </div>
               </div>
             </>
