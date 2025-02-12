@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import Drug from '@/models/Drug';
+import Email from '@/models/Email';
 import { connectDB } from '@/lib/db';
 import { auth } from '@/auth';
 import ExcelJS from 'exceljs';
@@ -7,45 +7,37 @@ import { format } from 'date-fns';
 
 export const GET = auth(async function GET(request: any) {
   try {
-    // if (request.auth?.drug?.role !== 'receptionist') {
-    //   return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    // }
+    if (request.auth?.user?.role !== 'admin') {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
     await connectDB();
-    let drugs = await Drug.find();
+    let emails = await Email.find();
 
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Drugs');
+    const worksheet = workbook.addWorksheet('Emails');
     worksheet.columns = [
-      { header: 'Drug ID', key: 'did', width: 10 },
-      { header: 'Status', key: 'status', width: 10 },
-      { header: 'Brand Name', key: 'brandName', width: 20 },
-      { header: 'Generic Name', key: 'genericName', width: 20 },
-      { header: 'Manufacturer', key: 'manufacturer', width: 20 },
-      { header: 'Dosage', key: 'dosage', width: 20 },
-      { header: 'Price (INR)', key: 'price', width: 10 },
-      { header: 'Strength (mg)', key: 'strength', width: 20 },
-      { header: 'Stock', key: 'stock', width: 10 },
+      { header: 'ID', key: '_id', width: 20 },
+      { header: 'To', key: 'to', width: 30 },
+      { header: 'From', key: 'from', width: 30 },
+      { header: 'Subject', key: 'subject', width: 30 },
+      { header: 'Message', key: 'message', width: 100 },
       { header: 'Created At', key: 'createdAt', width: 30 },
       { header: 'Created By', key: 'createdBy', width: 30 },
       { header: 'Updated At', key: 'updatedAt', width: 30 },
       { header: 'Updated By', key: 'updatedBy', width: 30 }
     ];
 
-    drugs.forEach((drug) => {
+    emails.forEach((email) => {
       worksheet.addRow({
-        did: drug.did,
-        status: drug.status,
-        brandName: drug.brandName,
-        genericName: drug.genericName,
-        manufacturer: drug.manufacturer || '-',
-        dosage: drug.dosage || '-',
-        strength: drug.strength || '-',
-        stock: drug.stock || '-',
-        price: drug?.price?.toLocaleString('en-IN') || '-',
-        createdAt: format(new Date(drug.createdAt), 'PPPp'),
-        createdBy: drug.createdBy,
-        updatedAt: format(new Date(drug.updatedAt), 'PPPp'),
-        updatedBy: drug.updatedBy
+        _id: email._id,
+        to: email.to,
+        from: email.from,
+        subject: email.subject,
+        message: email.message,
+        createdAt: format(new Date(email.createdAt), 'PPPp'),
+        createdBy: email.createdBy,
+        updatedAt: format(new Date(email.updatedAt), 'PPPp'),
+        updatedBy: email.updatedBy
       });
     });
 
@@ -55,7 +47,7 @@ export const GET = auth(async function GET(request: any) {
       headers: {
         'Content-Type':
           'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        'Content-Disposition': 'attachment; filename="drugs.xlsx"'
+        'Content-Disposition': 'attachment; filename="emails.xlsx"'
       }
     });
   } catch (error: any) {

@@ -7,9 +7,9 @@ import { format } from 'date-fns';
 
 export const GET = auth(async function GET(request: any) {
   try {
-    // if (request.auth?.drug?.role !== 'receptionist') {
-    //   return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    // }
+    if (request.auth?.user?.role !== 'admin') {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
     await connectDB();
     let drugs = await Drug.find();
 
