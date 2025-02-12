@@ -34,6 +34,7 @@ import Skeleton from '@/components/ui/skeleton';
 import useDebounce from '@/hooks/useDebounce';
 import { saveTableConfig, loadTableConfig } from '@/utils/localStorageUtil';
 import axios from 'axios';
+import HandleExport from '../common/handle-export';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   active: 'success',
@@ -92,7 +93,7 @@ const getAllServices = async (params: {
   return res.data;
 };
 
-export default function Services() {
+export default function Services({ session }: { session: any }) {
   const [searchQuery, setSearchQuery] = React.useState('');
   const query = useDebounce(searchQuery, 500);
 
@@ -308,7 +309,9 @@ export default function Services() {
             onClear={() => setSearchQuery('')}
           />
           <div className="flex gap-3">
-            {/* <HandleExport /> */}
+            {session?.user?.role === 'admin' && (
+              <HandleExport collection="services" />
+            )}
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button

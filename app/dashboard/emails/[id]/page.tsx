@@ -1,11 +1,9 @@
 import { API_BASE_URL } from '@/lib/config';
 import { EmailType } from '@/models/Email';
-import { Button, Chip, Input } from '@heroui/react';
+import { Chip } from '@heroui/react';
 import axios from 'axios';
 import { format } from 'date-fns';
-import { Clock, Link2, Maximize2, Plus, Send, X } from 'lucide-react';
 import { cookies } from 'next/headers';
-import { toast } from 'sonner';
 
 async function getData(id: string) {
   try {
@@ -32,16 +30,16 @@ export default async function Page({ params }: Props) {
         {/* Header */}
         <div className="flex flex-wrap items-center justify-between border-b p-4">
           <h1
-            title={email.subject}
+            title={email?.subject}
             className="line-clamp-1 text-lg font-medium"
           >
-            {email.subject}
+            {email?.subject}
           </h1>
           <span
-            title={format(email.createdAt as Date, 'PPp')}
+            title={format(email?.createdAt as Date, 'PPp')}
             className="line-clamp-1 text-xs text-default-500"
           >
-            {format(email.createdAt as Date, 'PPp')}
+            {format(email?.createdAt as Date, 'PPp')}
           </span>
         </div>
 
@@ -52,13 +50,13 @@ export default async function Page({ params }: Props) {
             <div className="flex items-center gap-8">
               <span className="w-8 text-sm text-default-500">From:</span>
               <Chip variant="flat">
-                <span className="text-sm">{email.from}</span>
+                <span className="text-sm">{email?.from}</span>
               </Chip>
             </div>
             <div className="flex items-center gap-8">
               <span className="w-8 text-sm text-default-500">To:</span>
               <Chip variant="flat">
-                <span className="text-sm">{email.to}</span>
+                <span className="text-sm">{email?.to}</span>
               </Chip>
             </div>
           </div>

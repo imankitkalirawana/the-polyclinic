@@ -35,7 +35,7 @@ import useDebounce from '@/hooks/useDebounce';
 import { saveTableConfig, loadTableConfig } from '@/utils/localStorageUtil';
 import axios from 'axios';
 import { toast } from 'sonner';
-import HandleExport from './handle-export';
+import HandleExport from '../common/handle-export';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   active: 'success',
@@ -94,7 +94,7 @@ const getAllUsers = async (params: {
   return res.data;
 };
 
-export default function Users() {
+export default function Users({ session }: { session: any }) {
   const [searchQuery, setSearchQuery] = React.useState('');
   const query = useDebounce(searchQuery, 500);
 
@@ -295,7 +295,9 @@ export default function Users() {
             onClear={() => setSearchQuery('')}
           />
           <div className="flex gap-3">
-            <HandleExport />
+            {session?.user?.role === 'admin' && (
+              <HandleExport collection="users" />
+            )}
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button

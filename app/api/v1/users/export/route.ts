@@ -7,7 +7,7 @@ import { format } from 'date-fns';
 
 export const GET = auth(async function GET(request: any) {
   try {
-    if (request.auth?.user?.role !== 'receptionist') {
+    if (request.auth?.user?.role !== 'admin') {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
     await connectDB();

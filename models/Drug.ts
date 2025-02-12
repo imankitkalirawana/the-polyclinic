@@ -3,8 +3,8 @@ import { Base } from '@/lib/interface';
 
 export interface DrugType extends Base {
   did: number;
-  genericName: string;
   brandName: string;
+  genericName: string;
   description?: string;
   manufacturer?: string;
   dosage?: string;
@@ -13,6 +13,8 @@ export interface DrugType extends Base {
   strength?: number;
   quantity?: number;
   price?: number;
+  status: 'available' | 'unavailable';
+  stock?: number;
 }
 
 const drugSchema = new mongoose.Schema<DrugType>(
@@ -21,8 +23,8 @@ const drugSchema = new mongoose.Schema<DrugType>(
       type: Number,
       unique: true
     },
-    genericName: String,
     brandName: String,
+    genericName: String,
     description: String,
     manufacturer: String,
     dosage: String,
@@ -30,7 +32,13 @@ const drugSchema = new mongoose.Schema<DrugType>(
     strength: Number,
     quantity: Number,
     price: Number,
-    frequency: String
+    frequency: String,
+    status: {
+      type: String,
+      enum: ['available', 'unavailable'],
+      default: 'available'
+    },
+    stock: Number
   },
   { timestamps: true }
 );
