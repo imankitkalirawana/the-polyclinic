@@ -10,9 +10,9 @@ export const GET = auth(async function GET(request: any) {
     }
 
     const { searchParams } = new URL(request.url);
-    const page = Number(searchParams.get('page')) || 1;
-    const limit = Number(searchParams.get('rows')) || 20;
-    const search = searchParams.get('search');
+    const page = parseInt(searchParams.get('page') || '1', 10);
+    const limit = parseInt(searchParams.get('rows') || '20', 10);
+    const search = searchParams.get('search')?.trim() || '';
 
     const searchQuery = search
       ? {
