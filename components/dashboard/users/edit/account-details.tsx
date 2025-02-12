@@ -9,25 +9,21 @@ import {
   Avatar,
   Badge,
   Input,
-  Autocomplete,
-  AutocompleteItem,
   CardFooter,
   Select,
   SelectItem,
-  DatePicker,
-  ScrollShadow
+  DatePicker
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { useSession } from 'next-auth/react';
-import { parseDate, getLocalTimeZone, today } from '@internationalized/date';
+import { getLocalTimeZone, today } from '@internationalized/date';
 import { I18nProvider } from '@react-aria/i18n';
 
-import { CityProps, CountryProps, StateProps } from '@/lib/interface';
 import { useFormik } from 'formik';
 import Link from 'next/link';
 import axios from 'axios';
 import { toast } from 'sonner';
-import { getUserWithUID, verifyEmail } from '@/functions/server-actions';
+import { verifyEmail } from '@/functions/server-actions';
 import { Genders } from '@/lib/options';
 import { userValidationSchema } from '@/lib/validation';
 import { calculateAge, calculateDOB } from '@/lib/client-functions';

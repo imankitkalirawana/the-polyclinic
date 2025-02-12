@@ -97,7 +97,7 @@ const userSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: UserStatus,
-      default: 'active'
+      default: 'unverified'
     },
     country: {
       type: String,
