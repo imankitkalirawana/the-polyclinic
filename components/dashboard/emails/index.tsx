@@ -1,12 +1,5 @@
 'use client';
-
-import { redirectTo } from '@/functions/server-actions';
-import {
-  capitalize,
-  humanReadableDate,
-  humanReadableTime
-} from '@/lib/utility';
-import { EmailType } from '@/models/Email';
+import { capitalize } from '@/lib/utility';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import {
   TableHeader,
@@ -15,6 +8,8 @@ import {
   TableRow,
   TableCell,
   Table,
+  ChipProps,
+  Chip,
   Selection,
   Dropdown,
   DropdownTrigger,
@@ -24,28 +19,28 @@ import {
   SortDescriptor,
   Input,
   Pagination,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  useDisclosure,
-  Tooltip
+  Tooltip,
+  Spinner
 } from '@heroui/react';
-import { IconTableExport } from '@tabler/icons-react';
-import { useFormik } from 'formik';
-import { useRouter } from 'next/navigation';
-import React from 'react';
-import { toast } from 'sonner';
-import { useQuery } from '@tanstack/react-query';
-import { getAllEmails } from '@/functions/server-actions/emails';
-import NoResults from '@/components/ui/no-results';
+import Link from 'next/link';
+import React, { useEffect } from 'react';
+import { CopyText } from '@/components/ui/copy';
+import { EmailType } from '@/models/Email';
+import { redirectTo } from '@/functions/server-actions';
+import { rowOptions } from '@/lib/config';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import FormatTimeInTable from '@/components/ui/format-time-in-table';
+import Skeleton from '@/components/ui/skeleton';
+import useDebounce from '@/hooks/useDebounce';
+import { saveTableConfig, loadTableConfig } from '@/utils/localStorageUtil';
+import axios from 'axios';
+import HandleExport from '../common/handle-export';
 
-interface Props {
-  emails: EmailType[];
-}
+const tableKey = 'emails';
 
-const INITIAL_VISIBLE_COLUMNS = [
+const savedConfig = loadTableConfig(tableKey);
+
+const INITIAL_VISIBLE_COLUMNS = savedConfig?.columns || [
   'to',
   'from',
   'subject',
@@ -53,38 +48,76 @@ const INITIAL_VISIBLE_COLUMNS = [
   'actions'
 ];
 
-export default function Emails() {
-  const {
-    data: emails,
-    isError,
-    error,
-    isLoading
-  } = useQuery<EmailType[]>({
-    queryKey: ['emails'],
-    queryFn: () => getAllEmails(),
-    initialData: [] as EmailType[]
+const INITIAL_SORT_DESCRIPTOR = savedConfig?.sortDescriptor || {
+  column: 'createdAt',
+  direction: 'descending'
+};
+
+const INITIAL_LIMIT = savedConfig?.limit || 10;
+
+const getAllEmails = async (params: {
+  limit?: number;
+  page?: number;
+  sortColumn?: string;
+  sortDirection?: string;
+  query?: string;
+}): Promise<{
+  emails: EmailType[];
+  total: number;
+  totalPages: number;
+}> => {
+  const res = await axios.get(`/api/v1/emails`, {
+    params
+  });
+  return res.data;
+};
+
+export default function Emails({ session }: { session: any }) {
+  const [searchQuery, setSearchQuery] = React.useState('');
+  const query = useDebounce(searchQuery, 500);
+
+  const [page, setPage] = React.useState(1);
+  const [limit, setLimit] = React.useState(INITIAL_LIMIT);
+  const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>(
+    INITIAL_SORT_DESCRIPTOR
+  );
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['emails', page, limit, sortDescriptor, query],
+    queryFn: () =>
+      getAllEmails({
+        limit,
+        page,
+        sortColumn: sortDescriptor.column as string,
+        sortDirection: sortDescriptor.direction,
+        query
+      })
   });
 
-  const deleteModal = useDisclosure();
-  const router = useRouter();
-  const [selected, setSelected] = React.useState<EmailType | null>(null);
-  const [filterValue, setFilterValue] = React.useState('');
+  useEffect(() => {
+    if (data) {
+      setPages(data?.totalPages);
+    }
+  }, [data]);
+
+  const [pages, setPages] = React.useState(1);
+
+  const emails = data?.emails || [];
+
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
     new Set([])
   );
   const [visibleColumns, setVisibleColumns] = React.useState<Selection>(
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
-  const [statusFilter, setStatusFilter] = React.useState<Selection>('all');
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
-    column: 'createdAt',
-    direction: 'descending'
-  });
 
-  const [page, setPage] = React.useState(1);
-
-  const hasSearchFilter = Boolean(filterValue);
+  useEffect(() => {
+    saveTableConfig(tableKey, {
+      columns: Array.from(visibleColumns),
+      sortDescriptor,
+      limit
+    });
+  }, [visibleColumns, sortDescriptor, limit]);
 
   const headerColumns = React.useMemo(() => {
     if (visibleColumns === 'all') return columns;
@@ -94,74 +127,16 @@ export default function Emails() {
     );
   }, [visibleColumns]);
 
-  const filteredItems = React.useMemo(() => {
-    let filteredItems = [...emails];
-
-    if (hasSearchFilter) {
-      filteredItems = filteredItems.filter(
-        (email) =>
-          email.to.toLowerCase().includes(filterValue.toLowerCase()) ||
-          email.from.toLowerCase().includes(filterValue.toLowerCase()) ||
-          email.subject.toLowerCase().includes(filterValue.toLowerCase())
-      );
-    }
-
-    return filteredItems;
-  }, [emails, filterValue, statusFilter]);
-
-  const pages = Math.ceil(filteredItems.length / rowsPerPage);
-
-  const items = React.useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
-
-    return filteredItems.slice(start, end);
-  }, [page, filteredItems, rowsPerPage]);
-
-  const sortedItems = React.useMemo(() => {
-    return [...items].sort((a: EmailType, b: EmailType) => {
-      const first = a[sortDescriptor.column as keyof EmailType] as string;
-      const second = b[sortDescriptor.column as keyof EmailType] as string;
-      const cmp = first < second ? -1 : first > second ? 1 : 0;
-
-      return sortDescriptor.direction === 'descending' ? -cmp : cmp;
-    });
-  }, [sortDescriptor, items]);
-
   const renderCell = React.useCallback(
     (email: EmailType, columnKey: React.Key) => {
       const cellValue = email[columnKey as keyof EmailType];
       switch (columnKey) {
-        case 'from':
-          return (
-            <>
-              <div className="flex items-center gap-2">
-                <div className="flex flex-col">
-                  <p className="text-bold whitespace-nowrap text-sm">
-                    {email.from}
-                  </p>
-                </div>
-              </div>
-            </>
-          );
-        case 'to':
-          return (
-            <>
-              <div className="flex items-center gap-2">
-                <div className="flex flex-col">
-                  <p className="text-bold whitespace-nowrap text-sm">
-                    {email.to}
-                  </p>
-                </div>
-              </div>
-            </>
-          );
         case 'subject':
           return (
             <>
               <div className="flex items-center gap-2">
                 <div className="flex flex-col">
-                  <p className="text-bold whitespace-nowrap text-sm">
+                  <p className="text-bold line-clamp-1 whitespace-nowrap text-sm capitalize">
                     {email.subject}
                   </p>
                 </div>
@@ -171,14 +146,19 @@ export default function Emails() {
 
         case 'createdAt':
           return (
-            <>
-              <p className="text-bold whitespace-nowrap text-sm capitalize">
-                {humanReadableDate(email.createdAt as Date)}
-              </p>
-              <p className="text-bold whitespace-nowrap text-sm capitalize text-default-400">
-                {humanReadableTime(email.createdAt as Date)}
-              </p>
-            </>
+            <div className="space-y-1">
+              {email.createdAt && (
+                <>
+                  <FormatTimeInTable date={email.createdAt} template="PP" />
+                  <FormatTimeInTable
+                    date={email.createdAt}
+                    template="p"
+                    className="text-xs text-default-400"
+                    skeleton={<Skeleton className="h-4 w-20" />}
+                  />
+                </>
+              )}
+            </div>
           );
         case 'actions':
           return (
@@ -190,16 +170,30 @@ export default function Emails() {
               </DropdownTrigger>
               <DropdownMenu>
                 <DropdownItem
+                  key={'view'}
+                  startContent={
+                    <Icon icon="ic:round-view-in-ar" fontSize={20} />
+                  }
+                  as={Link}
+                  href={`/dashboard/emails/${email._id}`}
+                >
+                  View
+                </DropdownItem>
+                <DropdownItem
+                  key={'edit'}
+                  startContent={<Icon icon="tabler:edit" fontSize={20} />}
+                  as={Link}
+                  href={`/dashboard/emails/${email._id}/edit`}
+                >
+                  Edit
+                </DropdownItem>
+                <DropdownItem
                   key={'delete'}
                   startContent={<Icon icon="tabler:trash" fontSize={20} />}
                   className="text-danger"
                   color="danger"
-                  onPress={() => {
-                    setSelected(email);
-                    deleteModal.onOpen();
-                  }}
                 >
-                  Unsubscribe
+                  Delete
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
@@ -211,96 +205,31 @@ export default function Emails() {
     []
   );
 
-  const onNextPage = React.useCallback(() => {
-    if (page < pages) {
-      setPage(page + 1);
-    }
-  }, [page, pages]);
-
-  const onPreviousPage = React.useCallback(() => {
-    if (page > 1) {
-      setPage(page - 1);
-    }
-  }, [page]);
-
   const onRowsPerPageChange = React.useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
-      setRowsPerPage(Number(e.target.value));
+      setLimit(Number(e.target.value));
       setPage(1);
     },
     []
   );
 
-  const onSearchChange = React.useCallback((value?: string) => {
-    if (value) {
-      setFilterValue(value);
-      setPage(1);
-    } else {
-      setFilterValue('');
-    }
-  }, []);
-
-  const onClear = React.useCallback(() => {
-    setFilterValue('');
-    setPage(1);
-  }, []);
-
-  const handleExport = async () => {
-    try {
-      const response = await fetch('/api/v1/email/export', {
-        method: 'GET'
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to download the file');
-      }
-
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `emails-${new Date().toLocaleDateString()}.xlsx`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-
-      setTimeout(() => window.URL.revokeObjectURL(url), 100);
-    } catch (error) {
-      console.error('Error downloading the file:', error);
-    }
-  };
-
-  const handleDownload = async () => {
-    await toast.promise(handleExport(), {
-      loading: 'Downloading...',
-      success: 'Downloaded successfully',
-      error: 'Failed to download'
-    });
-  };
   const topContent = React.useMemo(() => {
     return (
-      <div className="flex flex-col gap-4">
+      <div className="mt-12 flex flex-col gap-4">
         <div className="flex items-end justify-between gap-3">
           <Input
             isClearable
-            className="w-full sm:max-w-[44%]"
-            placeholder="Search by name..."
-            // startContent={<SearchIcon />}
-            value={filterValue}
-            onClear={() => onClear()}
-            onValueChange={onSearchChange}
+            className="w-full sm:max-w-sm"
+            placeholder="Search by name, phone, email, etc."
+            startContent={<Icon icon="tabler:search" />}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onClear={() => setSearchQuery('')}
           />
           <div className="flex gap-3">
-            <Tooltip content="Export to Excel">
-              <Button
-                variant="bordered"
-                isIconOnly
-                radius="full"
-                endContent={<IconTableExport size={20} />}
-                onPress={handleDownload}
-              />
-            </Tooltip>
+            {session?.user?.role === 'admin' && (
+              <HandleExport collection="emails" />
+            )}
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button
@@ -322,100 +251,83 @@ export default function Emails() {
               >
                 {columns.map((column) => (
                   <DropdownItem key={column.uid} className="capitalize">
-                    {capitalize(column.name)}
+                    {column.name}
                   </DropdownItem>
                 ))}
               </DropdownMenu>
             </Dropdown>
+            <Button
+              color="primary"
+              endContent={<Icon icon={'tabler:plus'} />}
+              as={Link}
+              href="/dashboard/emails/new"
+            >
+              New Email
+            </Button>
           </div>
         </div>
         <div className="flex items-center justify-between">
           <span className="text-small text-default-400">
-            Total {emails.length} emails
+            Total {data?.total} emails
           </span>
           <label className="flex items-center text-small text-default-400">
             Rows per page:
             <select
               className="bg-transparent text-small text-default-400 outline-none"
               onChange={onRowsPerPageChange}
+              value={limit}
             >
-              <option value="10">10</option>
-              <option value="20">20</option>
-              <option value="50">50</option>
+              {rowOptions.map((row) => (
+                <option key={row.label} value={row.value}>
+                  {row.label}
+                </option>
+              ))}
             </select>
           </label>
         </div>
       </div>
     );
-  }, [
-    filterValue,
-    statusFilter,
-    visibleColumns,
-    onSearchChange,
-    onRowsPerPageChange,
-    emails.length,
-    hasSearchFilter
-  ]);
+  }, [visibleColumns, onRowsPerPageChange, emails.length, searchQuery]);
 
   const bottomContent = React.useMemo(() => {
     return (
       <div className="flex items-center justify-between px-2 py-2">
         <span className="w-[30%] text-small text-default-400">
-          {selectedKeys === 'all'
-            ? 'All items selected'
-            : `${selectedKeys.size} of ${filteredItems.length} selected`}
+          Showing {emails.length} of {data?.total} emails
         </span>
         <Pagination
-          isCompact
-          showControls
-          showShadow
-          color="primary"
           page={page}
           total={pages}
           onChange={setPage}
+          isCompact
+          showControls
         />
         <div className="hidden w-[30%] justify-end gap-2 sm:flex">
           <Button
-            isDisabled={pages === 1}
+            isDisabled={pages === 1 || page === 1}
             size="sm"
             variant="flat"
-            onPress={onPreviousPage}
+            onPress={() => setPage((prev) => (prev > 1 ? prev - 1 : prev))}
           >
             Previous
           </Button>
           <Button
-            isDisabled={pages === 1}
+            isDisabled={pages === 1 || page === pages}
             size="sm"
             variant="flat"
-            onPress={onNextPage}
+            onPress={() => setPage((prev) => (prev < 10 ? prev + 1 : prev))}
           >
             Next
           </Button>
         </div>
       </div>
     );
-  }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
-
-  const formikDelete = useFormik({
-    initialValues: {},
-    onSubmit: async () => {
-      await fetch(`/api/v1/email/${selected?.to}`, {
-        method: 'DELETE'
-      });
-      toast.success('EmailType Unsubscribed successfully');
-      deleteModal.onClose();
-      router.refresh();
-    }
-  });
-
-  if (isError) {
-    return <NoResults message={error.message} />;
-  }
+  }, [selectedKeys, emails.length, page, pages]);
 
   return (
     <>
       <Table
-        aria-label="Newsletters List"
+        aria-label="Emails"
         isHeaderSticky
         bottomContent={bottomContent}
         bottomContentPlacement="outside"
@@ -423,16 +335,16 @@ export default function Emails() {
           wrapper: 'max-h-[382px]'
         }}
         selectedKeys={selectedKeys}
-        //   selectionMode="multiple"
+        // selectionMode="multiple"
         sortDescriptor={sortDescriptor}
         topContent={topContent}
         topContentPlacement="outside"
         onSelectionChange={setSelectedKeys}
         onSortChange={setSortDescriptor}
-        className="cursor-pointer"
         onRowAction={(key) => {
           redirectTo(`/dashboard/emails/${key}`);
         }}
+        className="cursor-pointer"
       >
         <TableHeader columns={headerColumns}>
           {(column) => (
@@ -446,9 +358,9 @@ export default function Emails() {
           )}
         </TableHeader>
         <TableBody
+          items={emails}
           isLoading={isLoading}
-          loadingContent="Loading emails..."
-          items={sortedItems}
+          loadingContent={<Spinner />}
           emptyContent={'No emails found'}
         >
           {(item) => (
@@ -464,55 +376,14 @@ export default function Emails() {
           )}
         </TableBody>
       </Table>
-      <Modal
-        backdrop="blur"
-        scrollBehavior="inside"
-        isOpen={deleteModal.isOpen}
-        onOpenChange={deleteModal.onOpenChange}
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex-col items-center">
-                <Icon
-                  icon="tabler:trash-x"
-                  fontSize={54}
-                  className="text-danger"
-                />
-                <h2 className="mt-4 max-w-xs text-center text-base">
-                  Are you sure you permanently want to delete {selected?.to}{' '}
-                  from the Database?
-                </h2>
-              </ModalHeader>
-              <ModalBody className="items-center text-sm">
-                You can&apos;t undo this action.
-              </ModalBody>
-              <ModalFooter className="flex-col-reverse sm:flex-row">
-                <Button fullWidth variant="flat" onPress={onClose}>
-                  Close
-                </Button>
-                <Button
-                  color="danger"
-                  variant="flat"
-                  fullWidth
-                  isLoading={formikDelete.isSubmitting}
-                  onPress={() => formikDelete.handleSubmit()}
-                >
-                  Unsubscribe
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
     </>
   );
 }
 
 const columns = [
-  { name: 'FROM', uid: 'from', sortable: true },
   { name: 'TO', uid: 'to', sortable: true },
+  { name: 'FROM', uid: 'from', sortable: true },
   { name: 'SUBJECT', uid: 'subject', sortable: true },
-  { name: 'SENT AT', uid: 'createdAt', sortable: true },
+  { name: 'CREATED ON', uid: 'createdAt', sortable: true },
   { name: 'ACTIONS', uid: 'actions' }
 ];

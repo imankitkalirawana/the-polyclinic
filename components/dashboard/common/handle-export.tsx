@@ -9,7 +9,13 @@ import { toast } from 'sonner';
 export default function HandleExport({
   collection
 }: {
-  collection: 'users' | 'services' | 'drugs' | 'newsletter' | 'appointments';
+  collection:
+    | 'users'
+    | 'services'
+    | 'drugs'
+    | 'newsletter'
+    | 'appointments'
+    | 'emails';
 }) {
   const [isExporting, setIsExporting] = useState(false);
 
