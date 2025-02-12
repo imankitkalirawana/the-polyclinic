@@ -4,6 +4,7 @@ import { connectDB } from '@/lib/db';
 import { auth } from '@/auth';
 import ExcelJS from 'exceljs';
 import { format } from 'date-fns';
+import { stripHtml } from 'string-strip-html'; // Install this package
 
 export const GET = auth(async function GET(request: any) {
   try {
@@ -33,7 +34,7 @@ export const GET = auth(async function GET(request: any) {
         to: email.to,
         from: email.from,
         subject: email.subject,
-        message: email.message,
+        message: stripHtml(email.message).result,
         createdAt: format(new Date(email.createdAt), 'PPPp'),
         createdBy: email.createdBy,
         updatedAt: format(new Date(email.updatedAt), 'PPPp'),

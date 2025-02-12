@@ -91,6 +91,7 @@
     "recharts": "^2.13.3",
     "slugify": "^1.6.6",
     "sonner": "^1.5.0",
+    "string-strip-html": "^13.4.8",
     "supabase": "^1.207.9",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
