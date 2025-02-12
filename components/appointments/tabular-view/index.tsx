@@ -77,8 +77,6 @@ const INITIAL_SORT_DESCRIPTOR = savedConfig?.sortDescriptor || {
 const INITIAL_LIMIT = savedConfig?.limit || 10;
 
 export default function TabularView({ session }: { session: any }) {
-  // const [appointments, setAppointments] = React.useState<AppointmentType[]>([]);
-
   const [searchQuery, setSearchQuery] = React.useState('');
   const query = useDebounce(searchQuery, 500);
 

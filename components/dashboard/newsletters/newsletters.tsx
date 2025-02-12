@@ -203,7 +203,7 @@ export default function Newsletters() {
 
   const handleExport = async () => {
     try {
-      const response = await fetch('/api/newsletter/export', {
+      const response = await fetch('/api/v1/newsletter/export', {
         method: 'GET'
       });
 
@@ -355,7 +355,7 @@ export default function Newsletters() {
   const formikDelete = useFormik({
     initialValues: {},
     onSubmit: async () => {
-      await fetch(`/api/newsletter/${selected?.email}`, {
+      await fetch(`/api/v1/newsletter/${selected?.email}`, {
         method: 'DELETE'
       });
       toast.success('NewsletterType Unsubscribed successfully');

@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 
 async function getData(id: string) {
   try {
-    const res = await axios.get(`${API_BASE_URL}api/emails/${id}`, {
+    const res = await axios.get(`${API_BASE_URL}api/v1/emails/${id}`, {
       headers: { Cookie: cookies().toString() }
     });
     return res.data;

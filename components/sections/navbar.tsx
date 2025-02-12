@@ -82,8 +82,8 @@ export default function Navbar({ session }: { session: any }) {
               icon: 'solar:test-tube-minimalistic-linear'
             },
             {
-              name: 'Drugs',
-              href: '/dashboard/drugs',
+              name: 'Users',
+              href: '/dashboard/users',
               icon: 'solar:pills-linear'
             }
           ]

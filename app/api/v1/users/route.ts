@@ -11,10 +11,16 @@ export const GET = auth(async function GET(request: any) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
+    //  GET /api/v1/users?limit=10&page=1&sortColumn=name&sortDirection=ascending&query=&status=%255B%2522inactive%2522%252C%2522blocked%2522%252C%2522deleted%2522%252C%2522unverified%2522%255D 200 in 171ms
+
     const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get('limit') || '25', 10);
     const page = parseInt(searchParams.get('page') || '1', 10);
-    const status = searchParams.get('status')?.split(',') || [];
+    const status = JSON.parse(
+      decodeURIComponent(
+        searchParams.get('status') || '%255B%2522all%2522%255D'
+      )
+    );
     const query = searchParams.get('query')?.trim() || '';
     const sort = {
       column: searchParams.get('sortColumn') || 'name',
@@ -45,6 +51,7 @@ export const GET = auth(async function GET(request: any) {
       [sort.column]: (sort.direction === 'ascending' ? 1 : -1) as 1 | -1
     };
     const users = await User.find(searchQuery)
+      .select('-password')
       .sort(sortObject)
       .skip((page - 1) * limit)
       .limit(limit)

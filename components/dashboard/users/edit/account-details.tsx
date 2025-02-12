@@ -62,7 +62,7 @@ export default function AccountDetails({
           formik.setFieldError('user.email', 'Email already exists');
           return;
         }
-        await axios.put(`/api/users/uid/${user?.uid}`, values.user);
+        await axios.put(`/api/v1/users/uid/${user?.uid}`, values.user);
         refetch();
         toast.success('User updated successfully');
       } catch (error: any) {

@@ -79,7 +79,7 @@ export default function Drugs() {
   const handleDelete = async (drug: DrugType) => {
     setIsDeleting(true);
     try {
-      await fetch(`/api/drugs/${drug._id}`, {
+      await fetch(`/api/v1/drugs/${drug._id}`, {
         method: 'DELETE'
       });
 

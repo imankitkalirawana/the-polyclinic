@@ -86,7 +86,7 @@ export default function Services() {
   const handleDelete = async (service: ServiceType) => {
     setIsDeleting(true);
     try {
-      await fetch(`/api/services/${service._id}`, {
+      await fetch(`/api/v1/services/${service._id}`, {
         method: 'DELETE'
       });
 

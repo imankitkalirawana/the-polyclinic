@@ -82,7 +82,7 @@ export default function NewUser({ countries }: { countries: CountryProps[] }) {
         return;
       }
       await axios
-        .post('/api/users', values.user)
+        .post('/api/v1/users', values.user)
         .then(() => {
           toast.success('UserType added successfully');
           router.push('/dashboard/users');

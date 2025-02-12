@@ -10,7 +10,7 @@ import {
   CardFooter,
   Button,
   ScrollShadow
-} from "@heroui/react";
+} from '@heroui/react';
 
 import { DrugType } from '@/models/Drug';
 import { useRouter } from 'next/navigation';
@@ -33,7 +33,7 @@ export default function EditDrug({ drug }: UserCardProps) {
     validationSchema: drugValidationSchema,
     onSubmit: async (values) => {
       try {
-        await axios.put(`/api/drugs/did/${drug.did}`, values.drug);
+        await axios.put(`/api/v1/drugs/did/${drug.did}`, values.drug);
         toast.success('Service updated successfully');
         router.push(`/dashboard/drugs/${values.drug.did}`);
       } catch (error) {

@@ -6,7 +6,7 @@ import { cookies } from 'next/headers';
 
 async function getData(did: number) {
   try {
-    const res = await axios.get(`${API_BASE_URL}api/drugs/did/${did}`, {
+    const res = await axios.get(`${API_BASE_URL}api/v1/drugs/did/${did}`, {
       headers: { Cookie: cookies().toString() }
     });
     return res.data;

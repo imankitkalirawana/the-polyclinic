@@ -80,7 +80,7 @@ export const FormProvider = ({
     },
     onSubmit: async (values) => {
       await axios
-        .post('/api/appointments', {
+        .post('/api/v1/appointments', {
           date: values.date,
           patient: {
             uid: values.patient.uid,

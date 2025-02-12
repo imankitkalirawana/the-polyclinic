@@ -47,7 +47,7 @@ export default function CompactView({ session }: { session: any }) {
     const fetchData = async () => {
       setIsLoading(true);
       await axios
-        .get(`/api/appointments?status=${status}`)
+        .get(`/api/v1/appointments?status=${status}`)
         .then((res) => {
           setAppointments(res.data);
         })
