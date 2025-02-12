@@ -28,21 +28,21 @@ import { CopyText } from '@/components/ui/copy';
 import { UserType } from '@/models/User';
 import { redirectTo } from '@/functions/server-actions';
 import { rowOptions } from '@/lib/config';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import FormatTimeInTable from '@/components/ui/format-time-in-table';
 import Skeleton from '@/components/ui/skeleton';
 import useDebounce from '@/hooks/useDebounce';
 import { saveTableConfig, loadTableConfig } from '@/utils/localStorageUtil';
 import axios from 'axios';
+import { toast } from 'sonner';
+import HandleExport from './handle-export';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
-  booked: 'default',
-  confirmed: 'success',
-  'in-progress': 'warning',
-  completed: 'success',
-  cancelled: 'danger',
-  overdue: 'danger',
-  'on-hold': 'warning'
+  active: 'success',
+  inactive: 'warning',
+  blocked: 'danger',
+  deleted: 'danger',
+  unverified: 'default'
 };
 
 const tableKey = 'users';
@@ -74,19 +74,23 @@ const INITIAL_SORT_DESCRIPTOR = savedConfig?.sortDescriptor || {
 
 const INITIAL_LIMIT = savedConfig?.limit || 10;
 
-const getAllUsers = async (options: {
+const getAllUsers = async (params: {
   limit?: number;
   page?: number;
   sortColumn?: string;
   sortDirection?: string;
   query?: string;
-  status?: string;
+  status?: string[];
 }): Promise<{
   users: UserType[];
   total: number;
   totalPages: number;
 }> => {
-  const res = await axios.get('/api/v1/users', { params: options });
+  let status = encodeURIComponent(JSON.stringify(params.status));
+
+  const res = await axios.get(`/api/v1/users`, {
+    params: { ...params, status }
+  });
   return res.data;
 };
 
@@ -103,8 +107,8 @@ export default function Users() {
     new Set(INITIAL_VISIBLE_STATUS)
   );
 
-  const { data, refetch, isRefetching, isLoading } = useQuery({
-    queryKey: ['users', page, limit, sortDescriptor, query, status],
+  const { data, isLoading } = useQuery({
+    queryKey: ['users', page, limit, sortDescriptor, query, Array.from(status)],
     queryFn: () =>
       getAllUsers({
         limit,
@@ -112,15 +116,13 @@ export default function Users() {
         sortColumn: sortDescriptor.column as string,
         sortDirection: sortDescriptor.direction,
         query,
-        status: encodeURIComponent(
-          JSON.stringify(Array.from(status).filter((s) => s !== 'all'))
-        )
+        status: Array.from(status).map(String)
       })
   });
 
   useEffect(() => {
     if (data) {
-      setPages(data?.totalPages); // Update pages when data changes
+      setPages(data?.totalPages);
     }
   }, [data]);
 
@@ -183,9 +185,7 @@ export default function Users() {
                   <p className="text-bold whitespace-nowrap text-sm capitalize">
                     {user.name}
                   </p>
-                  <p className="whitespace-nowrap text-xs capitalize text-default-400">
-                    {user.role}
-                  </p>
+                  <Chip size="sm">{user.role}</Chip>
                 </div>
               </div>
             </>
@@ -194,11 +194,11 @@ export default function Users() {
           return (
             <div className="flex items-center gap-2">
               <div className="flex flex-col">
-                <p className="text-bold whitespace-nowrap text-sm capitalize">
+                <p className="text-bold whitespace-nowrap text-sm">
                   {user.email}
                 </p>
-                <p className="whitespace-nowrap text-xs capitalize text-default-400">
-                  {user.phone || 'N/A'}
+                <p className="whitespace-nowrap text-xs text-default-400">
+                  {user.phone || ''}
                 </p>
               </div>
             </div>
@@ -295,6 +295,7 @@ export default function Users() {
             onClear={() => setSearchQuery('')}
           />
           <div className="flex gap-3">
+            <HandleExport />
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button
@@ -483,6 +484,7 @@ const columns = [
   { name: 'UID', uid: 'uid', sortable: true },
   { name: 'NAME', uid: 'name', sortable: true },
   { name: 'CONTACT', uid: 'contact', sortable: true },
+  { name: 'ADDRESS', uid: 'address', sortable: true },
   { name: 'CREATED On', uid: 'createdAt', sortable: true },
   { name: 'ACTIONS', uid: 'actions' }
 ];
