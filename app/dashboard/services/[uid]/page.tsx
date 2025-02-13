@@ -1,5 +1,7 @@
-import ProductViewInfo from '@/components/dashboard/services/service-item';
+import { auth } from '@/auth';
+import ServiceViewItem from '@/components/dashboard/services/service-item';
 import { getServiceWithUID } from '@/functions/server-actions';
+import { AuthUser } from '@/models/User';
 import {
   dehydrate,
   HydrationBoundary,
@@ -14,15 +16,22 @@ interface Props {
 
 export default async function Page({ params }: Props) {
   const queryClient = new QueryClient();
+  const session = await auth();
+
+  if (!session) {
+    return null;
+  }
+
   await queryClient.prefetchQuery({
     queryKey: ['service', params.uid],
     queryFn: () => getServiceWithUID(params.uid)
   });
+
   return (
     <>
       <div className="h-full w-full px-2">
         <HydrationBoundary state={dehydrate(queryClient)}>
-          <ProductViewInfo uid={params.uid} />
+          <ServiceViewItem uid={params.uid} session={session as AuthUser} />
         </HydrationBoundary>
       </div>
     </>

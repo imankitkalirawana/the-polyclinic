@@ -26,8 +26,11 @@ import ModeToggle from '../mode-toggle';
 import { motion } from 'framer-motion';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { NavItem } from '@/lib/interface';
+import { useRouter } from 'nextjs-toploader/app';
 
 export default function Navbar({ session }: { session: any }) {
+  const router = useRouter();
+
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [activeMenu, setActiveMenu] = React.useState<
     null | (typeof menuItems)[0]
@@ -338,8 +341,9 @@ export default function Navbar({ session }: { session: any }) {
                               <Icon icon={subMenuItem?.icon} width={18} />
                             )
                           }
-                          href={subMenuItem.href}
+                          // href={subMenuItem.href}
                           onPress={() => {
+                            router.push(subMenuItem.href);
                             setTimeout(() => {
                               setActiveMenu(null);
                             }, 200);

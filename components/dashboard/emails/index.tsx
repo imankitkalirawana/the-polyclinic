@@ -35,6 +35,7 @@ import useDebounce from '@/hooks/useDebounce';
 import { saveTableConfig, loadTableConfig } from '@/utils/localStorageUtil';
 import axios from 'axios';
 import HandleExport from '../common/handle-export';
+import { useRouter } from 'nextjs-toploader/app';
 
 const tableKey = 'emails';
 
@@ -75,6 +76,7 @@ const getAllEmails = async (params: {
 export default function Emails({ session }: { session: any }) {
   const [searchQuery, setSearchQuery] = React.useState('');
   const query = useDebounce(searchQuery, 500);
+  const router = useRouter();
 
   const [page, setPage] = React.useState(1);
   const [limit, setLimit] = React.useState(INITIAL_LIMIT);
@@ -342,7 +344,7 @@ export default function Emails({ session }: { session: any }) {
         onSelectionChange={setSelectedKeys}
         onSortChange={setSortDescriptor}
         onRowAction={(key) => {
-          redirectTo(`/dashboard/emails/${key}`);
+          router.push(`/dashboard/emails/${key}`);
         }}
         className="cursor-pointer"
       >

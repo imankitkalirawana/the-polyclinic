@@ -1,19 +1,14 @@
+import DrugCard from '@/components/dashboard/drugs/drug';
 import EditDrug from '@/components/dashboard/drugs/drug/edit';
+import UserCard from '@/components/dashboard/users/user';
+import { getDrugWithDid } from '@/functions/server-actions/drugs';
 import { API_BASE_URL } from '@/lib/config';
 import { DrugType } from '@/models/Drug';
-import axios from 'axios';
-import { cookies } from 'next/headers';
-
-async function getData(did: number) {
-  try {
-    const res = await axios.get(`${API_BASE_URL}api/v1/drugs/did/${did}`, {
-      headers: { Cookie: cookies().toString() }
-    });
-    return res.data;
-  } catch (error) {
-    console.error(error);
-  }
-}
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient
+} from '@tanstack/react-query';
 
 interface Props {
   params: {
@@ -22,10 +17,17 @@ interface Props {
 }
 
 export default async function Page({ params }: Props) {
-  const drug: DrugType = (await getData(params.did)) || ({} as DrugType);
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ['drug', params.did],
+    queryFn: () => getDrugWithDid(params.did)
+  });
+
   return (
     <>
-      <EditDrug drug={drug} />
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <EditDrug did={params.did} />
+      </HydrationBoundary>
     </>
   );
 }

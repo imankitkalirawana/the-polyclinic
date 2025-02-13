@@ -1,5 +1,4 @@
 'use client';
-import { capitalize } from '@/lib/utility';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import {
   TableHeader,
@@ -26,15 +25,15 @@ import Link from 'next/link';
 import React, { useEffect } from 'react';
 import { CopyText } from '@/components/ui/copy';
 import { DrugType } from '@/models/Drug';
-import { redirectTo } from '@/functions/server-actions';
 import { rowOptions } from '@/lib/config';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import FormatTimeInTable from '@/components/ui/format-time-in-table';
 import Skeleton from '@/components/ui/skeleton';
 import useDebounce from '@/hooks/useDebounce';
 import { saveTableConfig, loadTableConfig } from '@/utils/localStorageUtil';
 import axios from 'axios';
 import HandleExport from '../common/handle-export';
+import { useRouter } from 'nextjs-toploader/app';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   available: 'success',
@@ -97,6 +96,7 @@ const getAllDrugs = async (params: {
 export default function Drugs({ session }: { session: any }) {
   const [searchQuery, setSearchQuery] = React.useState('');
   const query = useDebounce(searchQuery, 500);
+  const router = useRouter();
 
   const [page, setPage] = React.useState(1);
   const [limit, setLimit] = React.useState(INITIAL_LIMIT);
@@ -447,7 +447,7 @@ export default function Drugs({ session }: { session: any }) {
         onSelectionChange={setSelectedKeys}
         onSortChange={setSortDescriptor}
         onRowAction={(key) => {
-          redirectTo(`/dashboard/drugs/${key}`);
+          router.push(`/dashboard/drugs/${key}`);
         }}
         className="cursor-pointer"
       >

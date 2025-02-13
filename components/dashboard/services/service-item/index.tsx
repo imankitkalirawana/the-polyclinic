@@ -9,13 +9,12 @@ import {
   ChipProps,
   Link,
   Tooltip
-} from "@heroui/react";
+} from '@heroui/react';
 import { Icon } from '@iconify/react';
 
 import { CircleChartCard } from './graph';
 import {
   convertMinutesToHoursAndMinutes,
-  formatPrice,
   humanReadableDate,
   humanReadableTime
 } from '@/lib/utility';
@@ -24,13 +23,20 @@ import { ServiceType } from '@/models/Service';
 import { useQuery } from '@tanstack/react-query';
 import { getServiceWithUID } from '@/functions/server-actions';
 import PriceDisplay from '@/components/helper/display-price';
+import { AuthUser } from '@/models/User';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   active: 'success',
   inactive: 'danger'
 };
 
-export default function ServiceViewItem({ uid }: { uid: string }) {
+export default function ServiceViewItem({
+  uid,
+  session
+}: {
+  uid: string;
+  session: AuthUser;
+}) {
   const { data: service, isError } = useQuery<ServiceType>({
     queryKey: ['service', uid],
     queryFn: () => getServiceWithUID(uid)
@@ -132,23 +138,24 @@ export default function ServiceViewItem({ uid }: { uid: string }) {
             <div className="mt-2 flex gap-2">
               <Button
                 fullWidth
-                color="secondary"
-                variant="flat"
+                color="primary"
                 startContent={<Icon icon="lets-icons:send" width={24} />}
               >
                 Book Appointment
               </Button>
-              <Tooltip content="Edit">
-                <Button
-                  isIconOnly
-                  className="text-default-600"
-                  variant="flat"
-                  as={Link}
-                  href={`/dashboard/services/${service.uniqueId}/edit`}
-                >
-                  <Icon icon="solar:pen-linear" width={16} />
-                </Button>
-              </Tooltip>
+              {session && session?.user?.role === 'admin' && (
+                <Tooltip content="Edit">
+                  <Button
+                    isIconOnly
+                    className="text-default-600"
+                    variant="flat"
+                    as={Link}
+                    href={`/dashboard/services/${service.uniqueId}/edit`}
+                  >
+                    <Icon icon="solar:pen-linear" width={16} />
+                  </Button>
+                </Tooltip>
+              )}
             </div>
           </div>
         </div>

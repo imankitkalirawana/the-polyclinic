@@ -1,7 +1,7 @@
 'use server';
 
 import { connectDB } from '@/lib/db';
-import Email from '@/models/Email';
+import Email, { EmailType } from '@/models/Email';
 
 export const getAllEmails = async () => {
   await connectDB();
@@ -12,4 +12,16 @@ export const getAllEmails = async () => {
     ...email,
     _id: email._id.toString()
   }));
+};
+
+export const getEmailWithID = async (id: string): Promise<EmailType> => {
+  let email = (await Email.findById(id).lean()) as unknown as EmailType;
+  if (!email) {
+    throw new Error('Email not found');
+  }
+
+  return {
+    ...email,
+    _id: email._id.toString()
+  };
 };

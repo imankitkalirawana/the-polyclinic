@@ -43,6 +43,17 @@ export interface UserType extends Base {
   image: string;
 }
 
+export interface AuthUser {
+  user?: {
+    name: string;
+    email: string;
+    role: UserRole;
+    id: string;
+    uid: number;
+  };
+  expires?: string;
+}
+
 // @ts-ignore
 const AutoIncrement = mongooseSequence(mongoose);
 

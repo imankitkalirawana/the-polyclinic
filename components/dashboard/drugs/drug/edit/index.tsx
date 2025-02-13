@@ -19,12 +19,17 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { drugValidationSchema } from '@/lib/validation';
+import { useQuery } from '@tanstack/react-query';
+import { getDrugWithDid } from '@/functions/server-actions/drugs';
 
-interface UserCardProps {
-  drug: DrugType;
-}
+export default function EditDrug({ did }: { did: number }) {
+  const { data } = useQuery<DrugType>({
+    queryKey: ['drug', did],
+    queryFn: () => getDrugWithDid(did)
+  });
 
-export default function EditDrug({ drug }: UserCardProps) {
+  const drug = data || ({} as DrugType);
+
   const router = useRouter();
   const formik = useFormik({
     initialValues: {

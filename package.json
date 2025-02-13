@@ -73,7 +73,7 @@
     "next": "14.2.5",
     "next-auth": "5.0.0-beta.25",
     "next-themes": "^0.3.0",
-    "nextjs-toploader": "^1.6.12",
+    "nextjs-toploader": "^3.7.15",
     "nodemailer": "^6.9.16",
     "nuqs": "^2.2.3",
     "pdfkit": "^0.16.0",
