@@ -10,10 +10,8 @@ import {
 import { useLocale } from '@react-aria/i18n';
 import { useState } from 'react';
 import { TIMINGS } from '@/lib/config';
-import { useDispatch, useSelector } from 'react-redux';
 import { disabledDates } from '@/lib/appointments/new';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { setSelectedDate } from '@/store/slices/appointment-slice';
 import { format } from 'date-fns';
 import { useForm } from './context';
 

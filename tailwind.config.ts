@@ -27,12 +27,17 @@ const config = {
         'marquee-y': {
           from: { transform: 'translateY(0)' },
           to: { transform: 'translateY(calc(-100% - var(--gap)))' }
+        },
+        'card-up': {
+          from: { transform: 'translateY(-40px)' },
+          to: { transform: 'translateY(0)' }
         }
       },
       animation: {
         'caret-blink': 'caret-blink 1.25s ease-out infinite',
         'marquee-horizontal': 'marquee-x var(--duration) infinite linear',
-        'marquee-vertical': 'marquee-y var(--duration) linear infinite'
+        'marquee-vertical': 'marquee-y var(--duration) linear infinite',
+        'card-up': 'card-up 0.3s ease-out'
       }
     }
   },

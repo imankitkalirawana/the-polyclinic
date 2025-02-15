@@ -81,7 +81,7 @@ export const FormProvider = ({
     onSubmit: async (values) => {
       await axios
         .post('/api/v1/appointments', {
-          date: values.date,
+          date: values.date.toISOString(),
           patient: {
             uid: values.patient.uid,
             name: values.patient.name,

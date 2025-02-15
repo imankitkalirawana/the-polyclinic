@@ -34,8 +34,7 @@ import Skeleton from '@/components/ui/skeleton';
 import useDebounce from '@/hooks/useDebounce';
 import { saveTableConfig, loadTableConfig } from '@/utils/localStorageUtil';
 import axios from 'axios';
-import HandleExport from '../common/handle-export';
-import { useRouter } from 'nextjs-toploader/app';
+import { toast } from 'sonner';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   active: 'success',
@@ -94,10 +93,30 @@ const getAllUsers = async (params: {
   return res.data;
 };
 
-export default function Users({ session }: { session: any }) {
+const handleExport = async () => {
+  try {
+    const response = await fetch('/api/v1/users/export');
+    const blob = await response.blob();
+
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `users-${new Date().toLocaleDateString()}.xlsx`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    setTimeout(() => window.URL.revokeObjectURL(url), 100);
+  } catch (error) {
+    console.error('Error downloading the file:', error);
+    toast.error('Error downloading the file');
+  }
+};
+
+export default function Users() {
   const [searchQuery, setSearchQuery] = React.useState('');
   const query = useDebounce(searchQuery, 500);
-  const router = useRouter();
 
   const [page, setPage] = React.useState(1);
   const [limit, setLimit] = React.useState(INITIAL_LIMIT);
@@ -187,7 +206,7 @@ export default function Users({ session }: { session: any }) {
                     {user.name}
                   </p>
                   <p className="whitespace-nowrap text-xs text-default-400">
-                    {user.role || ''}
+                    {user.role}
                   </p>
                 </div>
               </div>
@@ -298,9 +317,13 @@ export default function Users({ session }: { session: any }) {
             onClear={() => setSearchQuery('')}
           />
           <div className="flex gap-3">
-            {session?.user?.role === 'admin' && (
-              <HandleExport collection="users" />
-            )}
+            <Button
+              color="primary"
+              endContent={<Icon icon={'tabler:download'} />}
+              onPress={handleExport}
+            >
+              Export
+            </Button>
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button
@@ -446,7 +469,7 @@ export default function Users({ session }: { session: any }) {
         onSelectionChange={setSelectedKeys}
         onSortChange={setSortDescriptor}
         onRowAction={(key) => {
-          router.push(`/dashboard/users/${key}`);
+          redirectTo(`/dashboard/users/${key}`);
         }}
         className="cursor-pointer"
       >

@@ -4,7 +4,7 @@ import mongooseSequence from 'mongoose-sequence';
 
 export interface AppointmentType extends Base {
   aid: number;
-  date: Date | string;
+  date: string;
   patient: {
     uid: number;
     name: string;
@@ -36,6 +36,7 @@ export interface AppointmentType extends Base {
     | 'overdue'
     | 'on-hold';
   data?: Record<string, string>;
+  type: 'consultation' | 'follow-up' | 'emergency';
 }
 
 // @ts-ignore
@@ -93,6 +94,11 @@ const appointmentSchema = new mongoose.Schema(
     data: {
       type: Map,
       of: String
+    },
+    type: {
+      type: String,
+      enum: ['consultation', 'follow-up', 'emergency'],
+      default: 'consultation'
     }
   },
   {

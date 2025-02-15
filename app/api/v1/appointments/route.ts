@@ -19,6 +19,7 @@ export const GET = auth(async function GET(request: any) {
 
     const { searchParams } = new URL(request.url);
     let status = searchParams.get('status') || 'all';
+    let date = searchParams.get('date');
 
     const statusMap: Record<string, string[]> = {
       upcoming: ['booked', 'in-progress', 'confirmed'],
@@ -53,8 +54,13 @@ export const GET = auth(async function GET(request: any) {
       }
     };
 
+    const query = {
+      status: statusMap[status],
+      ...(date && { date })
+    };
+
     await connectDB();
-    const appointments = await Appointment.find(queryMap[role]);
+    const appointments = await Appointment.find(query);
     appointments.sort((a, b) => {
       const statusOrder = [
         'in-progress',

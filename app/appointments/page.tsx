@@ -11,7 +11,7 @@ export default async function Page() {
     return <UseRedirect />;
   }
 
-  if (['doctor', 'user'].includes(session.user?.role)) {
+  if (['doctor', 'user', 'receptionist'].includes(session.user?.role)) {
     return <CompactView session={session} />;
   }
 

@@ -105,7 +105,7 @@ export const rescheduleAppointment = async (aid: number, date: string) => {
       sendHTMLEmail({
         to: appointment.patient.email,
         subject: 'Appointment Rescheduled',
-        html: RescheduledAppointment(appointment, previousDate as Date)
+        html: RescheduledAppointment(appointment, previousDate as any)
       }).catch((error) => {
         console.error(error);
       })
