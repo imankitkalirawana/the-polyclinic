@@ -127,9 +127,9 @@ export default function Navbar({ session }: { session: any }) {
           title: 'My Appointments',
           items: [
             {
-              name: 'Upcoming',
-              href: '/appointments',
-              icon: 'solar:graph-new-up-linear'
+              name: 'My Schedules',
+              href: '/appointments/schedules',
+              icon: 'solar:calendar-linear'
             },
             {
               name: 'Overdue',
@@ -143,7 +143,7 @@ export default function Navbar({ session }: { session: any }) {
             },
             {
               name: 'All Appointments',
-              href: '/appointments?status=all',
+              href: '/appointments/all',
               icon: 'solar:clipboard-list-linear'
             }
           ]
