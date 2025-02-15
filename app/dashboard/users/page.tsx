@@ -1,11 +1,9 @@
-import { auth } from '@/auth';
 import Users from '@/components/dashboard/users';
 
-export default async function Page() {
-  const session = await auth();
+export default function Page() {
   return (
     <>
-      <Users session={session} />
+      <Users />
     </>
   );
 }

@@ -1,100 +1,94 @@
 'use client';
 
 import { format, addDays, subDays } from 'date-fns';
-import { useState, useRef, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useEffect, useRef } from 'react';
 import { useQueryState } from 'nuqs';
+import { ScrollShadow, Tab, Tabs } from '@heroui/react';
 
 export default function DatePicker() {
   const [date, setDate] = useQueryState('date', {
-    defaultValue: new Date().toISOString()
+    defaultValue: new Date().toISOString().split('T')[0]
   });
 
-  const [selectedDate, setSelectedDate] = useState(new Date());
   const scrollRef = useRef<HTMLDivElement>(null);
+  const tabRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const dates = Array.from({ length: 61 }, (_, i) => {
     return subDays(addDays(new Date(), 30), 60 - i);
   });
 
-  const currentDateIndex = dates.findIndex(
-    (date) => format(date, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd')
-  );
-
-  const scrollToCurrentDate = () => {
-    if (scrollRef.current) {
-      const scrollAmount =
-        currentDateIndex * 82 - scrollRef.current.clientWidth / 2 + 36;
-      scrollRef.current.scrollLeft = scrollAmount;
-    }
-  };
-
   useEffect(() => {
-    scrollToCurrentDate();
-  }, []);
+    if (scrollRef.current && tabRefs.current[date]) {
+      const tab = tabRefs.current[date];
+      const container = scrollRef.current;
+
+      if (tab) {
+        const tabRect = tab.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+
+        container.scrollTo({
+          left:
+            container.scrollLeft +
+            tabRect.left -
+            containerRect.left -
+            container.clientWidth / 2 +
+            tabRect.width / 2,
+          behavior: 'smooth'
+        });
+      }
+    }
+  }, [date]);
 
   return (
     <div className="mx-auto w-full max-w-3xl p-4">
       <div className="mb-6">
         <h2 className="text-2xl font-semibold text-gray-900">
-          {format(selectedDate, 'MMMM d, yyyy')}
+          {format(new Date(date), 'MMMM d, yyyy')}
         </h2>
       </div>
-
-      <div className="relative">
-        {/* <Button
-          variant="outline"
-          size="icon"
-          className="absolute left-0 top-1/2 z-10 -translate-y-1/2 bg-white"
-          onClick={() =>
-            scrollRef.current?.scrollBy({ left: -200, behavior: 'smooth' })
-          }
+      <ScrollShadow
+        as="div"
+        ref={scrollRef}
+        className="max-w-3xl overflow-x-auto scrollbar-hide"
+      >
+        <Tabs
+          aria-label="Dates"
+          selectedKey={date}
+          onSelectionChange={(date) => {
+            setDate(date.toString());
+          }}
+          color="primary"
+          items={dates}
+          classNames={{
+            tabList: 'bg-transparent flex whitespace-nowrap',
+            tab: 'min-w-[56px] min-h-20 rounded-3xl border border-divider',
+            cursor: 'rounded-3xl ring-4 ring-primary'
+          }}
         >
-          <ChevronLeft className="h-4 w-4" />
-        </Button> */}
-
-        <div
-          ref={scrollRef}
-          className="flex gap-2 overflow-x-auto scroll-smooth px-10 pb-4 scrollbar-hide"
-          onLoad={scrollToCurrentDate} // Ensure it scrolls to the correct position on render
-        >
-          {dates.map((date) => {
-            const isSelected =
-              format(selectedDate, 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd');
+          {(date) => {
+            const dateKey = date.toISOString().split('T')[0];
             return (
-              <button
-                key={date.toISOString()}
-                onClick={() => {
-                  setDate(date.toISOString());
-                  setSelectedDate(date);
-                }}
-                className={`flex min-w-[72px] flex-col items-center rounded-full px-4 py-2 transition-colors ${
-                  isSelected
-                    ? 'bg-primary text-primary-foreground'
-                    : 'hover:bg-muted'
-                }`}
-              >
-                <span className="text-xs font-medium">
-                  {format(date, 'EEE').toUpperCase()}
-                </span>
-                <span className="text-lg">{format(date, 'd')}</span>
-              </button>
+              <Tab
+                key={dateKey}
+                title={
+                  <div
+                    ref={(el) => {
+                      tabRefs.current[dateKey] = el;
+                    }}
+                  >
+                    <div className="flex flex-col">
+                      <span className="text-xs font-medium text-default-400">
+                        {format(date, 'cccccc').toUpperCase()}
+                      </span>
+                      <span className="font-semibold">{format(date, 'd')}</span>
+                    </div>
+                  </div>
+                }
+              />
             );
-          })}
-        </div>
-
-        {/* <Button
-          variant="outline"
-          size="icon"
-          className="absolute right-0 top-1/2 z-10 -translate-y-1/2 bg-white"
-          onClick={() =>
-            scrollRef.current?.scrollBy({ left: 200, behavior: 'smooth' })
-          }
-        >
-          <ChevronRight className="h-4 w-4" />
-        </Button> */}
-      </div>
+          }}
+        </Tabs>
+      </ScrollShadow>
     </div>
   );
 }

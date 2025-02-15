@@ -5,6 +5,7 @@ import { AppointmentType } from '@/models/Appointment';
 import { ActionType } from './appointment-details-modal';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { useQueryState } from 'nuqs';
 
 interface FormType {
   selected: AppointmentType | null;
@@ -21,10 +22,14 @@ interface FormContextType {
 const FormContext = createContext<FormContextType | undefined>(undefined);
 
 export const FormProvider = ({ children }: { children: React.ReactNode }) => {
+  const [date, setDate] = useQueryState('date', {
+    defaultValue: new Date().toISOString().split('T')[0]
+  });
+
   const { data, refetch, isLoading } = useQuery<AppointmentType[]>({
-    queryKey: ['appointments'],
+    queryKey: ['appointments', date],
     queryFn: async () => {
-      const response = await axios.get('/api/v1/appointments');
+      const response = await axios.get(`/api/v1/appointments?date=${date}`);
       return response.data;
     }
   });

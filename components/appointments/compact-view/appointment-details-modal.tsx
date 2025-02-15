@@ -26,6 +26,7 @@ import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import RescheduleModal from '../modals/reschedule-modal';
+import { useRouter } from 'nextjs-toploader/app';
 
 interface DropdownItemProps {
   key: string;
@@ -40,6 +41,7 @@ export type ActionType = 'reschedule' | 'decline' | 'download' | 'receipt';
 
 export default function AppointmentDetailsModal() {
   const { formik } = useForm();
+  const router = useRouter();
 
   const dropdownItems: DropdownItemProps[] = [
     {
@@ -128,9 +130,29 @@ export default function AppointmentDetailsModal() {
             <>
               <ModalHeader className="items-center justify-between">
                 <Title title="Appointment Details" />
-                <Button variant="light" isIconOnly size="sm">
-                  <Icon icon="entypo:dots-two-vertical" width={18} />
-                </Button>
+                <Dropdown placement="bottom-end">
+                  <DropdownTrigger>
+                    <Button variant="light" isIconOnly size="sm">
+                      <Icon icon="entypo:dots-two-vertical" width={18} />
+                    </Button>
+                  </DropdownTrigger>
+                  <DropdownMenu>
+                    <DropdownItem
+                      key="view"
+                      endContent={
+                        <Icon icon="solar:arrow-right-up-linear" width={18} />
+                      }
+                      onPress={() => {
+                        router.push(
+                          `/appointments/${formik.values.selected?.aid}`
+                        );
+                      }}
+                    >
+                      View in detail
+                    </DropdownItem>
+                    <DropdownItem key="help">Help</DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
               </ModalHeader>
               <ModalBody>
                 <ScrollShadow className="no-scrollbar py-4 pb-12">

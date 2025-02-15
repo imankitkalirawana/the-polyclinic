@@ -14,66 +14,29 @@ export const GET = auth(async function GET(request: any) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    // const referer = request.headers.get('referer');
-    // const refererStatus = new URL(referer).searchParams.get('status');
-
     const { searchParams } = new URL(request.url);
-    let status = searchParams.get('status') || 'all';
-    let date = searchParams.get('date');
-
-    const statusMap: Record<string, string[]> = {
-      upcoming: ['booked', 'in-progress', 'confirmed'],
-      overdue: ['overdue', 'on-hold'],
-      past: ['completed', 'cancelled'],
-      all: [
-        'booked',
-        'in-progress',
-        'confirmed',
-        'completed',
-        'cancelled',
-        'overdue',
-        'on-hold'
-      ]
-    };
+    let date = searchParams.get('date'); // YYYY-MM-DD
 
     // query map with respect to user role and status
     const queryMap: Record<string, object> = {
       doctor: {
-        status: statusMap[status],
         'doctor.uid': request.auth?.user?.uid
       },
       user: {
-        status: statusMap[status],
         'patient.email': request.auth?.user?.email
       },
-      admin: {
-        status: statusMap[status]
-      },
-      receptionist: {
-        status: statusMap[status]
-      }
+      admin: {},
+      receptionist: {}
     };
 
     const query = {
-      status: statusMap[status],
-      ...(date && { date })
+      ...queryMap[role],
+      date: date ? { $regex: new RegExp(date, 'gi') } : {}
     };
 
     await connectDB();
-    const appointments = await Appointment.find(query);
-    appointments.sort((a, b) => {
-      const statusOrder = [
-        'in-progress',
-        'confirmed',
-        'booked',
-        'completed',
-        'overdue',
-        'cancelled'
-      ];
-      return (
-        statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status) ||
-        new Date(a.date).getTime() - new Date(b.date).getTime()
-      );
+    const appointments = await Appointment.find(query).sort({
+      date: 'ascending'
     });
 
     return NextResponse.json(appointments);
