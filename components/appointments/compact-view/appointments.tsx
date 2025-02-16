@@ -2,14 +2,15 @@
 
 import { useMemo, useState, useEffect, useRef } from 'react';
 import { Tag } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import {
   Avatar,
   Card,
   cn,
   ScrollShadow,
   Spinner,
-  Tooltip
+  Tooltip,
+  Button,
+  Link
 } from '@heroui/react';
 import { AppointmentType } from '@/models/Appointment';
 import { format, addMinutes, subMinutes } from 'date-fns';
@@ -161,9 +162,9 @@ export default function AppointmentsTimeline() {
               {!appointments.length ? 'No' : appointments.length} Appointment
               {appointments.length > 1 ? 's' : ''} Scheduled
             </h2>
-            <Button variant="link" className="text-primary">
+            <Link href="/appointments/all" className="text-primary">
               View all
-            </Button>
+            </Link>
           </div>
 
           <ScrollShadow className="relative max-h-96 py-4" ref={scrollRef}>
@@ -179,9 +180,9 @@ export default function AppointmentsTimeline() {
               {timeSlots.map((_, index) => (
                 <div
                   key={index}
-                  className={`h-[70px] border-b ${
-                    index % 2 === 0 ? 'border-dashed' : 'border-solid'
-                  } border-default-200`}
+                  className={`h-[70px] border-t border-default-200 ${
+                    index % 2 === 0 ? 'border-solid' : 'border-dashed'
+                  } `}
                 />
               ))}
 

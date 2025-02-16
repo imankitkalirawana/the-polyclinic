@@ -42,14 +42,15 @@ export default function DatePicker() {
   return (
     <div className="mx-auto w-full max-w-3xl p-4">
       <div className="mb-6">
-        <h2 className="text-2xl font-semibold text-gray-900">
+        <h2 className="text-2xl font-semibold text-default-900">
           {format(new Date(date), 'MMMM d, yyyy')}
         </h2>
       </div>
       <ScrollShadow
         as="div"
         ref={scrollRef}
-        className="max-w-3xl overflow-x-auto scrollbar-hide"
+        className="max-w-3xl scrollbar-hide"
+        orientation="horizontal"
       >
         <Tabs
           aria-label="Dates"
