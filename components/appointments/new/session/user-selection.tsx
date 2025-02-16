@@ -82,7 +82,7 @@ export default function UserSelection() {
                   <Card
                     isPressable
                     className={cn(
-                      'no-scrollbar min-w-64 rounded-xl border border-divider shadow-none sm:min-w-72'
+                      'no-scrollbar min-w-64 rounded-medium border border-divider shadow-none sm:min-w-72'
                     )}
                     onPress={() => formik.setFieldValue('step', 7)}
                   >
@@ -113,7 +113,7 @@ export default function UserSelection() {
                           isPressable
                           key={user.uid}
                           className={cn(
-                            'no-scrollbar min-w-64 rounded-xl border border-divider shadow-none sm:min-w-72',
+                            'no-scrollbar min-w-64 rounded-medium border border-divider shadow-none sm:min-w-72',
                             {
                               'border-2 border-primary-400':
                                 user.uid === formik.values.patient?.uid

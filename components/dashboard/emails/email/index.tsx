@@ -49,7 +49,7 @@ export default function Email({ _id }: { _id: string }) {
 
         {/* Message Body */}
         <div
-          className="rounded-xl bg-default-50 p-4 py-8"
+          className="rounded-medium bg-default-50 p-4 py-8"
           dangerouslySetInnerHTML={{ __html: email.message }}
         />
       </div>

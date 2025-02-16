@@ -31,6 +31,7 @@ import { useRouter } from 'nextjs-toploader/app';
 import { getAppointmentStyles } from './appointments';
 import CancelModal from '../modals/cancel-modal';
 import AsyncButton from '@/components/ui/buttons/async-button';
+import { downloadAppointmentReceipt } from '@/functions/client/appointment/receipt';
 
 interface DropdownItemProps {
   key: string;
@@ -41,27 +42,40 @@ interface DropdownItemProps {
   action?: () => void;
 }
 
-export type ActionType = 'reschedule' | 'cancel' | 'download' | 'receipt';
+export type ActionType =
+  | 'reschedule'
+  | 'cancel'
+  | 'download'
+  | 'receipt'
+  | 'proceed';
 
 export default function AppointmentDetailsModal() {
   const { formik, session } = useForm();
   const router = useRouter();
 
+  const [isLoading, setIsLoading] = useState<Record<ActionType, boolean>>({
+    reschedule: false,
+    cancel: false,
+    download: false,
+    receipt: false,
+    proceed: false
+  });
+
   const roleButton: Record<string, string[]> = {
     user: ['reschedule', 'cancel'],
-    doctor: ['reschedule', 'cancel', 'download', 'receipt'],
-    admin: ['reschedule', 'cancel', 'download', 'receipt'],
+    doctor: ['reschedule', 'cancel', 'download', 'receipt', 'proceed'],
+    admin: ['reschedule', 'cancel', 'download', 'receipt', 'proceed'],
     receptionist: ['reschedule', 'cancel', 'download', 'receipt']
   };
 
   const statusButton: Record<string, string[]> = {
-    booked: ['reschedule', 'cancel'],
-    confirmed: ['reschedule', 'cancel', 'receipt'],
-    'in-progress': ['reschedule', 'cancel', 'receipt'],
+    booked: ['reschedule', 'cancel', 'receipt', 'proceed'],
+    confirmed: ['reschedule', 'cancel', 'receipt', 'proceed'],
+    'in-progress': ['reschedule', 'cancel', 'receipt', 'proceed'],
     completed: ['download', 'receipt'],
     cancelled: ['receipt'],
     overdue: ['reschedule', 'cancel', 'receipt'],
-    'on-hold': ['cancel', 'receipt']
+    'on-hold': ['cancel', 'receipt', 'proceed']
   };
 
   const dropdownItems: DropdownItemProps[] = [
@@ -79,7 +93,7 @@ export default function AppointmentDetailsModal() {
       icon: 'solar:download-bold-duotone',
       key: 'download',
       color: 'primary',
-      action: () => {
+      action: async () => {
         toast('Download');
       }
     },
@@ -89,8 +103,10 @@ export default function AppointmentDetailsModal() {
       icon: 'solar:document-text-bold-duotone',
       key: 'receipt',
       color: 'primary',
-      action: () => {
-        toast('Receipt');
+      action: async () => {
+        setIsLoading((prev) => ({ ...prev, receipt: true }));
+        await downloadAppointmentReceipt(formik.values.selected?.aid || 0);
+        setIsLoading((prev) => ({ ...prev, receipt: false }));
       }
     },
     {
@@ -101,9 +117,16 @@ export default function AppointmentDetailsModal() {
           : 'Decline the appointment',
       icon: 'solar:close-circle-bold-duotone',
       key: 'cancel',
-      color: 'danger',
+      color: 'danger'
+    },
+    {
+      label: 'Proceed',
+      description: 'Proceed with the appointment',
+      icon: 'solar:arrow-right-up-bold-duotone',
+      key: 'proceed',
+      color: 'success',
       action: () => {
-        toast('Cancel');
+        router.push(`/appointments/${formik.values.selected?.aid}/proceed`);
       }
     }
   ];
@@ -127,11 +150,9 @@ export default function AppointmentDetailsModal() {
     (item) => item.key === selectedOptionValue
   );
 
-  const modalMap: Record<ActionType, React.ReactNode> = {
+  const modalMap: Record<string, React.ReactNode> = {
     reschedule: <RescheduleModal />,
-    cancel: <CancelModal />,
-    download: <RescheduleModal />,
-    receipt: <RescheduleModal />
+    cancel: <CancelModal />
   };
 
   return (
@@ -187,20 +208,21 @@ export default function AppointmentDetailsModal() {
                         <h3 className="font-semibold text-default-700">
                           {formik.values.selected?.patient?.name}
                         </h3>
-                        <Chip
-                          size="sm"
-                          className={cn(
-                            `text-sm capitalize`,
-                            getAppointmentStyles(
-                              formik.values.selected?.status as any
-                            ).background,
-                            getAppointmentStyles(
-                              formik.values.selected?.status as any
-                            ).avatar
-                          )}
-                        >
-                          {formik.values.selected?.status}
-                        </Chip>
+                        <div className="flex items-center gap-1">
+                          <span
+                            className={cn(
+                              'block size-4 rounded-md bg-default-500',
+                              getAppointmentStyles(
+                                formik.values.selected?.status as any
+                              ).avatarBg
+                            )}
+                          />
+                          <span className="text-sm capitalize text-default-700">
+                            {formik.values.selected?.status
+                              .split('-')
+                              .join(' ')}
+                          </span>
+                        </div>
                       </div>
                     </CardBody>
                   </Card>
@@ -342,8 +364,13 @@ export default function AppointmentDetailsModal() {
                     className="p-6 font-medium"
                     variant="flat"
                     color={selectedItem?.color}
+                    isLoading={isLoading[selectedOptionValue]}
                     onPress={() => {
-                      formik.setFieldValue('modal', selectedOptionValue);
+                      if (selectedItem?.action) {
+                        selectedItem.action();
+                      } else {
+                        formik.setFieldValue('modal', selectedOptionValue);
+                      }
                     }}
                   >
                     {selectedItem?.label}

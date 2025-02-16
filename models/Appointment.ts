@@ -2,6 +2,11 @@ import mongoose, { Model } from 'mongoose';
 import { Base } from '@/lib/interface';
 import mongooseSequence from 'mongoose-sequence';
 
+export enum AType {
+  consultation = 'consultation',
+  'follow-up' = 'follow-up',
+  emergency = 'emergency'
+}
 export interface AppointmentType extends Base {
   aid: number;
   date: string;
@@ -36,7 +41,7 @@ export interface AppointmentType extends Base {
     | 'overdue'
     | 'on-hold';
   data?: Record<string, string>;
-  type: 'consultation' | 'follow-up' | 'emergency';
+  type: AType;
 }
 
 // @ts-ignore

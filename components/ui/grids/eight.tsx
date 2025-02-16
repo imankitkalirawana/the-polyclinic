@@ -148,15 +148,43 @@ function FeatureSix() {
           {
             progress: 30,
             label: 'Jan',
-            className: 'rounded-xl bg-green-400'
+            className: 'rounded-medium bg-green-400'
           },
-          { progress: 70, label: 'S', className: 'rounded-xl bg-green-400' },
-          { progress: 60, label: 'M', className: 'rounded-xl bg-green-400' },
-          { progress: 90, label: 'T', className: 'rounded-xl bg-green-400' },
-          { progress: 10, label: 'W', className: 'rounded-xl bg-green-400' },
-          { progress: 20, label: 'Th', className: 'rounded-xl bg-green-400' },
-          { progress: 30, label: 'F', className: 'rounded-xl bg-green-400' },
-          { progress: 90, label: 'Sa', className: 'rounded-xl bg-green-400' }
+          {
+            progress: 70,
+            label: 'S',
+            className: 'rounded-medium bg-green-400'
+          },
+          {
+            progress: 60,
+            label: 'M',
+            className: 'rounded-medium bg-green-400'
+          },
+          {
+            progress: 90,
+            label: 'T',
+            className: 'rounded-medium bg-green-400'
+          },
+          {
+            progress: 10,
+            label: 'W',
+            className: 'rounded-medium bg-green-400'
+          },
+          {
+            progress: 20,
+            label: 'Th',
+            className: 'rounded-medium bg-green-400'
+          },
+          {
+            progress: 30,
+            label: 'F',
+            className: 'rounded-medium bg-green-400'
+          },
+          {
+            progress: 90,
+            label: 'Sa',
+            className: 'rounded-medium bg-green-400'
+          }
         ]}
         height={100}
       />

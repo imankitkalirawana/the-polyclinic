@@ -12,12 +12,14 @@ import {
   Button,
   Link
 } from '@heroui/react';
-import { AppointmentType } from '@/models/Appointment';
+import { AppointmentType, AType } from '@/models/Appointment';
 import { format, addMinutes, subMinutes } from 'date-fns';
 import { useQueryState } from 'nuqs';
 import { useForm } from './context';
 import AppointmentDetailsModal from './appointment-details-modal';
 import StatusReferences from './status-references';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import { useRouter } from 'nextjs-toploader/app';
 
 // Get background and icon colors based on appointment type
 export const getAppointmentStyles = (status: AppointmentType['status']) => {
@@ -87,6 +89,12 @@ export const getAppointmentStyles = (status: AppointmentType['status']) => {
         icon: 'text-white'
       };
   }
+};
+
+const TypeIcon: Record<AType, string> = {
+  consultation: 'solar:stethoscope-bold',
+  'follow-up': 'solar:clipboard-check-linear',
+  emergency: 'solar:adhesive-plaster-linear'
 };
 
 export default function AppointmentsTimeline() {
@@ -258,7 +266,7 @@ export default function AppointmentsTimeline() {
                     <Card
                       key={appointment.aid}
                       className={cn(
-                        `absolute left-4 justify-center rounded-xl px-2 py-1 hover:z-[29]`,
+                        `absolute left-4 justify-center rounded-large px-2 py-1 hover:z-[29]`,
                         styles.background
                       )}
                       style={{
@@ -271,36 +279,47 @@ export default function AppointmentsTimeline() {
                       onPress={() => {
                         formik.setFieldValue('selected', appointment);
                       }}
-                      // Assign ref only to the first appointment (sorted by date)
                       ref={index === 0 ? firstAppointmentRef : undefined}
+                      onContextMenu={(e) => {
+                        e.preventDefault();
+                        window.open(
+                          `/appointments/${appointment.aid}`,
+                          '_blank'
+                        );
+                      }}
                     >
                       {isInPast && (
                         <div className="absolute left-0 h-full w-full bg-background/50" />
                       )}
-                      <div className="flex items-center gap-4">
-                        <div className={`rounded-lg p-2 ${styles.iconBg}`}>
-                          <Tag className={`h-5 w-5 ${styles.icon}`} />
+                      <div className="flex items-center justify-start gap-4">
+                        <div className={`rounded-medium p-2 ${styles.iconBg}`}>
+                          <Icon
+                            icon={TypeIcon[appointment.type]}
+                            className={`h-5 w-5 ${styles.icon}`}
+                          />
                         </div>
-                        <div className="flex-1 text-xs">
-                          <h3 className="font-semibold capitalize text-default-900">
-                            {appointment.patient.name}
-                          </h3>
-                          <p className="flex text-default-500">
-                            <span className="line-clamp-1 capitalize">
-                              {appointment.type}
-                            </span>
-                            <span>•</span>
-                            <span>
-                              {format(new Date(appointment.date), 'HH:mm')}
-                            </span>
-                          </p>
+                        <div className="flex flex-1 items-center justify-between">
+                          <div className="flex flex-col items-start text-xs">
+                            <h3 className="font-semibold capitalize text-default-900">
+                              {appointment.patient.name}
+                            </h3>
+                            <p className="flex text-default-500">
+                              <span className="line-clamp-1 capitalize">
+                                {appointment.type}
+                              </span>
+                              <span>•</span>
+                              <span>
+                                {format(new Date(appointment.date), 'HH:mm')}
+                              </span>
+                            </p>
+                          </div>
+                          <Avatar
+                            size="sm"
+                            radius="sm"
+                            name={appointment.patient.name}
+                            className={cn(styles.avatar, styles.avatarBg)}
+                          />
                         </div>
-                        <Avatar
-                          size="sm"
-                          radius="sm"
-                          name={appointment.patient.name}
-                          className={cn(styles.avatar, styles.avatarBg)}
-                        />
                       </div>
                     </Card>
                   );
