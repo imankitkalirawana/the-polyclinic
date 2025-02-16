@@ -48,20 +48,11 @@ export default function DateTimePicker({
           })}
           value={date}
           onChange={onDateChange}
-          isInvalid={
-            isWeekend(date!, locale) ||
-            disabledDates[0].map((d) => d.compare(date!)).includes(0)
-          }
-          errorMessage={
-            isWeekend(date!, locale) ? 'We are closed on weekends' : ''
-          }
+          isInvalid={disabledDates[0].map((d) => d.compare(date!)).includes(0)}
           showMonthAndYearPickers
           showHelper
           isDateUnavailable={(date) => {
-            return (
-              isWeekend(date, locale) ||
-              disabledDates[0].map((d) => d.compare(date)).includes(0)
-            );
+            return disabledDates[0].map((d) => d.compare(date)).includes(0);
           }}
         />
         <TimeInput

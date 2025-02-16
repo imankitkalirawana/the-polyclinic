@@ -17,24 +17,25 @@ import { format, addMinutes, subMinutes } from 'date-fns';
 import { useQueryState } from 'nuqs';
 import { useForm } from './context';
 import AppointmentDetailsModal from './appointment-details-modal';
+import StatusReferences from './status-references';
 
 // Get background and icon colors based on appointment type
-const getAppointmentStyles = (status: AppointmentType['status']) => {
+export const getAppointmentStyles = (status: AppointmentType['status']) => {
   switch (status) {
     case 'booked':
       return {
-        background: 'bg-default-50',
-        avatarBg: 'bg-default-100',
-        avatar: 'text-default-500',
-        iconBg: 'bg-default-500',
+        background: 'bg-orange-50',
+        avatarBg: 'bg-orange-100',
+        avatar: 'text-orange-500',
+        iconBg: 'bg-orange-500',
         icon: 'text-white'
       };
     case 'confirmed':
       return {
-        background: 'bg-green-50',
-        avatarBg: 'bg-green-100',
-        avatar: 'text-green-500',
-        iconBg: 'bg-green-500',
+        background: 'bg-cyan-50',
+        avatarBg: 'bg-cyan-100',
+        avatar: 'text-cyan-500',
+        iconBg: 'bg-cyan-500',
         icon: 'text-white'
       };
     case 'in-progress':
@@ -55,26 +56,26 @@ const getAppointmentStyles = (status: AppointmentType['status']) => {
       };
     case 'cancelled':
       return {
-        background: 'bg-danger-50',
-        avatarBg: 'bg-danger-100',
-        avatar: 'text-danger-500',
-        iconBg: 'bg-danger-500',
+        background: 'bg-red-50',
+        avatarBg: 'bg-red-100',
+        avatar: 'text-red-500',
+        iconBg: 'bg-red-500',
         icon: 'text-white'
       };
     case 'overdue':
       return {
-        background: 'bg-warning-50',
-        avatarBg: 'bg-warning-100',
-        avatar: 'text-warning-500',
-        iconBg: 'bg-warning-500',
+        background: 'bg-pink-50',
+        avatarBg: 'bg-pink-100',
+        avatar: 'text-pink-500',
+        iconBg: 'bg-pink-500',
         icon: 'text-white'
       };
     case 'on-hold':
       return {
-        background: 'bg-info-50',
-        avatarBg: 'bg-info-100',
-        avatar: 'text-info-500',
-        iconBg: 'bg-info-500',
+        background: 'bg-yellow-50',
+        avatarBg: 'bg-yellow-100',
+        avatar: 'text-yellow-500',
+        iconBg: 'bg-yellow-500',
         icon: 'text-white'
       };
     default:
@@ -167,7 +168,10 @@ export default function AppointmentsTimeline() {
             </Link>
           </div>
 
-          <ScrollShadow className="relative max-h-96 py-4" ref={scrollRef}>
+          <ScrollShadow
+            className="relative max-h-[50vh] py-4 scrollbar-hide"
+            ref={scrollRef}
+          >
             <div className="absolute left-0 top-4 flex w-16 flex-col gap-[53.6px]">
               {timeSlots.map((time) => (
                 <div key={time} className="text-xs text-default-500">
@@ -271,7 +275,7 @@ export default function AppointmentsTimeline() {
                       ref={index === 0 ? firstAppointmentRef : undefined}
                     >
                       {isInPast && (
-                        <div className="absolute left-0 z-[29] h-full w-full bg-background/50" />
+                        <div className="absolute left-0 h-full w-full bg-background/50" />
                       )}
                       <div className="flex items-center gap-4">
                         <div className={`rounded-lg p-2 ${styles.iconBg}`}>
@@ -303,9 +307,11 @@ export default function AppointmentsTimeline() {
                 })}
             </div>
           </ScrollShadow>
+          {/* a reference for colors */}
+          <StatusReferences />
         </>
       )}
-      <AppointmentDetailsModal />
+      {formik.values.selected && <AppointmentDetailsModal />}
     </div>
   );
 }

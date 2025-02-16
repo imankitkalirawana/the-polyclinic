@@ -6,6 +6,7 @@ import { ActionType } from './appointment-details-modal';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useQueryState } from 'nuqs';
+import { AuthUser } from '@/models/User';
 
 interface FormType {
   selected: AppointmentType | null;
@@ -17,11 +18,18 @@ interface FormContextType {
   appointments: AppointmentType[];
   refetch: () => void;
   isLoading: boolean;
+  session?: AuthUser | null;
 }
 
 const FormContext = createContext<FormContextType | undefined>(undefined);
 
-export const FormProvider = ({ children }: { children: React.ReactNode }) => {
+export const FormProvider = ({
+  children,
+  session
+}: {
+  children: React.ReactNode;
+  session?: AuthUser | null;
+}) => {
   const [date, setDate] = useQueryState('date', {
     defaultValue: new Date().toISOString().split('T')[0]
   });
@@ -47,7 +55,9 @@ export const FormProvider = ({ children }: { children: React.ReactNode }) => {
   });
 
   return (
-    <FormContext.Provider value={{ formik, appointments, refetch, isLoading }}>
+    <FormContext.Provider
+      value={{ formik, appointments, refetch, isLoading, session }}
+    >
       {children}
     </FormContext.Provider>
   );

@@ -83,7 +83,7 @@ export function AppointmentStatus(appointment: AppointmentType) {
 
 export function RescheduledAppointment(
   appointment: AppointmentType,
-  previousDate: Date
+  previousDate: Date | string
 ) {
   return `<body style="margin: 0; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; background-color: #ffffff; color: #1a1a1a; line-height: 1.5;">
     <div style="max-width: 800px; margin: 0 auto; text-align: center;">
@@ -108,13 +108,13 @@ export function RescheduledAppointment(
                 <div style="text-align: center;">
                     <p style="font-size: 16px; color: #6b7280; margin: 0;">Previous Date</p>
                     <p style="font-size: 18px; color: #F31260; margin: 8px 0 0; font-weight: 500;">${format(previousDate, 'PP')}</p>
-                    <p style="font-size: 16px; color: #F31260; margin: 4px 0 0;">${format(previousDate, 'p')}</p>
+                    <p style="font-size: 16px; color: #F31260; margin: 4px 0 0;">${format(new Date(previousDate), 'p')}</p>
                 </div>
                 <div style="font-size: 24px; color: #73CD7D;">→</div>
                 <div style="text-align: center;">
                     <p style="font-size: 16px; color: #6b7280; margin: 0;">New Date</p>
                     <p style="font-size: 18px; color: #73CD7D; margin: 8px 0 0; font-weight: 500;">${format(appointment.date, 'PP')}</p>
-                    <p style="font-size: 16px; color: #73CD7D; margin: 4px 0 0;">${format(appointment.date, 'p')}</p>
+                    <p style="font-size: 16px; color: #73CD7D; margin: 4px 0 0;">${format(new Date(appointment.date), 'p')}</p>
                 </div>
             </div>
             

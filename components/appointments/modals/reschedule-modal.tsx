@@ -26,9 +26,10 @@ import DateTimePicker from '../new/session/date-time-picker';
 import AsyncButton from '@/components/ui/buttons/async-button';
 import { rescheduleAppointment } from '@/functions/server-actions/appointment';
 import { toast } from 'sonner';
+import axios from 'axios';
 
 export default function RescheduleModal() {
-  const { formik, refetch } = useForm();
+  const { formik, refetch, session } = useForm();
 
   const { locale } = useLocale();
 
@@ -40,32 +41,6 @@ export default function RescheduleModal() {
       new Date().toLocaleString('en-US', { timeZone: getLocalTimeZone() })
     );
     if (date.getHours() >= 17) {
-      if (
-        isWeekend(
-          new CalendarDate(
-            date.getFullYear(),
-            date.getMonth() + 1,
-            date.getDate()
-          ),
-          locale
-        )
-      ) {
-        // If next day is weekend, set to next Monday
-        while (
-          isWeekend(
-            new CalendarDate(
-              date.getFullYear(),
-              date.getMonth() + 1,
-              date.getDate()
-            ),
-            locale
-          )
-        ) {
-          date.setDate(date.getDate() + 1);
-        }
-      } else {
-        date.setDate(date.getDate() + 1);
-      }
       date.setHours(9);
       date.setMinutes(0);
     } else {
@@ -145,40 +120,31 @@ export default function RescheduleModal() {
                 className="min-w-[50%] p-6 font-medium"
                 color="primary"
                 fn={async () => {
-                  await rescheduleAppointment(
-                    formik.values?.selected?.aid as number,
-                    timing.toISOString()
-                  ).then(() => {
-                    toast(`Appointment rescheduled to ${format(timing, 'p')}`);
-                    formik.setFieldValue('selected', {
-                      ...formik.values.selected,
-                      date: timing.toISOString()
+                  await axios
+                    .post(
+                      `/api/v1/appointments/${formik.values.selected?.aid}/reschedule`,
+                      {
+                        date: timing.toISOString()
+                      }
+                    )
+                    .then(() => {
+                      toast(
+                        `Appointment rescheduled to ${format(timing, 'p')}`
+                      );
+                      formik.setFieldValue('selected', {
+                        ...formik.values.selected,
+                        date: timing.toISOString(),
+                        status:
+                          session?.user?.role === 'user'
+                            ? 'booked'
+                            : 'confirmed'
+                      });
+                      refetch();
+                      formik.setFieldValue('modal', null);
                     });
-                    refetch();
-                    formik.setFieldValue('modal', null);
-                  });
                 }}
                 whileSubmitting="Rescheduling..."
                 isDisabled={
-                  isWeekend(
-                    new CalendarDate(
-                      timing.getFullYear(),
-                      timing.getMonth() + 1,
-                      timing.getDate()
-                    ),
-                    locale
-                  ) ||
-                  disabledDates.includes(
-                    // @ts-ignore
-                    format(
-                      new Date(
-                        timing.getFullYear(),
-                        timing.getMonth(),
-                        timing.getDate()
-                      ),
-                      'yyyy-MM-dd'
-                    )
-                  ) ||
                   timing.getHours() < TIMINGS.appointment.start ||
                   timing.getHours() >= TIMINGS.appointment.end
                 }

@@ -12,16 +12,20 @@ const AsyncButton = React.forwardRef<
   }
 >(
   (
-    { isLoading: propIsLoading, fn, whileSubmitting = 'Loading...', ...props },
+    {
+      isLoading: propIsLoading,
+      fn,
+      onPress,
+      whileSubmitting = 'Loading...',
+      ...props
+    },
     ref
   ) => {
     const [isLoading, setIsLoading] = useState(false);
 
     const handleSubmit = async () => {
       setIsLoading(true);
-      fn
-        ? await fn()
-        : await new Promise((resolve) => setTimeout(resolve, 2000));
+      fn && (await fn());
       setIsLoading(false);
     };
 
@@ -31,7 +35,7 @@ const AsyncButton = React.forwardRef<
         {...props}
         className={cn('btn btn-primary', props.className)}
         isLoading={isLoading || propIsLoading}
-        onPress={handleSubmit}
+        onPress={onPress || handleSubmit}
         startContent={isLoading ? null : props.startContent}
       >
         {isLoading ? whileSubmitting : props.children}

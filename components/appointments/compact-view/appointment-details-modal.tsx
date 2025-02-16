@@ -17,16 +17,20 @@ import {
   Dropdown,
   ButtonGroup,
   DropdownTrigger,
-  Tooltip
+  Tooltip,
+  Link
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useForm } from './context';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import RescheduleModal from '../modals/reschedule-modal';
 import { useRouter } from 'nextjs-toploader/app';
+import { getAppointmentStyles } from './appointments';
+import CancelModal from '../modals/cancel-modal';
+import AsyncButton from '@/components/ui/buttons/async-button';
 
 interface DropdownItemProps {
   key: string;
@@ -37,11 +41,28 @@ interface DropdownItemProps {
   action?: () => void;
 }
 
-export type ActionType = 'reschedule' | 'decline' | 'download' | 'receipt';
+export type ActionType = 'reschedule' | 'cancel' | 'download' | 'receipt';
 
 export default function AppointmentDetailsModal() {
-  const { formik } = useForm();
+  const { formik, session } = useForm();
   const router = useRouter();
+
+  const roleButton: Record<string, string[]> = {
+    user: ['reschedule', 'cancel'],
+    doctor: ['reschedule', 'cancel', 'download', 'receipt'],
+    admin: ['reschedule', 'cancel', 'download', 'receipt'],
+    receptionist: ['reschedule', 'cancel', 'download', 'receipt']
+  };
+
+  const statusButton: Record<string, string[]> = {
+    booked: ['reschedule', 'cancel'],
+    confirmed: ['reschedule', 'cancel', 'receipt'],
+    'in-progress': ['reschedule', 'cancel', 'receipt'],
+    completed: ['download', 'receipt'],
+    cancelled: ['receipt'],
+    overdue: ['reschedule', 'cancel', 'receipt'],
+    'on-hold': ['cancel', 'receipt']
+  };
 
   const dropdownItems: DropdownItemProps[] = [
     {
@@ -73,43 +94,42 @@ export default function AppointmentDetailsModal() {
       }
     },
     {
-      label: 'Decline',
-      description: 'Decline the appointment',
+      label: session?.user?.role === 'user' ? 'Cancel' : 'Decline',
+      description:
+        session?.user?.role === 'user'
+          ? 'Cancel the appointment'
+          : 'Decline the appointment',
       icon: 'solar:close-circle-bold-duotone',
-      key: 'decline',
+      key: 'cancel',
       color: 'danger',
       action: () => {
-        toast('Decline');
+        toast('Cancel');
       }
     }
   ];
 
-  const [selectedOption, setSelectedOption] = useState(new Set(['reschedule']));
+  const [selectedOption, setSelectedOption] = useState(() => {
+    return new Set(
+      dropdownItems
+        .filter(
+          (item) =>
+            roleButton[session?.user?.role || '']?.includes(item.key) &&
+            statusButton[formik.values.selected?.status || '']?.includes(
+              item.key
+            )
+        )
+        .map((item) => item.key)
+    );
+  });
   const selectedOptionValue = Array.from(selectedOption)[0] as ActionType;
+
   const selectedItem = dropdownItems.find(
     (item) => item.key === selectedOptionValue
   );
 
-  useEffect(() => {
-    if (formik.values.selected) {
-      if (
-        new Date(formik.values.selected.date) < new Date() &&
-        formik.values.selected.status !== 'completed'
-      ) {
-        setSelectedOption(new Set(['reschedule']));
-      } else if (new Date(formik.values.selected.date) > new Date()) {
-        setSelectedOption(new Set(['decline']));
-      } else if (formik.values.selected.status === 'completed') {
-        setSelectedOption(new Set(['download']));
-      } else if (formik.values.selected.status === 'cancelled') {
-        setSelectedOption(new Set(['reschedule']));
-      }
-    }
-  }, [formik.values.selected?.aid]);
-
   const modalMap: Record<ActionType, React.ReactNode> = {
     reschedule: <RescheduleModal />,
-    decline: <RescheduleModal />,
+    cancel: <CancelModal />,
     download: <RescheduleModal />,
     receipt: <RescheduleModal />
   };
@@ -156,26 +176,74 @@ export default function AppointmentDetailsModal() {
               </ModalHeader>
               <ModalBody>
                 <ScrollShadow className="no-scrollbar py-4 pb-12">
-                  <Card className="min-h-20 border-2 border-divider shadow-none">
+                  <Card className="mt-4 w-full border border-divider bg-default-50 shadow-none">
                     <CardBody className="flex-row items-center gap-6 p-4">
                       <Avatar
                         radius="md"
                         src="/assets/placeholder-avatar.jpeg"
                         name="John Doe"
                       />
-                      <div className="flex flex-col gap-0">
+                      <div className="flex flex-col gap-1">
                         <h3 className="font-semibold text-default-700">
                           {formik.values.selected?.patient?.name}
                         </h3>
-                        <p className="text-sm capitalize text-default-400">
+                        <Chip
+                          size="sm"
+                          className={cn(
+                            `text-sm capitalize`,
+                            getAppointmentStyles(
+                              formik.values.selected?.status as any
+                            ).background,
+                            getAppointmentStyles(
+                              formik.values.selected?.status as any
+                            ).avatar
+                          )}
+                        >
                           {formik.values.selected?.status}
-                        </p>
+                        </Chip>
                       </div>
                     </CardBody>
                   </Card>
-                  <div className="mt-4 flex flex-col">
-                    <Subtitle title="Appointment info" />
-                    <div className="mt-4 flex flex-col gap-4">
+                  <Card className="mt-4 w-full border border-divider bg-default-50 shadow-none">
+                    <CardBody className="flex flex-col gap-4">
+                      <div className="flex items-center gap-4">
+                        <div className="rounded-medium bg-orange-100 p-2 text-orange-500">
+                          <Icon icon="solar:hashtag-circle-bold" width="24" />
+                        </div>
+                        <div className="flex text-[15px] text-default-400">
+                          <span className="capitalize">
+                            #{formik.values.selected?.aid}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20"></div>
+                      <div className="flex items-center gap-4">
+                        <div className="rounded-medium bg-blue-100 p-2 text-blue-500">
+                          <Icon icon="solar:phone-rounded-bold" width="24" />
+                        </div>
+                        <div className="flex flex-col gap-2 text-[15px] text-default-400">
+                          <Link
+                            href={`mailto:${formik.values.selected?.patient.email}`}
+                            target="_blank"
+                            className="text-[15px] text-default-400 hover:text-primary hover:underline"
+                          >
+                            {formik.values.selected?.patient.email}
+                          </Link>
+                          {formik.values.selected?.patient?.phone && (
+                            <>
+                              <div className="h-[1px] w-full bg-gradient-to-r from-divider via-divider to-divider/20"></div>
+                              <Link
+                                href={`tel:${formik.values.selected?.patient.phone}`}
+                                target="_blank"
+                                className="text-[15px] text-default-400 hover:text-primary hover:underline"
+                              >
+                                {formik.values.selected?.patient?.phone}
+                              </Link>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                      <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20"></div>
                       <div className="flex items-center gap-4">
                         <div className="rounded-medium bg-primary-100 p-2 text-primary">
                           <Icon icon="solar:clock-circle-bold" width={24} />
@@ -196,51 +264,66 @@ export default function AppointmentDetailsModal() {
                           </span>
                         </div>
                       </div>
-                      <div className="flex items-center gap-4">
-                        <div className="rounded-medium bg-blue-100 p-2 text-blue-500">
-                          <Icon icon="solar:tag-bold" width="24" height="24" />
+                    </CardBody>
+                  </Card>
+
+                  {formik.values.selected?.additionalInfo && (
+                    <Card className="mt-4 w-full border border-divider bg-default-50 shadow-none">
+                      <CardBody className="flex flex-col gap-4">
+                        <div className="flex items-center gap-4">
+                          <div className="rounded-medium bg-violet-100 p-2 text-violet-500">
+                            <Icon icon="solar:map-point-bold" width="24" />
+                          </div>
+                          <div className="flex text-[15px] text-default-400">
+                            <span>
+                              {formik.values.selected?.additionalInfo.type ===
+                              'online'
+                                ? 'Online'
+                                : 'In-Person'}
+                            </span>
+                          </div>
                         </div>
-                        <div className="flex text-[15px] text-default-400">
-                          <span className="capitalize">
-                            {formik.values.selected?.type}
-                          </span>
-                          <Icon icon="mdi:dot" width="24" height="24" />
-                          <span>
-                            {formik.values.selected?.additionalInfo.type ===
-                            'online'
-                              ? 'Online'
-                              : 'In-person'}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  {formik.values.selected?.additionalInfo.notes && (
-                    <div className="mt-4 flex flex-col">
-                      <Subtitle title="Patient notes" />
-                      <p className="mt-2 text-[15px] text-default-400">
-                        {formik.values.selected?.additionalInfo.notes}
-                      </p>
-                    </div>
-                  )}
-                  {formik.values.selected?.additionalInfo.symptoms && (
-                    <div className="mt-4 flex flex-col">
-                      <Subtitle title="Symptoms" />
-                      <div className="mt-4 flex gap-2">
-                        {formik.values.selected?.additionalInfo.symptoms
-                          .split(',')
-                          .map((symptom, index) => (
-                            <Chip
-                              key={index}
-                              className="p-5 font-medium capitalize text-default-400"
-                              variant="bordered"
-                              radius="md"
-                            >
-                              {symptom}
-                            </Chip>
-                          ))}
-                      </div>
-                    </div>
+                        {formik.values.selected?.additionalInfo.notes && (
+                          <>
+                            <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20"></div>
+                            <div className="flex items-start gap-4">
+                              <div className="rounded-medium bg-amber-100 p-2 text-amber-500">
+                                <Icon icon="solar:notes-bold" width="24" />
+                              </div>
+                              <div className="flex text-[15px] text-default-400">
+                                <span>
+                                  {formik.values.selected?.additionalInfo.notes}
+                                </span>
+                              </div>
+                            </div>
+                          </>
+                        )}
+                        {formik.values.selected?.additionalInfo.symptoms && (
+                          <>
+                            <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20"></div>
+                            <div className="flex items-start gap-4">
+                              <div className="rounded-medium bg-red-100 p-2 text-red-500">
+                                <Icon icon="solar:health-bold" width="24" />
+                              </div>
+                              <div className="flex flex-wrap gap-2 text-[15px] text-default-400">
+                                {formik.values.selected?.additionalInfo.symptoms
+                                  .split(',')
+                                  .map((symptom, index) => (
+                                    <Chip
+                                      key={index}
+                                      className="p-5 font-medium capitalize text-default-400"
+                                      variant="bordered"
+                                      radius="md"
+                                    >
+                                      {symptom}
+                                    </Chip>
+                                  ))}
+                              </div>
+                            </div>
+                          </>
+                        )}
+                      </CardBody>
+                    </Card>
                   )}
                 </ScrollShadow>
               </ModalBody>
@@ -251,7 +334,7 @@ export default function AppointmentDetailsModal() {
                   onPress={onClose}
                   className="min-w-[50%] p-6 font-medium"
                 >
-                  Cancel
+                  Back
                 </Button>
 
                 <ButtonGroup fullWidth className="min-w-[50%]" variant="flat">
@@ -282,23 +365,33 @@ export default function AppointmentDetailsModal() {
                       autoFocus={false}
                       aria-label="Appointment Options"
                       className="max-w-[300px]"
-                      selectedKeys={selectedOption}
+                      selectedKeys={[selectedOptionValue]}
                       selectionMode="single"
                       onSelectionChange={(keys) => {
                         setSelectedOption(keys as Set<string>);
                       }}
                       variant="flat"
                     >
-                      {dropdownItems.map((item) => (
-                        <DropdownItem
-                          color={item.color}
-                          description={item.description}
-                          startContent={<Icon icon={item.icon} width={24} />}
-                          key={item.key}
-                        >
-                          {item.label}
-                        </DropdownItem>
-                      ))}
+                      {dropdownItems
+                        .filter(
+                          (item) =>
+                            roleButton[session?.user?.role || 'user']?.includes(
+                              item.key
+                            ) &&
+                            statusButton[
+                              formik.values.selected?.status || 'booked'
+                            ]?.includes(item.key)
+                        )
+                        .map((item) => (
+                          <DropdownItem
+                            key={item.key}
+                            color={item.color}
+                            description={item.description}
+                            startContent={<Icon icon={item.icon} width={24} />}
+                          >
+                            {item.label}
+                          </DropdownItem>
+                        ))}
                     </DropdownMenu>
                   </Dropdown>
                 </ButtonGroup>

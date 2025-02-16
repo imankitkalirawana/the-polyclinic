@@ -41,7 +41,7 @@ export default function DatePicker() {
 
   return (
     <div className="mx-auto w-full max-w-3xl p-4">
-      <div className="mb-6">
+      <div className="mb-2">
         <h2 className="text-2xl font-semibold text-default-900">
           {format(new Date(date), 'MMMM d, yyyy')}
         </h2>
