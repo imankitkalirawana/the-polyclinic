@@ -13,7 +13,8 @@ const config = {
     extend: {
       screens: { xs: '512px' },
       maxWidth: {
-        '8xl': '96rem'
+        '8xl': '96rem',
+        '9xl': '105rem'
       },
       keyframes: {
         'caret-blink': {

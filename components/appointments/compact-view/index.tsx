@@ -3,6 +3,7 @@ import DatePicker from './date-picker';
 import AppointmentsTimeline from './appointments';
 import { FormProvider } from './context';
 import { auth } from '@/auth';
+import AsideRight from './aside/right';
 
 export default async function CompactView() {
   const session = await auth();
@@ -10,8 +11,14 @@ export default async function CompactView() {
   return (
     <>
       <FormProvider session={session as any}>
-        <DatePicker />
-        <AppointmentsTimeline />
+        <div className="flex w-full justify-center">
+          <div className="h-[90vh] w-96 bg-red-200"></div>
+          <div className="flex flex-col">
+            <DatePicker />
+            <AppointmentsTimeline />
+          </div>
+          <AsideRight />
+        </div>
       </FormProvider>
     </>
   );

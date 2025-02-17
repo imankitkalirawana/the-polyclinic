@@ -31,7 +31,7 @@ export const GET = auth(async function GET(request: any) {
 
     const query = {
       ...queryMap[role],
-      date: date ? { $regex: new RegExp(date, 'gi') } : {}
+      date: date ? { $regex: new RegExp(date, 'gi') } : { $exists: true }
     };
 
     await connectDB();

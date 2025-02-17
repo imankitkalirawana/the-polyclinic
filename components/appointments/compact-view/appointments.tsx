@@ -303,9 +303,9 @@ export default function AppointmentsTimeline() {
                             <h3 className="font-semibold capitalize text-default-900">
                               {appointment.patient.name}
                             </h3>
-                            <p className="flex text-default-500">
+                            <p className="flex gap-1 text-default-500">
                               <span className="line-clamp-1 capitalize">
-                                {appointment.type}
+                                #{appointment.aid}
                               </span>
                               <span>•</span>
                               <span>
