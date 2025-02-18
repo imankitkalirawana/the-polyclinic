@@ -31,6 +31,7 @@ export default function CalendarWidget({
 function Appointment({ appointment }: { appointment: AppointmentType }) {
   const styles = getAppointmentStyles(appointment.status);
   const chipControls = useAnimation();
+
   return (
     <Card
       as={motion.div}
