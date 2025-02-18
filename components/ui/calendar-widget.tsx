@@ -2,10 +2,8 @@
 import { cn } from '@/lib/utils';
 import { AppointmentType } from '@/models/Appointment';
 import { Card, Chip, ScrollShadow } from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
 import { getAppointmentStyles } from '../appointments/compact-view/appointments';
 import { format } from 'date-fns';
-import { useRouter } from 'nextjs-toploader/app';
 import { motion, useAnimation } from 'framer-motion';
 
 interface CalendarWidgetProps {
