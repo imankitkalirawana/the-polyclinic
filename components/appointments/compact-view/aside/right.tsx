@@ -1,7 +1,6 @@
 'use client';
-import { Card, CardBody, CardFooter } from '@heroui/react';
+import { Card, CardBody } from '@heroui/react';
 import Calendar from './calendar';
-import { Subtitle, Title } from '../appointment-details-modal';
 import { AppointmentType } from '@/models/Appointment';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
