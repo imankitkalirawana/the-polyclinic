@@ -3,7 +3,6 @@ import Appointment from '@/models/Appointment';
 import { connectDB } from '@/lib/db';
 import { auth } from '@/auth';
 import { sendHTMLEmail } from '@/functions/server-actions/emails/send-email';
-import { format } from 'date-fns';
 import { AppointmentStatus } from '@/utils/email-template/patient';
 
 export const POST = auth(async function POST(request: any, context: any) {

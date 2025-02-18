@@ -11,7 +11,6 @@ import {
 } from '@heroui/react';
 import { format } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import axios from 'axios';
 import { toast } from 'sonner';
 import { useForm } from '../context';
 import { useState } from 'react';

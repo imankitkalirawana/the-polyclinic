@@ -8,13 +8,9 @@ import {
   subMonths,
   getDay
 } from 'date-fns';
-import clsx from 'clsx';
 import { Button, Tooltip } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { cn } from '@/lib/utils';
-import { useForm } from '../context';
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
 import { AppointmentType } from '@/models/Appointment';
 import CalendarWidget from '@/components/ui/calendar-widget';
 
