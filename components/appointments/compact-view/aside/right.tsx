@@ -24,15 +24,21 @@ export default function AsideRight() {
         <Card className="mt-4 w-full border border-divider bg-default-50 shadow-none">
           <CardBody className="flex flex-col gap-4 p-0">
             <Calendar appointments={appointments} />
-            <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20"></div>
-            <PendingAppointments
-              appointments={appointments
-                .filter((appointment) => appointment.status === 'booked')
-                .sort(
-                  (a, b) =>
-                    new Date(b.date).getTime() - new Date(a.date).getTime()
-                )}
-            />
+            {appointments.filter(
+              (appointment) => appointment.status === 'booked'
+            ).length > 1 && (
+              <>
+                <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20"></div>
+                <PendingAppointments
+                  appointments={appointments
+                    .filter((appointment) => appointment.status === 'booked')
+                    .sort(
+                      (a, b) =>
+                        new Date(b.date).getTime() - new Date(a.date).getTime()
+                    )}
+                />
+              </>
+            )}
           </CardBody>
         </Card>
       </div>

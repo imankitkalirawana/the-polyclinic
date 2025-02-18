@@ -6,21 +6,47 @@ import {
   Card,
   CardBody,
   CardFooter,
-  CardHeader,
   Chip,
-  cn,
   ScrollShadow
 } from '@heroui/react';
 import { format } from 'date-fns';
-import { getAppointmentStyles } from '../appointments';
-import { motion, useAnimation } from 'framer-motion';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import axios from 'axios';
+import { toast } from 'sonner';
+import { useForm } from '../context';
+import { useState } from 'react';
 
 export default function PendingAppointments({
   appointments
 }: {
   appointments: AppointmentType[];
 }) {
+  const { refetch } = useForm();
+
+  const [isLoading, setIsLoading] = useState({
+    confirm: false,
+    cancel: false
+  });
+
+  const handleSubmit = async (
+    aid: number,
+    status: 'confirmed' | 'cancelled'
+  ) => {
+    // await axios
+    //   .post(`/api/v1/appointments/${aid}/status`, { status })
+    //   .then(() => {
+    //     toast.success('Appointment status updated successfully');
+    //     refetch();
+    //   });
+    //dummy 3 seconds delay
+    setIsLoading({ ...isLoading, [status]: true });
+    await new Promise((resolve) => setTimeout(resolve, 3000)).then(() => {
+      toast.success('Appointment status updated successfully');
+      refetch();
+    });
+    setIsLoading({ ...isLoading, [status]: false });
+  };
+
   return (
     <>
       <div className="flex flex-col gap-4 px-4 pb-4">
@@ -46,18 +72,15 @@ export default function PendingAppointments({
                 <CardFooter className="justify-end gap-1">
                   <Button
                     size="sm"
-                    variant="bordered"
+                    variant="flat"
                     color="danger"
                     isIconOnly
+                    onPress={() => handleSubmit(appointment.aid, 'cancelled')}
+                    isLoading={isLoading.cancel}
                   >
                     <Icon icon="tabler:x" width={16} />
                   </Button>
-                  <Button
-                    size="sm"
-                    variant="bordered"
-                    color="success"
-                    isIconOnly
-                  >
+                  <Button size="sm" variant="solid" color="primary" isIconOnly>
                     <Icon icon="tabler:check" width={16} />
                   </Button>
                 </CardFooter>
