@@ -148,19 +148,22 @@ const config = {
               foreground: '#fff',
               DEFAULT: '#bb391a'
             },
-            background: '#07120D',
-
-            content1: {
-              DEFAULT: '#101413'
-            },
+            background: '#141414',
             content2: {
-              DEFAULT: '#101413'
+              DEFAULT: '#292929',
+              foreground: '#fff'
+            },
+            content1: {
+              DEFAULT: '#2D2D2D',
+              foreground: '#000'
             },
             content3: {
-              DEFAULT: '#111D18'
+              DEFAULT: '#676767',
+              foreground: '#fff'
             },
             content4: {
-              DEFAULT: '#11291E'
+              DEFAULT: '#727272',
+              foreground: '#fff'
             },
             divider: '#2A2F31'
           }

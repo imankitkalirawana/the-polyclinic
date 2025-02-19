@@ -300,7 +300,7 @@ export default function AppointmentsTimeline() {
                         </div>
                         <div className="flex flex-1 items-center justify-between">
                           <div className="flex flex-col items-start text-xs">
-                            <h3 className="font-semibold capitalize text-default-900">
+                            <h3 className="line-clamp-1 font-semibold capitalize text-default-900">
                               {appointment.patient.name}
                             </h3>
                             <p className="flex gap-1 text-default-500">
