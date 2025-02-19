@@ -20,6 +20,7 @@ import AppointmentDetailsModal from './appointment-details-modal';
 import StatusReferences from './status-references';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useRouter } from 'nextjs-toploader/app';
+import CalendarWidget from '@/components/ui/calendar-widget';
 
 // Get background and icon colors based on appointment type
 export const getAppointmentStyles = (status: AppointmentType['status']) => {
@@ -232,30 +233,109 @@ export default function AppointmentsTimeline() {
                   let leftOffset = 16;
                   let width = '45%';
                   let overlappingCount = 0;
+                  let overlappingAppointments: (typeof appointment)[] = [];
+                  let remainingAppointments: (typeof appointment)[] = [];
 
-                  sortedAppointments.forEach((prev, i) => {
+                  // Find overlapping appointments
+                  sortedAppointments.forEach((other, i) => {
                     if (i >= index) return;
 
-                    const prevTime = convertISOTimetoTime(prev.date);
-                    const [prevHour, prevMinute] = prevTime
+                    const otherTime = convertISOTimetoTime(other.date);
+                    const [otherHour, otherMinute] = otherTime
                       .split(':')
                       .map(Number);
-                    const prevStart = prevHour * 60 + prevMinute;
-                    const prevEnd = prevStart + 30;
+                    const otherStart = otherHour * 60 + otherMinute;
+                    const otherEnd = otherStart + 30;
 
                     if (
-                      (startTimeInMinutes >= prevStart &&
-                        startTimeInMinutes < prevEnd) ||
-                      (prevStart >= startTimeInMinutes &&
-                        prevStart < startTimeInMinutes + 50)
+                      (startTimeInMinutes >= otherStart &&
+                        startTimeInMinutes < otherEnd) ||
+                      (otherStart >= startTimeInMinutes &&
+                        otherStart < startTimeInMinutes + 50)
                     ) {
                       overlappingCount++;
+                      overlappingAppointments.push(other);
                     }
                   });
 
+                  // Skip rendering if this is the 3rd or later overlapping appointment
+                  if (
+                    overlappingCount >= 2 &&
+                    overlappingAppointments.includes(
+                      sortedAppointments[index - 1]
+                    )
+                  ) {
+                    if (overlappingAppointments.length === 2) {
+                      const remainingCount =
+                        sortedAppointments.filter((apt) => {
+                          const aptTime = convertISOTimetoTime(apt.date);
+                          const [aptHour, aptMinute] = aptTime
+                            .split(':')
+                            .map(Number);
+                          const aptStart = aptHour * 60 + aptMinute;
+                          return Math.abs(aptStart - startTimeInMinutes) <= 30;
+                        }).length - 2;
+
+                      const remainingAppointments = sortedAppointments.filter(
+                        (apt, index) => {
+                          const aptTime = convertISOTimetoTime(apt.date);
+                          const [aptHour, aptMinute] = aptTime
+                            .split(':')
+                            .map(Number);
+                          const aptStart = aptHour * 60 + aptMinute;
+                          return (
+                            Math.abs(aptStart - startTimeInMinutes) <= 30 &&
+                            index >= 2
+                          );
+                        }
+                      );
+
+                      if (remainingCount > 0) {
+                        return (
+                          <Tooltip
+                            placement="right"
+                            content={
+                              <CalendarWidget
+                                appointments={remainingAppointments}
+                                className="items-start"
+                                isIcon
+                              />
+                            }
+                            classNames={{
+                              base: 'bg-transparent p-0'
+                            }}
+                            // isOpen
+                            className="bg-transparent p-0"
+                            shadow="none"
+                          >
+                            <Button
+                              key={`more-${startTimeInMinutes}`}
+                              className={cn(
+                                'absolute left-4 z-[29] aspect-square rounded-large bg-default-100',
+                                styles.background,
+                                styles.avatar
+                              )}
+                              style={{
+                                top: `${startY * 2.34}px`,
+                                left: `${leftOffset + 420}px`
+                                // minHeight: '50px'
+                              }}
+                              isIconOnly
+                              variant="flat"
+                              // isIconOnly
+                            >
+                              {`+${remainingCount}`}
+                            </Button>
+                          </Tooltip>
+                        );
+                      }
+                    }
+                    return null;
+                  }
+
                   if (overlappingCount > 0) {
-                    leftOffset += overlappingCount * 160; // Shift based on overlap count
-                    width = `${90 / (overlappingCount + 1)}%`; // Reduce width to fit multiple overlapping appointments
+                    leftOffset += overlappingCount * 160;
+                    width = '45%';
                   }
 
                   // Mark appointment as past if it is less than current date minus 30 minutes

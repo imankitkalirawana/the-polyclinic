@@ -1,52 +1,81 @@
 'use client';
 import { cn } from '@/lib/utils';
-import { AppointmentType } from '@/models/Appointment';
+import { AppointmentType, AType } from '@/models/Appointment';
 import { Card, Chip, ScrollShadow } from '@heroui/react';
 import { getAppointmentStyles } from '../appointments/compact-view/appointments';
 import { format } from 'date-fns';
 import { motion, useAnimation } from 'framer-motion';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import { useForm } from '../appointments/compact-view/context';
 
 interface CalendarWidgetProps {
   className?: string;
+  isIcon?: boolean;
   appointments?: AppointmentType[];
-  isDark?: boolean;
 }
 
+const TypeIcon: Record<AType, string> = {
+  consultation: 'solar:stethoscope-bold',
+  'follow-up': 'solar:clipboard-check-linear',
+  emergency: 'solar:adhesive-plaster-linear'
+};
+
 export default function CalendarWidget({
+  className,
+  isIcon,
   appointments = []
 }: CalendarWidgetProps) {
   return (
     <>
-      <ScrollShadow className="flex max-h-48 flex-col items-end gap-1 bg-transparent scrollbar-hide">
+      <ScrollShadow
+        className={cn(
+          'flex max-h-48 flex-col items-end gap-1 bg-transparent scrollbar-hide',
+          className
+        )}
+      >
         {appointments.map((appointment) => (
-          <Appointment key={appointment.aid} appointment={appointment} />
+          <Appointment
+            key={appointment.aid}
+            appointment={appointment}
+            isIcon={isIcon}
+          />
         ))}
       </ScrollShadow>
     </>
   );
 }
 
-function Appointment({ appointment }: { appointment: AppointmentType }) {
+function Appointment({
+  appointment,
+  isIcon
+}: {
+  appointment: AppointmentType;
+  isIcon?: boolean;
+}) {
   const styles = getAppointmentStyles(appointment.status);
   const chipControls = useAnimation();
+  const { formik } = useForm();
 
   return (
     <Card
       as={motion.div}
       initial={{ width: '180px' }}
-      whileHover={{ width: '230px' }}
+      whileHover={{ width: isIcon ? '180px' : '230px' }}
       key={appointment.aid}
       className={cn(
-        `group min-h-10 justify-center rounded-large px-2 py-1`,
+        `group min-h-10 max-w-[calc(fit-content+10px)] justify-center rounded-large px-2 py-1`,
         styles.background
       )}
       isPressable
+      onPress={() => {
+        formik.setFieldValue('selected', appointment);
+      }}
       shadow="none"
       onHoverStart={() =>
         chipControls.start({
           opacity: 1,
           scale: 1,
-          width: 'auto',
+          width: '80px',
           display: 'flex'
         })
       }
@@ -60,20 +89,29 @@ function Appointment({ appointment }: { appointment: AppointmentType }) {
       }
     >
       <div className="flex items-center justify-start gap-4">
-        <Chip size="sm" className={`rounded-medium p-2 ${styles.iconBg}`}>
-          <motion.span
-            initial={{
-              opacity: 0,
-              scale: 0,
-              width: 0,
-              display: 'none'
-            }}
-            animate={chipControls}
-            className="overflow-hidden capitalize text-white"
-          >
-            {appointment.status.split('-').join(' ')}
-          </motion.span>
-        </Chip>
+        {isIcon ? (
+          <div className={`rounded-medium p-2 ${styles.iconBg}`}>
+            <Icon
+              icon={TypeIcon[appointment.type]}
+              className={`h-5 w-5 ${styles.icon}`}
+            />
+          </div>
+        ) : (
+          <Chip size="sm" className={`rounded-medium p-2 ${styles.iconBg}`}>
+            <motion.span
+              initial={{
+                opacity: 0,
+                scale: 0,
+                width: 0,
+                display: 'none'
+              }}
+              animate={chipControls}
+              className="max-w-fit overflow-hidden capitalize text-white"
+            >
+              {appointment.status.split('-').join(' ')}
+            </motion.span>
+          </Chip>
+        )}
         <div className="flex flex-1 items-center justify-between">
           <div className="flex flex-col items-start text-xs">
             <h3 className="line-clamp-1 font-semibold capitalize text-default-900">
