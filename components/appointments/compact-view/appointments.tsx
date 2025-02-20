@@ -190,14 +190,16 @@ export default function AppointmentsTimeline() {
             </div>
 
             <div className="relative ml-16 border-l border-default-200">
-              {timeSlots.map((_, index) => (
-                <div
-                  key={index}
-                  className={`h-[70px] border-t border-default-200 ${
-                    index % 2 === 0 ? 'border-solid' : 'border-dashed'
-                  } `}
-                />
-              ))}
+              {timeSlots.map((time, index) => {
+                return (
+                  <div
+                    key={`${time}-divider`}
+                    className={`h-[70px] border-t border-default-200 ${
+                      index % 2 === 0 ? 'border-solid' : 'border-dashed'
+                    } `}
+                  />
+                );
+              })}
 
               {format(new Date(date), 'yyyy-MM-dd') ===
                 format(new Date(), 'yyyy-MM-dd') && (
@@ -293,6 +295,7 @@ export default function AppointmentsTimeline() {
                       if (remainingCount > 0) {
                         return (
                           <Tooltip
+                            key={`${appointment}-tooltip`}
                             placement="right"
                             content={
                               <CalendarWidget
