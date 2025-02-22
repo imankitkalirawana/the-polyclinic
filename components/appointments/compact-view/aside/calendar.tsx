@@ -84,8 +84,8 @@ export default function Calendar({
           </Button>
         </div>
         <div className="grid grid-cols-7 gap-2">
-          {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day) => (
-            <div key={day} className="text-center text-sm">
+          {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => (
+            <div key={`${day}-${index}`} className="text-center text-sm">
               {day}
             </div>
           ))}
