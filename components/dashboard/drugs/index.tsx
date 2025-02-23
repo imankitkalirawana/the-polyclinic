@@ -57,10 +57,8 @@ const INITIAL_VISIBLE_COLUMNS = savedConfig?.columns || [
 ];
 
 const INITIAL_VISIBLE_TYPES = savedConfig?.status || [
-  'medical',
-  'surgical',
-  'diagnostic',
-  'consultation'
+  'available',
+  'unavailable'
 ];
 
 const INITIAL_SORT_DESCRIPTOR = savedConfig?.sortDescriptor || {
