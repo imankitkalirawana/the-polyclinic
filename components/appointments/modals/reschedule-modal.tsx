@@ -6,7 +6,8 @@ import {
   ModalFooter,
   ModalHeader,
   Image,
-  Button
+  Button,
+  addToast
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { Title } from '../compact-view/appointment-details-modal';
@@ -20,12 +21,9 @@ import {
 import { useLocale } from '@react-aria/i18n';
 import { useState } from 'react';
 import { TIMINGS } from '@/lib/config';
-import { disabledDates } from '@/lib/appointments/new';
 import { format } from 'date-fns';
 import DateTimePicker from '../new/session/date-time-picker';
 import AsyncButton from '@/components/ui/buttons/async-button';
-import { rescheduleAppointment } from '@/functions/server-actions/appointment';
-import { toast } from 'sonner';
 import axios from 'axios';
 
 export default function RescheduleModal() {
@@ -128,9 +126,14 @@ export default function RescheduleModal() {
                       }
                     )
                     .then(() => {
-                      toast(
-                        `Appointment rescheduled to ${format(timing, 'p')}`
-                      );
+                      addToast({
+                        title: `Appointment Rescheduled`,
+                        description: `Appointment rescheduled to ${format(
+                          timing,
+                          'PPp'
+                        )}`,
+                        color: 'success'
+                      });
                       formik.setFieldValue('selected', {
                         ...formik.values.selected,
                         date: timing.toISOString(),

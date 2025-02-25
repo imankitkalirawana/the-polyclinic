@@ -17,7 +17,6 @@ export const transporter = nodemailer.createTransport({
 export function checkDomainMx(
   email: string | Address | (string | Address)[] | undefined
 ) {
-  console.log('email', email);
   return new Promise((resolve, reject) => {
     if (!email) {
       reject('Invalid email');

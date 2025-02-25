@@ -14,7 +14,7 @@ export const rowOptions = [
   {
     label: '100',
     value: 100
-  },
+  }
 ];
 
 export const TIMINGS = {
@@ -102,7 +102,8 @@ export const WEBSITE_SETTING = {
   status: {
     maintainance: false,
     registration: true,
-    login: true
+    login: true,
+    email: false
   },
   appearance: {
     theme: 'light',

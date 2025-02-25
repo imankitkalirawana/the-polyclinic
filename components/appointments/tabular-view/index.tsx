@@ -455,7 +455,7 @@ export default function TabularView({ session }: { session: any }) {
         onRowAction={(key) => {
           redirectTo(`/dashboard/appointments/${key}`);
         }}
-        className="cursor-pointer"
+        className="mx-auto max-w-7xl cursor-pointer px-4"
       >
         <TableHeader columns={headerColumns}>
           {(column) => (

@@ -1,4 +1,4 @@
-import { CLINIC_INFO } from '@/lib/config';
+import { CLINIC_INFO, WEBSITE_SETTING } from '@/lib/config';
 import { checkDomainMx, transporter } from '@/lib/nodemailer';
 import { MailOptions } from 'nodemailer/lib/json-transport';
 
@@ -15,6 +15,9 @@ export const defaultMailOptions: MailOptions = {
 export const sendHTMLEmail = async (mailOptions: MailOptions) => {
   const options = { ...defaultMailOptions, ...mailOptions };
   await checkDomainMx(options.to).then(async () => {
+    if (!WEBSITE_SETTING.status.email) {
+      return;
+    }
     await transporter
       .sendMail(options)
       .then(async () => {

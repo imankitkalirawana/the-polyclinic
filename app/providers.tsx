@@ -33,7 +33,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <ToastProvider
         toastProps={{
           variant: 'flat',
-          radius: 'lg'
+          timeout: 3000,
+          shouldShowTimeoutProgess: true,
+          radius: 'lg',
+          classNames: {
+            base: '!z-[100]',
+            wrapper: '!z-[100]'
+          }
         }}
       />
 

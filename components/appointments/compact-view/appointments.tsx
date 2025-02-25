@@ -19,7 +19,6 @@ import { useForm } from './context';
 import AppointmentDetailsModal from './appointment-details-modal';
 import StatusReferences from './status-references';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useRouter } from 'nextjs-toploader/app';
 import CalendarWidget from '@/components/ui/calendar-widget';
 
 // Get background and icon colors based on appointment type
@@ -100,7 +99,7 @@ const TypeIcon: Record<AType, string> = {
 
 export default function AppointmentsTimeline() {
   const { formik, appointments, isLoading } = useForm();
-  const [date, setDate] = useQueryState('date', {
+  const [date] = useQueryState('date', {
     defaultValue: new Date().toISOString().split('T')[0]
   });
 
@@ -278,18 +277,8 @@ export default function AppointmentsTimeline() {
                           return Math.abs(aptStart - startTimeInMinutes) <= 30;
                         }).length - 2;
 
-                      const remainingAppointments = sortedAppointments.filter(
-                        (apt, index) => {
-                          const aptTime = convertISOTimetoTime(apt.date);
-                          const [aptHour, aptMinute] = aptTime
-                            .split(':')
-                            .map(Number);
-                          const aptStart = aptHour * 60 + aptMinute;
-                          return (
-                            Math.abs(aptStart - startTimeInMinutes) <= 30 &&
-                            index >= 2
-                          );
-                        }
+                      remainingAppointments = sortedAppointments.filter(
+                        (apt, index) => {}
                       );
 
                       if (remainingCount > 0) {
