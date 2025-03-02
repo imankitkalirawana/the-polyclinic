@@ -11,7 +11,7 @@
   "dependencies": {
     "@auth/mongodb-adapter": "^3.7.2",
     "@aws-sdk/client-s3": "^3.679.0",
-    "@heroui/react": "^2.7.2",
+    "@heroui/react": "^2.7.4",
     "@iconify/icons-lucide": "^1.2.135",
     "@iconify/icons-solar": "^1.2.3",
     "@iconify/react": "^5.0.2",
