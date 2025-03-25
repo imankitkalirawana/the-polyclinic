@@ -7,7 +7,7 @@ import { auth } from '@/auth';
 export async function GET(_request: any, context: any) {
   try {
     await connectDB();
-    const did = parseInt(context.params.did);
+    const did = parseInt((await context.params).did);
     const drug = await Drug.findOne({ did });
     if (!drug) {
       return NextResponse.json({ message: 'Drug not found' }, { status: 404 });

@@ -10,12 +10,13 @@ import {
 } from '@tanstack/react-query';
 
 interface Props {
-  params: {
+  params: Promise<{
     did: number;
-  };
+  }>;
 }
 
-export default async function Page({ params }: Props) {
+export default async function Page(props: Props) {
+  const params = await props.params;
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ['drug', params.did],

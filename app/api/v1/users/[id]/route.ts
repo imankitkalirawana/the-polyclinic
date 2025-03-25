@@ -9,7 +9,7 @@ import bcrypt from 'bcryptjs';
 export async function GET(_request: any, context: any) {
   try {
     await connectDB();
-    const userId = context.params.id;
+    const userId = (await context.params).id;
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return NextResponse.json({ message: 'Invalid user ID' }, { status: 400 });
     }

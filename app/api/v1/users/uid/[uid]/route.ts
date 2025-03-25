@@ -8,7 +8,7 @@ import bcrypt from 'bcryptjs';
 export async function GET(_request: any, context: any) {
   try {
     await connectDB();
-    const uid = parseInt(context.params.uid);
+    const uid = parseInt((await context.params).uid);
     const user = await User.findOne({ uid });
     if (!user) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });

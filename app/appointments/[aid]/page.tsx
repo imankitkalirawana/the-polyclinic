@@ -8,12 +8,13 @@ import {
 } from '@tanstack/react-query';
 
 interface Props {
-  params: {
+  params: Promise<{
     aid: number;
-  };
+  }>;
 }
 
-export default async function Page({ params }: Props) {
+export default async function Page(props: Props) {
+  const params = await props.params;
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ['appointment', params.aid],

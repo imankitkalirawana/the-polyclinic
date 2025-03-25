@@ -220,7 +220,7 @@ export const changeAppointmentStatus = async (id: string, status: string) => {
 
 // drugs
 
-export const redirectTo = (url: string) => {
+export const redirectTo = async (url: string) => {
   revalidatePath(url);
-  redirect(url);
+  await redirect(url);
 };

@@ -4,7 +4,7 @@ import { connectDB } from '@/lib/db';
 
 export const DELETE = async function DELETE(_request: any, context: any) {
   try {
-    const email = context.params.email;
+    const email = (await context.params).email;
     await connectDB();
     const newsletter = await Newsletter.findOneAndDelete({ email });
     if (!newsletter) {
