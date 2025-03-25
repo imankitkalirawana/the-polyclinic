@@ -181,8 +181,10 @@ export default function Navbar({ session }: { session: any }) {
       >
         <NavbarMenuToggle className="text-default-400 md:hidden" />
 
-        <NavbarBrand as={Link} href="/" className="text-foreground-500">
-          <span className="ml-2 font-medium">The Polyclinic</span>
+        <NavbarBrand>
+          <Link className="ml-2 font-medium text-foreground" href="/">
+            The Polyclinic
+          </Link>
         </NavbarBrand>
 
         <NavbarContent
