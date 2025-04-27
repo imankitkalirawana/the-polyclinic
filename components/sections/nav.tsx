@@ -1,7 +1,18 @@
 'use client';
 
 import React from 'react';
+import { usePathname } from 'next/navigation';
+import { signIn, signOut } from 'next-auth/react';
+import { motion } from 'framer-motion';
 import {
+  Avatar,
+  Button,
+  cn,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Link,
   Navbar,
   NavbarBrand,
   NavbarContent,
@@ -9,19 +20,9 @@ import {
   NavbarMenu,
   NavbarMenuItem,
   NavbarMenuToggle,
-  Link,
-  Button,
-  cn,
-  Avatar,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger
 } from '@heroui/react';
-import { usePathname } from 'next/navigation';
-import { signIn, signOut } from 'next-auth/react';
+
 import ModeToggle from '../mode-toggle';
-import { motion } from 'framer-motion';
 
 export default function Nav({ session }: { session: any }) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -52,7 +53,7 @@ export default function Nav({ session }: { session: any }) {
   const menuItems = [
     {
       name: 'Home',
-      href: '/home'
+      href: '/home',
     },
     {
       name: 'Dashboard',
@@ -63,18 +64,18 @@ export default function Nav({ session }: { session: any }) {
           items: [
             { name: 'Overview', href: '/dashboard/overview' },
             { name: 'Stats', href: '/dashboard/stats' },
-            { name: 'Settings', href: '/dashboard/settings' }
-          ]
+            { name: 'Settings', href: '/dashboard/settings' },
+          ],
         },
         {
           title: 'Admin Dashboard',
           items: [
             { name: 'Overview', href: '/dashboard/admin/overview' },
             { name: 'Stats', href: '/dashboard/admin/stats' },
-            { name: 'Settings', href: '/dashboard/admin/settings' }
-          ]
-        }
-      ]
+            { name: 'Settings', href: '/dashboard/admin/settings' },
+          ],
+        },
+      ],
     },
     {
       name: 'Appointments',
@@ -82,7 +83,7 @@ export default function Nav({ session }: { session: any }) {
       subItems: [
         {
           title: 'Appointments',
-          items: [{ name: 'Create New', href: '/appointments/new' }]
+          items: [{ name: 'Create New', href: '/appointments/new' }],
         },
         {
           title: 'My Appointments',
@@ -90,19 +91,19 @@ export default function Nav({ session }: { session: any }) {
             { name: 'Upcoming', href: '/appointments' },
             { name: 'Overdue', href: '/appointments?status=overdue' },
             { name: 'Past', href: '/appointments?status=past' },
-            { name: 'All Appointments', href: '/appointments?status=all' }
-          ]
-        }
-      ]
+            { name: 'All Appointments', href: '/appointments?status=all' },
+          ],
+        },
+      ],
     },
     {
       name: 'About Us',
-      href: '/about'
+      href: '/about',
     },
     {
       name: 'Integrations',
-      href: '/integrations'
-    }
+      href: '/integrations',
+    },
   ];
 
   if (isDisabled) return null;
@@ -113,10 +114,10 @@ export default function Nav({ session }: { session: any }) {
         isBordered
         classNames={{
           base: cn('border-default-100', {
-            'bg-default-200/50': isMenuOpen
+            'bg-default-200/50': isMenuOpen,
           }),
           wrapper: 'w-full justify-center bg-transparent',
-          item: 'hidden md:flex'
+          item: 'hidden md:flex',
         }}
         height="56px"
         isMenuOpen={isMenuOpen || activeMenu ? true : false}
@@ -230,8 +231,8 @@ export default function Nav({ session }: { session: any }) {
             exit: { opacity: 0, y: -20 },
             transition: {
               ease: 'easeInOut',
-              duration: 0.2
-            }
+              duration: 0.2,
+            },
           }}
         >
           {menuItems.map((item, index) => (
@@ -257,8 +258,8 @@ export default function Nav({ session }: { session: any }) {
             exit: { opacity: 0, y: -20 },
             transition: {
               ease: 'easeInOut',
-              duration: 0.2
-            }
+              duration: 0.2,
+            },
           }}
         >
           {activeMenu && activeMenu.subItems && (

@@ -1,8 +1,7 @@
 'use client';
 
-import type { RadioProps } from '@heroui/react';
-
 import React from 'react';
+import type { RadioProps } from '@heroui/react';
 import { Radio } from '@heroui/react';
 import { cn } from '@heroui/react';
 
@@ -41,7 +40,7 @@ const UserRadio = React.forwardRef<HTMLInputElement, UserRadioProps>(
           'group-data-[focus-visible=true]:ring-secondary',
           classNames?.wrapper
         ),
-        labelWrapper: cn('ml-0', classNames?.labelWrapper)
+        labelWrapper: cn('ml-0', classNames?.labelWrapper),
       }}
       color="secondary"
     >

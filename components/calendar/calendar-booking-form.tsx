@@ -1,14 +1,13 @@
 'use client';
 
-import type { CalendarBookingStepType } from './calendar-booking-types';
-
-import { type SharedSelection } from '@heroui/system';
 import React, { useState } from 'react';
 import { type DateValue } from '@heroui/calendar';
+import { type SharedSelection } from '@heroui/system';
 
 import CalendarBookingDetails from './booking-details';
-import { DurationEnum, durations, type TimeSlot } from './calendar';
 import BookingForm from './booking-form';
+import { DurationEnum, durations, type TimeSlot } from './calendar';
+import type { CalendarBookingStepType } from './calendar-booking-types';
 
 interface CalendarBookingFormProps {
   setCalendarBookingStep: (step: CalendarBookingStepType) => void;
@@ -19,7 +18,7 @@ interface CalendarBookingFormProps {
 export default function CalendarBookingForm({
   setCalendarBookingStep,
   selectedTimeSlotRange,
-  selectedDate
+  selectedDate,
 }: CalendarBookingFormProps) {
   const [selectedTimeZone, setSelectedTimeZone] = useState<string>(
     // use system time zone as default

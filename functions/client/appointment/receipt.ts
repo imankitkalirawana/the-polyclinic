@@ -1,6 +1,7 @@
 'use client';
-import { printAppointmentReceipt } from '@/functions/server-actions/receipt';
 import { toast } from 'sonner';
+
+import { printAppointmentReceipt } from '@/functions/server-actions/receipt';
 
 export const downloadAppointmentReceipt = async (aid: number) => {
   try {
@@ -11,7 +12,7 @@ export const downloadAppointmentReceipt = async (aid: number) => {
     const pdfBlob = new Blob(
       [Uint8Array.from(atob(res.pdf), (c) => c.charCodeAt(0))],
       {
-        type: 'application/pdf'
+        type: 'application/pdf',
       }
     );
 

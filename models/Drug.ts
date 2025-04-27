@@ -1,4 +1,5 @@
 import mongoose, { Model } from 'mongoose';
+
 import { Base } from '@/lib/interface';
 
 export interface DrugType extends Base {
@@ -21,7 +22,7 @@ const drugSchema = new mongoose.Schema<DrugType>(
   {
     did: {
       type: Number,
-      unique: true
+      unique: true,
     },
     brandName: String,
     genericName: String,
@@ -36,9 +37,9 @@ const drugSchema = new mongoose.Schema<DrugType>(
     status: {
       type: String,
       enum: ['available', 'unavailable'],
-      default: 'available'
+      default: 'available',
     },
-    stock: Number
+    stock: Number,
   },
   { timestamps: true }
 );

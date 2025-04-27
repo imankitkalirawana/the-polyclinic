@@ -1,6 +1,9 @@
 'use client';
 import { useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import axios from 'axios';
+import { format } from 'date-fns';
+import { useQueryState } from 'nuqs';
 import {
   Accordion,
   AccordionItem,
@@ -13,26 +16,25 @@ import {
   DropdownTrigger,
   Input,
   Link,
-  Tooltip
+  Tooltip,
 } from '@heroui/react';
-import Skeleton from '../../ui/skeleton';
-import Heading from '../../ui/heading';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useQueryState } from 'nuqs';
-import React from 'react';
-import { format } from 'date-fns';
+
+import Heading from '../../ui/heading';
 import NoResults from '../../ui/no-results';
-import { AppointmentType } from '@/models/Appointment';
-import { capitalize } from '@/lib/utility';
-import { ChipColorMap } from '@/lib/maps';
+import Skeleton from '../../ui/skeleton';
 import AppointmentDetail from './appointment-detail';
+
+import { ChipColorMap } from '@/lib/maps';
+import { capitalize } from '@/lib/utility';
+import { AppointmentType } from '@/models/Appointment';
 
 export default function CompactView({ session }: { session: any }) {
   const [status, setStatus] = useQueryState('status', {
-    defaultValue: 'upcoming'
+    defaultValue: 'upcoming',
   });
   const [sort, setSort] = useQueryState('sort', {
-    defaultValue: 'upcoming'
+    defaultValue: 'upcoming',
   });
   const [searchQuery, setSearchQuery] = useQueryState('query');
 
@@ -82,7 +84,7 @@ export default function CompactView({ session }: { session: any }) {
         'overdue',
         'in-progress',
         'completed',
-        'cancelled'
+        'cancelled',
       ];
 
       if (sort === 'date') {
@@ -115,7 +117,7 @@ export default function CompactView({ session }: { session: any }) {
     all: 'There are no appointments to show. Create a new appointment to get started.',
     upcoming: 'There are no upcoming appointments to show.',
     overdue: 'There are no overdue appointments.',
-    past: 'There are no past appointments.'
+    past: 'There are no past appointments.',
   };
 
   return (
@@ -243,14 +245,14 @@ export default function CompactView({ session }: { session: any }) {
                                   type: 'spring',
                                   stiffness: 500,
                                   damping: 30,
-                                  duration: 1
+                                  duration: 1,
                                 },
                                 opacity: {
                                   easings: 'ease',
                                   duration: 1,
-                                  delay: 0.2
-                                }
-                              }
+                                  delay: 0.2,
+                                },
+                              },
                             },
                             exit: {
                               y: -10,
@@ -260,15 +262,15 @@ export default function CompactView({ session }: { session: any }) {
                               transition: {
                                 height: {
                                   easings: 'ease',
-                                  duration: 0.25
+                                  duration: 0.25,
                                 },
                                 opacity: {
                                   easings: 'ease',
-                                  duration: 0.3
-                                }
-                              }
-                            }
-                          }
+                                  duration: 0.3,
+                                },
+                              },
+                            },
+                          },
                         }}
                         variant="splitted"
                       >
@@ -358,7 +360,7 @@ export default function CompactView({ session }: { session: any }) {
                                 </div>
                               }
                               classNames={{
-                                base: 'bg-background shadow-none border-divider border'
+                                base: 'bg-background shadow-none border-divider border',
                               }}
                             >
                               <AppointmentDetail
@@ -437,5 +439,5 @@ const sortOptions = [
   { name: 'APPOINTMENT DATE', uid: 'date' },
   { name: 'NAME', uid: 'name' },
   { name: 'STATUS', uid: 'status' },
-  { name: 'BOOKING DATE', uid: 'createdAt' }
+  { name: 'BOOKING DATE', uid: 'createdAt' },
 ];

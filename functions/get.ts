@@ -11,8 +11,8 @@ export const getCountries = async () => {
       'https://api.countrystatecity.in/v1/countries',
       {
         headers: {
-          'X-CSCAPI-KEY': process.env.NEXT_PUBLIC_CSCAPI_KEY
-        }
+          'X-CSCAPI-KEY': process.env.NEXT_PUBLIC_CSCAPI_KEY,
+        },
       }
     );
     return response.data;
@@ -27,8 +27,8 @@ export const getStates = async (country: string) => {
       `https://api.countrystatecity.in/v1/countries/${country}/states`,
       {
         headers: {
-          'X-CSCAPI-KEY': process.env.NEXT_PUBLIC_CSCAPI_KEY
-        }
+          'X-CSCAPI-KEY': process.env.NEXT_PUBLIC_CSCAPI_KEY,
+        },
       }
     );
     return response.data;

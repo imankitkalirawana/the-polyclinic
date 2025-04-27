@@ -1,27 +1,19 @@
 'use client';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import {
-  Avatar,
-  Badge,
-  BadgeProps,
-  Button,
-  Divider,
-  Input,
-  RadioGroup,
-  Tooltip
-} from '@heroui/react';
-import Link from 'next/link';
 import React, { useState } from 'react';
-import { useFormik } from 'formik';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { AnimatePresence, domAnimation, LazyMotion, m } from 'framer-motion';
-import UserRadio from './user-radio';
-import axios from 'axios';
-import { getAllUsers } from '@/functions/server-actions';
 import { signIn } from 'next-auth/react';
-import { toast } from 'sonner';
-import { UserType } from '@/models/User';
+import { useFormik } from 'formik';
+import { AnimatePresence, domAnimation, LazyMotion, m } from 'framer-motion';
 import { useQueryState } from 'nuqs';
+import { toast } from 'sonner';
+import { Button, Input, RadioGroup, Tooltip } from '@heroui/react';
+import { Icon } from '@iconify/react/dist/iconify.js';
+
+import UserRadio from './user-radio';
+
+import { getAllUsers } from '@/functions/server-actions';
+import { UserType } from '@/models/User';
 
 const SignIn = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -34,18 +26,18 @@ const SignIn = () => {
   const variants = {
     enter: (direction: number) => ({
       x: direction > 0 ? 20 : -20,
-      opacity: 0
+      opacity: 0,
     }),
     center: {
       zIndex: 1,
       x: 0,
-      opacity: 1
+      opacity: 1,
     },
     exit: (direction: number) => ({
       zIndex: 0,
       x: direction < 0 ? 20 : -20,
-      opacity: 0
-    })
+      opacity: 0,
+    }),
   };
 
   const paginate = (newDirection: number) => {
@@ -58,7 +50,7 @@ const SignIn = () => {
     initialValues: {
       id: '',
       password: '',
-      users: [] as UserType[]
+      users: [] as UserType[],
     },
     onSubmit: async (values) => {
       if (page === 0) {
@@ -79,7 +71,7 @@ const SignIn = () => {
           id: values.id,
           password: values.password,
           redirect: true,
-          redirectTo: callbackUrl || '/'
+          redirectTo: callbackUrl || '/',
         }).then((res) => {
           if (res?.error) {
             console.error(res);
@@ -87,7 +79,7 @@ const SignIn = () => {
           }
         });
       }
-    }
+    },
   });
 
   return (
@@ -136,7 +128,7 @@ const SignIn = () => {
               exit="exit"
               initial="enter"
               transition={{
-                duration: 0.25
+                duration: 0.25,
               }}
               variants={variants}
               onSubmit={formik.handleSubmit}

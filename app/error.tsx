@@ -1,13 +1,14 @@
 'use client';
-import { Button, Card, Link as NextLink } from '@heroui/react';
 import Link from 'next/link';
+import { Button, Card, Link as NextLink } from '@heroui/react';
 import {
   IconArrowNarrowLeft,
   IconArrowNarrowRight,
   IconBook,
   IconFileDescription,
-  IconMessageCircle
+  IconMessageCircle,
 } from '@tabler/icons-react';
+
 import { cn } from '@/lib/utils';
 
 interface Props {
@@ -38,7 +39,7 @@ export default function Error({
     <Button variant="flat" color="primary" as={Link} href="/">
       Take me home
     </Button>
-  )
+  ),
 }: Props) {
   return (
     <>

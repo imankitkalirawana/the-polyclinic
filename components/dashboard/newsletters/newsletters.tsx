@@ -1,43 +1,44 @@
 'use client';
 
+import React from 'react';
+import { useRouter } from 'next/navigation';
+import { useFormik } from 'formik';
+import { toast } from 'sonner';
 import {
-  capitalize,
-  humanReadableDate,
-  humanReadableTime
-} from '@/lib/utility';
-import { NewsletterType } from '@/models/Newsletter';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import {
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  Table,
-  Selection,
-  Dropdown,
-  DropdownTrigger,
   Button,
-  DropdownMenu,
+  Dropdown,
   DropdownItem,
-  SortDescriptor,
+  DropdownMenu,
+  DropdownTrigger,
   Input,
-  Pagination,
   Modal,
-  ModalHeader,
   ModalBody,
   ModalContent,
   ModalFooter,
+  ModalHeader,
+  Pagination,
+  Selection,
+  SortDescriptor,
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
+  Tooltip,
   useDisclosure,
-  Tooltip
 } from '@heroui/react';
+import { Icon } from '@iconify/react/dist/iconify.js';
 import { IconTableExport } from '@tabler/icons-react';
-import { useFormik } from 'formik';
-import { useRouter } from 'next/navigation';
-import React from 'react';
-import { toast } from 'sonner';
 import { useQuery } from '@tanstack/react-query';
+
 import { getAllNewsletters } from '@/functions/server-actions/newsletters';
+import {
+  capitalize,
+  humanReadableDate,
+  humanReadableTime,
+} from '@/lib/utility';
+import { NewsletterType } from '@/models/Newsletter';
 
 const INITIAL_VISIBLE_COLUMNS = ['email', 'createdAt', 'actions'];
 
@@ -45,7 +46,7 @@ export default function Newsletters() {
   const { data: newsletters } = useQuery<NewsletterType[]>({
     queryKey: ['newsletters'],
     queryFn: () => getAllNewsletters(),
-    initialData: [] as NewsletterType[]
+    initialData: [] as NewsletterType[],
   });
 
   const deleteModal = useDisclosure();
@@ -62,7 +63,7 @@ export default function Newsletters() {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: 'email',
-    direction: 'ascending'
+    direction: 'ascending',
   });
 
   const [page, setPage] = React.useState(1);
@@ -204,7 +205,7 @@ export default function Newsletters() {
   const handleExport = async () => {
     try {
       const response = await fetch('/api/v1/newsletter/export', {
-        method: 'GET'
+        method: 'GET',
       });
 
       if (!response.ok) {
@@ -231,7 +232,7 @@ export default function Newsletters() {
     await toast.promise(handleExport(), {
       loading: 'Downloading...',
       success: 'Downloaded successfully',
-      error: 'Failed to download'
+      error: 'Failed to download',
     });
   };
   const topContent = React.useMemo(() => {
@@ -310,7 +311,7 @@ export default function Newsletters() {
     onSearchChange,
     onRowsPerPageChange,
     newsletters.length,
-    hasSearchFilter
+    hasSearchFilter,
   ]);
 
   const bottomContent = React.useMemo(() => {
@@ -356,12 +357,12 @@ export default function Newsletters() {
     initialValues: {},
     onSubmit: async () => {
       await fetch(`/api/v1/newsletter/${selected?.email}`, {
-        method: 'DELETE'
+        method: 'DELETE',
       });
       toast.success('NewsletterType Unsubscribed successfully');
       deleteModal.onClose();
       router.refresh();
-    }
+    },
   });
 
   return (
@@ -372,7 +373,7 @@ export default function Newsletters() {
         bottomContent={bottomContent}
         bottomContentPlacement="outside"
         classNames={{
-          wrapper: 'max-h-[382px]'
+          wrapper: 'max-h-[382px]',
         }}
         selectedKeys={selectedKeys}
         //   selectionMode="multiple"
@@ -456,5 +457,5 @@ export default function Newsletters() {
 const columns = [
   { name: 'EMAIL', uid: 'email', sortable: true },
   { name: 'SUBSCRIBED AT', uid: 'createdAt', sortable: true },
-  { name: 'ACTIONS', uid: 'actions' }
+  { name: 'ACTIONS', uid: 'actions' },
 ];

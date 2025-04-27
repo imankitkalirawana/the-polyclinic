@@ -1,6 +1,7 @@
 'use client';
-import { formatPrice } from '@/lib/utility';
 import { useEffect, useState } from 'react';
+
+import { formatPrice } from '@/lib/utility';
 
 export default function PriceDisplay({ price }: { price: number | undefined }) {
   const [formattedPrice, setFormattedPrice] = useState<string | null>(null);

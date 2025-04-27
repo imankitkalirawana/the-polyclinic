@@ -1,9 +1,11 @@
 import React from 'react';
-import DatePicker from './date-picker';
+
+import AsideRight from './aside/right';
 import AppointmentsTimeline from './appointments';
 import { FormProvider } from './context';
+import DatePicker from './date-picker';
+
 import { auth } from '@/auth';
-import AsideRight from './aside/right';
 
 export default async function CompactView() {
   const session = await auth();

@@ -1,27 +1,28 @@
 'use client';
-import { getUserWithUID } from '@/functions/server-actions';
-import { UserType } from '@/models/User';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import { Link, Tab, Tabs } from "@heroui/react";
-import { useQuery } from '@tanstack/react-query';
-import { usePathname } from 'next/navigation';
 import { useQueryState } from 'nuqs';
+import { Tab, Tabs } from '@heroui/react';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import { useQuery } from '@tanstack/react-query';
+
 import AccountDetails from './account-details';
 import NotificationsSettings from './notifications-settings';
 import SecuritySettings from './security-settings';
 
+import { getUserWithUID } from '@/functions/server-actions';
+import { UserType } from '@/models/User';
+
 export default function EditUser({ uid }: { uid: number }) {
   const [tab, setTab] = useQueryState('tab', {
-    defaultValue: 'account'
+    defaultValue: 'account',
   });
 
   const {
     data: user,
     isError,
-    refetch
+    refetch,
   } = useQuery<UserType>({
     queryKey: ['user', uid],
-    queryFn: () => getUserWithUID(uid)
+    queryFn: () => getUserWithUID(uid),
   });
 
   if (isError) {
@@ -41,7 +42,7 @@ export default function EditUser({ uid }: { uid: number }) {
           <p>Account</p>
         </div>
       ),
-      content: <AccountDetails user={user} refetch={refetch} />
+      content: <AccountDetails user={user} refetch={refetch} />,
     },
     {
       key: 'notifications-settings',
@@ -51,7 +52,7 @@ export default function EditUser({ uid }: { uid: number }) {
           <p>Notifications</p>
         </div>
       ),
-      content: <NotificationsSettings />
+      content: <NotificationsSettings />,
     },
     {
       key: 'security-settings',
@@ -61,8 +62,8 @@ export default function EditUser({ uid }: { uid: number }) {
           <p>Security</p>
         </div>
       ),
-      content: <SecuritySettings user={user} refetch={refetch} />
-    }
+      content: <SecuritySettings user={user} refetch={refetch} />,
+    },
   ];
   return (
     <>
@@ -70,7 +71,7 @@ export default function EditUser({ uid }: { uid: number }) {
         classNames={{
           tabList: 'mx-4 text-medium',
           tabContent: 'text-small',
-          tab: 'w-fit'
+          tab: 'w-fit',
         }}
         color="primary"
         items={tabs}

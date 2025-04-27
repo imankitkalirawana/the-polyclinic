@@ -1,34 +1,36 @@
 'use client';
-import {
-  changeAppointmentStatus,
-  getUserWithUID
-} from '@/functions/server-actions';
-import { AppointmentType } from '@/models/Appointment';
-import { UserType } from '@/models/User';
+import { useEffect, useState } from 'react';
+import { format } from 'date-fns';
+import { toast } from 'sonner';
 import {
   Button,
   Link,
   Modal,
   ModalContent,
   Tooltip,
-  useDisclosure
+  useDisclosure,
 } from '@heroui/react';
-import { useEffect, useState } from 'react';
+import { Icon } from '@iconify/react/dist/iconify.js';
+
+import AsyncButton from '../../ui/buttons/async-button';
+import CellValue from '../../ui/cell-value';
+import AddtoCalendar from '../common/add-to-calendar';
 import CancelAppointment from '../common/cancel-appointement';
 import RescheduleAppointment from '../common/reschedule-appointment';
-import AddtoCalendar from '../common/add-to-calendar';
-import { toast } from 'sonner';
-import CellValue from '../../ui/cell-value';
-import { genderMap, buttonColorMap } from '@/lib/maps';
-import { format } from 'date-fns';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import AsyncButton from '../../ui/buttons/async-button';
+
 import { downloadAppointmentReceipt } from '@/functions/client/appointment/receipt';
+import {
+  changeAppointmentStatus,
+  getUserWithUID,
+} from '@/functions/server-actions';
+import { buttonColorMap, genderMap } from '@/lib/maps';
+import { AppointmentType } from '@/models/Appointment';
+import { UserType } from '@/models/User';
 
 export default function AppointmentDetail({
   appointment,
   setAppointments,
-  session
+  session,
 }: {
   appointment: AppointmentType;
   setAppointments?: any;
@@ -67,7 +69,7 @@ export default function AppointmentDetail({
         setAppointments={setAppointments}
       />
     ),
-    addToCalendar: <AddtoCalendar appointment={appointment} />
+    addToCalendar: <AddtoCalendar appointment={appointment} />,
   };
 
   function handleButtonClick(action: string) {
@@ -228,7 +230,7 @@ export default function AppointmentDetail({
                 'overdue',
                 'confirmed',
                 'in-progress',
-                'on-hold'
+                'on-hold',
               ].includes(appointment.status) && (
                 <Button
                   className="w-full sm:w-fit"
@@ -277,7 +279,7 @@ export default function AppointmentDetail({
                               if (item._id === appointment._id) {
                                 return {
                                   ...item,
-                                  status: 'confirmed'
+                                  status: 'confirmed',
                                 };
                               }
                               return item;

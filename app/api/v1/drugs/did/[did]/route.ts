@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
-import Drug from '@/models/Drug';
-import { connectDB } from '@/lib/db';
+
 import { auth } from '@/auth';
+import { connectDB } from '@/lib/db';
+import Drug from '@/models/Drug';
 
 // get drug by id from param
 export async function GET(_request: any, context: any) {
@@ -42,7 +43,7 @@ export const PUT = auth(async function PUT(request: any, context: any) {
     drug.updatedBy = request.auth?.user?.email;
 
     drug = await Drug.findOneAndUpdate({ did }, data, {
-      new: true
+      new: true,
     });
     return NextResponse.json(drug);
   } catch (error) {

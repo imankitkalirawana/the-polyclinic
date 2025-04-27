@@ -1,22 +1,21 @@
 'use client';
 import {
+  Button,
+  Divider,
+  Input,
+  Link,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
-  Button,
-  Divider,
-  Chip,
-  Image,
-  Link,
-  Input,
   ScrollShadow,
   Select,
-  SelectItem
+  SelectItem,
 } from '@heroui/react';
-import { useForm } from '../context';
 import { Icon } from '@iconify/react/dist/iconify.js';
+
+import { useForm } from '../context';
 import VerifyId from './verify-id';
 
 export default function NewUserModal() {
@@ -24,7 +23,7 @@ export default function NewUserModal() {
 
   const ModalMap: Record<number, React.ReactNode> = {
     2: <VerifyId />,
-    4: <>Step 3</>
+    4: <>Step 3</>,
   };
 
   return (
@@ -176,7 +175,7 @@ export default function NewUserModal() {
                             register.setValues({
                               ...register.values,
                               step: 1,
-                              otp: ''
+                              otp: '',
                             });
                           }}
                           className="text-xs"

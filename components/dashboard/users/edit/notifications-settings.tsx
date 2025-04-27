@@ -1,9 +1,8 @@
 'use client';
 
-import type { CardProps } from "@heroui/react";
-
 import React from 'react';
-import { Card, CardHeader, CardBody, Button } from "@heroui/react";
+import type { CardProps } from '@heroui/react';
+import { Button, Card, CardBody, CardHeader } from '@heroui/react';
 
 import SwitchCell from './switch-cell';
 

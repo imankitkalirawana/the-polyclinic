@@ -1,5 +1,6 @@
-import { Base } from '@/lib/interface';
 import mongoose from 'mongoose';
+
+import { Base } from '@/lib/interface';
 
 export interface EmailType extends Base {
   from: string;
@@ -12,23 +13,23 @@ const EmailSchema = new mongoose.Schema<EmailType>(
   {
     from: {
       type: String,
-      required: true
+      required: true,
     },
     to: {
       type: String,
-      required: true
+      required: true,
     },
     subject: {
       type: String,
-      required: true
+      required: true,
     },
     message: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 

@@ -1,21 +1,22 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import { Avatar, Button, Link, Input } from '@heroui/react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { toast } from 'sonner';
-import { signIn } from 'next-auth/react';
 import React from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 import axios from 'axios';
+import { useFormik } from 'formik';
+import { toast } from 'sonner';
+import * as Yup from 'yup';
+import { Avatar, Button, Input, Link } from '@heroui/react';
+import { Icon } from '@iconify/react/dist/iconify.js';
+
+import Error from '@/app/error';
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSlot
+  InputOTPSlot,
 } from '@/components/ui/input-otp';
 import { WEBSITE_SETTING } from '@/lib/config';
-import Error from '@/app/error';
 
 export default function Register() {
   const [isOtpSent, setIsOtpSent] = useState(false);
@@ -43,7 +44,7 @@ export default function Register() {
       otp: '',
       password: '',
       confirmPassword: '',
-      isChecked: false
+      isChecked: false,
     },
     onSubmit: async (values) => {
       try {
@@ -57,7 +58,7 @@ export default function Register() {
       } catch (e) {
         console.error(e);
       }
-    }
+    },
   });
 
   useEffect(() => {
@@ -81,7 +82,7 @@ export default function Register() {
       console.log(formik.values.id, formik.values.otp);
       const res = await axios.post('/api/auth/verify-otp', {
         id: formik.values.id,
-        otp: parseInt(formik.values.otp)
+        otp: parseInt(formik.values.otp),
       });
       toast.success(res.data.message);
       setIsVerified(true);
@@ -95,7 +96,7 @@ export default function Register() {
   const resendOtp = async () => {
     try {
       const res = await axios.post('/api/auth/register/send-otp', {
-        id: formik.values.id
+        id: formik.values.id,
       });
       toast.success(res.data.message);
     } catch (error: any) {
@@ -212,10 +213,10 @@ const IdInput = () => {
   };
   const formik = useFormik({
     initialValues: {
-      id: ''
+      id: '',
     },
     validationSchema: Yup.object({
-      id: Yup.string().required('Email or Phone Number is required')
+      id: Yup.string().required('Email or Phone Number is required'),
     }),
     onSubmit: async (values) => {
       try {
@@ -228,7 +229,7 @@ const IdInput = () => {
         toast.error(error.response.data.message);
         console.error(error);
       }
-    }
+    },
   });
   return (
     <>
@@ -276,7 +277,7 @@ const DetailForm = () => {
       id: '',
       password: '',
       confirmPassword: '',
-      isChecked: false
+      isChecked: false,
     },
     validationSchema: Yup.object({
       name: Yup.string()
@@ -289,7 +290,7 @@ const DetailForm = () => {
         .required('Password is required'),
       confirmPassword: Yup.string()
         .required('Please retype your password.')
-        .oneOf([Yup.ref('password')], 'Your passwords do not match.')
+        .oneOf([Yup.ref('password')], 'Your passwords do not match.'),
     }),
     onSubmit: async (values) => {
       // call api /api/auth/register
@@ -299,13 +300,13 @@ const DetailForm = () => {
           id: values.id,
           password: values.password,
           redirect: true,
-          callbackUrl: '/dashboard'
+          callbackUrl: '/dashboard',
         });
       } catch (error: any) {
         toast.error(error.response.data.message);
         console.error(error);
       }
-    }
+    },
   });
   return (
     <>

@@ -1,11 +1,5 @@
 'use client';
-import {
-  addToGoogleCalendar,
-  addToOutlookCalendar,
-  handleAddToCalendar
-} from '@/lib/client-functions';
-import { EventType } from '@/lib/interface';
-import { AppointmentType } from '@/models/Appointment';
+import { useState } from 'react';
 import {
   Button,
   ButtonGroup,
@@ -14,13 +8,20 @@ import {
   DropdownMenu,
   DropdownTrigger,
   ModalBody,
-  ModalHeader
+  ModalHeader,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useState } from 'react';
+
+import {
+  addToGoogleCalendar,
+  addToOutlookCalendar,
+  handleAddToCalendar,
+} from '@/lib/client-functions';
+import { EventType } from '@/lib/interface';
+import { AppointmentType } from '@/models/Appointment';
 
 export default function AddtoCalendar({
-  appointment
+  appointment,
 }: {
   appointment: AppointmentType;
 }) {
@@ -32,13 +33,13 @@ export default function AddtoCalendar({
   const labelsMap = {
     google: 'Add to Google Calendar',
     outlook: 'Add to Outlook Calendar',
-    download: 'Download ICS File'
+    download: 'Download ICS File',
   };
 
   const buttonIconMap = {
     google: 'logos:google-calendar',
     outlook: 'vscode-icons:file-type-outlook',
-    download: 'solar:download-square-bold'
+    download: 'solar:download-square-bold',
   };
 
   const appointmentDate = new Date(appointment.date);
@@ -52,7 +53,7 @@ export default function AddtoCalendar({
     start: new Date(appointment.date),
     end: new Date(appointmentDate),
     duration: [1, 'hour'],
-    busy: true
+    busy: true,
   };
 
   const handleSubmit = (action: ActionType) => {

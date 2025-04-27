@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
-import Appointment from '@/models/Appointment';
-import { connectDB } from '@/lib/db';
+
 import { auth } from '@/auth';
 import { sendHTMLEmail } from '@/functions/server-actions/emails/send-email';
+import { connectDB } from '@/lib/db';
+import Appointment from '@/models/Appointment';
 import { AppointmentStatus } from '@/utils/email-template/patient';
 
 export const POST = auth(async function POST(request: any, context: any) {
@@ -43,8 +44,8 @@ export const POST = auth(async function POST(request: any, context: any) {
         'on-hold',
         'in-progress',
         'overdue',
-        'booked'
-      ]
+        'booked',
+      ],
     };
 
     if (!accessMap[request.auth?.user.role].includes(status)) {
@@ -69,11 +70,11 @@ export const POST = auth(async function POST(request: any, context: any) {
         to: updatedAppointment.patient.email,
         cc: updatedAppointment.doctor?.email || '',
         subject: `Your Appointment with ID: ${updatedAppointment.aid} is ${status}`,
-        html: AppointmentStatus(updatedAppointment)
+        html: AppointmentStatus(updatedAppointment),
       }).catch((error) => {
         console.error(error);
         throw new Error('Failed to send email');
-      })
+      }),
     ];
 
     Promise.all(emailTasks);

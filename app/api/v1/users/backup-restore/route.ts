@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
-import User from '@/models/User';
-import { connectDB } from '@/lib/db';
+
 import { auth } from '@/auth';
+import { connectDB } from '@/lib/db';
+import User from '@/models/User';
 
 export const GET = auth(async function GET(request: any) {
   try {
@@ -17,8 +18,8 @@ export const GET = auth(async function GET(request: any) {
     return new NextResponse(json, {
       headers: {
         'Content-Type': 'application/json',
-        'Content-Disposition': 'attachment; filename="users_backup.json"'
-      }
+        'Content-Disposition': 'attachment; filename="users_backup.json"',
+      },
     });
   } catch (error: any) {
     console.error(error);

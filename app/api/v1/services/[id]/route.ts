@@ -1,7 +1,8 @@
+import { NextResponse } from 'next/server';
+
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import Service, { ServiceType } from '@/models/Service';
-import { NextResponse } from 'next/server';
 
 export const GET = async function GET(_request: any, context: any) {
   try {
@@ -27,7 +28,7 @@ export const PUT = auth(async function PUT(request: any, context: any) {
     data.updatedBy = request.auth.user.email;
     await connectDB();
     const service = await Service.findByIdAndUpdate(id, data, {
-      new: true
+      new: true,
     });
     return NextResponse.json(service);
   } catch (error) {

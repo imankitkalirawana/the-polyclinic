@@ -39,8 +39,8 @@ END:VCALENDAR
   const response = new NextResponse(icsContent, {
     headers: {
       'Content-Type': 'text/calendar',
-      'Content-Disposition': `attachment; filename="${title}.ics"`
-    }
+      'Content-Disposition': `attachment; filename="${title}.ics"`,
+    },
   });
 
   return response;

@@ -1,14 +1,14 @@
 'use client';
 
-import { HeroUIProvider, ToastProvider } from '@heroui/react';
-
 import React from 'react';
-import { SessionProvider } from 'next-auth/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Provider as ReduxProvider } from 'react-redux';
-import { store } from '@/store';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { SessionProvider } from 'next-auth/react';
 import { useRouter } from 'nextjs-toploader/app';
+import { HeroUIProvider, ToastProvider } from '@heroui/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
+import { store } from '@/store';
 
 declare module '@react-types/shared' {
   interface RouterConfig {
@@ -23,9 +23,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 60 * 1000
-      }
-    }
+        staleTime: 60 * 1000,
+      },
+    },
   });
   return (
     <HeroUIProvider navigate={router.push}>
@@ -37,8 +37,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
           radius: 'lg',
           classNames: {
             base: '!z-[100]',
-            wrapper: '!z-[100]'
-          }
+            wrapper: '!z-[100]',
+          },
         }}
       />
 

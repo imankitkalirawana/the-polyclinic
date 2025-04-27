@@ -1,7 +1,8 @@
 'use client';
 
-import { cn } from '@/lib/utils';
 import { getAppointmentStyles } from './appointments';
+
+import { cn } from '@/lib/utils';
 
 export default function StatusReferences() {
   const statuses = [
@@ -11,7 +12,7 @@ export default function StatusReferences() {
     'completed',
     'cancelled',
     'overdue',
-    'on-hold'
+    'on-hold',
   ];
 
   return (

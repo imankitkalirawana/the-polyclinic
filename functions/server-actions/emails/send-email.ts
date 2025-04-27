@@ -1,15 +1,16 @@
+import { MailOptions } from 'nodemailer/lib/json-transport';
+
 import { CLINIC_INFO, WEBSITE_SETTING } from '@/lib/config';
 import { checkDomainMx, transporter } from '@/lib/nodemailer';
-import { MailOptions } from 'nodemailer/lib/json-transport';
 
 export const defaultMailOptions: MailOptions = {
   from: {
     name: CLINIC_INFO.name,
-    address: CLINIC_INFO.email
+    address: CLINIC_INFO.email,
   },
   to: '',
   subject: '',
-  html: '<h1>Hello World</h1>'
+  html: '<h1>Hello World</h1>',
 };
 
 export const sendHTMLEmail = async (mailOptions: MailOptions) => {

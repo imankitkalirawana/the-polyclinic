@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
-import User from '@/models/User';
-import { connectDB } from '@/lib/db';
+
 import { auth } from '@/auth';
+import { connectDB } from '@/lib/db';
+import User from '@/models/User';
 
 export const GET = auth(async function GET(request: any) {
   try {

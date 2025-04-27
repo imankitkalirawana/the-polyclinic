@@ -1,47 +1,48 @@
 'use client';
-import { capitalize } from '@/lib/utility';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import {
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  Table,
-  ChipProps,
-  Chip,
-  Selection,
-  Dropdown,
-  DropdownTrigger,
-  Button,
-  DropdownMenu,
-  DropdownItem,
-  SortDescriptor,
-  Input,
-  Pagination,
-  Tooltip,
-  Spinner
-} from '@heroui/react';
-import Link from 'next/link';
 import React, { useEffect } from 'react';
-import { CopyText } from '@/components/ui/copy';
-import { UserType } from '@/models/User';
-import { redirectTo } from '@/functions/server-actions';
-import { rowOptions } from '@/lib/config';
-import { useQuery } from '@tanstack/react-query';
-import FormatTimeInTable from '@/components/ui/format-time-in-table';
-import Skeleton from '@/components/ui/skeleton';
-import useDebounce from '@/hooks/useDebounce';
-import { saveTableConfig, loadTableConfig } from '@/utils/localStorageUtil';
+import Link from 'next/link';
 import axios from 'axios';
 import { toast } from 'sonner';
+import {
+  Button,
+  Chip,
+  ChipProps,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Input,
+  Pagination,
+  Selection,
+  SortDescriptor,
+  Spinner,
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
+  Tooltip,
+} from '@heroui/react';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import { useQuery } from '@tanstack/react-query';
+
+import { CopyText } from '@/components/ui/copy';
+import FormatTimeInTable from '@/components/ui/format-time-in-table';
+import Skeleton from '@/components/ui/skeleton';
+import { redirectTo } from '@/functions/server-actions';
+import useDebounce from '@/hooks/useDebounce';
+import { rowOptions } from '@/lib/config';
+import { capitalize } from '@/lib/utility';
+import { UserType } from '@/models/User';
+import { loadTableConfig, saveTableConfig } from '@/utils/localStorageUtil';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   active: 'success',
   inactive: 'warning',
   blocked: 'danger',
   deleted: 'danger',
-  unverified: 'default'
+  unverified: 'default',
 };
 
 const tableKey = 'users';
@@ -55,7 +56,7 @@ const INITIAL_VISIBLE_COLUMNS = savedConfig?.columns || [
   'contact',
   'address',
   'createdAt',
-  'actions'
+  'actions',
 ];
 
 const INITIAL_VISIBLE_STATUS = savedConfig?.status || [
@@ -63,12 +64,12 @@ const INITIAL_VISIBLE_STATUS = savedConfig?.status || [
   'inactive',
   'blocked',
   'deleted',
-  'unverified'
+  'unverified',
 ];
 
 const INITIAL_SORT_DESCRIPTOR = savedConfig?.sortDescriptor || {
   column: 'date',
-  direction: 'ascending'
+  direction: 'ascending',
 };
 
 const INITIAL_LIMIT = savedConfig?.limit || 10;
@@ -88,7 +89,7 @@ const getAllUsers = async (params: {
   let status = encodeURIComponent(JSON.stringify(params.status));
 
   const res = await axios.get(`/api/v1/users`, {
-    params: { ...params, status }
+    params: { ...params, status },
   });
   return res.data;
 };
@@ -136,8 +137,8 @@ export default function Users() {
         sortColumn: sortDescriptor.column as string,
         sortDirection: sortDescriptor.direction,
         query,
-        status: Array.from(status).map(String)
-      })
+        status: Array.from(status).map(String),
+      }),
   });
 
   useEffect(() => {
@@ -162,7 +163,7 @@ export default function Users() {
       columns: Array.from(visibleColumns),
       status: Array.from(status),
       sortDescriptor,
-      limit
+      limit,
     });
   }, [visibleColumns, status, sortDescriptor, limit]);
 
@@ -459,7 +460,7 @@ export default function Users() {
         bottomContent={bottomContent}
         bottomContentPlacement="outside"
         classNames={{
-          wrapper: 'max-h-[382px]'
+          wrapper: 'max-h-[382px]',
         }}
         selectedKeys={selectedKeys}
         // selectionMode="multiple"
@@ -514,7 +515,7 @@ const columns = [
   { name: 'CONTACT', uid: 'contact', sortable: true },
   { name: 'ADDRESS', uid: 'address', sortable: true },
   { name: 'CREATED On', uid: 'createdAt', sortable: true },
-  { name: 'ACTIONS', uid: 'actions' }
+  { name: 'ACTIONS', uid: 'actions' },
 ];
 
 const statusOptions = [
@@ -522,5 +523,5 @@ const statusOptions = [
   { name: 'inactive', uid: 'inactive' },
   { name: 'blocked', uid: 'blocked' },
   { name: 'deleted', uid: 'deleted' },
-  { name: 'unverified', uid: 'unverified' }
+  { name: 'unverified', uid: 'unverified' },
 ];

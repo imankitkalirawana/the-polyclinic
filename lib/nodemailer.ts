@@ -1,5 +1,5 @@
-import nodemailer from 'nodemailer';
 import dns from 'dns';
+import nodemailer from 'nodemailer';
 import { Address } from 'nodemailer/lib/mailer';
 const email = process.env.EMAIL;
 const password = process.env.PASSWORD;
@@ -10,8 +10,8 @@ export const transporter = nodemailer.createTransport({
   secure: true,
   auth: {
     user: email,
-    pass: password
-  }
+    pass: password,
+  },
 });
 
 export function checkDomainMx(

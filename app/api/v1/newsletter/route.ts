@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
-import Newsletter from '@/models/Newsletter';
-import { connectDB } from '@/lib/db';
+
 import { auth } from '@/auth';
+import { connectDB } from '@/lib/db';
+import Newsletter from '@/models/Newsletter';
 
 export const GET = auth(async function GET(request: any) {
   try {
@@ -34,7 +35,7 @@ export const POST = async function POST(request: any) {
     await newsletter.save();
     return NextResponse.json({
       newsletter,
-      message: 'Subscribed successfully'
+      message: 'Subscribed successfully',
     });
   } catch (error: any) {
     console.error(error);

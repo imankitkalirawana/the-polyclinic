@@ -1,30 +1,26 @@
 'use client';
+import { useState } from 'react';
+import axios from 'axios';
+import { format } from 'date-fns';
 import {
+  addToast,
+  Button,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
-  Image,
-  Button,
-  addToast
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import { CalendarDate, getLocalTimeZone, Time } from '@internationalized/date';
+import { useLocale } from '@react-aria/i18n';
+
 import { Title } from '../compact-view/appointment-details-modal';
 import { useForm } from '../compact-view/context';
-import {
-  CalendarDate,
-  getLocalTimeZone,
-  Time,
-  isWeekend
-} from '@internationalized/date';
-import { useLocale } from '@react-aria/i18n';
-import { useState } from 'react';
-import { TIMINGS } from '@/lib/config';
-import { format } from 'date-fns';
 import DateTimePicker from '../new/session/date-time-picker';
+
 import AsyncButton from '@/components/ui/buttons/async-button';
-import axios from 'axios';
+import { TIMINGS } from '@/lib/config';
 
 export default function RescheduleModal() {
   const { formik, refetch, session } = useForm();
@@ -99,7 +95,7 @@ export default function RescheduleModal() {
                 }}
                 timeProps={{
                   minValue: new Time(TIMINGS.appointment.start),
-                  maxValue: new Time(TIMINGS.appointment.end)
+                  maxValue: new Time(TIMINGS.appointment.end),
                 }}
               />
             </ModalBody>
@@ -122,7 +118,7 @@ export default function RescheduleModal() {
                     .post(
                       `/api/v1/appointments/${formik.values.selected?.aid}/reschedule`,
                       {
-                        date: timing.toISOString()
+                        date: timing.toISOString(),
                       }
                     )
                     .then(() => {
@@ -132,7 +128,7 @@ export default function RescheduleModal() {
                           timing,
                           'PPp'
                         )}`,
-                        color: 'success'
+                        color: 'success',
                       });
                       formik.setFieldValue('selected', {
                         ...formik.values.selected,
@@ -140,7 +136,7 @@ export default function RescheduleModal() {
                         status:
                           session?.user?.role === 'user'
                             ? 'booked'
-                            : 'confirmed'
+                            : 'confirmed',
                       });
                       refetch();
                       formik.setFieldValue('modal', null);

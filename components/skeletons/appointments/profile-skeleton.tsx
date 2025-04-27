@@ -1,11 +1,12 @@
+import { Card, cn } from '@heroui/react';
+
 import Skeleton from '@/components/ui/skeleton';
-import { Card, cn } from "@heroui/react";
 
 export default function ProfileSkeleton({ step = 0 }: { step?: number }) {
   return (
     <Card
       className={cn('w-full space-y-4 p-4', {
-        '': step > 0
+        '': step > 0,
       })}
     >
       {/* Profile Header */}
@@ -14,7 +15,7 @@ export default function ProfileSkeleton({ step = 0 }: { step?: number }) {
           {/* Avatar */}
           <Skeleton
             className={cn('h-20 w-20 rounded-full', {
-              'h-12 w-12': step > 0
+              'h-12 w-12': step > 0,
             })}
           />
 

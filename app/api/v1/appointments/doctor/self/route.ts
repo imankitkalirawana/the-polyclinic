@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
-import Appointment from '@/models/Appointment';
-import { connectDB } from '@/lib/db';
+
 import { auth } from '@/auth';
+import { connectDB } from '@/lib/db';
+import Appointment from '@/models/Appointment';
 
 export const GET = auth(async function GET(request: any) {
   try {
@@ -24,14 +25,14 @@ export const GET = auth(async function GET(request: any) {
         'completed',
         'cancelled',
         'overdue',
-        'on-hold'
-      ]
+        'on-hold',
+      ],
     };
 
     await connectDB();
     const appointments = await Appointment.find({
       doctor,
-      status: statusMap[status]
+      status: statusMap[status],
     });
     return NextResponse.json(appointments);
   } catch (error) {

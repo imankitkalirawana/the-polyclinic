@@ -1,25 +1,18 @@
 'use client';
+import { format } from 'date-fns';
 import {
+  Button,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
-  Image,
-  Link,
-  Button,
-  Divider,
-  Chip
 } from '@heroui/react';
-import { useForm } from '../context';
 import { Icon } from '@iconify/react/dist/iconify.js';
+
+import { useForm } from '../context';
+
 import CellValue from '@/components/ui/cell-value';
-import { format } from 'date-fns';
-import Skeleton from '@/components/ui/skeleton';
-import { getDoctorWithUID } from '@/functions/server-actions';
-import { useEffect, useState } from 'react';
-import { AppointmentType } from '@/models/Appointment';
-import AsyncButton from '@/components/ui/buttons/async-button';
 
 export default function SummaryModal() {
   const { formik } = useForm();

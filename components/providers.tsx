@@ -1,6 +1,6 @@
 'use client';
-import NextTopLoader from 'nextjs-toploader';
 import { useEffect, useState } from 'react';
+import NextTopLoader from 'nextjs-toploader';
 import { Toaster } from 'sonner';
 
 const Sonner = () => {
@@ -37,8 +37,8 @@ const Sonner = () => {
             warning: 'text-warning-500 bg-warning-300/10 border-warning-300/30',
             info: 'text-blue-500 bg-blue-300/10 border-blue-300/30',
             closeButton:
-              'hover:text-default-700 bg-background/20 border-default-500 text-slate-500 backdrop-blur-sm'
-          }
+              'hover:text-default-700 bg-background/20 border-default-500 text-slate-500 backdrop-blur-sm',
+          },
         }}
         // expand
         theme={'light'}

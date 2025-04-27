@@ -1,9 +1,9 @@
 'use client';
 
-import { downloadAppointmentReceipt } from '@/functions/client/appointment/receipt';
-import { printAppointmentReceipt } from '@/functions/server-actions/receipt';
-import { Button } from '@heroui/react';
 import { useState } from 'react';
+import { Button } from '@heroui/react';
+
+import { downloadAppointmentReceipt } from '@/functions/client/appointment/receipt';
 
 export default function Page() {
   const [isDownloading, setIsDownloading] = useState(false);

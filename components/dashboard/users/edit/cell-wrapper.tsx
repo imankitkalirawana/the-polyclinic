@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from "@heroui/react";
+import { cn } from '@heroui/react';
 
 const CellWrapper = React.forwardRef<
   HTMLDivElement,

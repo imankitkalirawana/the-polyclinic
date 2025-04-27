@@ -1,13 +1,14 @@
-import { Base } from '@/lib/interface';
 import mongoose, { Model } from 'mongoose';
 import mongooseSequence from 'mongoose-sequence';
+
+import { Base } from '@/lib/interface';
 
 export enum UserStatus {
   active = 'active',
   inactive = 'inactive',
   blocked = 'blocked',
   deleted = 'deleted',
-  unverified = 'unverified'
+  unverified = 'unverified',
 }
 
 export enum UserRole {
@@ -17,7 +18,7 @@ export enum UserRole {
   receptionist = 'receptionist',
   pharmacist = 'pharmacist',
   laboratorist = 'laboratorist',
-  user = 'user'
+  user = 'user',
 }
 
 export interface UserType extends Base {
@@ -65,69 +66,69 @@ const userSchema = new mongoose.Schema(
       required: [true, 'Email is required'],
       match: [
         /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-        'Email is invalid'
-      ]
+        'Email is invalid',
+      ],
     },
     uid: {
       type: Number,
-      unique: true
+      unique: true,
     },
     phone: String,
     password: {
       type: String,
-      default: 'secure_password123'
+      default: 'secure_password123',
     },
     name: {
       type: String,
-      required: [true, 'Name is required']
+      required: [true, 'Name is required'],
     },
     dob: {
       day: {
         type: String,
-        default: '01'
+        default: '01',
       },
       month: {
         type: String,
-        default: '01'
+        default: '01',
       },
       year: {
         type: String,
-        default: '2000'
-      }
+        default: '2000',
+      },
     },
     gender: {
       type: String,
       enum: ['male', 'female', 'other'],
-      default: 'male'
+      default: 'male',
     },
     role: {
       type: String,
       enum: UserRole,
-      default: 'user'
+      default: 'user',
     },
     status: {
       type: String,
       enum: UserStatus,
-      default: 'unverified'
+      default: 'unverified',
     },
     country: {
       type: String,
-      default: 'IN'
+      default: 'IN',
     },
     state: {
       type: String,
-      default: 'MH'
+      default: 'MH',
     },
     city: String,
     address: String,
     zipcode: String,
     passwordResetToken: String,
     updatedBy: String,
-    createdBy: String
+    createdBy: String,
   },
   {
     timestamps: true,
-    collection: 'user'
+    collection: 'user',
   }
 );
 

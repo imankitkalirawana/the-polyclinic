@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
-import Appointment from '@/models/Appointment';
-import { connectDB } from '@/lib/db';
+
 import { auth } from '@/auth';
-import { AppointmentStatus } from '@/utils/email-template/patient';
-import { NewAppointment } from '@/utils/email-template/doctor';
 import { sendHTMLEmail } from '@/functions/server-actions/emails/send-email';
+import { connectDB } from '@/lib/db';
+import Appointment from '@/models/Appointment';
+import { NewAppointment } from '@/utils/email-template/doctor';
+import { AppointmentStatus } from '@/utils/email-template/patient';
 
 export const GET = auth(async function GET(request: any) {
   try {
@@ -20,23 +21,23 @@ export const GET = auth(async function GET(request: any) {
     // query map with respect to user role and status
     const queryMap: Record<string, object> = {
       doctor: {
-        'doctor.uid': request.auth?.user?.uid
+        'doctor.uid': request.auth?.user?.uid,
       },
       user: {
-        'patient.email': request.auth?.user?.email
+        'patient.email': request.auth?.user?.email,
       },
       admin: {},
-      receptionist: {}
+      receptionist: {},
     };
 
     const query = {
       ...queryMap[role],
-      date: date ? { $regex: new RegExp(date, 'gi') } : { $exists: true }
+      date: date ? { $regex: new RegExp(date, 'gi') } : { $exists: true },
     };
 
     await connectDB();
     const appointments = await Appointment.find(query).sort({
-      date: 'ascending'
+      date: 'ascending',
     });
 
     return NextResponse.json(appointments);
@@ -64,7 +65,7 @@ export const POST = auth(async function POST(request: any) {
       sendHTMLEmail({
         to: data.patient.email,
         subject: 'Booked: Appointment Confirmation',
-        html: AppointmentStatus(appointment)
+        html: AppointmentStatus(appointment),
       }).catch((error) => {
         console.error('Failed to send patient email:', error);
       }),
@@ -72,10 +73,10 @@ export const POST = auth(async function POST(request: any) {
         sendHTMLEmail({
           to: data.doctor.email,
           subject: `New Appointment Requested by ${data.patient.name}`,
-          html: NewAppointment(appointment)
+          html: NewAppointment(appointment),
         }).catch((error) => {
           console.error('Failed to send doctor email:', error);
-        })
+        }),
     ];
 
     Promise.all(emailTasks).catch((error) => {

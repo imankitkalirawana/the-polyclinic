@@ -1,21 +1,20 @@
 'use client';
 
-import { AppointmentType } from '@/models/Appointment';
-import { useQuery } from '@tanstack/react-query';
-import { getAppointmentWithAID } from '@/functions/server-actions/appointment';
-import NoResults from '@/components/ui/no-results';
-import AppointmentDetail from '../compact-view/appointment-detail';
 import {
-  Badge,
   Card,
   CardBody,
   CardHeader,
   Chip,
   Divider,
   Progress,
-  ProgressProps
+  ProgressProps,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import { useQuery } from '@tanstack/react-query';
+
+import NoResults from '@/components/ui/no-results';
+import { getAppointmentWithAID } from '@/functions/server-actions/appointment';
+import { AppointmentType } from '@/models/Appointment';
 
 interface AppointmentProps {
   aid: number;
@@ -26,10 +25,10 @@ export default function Appointment({ aid, session }: AppointmentProps) {
   const {
     data: appointment,
     isError,
-    error
+    error,
   } = useQuery<AppointmentType>({
     queryKey: ['appointment', aid],
-    queryFn: () => getAppointmentWithAID(aid)
+    queryFn: () => getAppointmentWithAID(aid),
   });
 
   if (isError) {
@@ -62,12 +61,12 @@ export default function Appointment({ aid, session }: AppointmentProps) {
   > = {
     booked: {
       value: 10,
-      color: 'primary'
+      color: 'primary',
     },
     confirmed: {
       value: 50,
-      color: 'success'
-    }
+      color: 'success',
+    },
   };
 
   return (

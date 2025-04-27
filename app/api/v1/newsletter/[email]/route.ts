@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
-import Newsletter from '@/models/Newsletter';
+
 import { connectDB } from '@/lib/db';
+import Newsletter from '@/models/Newsletter';
 
 export const DELETE = async function DELETE(_request: any, context: any) {
   try {

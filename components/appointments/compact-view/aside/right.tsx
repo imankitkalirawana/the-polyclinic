@@ -1,10 +1,12 @@
 'use client';
-import { Card, CardBody } from '@heroui/react';
-import Calendar from './calendar';
-import { AppointmentType } from '@/models/Appointment';
-import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { Card, CardBody } from '@heroui/react';
+import { useQuery } from '@tanstack/react-query';
+
+import Calendar from './calendar';
 import PendingAppointments from './pending-appointments';
+
+import { AppointmentType } from '@/models/Appointment';
 
 export default function AsideRight() {
   const { data } = useQuery<AppointmentType[]>({
@@ -12,7 +14,7 @@ export default function AsideRight() {
     queryFn: async () => {
       const response = await axios.get(`/api/v1/appointments`);
       return response.data;
-    }
+    },
   });
 
   const appointments = data || [];

@@ -1,12 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
-import userReducer from './slices/user-slice';
+
 import appointmentReducer from './slices/appointment-slice';
+import userReducer from './slices/user-slice';
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
-    appointment: appointmentReducer
-  }
+    appointment: appointmentReducer,
+  },
 });
 
 export type RootState = ReturnType<typeof store.getState>;

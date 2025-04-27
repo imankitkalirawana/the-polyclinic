@@ -14,8 +14,8 @@ export const serviceValidationSchema = Yup.object().shape({
     duration: Yup.number()
       .required('Duration is required')
       .min(1, 'Duration is too low'),
-    status: Yup.string().required('Status is required')
-  })
+    status: Yup.string().required('Status is required'),
+  }),
 });
 
 export const userValidationSchema = Yup.object().shape({
@@ -29,9 +29,9 @@ export const userValidationSchema = Yup.object().shape({
       'Invalid email'
     ),
     phone: Yup.string().required('Phone number is required'),
-    gender: Yup.string().required('Gender is required')
+    gender: Yup.string().required('Gender is required'),
   }),
-  age: Yup.number().required('Age is required')
+  age: Yup.number().required('Age is required'),
 });
 
 export const drugValidationSchema = Yup.object().shape({
@@ -43,6 +43,6 @@ export const drugValidationSchema = Yup.object().shape({
     genericName: Yup.string()
       .required('Generic Name is required')
       .min(3, 'Generic Name is too short')
-      .max(50, 'Generic Name is too long')
-  })
+      .max(50, 'Generic Name is too long'),
+  }),
 });

@@ -1,7 +1,7 @@
-import { auth } from '@/auth';
+import { NextResponse } from 'next/server';
+
 import { connectDB } from '@/lib/db';
 import Service from '@/models/Service';
-import { NextResponse } from 'next/server';
 
 export const GET = async function GET(_request: any, context: any) {
   try {

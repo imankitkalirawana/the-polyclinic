@@ -1,8 +1,9 @@
-import { Button, Chip } from '@heroui/react';
+import { Chip } from '@heroui/react';
 import { Icon } from '@iconify/react';
 
 import { type SidebarItem, SidebarItemType } from './sidebar';
 import TeamAvatar from './team-avatar';
+
 import ModeToggle from '@/components/mode-toggle';
 
 export const items: SidebarItem[] = [
@@ -10,7 +11,7 @@ export const items: SidebarItem[] = [
     key: 'home',
     href: '/dashboard',
     icon: 'solar:home-2-linear',
-    title: 'Home'
+    title: 'Home',
   },
   {
     key: 'projects',
@@ -23,7 +24,7 @@ export const items: SidebarItem[] = [
         icon="solar:add-circle-line-duotone"
         width={24}
       />
-    )
+    ),
   },
   {
     key: 'tasks',
@@ -36,13 +37,13 @@ export const items: SidebarItem[] = [
         icon="solar:add-circle-line-duotone"
         width={24}
       />
-    )
+    ),
   },
   {
     key: 'team',
     href: '#',
     icon: 'solar:users-group-two-rounded-outline',
-    title: 'Team'
+    title: 'Team',
   },
   {
     key: 'tracker',
@@ -53,13 +54,13 @@ export const items: SidebarItem[] = [
       <Chip size="sm" variant="flat">
         New
       </Chip>
-    )
+    ),
   },
   {
     key: 'analytics',
     href: '#',
     icon: 'solar:chart-outline',
-    title: 'Analytics'
+    title: 'Analytics',
   },
   {
     key: 'perks',
@@ -70,20 +71,20 @@ export const items: SidebarItem[] = [
       <Chip size="sm" variant="flat">
         3
       </Chip>
-    )
+    ),
   },
   {
     key: 'expenses',
     href: '#',
     icon: 'solar:bill-list-outline',
-    title: 'Expenses'
+    title: 'Expenses',
   },
   {
     key: 'settings',
     href: '#',
     icon: 'solar:settings-outline',
-    title: 'Settings'
-  }
+    title: 'Settings',
+  },
 ];
 
 export const sectionItems: SidebarItem[] = [
@@ -95,46 +96,46 @@ export const sectionItems: SidebarItem[] = [
         key: 'home',
         href: '/home',
         icon: 'solar:home-2-broken',
-        title: 'Home'
+        title: 'Home',
       },
       {
         key: 'users',
         href: '/dashboard/users',
         icon: 'solar:users-group-rounded-broken',
-        title: 'Users'
+        title: 'Users',
       },
       {
         key: 'services',
         href: '/dashboard/services',
         icon: 'solar:test-tube-minimalistic-broken',
-        title: 'Services'
+        title: 'Services',
       },
 
       {
         key: 'drugs',
         href: '/dashboard/drugs',
         icon: 'solar:pills-broken',
-        title: 'Drugs'
+        title: 'Drugs',
       },
       {
         key: 'emails',
         href: '/dashboard/emails',
         icon: 'solar:mailbox-broken',
-        title: 'Emails'
+        title: 'Emails',
       },
       {
         key: 'newsletters',
         href: '/dashboard/newsletters',
         icon: 'solar:inbox-broken',
-        title: 'Newsletters'
+        title: 'Newsletters',
       },
       {
         key: 'website',
         href: '/dashboard/website',
         icon: 'solar:card-broken',
-        title: 'Website'
-      }
-    ]
+        title: 'Website',
+      },
+    ],
   },
   {
     key: 'configure',
@@ -145,10 +146,10 @@ export const sectionItems: SidebarItem[] = [
         href: undefined,
         icon: 'solar:moon-broken',
         title: 'Dark Mode',
-        endContent: <ModeToggle />
-      }
-    ]
-  }
+        endContent: <ModeToggle />,
+      },
+    ],
+  },
 ];
 
 export const sectionItemsWithTeams: SidebarItem[] = [...sectionItems];
@@ -162,7 +163,7 @@ export const brandItems: SidebarItem[] = [
         key: 'home',
         href: '#',
         icon: 'solar:home-2-linear',
-        title: 'Home'
+        title: 'Home',
       },
       {
         key: 'projects',
@@ -175,7 +176,7 @@ export const brandItems: SidebarItem[] = [
             icon="solar:add-circle-line-duotone"
             width={24}
           />
-        )
+        ),
       },
       {
         key: 'tasks',
@@ -188,13 +189,13 @@ export const brandItems: SidebarItem[] = [
             icon="solar:add-circle-line-duotone"
             width={24}
           />
-        )
+        ),
       },
       {
         key: 'team',
         href: '#',
         icon: 'solar:users-group-two-rounded-outline',
-        title: 'Team'
+        title: 'Team',
       },
       {
         key: 'tracker',
@@ -209,9 +210,9 @@ export const brandItems: SidebarItem[] = [
           >
             New
           </Chip>
-        )
-      }
-    ]
+        ),
+      },
+    ],
   },
   {
     key: 'your-teams',
@@ -225,11 +226,11 @@ export const brandItems: SidebarItem[] = [
           <TeamAvatar
             classNames={{
               base: 'border-1 border-primary-foreground/20',
-              name: 'text-primary-foreground/80'
+              name: 'text-primary-foreground/80',
             }}
             name="Next UI"
           />
-        )
+        ),
       },
       {
         key: 'tailwind-variants',
@@ -239,11 +240,11 @@ export const brandItems: SidebarItem[] = [
           <TeamAvatar
             classNames={{
               base: 'border-1 border-primary-foreground/20',
-              name: 'text-primary-foreground/80'
+              name: 'text-primary-foreground/80',
             }}
             name="Tailwind Variants"
           />
-        )
+        ),
       },
       {
         key: 'nextui-pro',
@@ -253,14 +254,14 @@ export const brandItems: SidebarItem[] = [
           <TeamAvatar
             classNames={{
               base: 'border-1 border-primary-foreground/20',
-              name: 'text-primary-foreground/80'
+              name: 'text-primary-foreground/80',
             }}
             name="NextUI Pro"
           />
-        )
-      }
-    ]
-  }
+        ),
+      },
+    ],
+  },
 ];
 
 export const sectionLongList: SidebarItem[] = [
@@ -273,33 +274,33 @@ export const sectionLongList: SidebarItem[] = [
         key: 'payroll',
         href: '#',
         title: 'Payroll',
-        icon: 'solar:dollar-minimalistic-linear'
+        icon: 'solar:dollar-minimalistic-linear',
       },
       {
         key: 'invoices',
         href: '#',
         title: 'Invoices',
-        icon: 'solar:file-text-linear'
+        icon: 'solar:file-text-linear',
       },
       {
         key: 'billing',
         href: '#',
         title: 'Billing',
-        icon: 'solar:card-outline'
+        icon: 'solar:card-outline',
       },
       {
         key: 'payment-methods',
         href: '#',
         title: 'Payment Methods',
-        icon: 'solar:wallet-money-outline'
+        icon: 'solar:wallet-money-outline',
       },
       {
         key: 'payouts',
         href: '#',
         title: 'Payouts',
-        icon: 'solar:card-transfer-outline'
-      }
-    ]
+        icon: 'solar:card-transfer-outline',
+      },
+    ],
   },
   {
     key: 'your-teams',
@@ -309,22 +310,22 @@ export const sectionLongList: SidebarItem[] = [
         key: 'nextui',
         href: '#',
         title: 'NextUI',
-        startContent: <TeamAvatar name="Next UI" />
+        startContent: <TeamAvatar name="Next UI" />,
       },
       {
         key: 'tailwind-variants',
         href: '#',
         title: 'Tailwind Variants',
-        startContent: <TeamAvatar name="Tailwind Variants" />
+        startContent: <TeamAvatar name="Tailwind Variants" />,
       },
       {
         key: 'nextui-pro',
         href: '#',
         title: 'NextUI Pro',
-        startContent: <TeamAvatar name="NextUI Pro" />
-      }
-    ]
-  }
+        startContent: <TeamAvatar name="NextUI Pro" />,
+      },
+    ],
+  },
 ];
 
 export const sectionNestedItems: SidebarItem[] = [
@@ -332,7 +333,7 @@ export const sectionNestedItems: SidebarItem[] = [
     key: 'home',
     href: '#',
     icon: 'solar:home-2-linear',
-    title: 'Home'
+    title: 'Home',
   },
   {
     key: 'projects',
@@ -345,7 +346,7 @@ export const sectionNestedItems: SidebarItem[] = [
         icon="solar:add-circle-line-duotone"
         width={24}
       />
-    )
+    ),
   },
   {
     key: 'tasks',
@@ -358,13 +359,13 @@ export const sectionNestedItems: SidebarItem[] = [
         icon="solar:add-circle-line-duotone"
         width={24}
       />
-    )
+    ),
   },
   {
     key: 'team',
     href: '#',
     icon: 'solar:users-group-two-rounded-outline',
-    title: 'Team'
+    title: 'Team',
   },
   {
     key: 'tracker',
@@ -375,13 +376,13 @@ export const sectionNestedItems: SidebarItem[] = [
       <Chip size="sm" variant="flat">
         New
       </Chip>
-    )
+    ),
   },
   {
     key: 'analytics',
     href: '#',
     icon: 'solar:chart-outline',
-    title: 'Analytics'
+    title: 'Analytics',
   },
   {
     key: 'perks',
@@ -392,7 +393,7 @@ export const sectionNestedItems: SidebarItem[] = [
       <Chip size="sm" variant="flat">
         3
       </Chip>
-    )
+    ),
   },
   {
     key: 'cap_table',
@@ -404,26 +405,26 @@ export const sectionNestedItems: SidebarItem[] = [
         key: 'shareholders',
         icon: 'solar:users-group-rounded-linear',
         href: '#',
-        title: 'Shareholders'
+        title: 'Shareholders',
       },
       {
         key: 'note_holders',
         icon: 'solar:notes-outline',
         href: '#',
-        title: 'Note Holders'
+        title: 'Note Holders',
       },
       {
         key: 'transactions_log',
         icon: 'solar:clipboard-list-linear',
         href: '#',
-        title: 'Transactions Log'
-      }
-    ]
+        title: 'Transactions Log',
+      },
+    ],
   },
   {
     key: 'expenses',
     href: '#',
     icon: 'solar:bill-list-outline',
-    title: 'Expenses'
-  }
+    title: 'Expenses',
+  },
 ];

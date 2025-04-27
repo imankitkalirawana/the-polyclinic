@@ -1,24 +1,25 @@
 'use client';
-import { sectionItemsWithTeams } from '@/components/dashboard/sidebar/sidebar-items';
-import {
-  cn,
-  Spacer,
-  ScrollShadow,
-  Button,
-  Breadcrumbs as NextUIBreadcrumbs,
-  BreadcrumbItem,
-  Image
-} from '@heroui/react';
-import { Icon } from '@iconify/react';
 import React, { useEffect, useMemo, useState } from 'react';
-import Sidebar from '@/components/dashboard/sidebar/sidebar';
-import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { signOut } from 'next-auth/react';
+import {
+  BreadcrumbItem,
+  Breadcrumbs as NextUIBreadcrumbs,
+  Button,
+  cn,
+  Image,
+  ScrollShadow,
+  Spacer,
+} from '@heroui/react';
+import { Icon } from '@iconify/react';
+
+import Sidebar from '@/components/dashboard/sidebar/sidebar';
+import { sectionItemsWithTeams } from '@/components/dashboard/sidebar/sidebar-items';
 
 export default function DashboardLayout({
   session,
-  children
+  children,
 }: {
   session: any;
   readonly children: React.ReactNode;
@@ -46,7 +47,7 @@ export default function DashboardLayout({
         className={cn(
           'relative flex h-full w-72 max-w-[288px] flex-1 flex-col !border-r-small border-divider transition-[transform,opacity,margin] duration-250 ease-in-out',
           {
-            '-ml-72 -translate-x-72': isHidden
+            '-ml-72 -translate-x-72': isHidden,
           }
         )}
       >
@@ -88,7 +89,6 @@ export default function DashboardLayout({
             </div>
           </div>
         </div>
-        
 
         <ScrollShadow className="h-full max-h-full pl-2">
           <Sidebar

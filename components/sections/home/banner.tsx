@@ -1,14 +1,15 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { Pacifico } from 'next/font/google';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
+
 import { cn } from '@/lib/utils';
 
 const pacifico = Pacifico({
   subsets: ['latin'],
   weight: ['400'],
-  variable: '--font-pacifico'
+  variable: '--font-pacifico',
 });
 
 function ElegantShape({
@@ -17,7 +18,7 @@ function ElegantShape({
   width = 400,
   height = 100,
   rotate = 0,
-  gradient = 'from-white/[0.08]'
+  gradient = 'from-white/[0.08]',
 }: {
   className?: string;
   delay?: number;
@@ -31,33 +32,33 @@ function ElegantShape({
       initial={{
         opacity: 0,
         y: -150,
-        rotate: rotate - 15
+        rotate: rotate - 15,
       }}
       animate={{
         opacity: 1,
         y: 0,
-        rotate: rotate
+        rotate: rotate,
       }}
       transition={{
         duration: 2.4,
         delay,
         ease: [0.23, 0.86, 0.39, 0.96],
-        opacity: { duration: 1.2 }
+        opacity: { duration: 1.2 },
       }}
       className={cn('absolute', className)}
     >
       <motion.div
         animate={{
-          y: [0, 15, 0]
+          y: [0, 15, 0],
         }}
         transition={{
           duration: 12,
           repeat: Number.POSITIVE_INFINITY,
-          ease: 'easeInOut'
+          ease: 'easeInOut',
         }}
         style={{
           width,
-          height
+          height,
         }}
         className="relative"
       >
@@ -80,7 +81,7 @@ function ElegantShape({
 export default function Banner({
   badge = 'Devocode UI',
   title1 = 'Elevate Your',
-  title2 = 'Digital Vision'
+  title2 = 'Digital Vision',
 }: {
   badge?: string;
   title1?: string;
@@ -94,9 +95,9 @@ export default function Banner({
       transition: {
         duration: 1,
         delay: 0.5 + i * 0.2,
-        ease: [0.25, 0.4, 0.25, 1]
-      }
-    })
+        ease: [0.25, 0.4, 0.25, 1],
+      },
+    }),
   };
 
   return (

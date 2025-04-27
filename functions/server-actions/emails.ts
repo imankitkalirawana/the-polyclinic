@@ -10,7 +10,7 @@ export const getAllEmails = async () => {
 
   return emails.map((email: any) => ({
     ...email,
-    _id: email._id.toString()
+    _id: email._id.toString(),
   }));
 };
 
@@ -22,6 +22,6 @@ export const getEmailWithID = async (id: string): Promise<EmailType> => {
 
   return {
     ...email,
-    _id: email._id.toString()
+    _id: email._id.toString(),
   };
 };
