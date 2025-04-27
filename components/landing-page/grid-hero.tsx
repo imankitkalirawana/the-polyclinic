@@ -1,9 +1,8 @@
 'use client';
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AnimationProps, motion } from 'framer-motion';
 // TODO: to be removed
 import { FiArrowRight } from 'react-icons/fi';
-import { twMerge } from 'tailwind-merge';
 import { Button } from '@heroui/react';
 
 export default function GridHero() {
@@ -98,43 +97,6 @@ const Content = () => {
         </Button>
       </motion.div>
     </div>
-  );
-};
-
-const GlowingChip = ({ children }: { children: string }) => {
-  return (
-    <span className="relative z-10 mb-4 inline-block rounded-full border border-zinc-700 bg-zinc-900/20 px-3 py-1.5 text-xs text-zinc-50 md:mb-0">
-      {children}
-      <span className="absolute bottom-0 left-3 right-3 h-[1px] bg-gradient-to-r from-zinc-500/0 via-zinc-300 to-zinc-500/0" />
-    </span>
-  );
-};
-
-const SplashButton = ({ children, className, ...rest }: ButtonProps) => {
-  return (
-    <button
-      className={twMerge(
-        'rounded-md bg-gradient-to-br from-blue-400 to-blue-700 px-4 py-2 text-zinc-50 ring-2 ring-blue-500/50 ring-offset-2 ring-offset-zinc-950 transition-all hover:scale-[1.02] hover:ring-transparent active:scale-[0.98] active:ring-blue-500/70',
-        className
-      )}
-      {...rest}
-    >
-      {children}
-    </button>
-  );
-};
-
-const GhostButton = ({ children, className, ...rest }: ButtonProps) => {
-  return (
-    <button
-      className={twMerge(
-        'rounded-md px-4 py-2 text-zinc-100 transition-all hover:scale-[1.02] hover:bg-zinc-800 hover:text-zinc-50 active:scale-[0.98]',
-        className
-      )}
-      {...rest}
-    >
-      {children}
-    </button>
   );
 };
 
@@ -297,8 +259,3 @@ type BeamType = {
   left: number;
   transition?: AnimationProps['transition'];
 };
-
-type ButtonProps = {
-  children: ReactNode;
-  className?: string;
-} & React.ButtonHTMLAttributes<HTMLButtonElement>;
