@@ -5,6 +5,7 @@ export default function Home() {
   return (
     <>
       <Button
+        className="absolute mt-4"
         onPress={() => {
           addToast({
             title: 'Hello',
