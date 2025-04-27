@@ -80,6 +80,9 @@
     "yup": "^1.4.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
+    "@commitlint/types": "^19.8.0",
     "@tanstack/eslint-plugin-query": "^5.62.9",
     "@tanstack/react-query-devtools": "^5.66.0",
     "@types/bcryptjs": "^2.4.6",
