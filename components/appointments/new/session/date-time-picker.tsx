@@ -11,6 +11,7 @@ import * as React from 'react';
 import {
   Calendar,
   CalendarProps,
+  DateValue,
   TimeInput,
   TimeInputProps,
   TimeInputValue
@@ -41,12 +42,14 @@ export default function DateTimePicker({
         <Calendar
           {...dateProps}
           aria-label="Date (Min Date Value)"
-          defaultValue={today(getLocalTimeZone())}
+          // @ts-ignore
+          defaultValue={today(getLocalTimeZone()) as unknown as DateValue }
           minValue={today(getLocalTimeZone())}
           maxValue={today(getLocalTimeZone()).add({
             days: TIMINGS.booking.maximum
           })}
-          value={date}
+          // @ts-ignore
+          value={date} 
           onChange={onDateChange}
           isInvalid={disabledDates[0].map((d) => d.compare(date!)).includes(0)}
           showMonthAndYearPickers

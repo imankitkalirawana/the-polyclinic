@@ -255,7 +255,9 @@ export default function AccountDetails({
             label="DOB (DD-MM-YYYY)"
             onChange={(date) => {
               const dob =
+                // @ts-ignore
                 date instanceof Date
+                  // @ts-ignore
                   ? date.toISOString().split('T')[0]
                   : new Date(date as any).toISOString().split('T')[0];
               formik.setFieldValue('user.dob', dob);
