@@ -2,6 +2,13 @@
 export const isCaching = false;
 export const API_BASE_URL = process.env.NEXTAUTH_URL;
 
+export const APP_INFO = {
+  name: 'GoMapper',
+  email: process.env.GMAIL || '',
+  url: process.env.NEXTAUTH_URL || '',
+  description: `GoMapper is a platform for mapping data from one format to another.`,
+};
+
 export const rowOptions = [
   {
     label: '10',
