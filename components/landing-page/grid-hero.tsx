@@ -1,6 +1,7 @@
 'use client';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { AnimationProps, motion } from 'framer-motion';
+// TODO: to be removed
 import { FiArrowRight } from 'react-icons/fi';
 import { twMerge } from 'tailwind-merge';
 import { Button } from '@heroui/react';

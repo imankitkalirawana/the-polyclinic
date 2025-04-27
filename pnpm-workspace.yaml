@@ -1,0 +1,5 @@
+onlyBuiltDependencies:
+  - '@heroui/shared-utils'
+  - puppeteer
+  - unrs-resolver
+  - ws
