@@ -126,7 +126,8 @@ const userSchema = new mongoose.Schema(
     createdBy: String
   },
   {
-    timestamps: true
+    timestamps: true,
+    collection: 'user'
   }
 );
 

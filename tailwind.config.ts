@@ -77,6 +77,48 @@ const config = {
               foreground: '#fff',
               DEFAULT: '#153a01'
             },
+            success: {
+              '50': '#e3f7ee',
+              '100': '#bbecd7',
+              '200': '#93e1bf',
+              '300': '#6bd6a8',
+              '400': '#43cb90',
+              '500': '#1bc079',
+              '600': '#169e64',
+              '700': '#127d4f',
+              '800': '#0d5b39',
+              '900': '#083a24',
+              foreground: '#000',
+              DEFAULT: '#1bc079'
+            },
+            warning: {
+              '50': '#fff7e5',
+              '100': '#ffebc0',
+              '200': '#ffe09c',
+              '300': '#ffd477',
+              '400': '#ffc953',
+              '500': '#ffbd2e',
+              '600': '#d29c26',
+              '700': '#a67b1e',
+              '800': '#795a16',
+              '900': '#4d390e',
+              foreground: '#000',
+              DEFAULT: '#ffbd2e'
+            },
+            danger: {
+              '50': '#fde8e3',
+              '100': '#fbc8bc',
+              '200': '#f9a896',
+              '300': '#f7886f',
+              '400': '#f46848',
+              '500': '#f24821',
+              '600': '#c83b1b',
+              '700': '#9d2f15',
+              '800': '#732210',
+              '900': '#49160a',
+              foreground: '#000',
+              DEFAULT: '#f24821'
+            },
             // background: '#E0F5E8',
             foreground: '#07170E',
             divider: '#E5E7EB'
@@ -148,7 +190,7 @@ const config = {
               foreground: '#fff',
               DEFAULT: '#bb391a'
             },
-            background: '#141414',
+            background: '#1D1E20',
             content2: {
               DEFAULT: '#292929',
               foreground: '#fff'

@@ -3,7 +3,6 @@ import { sectionItemsWithTeams } from '@/components/dashboard/sidebar/sidebar-it
 import {
   cn,
   Spacer,
-  Avatar,
   ScrollShadow,
   Button,
   Breadcrumbs as NextUIBreadcrumbs,
@@ -13,7 +12,7 @@ import {
 import { Icon } from '@iconify/react';
 import React, { useEffect, useMemo, useState } from 'react';
 import Sidebar from '@/components/dashboard/sidebar/sidebar';
-import { signOut, useSession } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -89,7 +88,7 @@ export default function DashboardLayout({
             </div>
           </div>
         </div>
-       
+        
 
         <ScrollShadow className="h-full max-h-full pl-2">
           <Sidebar

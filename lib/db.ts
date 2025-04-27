@@ -1,7 +1,7 @@
 // utils/db.js
 import mongoose from 'mongoose';
 
-const databaseUrl = process.env.NEXT_PUBLIC_MONGO_URL || '';
+const databaseUrl = process.env.MONGO_URI || '';
 
 const connectDB = async () => {
   try {
