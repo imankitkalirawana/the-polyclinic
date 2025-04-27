@@ -10,6 +10,6 @@ export const getAllNewsletters = async () => {
 
   return newsletters.map((newsletter: any) => ({
     ...newsletter,
-    _id: newsletter._id.toString()
+    _id: newsletter._id.toString(),
   }));
 };

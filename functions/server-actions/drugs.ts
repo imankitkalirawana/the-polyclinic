@@ -10,20 +10,20 @@ export const getAllDrugs = async () => {
     .lean();
   return drugs.map((drug) => ({
     ...drug,
-    _id: drug._id.toString()
+    _id: drug._id.toString(),
   }));
 };
 
 export const getDrugWithDid = async (did: number) => {
   await connectDB();
   const drug = await Drug.findOne({
-    did
+    did,
   }).lean();
   if (!drug) {
     throw new Error('Drug not found');
   }
   return {
     ...drug,
-    _id: drug?._id.toString()
+    _id: drug?._id.toString(),
   };
 };

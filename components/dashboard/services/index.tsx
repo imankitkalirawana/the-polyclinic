@@ -1,45 +1,46 @@
 'use client';
-import { capitalize } from '@/lib/utility';
-import { Icon } from '@iconify/react/dist/iconify.js';
+import React, { useEffect } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'nextjs-toploader/app';
+import axios from 'axios';
 import {
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  Table,
-  ChipProps,
-  Chip,
-  Selection,
-  Dropdown,
-  DropdownTrigger,
   Button,
-  DropdownMenu,
+  Chip,
+  ChipProps,
+  Dropdown,
   DropdownItem,
-  SortDescriptor,
+  DropdownMenu,
+  DropdownTrigger,
   Input,
   Pagination,
+  Selection,
+  SortDescriptor,
+  Spinner,
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
   Tooltip,
-  Spinner
 } from '@heroui/react';
-import Link from 'next/link';
-import React, { useEffect } from 'react';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import { useQuery } from '@tanstack/react-query';
+
+import HandleExport from '../common/handle-export';
+
 import { CopyText } from '@/components/ui/copy';
-import { ServiceType } from '@/models/Service';
-import { redirectTo } from '@/functions/server-actions';
-import { rowOptions } from '@/lib/config';
-import { useMutation, useQuery } from '@tanstack/react-query';
 import FormatTimeInTable from '@/components/ui/format-time-in-table';
 import Skeleton from '@/components/ui/skeleton';
 import useDebounce from '@/hooks/useDebounce';
-import { saveTableConfig, loadTableConfig } from '@/utils/localStorageUtil';
-import axios from 'axios';
-import HandleExport from '../common/handle-export';
-import { useRouter } from 'nextjs-toploader/app';
+import { rowOptions } from '@/lib/config';
+import { capitalize } from '@/lib/utility';
+import { ServiceType } from '@/models/Service';
+import { loadTableConfig, saveTableConfig } from '@/utils/localStorageUtil';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   active: 'success',
-  inactive: 'danger'
+  inactive: 'danger',
 };
 
 const tableKey = 'services';
@@ -54,19 +55,19 @@ const INITIAL_VISIBLE_COLUMNS = savedConfig?.columns || [
   'price',
   'duration',
   'createdAt',
-  'actions'
+  'actions',
 ];
 
 const INITIAL_VISIBLE_TYPES = savedConfig?.type || [
   'medical',
   'surgical',
   'diagnostic',
-  'consultation'
+  'consultation',
 ];
 
 const INITIAL_SORT_DESCRIPTOR = savedConfig?.sortDescriptor || {
   column: 'date',
-  direction: 'ascending'
+  direction: 'ascending',
 };
 
 const INITIAL_LIMIT = savedConfig?.limit || 10;
@@ -88,8 +89,8 @@ const getAllServices = async (params: {
   const res = await axios.get(`/api/v1/services`, {
     params: {
       ...params,
-      types
-    }
+      types,
+    },
   });
   return res.data;
 };
@@ -115,7 +116,7 @@ export default function Services({ session }: { session: any }) {
       limit,
       sortDescriptor,
       query,
-      Array.from(types)
+      Array.from(types),
     ],
     queryFn: () =>
       getAllServices({
@@ -124,8 +125,8 @@ export default function Services({ session }: { session: any }) {
         sortColumn: sortDescriptor.column as string,
         sortDirection: sortDescriptor.direction,
         query,
-        types: Array.from(types).map(String)
-      })
+        types: Array.from(types).map(String),
+      }),
   });
 
   useEffect(() => {
@@ -150,7 +151,7 @@ export default function Services({ session }: { session: any }) {
       columns: Array.from(visibleColumns),
       types: Array.from(types),
       sortDescriptor,
-      limit
+      limit,
     });
   }, [visibleColumns, types, sortDescriptor, limit]);
 
@@ -409,7 +410,7 @@ export default function Services({ session }: { session: any }) {
     onRowsPerPageChange,
     services.length,
     searchQuery,
-    types
+    types,
   ]);
 
   const bottomContent = React.useMemo(() => {
@@ -455,7 +456,7 @@ export default function Services({ session }: { session: any }) {
         bottomContent={bottomContent}
         bottomContentPlacement="outside"
         classNames={{
-          wrapper: 'max-h-[382px]'
+          wrapper: 'max-h-[382px]',
         }}
         selectedKeys={selectedKeys}
         // selectionMode="multiple"
@@ -511,12 +512,12 @@ const columns = [
   { name: 'PRICE', uid: 'price', sortable: true },
   { name: 'DURATION', uid: 'duration', sortable: true },
   { name: 'CREATED On', uid: 'createdAt', sortable: true },
-  { name: 'ACTIONS', uid: 'actions' }
+  { name: 'ACTIONS', uid: 'actions' },
 ];
 
 const typesOption = [
   { name: 'MEDICAL', uid: 'medical' },
   { name: 'SURGICAL', uid: 'surgical' },
   { name: 'DIAGNOSTIC', uid: 'diagnostic' },
-  { name: 'CONSULTATION', uid: 'consultation' }
+  { name: 'CONSULTATION', uid: 'consultation' },
 ];

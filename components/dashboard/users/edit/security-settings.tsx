@@ -1,46 +1,45 @@
 'use client';
 
 import React from 'react';
+import axios from 'axios';
+import { useFormik } from 'formik';
+import { MailOptions } from 'nodemailer/lib/sendmail-transport';
+import { toast } from 'sonner';
+import * as Yup from 'yup';
 import {
-  Card,
-  CardHeader,
-  CardBody,
   Button,
-  useDisclosure,
+  Card,
+  CardBody,
+  CardHeader,
+  Divider,
+  Input,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
-  Spacer,
-  Input,
   ModalHeader,
-  Divider,
   Select,
-  SelectItem
+  SelectItem,
+  Spacer,
+  useDisclosure,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
 
-import SwitchCell from './switch-cell';
 import CellWrapper from './cell-wrapper';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
+import SwitchCell from './switch-cell';
+
 import {
   changePassword,
-  getUserWithUID,
   sendMailWithOTP,
   verifyEmail,
-  verifyOTP
+  verifyOTP,
 } from '@/functions/server-actions';
-import { MailOptions } from 'nodemailer/lib/sendmail-transport';
-import { toast } from 'sonner';
-import axios from 'axios';
 import { UserRoles } from '@/lib/options';
 import { UserType } from '@/models/User';
-import { useQuery } from '@tanstack/react-query';
 
 export default function SecuritySettings({
   user,
-  refetch
+  refetch,
 }: {
   user: UserType;
   refetch: () => void;
@@ -53,11 +52,11 @@ export default function SecuritySettings({
   const mailOptions: MailOptions = {
     from: {
       name: 'The Polyclinic - Devocode',
-      address: 'contact@divinely.dev'
+      address: 'contact@divinely.dev',
     },
     to: user?.email,
     subject: 'Email Verification',
-    text: 'Your OTP is 123456'
+    text: 'Your OTP is 123456',
   };
 
   const emailFormik = useFormik({
@@ -67,12 +66,12 @@ export default function SecuritySettings({
       isSent: false,
       otp: '',
       isResending: false,
-      isUpdatingRole: false
+      isUpdatingRole: false,
     },
     validationSchema: Yup.object().shape({
       email: Yup.string()
         .email('Please enter a valid Email.')
-        .required('Please enter your Email.')
+        .required('Please enter your Email.'),
     }),
     onSubmit: async (values) => {
       mailOptions.to = values.email;
@@ -85,7 +84,7 @@ export default function SecuritySettings({
           .then(async () => {
             await axios
               .put(`/api/v1/users/uid/${user?.uid}`, {
-                email: values.email
+                email: values.email,
               })
               .then(() => {
                 refetch();
@@ -115,13 +114,13 @@ export default function SecuritySettings({
             console.error(err);
           });
       }
-    }
+    },
   });
 
   const passwordFormik = useFormik({
     initialValues: {
       password: '',
-      confirmPassword: ''
+      confirmPassword: '',
     },
     validationSchema: Yup.object().shape({
       password: Yup.string()
@@ -130,7 +129,7 @@ export default function SecuritySettings({
       confirmPassword: Yup.string()
         // @ts-ignore
         .oneOf([Yup.ref('password'), null], 'Passwords must match.')
-        .required('Please confirm your password.')
+        .required('Please confirm your password.'),
     }),
     onSubmit: async (values) => {
       await changePassword(user?._id as string, values.password)
@@ -143,17 +142,17 @@ export default function SecuritySettings({
         .catch((err) => {
           toast.error(err.message);
         });
-    }
+    },
   });
 
   const deactivateFormik = useFormik({
     initialValues: {
-      email: ''
+      email: '',
     },
     validationSchema: Yup.object().shape({
       email: Yup.string()
         .email('Please enter a valid Email.')
-        .required('Please enter your Email.')
+        .required('Please enter your Email.'),
     }),
     onSubmit: async (values) => {
       if (user?.email === 'contact@divinely.dev') {
@@ -173,7 +172,7 @@ export default function SecuritySettings({
       await axios
         .put(`/api/v1/users/uid/${user?.uid}`, {
           // @ts-ignore
-          status: user.status === 'active' ? 'inactive' : 'active'
+          status: user.status === 'active' ? 'inactive' : 'active',
         })
         .then(() => {
           refetch();
@@ -189,17 +188,17 @@ export default function SecuritySettings({
         .catch((err) => {
           toast.error(err.message);
         });
-    }
+    },
   });
 
   const deleteFormik = useFormik({
     initialValues: {
-      email: ''
+      email: '',
     },
     validationSchema: Yup.object().shape({
       email: Yup.string()
         .email('Please enter a valid Email.')
-        .required('Please enter your Email.')
+        .required('Please enter your Email.'),
     }),
     onSubmit: async (values) => {
       if (values.email !== user?.email) {
@@ -212,7 +211,7 @@ export default function SecuritySettings({
       await axios
         .put(`/api/v1/users/uid/${user.uid}`, {
           // @ts-ignore
-          status: user.status === 'active' ? 'deleted' : 'active'
+          status: user.status === 'active' ? 'deleted' : 'active',
         })
         .then(() => {
           refetch();
@@ -227,7 +226,7 @@ export default function SecuritySettings({
         .catch((err) => {
           toast.error(err.message);
         });
-    }
+    },
   });
 
   return (
@@ -327,7 +326,7 @@ export default function SecuritySettings({
                   emailFormik.setFieldValue('user.role', selectedValue);
                   await axios
                     .put(`/api/v1/users/uid/${user.uid}`, {
-                      role: selectedValue
+                      role: selectedValue,
                     })
                     .then(() => {
                       refetch();
@@ -409,7 +408,7 @@ export default function SecuritySettings({
       <EditModal
         header={{
           title: 'Email',
-          subtitle: "Update user's email address"
+          subtitle: "Update user's email address",
         }}
         editEmailModal={editEmailModal}
         button={
@@ -490,7 +489,7 @@ export default function SecuritySettings({
       <EditModal
         header={{
           title: 'Password',
-          subtitle: "Update user's password"
+          subtitle: "Update user's password",
         }}
         editEmailModal={editPasswordModal}
         button={
@@ -560,7 +559,7 @@ export default function SecuritySettings({
             <>
               Enter the email address <strong>{user.email}</strong> to continue:
             </>
-          )
+          ),
         }}
         editEmailModal={deactivateModal}
         button={
@@ -609,7 +608,7 @@ export default function SecuritySettings({
             <>
               Enter the email address <strong>{user.email}</strong> to continue:
             </>
-          )
+          ),
         }}
         editEmailModal={deleteModal}
         button={
@@ -667,7 +666,7 @@ const EditModal = ({
   content,
   button,
   secondaryButton,
-  header
+  header,
 }: EditModalProps) => {
   return (
     <>

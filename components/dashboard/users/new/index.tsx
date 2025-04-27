@@ -1,4 +1,10 @@
 'use client';
+import { useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
+import { useFormik } from 'formik';
+import slugify from 'slugify';
+import { toast } from 'sonner';
 import {
   Autocomplete,
   AutocompleteItem,
@@ -11,27 +17,21 @@ import {
   CardHeader,
   DatePicker,
   Input,
-  Link,
   ScrollShadow,
   Select,
   SelectItem,
-  user
+  user,
 } from '@heroui/react';
-import { Genders } from '@/lib/options';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useFormik } from 'formik';
-import { CityProps, CountryProps, StateProps } from '@/lib/interface';
-import { parseDate, getLocalTimeZone, today } from '@internationalized/date';
+import { getLocalTimeZone, today } from '@internationalized/date';
 import { I18nProvider } from '@react-aria/i18n';
-import { useEffect, useRef } from 'react';
-import axios from 'axios';
-import { toast } from 'sonner';
-import { userValidationSchema } from '@/lib/validation';
-import slugify from 'slugify';
-import { scrollToError } from '@/lib/formik';
-import { calculateAge, calculateDOB } from '@/lib/client-functions';
-import { useRouter } from 'next/navigation';
+
 import { verifyEmail } from '@/functions/server-actions';
+import { calculateAge, calculateDOB } from '@/lib/client-functions';
+import { scrollToError } from '@/lib/formik';
+import { CityProps, CountryProps, StateProps } from '@/lib/interface';
+import { Genders } from '@/lib/options';
+import { userValidationSchema } from '@/lib/validation';
 import { UserType } from '@/models/User';
 
 export default function NewUser({ countries }: { countries: CountryProps[] }) {
@@ -43,7 +43,7 @@ export default function NewUser({ countries }: { countries: CountryProps[] }) {
     gender: useRef<HTMLSelectElement>(null),
     age: useRef<HTMLInputElement>(null),
     address: useRef<HTMLInputElement>(null),
-    zipcode: useRef<HTMLInputElement>(null)
+    zipcode: useRef<HTMLInputElement>(null),
   };
 
   const formik = useFormik({
@@ -55,14 +55,14 @@ export default function NewUser({ countries }: { countries: CountryProps[] }) {
         dob: {
           day: '01',
           month: '01',
-          year: '2000'
+          year: '2000',
         },
         gender: 'male',
         country: 'IN',
         state: '',
         city: '',
         address: '',
-        zipcode: ''
+        zipcode: '',
       } as UserType,
       age: 0,
       countries:
@@ -70,7 +70,7 @@ export default function NewUser({ countries }: { countries: CountryProps[] }) {
         ([] as CountryProps[]),
       states: [] as StateProps[],
       cities: [] as CityProps[],
-      phoneCode: '91'
+      phoneCode: '91',
     },
     validationSchema: userValidationSchema,
     onSubmit: async (values) => {
@@ -91,7 +91,7 @@ export default function NewUser({ countries }: { countries: CountryProps[] }) {
           console.log(error);
           toast.error(error.response.data.message);
         });
-    }
+    },
   });
 
   useEffect(() => {
@@ -101,16 +101,16 @@ export default function NewUser({ countries }: { countries: CountryProps[] }) {
           `https://api.countrystatecity.in/v1/countries/${formik.values.user.country}/states`,
           {
             headers: {
-              'X-CSCAPI-KEY': process.env.NEXT_PUBLIC_CSCAPI_KEY
-            }
+              'X-CSCAPI-KEY': process.env.NEXT_PUBLIC_CSCAPI_KEY,
+            },
           }
         );
         const res2 = await axios.get(
           `https://api.countrystatecity.in/v1/countries/${formik.values.user.country}`,
           {
             headers: {
-              'X-CSCAPI-KEY': process.env.NEXT_PUBLIC_CSCAPI_KEY
-            }
+              'X-CSCAPI-KEY': process.env.NEXT_PUBLIC_CSCAPI_KEY,
+            },
           }
         );
         formik.setFieldValue(
@@ -136,8 +136,8 @@ export default function NewUser({ countries }: { countries: CountryProps[] }) {
           `https://api.countrystatecity.in/v1/countries/${formik.values.user.country}/states/${formik.values.user.state}/cities`,
           {
             headers: {
-              'X-CSCAPI-KEY': process.env.NEXT_PUBLIC_CSCAPI_KEY
-            }
+              'X-CSCAPI-KEY': process.env.NEXT_PUBLIC_CSCAPI_KEY,
+            },
           }
         );
         formik.setFieldValue(
@@ -167,7 +167,7 @@ export default function NewUser({ countries }: { countries: CountryProps[] }) {
           <div className="sr-only flex gap-4 py-4">
             <Badge
               classNames={{
-                badge: 'w-5 h-5'
+                badge: 'w-5 h-5',
               }}
               color="primary"
               content={
@@ -299,8 +299,10 @@ export default function NewUser({ countries }: { countries: CountryProps[] }) {
                 label="DOB (DD-MM-YYYY)"
                 onChange={(date) => {
                   const dob =
+                    // @ts-ignore
                     date instanceof Date
-                      ? date.toISOString().split('T')[0]
+                      ? // @ts-ignore
+                        date.toISOString().split('T')[0]
                       : new Date(date as any).toISOString().split('T')[0];
                   formik.setFieldValue('user.dob', dob);
                   formik.setFieldValue('age', calculateAge(dob));

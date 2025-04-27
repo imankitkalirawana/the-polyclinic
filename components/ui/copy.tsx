@@ -1,7 +1,7 @@
-import { Button, Tooltip } from "@heroui/react";
 import React, { forwardRef, memo, useMemo } from 'react';
+import { Button, Tooltip } from '@heroui/react';
+import { cn } from '@heroui/react';
 import { Icon } from '@iconify/react';
-import { cn } from "@heroui/react";
 
 export interface CopyTextProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;

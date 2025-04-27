@@ -9,7 +9,7 @@ export const getAppointmentStyles = (status: AppointmentType['status']) => {
         avatarBg: 'bg-default-100',
         avatar: 'text-default-500',
         iconBg: 'bg-default-500',
-        icon: 'text-white'
+        icon: 'text-white',
       };
     case 'confirmed':
       return {
@@ -17,7 +17,7 @@ export const getAppointmentStyles = (status: AppointmentType['status']) => {
         avatarBg: 'bg-lime-100',
         avatar: 'text-lime-500',
         iconBg: 'bg-lime-500',
-        icon: 'text-white'
+        icon: 'text-white',
       };
     case 'in-progress':
       return {
@@ -25,7 +25,7 @@ export const getAppointmentStyles = (status: AppointmentType['status']) => {
         avatarBg: 'bg-blue-100',
         avatar: 'text-blue-500',
         iconBg: 'bg-blue-500',
-        icon: 'text-white'
+        icon: 'text-white',
       };
     case 'completed':
       return {
@@ -33,7 +33,7 @@ export const getAppointmentStyles = (status: AppointmentType['status']) => {
         avatarBg: 'bg-success-100',
         avatar: 'text-success-500',
         iconBg: 'bg-success-500',
-        icon: 'text-white'
+        icon: 'text-white',
       };
     case 'cancelled':
       return {
@@ -41,7 +41,7 @@ export const getAppointmentStyles = (status: AppointmentType['status']) => {
         avatarBg: 'bg-danger-100',
         avatar: 'text-danger-500',
         iconBg: 'bg-danger-500',
-        icon: 'text-white'
+        icon: 'text-white',
       };
     case 'overdue':
       return {
@@ -49,7 +49,7 @@ export const getAppointmentStyles = (status: AppointmentType['status']) => {
         avatarBg: 'bg-warning-100',
         avatar: 'text-warning-500',
         iconBg: 'bg-warning-500',
-        icon: 'text-white'
+        icon: 'text-white',
       };
     case 'on-hold':
       return {
@@ -57,7 +57,7 @@ export const getAppointmentStyles = (status: AppointmentType['status']) => {
         avatarBg: 'bg-info-100',
         avatar: 'text-info-500',
         iconBg: 'bg-info-500',
-        icon: 'text-white'
+        icon: 'text-white',
       };
     default:
       return {
@@ -65,7 +65,7 @@ export const getAppointmentStyles = (status: AppointmentType['status']) => {
         avatarBg: 'bg-default-100',
         avatar: 'text-default-500',
         iconBg: 'bg-default-500',
-        icon: 'text-white'
+        icon: 'text-white',
       };
   }
 };

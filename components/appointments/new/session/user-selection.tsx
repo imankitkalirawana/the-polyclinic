@@ -1,28 +1,29 @@
 'use client';
 
+import { useMemo, useState } from 'react';
 import {
+  Button,
   Card,
   CardBody,
   cn,
-  ScrollShadow,
   Image,
+  Input,
   Link,
-  Button,
-  Input
+  ScrollShadow,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useMemo, useState } from 'react';
-import useDebounce from '@/hooks/useDebounce';
 import { useQuery } from '@tanstack/react-query';
-import { UserRole, UserType } from '@/models/User';
-import {
-  getAllPatients,
-  getAllPatientsWithEmail
-} from '@/functions/server-actions/users';
+
+import { useForm } from './context';
+import { LoadingUsers } from './loading-user';
 
 import NoResults from '@/components/ui/no-results';
-import { LoadingUsers } from './loading-user';
-import { useForm } from './context';
+import {
+  getAllPatients,
+  getAllPatientsWithEmail,
+} from '@/functions/server-actions/users';
+import useDebounce from '@/hooks/useDebounce';
+import { UserRole, UserType } from '@/models/User';
 
 export default function UserSelection() {
   const { formik, session } = useForm();
@@ -33,12 +34,12 @@ export default function UserSelection() {
   const fetchFunctionMap: Record<string, () => Promise<UserType[]>> = {
     user: () => getAllPatientsWithEmail(session?.user?.email),
     receptionist: () => getAllPatients(),
-    admin: () => getAllPatients()
+    admin: () => getAllPatients(),
   };
 
   const { data: users, isLoading } = useQuery<UserType[]>({
     queryKey: ['user', session?.user?.uid],
-    queryFn: fetchFunctionMap[session?.user?.role as UserRole]
+    queryFn: fetchFunctionMap[session?.user?.role as UserRole],
   });
 
   const filteredUsers = useMemo(() => {
@@ -116,7 +117,7 @@ export default function UserSelection() {
                             'no-scrollbar min-w-64 rounded-medium border border-divider shadow-none sm:min-w-72',
                             {
                               'border-2 border-primary-400':
-                                user.uid === formik.values.patient?.uid
+                                user.uid === formik.values.patient?.uid,
                             }
                           )}
                           onPress={() => {

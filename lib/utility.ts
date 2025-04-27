@@ -3,7 +3,7 @@ export const formatPrice = (price: number) => {
     style: 'currency',
     currency: 'INR',
     minimumFractionDigits: 0,
-    maximumFractionDigits: 0
+    maximumFractionDigits: 0,
   })
     .format(price)
     .toString();
@@ -40,7 +40,7 @@ export const humanReadableDate = (
 export const humanReadableTime = (date: string | Date) => {
   return new Date(date).toLocaleTimeString('en-US', {
     hour: 'numeric',
-    minute: '2-digit'
+    minute: '2-digit',
   });
 };
 

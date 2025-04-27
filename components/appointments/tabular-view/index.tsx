@@ -1,39 +1,40 @@
 'use client';
-import { capitalize } from '@/lib/utility';
-import { Icon } from '@iconify/react/dist/iconify.js';
+import React, { useEffect } from 'react';
+import Link from 'next/link';
 import {
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  Table,
-  ChipProps,
-  Chip,
-  Selection,
-  Dropdown,
-  DropdownTrigger,
   Button,
-  DropdownMenu,
+  Chip,
+  ChipProps,
+  Dropdown,
   DropdownItem,
-  SortDescriptor,
+  DropdownMenu,
+  DropdownTrigger,
   Input,
   Pagination,
+  Selection,
+  SortDescriptor,
+  Spinner,
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
   Tooltip,
-  Spinner
 } from '@heroui/react';
-import Link from 'next/link';
-import React, { useEffect } from 'react';
-import { CopyText } from '@/components/ui/copy';
-import { AppointmentType } from '@/models/Appointment';
-import { redirectTo } from '@/functions/server-actions';
-import { rowOptions } from '@/lib/config';
+import { Icon } from '@iconify/react/dist/iconify.js';
 import { useQuery } from '@tanstack/react-query';
-import { getAllAppointments } from '@/functions/server-actions/appointment';
+
+import { CopyText } from '@/components/ui/copy';
 import FormatTimeInTable from '@/components/ui/format-time-in-table';
 import Skeleton from '@/components/ui/skeleton';
+import { redirectTo } from '@/functions/server-actions';
+import { getAllAppointments } from '@/functions/server-actions/appointment';
 import useDebounce from '@/hooks/useDebounce';
-import { saveTableConfig, loadTableConfig } from '@/utils/localStorageUtil';
+import { rowOptions } from '@/lib/config';
+import { capitalize } from '@/lib/utility';
+import { AppointmentType } from '@/models/Appointment';
+import { loadTableConfig, saveTableConfig } from '@/utils/localStorageUtil';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   booked: 'default',
@@ -42,7 +43,7 @@ const statusColorMap: Record<string, ChipProps['color']> = {
   completed: 'success',
   cancelled: 'danger',
   overdue: 'danger',
-  'on-hold': 'warning'
+  'on-hold': 'warning',
 };
 
 const tableKey = 'appointments';
@@ -56,7 +57,7 @@ const INITIAL_VISIBLE_COLUMNS = savedConfig?.columns || [
   'date',
   'doctor.name',
   'createdAt',
-  'actions'
+  'actions',
 ];
 
 const INITIAL_VISIBLE_STATUS = savedConfig?.status || [
@@ -66,12 +67,12 @@ const INITIAL_VISIBLE_STATUS = savedConfig?.status || [
   'completed',
   'cancelled',
   'overdue',
-  'on-hold'
+  'on-hold',
 ];
 
 const INITIAL_SORT_DESCRIPTOR = savedConfig?.sortDescriptor || {
   column: 'date',
-  direction: 'ascending'
+  direction: 'ascending',
 };
 
 const INITIAL_LIMIT = savedConfig?.limit || 10;
@@ -97,8 +98,8 @@ export default function TabularView({ session }: { session: any }) {
         page,
         sort: sortDescriptor,
         query,
-        status: Array.from(status) as string[]
-      })
+        status: Array.from(status) as string[],
+      }),
   });
 
   useEffect(() => {
@@ -123,7 +124,7 @@ export default function TabularView({ session }: { session: any }) {
       columns: Array.from(visibleColumns),
       status: Array.from(status),
       sortDescriptor,
-      limit
+      limit,
     });
   }, [visibleColumns, status, sortDescriptor, limit]);
 
@@ -397,7 +398,7 @@ export default function TabularView({ session }: { session: any }) {
     onRowsPerPageChange,
     appointments.length,
     searchQuery,
-    status
+    status,
   ]);
 
   const bottomContent = React.useMemo(() => {
@@ -443,7 +444,7 @@ export default function TabularView({ session }: { session: any }) {
         bottomContent={bottomContent}
         bottomContentPlacement="outside"
         classNames={{
-          wrapper: 'max-h-[382px]'
+          wrapper: 'max-h-[382px]',
         }}
         selectedKeys={selectedKeys}
         // selectionMode="multiple"
@@ -500,7 +501,7 @@ const columns = [
   { name: 'PHONE', uid: 'patient.phone', sortable: true },
   { name: 'EMAIL', uid: 'patient.email', sortable: true },
   { name: 'Booked On', uid: 'createdAt', sortable: true },
-  { name: 'ACTIONS', uid: 'actions' }
+  { name: 'ACTIONS', uid: 'actions' },
 ];
 
 const statusOptions = [
@@ -510,5 +511,5 @@ const statusOptions = [
   { name: 'COMPLETED', uid: 'completed' },
   { name: 'CANCELLED', uid: 'cancelled' },
   { name: 'OVERDUE', uid: 'overdue' },
-  { name: 'ON HOLD', uid: 'on-hold' }
+  { name: 'ON HOLD', uid: 'on-hold' },
 ];

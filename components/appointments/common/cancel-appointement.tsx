@@ -1,20 +1,21 @@
 'use client';
-import { changeAppointmentStatus } from '@/functions/server-actions';
-import { AppointmentType } from '@/models/Appointment';
+import { useState } from 'react';
+import { toast } from 'sonner';
 import {
   Alert,
   Button,
   ModalBody,
   ModalFooter,
-  ModalHeader
+  ModalHeader,
 } from '@heroui/react';
-import { useState } from 'react';
-import { toast } from 'sonner';
+
+import { changeAppointmentStatus } from '@/functions/server-actions';
+import { AppointmentType } from '@/models/Appointment';
 
 export default function CancelAppointment({
   appointment,
   modal,
-  setAppointments
+  setAppointments,
 }: {
   appointment: AppointmentType;
   modal: any;

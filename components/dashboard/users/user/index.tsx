@@ -1,27 +1,28 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import Link from 'next/link';
 import {
-  Card,
-  CardHeader,
-  CardBody,
-  Button,
   Avatar,
+  Button,
+  Card,
+  CardBody,
   CardFooter,
-  ScrollShadow
-} from "@heroui/react";
+  CardHeader,
+  ScrollShadow,
+} from '@heroui/react';
+import { useQuery } from '@tanstack/react-query';
 
 import CellValue from '../../../ui/cell-value';
-import Link from 'next/link';
+
+import { getUserWithUID } from '@/functions/server-actions';
 import { humanReadableDate, humanReadableTime } from '@/lib/utility';
 import { UserType } from '@/models/User';
-import { useQuery } from '@tanstack/react-query';
-import { getUserWithUID } from '@/functions/server-actions';
 
 export default function UserCard({ uid }: { uid: number }) {
   const { data: user, isError } = useQuery<UserType>({
     queryKey: ['user', uid],
-    queryFn: () => getUserWithUID(uid)
+    queryFn: () => getUserWithUID(uid),
   });
 
   if (isError) {

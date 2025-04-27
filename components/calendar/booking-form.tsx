@@ -1,8 +1,8 @@
+import { useCallback } from 'react';
 import { Button } from '@heroui/button';
 import { Form } from '@heroui/form';
 import { Input, Textarea } from '@heroui/input';
 import { Link } from '@heroui/link';
-import { useCallback } from 'react';
 
 type CalendarBookingStepType =
   | 'booking_initial'
@@ -12,7 +12,7 @@ interface BookingFormProps {
   onConfirm: ({
     name,
     email,
-    notes
+    notes,
   }: {
     name: string;
     email: string;
@@ -23,7 +23,7 @@ interface BookingFormProps {
 
 export default function BookingForm({
   onConfirm,
-  setCalendarBookingStep
+  setCalendarBookingStep,
 }: BookingFormProps) {
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

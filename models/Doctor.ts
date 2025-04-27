@@ -1,5 +1,6 @@
-import { Base } from '@/lib/interface';
 import mongoose, { Model } from 'mongoose';
+
+import { Base } from '@/lib/interface';
 
 export interface DoctorType extends Base {
   name: string;
@@ -32,10 +33,10 @@ const DoctorSchema = new mongoose.Schema(
     image: String,
     shortbio: String,
     uid: Number,
-    seating: String
+    seating: String,
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 

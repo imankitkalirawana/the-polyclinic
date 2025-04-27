@@ -1,5 +1,5 @@
-import DetailsInput from './details-input';
 import { FormProvider } from './context';
+import DetailsInput from './details-input';
 
 export default function NoSession() {
   return (

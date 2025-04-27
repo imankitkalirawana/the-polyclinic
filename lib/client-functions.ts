@@ -1,7 +1,8 @@
 'use client';
 import { saveAs } from 'file-saver';
-import { EventType } from './interface';
 import { toast } from 'sonner';
+
+import { EventType } from './interface';
 
 export const calculateAge = (dob: string) => {
   const birthDate = new Date(dob);
@@ -72,7 +73,7 @@ END:VCALENDAR
 `.trim();
 
   const blob = new Blob([icsContent], {
-    type: 'text/calendar;charset=utf-8'
+    type: 'text/calendar;charset=utf-8',
   });
 
   saveAs(blob, `${title}.ics`);

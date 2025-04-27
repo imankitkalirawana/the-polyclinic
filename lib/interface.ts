@@ -9,33 +9,33 @@ export interface Base {
 export const ServiceTypes = [
   {
     label: 'Medical',
-    value: 'medical'
+    value: 'medical',
   },
   {
     label: 'Surgical',
-    value: 'surgical'
+    value: 'surgical',
   },
   {
     label: 'Diagnostic',
-    value: 'diagnostic'
+    value: 'diagnostic',
   },
   {
     label: 'Consultation',
-    value: 'consultation'
-  }
+    value: 'consultation',
+  },
 ];
 
 export const ServiceStatuses = [
   {
     label: 'Available',
     value: 'active',
-    color: 'success'
+    color: 'success',
   },
   {
     label: 'Unavailable',
     value: 'inactive',
-    color: 'danger'
-  }
+    color: 'danger',
+  },
 ];
 
 export interface CountryProps {

@@ -7,7 +7,7 @@ interface Props {
 
 export default function NoResults({
   message = 'No Results Found',
-  description
+  description,
 }: Props) {
   return (
     <>

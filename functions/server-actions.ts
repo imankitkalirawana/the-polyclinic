@@ -1,21 +1,20 @@
 'use server';
-import Service from '@/models/Service';
-import User from '@/models/User';
-import Doctor from '@/models/Doctor';
-import Otp from '@/models/Otp';
-import Appointment from '@/models/Appointment';
-import { connectDB } from '@/lib/db';
-import { transporter } from '@/lib/nodemailer';
-import { MailOptions } from 'nodemailer/lib/json-transport';
-import { generateOtp, sendSMS } from '@/lib/functions';
-import bcrypt from 'bcryptjs';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import {
-  AppointmentStatus,
-  RescheduledAppointment
-} from '@/utils/email-template/patient';
+import bcrypt from 'bcryptjs';
+import { MailOptions } from 'nodemailer/lib/json-transport';
+
 import { sendHTMLEmail } from './server-actions/emails/send-email';
+
+import { connectDB } from '@/lib/db';
+import { generateOtp, sendSMS } from '@/lib/functions';
+import { transporter } from '@/lib/nodemailer';
+import Appointment from '@/models/Appointment';
+import Doctor from '@/models/Doctor';
+import Otp from '@/models/Otp';
+import Service from '@/models/Service';
+import User from '@/models/User';
+import { AppointmentStatus } from '@/utils/email-template/patient';
 
 export const verifyUID = async (uid: string, _id?: string) => {
   await connectDB();
@@ -107,14 +106,14 @@ export const getAllUsers = async (id: string) => {
   await connectDB();
   const users = await User.find({
     $or: [{ email: id }, { phone: id }],
-    status: 'active'
+    status: 'active',
   })
     .select('_id name email phone role status image')
     .lean();
 
   return users.map((user) => ({
     ...user,
-    _id: user._id.toString()
+    _id: user._id.toString(),
   }));
 };
 
@@ -124,7 +123,7 @@ export const getAllPatients = async () => {
 
   return users.map((user) => ({
     ...user,
-    _id: user._id.toString()
+    _id: user._id.toString(),
   }));
 };
 
@@ -134,7 +133,7 @@ export const getAllDoctors = async () => {
 
   return doctors.map((doctor) => ({
     ...doctor,
-    _id: doctor._id.toString()
+    _id: doctor._id.toString(),
   }));
 };
 
@@ -149,7 +148,7 @@ export const getServiceWithUID = async (uid: string) => {
   }
   return {
     ...service,
-    _id: service?._id.toString()
+    _id: service?._id.toString(),
   };
 };
 
@@ -163,7 +162,7 @@ export const getUserWithUID = async (uid: number) => {
   }
   return {
     ...user,
-    _id: user?._id.toString()
+    _id: user?._id.toString(),
   };
 };
 
@@ -179,7 +178,7 @@ export const getDoctorWithUID = async (uid: number) => {
   }
   return {
     ...doctor,
-    _id: doctor?._id.toString()
+    _id: doctor?._id.toString(),
   };
 };
 
@@ -188,7 +187,7 @@ export const getDoctorWithUID = async (uid: number) => {
 export const changeAppointmentStatus = async (id: string, status: string) => {
   const emailMessageMap: Record<string, string> = {
     confirmed: 'Your Appointment is Confirmed',
-    cancelled: 'Your Appointment is Cancelled'
+    cancelled: 'Your Appointment is Cancelled',
   };
 
   await connectDB();
@@ -204,10 +203,10 @@ export const changeAppointmentStatus = async (id: string, status: string) => {
       sendHTMLEmail({
         to: appointment.patient.email,
         subject: `Appointment Status: ${emailMessageMap[status]}`,
-        html: AppointmentStatus(appointment)
+        html: AppointmentStatus(appointment),
       }).catch((error) => {
         console.error(error);
-      })
+      }),
     ];
 
     Promise.all(emailTasks).catch((error) => {

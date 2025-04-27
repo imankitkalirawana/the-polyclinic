@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
-import Appointment from '@/models/Appointment';
-import { connectDB } from '@/lib/db';
-import { AppointmentStatus } from '@/utils/email-template/patient';
+
 import { sendHTMLEmail } from '@/functions/server-actions/emails/send-email';
+import { connectDB } from '@/lib/db';
+import Appointment from '@/models/Appointment';
+import { AppointmentStatus } from '@/utils/email-template/patient';
 
 export const POST = async function POST(request: any) {
   try {
@@ -10,8 +11,8 @@ export const POST = async function POST(request: any) {
     const appointments = await Appointment.find({
       date: { $lt: new Date().toISOString() },
       status: {
-        $nin: ['overdue', 'cancelled', 'completed', 'on-hold', 'in-progress']
-      }
+        $nin: ['overdue', 'cancelled', 'completed', 'on-hold', 'in-progress'],
+      },
     }).lean();
 
     for (const appointment of appointments) {
@@ -23,14 +24,14 @@ export const POST = async function POST(request: any) {
         await sendHTMLEmail({
           to: appointment.patient.email,
           subject: 'Action Needed: Reschedule Your Missed Appointment',
-          html: AppointmentStatus(appointment)
+          html: AppointmentStatus(appointment),
         });
       });
     }
 
     return NextResponse.json({
       message: `Affected ${appointments.length} items`,
-      appointments
+      appointments,
     });
   } catch (error: any) {
     console.error(error);

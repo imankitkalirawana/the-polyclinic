@@ -9,6 +9,6 @@ export const getAllDoctors = async () => {
 
   return doctors.map((doctor) => ({
     ...doctor,
-    _id: doctor._id.toString()
+    _id: doctor._id.toString(),
   }));
 };

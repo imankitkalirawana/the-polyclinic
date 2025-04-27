@@ -1,7 +1,21 @@
 'use client';
 
 import React from 'react';
+import { usePathname } from 'next/navigation';
+import { signIn, signOut } from 'next-auth/react';
+import { useRouter } from 'nextjs-toploader/app';
+import { motion } from 'framer-motion';
 import {
+  Avatar,
+  Button,
+  cn,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Link,
+  Listbox,
+  ListboxItem,
   Navbar as NextNavbar,
   NavbarBrand,
   NavbarContent,
@@ -9,24 +23,12 @@ import {
   NavbarMenu,
   NavbarMenuItem,
   NavbarMenuToggle,
-  Link,
-  Button,
-  cn,
-  Avatar,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-  Listbox,
-  ListboxItem
 } from '@heroui/react';
-import { usePathname } from 'next/navigation';
-import { signIn, signOut } from 'next-auth/react';
-import ModeToggle from '../mode-toggle';
-import { motion } from 'framer-motion';
 import { Icon } from '@iconify/react/dist/iconify.js';
+
+import ModeToggle from '../mode-toggle';
+
 import { NavItem } from '@/lib/interface';
-import { useRouter } from 'nextjs-toploader/app';
 
 export default function Navbar({ session }: { session: any }) {
   const router = useRouter();
@@ -59,7 +61,7 @@ export default function Navbar({ session }: { session: any }) {
   const menuItems: NavItem[] = [
     {
       name: 'Home',
-      href: '/home'
+      href: '/home',
     },
     {
       name: 'Dashboard',
@@ -72,24 +74,24 @@ export default function Navbar({ session }: { session: any }) {
             {
               name: 'Overview',
               href: '/dashboard',
-              icon: 'solar:window-frame-linear'
+              icon: 'solar:window-frame-linear',
             },
             {
               name: 'Profile',
               href: '/dashboard/profile',
-              icon: 'solar:user-linear'
+              icon: 'solar:user-linear',
             },
             {
               name: 'Services',
               href: '/dashboard/services',
-              icon: 'solar:test-tube-minimalistic-linear'
+              icon: 'solar:test-tube-minimalistic-linear',
             },
             {
               name: 'Users',
               href: '/dashboard/users',
-              icon: 'solar:pills-linear'
-            }
-          ]
+              icon: 'solar:pills-linear',
+            },
+          ],
         },
         {
           title: 'Admin Dashboard',
@@ -97,16 +99,16 @@ export default function Navbar({ session }: { session: any }) {
             {
               name: 'Stats',
               href: '/dashboard/admin/stats',
-              icon: 'solar:graph-linear'
+              icon: 'solar:graph-linear',
             },
             {
               name: 'Settings',
               href: '/dashboard/admin/settings',
-              icon: 'solar:settings-linear'
-            }
-          ]
-        }
-      ]
+              icon: 'solar:settings-linear',
+            },
+          ],
+        },
+      ],
     },
     {
       name: 'Appointments',
@@ -119,9 +121,9 @@ export default function Navbar({ session }: { session: any }) {
             {
               name: 'Create New',
               href: '/appointments/new',
-              icon: 'solar:pen-new-round-linear'
-            }
-          ]
+              icon: 'solar:pen-new-round-linear',
+            },
+          ],
         },
         {
           title: 'My Appointments',
@@ -129,35 +131,35 @@ export default function Navbar({ session }: { session: any }) {
             {
               name: 'My Schedules',
               href: '/appointments/schedules',
-              icon: 'solar:calendar-linear'
+              icon: 'solar:calendar-linear',
             },
             {
               name: 'Overdue',
               href: '/appointments?status=overdue',
-              icon: 'solar:bill-list-linear'
+              icon: 'solar:bill-list-linear',
             },
             {
               name: 'Past',
               href: '/appointments?status=past',
-              icon: 'solar:bill-list-linear'
+              icon: 'solar:bill-list-linear',
             },
             {
               name: 'All Appointments',
               href: '/appointments/all',
-              icon: 'solar:clipboard-list-linear'
-            }
-          ]
-        }
-      ]
+              icon: 'solar:clipboard-list-linear',
+            },
+          ],
+        },
+      ],
     },
     {
       name: 'About Us',
-      href: '/about'
+      href: '/about',
     },
     {
       name: 'Integrations',
-      href: '/integrations'
-    }
+      href: '/integrations',
+    },
   ];
 
   if (isDisabled) return null;
@@ -168,10 +170,10 @@ export default function Navbar({ session }: { session: any }) {
         isBordered
         classNames={{
           base: cn('border-default-100', {
-            'bg-default-200/50': isMenuOpen
+            'bg-default-200/50': isMenuOpen,
           }),
           wrapper: 'w-full justify-center bg-transparent',
-          item: 'hidden md:flex'
+          item: 'hidden md:flex',
         }}
         height="56px"
         isMenuOpen={isMenuOpen || activeMenu ? true : false}
@@ -290,8 +292,8 @@ export default function Navbar({ session }: { session: any }) {
             exit: { opacity: 0, y: -20 },
             transition: {
               ease: 'easeInOut',
-              duration: 0.2
-            }
+              duration: 0.2,
+            },
           }}
         >
           {menuItems.map((item, index) => (
@@ -317,8 +319,8 @@ export default function Navbar({ session }: { session: any }) {
             exit: { opacity: 0, y: -20 },
             transition: {
               ease: 'easeInOut',
-              duration: 0.2
-            }
+              duration: 0.2,
+            },
           }}
         >
           {activeMenu && activeMenu.subItems && (
@@ -360,7 +362,7 @@ export default function Navbar({ session }: { session: any }) {
               </div>
               <div
                 style={{
-                  backgroundImage: `url(${activeMenu.thumbnail})`
+                  backgroundImage: `url(${activeMenu.thumbnail})`,
                 }}
                 className="aspect-[2.1] h-full min-h-48 max-w-sm place-self-end self-end justify-self-end rounded-2xl bg-gradient-to-r from-[#F2F0FF] to-[#F0F6FF] bg-cover p-4 text-default-500"
               ></div>

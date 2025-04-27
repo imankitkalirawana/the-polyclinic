@@ -1,5 +1,6 @@
+import { Card } from '@heroui/react';
+
 import Skeleton from '../ui/skeleton';
-import { Card } from "@heroui/react";
 
 export default function ListSkeleton() {
   return (

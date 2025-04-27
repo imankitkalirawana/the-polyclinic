@@ -1,9 +1,11 @@
 'use server';
+import bcrypt from 'bcryptjs';
+
+import { sendHTMLEmail } from '../emails/send-email';
+
+import { CLINIC_INFO } from '@/lib/config';
 import { connectDB } from '@/lib/db';
 import User from '@/models/User';
-import bcrypt from 'bcryptjs';
-import { sendHTMLEmail } from '../emails/send-email';
-import { CLINIC_INFO } from '@/lib/config';
 import { WelcomeUser } from '@/utils/email-template/patient/new-user';
 
 export default async function registerUser(data: {
@@ -15,11 +17,11 @@ export default async function registerUser(data: {
   };
   id: string;
   password?: string;
-  gender?: "male"| "female"| "other";
+  gender?: 'male' | 'female' | 'other';
 }) {
   await connectDB();
 
-  if (!data.name || !data.id ) {
+  if (!data.name || !data.id) {
     throw new Error('Please enter all fields');
   }
 
@@ -30,8 +32,7 @@ export default async function registerUser(data: {
     throw new Error('User already exists');
   }
 
-
-  if(!data.password){
+  if (!data.password) {
     data.password = '12345678';
   }
 
@@ -40,14 +41,17 @@ export default async function registerUser(data: {
   let user;
 
   if (data.id.includes('@')) {
-    user = (await User.create({ ...data, email: data.id, })).toObject();
+    user = (await User.create({ ...data, email: data.id })).toObject();
   } else {
-    user = (await User.create({ ...data, phone: data.id, })).toObject();
+    user = (await User.create({ ...data, phone: data.id })).toObject();
   }
 
-  if(data.id.includes('@')){
-    await sendHTMLEmail({to: data.id, subject: `Welcome to ${CLINIC_INFO.name}`, html: WelcomeUser(user)
-    })
+  if (data.id.includes('@')) {
+    await sendHTMLEmail({
+      to: data.id,
+      subject: `Welcome to ${CLINIC_INFO.name}`,
+      html: WelcomeUser(user),
+    });
   }
   if (!user) {
     throw new Error('An error occurred');
@@ -56,7 +60,7 @@ export default async function registerUser(data: {
     ...user,
     _id: user._id.toString(),
     createdAt: user.createdAt.toLocaleString(),
-    updatedAt: user.updatedAt.toLocaleString()
+    updatedAt: user.updatedAt.toLocaleString(),
   };
 }
 
@@ -68,9 +72,8 @@ export const generatePassword = (length: number) => {
   for (let i = 0; i < length; i++) {
     password += charset.charAt(Math.floor(Math.random() * charset.length));
   }
-    return password;
-
-}
+  return password;
+};
 
 // helper functions
 

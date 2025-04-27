@@ -1,43 +1,45 @@
 'use client';
-import { Icon } from '@iconify/react/dist/iconify.js';
+import React, { useEffect } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'nextjs-toploader/app';
+import axios from 'axios';
 import {
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  Table,
-  ChipProps,
-  Chip,
-  Selection,
-  Dropdown,
-  DropdownTrigger,
   Button,
-  DropdownMenu,
+  Chip,
+  ChipProps,
+  Dropdown,
   DropdownItem,
-  SortDescriptor,
+  DropdownMenu,
+  DropdownTrigger,
   Input,
   Pagination,
+  Selection,
+  SortDescriptor,
+  Spinner,
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
   Tooltip,
-  Spinner
 } from '@heroui/react';
-import Link from 'next/link';
-import React, { useEffect } from 'react';
-import { CopyText } from '@/components/ui/copy';
-import { DrugType } from '@/models/Drug';
-import { rowOptions } from '@/lib/config';
+import { Icon } from '@iconify/react/dist/iconify.js';
 import { useQuery } from '@tanstack/react-query';
+
+import HandleExport from '../common/handle-export';
+
+import { CopyText } from '@/components/ui/copy';
 import FormatTimeInTable from '@/components/ui/format-time-in-table';
 import Skeleton from '@/components/ui/skeleton';
 import useDebounce from '@/hooks/useDebounce';
-import { saveTableConfig, loadTableConfig } from '@/utils/localStorageUtil';
-import axios from 'axios';
-import HandleExport from '../common/handle-export';
-import { useRouter } from 'nextjs-toploader/app';
+import { rowOptions } from '@/lib/config';
+import { DrugType } from '@/models/Drug';
+import { loadTableConfig, saveTableConfig } from '@/utils/localStorageUtil';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   available: 'success',
-  unavailable: 'danger'
+  unavailable: 'danger',
 };
 
 const tableKey = 'drugs';
@@ -53,17 +55,17 @@ const INITIAL_VISIBLE_COLUMNS = savedConfig?.columns || [
   'price',
   'stock',
   'createdAt',
-  'actions'
+  'actions',
 ];
 
 const INITIAL_VISIBLE_TYPES = savedConfig?.status || [
   'available',
-  'unavailable'
+  'unavailable',
 ];
 
 const INITIAL_SORT_DESCRIPTOR = savedConfig?.sortDescriptor || {
   column: 'date',
-  direction: 'ascending'
+  direction: 'ascending',
 };
 
 const INITIAL_LIMIT = savedConfig?.limit || 10;
@@ -85,8 +87,8 @@ const getAllDrugs = async (params: {
   const res = await axios.get(`/api/v1/drugs`, {
     params: {
       ...params,
-      status
-    }
+      status,
+    },
   });
   return res.data;
 };
@@ -114,8 +116,8 @@ export default function Drugs({ session }: { session: any }) {
         sortColumn: sortDescriptor.column as string,
         sortDirection: sortDescriptor.direction,
         query,
-        status: Array.from(status).map(String)
-      })
+        status: Array.from(status).map(String),
+      }),
   });
 
   useEffect(() => {
@@ -140,7 +142,7 @@ export default function Drugs({ session }: { session: any }) {
       columns: Array.from(visibleColumns),
       status: Array.from(status),
       sortDescriptor,
-      limit
+      limit,
     });
   }, [visibleColumns, status, sortDescriptor, limit]);
 
@@ -435,7 +437,7 @@ export default function Drugs({ session }: { session: any }) {
         bottomContent={bottomContent}
         bottomContentPlacement="outside"
         classNames={{
-          wrapper: 'max-h-[382px]'
+          wrapper: 'max-h-[382px]',
         }}
         selectedKeys={selectedKeys}
         // selectionMode="multiple"
@@ -492,10 +494,10 @@ const columns = [
   { name: 'PRICE', uid: 'price', sortable: true },
   { name: 'STOCK', uid: 'stock', sortable: true },
   { name: 'CREATED On', uid: 'createdAt', sortable: true },
-  { name: 'ACTIONS', uid: 'actions' }
+  { name: 'ACTIONS', uid: 'actions' },
 ];
 
 const statusOptions = [
   { name: 'AVAILABLE', uid: 'available' },
-  { name: 'UNAVAILABLE', uid: 'unavailable' }
+  { name: 'UNAVAILABLE', uid: 'unavailable' },
 ];

@@ -1,13 +1,13 @@
 'use client';
 
-import { format, addDays, subDays } from 'date-fns';
 import { useEffect, useRef } from 'react';
+import { addDays, format, subDays } from 'date-fns';
 import { useQueryState } from 'nuqs';
 import { ScrollShadow, Tab, Tabs } from '@heroui/react';
 
 export default function DatePicker() {
   const [date, setDate] = useQueryState('date', {
-    defaultValue: new Date().toISOString().split('T')[0]
+    defaultValue: new Date().toISOString().split('T')[0],
   });
 
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -33,7 +33,7 @@ export default function DatePicker() {
             containerRect.left -
             container.clientWidth / 2 +
             tabRect.width / 2,
-          behavior: 'smooth'
+          behavior: 'smooth',
         });
       }
     }
@@ -63,7 +63,7 @@ export default function DatePicker() {
           classNames={{
             tabList: 'bg-transparent flex whitespace-nowrap',
             tab: 'min-w-[56px] min-h-20 rounded-3xl border border-divider',
-            cursor: 'rounded-3xl ring-4 ring-primary'
+            cursor: 'rounded-3xl ring-4 ring-primary',
           }}
         >
           {(date) => {

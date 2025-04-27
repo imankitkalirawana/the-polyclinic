@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
-import User, { UserStatus } from '@/models/User';
-import { connectDB } from '@/lib/db';
+
 import { auth } from '@/auth';
+import { connectDB } from '@/lib/db';
+import User from '@/models/User';
 
 export const GET = auth(async function GET(request: any) {
   try {
@@ -24,7 +25,7 @@ export const GET = auth(async function GET(request: any) {
     const query = searchParams.get('query')?.trim() || '';
     const sort = {
       column: searchParams.get('sortColumn') || 'name',
-      direction: searchParams.get('sortDirection') || 'ascending'
+      direction: searchParams.get('sortDirection') || 'ascending',
     };
 
     const searchQuery = {
@@ -35,20 +36,20 @@ export const GET = auth(async function GET(request: any) {
               { email: { $regex: new RegExp(query.trim(), 'ig') } },
               { phone: { $regex: new RegExp(query.trim(), 'ig') } },
               { status: { $regex: new RegExp(query.trim(), 'ig') } },
-              { uid: isNaN(parseInt(query)) ? undefined : parseInt(query, 10) }
-            ].filter(Boolean) as any[]
+              { uid: isNaN(parseInt(query)) ? undefined : parseInt(query, 10) },
+            ].filter(Boolean) as any[],
           }
         : {}),
       ...(status.length && !status.includes('all')
         ? { status: { $in: status } }
-        : {})
+        : {}),
     };
 
     await connectDB();
 
     // Build the sort object dynamically
     const sortObject: Record<string, 1 | -1> = {
-      [sort.column]: (sort.direction === 'ascending' ? 1 : -1) as 1 | -1
+      [sort.column]: (sort.direction === 'ascending' ? 1 : -1) as 1 | -1,
     };
     const users = await User.find(searchQuery)
       .select('-password')

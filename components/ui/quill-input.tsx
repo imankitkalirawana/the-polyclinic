@@ -1,7 +1,8 @@
 'use client';
-import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import ReactQuill from 'react-quill';
+
+import { cn } from '@/lib/utils';
 
 interface Props {
   value?: string;
@@ -22,7 +23,7 @@ export default function QuillInput({
   className,
   id,
   label,
-  description
+  description,
 }: Props) {
   const formats = ['bold', 'italic', 'underline', 'strike'];
   const [isFocused, setIsFocused] = useState(false);
@@ -38,7 +39,7 @@ export default function QuillInput({
         <label
           htmlFor={id}
           className={cn('text-sm text-default-500 transition-all', {
-            'text-xs': isFocused || value
+            'text-xs': isFocused || value,
           })}
         >
           {label}

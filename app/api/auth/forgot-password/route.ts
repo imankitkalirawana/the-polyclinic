@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
-import User from '@/models/User';
-import Otp from '@/models/Otp';
-import { connectDB } from '@/lib/db';
-import { generateOtp, phoneValidate, sendSMS } from '@/lib/functions';
+
 import { sendHTMLEmail } from '@/functions/server-actions/emails/send-email';
+import { connectDB } from '@/lib/db';
+import { generateOtp, phoneValidate } from '@/lib/functions';
+import Otp from '@/models/Otp';
+import User from '@/models/User';
 
 // send forgot password mail
 export async function POST(request: Request) {
@@ -22,7 +23,7 @@ export async function POST(request: Request) {
       await sendHTMLEmail({
         to: user.email,
         subject: 'Reset Password',
-        html: `Your OTP is: ${otp}`
+        html: `Your OTP is: ${otp}`,
       });
       await Otp.create({ id: user.email, otp });
       return NextResponse.json({ message: 'OTP sent successfully' });

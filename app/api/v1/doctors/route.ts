@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
-import User, { UserRole, UserStatus } from '@/models/User';
-import Doctor from '@/models/Doctor';
-import { connectDB } from '@/lib/db';
+
 import { auth } from '@/auth';
+import { connectDB } from '@/lib/db';
+import Doctor from '@/models/Doctor';
+import User, { UserRole, UserStatus } from '@/models/User';
 
 export const GET = auth(async function GET(request: any) {
   try {
@@ -38,7 +39,7 @@ export const POST = auth(async function POST(request: any) {
 
     // check if uid alreaady exists
     const doctorExists = await Doctor.findOne({
-      uid
+      uid,
     });
 
     if (user.role === 'doctor' || doctorExists) {
@@ -64,7 +65,7 @@ export const POST = auth(async function POST(request: any) {
     return NextResponse.json({
       doctor,
       user,
-      message: 'Doctor created successfully'
+      message: 'Doctor created successfully',
     });
   } catch (error: any) {
     console.error(error);

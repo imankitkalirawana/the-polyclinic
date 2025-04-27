@@ -1,12 +1,14 @@
 'use client';
 
-import { cn } from '@/lib/utils';
-import { Button, Tooltip } from "@heroui/react";
-import { IconPlus, IconX } from '@tabler/icons-react';
-import { useFormik } from 'formik';
 import { useState } from 'react';
+import { useFormik } from 'formik';
 import ReactQuill from 'react-quill';
+import { Button, Tooltip } from '@heroui/react';
+import { IconPlus, IconX } from '@tabler/icons-react';
+
 import 'react-quill/dist/quill.snow.css';
+
+import { cn } from '@/lib/utils';
 
 interface EditableDataTableProps {
   data: Record<string, string>;
@@ -15,15 +17,15 @@ interface EditableDataTableProps {
 
 export default function EditableDataTable({
   data,
-  onChange
+  onChange,
 }: EditableDataTableProps) {
   const formik = useFormik({
     initialValues: {
-      data: data
+      data: data,
     },
     onSubmit: async (values) => {
       console.log('Updated Table Data:', values.data);
-    }
+    },
   });
 
   const [numRows, setNumRows] = useState(
@@ -129,7 +131,7 @@ export default function EditableDataTable({
               >
                 <div
                   className={cn('flex flex-row justify-between opacity-0', {
-                    'opacity-100': hoveredColIndex === colIndex
+                    'opacity-100': hoveredColIndex === colIndex,
                   })}
                 >
                   {numCols > 1 && (

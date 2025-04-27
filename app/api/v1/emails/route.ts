@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
-import Email from '@/models/Email';
-import { connectDB } from '@/lib/db';
+
 import { auth } from '@/auth';
+import { connectDB } from '@/lib/db';
+import Email from '@/models/Email';
 
 export const GET = auth(async function GET(request: any) {
   try {
@@ -17,7 +18,7 @@ export const GET = auth(async function GET(request: any) {
     const query = searchParams.get('query')?.trim() || '';
     const sort = {
       column: searchParams.get('sortColumn') || 'createdAt',
-      direction: searchParams.get('sortDirection') || 'descending'
+      direction: searchParams.get('sortDirection') || 'descending',
     };
 
     const searchQuery = {
@@ -27,16 +28,16 @@ export const GET = auth(async function GET(request: any) {
               { from: { $regex: new RegExp(query.trim(), 'ig') } },
               { total: { $regex: new RegExp(query.trim(), 'ig') } },
               { subject: { $regex: new RegExp(query.trim(), 'ig') } },
-              { message: { $regex: new RegExp(query.trim(), 'ig') } }
-            ].filter(Boolean) as any[]
+              { message: { $regex: new RegExp(query.trim(), 'ig') } },
+            ].filter(Boolean) as any[],
           }
-        : {})
+        : {}),
     };
 
     await connectDB();
 
     const sortObject: Record<string, 1 | -1> = {
-      [sort.column]: (sort.direction === 'ascending' ? 1 : -1) as 1 | -1
+      [sort.column]: (sort.direction === 'ascending' ? 1 : -1) as 1 | -1,
     };
     const emails = await Email.find(searchQuery)
       .sort(sortObject)
@@ -67,7 +68,7 @@ export const POST = async function POST(request: any) {
     await email.save();
     return NextResponse.json({
       email,
-      message: 'Email sent successfully'
+      message: 'Email sent successfully',
     });
 
     await connectDB();

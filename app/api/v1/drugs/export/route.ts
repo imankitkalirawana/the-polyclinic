@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
-import Drug from '@/models/Drug';
-import { connectDB } from '@/lib/db';
-import { auth } from '@/auth';
-import ExcelJS from 'exceljs';
 import { format } from 'date-fns';
+import ExcelJS from 'exceljs';
+
+import { auth } from '@/auth';
+import { connectDB } from '@/lib/db';
+import Drug from '@/models/Drug';
 
 export const GET = auth(async function GET(request: any) {
   try {
@@ -28,7 +29,7 @@ export const GET = auth(async function GET(request: any) {
       { header: 'Created At', key: 'createdAt', width: 30 },
       { header: 'Created By', key: 'createdBy', width: 30 },
       { header: 'Updated At', key: 'updatedAt', width: 30 },
-      { header: 'Updated By', key: 'updatedBy', width: 30 }
+      { header: 'Updated By', key: 'updatedBy', width: 30 },
     ];
 
     drugs.forEach((drug) => {
@@ -45,7 +46,7 @@ export const GET = auth(async function GET(request: any) {
         createdAt: format(new Date(drug.createdAt), 'PPPp'),
         createdBy: drug.createdBy,
         updatedAt: format(new Date(drug.updatedAt), 'PPPp'),
-        updatedBy: drug.updatedBy
+        updatedBy: drug.updatedBy,
       });
     });
 
@@ -55,8 +56,8 @@ export const GET = auth(async function GET(request: any) {
       headers: {
         'Content-Type':
           'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        'Content-Disposition': 'attachment; filename="drugs.xlsx"'
-      }
+        'Content-Disposition': 'attachment; filename="drugs.xlsx"',
+      },
     });
   } catch (error: any) {
     console.error(error);

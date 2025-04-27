@@ -5,12 +5,13 @@ export default function Home() {
   return (
     <>
       <Button
+        className="absolute mt-4"
         onPress={() => {
           addToast({
             title: 'Hello',
-            description: 'chhavi and ankit',
-            color: 'secondary'
-          }); 
+            description: 'World',
+            color: 'secondary',
+          });
         }}
       >
         Click me

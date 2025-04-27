@@ -1,13 +1,13 @@
 'use client';
 
-import { Button, Tooltip } from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
 import { useState } from 'react';
 import slugify from 'slugify';
 import { toast } from 'sonner';
+import { Button, Tooltip } from '@heroui/react';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 export default function HandleExport({
-  collection
+  collection,
 }: {
   collection:
     | 'users'

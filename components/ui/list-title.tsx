@@ -1,5 +1,4 @@
 import { cn } from '@/lib/utils';
-import { Button } from "@heroui/react";
 
 interface ListTitleProps {
   className?: string;

@@ -1,19 +1,16 @@
 'use client';
 import React, { createContext, useContext } from 'react';
-import { useFormik } from 'formik';
-import { UserType } from '@/models/User';
-import { DoctorType } from '@/models/Doctor';
-import { AppointmentType } from '@/models/Appointment';
 import axios from 'axios';
-import { toast } from 'sonner';
 import { subYears } from 'date-fns';
-import {
-  sendMailWithOTP,
-  verifyEmail,
-  verifyOTP
-} from '@/functions/server-actions/auth/verification';
+import { useFormik } from 'formik';
+import { toast } from 'sonner';
 import * as Yup from 'yup';
+
 import registerUser from '@/functions/server-actions/auth/register';
+import { verifyEmail } from '@/functions/server-actions/auth/verification';
+import { AppointmentType } from '@/models/Appointment';
+import { DoctorType } from '@/models/Doctor';
+import { UserType } from '@/models/User';
 
 const validationSchema = Yup.object({
   firstName: Yup.string()
@@ -23,7 +20,7 @@ const validationSchema = Yup.object({
   age: Yup.number().max(120, 'Max age can be 120.'),
   id: Yup.string().required(
     'Enter a valid email / phone. OTP will be sent to this.'
-  )
+  ),
 });
 
 interface AppointmentForm {
@@ -60,7 +57,7 @@ const FormContext = createContext<FormContextType | undefined>(undefined);
 
 export const FormProvider = ({
   children,
-  session
+  session,
 }: {
   children: React.ReactNode;
   session: any;
@@ -74,9 +71,9 @@ export const FormProvider = ({
       additionalInfo: {
         notes: '',
         type: 'online',
-        symptoms: ''
+        symptoms: '',
       },
-      step: 1
+      step: 1,
     },
     onSubmit: async (values) => {
       await axios
@@ -86,19 +83,19 @@ export const FormProvider = ({
             uid: values.patient.uid,
             name: values.patient.name,
             phone: values.patient.phone,
-            email: values.patient.email
+            email: values.patient.email,
           },
           doctor: {
             uid: values.doctor.uid,
             name: values.doctor.name,
             email: values.doctor.email,
-            sitting: values.doctor?.sitting
+            sitting: values.doctor?.sitting,
           },
           additionalInfo: {
             notes: values.additionalInfo.notes,
             symptoms: values.additionalInfo.symptoms,
-            type: values.additionalInfo.type
-          }
+            type: values.additionalInfo.type,
+          },
         })
         .then((res) => {
           values.appointment = res.data;
@@ -108,7 +105,7 @@ export const FormProvider = ({
           toast.error('Failed to create appointment');
           console.error(error);
         });
-    }
+    },
   });
 
   const register = useFormik<RegisterFormType>({
@@ -120,14 +117,14 @@ export const FormProvider = ({
       gender: 'other',
       id: '',
       otp: '',
-      step: 1
+      step: 1,
     },
     validationSchema,
     onSubmit: async (values) => {
       if (values.step === 1) {
         await handeVerification();
       }
-    }
+    },
   });
 
   const handeVerification = async () => {
@@ -162,8 +159,8 @@ export const FormProvider = ({
       dob: {
         day: day.length === 1 ? '0' + day : day,
         month: month.length === 1 ? '0' + month : month,
-        year
-      }
+        year,
+      },
     };
     await registerUser(data)
       .then(async (user) => {
@@ -172,7 +169,7 @@ export const FormProvider = ({
           {
             ...formik.values,
             patient: user,
-            step: 2
+            step: 2,
           },
           true
         );

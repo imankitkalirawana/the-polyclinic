@@ -2,14 +2,16 @@
 
 import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
+
 import Skeleton from './skeleton';
+
 import { cn } from '@/lib/utils';
 
 export default function FormatTimeInTable({
   date,
   template,
   skeleton,
-  className
+  className,
 }: {
   date: string | Date;
   template?: string;

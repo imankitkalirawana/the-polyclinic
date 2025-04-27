@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
-import User from '@/models/User';
-import { connectDB } from '@/lib/db';
-import mongoose from 'mongoose';
-import { auth } from '@/auth';
 import bcrypt from 'bcryptjs';
+import mongoose from 'mongoose';
+
+import { auth } from '@/auth';
+import { connectDB } from '@/lib/db';
+import User from '@/models/User';
 
 // get user by id from param
 export async function GET(_request: any, context: any) {
@@ -51,7 +52,7 @@ export const PUT = auth(async function PUT(request: any, context: any) {
       console;
     }
     user = await User.findByIdAndUpdate(userId, data, {
-      new: true
+      new: true,
     });
     return NextResponse.json(user);
   } catch (error) {

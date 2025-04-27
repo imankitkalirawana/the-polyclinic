@@ -1,17 +1,16 @@
 'use client';
 import { Accordion, AccordionItem, Link } from '@heroui/react';
 
-import DoctorSelection, { DoctorSelectionTitle } from './doctor-selection';
-
-import { useForm } from './context';
 import ConfirmationModal from './modals/confirmation-modal';
+import NewUserModal from './modals/new-user-modal';
 import SummaryModal from './modals/summary-modal';
 import AdditionalDetailsSelection, {
-  AdditionalDetailsSelectionTitle
+  AdditionalDetailsSelectionTitle,
 } from './additional-details-selection';
+import { useForm } from './context';
 import DateSelection, { DateSelectionTitle } from './date-selection';
+import DoctorSelection, { DoctorSelectionTitle } from './doctor-selection';
 import UserSelection, { UserSelectionTitle } from './user-selection';
-import NewUserModal from './modals/new-user-modal';
 
 export default function Selection() {
   const { formik } = useForm();
@@ -19,14 +18,14 @@ export default function Selection() {
   const ModalMap: Record<number, React.ReactNode> = {
     5: <SummaryModal />,
     6: <ConfirmationModal />,
-    7: <NewUserModal />
+    7: <NewUserModal />,
   };
 
   const KeyMap: Record<number, string> = {
     1: 'user',
     2: 'time',
     3: 'doctor',
-    4: 'additional-details'
+    4: 'additional-details',
   };
 
   return (

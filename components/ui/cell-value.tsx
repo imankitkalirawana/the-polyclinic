@@ -1,6 +1,6 @@
-import { cn } from '@/lib/utils';
-import { Divider } from '@heroui/react';
 import React from 'react';
+
+import { cn } from '@/lib/utils';
 
 export type CellValueProps = React.HTMLAttributes<HTMLDivElement> & {
   label: string;

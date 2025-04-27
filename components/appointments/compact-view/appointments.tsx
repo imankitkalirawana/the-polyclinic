@@ -1,25 +1,26 @@
 'use client';
 
-import { useMemo, useState, useEffect, useRef } from 'react';
-import { Tag } from 'lucide-react';
+import { useEffect, useRef } from 'react';
+import { format, subMinutes } from 'date-fns';
+import { useQueryState } from 'nuqs';
 import {
   Avatar,
+  Button,
   Card,
   cn,
+  Link,
   ScrollShadow,
   Spinner,
   Tooltip,
-  Button,
-  Link
 } from '@heroui/react';
-import { AppointmentType, AType } from '@/models/Appointment';
-import { format, addMinutes, subMinutes } from 'date-fns';
-import { useQueryState } from 'nuqs';
-import { useForm } from './context';
-import AppointmentDetailsModal from './appointment-details-modal';
-import StatusReferences from './status-references';
 import { Icon } from '@iconify/react/dist/iconify.js';
+
+import AppointmentDetailsModal from './appointment-details-modal';
+import { useForm } from './context';
+import StatusReferences from './status-references';
+
 import CalendarWidget from '@/components/ui/calendar-widget';
+import { AppointmentType, AType } from '@/models/Appointment';
 
 // Get background and icon colors based on appointment type
 export const getAppointmentStyles = (status: AppointmentType['status']) => {
@@ -30,7 +31,7 @@ export const getAppointmentStyles = (status: AppointmentType['status']) => {
         avatarBg: 'bg-orange-100',
         avatar: 'text-orange-500',
         iconBg: 'bg-orange-500',
-        icon: 'text-white'
+        icon: 'text-white',
       };
     case 'confirmed':
       return {
@@ -38,7 +39,7 @@ export const getAppointmentStyles = (status: AppointmentType['status']) => {
         avatarBg: 'bg-cyan-100',
         avatar: 'text-cyan-500',
         iconBg: 'bg-cyan-500',
-        icon: 'text-white'
+        icon: 'text-white',
       };
     case 'in-progress':
       return {
@@ -46,7 +47,7 @@ export const getAppointmentStyles = (status: AppointmentType['status']) => {
         avatarBg: 'bg-blue-100',
         avatar: 'text-blue-500',
         iconBg: 'bg-blue-500',
-        icon: 'text-white'
+        icon: 'text-white',
       };
     case 'completed':
       return {
@@ -54,7 +55,7 @@ export const getAppointmentStyles = (status: AppointmentType['status']) => {
         avatarBg: 'bg-success-100',
         avatar: 'text-success-500',
         iconBg: 'bg-success-500',
-        icon: 'text-white'
+        icon: 'text-white',
       };
     case 'cancelled':
       return {
@@ -62,7 +63,7 @@ export const getAppointmentStyles = (status: AppointmentType['status']) => {
         avatarBg: 'bg-red-100',
         avatar: 'text-red-500',
         iconBg: 'bg-red-500',
-        icon: 'text-white'
+        icon: 'text-white',
       };
     case 'overdue':
       return {
@@ -70,7 +71,7 @@ export const getAppointmentStyles = (status: AppointmentType['status']) => {
         avatarBg: 'bg-pink-100',
         avatar: 'text-pink-500',
         iconBg: 'bg-pink-500',
-        icon: 'text-white'
+        icon: 'text-white',
       };
     case 'on-hold':
       return {
@@ -78,7 +79,7 @@ export const getAppointmentStyles = (status: AppointmentType['status']) => {
         avatarBg: 'bg-yellow-100',
         avatar: 'text-yellow-500',
         iconBg: 'bg-yellow-500',
-        icon: 'text-white'
+        icon: 'text-white',
       };
     default:
       return {
@@ -86,7 +87,7 @@ export const getAppointmentStyles = (status: AppointmentType['status']) => {
         avatarBg: 'bg-default-100',
         avatar: 'text-default-500',
         iconBg: 'bg-default-500',
-        icon: 'text-white'
+        icon: 'text-white',
       };
   }
 };
@@ -94,13 +95,13 @@ export const getAppointmentStyles = (status: AppointmentType['status']) => {
 const TypeIcon: Record<AType, string> = {
   consultation: 'solar:stethoscope-bold',
   'follow-up': 'solar:clipboard-check-linear',
-  emergency: 'solar:adhesive-plaster-linear'
+  emergency: 'solar:adhesive-plaster-linear',
 };
 
 export default function AppointmentsTimeline() {
   const { formik, appointments, isLoading } = useForm();
   const [date] = useQueryState('date', {
-    defaultValue: new Date().toISOString().split('T')[0]
+    defaultValue: new Date().toISOString().split('T')[0],
   });
 
   // Time slots for the timeline
@@ -149,7 +150,7 @@ export default function AppointmentsTimeline() {
 
       container.scrollTo({
         top: offsetTop - 20, // Adjust the offset as needed
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
     }
   }, [appointments]);
@@ -165,7 +166,7 @@ export default function AppointmentsTimeline() {
           <div className="mb-6 flex items-center justify-between">
             <h2
               className={cn('text-2xl font-semibold text-default-900', {
-                'text-default-500': !appointments.length
+                'text-default-500': !appointments.length,
               })}
             >
               {!appointments.length ? 'No' : appointments.length} Appointment
@@ -294,7 +295,7 @@ export default function AppointmentsTimeline() {
                               />
                             }
                             classNames={{
-                              base: 'bg-transparent p-0'
+                              base: 'bg-transparent p-0',
                             }}
                             // isOpen
                             className="bg-transparent p-0"
@@ -309,7 +310,7 @@ export default function AppointmentsTimeline() {
                               )}
                               style={{
                                 top: `${startY * 2.34}px`,
-                                left: `${leftOffset + 420}px`
+                                left: `${leftOffset + 420}px`,
                                 // minHeight: '50px'
                               }}
                               isIconOnly
@@ -345,7 +346,7 @@ export default function AppointmentsTimeline() {
                         top: `${startY * 2.33}px`,
                         left: `${leftOffset}px`,
                         width,
-                        minHeight: '50px'
+                        minHeight: '50px',
                       }}
                       isPressable
                       onPress={() => {

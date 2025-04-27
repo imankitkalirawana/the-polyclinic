@@ -1,20 +1,20 @@
 'use client';
 
-import type { CalendarBookingStepType } from './calendar-booking-types';
-
 import { useCallback } from 'react';
-import { Icon } from '@iconify/react';
-import { Spacer } from '@heroui/spacer';
+import { Button } from '@heroui/button';
 import { Chip } from '@heroui/chip';
 import { Link } from '@heroui/link';
-import { Button } from '@heroui/button';
+import { Spacer } from '@heroui/spacer';
+import { Icon } from '@iconify/react';
+
+import type { CalendarBookingStepType } from './calendar-booking-types';
 
 interface CalendarBookingConfirmationProps {
   setCalendarBookingStep?: (step: CalendarBookingStepType) => void;
 }
 
 export default function CalendarBookingConfirmation({
-  setCalendarBookingStep
+  setCalendarBookingStep,
 }: CalendarBookingConfirmationProps) {
   const handleCancelOrReschedule = useCallback(() => {
     if (setCalendarBookingStep) setCalendarBookingStep('booking_initial');
@@ -65,7 +65,7 @@ export default function CalendarBookingConfirmation({
             <Chip
               classNames={{
                 base: 'px-0.5 h-4',
-                content: 'text-[10px] leading-3'
+                content: 'text-[10px] leading-3',
               }}
               color="primary"
               size="sm"

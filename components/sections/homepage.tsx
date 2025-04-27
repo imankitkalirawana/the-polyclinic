@@ -1,11 +1,12 @@
 'use client';
-import Image from 'next/image';
-import GridHero from '../landing-page/grid-hero';
-import { ContainerScroll } from '../ui/landing-page/container-scroll-animation';
-import { useTheme } from 'next-themes';
 import { useEffect } from 'react';
 import React from 'react';
+import Image from 'next/image';
+import { useTheme } from 'next-themes';
+
+import GridHero from '../landing-page/grid-hero';
 import { MarqueeContainer } from '../landing-page/marquee';
+import { ContainerScroll } from '../ui/landing-page/container-scroll-animation';
 
 export default function Homepage() {
   const { theme } = useTheme();

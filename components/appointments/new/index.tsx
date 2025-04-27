@@ -1,6 +1,6 @@
 import * as React from 'react';
-import NoSession from './no-session';
 
+import NoSession from './no-session';
 import Session from './session';
 
 export default async function NewAppointment({ session }: { session: any }) {

@@ -1,22 +1,24 @@
 'use client';
-import { AppointmentType } from '@/models/Appointment';
-import { Subtitle } from '../appointment-details-modal';
+import { useState } from 'react';
+import { format } from 'date-fns';
+import { toast } from 'sonner';
 import {
   Button,
   Card,
   CardBody,
   CardFooter,
   Chip,
-  ScrollShadow
+  ScrollShadow,
 } from '@heroui/react';
-import { format } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { toast } from 'sonner';
+
+import { Subtitle } from '../appointment-details-modal';
 import { useForm } from '../context';
-import { useState } from 'react';
+
+import { AppointmentType } from '@/models/Appointment';
 
 export default function PendingAppointments({
-  appointments
+  appointments,
 }: {
   appointments: AppointmentType[];
 }) {
@@ -24,7 +26,7 @@ export default function PendingAppointments({
 
   const [isLoading, setIsLoading] = useState({
     confirm: false,
-    cancel: false
+    cancel: false,
   });
 
   const handleSubmit = async (

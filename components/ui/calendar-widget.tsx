@@ -1,12 +1,14 @@
 'use client';
-import { cn } from '@/lib/utils';
-import { AppointmentType, AType } from '@/models/Appointment';
-import { Card, Chip, ScrollShadow } from '@heroui/react';
-import { getAppointmentStyles } from '../appointments/compact-view/appointments';
 import { format } from 'date-fns';
 import { motion, useAnimation } from 'framer-motion';
+import { Card, Chip, ScrollShadow } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
+
+import { getAppointmentStyles } from '../appointments/compact-view/appointments';
 import { useForm } from '../appointments/compact-view/context';
+
+import { cn } from '@/lib/utils';
+import { AppointmentType, AType } from '@/models/Appointment';
 
 interface CalendarWidgetProps {
   className?: string;
@@ -17,13 +19,13 @@ interface CalendarWidgetProps {
 const TypeIcon: Record<AType, string> = {
   consultation: 'solar:stethoscope-bold',
   'follow-up': 'solar:clipboard-check-linear',
-  emergency: 'solar:adhesive-plaster-linear'
+  emergency: 'solar:adhesive-plaster-linear',
 };
 
 export default function CalendarWidget({
   className,
   isIcon,
-  appointments = []
+  appointments = [],
 }: CalendarWidgetProps) {
   return (
     <>
@@ -47,7 +49,7 @@ export default function CalendarWidget({
 
 function Appointment({
   appointment,
-  isIcon
+  isIcon,
 }: {
   appointment: AppointmentType;
   isIcon?: boolean;
@@ -76,7 +78,7 @@ function Appointment({
           opacity: 1,
           scale: 1,
           width: '80px',
-          display: 'flex'
+          display: 'flex',
         })
       }
       onHoverEnd={() =>
@@ -84,7 +86,7 @@ function Appointment({
           opacity: 0,
           scale: 0,
           width: 0,
-          display: 'none'
+          display: 'none',
         })
       }
     >
@@ -103,7 +105,7 @@ function Appointment({
                 opacity: 0,
                 scale: 0,
                 width: 0,
-                display: 'none'
+                display: 'none',
               }}
               animate={chipControls}
               className="max-w-fit overflow-hidden capitalize text-white"

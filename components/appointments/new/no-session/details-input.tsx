@@ -1,4 +1,5 @@
 'use client';
+import { signIn } from 'next-auth/react';
 import {
   Button,
   Card,
@@ -11,20 +12,19 @@ import {
   ScrollShadow,
   Select,
   SelectItem,
-  Tooltip
+  Tooltip,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { signIn } from 'next-auth/react';
+
 import VerifyId from './modals/verify-id';
 import { useForm } from './context';
-import { verifyEmail } from '@/functions/server-actions';
 
 export default function DetailsInput() {
   const { formik } = useForm();
 
   const ModalMap: Record<number, React.ReactNode> = {
     2: <VerifyId />,
-    4: <>Step 3</>
+    4: <>Step 3</>,
   };
 
   return (
@@ -136,7 +136,7 @@ export default function DetailsInput() {
             >
               {Array.from({ length: 12 }, (_, i) => {
                 const month = new Date(0, i).toLocaleString('default', {
-                  month: 'long'
+                  month: 'long',
                 });
                 return (
                   <SelectItem key={i + 1} textValue={month}>
@@ -214,7 +214,7 @@ export default function DetailsInput() {
                         formik.setValues({
                           ...formik.values,
                           step: 1,
-                          otp: ''
+                          otp: '',
                         });
                       }}
                       className="text-xs"

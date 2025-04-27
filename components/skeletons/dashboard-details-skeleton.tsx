@@ -1,4 +1,5 @@
-import { Card, CardBody, CardFooter, CardHeader } from "@heroui/react";
+import { Card, CardBody, CardHeader } from '@heroui/react';
+
 import Skeleton from '../ui/skeleton';
 
 export default function DashboardDetailsSkeleton() {
@@ -25,7 +26,7 @@ export default function DashboardDetailsSkeleton() {
             'Phone Number',
             'Email',
             'Status',
-            'Role'
+            'Role',
           ].map((label, index) => (
             <div key={index} className="grid grid-cols-2 items-center gap-4">
               <Skeleton className="h-5 w-24" />

@@ -1,10 +1,9 @@
-import { Tab, Tabs } from '@heroui/tabs';
-import { ScrollShadow } from '@heroui/scroll-shadow';
 import { useMemo, useState } from 'react';
+import { ScrollShadow } from '@heroui/scroll-shadow';
+import { Tab, Tabs } from '@heroui/tabs';
 
 import { DurationEnum, type TimeSlot } from './calendar';
 import { TimeFormatEnum, timeFormats } from './calendar';
-
 import CalendarTime from './calendar-time';
 
 interface CalendarTimeSelectProps {
@@ -22,7 +21,7 @@ export default function CalendarTimeSelect({
   duration,
   selectedTime,
   onTimeChange,
-  onConfirm
+  onConfirm,
 }: CalendarTimeSelectProps) {
   const [timeFormat, setTimeFormat] = useState<TimeFormatEnum>(
     TimeFormatEnum.TwelveHour
@@ -67,12 +66,12 @@ export default function CalendarTimeSelect({
 
         slots.push({
           value,
-          label: `${displayHours}:${mins.toString().padStart(2, '0')} ${period}`
+          label: `${displayHours}:${mins.toString().padStart(2, '0')} ${period}`,
         });
       } else {
         slots.push({
           value,
-          label: value
+          label: value,
         });
       }
     }
@@ -92,7 +91,7 @@ export default function CalendarTimeSelect({
           classNames={{
             tab: 'h-6 py-0.5 px-1.5',
             tabList: 'p-0.5 rounded-[7px] gap-0.5',
-            cursor: 'rounded-md'
+            cursor: 'rounded-md',
           }}
           size="sm"
           onSelectionChange={onTimeFormatChange}

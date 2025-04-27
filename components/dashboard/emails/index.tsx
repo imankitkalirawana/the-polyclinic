@@ -1,41 +1,37 @@
 'use client';
-import { capitalize } from '@/lib/utility';
-import { Icon } from '@iconify/react/dist/iconify.js';
+import React, { useEffect } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'nextjs-toploader/app';
+import axios from 'axios';
 import {
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  Table,
-  ChipProps,
-  Chip,
-  Selection,
-  Dropdown,
-  DropdownTrigger,
   Button,
-  DropdownMenu,
+  Dropdown,
   DropdownItem,
-  SortDescriptor,
+  DropdownMenu,
+  DropdownTrigger,
   Input,
   Pagination,
-  Tooltip,
-  Spinner
+  Selection,
+  SortDescriptor,
+  Spinner,
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
 } from '@heroui/react';
-import Link from 'next/link';
-import React, { useEffect } from 'react';
-import { CopyText } from '@/components/ui/copy';
-import { EmailType } from '@/models/Email';
-import { redirectTo } from '@/functions/server-actions';
-import { rowOptions } from '@/lib/config';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import { useQuery } from '@tanstack/react-query';
+
+import HandleExport from '../common/handle-export';
+
 import FormatTimeInTable from '@/components/ui/format-time-in-table';
 import Skeleton from '@/components/ui/skeleton';
 import useDebounce from '@/hooks/useDebounce';
-import { saveTableConfig, loadTableConfig } from '@/utils/localStorageUtil';
-import axios from 'axios';
-import HandleExport from '../common/handle-export';
-import { useRouter } from 'nextjs-toploader/app';
+import { rowOptions } from '@/lib/config';
+import { EmailType } from '@/models/Email';
+import { loadTableConfig, saveTableConfig } from '@/utils/localStorageUtil';
 
 const tableKey = 'emails';
 
@@ -46,12 +42,12 @@ const INITIAL_VISIBLE_COLUMNS = savedConfig?.columns || [
   'from',
   'subject',
   'createdAt',
-  'actions'
+  'actions',
 ];
 
 const INITIAL_SORT_DESCRIPTOR = savedConfig?.sortDescriptor || {
   column: 'createdAt',
-  direction: 'descending'
+  direction: 'descending',
 };
 
 const INITIAL_LIMIT = savedConfig?.limit || 10;
@@ -68,7 +64,7 @@ const getAllEmails = async (params: {
   totalPages: number;
 }> => {
   const res = await axios.get(`/api/v1/emails`, {
-    params
+    params,
   });
   return res.data;
 };
@@ -92,8 +88,8 @@ export default function Emails({ session }: { session: any }) {
         page,
         sortColumn: sortDescriptor.column as string,
         sortDirection: sortDescriptor.direction,
-        query
-      })
+        query,
+      }),
   });
 
   useEffect(() => {
@@ -117,7 +113,7 @@ export default function Emails({ session }: { session: any }) {
     saveTableConfig(tableKey, {
       columns: Array.from(visibleColumns),
       sortDescriptor,
-      limit
+      limit,
     });
   }, [visibleColumns, sortDescriptor, limit]);
 
@@ -334,7 +330,7 @@ export default function Emails({ session }: { session: any }) {
         bottomContent={bottomContent}
         bottomContentPlacement="outside"
         classNames={{
-          wrapper: 'max-h-[382px]'
+          wrapper: 'max-h-[382px]',
         }}
         selectedKeys={selectedKeys}
         // selectionMode="multiple"
@@ -387,5 +383,5 @@ const columns = [
   { name: 'FROM', uid: 'from', sortable: true },
   { name: 'SUBJECT', uid: 'subject', sortable: true },
   { name: 'CREATED ON', uid: 'createdAt', sortable: true },
-  { name: 'ACTIONS', uid: 'actions' }
+  { name: 'ACTIONS', uid: 'actions' },
 ];

@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 type AsyncComponentProps<T> = {
   fetchData: () => Promise<T>; // Function to fetch data
@@ -10,7 +10,7 @@ type AsyncComponentProps<T> = {
 const AsyncComponent = <T>({
   fetchData,
   fallback,
-  render
+  render,
 }: AsyncComponentProps<T>) => {
   const [data, setData] = useState<T | null>(null);
 

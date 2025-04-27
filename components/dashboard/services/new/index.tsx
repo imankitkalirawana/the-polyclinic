@@ -1,5 +1,10 @@
 'use client';
-import { ServiceTypes, ServiceStatuses } from '@/lib/interface';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
+import { useFormik } from 'formik';
+import ReactQuill from 'react-quill';
+import { toast } from 'sonner';
 import {
   Button,
   cn,
@@ -7,21 +12,15 @@ import {
   Select,
   SelectItem,
   SelectItemProps,
-  Textarea,
-  Tooltip
+  Tooltip,
 } from '@heroui/react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { useState } from 'react';
-import { IconX, IconPlus } from '@tabler/icons-react';
-import { toast } from 'sonner';
-import axios from 'axios';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import ReactQuill from 'react-quill';
-import { serviceValidationSchema } from '@/lib/validation';
-import { useRouter } from 'next/navigation';
-import { verifyUID } from '@/functions/server-actions';
+import { IconPlus, IconX } from '@tabler/icons-react';
+
 import QuillInput from '@/components/ui/quill-input';
+import { verifyUID } from '@/functions/server-actions';
+import { ServiceStatuses, ServiceTypes } from '@/lib/interface';
+import { serviceValidationSchema } from '@/lib/validation';
 
 type ServiceData = {
   [key: `cell-${number}-${number}`]: string;
@@ -42,9 +41,9 @@ export default function NewService() {
         type: 'medical',
         data: {
           'cell-0-0': '',
-          'cell-0-1': ''
-        } as ServiceData
-      }
+          'cell-0-1': '',
+        } as ServiceData,
+      },
     },
     validationSchema: serviceValidationSchema,
     onSubmit: async (values) => {
@@ -56,7 +55,7 @@ export default function NewService() {
         toast.error('Failed to update service');
         console.error(error);
       }
-    }
+    },
   });
 
   const [numRows, setNumRows] = useState(
@@ -172,8 +171,8 @@ export default function NewService() {
                   if (await verifyUID(uid)) {
                     formik.setErrors({
                       service: {
-                        uniqueId: 'This Unique ID is already taken'
-                      }
+                        uniqueId: 'This Unique ID is already taken',
+                      },
                     });
                   }
                 }}
@@ -346,7 +345,7 @@ export default function NewService() {
                               className={cn(
                                 'flex flex-row-reverse justify-between opacity-0',
                                 {
-                                  'opacity-100': hoveredColIndex === colIndex
+                                  'opacity-100': hoveredColIndex === colIndex,
                                 }
                               )}
                             >
@@ -446,7 +445,7 @@ export default function NewService() {
                                     'bold',
                                     'italic',
                                     'underline',
-                                    'strike'
+                                    'strike',
                                   ]}
                                   className={cn('w-full overflow-hidden', {
                                     'rounded-tl-xl':
@@ -459,7 +458,7 @@ export default function NewService() {
                                       colIndex === 0,
                                     'rounded-br-xl':
                                       rowIndex === numRows - 1 &&
-                                      colIndex === numCols - 1
+                                      colIndex === numCols - 1,
                                   })}
                                 />
                               </td>

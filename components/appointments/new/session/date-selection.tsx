@@ -1,19 +1,21 @@
 'use client';
+import { useState } from 'react';
+import { format } from 'date-fns';
 import { Button } from '@heroui/react';
-import DateTimePicker from './date-time-picker';
+import { Icon } from '@iconify/react/dist/iconify.js';
 import {
   CalendarDate,
   getLocalTimeZone,
+  isWeekend,
   Time,
-  isWeekend
 } from '@internationalized/date';
 import { useLocale } from '@react-aria/i18n';
-import { useState } from 'react';
-import { TIMINGS } from '@/lib/config';
-import { disabledDates } from '@/lib/appointments/new';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import { format } from 'date-fns';
+
 import { useForm } from './context';
+import DateTimePicker from './date-time-picker';
+
+import { disabledDates } from '@/lib/appointments/new';
+import { TIMINGS } from '@/lib/config';
 
 export default function DateSelection() {
   const { formik } = useForm();
@@ -98,7 +100,7 @@ export default function DateSelection() {
         }}
         timeProps={{
           minValue: new Time(TIMINGS.appointment.start),
-          maxValue: new Time(TIMINGS.appointment.end)
+          maxValue: new Time(TIMINGS.appointment.end),
         }}
       />
       <div className="mt-4 flex justify-center xs:justify-start">

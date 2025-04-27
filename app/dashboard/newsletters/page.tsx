@@ -1,17 +1,18 @@
-import Newsletters from '@/components/dashboard/newsletters/newsletters';
-import { getAllNewsletters } from '@/functions/server-actions/newsletters';
 import {
   dehydrate,
   HydrationBoundary,
-  QueryClient
+  QueryClient,
 } from '@tanstack/react-query';
+
+import Newsletters from '@/components/dashboard/newsletters/newsletters';
+import { getAllNewsletters } from '@/functions/server-actions/newsletters';
 
 export default async function Page() {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ['newsletters'],
     queryFn: () => getAllNewsletters(),
-    initialData: []
+    initialData: [],
   });
 
   return (

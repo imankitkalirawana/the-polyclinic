@@ -1,20 +1,22 @@
 'use client';
 import { useState } from 'react';
-import { CalendarDate, getLocalTimeZone, Time } from '@internationalized/date';
-import { useLocale } from '@react-aria/i18n';
-import { Button, ModalBody, ModalFooter, ModalHeader } from '@heroui/react';
 import React from 'react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
-import { AppointmentType } from '@/models/Appointment';
+import { Button, ModalBody, ModalFooter, ModalHeader } from '@heroui/react';
+import { CalendarDate, getLocalTimeZone, Time } from '@internationalized/date';
+import { useLocale } from '@react-aria/i18n';
+
 import DateTimePicker from '../new/session/date-time-picker';
-import { TIMINGS } from '@/lib/config';
+
 import { rescheduleAppointment } from '@/functions/server-actions/appointment';
+import { TIMINGS } from '@/lib/config';
+import { AppointmentType } from '@/models/Appointment';
 
 export default function RescheduleAppointment({
   appointment,
   modal,
-  setAppointments
+  setAppointments,
 }: {
   appointment: AppointmentType;
   modal: any;
@@ -53,6 +55,7 @@ export default function RescheduleAppointment({
               timing.getDate()
             )
           }
+          // @ts-ignore
           time={new Time(timing.getHours(), timing.getMinutes())}
           onDateChange={(date) => {
             // set the date to the selected date
@@ -79,8 +82,10 @@ export default function RescheduleAppointment({
             );
           }}
           timeProps={{
+            // @ts-ignore
             minValue: new Time(TIMINGS.appointment.start),
-            maxValue: new Time(TIMINGS.appointment.end)
+            // @ts-ignore
+            maxValue: new Time(TIMINGS.appointment.end),
           }}
         />
       </ModalBody>
@@ -109,7 +114,7 @@ export default function RescheduleAppointment({
                       return {
                         ...item,
                         date: new Date(timing),
-                        status: 'booked'
+                        status: 'booked',
                       };
                     }
                     return item;
@@ -120,7 +125,7 @@ export default function RescheduleAppointment({
                 toast(
                   `Appointment Rescheduled to ${format(new Date(timing), 'PPp')}`,
                   {
-                    duration: 10000
+                    duration: 10000,
                   }
                 );
                 modal.onClose();

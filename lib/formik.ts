@@ -6,7 +6,7 @@ export const scrollToError = (formik: any, inputRefs: any) => {
   if (firstErrorKey && inputRefs[firstErrorKey]?.current) {
     inputRefs[firstErrorKey].current?.scrollIntoView({
       behavior: 'smooth',
-      block: 'center'
+      block: 'center',
     });
     return;
   }

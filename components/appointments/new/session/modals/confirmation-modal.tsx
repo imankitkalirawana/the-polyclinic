@@ -1,23 +1,25 @@
 'use client';
+import { format } from 'date-fns/format';
 import {
+  Button,
+  Chip,
+  Divider,
+  Image,
+  Link,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
-  Button,
-  Divider,
-  Chip,
-  Image,
-  Link
 } from '@heroui/react';
-import { useForm } from '../context';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import CellValue from '@/components/ui/cell-value';
+
+import { useForm } from '../context';
+
 import AsyncButton from '@/components/ui/buttons/async-button';
-import { format } from 'date-fns/format';
-import { ChipColorMap } from '@/lib/maps';
+import CellValue from '@/components/ui/cell-value';
 import { downloadAppointmentReceipt } from '@/functions/client/appointment/receipt';
+import { ChipColorMap } from '@/lib/maps';
 
 export default function ConfirmationModal() {
   const { formik, session } = useForm();

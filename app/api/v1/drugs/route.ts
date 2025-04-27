@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
-import Drug from '@/models/Drug';
-import { connectDB } from '@/lib/db';
+
 import { auth } from '@/auth';
+import { connectDB } from '@/lib/db';
+import Drug from '@/models/Drug';
 
 export const GET = auth(async function GET(request: any) {
   try {
@@ -22,7 +23,7 @@ export const GET = auth(async function GET(request: any) {
     const query = searchParams.get('query')?.trim() || '';
     const sort = {
       column: searchParams.get('sortColumn') || 'brandName',
-      direction: searchParams.get('sortDirection') || 'ascending'
+      direction: searchParams.get('sortDirection') || 'ascending',
     };
 
     const searchQuery = {
@@ -35,20 +36,20 @@ export const GET = auth(async function GET(request: any) {
               { manufacturer: { $regex: new RegExp(query.trim(), 'ig') } },
               { form: { $regex: new RegExp(query.trim(), 'ig') } },
               {
-                did: isNaN(parseInt(query)) ? undefined : parseInt(query, 10)
-              }
-            ].filter(Boolean) as any[]
+                did: isNaN(parseInt(query)) ? undefined : parseInt(query, 10),
+              },
+            ].filter(Boolean) as any[],
           }
         : {}),
       ...(status.length && !status.includes('all')
         ? { status: { $in: status } }
-        : {})
+        : {}),
     };
 
     await connectDB();
 
     const sortObject: Record<string, 1 | -1> = {
-      [sort.column]: (sort.direction === 'ascending' ? 1 : -1) as 1 | -1
+      [sort.column]: (sort.direction === 'ascending' ? 1 : -1) as 1 | -1,
     };
     const drugs = await Drug.find(searchQuery)
       .sort(sortObject)

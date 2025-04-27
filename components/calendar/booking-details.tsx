@@ -1,22 +1,22 @@
 'use client';
+import { useMemo } from 'react';
+import { format } from 'date-fns';
+import { type DateValue } from '@heroui/calendar';
 import {
   Avatar,
   cn,
   Select,
   SelectItem,
-  type SharedSelection
+  type SharedSelection,
 } from '@heroui/react';
+import { Tab, Tabs } from '@heroui/react';
 import { Icon } from '@iconify/react';
-import { Tabs, Tab } from '@heroui/react';
-import { type DateValue } from '@heroui/calendar';
-import { useMemo } from 'react';
-import { format } from 'date-fns';
 
 import {
   DurationEnum,
   durations,
   type TimeSlot,
-  timeZoneOptions
+  timeZoneOptions,
 } from './calendar';
 
 interface BookingDetailsProps {
@@ -36,7 +36,7 @@ export default function BookingDetails({
   onDurationChange,
   onTimeZoneChange,
   selectedTimeSlotRange,
-  selectedDate
+  selectedDate,
 }: BookingDetailsProps) {
   const bookingDate = useMemo(() => {
     if (selectedDate) {
@@ -71,7 +71,7 @@ export default function BookingDetails({
       <div className="mb-6 flex flex-col gap-3">
         <div
           className={cn('flex items-start gap-2', {
-            hidden: !bookingDate
+            hidden: !bookingDate,
           })}
         >
           <Icon
@@ -114,7 +114,7 @@ export default function BookingDetails({
             classNames={{
               trigger: 'h-4 min-h-4 bg-transparent border-none shadow-none',
               value:
-                'text-xs font-medium group-data-[has-value=true]:text-default-600'
+                'text-xs font-medium group-data-[has-value=true]:text-default-600',
             }}
             items={timeZoneOptions}
             placeholder="Select time zone"
@@ -129,7 +129,7 @@ export default function BookingDetails({
                 className="capitalize"
                 classNames={{
                   title: 'text-xs font-medium text-default-600',
-                  description: 'text-xs font-medium text-default-600'
+                  description: 'text-xs font-medium text-default-600',
                 }}
               >
                 {option.label}

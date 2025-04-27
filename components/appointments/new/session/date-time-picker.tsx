@@ -1,22 +1,23 @@
 'use client';
-import {
-  CalendarDate,
-  getLocalTimeZone,
-  today,
-  isWeekend,
-  Time
-} from '@internationalized/date';
-import { useLocale } from '@react-aria/i18n';
 import * as React from 'react';
 import {
   Calendar,
   CalendarProps,
+  DateValue,
   TimeInput,
   TimeInputProps,
-  TimeInputValue
+  TimeInputValue,
 } from '@heroui/react';
-import { TIMINGS } from '@/lib/config';
+import {
+  CalendarDate,
+  getLocalTimeZone,
+  Time,
+  today,
+} from '@internationalized/date';
+import { useLocale } from '@react-aria/i18n';
+
 import { disabledDates } from '@/lib/appointments/new';
+import { TIMINGS } from '@/lib/config';
 
 export default function DateTimePicker({
   date = today(getLocalTimeZone()),
@@ -24,7 +25,7 @@ export default function DateTimePicker({
   onDateChange,
   onTimeChange,
   dateProps,
-  timeProps
+  timeProps,
 }: {
   date?: CalendarDate;
   time?: TimeInputValue;
@@ -41,11 +42,13 @@ export default function DateTimePicker({
         <Calendar
           {...dateProps}
           aria-label="Date (Min Date Value)"
-          defaultValue={today(getLocalTimeZone())}
+          // @ts-ignore
+          defaultValue={today(getLocalTimeZone()) as unknown as DateValue}
           minValue={today(getLocalTimeZone())}
           maxValue={today(getLocalTimeZone()).add({
-            days: TIMINGS.booking.maximum
+            days: TIMINGS.booking.maximum,
           })}
+          // @ts-ignore
           value={date}
           onChange={onDateChange}
           isInvalid={disabledDates[0].map((d) => d.compare(date!)).includes(0)}

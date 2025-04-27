@@ -1,8 +1,9 @@
 'use server';
 
+import { SortDescriptor } from '@heroui/react';
+
 import { connectDB } from '@/lib/db';
 import Service from '@/models/Service';
-import { SortDescriptor } from '@heroui/react';
 
 export const getAllServices = async (options?: {
   limit?: number;
@@ -27,16 +28,16 @@ export const getAllServices = async (options?: {
             { department: { $regex: new RegExp(query.trim(), 'ig') } },
             { sitting: { $regex: new RegExp(query.trim(), 'ig') } },
             { status: { $regex: new RegExp(query.trim(), 'ig') } },
-            { uid: isNaN(parseInt(query)) ? undefined : parseInt(query, 10) }
-          ].filter(Boolean) as any[]
+            { uid: isNaN(parseInt(query)) ? undefined : parseInt(query, 10) },
+          ].filter(Boolean) as any[],
         }
-      : {})
+      : {}),
   };
 
   await connectDB();
 
   const sortObject: Record<string, 1 | -1> = {
-    [sort.column]: (sort.direction === 'ascending' ? 1 : -1) as 1 | -1
+    [sort.column]: (sort.direction === 'ascending' ? 1 : -1) as 1 | -1,
   };
 
   const services = await Service.find(searchQuery)
@@ -56,13 +57,13 @@ export const getAllServices = async (options?: {
   const formattedAppointments = services.map((service) => {
     return {
       ...service,
-      _id: service._id.toString()
+      _id: service._id.toString(),
     };
   });
 
   return {
     services: formattedAppointments,
     total,
-    totalPages
+    totalPages,
   };
 };

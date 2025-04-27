@@ -9,7 +9,7 @@ export default async function Page() {
       {
         // @ts-ignore
         session && allowed.includes(session.user.role) ? (
-          <div className="max-w-8xl h-full w-full px-2">adfa</div>
+          <div className="h-full w-full max-w-8xl px-2">adfa</div>
         ) : (
           <Error
             code="401"

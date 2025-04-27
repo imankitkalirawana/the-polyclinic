@@ -3,7 +3,7 @@ import { ButtonProps, ChipProps } from '@heroui/react';
 export const genderMap: Record<string, string> = {
   male: 'fluent-emoji:male-sign',
   female: 'fluent-emoji:female-sign',
-  other: 'fluent-emoji:transgender-symbol'
+  other: 'fluent-emoji:transgender-symbol',
 };
 
 export const buttonColorMap: Record<string, ButtonProps['color']> = {
@@ -11,7 +11,7 @@ export const buttonColorMap: Record<string, ButtonProps['color']> = {
   reschedule: 'warning',
   download: 'default',
   complete: 'success',
-  accept: 'success'
+  accept: 'success',
 };
 
 export const ChipColorMap: Record<string, ChipProps['color']> = {
@@ -20,7 +20,7 @@ export const ChipColorMap: Record<string, ChipProps['color']> = {
   'in-progress': 'warning',
   overdue: 'danger',
   completed: 'success',
-  cancelled: 'danger'
+  cancelled: 'danger',
 };
 
 export const statusColorMap: Record<string, string> = {
@@ -29,5 +29,5 @@ export const statusColorMap: Record<string, string> = {
   cancelled: '#F31260',
   overdue: '#F31260',
   completed: '#10793C',
-  'on-hold': '#936316'
+  'on-hold': '#936316',
 };

@@ -1,12 +1,14 @@
 'use server';
-import { connectDB } from '@/lib/db';
-import Otp from '@/models/Otp';
 import { MailOptions } from 'nodemailer/lib/json-transport';
-import { transporter } from '@/lib/nodemailer';
-import { generateOtp, sendSMS } from '@/lib/functions';
-import { CLINIC_INFO } from '@/lib/config';
-import User from '@/models/User';
+
 import { sendHTMLEmail } from '../emails/send-email';
+
+import { CLINIC_INFO } from '@/lib/config';
+import { connectDB } from '@/lib/db';
+import { generateOtp, sendSMS } from '@/lib/functions';
+import { transporter } from '@/lib/nodemailer';
+import Otp from '@/models/Otp';
+import User from '@/models/User';
 
 export const sendMail = async (mailOptions: MailOptions) => {
   return await transporter.sendMail(mailOptions);
@@ -30,11 +32,11 @@ export const sendMailWithOTP = async (id: string) => {
   const mailOptions: MailOptions = {
     from: {
       name: CLINIC_INFO.name,
-      address: CLINIC_INFO.email
+      address: CLINIC_INFO.email,
     },
     to: id.includes('@') ? id : '',
     subject: `Email Verification - ${CLINIC_INFO.name}`,
-    html: `Your OTP is ${otp}`
+    html: `Your OTP is ${otp}`,
   };
 
   await connectDB();
