@@ -6,7 +6,7 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "clean": "rm -rf node_modules && rm -rf .next && rm -rf pnpm-lock.yaml && $npm_execpath install",
+    "clean": "rm -rf node_modules && rm -rf .next && rm -rf pnpm-lock.yaml && pnpm install",
     "format": "prettier --write .",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
