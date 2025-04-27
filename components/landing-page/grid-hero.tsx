@@ -204,6 +204,7 @@ const Beam = ({ top, left, transition = {} }: BeamType) => {
         opacity: [0, 1, 0],
         y: 32 * 8,
       }}
+      // @ts-ignore
       transition={{
         ease: 'easeInOut',
         duration: 3,
