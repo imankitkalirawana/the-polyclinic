@@ -1,7 +1,6 @@
 'use client';
 
-import { HeroUIProvider } from '@heroui/react';
-import { ToastProvider } from '@heroui/toast';
+import { HeroUIProvider, ToastProvider } from '@heroui/react';
 
 import React from 'react';
 import { SessionProvider } from 'next-auth/react';
@@ -34,7 +33,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         toastProps={{
           variant: 'flat',
           timeout: 3000,
-          shouldShowTimeoutProgess: true,
+          shouldShowTimeoutProgress: true,
           radius: 'lg',
           classNames: {
             base: '!z-[100]',

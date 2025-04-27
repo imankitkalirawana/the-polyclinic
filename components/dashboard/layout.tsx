@@ -16,8 +16,6 @@ import Sidebar from '@/components/dashboard/sidebar/sidebar';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import ModeToggle from '../mode-toggle';
-import CommandMenu from '../command-menu';
 
 export default function DashboardLayout({
   session,
@@ -91,9 +89,7 @@ export default function DashboardLayout({
             </div>
           </div>
         </div>
-        <div className="p-2">
-          <CommandMenu />
-        </div>
+       
 
         <ScrollShadow className="h-full max-h-full pl-2">
           <Sidebar
