@@ -8,7 +8,7 @@ export default function Home() {
         onPress={() => {
           addToast({
             title: 'Hello',
-            description: 'World',
+            description: 'chhavi',
             color: 'secondary'
           });
         }}
