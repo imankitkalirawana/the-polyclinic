@@ -18,10 +18,10 @@ export default function ForgotPassword() {
   const formik = useFormik({
     initialValues: {
       email: email ?? '',
-      otp: ''
+      otp: '',
     },
     validationSchema: Yup.object({
-      email: Yup.string().required('Email is required')
+      email: Yup.string().required('Email is required'),
     }),
     onSubmit: async (values) => {
       try {
@@ -29,7 +29,7 @@ export default function ForgotPassword() {
           const res = await verifyOTP({
             email: values.email,
             otp: parseInt(values.otp),
-            type: 'forgot-password'
+            type: 'forgot-password',
           });
           if (res.success) {
             setIsVerified(true);
@@ -39,7 +39,7 @@ export default function ForgotPassword() {
         } else {
           const res = await sendOTP({
             email: values.email,
-            type: 'forgot-password'
+            type: 'forgot-password',
           });
 
           if (res.success) {
@@ -53,17 +53,17 @@ export default function ForgotPassword() {
         addToast({
           title: 'Error sending OTP',
           description: error.response.data.message,
-          color: 'danger'
+          color: 'danger',
         });
       }
-    }
+    },
   });
 
   const resendOtp = async () => {
     setIsResendingOtp(true);
     const res = await sendOTP({
       email: formik.values.email,
-      type: 'forgot-password'
+      type: 'forgot-password',
     });
 
     if (res.success) {
@@ -184,7 +184,7 @@ const UpdatePassword = () => {
     initialValues: {
       email: email ?? '',
       password: '',
-      confirmPassword: ''
+      confirmPassword: '',
     },
     validationSchema: Yup.object({
       password: Yup.string()
@@ -192,27 +192,27 @@ const UpdatePassword = () => {
         .required('Password is required'),
       confirmPassword: Yup.string()
         .required('Please retype your password.')
-        .oneOf([Yup.ref('password')], 'Your passwords do not match.')
+        .oneOf([Yup.ref('password')], 'Your passwords do not match.'),
     }),
     onSubmit: async (values) => {
       await updatePassword({
         email: email ?? '',
-        password: values.password
+        password: values.password,
       })
         .then(() => {
           addToast({
             title: 'Password updated successfully',
-            color: 'success'
+            color: 'success',
           });
           router.push(`/auth/login?email=${email}`);
         })
         .catch((error) => {
           addToast({
             title: error.message,
-            color: 'danger'
+            color: 'danger',
           });
         });
-    }
+    },
   });
 
   return (

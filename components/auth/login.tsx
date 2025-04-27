@@ -20,18 +20,18 @@ export default function Login() {
   const formik = useFormik({
     initialValues: {
       email: email ?? '',
-      password: ''
+      password: '',
     },
     validationSchema: Yup.object({
       email: Yup.string().required('Email is required'),
-      password: Yup.string().required('Password is required')
+      password: Yup.string().required('Password is required'),
     }),
     onSubmit: async (values) => {
       try {
         await signIn('credentials', {
           email: values.email,
           password: values.password,
-          redirect: false
+          redirect: false,
         }).then((res) => {
           if (res?.error) {
             formik.setFieldError('password', res.code);
@@ -42,7 +42,7 @@ export default function Login() {
       } catch (e) {
         console.error(e);
       }
-    }
+    },
   });
   return (
     <div className="mt-12 flex h-full w-full flex-col items-center justify-center">
