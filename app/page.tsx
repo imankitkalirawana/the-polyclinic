@@ -10,7 +10,7 @@ export default function Home() {
             title: 'Hello',
             description: 'chhavi',
             color: 'secondary'
-          });
+          }); 
         }}
       >
         Click me
