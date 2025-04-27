@@ -1,6 +1,5 @@
 'use client';
 
-import CommandMenu from '@/components/command-menu';
 import { Button } from "@heroui/react";
 import { toast } from 'sonner';
 

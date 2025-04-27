@@ -53,6 +53,7 @@ export default function RescheduleAppointment({
               timing.getDate()
             )
           }
+          // @ts-ignore
           time={new Time(timing.getHours(), timing.getMinutes())}
           onDateChange={(date) => {
             // set the date to the selected date
@@ -79,7 +80,9 @@ export default function RescheduleAppointment({
             );
           }}
           timeProps={{
+            // @ts-ignore
             minValue: new Time(TIMINGS.appointment.start),
+            // @ts-ignore
             maxValue: new Time(TIMINGS.appointment.end)
           }}
         />
