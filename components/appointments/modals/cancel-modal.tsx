@@ -1,23 +1,24 @@
 'use client';
+import axios from 'axios';
+import { format } from 'date-fns';
+import { toast } from 'sonner';
 import {
+  Alert,
+  Button,
+  Card,
+  CardBody,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
-  Button,
-  Alert,
-  Link,
-  Card,
-  CardBody
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
+
 import { Title } from '../compact-view/appointment-details-modal';
 import { useForm } from '../compact-view/context';
+
 import AsyncButton from '@/components/ui/buttons/async-button';
-import { format } from 'date-fns';
-import axios from 'axios';
-import { toast } from 'sonner';
 
 export default function CancelModal() {
   const { formik, refetch, session } = useForm();

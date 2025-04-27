@@ -1,6 +1,7 @@
+import { format } from 'date-fns';
+
 import { API_BASE_URL, CLINIC_INFO } from '@/lib/config';
 import { AppointmentType } from '@/models/Appointment';
-import { format } from 'date-fns';
 
 export function AppointmentStatus(appointment: AppointmentType) {
   const statusDescriptionMap: Record<string, string> = {
@@ -15,7 +16,7 @@ export function AppointmentStatus(appointment: AppointmentType) {
     completed:
       'Thank you for visiting us! Your appointment has been successfully completed. If you have feedback or need further assistance, let us know.',
     'on-hold':
-      "Your appointment is currently on hold. We'll notify you once it's ready to move forward. If you have any questions, feel free to contact us."
+      "Your appointment is currently on hold. We'll notify you once it's ready to move forward. If you have any questions, feel free to contact us.",
   };
 
   const statusColorMap: Record<string, string> = {
@@ -24,7 +25,7 @@ export function AppointmentStatus(appointment: AppointmentType) {
     cancelled: '#F31260',
     overdue: '#F31260',
     completed: '#10793C',
-    'on-hold': '#936316'
+    'on-hold': '#936316',
   };
 
   const statusButtonMap: Record<string, string> = {
@@ -33,7 +34,7 @@ export function AppointmentStatus(appointment: AppointmentType) {
     cancelled: 'View Details',
     overdue: 'Reschedule Now',
     completed: 'View Details',
-    'on-hold': 'Track Now'
+    'on-hold': 'Track Now',
   };
 
   return `<body style="margin: 0; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; background-color: #ffffff; color: #1a1a1a; line-height: 1.5;">

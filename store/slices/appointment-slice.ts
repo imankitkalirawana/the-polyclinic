@@ -1,6 +1,7 @@
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 import { DoctorType } from '@/models/Doctor';
 import { UserType } from '@/models/User';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface AddionalInfo {
   notes?: string;
@@ -21,8 +22,8 @@ const initialState: BookAppointmentType = {
   additionalInfo: {
     notes: '',
     type: 'offline',
-    symptoms: ''
-  } as AddionalInfo
+    symptoms: '',
+  } as AddionalInfo,
 };
 
 const appointmentSlice = createSlice({
@@ -54,17 +55,17 @@ const appointmentSlice = createSlice({
     ) => {
       state.additionalInfo = {
         ...state.additionalInfo,
-        ...payload
+        ...payload,
       };
     },
     removeAdditionalInfo: (state) => {
       state.additionalInfo = {
         notes: '',
         type: 'offline',
-        symptoms: ''
+        symptoms: '',
       };
-    }
-  }
+    },
+  },
 });
 
 export const {
@@ -75,7 +76,7 @@ export const {
   setSelectedDoctor,
   removeSelectedDoctor,
   setAdditionalInfo,
-  removeAdditionalInfo
+  removeAdditionalInfo,
 } = appointmentSlice.actions;
 
 export default appointmentSlice.reducer;

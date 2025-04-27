@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react';
 
 export default function UseRedirect() {
   useSession({
-    required: true
+    required: true,
   });
   return null;
 }

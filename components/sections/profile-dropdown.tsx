@@ -1,12 +1,13 @@
 'use client';
-import {
-  Dropdown,
-  DropdownTrigger,
-  Avatar,
-  DropdownMenu,
-  DropdownItem
-} from '@heroui/react';
 import { signOut } from 'next-auth/react';
+import {
+  Avatar,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from '@heroui/react';
+
 import ModeToggle from '../mode-toggle';
 
 export default function ProfileDropdown({ session }: { session: any }) {

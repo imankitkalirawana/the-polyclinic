@@ -1,15 +1,16 @@
 'use client';
 
-import { getEmailWithID } from '@/functions/server-actions/emails';
-import { EmailType } from '@/models/Email';
+import { format } from 'date-fns';
 import { Chip } from '@heroui/react';
 import { useQuery } from '@tanstack/react-query';
-import { format } from 'date-fns';
+
+import { getEmailWithID } from '@/functions/server-actions/emails';
+import { EmailType } from '@/models/Email';
 
 export default function Email({ _id }: { _id: string }) {
   const { data } = useQuery<EmailType>({
     queryKey: ['email', _id],
-    queryFn: () => getEmailWithID(_id)
+    queryFn: () => getEmailWithID(_id),
   });
 
   const email = data || ({} as EmailType);

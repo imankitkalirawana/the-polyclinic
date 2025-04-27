@@ -1,37 +1,36 @@
 'use client';
+import { useState } from 'react';
+import { useRouter } from 'nextjs-toploader/app';
+import { format } from 'date-fns';
+import { toast } from 'sonner';
 import {
+  Avatar,
+  Button,
+  ButtonGroup,
+  Card,
+  CardBody,
+  Chip,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Link,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
-  Image,
-  Card,
-  CardBody,
-  Avatar,
-  Button,
-  Chip,
   ScrollShadow,
-  DropdownMenu,
-  DropdownItem,
-  Dropdown,
-  ButtonGroup,
-  DropdownTrigger,
-  Tooltip,
-  Link
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useForm } from './context';
-import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
-import { useState } from 'react';
-import { toast } from 'sonner';
-import RescheduleModal from '../modals/reschedule-modal';
-import { useRouter } from 'nextjs-toploader/app';
-import { getAppointmentStyles } from './appointments';
+
 import CancelModal from '../modals/cancel-modal';
-import AsyncButton from '@/components/ui/buttons/async-button';
+import RescheduleModal from '../modals/reschedule-modal';
+import { getAppointmentStyles } from './appointments';
+import { useForm } from './context';
+
 import { downloadAppointmentReceipt } from '@/functions/client/appointment/receipt';
+import { cn } from '@/lib/utils';
 
 interface DropdownItemProps {
   key: string;
@@ -58,14 +57,14 @@ export default function AppointmentDetailsModal() {
     cancel: false,
     download: false,
     receipt: false,
-    proceed: false
+    proceed: false,
   });
 
   const roleButton: Record<string, string[]> = {
     user: ['reschedule', 'cancel'],
     doctor: ['reschedule', 'cancel', 'download', 'receipt', 'proceed'],
     admin: ['reschedule', 'cancel', 'download', 'receipt', 'proceed'],
-    receptionist: ['reschedule', 'cancel', 'download', 'receipt']
+    receptionist: ['reschedule', 'cancel', 'download', 'receipt'],
   };
 
   const statusButton: Record<string, string[]> = {
@@ -75,7 +74,7 @@ export default function AppointmentDetailsModal() {
     completed: ['download', 'receipt'],
     cancelled: ['receipt'],
     overdue: ['reschedule', 'cancel', 'receipt'],
-    'on-hold': ['cancel', 'receipt', 'proceed']
+    'on-hold': ['cancel', 'receipt', 'proceed'],
   };
 
   const dropdownItems: DropdownItemProps[] = [
@@ -84,7 +83,7 @@ export default function AppointmentDetailsModal() {
       label: 'Reschedule',
       description: 'Reschedule the appointment',
       icon: 'solar:clock-circle-bold-duotone',
-      color: 'warning'
+      color: 'warning',
     },
 
     {
@@ -95,7 +94,7 @@ export default function AppointmentDetailsModal() {
       color: 'primary',
       action: async () => {
         toast('Download');
-      }
+      },
     },
     {
       label: 'Receipt',
@@ -107,7 +106,7 @@ export default function AppointmentDetailsModal() {
         setIsLoading((prev) => ({ ...prev, receipt: true }));
         await downloadAppointmentReceipt(formik.values.selected?.aid || 0);
         setIsLoading((prev) => ({ ...prev, receipt: false }));
-      }
+      },
     },
     {
       label: session?.user?.role === 'user' ? 'Cancel' : 'Decline',
@@ -117,7 +116,7 @@ export default function AppointmentDetailsModal() {
           : 'Decline the appointment',
       icon: 'solar:close-circle-bold-duotone',
       key: 'cancel',
-      color: 'danger'
+      color: 'danger',
     },
     {
       label: 'Proceed',
@@ -127,8 +126,8 @@ export default function AppointmentDetailsModal() {
       color: 'success',
       action: () => {
         router.push(`/appointments/${formik.values.selected?.aid}/proceed`);
-      }
-    }
+      },
+    },
   ];
 
   const [selectedOption, setSelectedOption] = useState(() => {
@@ -152,7 +151,7 @@ export default function AppointmentDetailsModal() {
 
   const modalMap: Record<string, React.ReactNode> = {
     reschedule: <RescheduleModal />,
-    cancel: <CancelModal />
+    cancel: <CancelModal />,
   };
 
   return (
@@ -434,7 +433,7 @@ export default function AppointmentDetailsModal() {
 
 export function Title({
   title,
-  className
+  className,
 }: {
   title: string;
   className?: string;
@@ -448,7 +447,7 @@ export function Title({
 
 export function Subtitle({
   title,
-  className
+  className,
 }: {
   title: string;
   className?: string;

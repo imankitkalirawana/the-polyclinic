@@ -1,31 +1,31 @@
 'use client';
 
 import React from 'react';
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  Input,
-  Textarea,
-  CardFooter,
-  Button,
-  ScrollShadow
-} from '@heroui/react';
-
-import { DrugType } from '@/models/Drug';
 import { useRouter } from 'next/navigation';
-import { useFormik } from 'formik';
 import axios from 'axios';
+import { useFormik } from 'formik';
 import { toast } from 'sonner';
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Input,
+  ScrollShadow,
+  Textarea,
+} from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { drugValidationSchema } from '@/lib/validation';
 import { useQuery } from '@tanstack/react-query';
+
 import { getDrugWithDid } from '@/functions/server-actions/drugs';
+import { drugValidationSchema } from '@/lib/validation';
+import { DrugType } from '@/models/Drug';
 
 export default function EditDrug({ did }: { did: number }) {
   const { data } = useQuery<DrugType>({
     queryKey: ['drug', did],
-    queryFn: () => getDrugWithDid(did)
+    queryFn: () => getDrugWithDid(did),
   });
 
   const drug = data || ({} as DrugType);
@@ -33,7 +33,7 @@ export default function EditDrug({ did }: { did: number }) {
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
-      drug: drug
+      drug: drug,
     },
     validationSchema: drugValidationSchema,
     onSubmit: async (values) => {
@@ -45,7 +45,7 @@ export default function EditDrug({ did }: { did: number }) {
         toast.error('Failed to update service');
         console.error(error);
       }
-    }
+    },
   });
 
   return (

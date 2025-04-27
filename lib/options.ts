@@ -1,45 +1,45 @@
 export const UserRoles = [
   {
     label: 'Admin',
-    value: 'admin'
+    value: 'admin',
   },
   {
     label: 'Doctor',
-    value: 'doctor'
+    value: 'doctor',
   },
   {
     label: 'Nurse',
-    value: 'nurse'
+    value: 'nurse',
   },
   {
     label: 'Receptionist',
-    value: 'receptionist'
+    value: 'receptionist',
   },
   {
     label: 'Pharmacist',
-    value: 'pharmacist'
+    value: 'pharmacist',
   },
   {
     label: 'Laboratorist',
-    value: 'laboratorist'
+    value: 'laboratorist',
   },
   {
     label: 'User',
-    value: 'user'
-  }
+    value: 'user',
+  },
 ];
 
 export const Genders = [
   {
     label: 'Male',
-    value: 'male'
+    value: 'male',
   },
   {
     label: 'Female',
-    value: 'female'
+    value: 'female',
   },
   {
     label: 'Other',
-    value: 'other'
-  }
+    value: 'other',
+  },
 ];

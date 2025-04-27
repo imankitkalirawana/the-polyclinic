@@ -25,17 +25,17 @@ interface BarChartProps {
 export default function BarChart({
   items,
   className,
-  height: providedHeight
+  height: providedHeight,
 }: BarChartProps) {
   const [{ height }, setSize] = useState({
-    height: providedHeight ?? 12
+    height: providedHeight ?? 12,
   });
 
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setSize({
-      height: providedHeight ?? containerRef.current?.offsetHeight ?? 12
+      height: providedHeight ?? containerRef.current?.offsetHeight ?? 12,
     });
   }, [providedHeight]);
 

@@ -1,20 +1,20 @@
 'use client';
 
 import React from 'react';
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  Button,
-  ScrollShadow
-} from '@heroui/react';
-
 import Link from 'next/link';
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  ScrollShadow,
+} from '@heroui/react';
+import { useQuery } from '@tanstack/react-query';
+
+import CellValue from '@/components/ui/cell-value';
+import { getDrugWithDid } from '@/functions/server-actions/drugs';
 import { humanReadableDate, humanReadableTime } from '@/lib/utility';
 import { DrugType } from '@/models/Drug';
-import CellValue from '@/components/ui/cell-value';
-import { useQuery } from '@tanstack/react-query';
-import { getDrugWithDid } from '@/functions/server-actions/drugs';
 
 interface Props {
   drug: DrugType;
@@ -23,7 +23,7 @@ interface Props {
 export default function DrugCard({ did }: { did: number }) {
   const { data } = useQuery<DrugType>({
     queryKey: ['drug', did],
-    queryFn: () => getDrugWithDid(did)
+    queryFn: () => getDrugWithDid(did),
   });
 
   const drug = data || ({} as DrugType);

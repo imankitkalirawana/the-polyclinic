@@ -1,7 +1,7 @@
 'use client';
 
-import { Button } from "@heroui/react";
 import { toast } from 'sonner';
+import { Button } from '@heroui/react';
 
 export default function Dashboard() {
   return (
@@ -10,7 +10,7 @@ export default function Dashboard() {
         <Button
           onPress={() => {
             toast.success('Hello WOrld', {
-              description: 'This is a toast message'
+              description: 'This is a toast message',
             });
           }}
         >
@@ -20,7 +20,7 @@ export default function Dashboard() {
           color="primary"
           onPress={() => {
             toast.success('Hello WOrld', {
-              description: 'This is a toast message'
+              description: 'This is a toast message',
             });
           }}
         >
@@ -30,7 +30,7 @@ export default function Dashboard() {
           color="secondary"
           onPress={() => {
             toast.success('Hello WOrld', {
-              description: 'This is a toast message'
+              description: 'This is a toast message',
             });
           }}
         >
@@ -40,7 +40,7 @@ export default function Dashboard() {
           color="success"
           onPress={() => {
             toast.success('Hello WOrld', {
-              description: 'This is a toast message'
+              description: 'This is a toast message',
             });
           }}
         >
@@ -50,7 +50,7 @@ export default function Dashboard() {
           color="warning"
           onPress={() => {
             toast.warning('Hello WOrld', {
-              description: 'This is a toast message'
+              description: 'This is a toast message',
             });
           }}
         >
@@ -60,7 +60,7 @@ export default function Dashboard() {
           color="danger"
           onPress={() => {
             toast.error('Hello WOrld', {
-              description: 'This is a toast message'
+              description: 'This is a toast message',
             });
           }}
         >

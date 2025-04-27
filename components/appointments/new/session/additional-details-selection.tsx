@@ -1,17 +1,19 @@
 'use client';
 
-import { AddionalInfo } from '@/store/slices/appointment-slice';
+import { useState } from 'react';
 import { Button, Input, Select, SelectItem, Textarea } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useState } from 'react';
+
 import { useForm } from './context';
+
+import { AddionalInfo } from '@/store/slices/appointment-slice';
 
 export default function AdditionalDetailsSelection() {
   const { formik } = useForm();
   const [data, setData] = useState<AddionalInfo>({
     notes: '',
     type: 'offline',
-    symptoms: ''
+    symptoms: '',
   } as AddionalInfo);
 
   return (

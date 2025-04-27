@@ -1,8 +1,9 @@
 'use server';
 
-import User, { UserType } from '@/models/User';
-import { connectDB } from '@/lib/db';
 import { SortDescriptor } from '@heroui/react';
+
+import { connectDB } from '@/lib/db';
+import User, { UserType } from '@/models/User';
 
 // get all patients
 export const getAllPatients = async () => {
@@ -10,7 +11,7 @@ export const getAllPatients = async () => {
   const users = await User.find({ role: 'user' }).select('-password').lean();
   return users.map((user) => ({
     ...user,
-    _id: user._id.toString()
+    _id: user._id.toString(),
   }));
 };
 
@@ -29,7 +30,7 @@ export const getAllPatientsWithEmail = async (email: string) => {
 
   return users.map((user) => ({
     ...user,
-    _id: user._id.toString()
+    _id: user._id.toString(),
   })) as UserType[];
 };
 
@@ -38,14 +39,14 @@ export const getAllPatientsWithEmail = async (email: string) => {
 export const getPatientWithUID = async (uid: number) => {
   await connectDB();
   const user = await User.findOne({
-    uid
+    uid,
   }).lean();
   if (!user) {
     throw new Error('User not found');
   }
   return {
     ...user,
-    _id: user?._id.toString()
+    _id: user?._id.toString(),
   };
 };
 
@@ -71,20 +72,20 @@ export const getAllUsers = async (options?: {
             { email: { $regex: new RegExp(query.trim(), 'ig') } },
             { phone: { $regex: new RegExp(query.trim(), 'ig') } },
             { status: { $regex: new RegExp(query.trim(), 'ig') } },
-            { uid: isNaN(parseInt(query)) ? undefined : parseInt(query, 10) }
-          ].filter(Boolean) as any[]
+            { uid: isNaN(parseInt(query)) ? undefined : parseInt(query, 10) },
+          ].filter(Boolean) as any[],
         }
       : {}),
     ...(status.length && !status.includes('all')
       ? { status: { $in: status } }
-      : {})
+      : {}),
   };
 
   await connectDB();
 
   // Build the sort object dynamically
   const sortObject: Record<string, 1 | -1> = {
-    [sort.column]: (sort.direction === 'ascending' ? 1 : -1) as 1 | -1
+    [sort.column]: (sort.direction === 'ascending' ? 1 : -1) as 1 | -1,
   };
 
   const users = await User.find(searchQuery)
@@ -104,13 +105,13 @@ export const getAllUsers = async (options?: {
   const formattedAppointments = users.map((user) => {
     return {
       ...user,
-      _id: user._id.toString()
+      _id: user._id.toString(),
     };
   });
 
   return {
     users: formattedAppointments,
     total,
-    totalPages
+    totalPages,
   };
 };

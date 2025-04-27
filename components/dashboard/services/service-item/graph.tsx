@@ -1,10 +1,9 @@
 'use client';
 
-import type { ButtonProps, CardProps } from "@heroui/react";
-
 import React from 'react';
-import { ResponsiveContainer, PieChart, Pie, Tooltip, Cell } from 'recharts';
-import { cn } from "@heroui/react";
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
+import type { ButtonProps, CardProps } from '@heroui/react';
+import { cn } from '@heroui/react';
 
 type ChartData = {
   name: string;
@@ -63,7 +62,7 @@ export const CircleChartCard = React.forwardRef<
                         <div
                           className="h-2 w-2 flex-none rounded-full"
                           style={{
-                            backgroundColor: `hsl(var(--heroui-${color}-${(index + 1) * 200}))`
+                            backgroundColor: `hsl(var(--heroui-${color}-${(index + 1) * 200}))`,
                           }}
                         />
                         <div className="flex w-full items-center justify-between gap-x-2 pr-1 text-xs text-default-700">
@@ -105,7 +104,7 @@ export const CircleChartCard = React.forwardRef<
               <span
                 className="h-2 w-2 rounded-full"
                 style={{
-                  backgroundColor: `hsl(var(--heroui-${color}-${(index + 1) * 200}))`
+                  backgroundColor: `hsl(var(--heroui-${color}-${(index + 1) * 200}))`,
                 }}
               />
               <span className="capitalize">{category}</span>

@@ -3,7 +3,7 @@ import { auth } from '@/auth';
 import DashboardLayout from '@/components/dashboard/layout';
 
 export default async function Layout({
-  children
+  children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {

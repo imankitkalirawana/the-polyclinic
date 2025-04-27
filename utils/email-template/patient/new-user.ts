@@ -1,10 +1,8 @@
-import { UserType } from "@/models/User";
-import { CLINIC_INFO } from "@/lib/config";
+import { CLINIC_INFO } from '@/lib/config';
+import { UserType } from '@/models/User';
 
-export function WelcomeUser(
-  user: UserType,
-) {
-    return `
+export function WelcomeUser(user: UserType) {
+  return `
     <html lang="en">
         <head>
             <meta charset="UTF-8" />
@@ -102,6 +100,5 @@ export function WelcomeUser(
             </p>
         </body>
     </html>
-`
- 
+`;
 }

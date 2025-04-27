@@ -1,5 +1,6 @@
+import { Card, CardBody } from '@heroui/react';
+
 import Skeleton from '@/components/ui/skeleton';
-import { Card, CardBody } from "@heroui/react";
 
 export default function ServiceSkeleton() {
   return (
@@ -38,7 +39,7 @@ export default function ServiceSkeleton() {
                 'Description',
                 'Test Information',
                 'Created By',
-                'Updated By'
+                'Updated By',
               ].map((_section, index) => (
                 <div key={index} className="rounded-lg border p-4">
                   <div className="flex items-center justify-between">

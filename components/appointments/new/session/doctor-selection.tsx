@@ -1,27 +1,24 @@
 'use client';
+import { useMemo, useState } from 'react';
 import {
   Button,
   Card,
   CardBody,
-  ScrollShadow,
+  cn,
   Image,
   Input,
-  cn
+  ScrollShadow,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  removeSelectedDoctor,
-  setSelectedDoctor
-} from '@/store/slices/appointment-slice';
 import { useQuery } from '@tanstack/react-query';
-import { DoctorType } from '@/models/Doctor';
-import { getAllDoctors } from '@/functions/server-actions/doctor';
-import { useMemo, useState } from 'react';
-import useDebounce from '@/hooks/useDebounce';
-import NoResults from '@/components/ui/no-results';
-import { LoadingUsers } from './loading-user';
+
 import { useForm } from './context';
+import { LoadingUsers } from './loading-user';
+
+import NoResults from '@/components/ui/no-results';
+import { getAllDoctors } from '@/functions/server-actions/doctor';
+import useDebounce from '@/hooks/useDebounce';
+import { DoctorType } from '@/models/Doctor';
 
 export default function DoctorSelection() {
   const { formik } = useForm();
@@ -31,7 +28,7 @@ export default function DoctorSelection() {
   const { data: doctors, isLoading } = useQuery<DoctorType[]>({
     queryKey: ['doctors'],
     queryFn: () => getAllDoctors(),
-    enabled: !!formik.values.patient?.uid
+    enabled: !!formik.values.patient?.uid,
   });
 
   const filteredDoctors = useMemo(() => {
@@ -81,7 +78,7 @@ export default function DoctorSelection() {
                       'no-scrollbar min-w-64 rounded-medium border border-divider shadow-none sm:min-w-72',
                       {
                         'border-2 border-primary-400':
-                          doctor.uid === formik.values.doctor?.uid
+                          doctor.uid === formik.values.doctor?.uid,
                       }
                     )}
                     onPress={() => {
@@ -124,7 +121,7 @@ export default function DoctorSelection() {
                 onPress={() => {
                   if (!formik.values.doctor?.uid) {
                     formik.setFieldValue('doctor', {
-                      uid: 0
+                      uid: 0,
                     });
                   }
                   formik.setFieldValue('step', 4);

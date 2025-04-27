@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
-import Appointment from '@/models/Appointment';
-import { connectDB } from '@/lib/db';
+
 import { auth } from '@/auth';
+import { connectDB } from '@/lib/db';
+import Appointment from '@/models/Appointment';
 
 // get appointment by id from param
 export const GET = auth(async function GET(request: any, context: any) {

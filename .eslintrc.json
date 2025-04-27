@@ -1,3 +1,80 @@
 {
-  "extends": "next/core-web-vitals"
+  "$schema": "https://json.schemastore.org/eslintrc.json",
+  "env": {
+    "browser": true, // for react
+    "es2021": true, // for typescript
+    "node": true // for node
+  },
+  "extends": [
+    "plugin:react/recommended", // for react
+    "plugin:prettier/recommended", // for prettier
+    "plugin:react-hooks/recommended" // for react hooks
+  ],
+  "plugins": [
+    "react", // for react
+    "unused-imports", // for unused imports
+    "@typescript-eslint", // for typescript
+    "prettier", // for prettier,
+    "simple-import-sort" // for import sorting
+  ],
+  "parser": "@typescript-eslint/parser", // for typescript
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true // for react
+    },
+    "ecmaVersion": "latest", // for typescript
+    "sourceType": "module" // for typescript
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "@typescript-eslint/no-namespace": "error",
+    "prettier/prettier": "warn",
+    "no-unused-vars": "off",
+    "unused-imports/no-unused-vars": "warn",
+    "unused-imports/no-unused-imports": "warn",
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "args": "after-used",
+        "ignoreRestSiblings": false,
+        "argsIgnorePattern": "^_.*?$"
+      }
+    ],
+    "simple-import-sort/imports": [
+      "warn",
+      {
+        "groups": [
+          ["^react$", "^react-redux", "^next", "^[a-z]", "^@\\w+"],
+          [
+            "^store",
+            "^util",
+            "^common-util",
+            "^helpers",
+            "^static",
+            "^public",
+            "^components"
+          ],
+          [
+            "^\\.\\.(?!/?$)",
+            "^\\.\\./?$",
+            "^\\./(?=.*/)(?!/?$)",
+            "^\\.(?!/?$)",
+            "^\\./?$",
+            "^\\.\\./?styles$",
+            "^\\.\\./?styles$",
+            "^\\./?styles$"
+          ],
+          // side effect imports like 'import "something"'
+          ["^\\u0000"]
+        ]
+      }
+    ]
+  }
 }

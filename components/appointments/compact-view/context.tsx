@@ -1,11 +1,13 @@
 'use client';
 import React, { createContext, useContext } from 'react';
-import { useFormik } from 'formik';
-import { AppointmentType } from '@/models/Appointment';
-import { ActionType } from './appointment-details-modal';
-import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { useFormik } from 'formik';
 import { useQueryState } from 'nuqs';
+import { useQuery } from '@tanstack/react-query';
+
+import { ActionType } from './appointment-details-modal';
+
+import { AppointmentType } from '@/models/Appointment';
 import { AuthUser } from '@/models/User';
 
 interface FormType {
@@ -25,13 +27,13 @@ const FormContext = createContext<FormContextType | undefined>(undefined);
 
 export const FormProvider = ({
   children,
-  session
+  session,
 }: {
   children: React.ReactNode;
   session?: AuthUser | null;
 }) => {
   const [date, setDate] = useQueryState('date', {
-    defaultValue: new Date().toISOString().split('T')[0]
+    defaultValue: new Date().toISOString().split('T')[0],
   });
 
   const { data, refetch, isLoading } = useQuery<AppointmentType[]>({
@@ -39,7 +41,7 @@ export const FormProvider = ({
     queryFn: async () => {
       const response = await axios.get(`/api/v1/appointments?date=${date}`);
       return response.data;
-    }
+    },
   });
 
   const appointments = data || [];
@@ -47,11 +49,11 @@ export const FormProvider = ({
   const formik = useFormik<FormType>({
     initialValues: {
       selected: null,
-      modal: null
+      modal: null,
     },
     onSubmit: async (values) => {
       console.log(values);
-    }
+    },
   });
 
   return (

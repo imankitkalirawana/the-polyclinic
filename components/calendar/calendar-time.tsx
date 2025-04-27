@@ -1,8 +1,8 @@
-import type { TimeSlot } from './calendar';
-
-import { Button } from '@heroui/button';
-import { motion } from 'framer-motion';
 import { useRef } from 'react';
+import { motion } from 'framer-motion';
+import { Button } from '@heroui/button';
+
+import type { TimeSlot } from './calendar';
 
 interface CalendarTimeProps {
   slot: TimeSlot;
@@ -17,7 +17,7 @@ export default function CalendarTime({
   isSelected,
   onTimeChange,
   onConfirm,
-  timeSlots
+  timeSlots,
 }: CalendarTimeProps) {
   const confirmRef = useRef<HTMLButtonElement>(null);
 
@@ -53,7 +53,7 @@ export default function CalendarTime({
       <motion.div
         animate={{
           width: isSelected ? '6rem' : '0',
-          opacity: isSelected ? 1 : 0
+          opacity: isSelected ? 1 : 0,
         }}
         className="overflow-hidden opacity-0"
         initial={false}

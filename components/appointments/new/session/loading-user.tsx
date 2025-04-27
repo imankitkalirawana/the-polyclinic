@@ -1,5 +1,6 @@
-import Skeleton from '@/components/ui/skeleton';
 import { Card, CardBody } from '@heroui/react';
+
+import Skeleton from '@/components/ui/skeleton';
 
 export const LoadingUsers = () => {
   return (

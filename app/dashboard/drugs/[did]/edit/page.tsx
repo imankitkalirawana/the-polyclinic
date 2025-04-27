@@ -1,14 +1,11 @@
-import DrugCard from '@/components/dashboard/drugs/drug';
-import EditDrug from '@/components/dashboard/drugs/drug/edit';
-import UserCard from '@/components/dashboard/users/user';
-import { getDrugWithDid } from '@/functions/server-actions/drugs';
-import { API_BASE_URL } from '@/lib/config';
-import { DrugType } from '@/models/Drug';
 import {
   dehydrate,
   HydrationBoundary,
-  QueryClient
+  QueryClient,
 } from '@tanstack/react-query';
+
+import EditDrug from '@/components/dashboard/drugs/drug/edit';
+import { getDrugWithDid } from '@/functions/server-actions/drugs';
 
 interface Props {
   params: {
@@ -20,7 +17,7 @@ export default async function Page({ params }: Props) {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ['drug', params.did],
-    queryFn: () => getDrugWithDid(params.did)
+    queryFn: () => getDrugWithDid(params.did),
   });
 
   return (

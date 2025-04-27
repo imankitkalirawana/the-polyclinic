@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
-import Appointment from '@/models/Appointment';
-import { connectDB } from '@/lib/db';
+import { format } from 'date-fns';
+
 import { auth } from '@/auth';
 import { sendHTMLEmail } from '@/functions/server-actions/emails/send-email';
+import { connectDB } from '@/lib/db';
+import Appointment from '@/models/Appointment';
 import { RescheduledAppointment } from '@/utils/email-template/patient';
-import { format } from 'date-fns';
 
 export const POST = auth(async function POST(request: any, context: any) {
   try {
@@ -31,7 +32,7 @@ export const POST = auth(async function POST(request: any, context: any) {
       { aid },
       {
         date: newDate,
-        status: request.auth?.user?.role === 'user' ? 'booked' : 'confirmed'
+        status: request.auth?.user?.role === 'user' ? 'booked' : 'confirmed',
       },
       { new: true }
     );
@@ -47,11 +48,11 @@ export const POST = auth(async function POST(request: any, context: any) {
         to: updatedAppointment.patient.email,
         cc: updatedAppointment.doctor?.email || '',
         subject: `Appointment Rescheduled to ${format(new Date(newDate), 'PPp')}`,
-        html: RescheduledAppointment(updatedAppointment, previousDate)
+        html: RescheduledAppointment(updatedAppointment, previousDate),
       }).catch((error) => {
         console.error(error);
         throw new Error('Failed to send email');
-      })
+      }),
     ];
 
     Promise.all(emailTasks);

@@ -1,16 +1,18 @@
-import credentials from 'next-auth/providers/credentials';
 import NextAuth from 'next-auth';
+import credentials from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
+
+import { InvalidCredentialsError } from './authClass';
+
 import { connectDB } from '@/lib/db';
 import User from '@/models/User';
-import { InvalidCredentialsError } from './authClass';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     credentials({
       credentials: {
         id: { label: 'Email / Phone Number' },
-        password: { label: 'Password', type: 'password' }
+        password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
         await connectDB();
@@ -38,14 +40,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           throw new InvalidCredentialsError();
         }
         return user;
-      }
-    })
+      },
+    }),
   ],
   pages: {
-    signIn: '/auth/login'
+    signIn: '/auth/login',
   },
   session: {
-    strategy: 'jwt'
+    strategy: 'jwt',
   },
   callbacks: {
     jwt({ token, user }) {
@@ -61,6 +63,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.user.id = token.id;
       session.user.uid = token.uid;
       return session;
-    }
-  }
+    },
+  },
 });

@@ -9,7 +9,7 @@ export default function Home() {
           addToast({
             title: 'Hello',
             description: 'World',
-            color: 'secondary'
+            color: 'secondary',
           });
         }}
       >

@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
+
+import { connectDB } from '@/lib/db';
 import { sendOTP } from '@/lib/functions';
 import User from '@/models/User';
-import { connectDB } from '@/lib/db';
 
 export async function POST(request: Request) {
   try {
@@ -15,7 +16,7 @@ export async function POST(request: Request) {
     }
     await connectDB();
     const user = await User.findOne({
-      $or: [{ email: id }, { phone: id }]
+      $or: [{ email: id }, { phone: id }],
     });
     if (user) {
       return NextResponse.json(

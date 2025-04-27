@@ -1,33 +1,34 @@
 import React, { useState } from 'react';
 import {
-  eachDayOfInterval,
-  format,
-  startOfMonth,
-  endOfMonth,
   addMonths,
+  eachDayOfInterval,
+  endOfMonth,
+  format,
+  getDay,
+  startOfMonth,
   subMonths,
-  getDay
 } from 'date-fns';
 import { Button, Tooltip } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
+
+import CalendarWidget from '@/components/ui/calendar-widget';
 import { cn } from '@/lib/utils';
 import { AppointmentType } from '@/models/Appointment';
-import CalendarWidget from '@/components/ui/calendar-widget';
 
 export enum AType {
   consultation = 'consultation',
   'follow-up' = 'follow-up',
-  emergency = 'emergency'
+  emergency = 'emergency',
 }
 
 const typeMap: Record<AType, string> = {
   consultation: 'bg-sky-500',
   'follow-up': 'bg-amber-500',
-  emergency: 'bg-rose-500'
+  emergency: 'bg-rose-500',
 };
 
 export default function Calendar({
-  appointments
+  appointments,
 }: {
   appointments: AppointmentType[];
 }) {
@@ -35,7 +36,7 @@ export default function Calendar({
 
   const daysInMonth = eachDayOfInterval({
     start: startOfMonth(currentMonth),
-    end: endOfMonth(currentMonth)
+    end: endOfMonth(currentMonth),
   });
 
   const appointmentsByDate = appointments.reduce(
@@ -113,7 +114,7 @@ export default function Calendar({
               delay={500}
               placement="left"
               classNames={{
-                base: 'bg-transparent p-0'
+                base: 'bg-transparent p-0',
               }}
               className="bg-transparent p-0"
               shadow="none"
@@ -124,7 +125,7 @@ export default function Calendar({
                   {
                     'bg-primary-500/20 font-medium text-primary':
                       format(day, 'yyyy-MM-dd') ===
-                      format(new Date(), 'yyyy-MM-dd')
+                      format(new Date(), 'yyyy-MM-dd'),
                   }
                 )}
               >
@@ -135,7 +136,7 @@ export default function Calendar({
                       <span
                         key={i}
                         className={cn('h-1 w-1 rounded-full', {
-                          [typeMap[appointments[i].type]]: true
+                          [typeMap[appointments[i].type]]: true,
                         })}
                       />
                     ))}

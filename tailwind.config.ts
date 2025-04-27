@@ -7,40 +7,40 @@ const config = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
-    './node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}'
+    './node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {
       screens: { xs: '512px' },
       maxWidth: {
         '8xl': '96rem',
-        '9xl': '105rem'
+        '9xl': '105rem',
       },
       keyframes: {
         'caret-blink': {
           '0%,70%,100%': { opacity: '1' },
-          '20%,50%': { opacity: '0' }
+          '20%,50%': { opacity: '0' },
         },
         'marquee-x': {
           from: { transform: 'translateX(0)' },
-          to: { transform: 'translateX(calc(-100% - var(--gap)))' }
+          to: { transform: 'translateX(calc(-100% - var(--gap)))' },
         },
         'marquee-y': {
           from: { transform: 'translateY(0)' },
-          to: { transform: 'translateY(calc(-100% - var(--gap)))' }
+          to: { transform: 'translateY(calc(-100% - var(--gap)))' },
         },
         'card-up': {
           from: { transform: 'translateY(-40px)' },
-          to: { transform: 'translateY(0)' }
-        }
+          to: { transform: 'translateY(0)' },
+        },
       },
       animation: {
         'caret-blink': 'caret-blink 1.25s ease-out infinite',
         'marquee-horizontal': 'marquee-x var(--duration) infinite linear',
         'marquee-vertical': 'marquee-y var(--duration) linear infinite',
-        'card-up': 'card-up 0.3s ease-out'
-      }
-    }
+        'card-up': 'card-up 0.3s ease-out',
+      },
+    },
   },
   darkMode: ['class', '[data-theme^="dark-"]'],
   plugins: [
@@ -61,7 +61,7 @@ const config = {
               800: '#0E2D19',
               900: '#091E11',
               foreground: '#fff',
-              DEFAULT: '#1F6538'
+              DEFAULT: '#1F6538',
             },
             secondary: {
               '50': '#e2e6df',
@@ -75,7 +75,7 @@ const config = {
               '800': '#0a1c00',
               '900': '#061100',
               foreground: '#fff',
-              DEFAULT: '#153a01'
+              DEFAULT: '#153a01',
             },
             success: {
               '50': '#e3f7ee',
@@ -89,7 +89,7 @@ const config = {
               '800': '#0d5b39',
               '900': '#083a24',
               foreground: '#000',
-              DEFAULT: '#1bc079'
+              DEFAULT: '#1bc079',
             },
             warning: {
               '50': '#fff7e5',
@@ -103,7 +103,7 @@ const config = {
               '800': '#795a16',
               '900': '#4d390e',
               foreground: '#000',
-              DEFAULT: '#ffbd2e'
+              DEFAULT: '#ffbd2e',
             },
             danger: {
               '50': '#fde8e3',
@@ -117,12 +117,12 @@ const config = {
               '800': '#732210',
               '900': '#49160a',
               foreground: '#000',
-              DEFAULT: '#f24821'
+              DEFAULT: '#f24821',
             },
             // background: '#E0F5E8',
             foreground: '#07170E',
-            divider: '#E5E7EB'
-          }
+            divider: '#E5E7EB',
+          },
         },
         dark: {
           colors: {
@@ -136,7 +136,7 @@ const config = {
               '600': '#bec0c1',
               '700': '#ebecec',
               foreground: '#fff',
-              DEFAULT: '#2a2f31'
+              DEFAULT: '#2a2f31',
             },
             primary: {
               50: '#FAFDFB',
@@ -150,7 +150,7 @@ const config = {
               800: '#456551',
               900: '#2E4336',
               foreground: '#000',
-              DEFAULT: '#37a676'
+              DEFAULT: '#37a676',
             },
             secondary: {
               50: '#F5F8F6',
@@ -164,7 +164,7 @@ const config = {
               800: '#143320',
               900: '#0E2215',
               foreground: '#fff',
-              DEFAULT: '#2D7147'
+              DEFAULT: '#2D7147',
             },
             success: {
               '50': '#041f13',
@@ -176,7 +176,7 @@ const config = {
               '600': '#b0cbbf',
               '700': '#e7efeb',
               foreground: '#fff',
-              DEFAULT: '#0a492e'
+              DEFAULT: '#0a492e',
             },
             danger: {
               '50': '#4e180b',
@@ -188,58 +188,58 @@ const config = {
               '600': '#fac4b7',
               '700': '#feede9',
               foreground: '#fff',
-              DEFAULT: '#bb391a'
+              DEFAULT: '#bb391a',
             },
             background: '#1D1E20',
             content2: {
               DEFAULT: '#292929',
-              foreground: '#fff'
+              foreground: '#fff',
             },
             content1: {
               DEFAULT: '#2D2D2D',
-              foreground: '#000'
+              foreground: '#000',
             },
             content3: {
               DEFAULT: '#676767',
-              foreground: '#fff'
+              foreground: '#fff',
             },
             content4: {
               DEFAULT: '#727272',
-              foreground: '#fff'
+              foreground: '#fff',
             },
-            divider: '#2A2F31'
-          }
-        }
+            divider: '#2A2F31',
+          },
+        },
       },
       layout: {
         fontSize: {
           tiny: '0.75rem',
           small: '0.875rem',
           medium: '1rem',
-          large: '1.125rem'
+          large: '1.125rem',
         },
         lineHeight: {
           tiny: '1rem',
           small: '1.25rem',
           medium: '1.5rem',
-          large: '1.75rem'
+          large: '1.75rem',
         },
         radius: {
           small: '0.75rem',
           medium: '1rem',
-          large: '1.25rem'
+          large: '1.25rem',
         },
         borderWidth: {
           small: '1px',
           medium: '2px',
-          large: '3px'
+          large: '3px',
         },
         disabledOpacity: '0.5',
         dividerWeight: '1',
-        hoverOpacity: '0.9'
-      }
-    })
-  ]
+        hoverOpacity: '0.9',
+      },
+    }),
+  ],
 } satisfies Config;
 
 export default config;

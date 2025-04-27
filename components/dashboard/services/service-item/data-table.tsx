@@ -1,7 +1,6 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { useFormik } from 'formik';
 
 interface DataTableProps {
   data: Record<string, string>;
@@ -37,14 +36,15 @@ export default function DataTable({ data }: DataTableProps) {
                           'rounded-bl-xl':
                             rowIndex === numRows - 1 && colIndex === 0,
                           'rounded-br-xl':
-                            rowIndex === numRows - 1 && colIndex === numCols - 1
+                            rowIndex === numRows - 1 &&
+                            colIndex === numCols - 1,
                         }
                       )}
                     >
                       {data[`cell-${rowIndex}-${colIndex}`] ? (
                         <div
                           dangerouslySetInnerHTML={{
-                            __html: data[`cell-${rowIndex}-${colIndex}`]
+                            __html: data[`cell-${rowIndex}-${colIndex}`],
                           }}
                         />
                       ) : (

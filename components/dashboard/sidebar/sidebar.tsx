@@ -1,26 +1,26 @@
 'use client';
 
+import React from 'react';
 import {
   Accordion,
   AccordionItem,
   type ListboxProps,
   type ListboxSectionProps,
-  type Selection
-} from "@heroui/react";
-import React from 'react';
+  type Selection,
+} from '@heroui/react';
 import {
+  Link,
   Listbox,
-  Tooltip,
   ListboxItem,
   ListboxSection,
-  Link
-} from "@heroui/react";
+  Tooltip,
+} from '@heroui/react';
+import { cn } from '@heroui/react';
 import { Icon } from '@iconify/react';
-import { cn } from "@heroui/react";
 // import Link from 'next/link';
 
 export enum SidebarItemType {
-  Nest = 'nest'
+  Nest = 'nest',
 }
 
 export type SidebarItem = {
@@ -69,21 +69,21 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
     const sectionClasses = {
       ...sectionClassesProp,
       base: cn(sectionClassesProp?.base, 'w-full', {
-        'p-0 max-w-[44px]': isCompact
+        'p-0 max-w-[44px]': isCompact,
       }),
       group: cn(sectionClassesProp?.group, {
-        'flex flex-col gap-1': isCompact
+        'flex flex-col gap-1': isCompact,
       }),
       heading: cn(sectionClassesProp?.heading, {
-        hidden: isCompact
-      })
+        hidden: isCompact,
+      }),
     };
 
     const itemClasses = {
       ...itemClassesProp,
       base: cn(itemClassesProp?.base, {
-        'w-11 h-11 gap-0 p-0': isCompact
-      })
+        'w-11 h-11 gap-0 p-0': isCompact,
+      }),
     };
 
     const renderNestItem = React.useCallback(
@@ -105,12 +105,12 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
             classNames={{
               base: cn(
                 {
-                  'h-auto p-0': !isCompact && isNestType
+                  'h-auto p-0': !isCompact && isNestType,
                 },
                 {
-                  'inline-block w-11': isCompact && isNestType
+                  'inline-block w-11': isCompact && isNestType,
                 }
-              )
+              ),
             }}
             endContent={
               isCompact || isNestType || hideEndContent
@@ -160,7 +160,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
                   classNames={{
                     heading: 'pr-3',
                     trigger: 'p-0',
-                    content: 'py-0 pl-4'
+                    content: 'py-0 pl-4',
                   }}
                   title={
                     item.icon ? (
@@ -188,7 +188,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
                     <Listbox
                       className={'mt-0.5'}
                       classNames={{
-                        list: cn('border-l border-default-200 pl-4')
+                        list: cn('border-l border-default-200 pl-4'),
                       }}
                       items={item.items}
                       variant="flat"
@@ -277,7 +277,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
         className={cn('list-none', className)}
         classNames={{
           ...classNames,
-          list: cn('items-center', classNames?.list)
+          list: cn('items-center', classNames?.list),
         }}
         color="default"
         itemClasses={{
@@ -289,7 +289,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
           title: cn(
             'text-small font-medium text-default-500 group-data-[selected=true]:text-foreground',
             itemClasses?.title
-          )
+          ),
         }}
         items={items}
         selectedKeys={[selected] as unknown as Selection}

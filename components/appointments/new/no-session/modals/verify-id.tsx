@@ -1,17 +1,18 @@
 'use client';
 import {
+  Button,
+  Image,
+  InputOtp,
+  Link,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
-  Image,
-  Link,
-  InputOtp,
-  Button
 } from '@heroui/react';
-import { useForm } from '../context';
 import { Icon } from '@iconify/react/dist/iconify.js';
+
+import { useForm } from '../context';
 
 export default function VerifyId() {
   const { formik } = useForm();

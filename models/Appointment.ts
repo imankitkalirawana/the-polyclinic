@@ -1,11 +1,12 @@
 import mongoose, { Model } from 'mongoose';
-import { Base } from '@/lib/interface';
 import mongooseSequence from 'mongoose-sequence';
+
+import { Base } from '@/lib/interface';
 
 export enum AType {
   consultation = 'consultation',
   'follow-up' = 'follow-up',
-  emergency = 'emergency'
+  emergency = 'emergency',
 }
 export interface AppointmentType extends Base {
   aid: number;
@@ -51,7 +52,7 @@ const appointmentSchema = new mongoose.Schema(
   {
     aid: {
       type: Number,
-      unique: true
+      unique: true,
     },
     date: String,
     patient: {
@@ -61,26 +62,26 @@ const appointmentSchema = new mongoose.Schema(
       email: String,
       gender: {
         type: String,
-        enum: ['male', 'female', 'other']
+        enum: ['male', 'female', 'other'],
       },
-      age: Number
+      age: Number,
     },
     doctor: {
       uid: Number,
       name: String,
       email: String,
-      sitting: String
+      sitting: String,
     },
     additionalInfo: {
       type: {
         type: String,
         enum: ['online', 'offline'],
-        default: 'offline'
+        default: 'offline',
       },
       notes: String,
       symptoms: String,
       description: String,
-      instructions: String
+      instructions: String,
     },
     progerss: Number,
     status: {
@@ -93,21 +94,21 @@ const appointmentSchema = new mongoose.Schema(
         'completed',
         'cancelled',
         'overdue',
-        'on-hold'
-      ]
+        'on-hold',
+      ],
     },
     data: {
       type: Map,
-      of: String
+      of: String,
     },
     type: {
       type: String,
       enum: ['consultation', 'follow-up', 'emergency'],
-      default: 'consultation'
-    }
+      default: 'consultation',
+    },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 

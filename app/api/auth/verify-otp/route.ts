@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
-import Otp from '@/models/Otp';
+
 import { connectDB } from '@/lib/db';
+import Otp from '@/models/Otp';
 
 export async function POST(request: Request) {
   try {

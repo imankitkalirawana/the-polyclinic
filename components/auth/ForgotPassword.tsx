@@ -1,17 +1,18 @@
 'use client';
-import { Avatar, Button, Input } from '@heroui/react';
-import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import axios from 'axios';
+import { useFormik } from 'formik';
 import { toast } from 'sonner';
 import * as Yup from 'yup';
-import axios from 'axios';
+import { Avatar, Button, Input } from '@heroui/react';
+
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSlot
+  InputOTPSlot,
 } from '@/components/ui/input-otp';
-import { useSearchParams, usePathname, useRouter } from 'next/navigation';
-import Link from 'next/link';
 
 const ForgotPassword = () => {
   const [isOtpSent, setIsOtpSent] = useState(false);
@@ -24,10 +25,10 @@ const ForgotPassword = () => {
   const formik = useFormik({
     initialValues: {
       id: '',
-      otp: ''
+      otp: '',
     },
     validationSchema: Yup.object({
-      id: Yup.string().required('Email or Phone Number is required')
+      id: Yup.string().required('Email or Phone Number is required'),
     }),
     onSubmit: async (values) => {
       try {
@@ -42,7 +43,7 @@ const ForgotPassword = () => {
         console.log(error);
         toast.error(error.response.data.message);
       }
-    }
+    },
   });
 
   useEffect(() => {
@@ -63,7 +64,7 @@ const ForgotPassword = () => {
   const resendOtp = async () => {
     try {
       const res = await axios.post('/api/auth/forgot-password', {
-        id: formik.values.id
+        id: formik.values.id,
       });
       toast.success(res.data.message);
     } catch (error: any) {
@@ -76,7 +77,7 @@ const ForgotPassword = () => {
     try {
       const res = await axios.post('/api/auth/verify-otp', {
         id: formik.values.id,
-        otp: parseInt(formik.values.otp)
+        otp: parseInt(formik.values.otp),
       });
       toast.success(res.data.message);
       setIsVerified(true);
@@ -212,7 +213,7 @@ const UpdatePassword = ({ id }: UpdatePasswordProps) => {
   const formik = useFormik({
     initialValues: {
       password: '',
-      confirmPassword: ''
+      confirmPassword: '',
     },
     validationSchema: Yup.object({
       password: Yup.string()
@@ -220,13 +221,13 @@ const UpdatePassword = ({ id }: UpdatePasswordProps) => {
         .required('Password is required'),
       confirmPassword: Yup.string()
         .required('Please retype your password.')
-        .oneOf([Yup.ref('password')], 'Your passwords do not match.')
+        .oneOf([Yup.ref('password')], 'Your passwords do not match.'),
     }),
     onSubmit: async (values) => {
       try {
         await axios.post('/api/auth/update-password', {
           id: id || searchParams.get('id'),
-          password: values.password
+          password: values.password,
         });
         toast.success('Password updated successfully');
         router.push('/auth/login');
@@ -234,7 +235,7 @@ const UpdatePassword = ({ id }: UpdatePasswordProps) => {
         console.log(error);
         toast.error(error.response.data.message);
       }
-    }
+    },
   });
 
   return (

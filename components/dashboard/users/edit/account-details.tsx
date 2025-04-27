@@ -1,38 +1,38 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import Link from 'next/link';
+import { useSession } from 'next-auth/react';
+import axios from 'axios';
+import { useFormik } from 'formik';
+import { toast } from 'sonner';
 import {
-  Card,
-  CardHeader,
-  CardBody,
-  Button,
   Avatar,
   Badge,
-  Input,
+  Button,
+  Card,
+  CardBody,
   CardFooter,
+  CardHeader,
+  DatePicker,
+  Input,
   Select,
   SelectItem,
-  DatePicker
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
-import { useSession } from 'next-auth/react';
 import { getLocalTimeZone, today } from '@internationalized/date';
 import { I18nProvider } from '@react-aria/i18n';
 
-import { useFormik } from 'formik';
-import Link from 'next/link';
-import axios from 'axios';
-import { toast } from 'sonner';
 import { verifyEmail } from '@/functions/server-actions';
-import { Genders } from '@/lib/options';
-import { userValidationSchema } from '@/lib/validation';
 import { calculateAge, calculateDOB } from '@/lib/client-functions';
 import { scrollToError } from '@/lib/formik';
+import { Genders } from '@/lib/options';
+import { userValidationSchema } from '@/lib/validation';
 import { UserType } from '@/models/User';
 
 export default function AccountDetails({
   user,
-  refetch
+  refetch,
 }: {
   user: UserType;
   refetch: () => void;
@@ -44,7 +44,7 @@ export default function AccountDetails({
     gender: useRef<HTMLSelectElement>(null),
     age: useRef<HTMLInputElement>(null),
     address: useRef<HTMLInputElement>(null),
-    zipcode: useRef<HTMLInputElement>(null)
+    zipcode: useRef<HTMLInputElement>(null),
   };
 
   const { data: session } = useSession();
@@ -53,7 +53,7 @@ export default function AccountDetails({
     initialValues: {
       user: user as UserType,
       phoneCode: '91',
-      age: 0
+      age: 0,
     },
     validationSchema: userValidationSchema,
     onSubmit: async (values) => {
@@ -69,7 +69,7 @@ export default function AccountDetails({
         console.log(error);
         toast.error(error.response.data.message);
       }
-    }
+    },
   });
 
   useEffect(() => {
@@ -87,7 +87,7 @@ export default function AccountDetails({
         <div className="sr-only flex gap-4 py-4">
           <Badge
             classNames={{
-              badge: 'w-5 h-5'
+              badge: 'w-5 h-5',
             }}
             color="primary"
             content={
@@ -257,8 +257,8 @@ export default function AccountDetails({
               const dob =
                 // @ts-ignore
                 date instanceof Date
-                  // @ts-ignore
-                  ? date.toISOString().split('T')[0]
+                  ? // @ts-ignore
+                    date.toISOString().split('T')[0]
                   : new Date(date as any).toISOString().split('T')[0];
               formik.setFieldValue('user.dob', dob);
               formik.setFieldValue('age', calculateAge(dob));

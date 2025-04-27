@@ -8,38 +8,39 @@ import {
   Chip,
   ChipProps,
   Link,
-  Tooltip
+  Tooltip,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
+import { useQuery } from '@tanstack/react-query';
 
+import DataTable from './data-table';
 import { CircleChartCard } from './graph';
+
+import PriceDisplay from '@/components/helper/display-price';
+import { getServiceWithUID } from '@/functions/server-actions';
 import {
   convertMinutesToHoursAndMinutes,
   humanReadableDate,
-  humanReadableTime
+  humanReadableTime,
 } from '@/lib/utility';
-import DataTable from './data-table';
 import { ServiceType } from '@/models/Service';
-import { useQuery } from '@tanstack/react-query';
-import { getServiceWithUID } from '@/functions/server-actions';
-import PriceDisplay from '@/components/helper/display-price';
 import { AuthUser } from '@/models/User';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   active: 'success',
-  inactive: 'danger'
+  inactive: 'danger',
 };
 
 export default function ServiceViewItem({
   uid,
-  session
+  session,
 }: {
   uid: string;
   session: AuthUser;
 }) {
   const { data: service, isError } = useQuery<ServiceType>({
     queryKey: ['service', uid],
-    queryFn: () => getServiceWithUID(uid)
+    queryFn: () => getServiceWithUID(uid),
   });
 
   if (isError) {
@@ -101,14 +102,14 @@ export default function ServiceViewItem({
               className="-mx-1 mt-2"
               itemClasses={{
                 title: 'text-default-400',
-                content: 'pt-0 pb-6 text-base text-default-500'
+                content: 'pt-0 pb-6 text-base text-default-500',
               }}
             >
               <AccordionItem title="Description">
                 <p
                   className="text-default-500"
                   dangerouslySetInnerHTML={{
-                    __html: service.description || 'No Description available'
+                    __html: service.description || 'No Description available',
                   }}
                 />
               </AccordionItem>
@@ -116,7 +117,7 @@ export default function ServiceViewItem({
                 <p
                   className="text-default-500"
                   dangerouslySetInnerHTML={{
-                    __html: service.summary || 'No Information available'
+                    __html: service.summary || 'No Information available',
                   }}
                 />
               </AccordionItem>
@@ -173,6 +174,6 @@ const data = {
   color: 'warning',
   chartData: [
     { name: 'Total', value: 400 },
-    { name: 'Completed', value: 100 }
-  ]
+    { name: 'Completed', value: 100 },
+  ],
 };

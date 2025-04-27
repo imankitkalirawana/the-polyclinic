@@ -1,15 +1,16 @@
 'use client';
 import React, { createContext, useContext } from 'react';
+import { signIn } from 'next-auth/react';
 import { useFormik } from 'formik';
+import { toast } from 'sonner';
 import * as Yup from 'yup';
+
+import registerUser from '@/functions/server-actions/auth/register';
 import {
   sendMailWithOTP,
   verifyEmail,
-  verifyOTP
+  verifyOTP,
 } from '@/functions/server-actions/auth/verification';
-import registerUser from '@/functions/server-actions/auth/register';
-import { toast } from 'sonner';
-import { signIn } from 'next-auth/react';
 
 const validationSchema = Yup.object({
   firstName: Yup.string()
@@ -19,7 +20,7 @@ const validationSchema = Yup.object({
   dob: Yup.object({
     day: Yup.string().required('Enter a valid day'),
     month: Yup.string().required('Enter a valid month'),
-    year: Yup.string().required('Enter a valid year')
+    year: Yup.string().required('Enter a valid year'),
   }),
   id: Yup.string().required(
     'Enter a valid email / phone. OTP will be sent to this.'
@@ -35,8 +36,8 @@ const validationSchema = Yup.object({
     then: (schema) =>
       schema
         .required('Confirm your password')
-        .oneOf([Yup.ref('password')], 'Passwords must match')
-  })
+        .oneOf([Yup.ref('password')], 'Passwords must match'),
+  }),
 });
 
 interface RegisterFormType {
@@ -66,7 +67,7 @@ export const FormProvider = ({ children }: { children: React.ReactNode }) => {
       otp: '',
       password: '',
       confirmPassword: '',
-      step: 1
+      step: 1,
     },
     validationSchema,
     onSubmit: async (values) => {
@@ -92,7 +93,7 @@ export const FormProvider = ({ children }: { children: React.ReactNode }) => {
       if (values.step === 3) {
         await handleRegister();
       }
-    }
+    },
   });
 
   const handeVerification = async () => {
@@ -126,7 +127,7 @@ export const FormProvider = ({ children }: { children: React.ReactNode }) => {
       name: formik.values.firstName + ' ' + formik.values.lastName,
       dob: formik.values.dob,
       id: formik.values.id,
-      password: formik.values.password
+      password: formik.values.password,
     };
     await registerUser(data)
       .then(async () => {
@@ -134,7 +135,7 @@ export const FormProvider = ({ children }: { children: React.ReactNode }) => {
           id: formik.values.id,
           password: formik.values.password,
           redirect: true,
-          redirectTo: '/appointments/new'
+          redirectTo: '/appointments/new',
         }).catch((err) => {
           console.log(err);
           toast.error(err.message);
