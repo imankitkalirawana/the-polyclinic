@@ -1,54 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @layer base {
-  :root {
-    --background: 126 65% 98%;
-    --foreground: 126 53% 4%;
-    --muted: 306 38% 88%;
-    --muted-foreground: 306 5% 38%;
-    --popover: 126 65% 97%;
-    --popover-foreground: 126 53% 3%;
-    --card: 126 65% 97%;
-    --card-foreground: 126 53% 3%;
-    --border: 126 2% 90%;
-    --input: 126 2% 90%;
-    --primary: 126 47% 63%;
-    --primary-foreground: 126 47% 3%;
-    --secondary: 306 47% 63%;
-    --secondary-foreground: 306 47% 3%;
-    --accent: 306 47% 63%;
-    --accent-foreground: 306 47% 3%;
-    --destructive: 12 100% 20%;
-    --destructive-foreground: 12 100% 80%;
-    --ring: 126 47% 63%;
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    --background: 126 47% 2%;
-    --foreground: 126 26% 97%;
-    --muted: 306 38% 12%;
-    --muted-foreground: 306 5% 62%;
-    --popover: 126 47% 3%;
-    --popover-foreground: 126 26% 98%;
-    --card: 126 47% 3%;
-    --card-foreground: 126 26% 98%;
-    --border: 126 2% 15%;
-    --input: 126 2% 15%;
-    --primary: 126 47% 63%;
-    --primary-foreground: 126 47% 3%;
-    --secondary: 306 47% 63%;
-    --secondary-foreground: 306 47% 3%;
-    --accent: 306 47% 63%;
-    --accent-foreground: 306 47% 3%;
-    --destructive: 12 100% 50%;
-    --destructive-foreground: 0 0% 100%;
-    --ring: 126 47% 63%;
-  }
-
-  /* Manrope */
-
   /* cyrillic-ext */
   @font-face {
     font-family: 'Manrope';

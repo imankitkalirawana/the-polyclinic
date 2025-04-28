@@ -1,16 +1,9 @@
 'use client';
 
-import { Pacifico } from 'next/font/google';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 
 import { cn } from '@/lib/utils';
-
-const pacifico = Pacifico({
-  subsets: ['latin'],
-  weight: ['400'],
-  variable: '--font-pacifico',
-});
 
 function ElegantShape({
   className,
@@ -184,8 +177,7 @@ export default function Banner({
               <br />
               <span
                 className={cn(
-                  'bg-gradient-to-r from-primary-300 via-foreground/90 to-rose-300 bg-clip-text text-transparent',
-                  pacifico.className
+                  'bg-gradient-to-r from-primary-300 via-foreground/90 to-rose-300 bg-clip-text text-transparent'
                 )}
               >
                 {title2}

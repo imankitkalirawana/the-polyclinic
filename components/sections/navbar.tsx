@@ -197,6 +197,7 @@ export default function Navbar({ session }: { session: any }) {
             <NavbarItem key={`${item.name}-${index}`}>
               {item.subItems ? (
                 <Link
+                  aria-label={item.name}
                   // href={item.href}
                   className="cursor-pointer text-sm text-default-500"
                   onMouseEnter={() => {
@@ -335,7 +336,7 @@ export default function Navbar({ session }: { session: any }) {
                     >
                       {subItem.title}
                     </motion.h3>
-                    <Listbox>
+                    <Listbox aria-label={subItem.title}>
                       {subItem.items.map((subMenuItem, index) => (
                         <ListboxItem
                           className="pl-2 pr-4 text-default-500"

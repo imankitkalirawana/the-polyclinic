@@ -15,7 +15,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import CellValue from '../../../ui/cell-value';
 
-import { getUserWithUID } from '@/functions/server-actions';
+import { getUserWithUID } from '@/app/dashboard/users/[uid]/helper';
 import { humanReadableDate, humanReadableTime } from '@/lib/utility';
 import { UserType } from '@/models/User';
 
