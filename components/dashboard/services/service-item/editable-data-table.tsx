@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { useFormik } from 'formik';
 import ReactQuill from 'react-quill';
 import { Button, Tooltip } from '@heroui/react';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 import 'react-quill/dist/quill.snow.css';
 
 import { cn } from '@/lib/utils';
-import { Icon } from '@iconify/react/dist/iconify.js';
 
 interface EditableDataTableProps {
   data: Record<string, string>;

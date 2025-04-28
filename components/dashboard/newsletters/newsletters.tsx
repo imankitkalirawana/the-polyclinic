@@ -58,7 +58,7 @@ export default function Newsletters() {
   const [visibleColumns, setVisibleColumns] = React.useState<Selection>(
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
-  const [statusFilter, setStatusFilter] = React.useState<Selection>('all');
+  const [statusFilter] = React.useState<Selection>('all');
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: 'email',
@@ -201,6 +201,7 @@ export default function Newsletters() {
     setPage(1);
   }, []);
 
+  // eslint-disable-next-line unused-imports/no-unused-vars
   const handleExport = async () => {
     try {
       const response = await fetch('/api/v1/newsletter/export', {

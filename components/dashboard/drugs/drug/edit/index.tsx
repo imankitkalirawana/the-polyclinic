@@ -87,9 +87,6 @@ export default function EditDrug({ did }: { did: number }) {
               onChange={(e) => {
                 formik.handleChange(e);
               }}
-              onBlur={async () => {
-                const did = formik.values.drug.did;
-              }}
               min={1}
               startContent={
                 <div className="pointer-events-none flex items-center">

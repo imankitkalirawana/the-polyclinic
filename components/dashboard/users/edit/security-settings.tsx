@@ -725,7 +725,7 @@ const EditModal = ({
         className="w-[420px]"
       >
         <ModalContent>
-          {(onClose) => (
+          {() => (
             <>
               <ModalHeader className="px-6 pb-0 pt-6">
                 <div className="flex flex-col items-start">

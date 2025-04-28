@@ -1,10 +1,10 @@
 'use client';
 
 import * as React from 'react';
+import { Icon } from '@iconify/react/dist/iconify.js';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 
 import { cn } from '@/lib/utils';
-import { Icon } from '@iconify/react/dist/iconify.js';
 
 const Dialog = DialogPrimitive.Root;
 
