@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
 import { useFormik } from 'formik';
-import { toast } from 'sonner';
 import {
+  addToast,
   Avatar,
   Badge,
   Button,
@@ -18,6 +18,7 @@ import {
   Input,
   Select,
   SelectItem,
+  toast,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { getLocalTimeZone, today } from '@internationalized/date';
@@ -64,10 +65,18 @@ export default function AccountDetails({
         }
         await axios.put(`/api/v1/users/uid/${user?.uid}`, values.user);
         refetch();
-        toast.success('User updated successfully');
+        // toast.success('User updated successfully');
+        addToast({
+          title: 'User updated successfully',
+          color: 'success',
+        });
       } catch (error: any) {
         console.log(error);
-        toast.error(error.response.data.message);
+        addToast({
+          title: 'Error',
+          description: error.response.data.message,
+          color: 'danger',
+        });
       }
     },
   });

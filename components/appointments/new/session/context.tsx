@@ -3,7 +3,6 @@ import React, { createContext, useContext } from 'react';
 import axios from 'axios';
 import { subYears } from 'date-fns';
 import { useFormik } from 'formik';
-import { toast } from 'sonner';
 import * as Yup from 'yup';
 
 import registerUser from '@/functions/server-actions/auth/register';
@@ -11,6 +10,7 @@ import { verifyEmail } from '@/functions/server-actions/auth/verification';
 import { AppointmentType } from '@/models/Appointment';
 import { DoctorType } from '@/models/Doctor';
 import { UserType } from '@/models/User';
+import { addToast } from '@heroui/react';
 
 const validationSchema = Yup.object({
   firstName: Yup.string()
@@ -102,7 +102,11 @@ export const FormProvider = ({
           values.step = 6;
         })
         .catch((error) => {
-          toast.error('Failed to create appointment');
+          addToast({
+            title: 'Error',
+            description: 'Failed to create appointment',
+            color: 'danger',
+          });
           console.error(error);
         });
     },
@@ -164,7 +168,10 @@ export const FormProvider = ({
     };
     await registerUser(data)
       .then(async (user) => {
-        toast('Please choose date and time for appointment');
+        addToast({
+          title: 'Please choose date and time for appointment',
+          color: 'success',
+        });
         formik.setValues(
           {
             ...formik.values,
@@ -176,7 +183,11 @@ export const FormProvider = ({
       })
       .catch((err) => {
         console.log(err);
-        toast.error(err.message);
+        addToast({
+          title: 'Error',
+          description: err.message,
+          color: 'danger',
+        });
       });
   };
 

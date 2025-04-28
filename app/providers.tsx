@@ -3,6 +3,7 @@
 import React from 'react';
 import { Provider as ReduxProvider } from 'react-redux';
 import { SessionProvider } from 'next-auth/react';
+import NextTopLoader from 'nextjs-toploader';
 import { useRouter } from 'nextjs-toploader/app';
 import { HeroUIProvider, ToastProvider } from '@heroui/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -44,6 +45,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
       <QueryClientProvider client={queryClient}>
         <SessionProvider>
+          <NextTopLoader
+            height={5}
+            showSpinner={false}
+            shadow="false"
+            easing="ease"
+            color="hsl(var(--heroui-primary))"
+          />
           <ReduxProvider store={store}>{children}</ReduxProvider>
           <ReactQueryDevtools initialIsOpen={false} />
         </SessionProvider>

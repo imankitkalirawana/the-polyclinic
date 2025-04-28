@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 import slugify from 'slugify';
-import { toast } from 'sonner';
-import { Button, Tooltip } from '@heroui/react';
+import { addToast, Button, Tooltip } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 export default function HandleExport({
@@ -33,10 +32,17 @@ export default function HandleExport({
         a.remove();
 
         setTimeout(() => window.URL.revokeObjectURL(url), 100);
-        toast.success('File downloaded successfully');
+        addToast({
+          title: 'File downloaded successfully',
+          color: 'success',
+        });
       })
       .catch(() => {
-        toast.error('An error occurred while generating the file');
+        addToast({
+          title: 'Error',
+          description: 'An error occurred while generating the file',
+          color: 'danger',
+        });
       })
       .finally(() => {
         setIsExporting(false);

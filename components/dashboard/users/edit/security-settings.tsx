@@ -4,9 +4,9 @@ import React from 'react';
 import axios from 'axios';
 import { useFormik } from 'formik';
 import { MailOptions } from 'nodemailer/lib/sendmail-transport';
-import { toast } from 'sonner';
 import * as Yup from 'yup';
 import {
+  addToast,
   Button,
   Card,
   CardBody,
@@ -88,11 +88,18 @@ export default function SecuritySettings({
               })
               .then(() => {
                 refetch();
-                toast.success('Email updated successfully.');
+                addToast({
+                  title: 'Email updated successfully',
+                  color: 'success',
+                });
                 editEmailModal.onClose();
               })
               .catch((err) => {
-                toast.error(err.message);
+                addToast({
+                  title: 'Error',
+                  description: err.message,
+                  color: 'danger',
+                });
               });
           })
           .catch((err) => {
@@ -107,10 +114,17 @@ export default function SecuritySettings({
         await sendMailWithOTP(values?.email as string, mailOptions)
           .then(() => {
             emailFormik.setFieldValue('isSent', true);
-            toast.success('OTP sent successfully.');
+            addToast({
+              title: 'OTP sent successfully',
+              color: 'success',
+            });
           })
           .catch((err) => {
-            toast.error(err.message);
+            addToast({
+              title: 'Error',
+              description: err.message,
+              color: 'danger',
+            });
             console.error(err);
           });
       }
@@ -135,12 +149,19 @@ export default function SecuritySettings({
       await changePassword(user?._id as string, values.password)
         .then(() => {
           refetch();
-          toast.success('Password updated successfully.');
+          addToast({
+            title: 'Password updated successfully',
+            color: 'success',
+          });
           editPasswordModal.onClose();
           passwordFormik.resetForm();
         })
         .catch((err) => {
-          toast.error(err.message);
+          addToast({
+            title: 'Error',
+            description: err.message,
+            color: 'danger',
+          });
         });
     },
   });
@@ -176,17 +197,22 @@ export default function SecuritySettings({
         })
         .then(() => {
           refetch();
-          toast.success(
-            `Account ${
+          addToast({
+            title: `Account ${
               // @ts-ignore
               user.status === 'inactive' ? 'activated' : 'deactivated'
-            } successfully.`
-          );
+            } successfully.`,
+            color: 'success',
+          });
           deactivateFormik.resetForm();
           deactivateModal.onClose();
         })
         .catch((err) => {
-          toast.error(err.message);
+          addToast({
+            title: 'Error',
+            description: err.message,
+            color: 'danger',
+          });
         });
     },
   });
@@ -215,16 +241,21 @@ export default function SecuritySettings({
         })
         .then(() => {
           refetch();
-          toast.success(
-            `Account ${
+          addToast({
+            title: `Account ${
               // @ts-ignore
               user.status === 'deleted' ? 'recovered' : 'deleted'
-            } successfully.`
-          );
+            } successfully.`,
+            color: 'success',
+          });
           deleteModal.onClose();
         })
         .catch((err) => {
-          toast.error(err.message);
+          addToast({
+            title: 'Error',
+            description: err.message,
+            color: 'danger',
+          });
         });
     },
   });
@@ -283,7 +314,10 @@ export default function SecuritySettings({
                 radius="full"
                 variant="bordered"
                 onPress={() => {
-                  toast.warning("This feature isn't available yet.");
+                  addToast({
+                    title: "This feature isn't available yet.",
+                    color: 'warning',
+                  });
                 }}
               >
                 Edit
@@ -330,10 +364,17 @@ export default function SecuritySettings({
                     })
                     .then(() => {
                       refetch();
-                      toast.success('Role updated successfully.');
+                      addToast({
+                        title: 'Role updated successfully',
+                        color: 'success',
+                      });
                     })
                     .catch((err) => {
-                      toast.error(err.message);
+                      addToast({
+                        title: 'Error',
+                        description: err.message,
+                        color: 'danger',
+                      });
                     });
                   emailFormik.setFieldValue('isUpdatingRole', false);
                 }}
@@ -436,10 +477,17 @@ export default function SecuritySettings({
                   mailOptions
                 )
                   .then(() => {
-                    toast.success('OTP sent successfully.');
+                    addToast({
+                      title: 'OTP sent successfully',
+                      color: 'success',
+                    });
                   })
                   .catch((err) => {
-                    toast.error(err.message);
+                    addToast({
+                      title: 'Error',
+                      description: err.message,
+                      color: 'danger',
+                    });
                     console.error(err);
                   });
                 emailFormik.setFieldValue('isResending', false);

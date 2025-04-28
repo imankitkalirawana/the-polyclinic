@@ -1,8 +1,8 @@
 'use client';
 import axios from 'axios';
 import { format } from 'date-fns';
-import { toast } from 'sonner';
 import {
+  addToast,
   Alert,
   Button,
   Card,
@@ -21,7 +21,7 @@ import { useForm } from '../compact-view/context';
 import AsyncButton from '@/components/ui/buttons/async-button';
 
 export default function CancelModal() {
-  const { formik, refetch, session } = useForm();
+  const { formik, refetch } = useForm();
 
   return (
     <>
@@ -115,7 +115,11 @@ export default function CancelModal() {
                       `/api/v1/appointments/${formik.values.selected?.aid}`
                     )
                     .then(() => {
-                      toast('Appointment cancelled');
+                      addToast({
+                        title: 'Appointment cancelled',
+                        description: 'The appointment has been cancelled',
+                        color: 'success',
+                      });
                       refetch();
                       formik.setFieldValue('selected', null);
                       formik.setFieldValue('modal', null);

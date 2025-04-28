@@ -4,8 +4,8 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { useFormik } from 'formik';
 import ReactQuill from 'react-quill';
-import { toast } from 'sonner';
 import {
+  addToast,
   Button,
   cn,
   Input,
@@ -49,10 +49,17 @@ export default function NewService() {
     onSubmit: async (values) => {
       try {
         await axios.post(`/api/v1/services/`, values.service);
-        toast.success('Service updated successfully');
+        addToast({
+          title: 'Service updated successfully',
+          color: 'success',
+        });
         router.push(`/dashboard/services/${values.service.uniqueId}`);
       } catch (error) {
-        toast.error('Failed to update service');
+        addToast({
+          title: 'Error',
+          description: 'Failed to update service',
+          color: 'danger',
+        });
         console.error(error);
       }
     },

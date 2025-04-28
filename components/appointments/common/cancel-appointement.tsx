@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
-import { toast } from 'sonner';
 import {
+  addToast,
   Alert,
   Button,
   ModalBody,
@@ -64,12 +64,20 @@ export default function CancelAppointment({
                   );
                   return updatedAppointments;
                 });
-                toast.success('Appointment cancelled');
+                addToast({
+                  title: 'Appointment Cancelled',
+                  description: 'The appointment has been cancelled',
+                  color: 'success',
+                });
                 modal.onClose();
               })
               .catch((error) => {
                 console.error(error);
-                toast.error('An error occurred');
+                addToast({
+                  title: 'Error',
+                  description: 'An error occurred',
+                  color: 'danger',
+                });
               })
               .finally(() => {
                 setIsLoading(false);

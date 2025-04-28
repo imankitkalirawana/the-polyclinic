@@ -7,7 +7,6 @@ import { Providers } from './providers';
 import './globals.css';
 
 import { auth } from '@/auth';
-import Sonner from '@/components/providers';
 import Navbar from '@/components/sections/navbar';
 import { ThemeProvider } from '@/components/theme-provider';
 
@@ -38,7 +37,6 @@ export default async function RootLayout({
               {/* <Nav session={session} /> */}
               <Navbar session={session} />
               {children}
-              <Sonner />
             </ThemeProvider>
           </NuqsAdapter>
         </Providers>

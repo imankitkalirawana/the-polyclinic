@@ -4,8 +4,8 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { useFormik } from 'formik';
-import { toast } from 'sonner';
 import {
+  addToast,
   Button,
   Card,
   CardBody,
@@ -39,10 +39,17 @@ export default function EditDrug({ did }: { did: number }) {
     onSubmit: async (values) => {
       try {
         await axios.put(`/api/v1/drugs/did/${drug.did}`, values.drug);
-        toast.success('Service updated successfully');
+        addToast({
+          title: 'Drug updated successfully',
+          color: 'success',
+        });
         router.push(`/dashboard/drugs/${values.drug.did}`);
       } catch (error) {
-        toast.error('Failed to update service');
+        addToast({
+          title: 'Error',
+          description: 'Failed to update drug',
+          color: 'danger',
+        });
         console.error(error);
       }
     },

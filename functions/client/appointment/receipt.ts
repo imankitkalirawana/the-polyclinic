@@ -1,5 +1,6 @@
 'use client';
-import { toast } from 'sonner';
+
+import { addToast } from '@heroui/react';
 
 import { printAppointmentReceipt } from '@/functions/server-actions/receipt';
 
@@ -23,9 +24,16 @@ export const downloadAppointmentReceipt = async (aid: number) => {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    toast('Downloaded appointment receipt');
+    addToast({
+      title: 'Downloaded appointment receipt',
+      color: 'success',
+    });
   } catch (err: any) {
     console.error(err);
-    toast.error(err.message);
+    addToast({
+      title: 'Error',
+      description: err.message,
+      color: 'danger',
+    });
   }
 };

@@ -3,8 +3,8 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useFormik } from 'formik';
-import { toast } from 'sonner';
 import {
+  addToast,
   Button,
   Dropdown,
   DropdownItem,
@@ -229,10 +229,10 @@ export default function Newsletters() {
   };
 
   const handleDownload = async () => {
-    await toast.promise(handleExport(), {
-      loading: 'Downloading...',
-      success: 'Downloaded successfully',
-      error: 'Failed to download',
+    addToast({
+      title: 'Downloading...',
+      description: 'Downloading...',
+      color: 'success',
     });
   };
   const topContent = React.useMemo(() => {
@@ -359,7 +359,10 @@ export default function Newsletters() {
       await fetch(`/api/v1/newsletter/${selected?.email}`, {
         method: 'DELETE',
       });
-      toast.success('NewsletterType Unsubscribed successfully');
+      addToast({
+        title: 'Newsletter Unsubscribed successfully',
+        color: 'success',
+      });
       deleteModal.onClose();
       router.refresh();
     },

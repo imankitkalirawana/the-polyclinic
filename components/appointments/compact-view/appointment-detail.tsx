@@ -1,8 +1,8 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
-import { toast } from 'sonner';
 import {
+  addToast,
   Button,
   Link,
   Modal,
@@ -74,7 +74,11 @@ export default function AppointmentDetail({
 
   function handleButtonClick(action: string) {
     if (action === 'download') {
-      toast.success('Downloading reports');
+      addToast({
+        title: 'Downloading reports',
+        description: 'Downloading reports',
+        color: 'success',
+      });
       return;
     }
 
@@ -273,7 +277,11 @@ export default function AppointmentDetail({
                         'confirmed'
                       )
                         .then(() => {
-                          toast.success('Appointment confirmed');
+                          addToast({
+                            title: 'Appointment confirmed',
+                            description: 'The appointment has been confirmed',
+                            color: 'success',
+                          });
                           setAppointments((prev: AppointmentType[]) => {
                             const updatedAppointments = prev.map((item) => {
                               if (item._id === appointment._id) {
@@ -289,7 +297,11 @@ export default function AppointmentDetail({
                         })
                         .catch((error) => {
                           console.error(error);
-                          toast.error('An error occurred');
+                          addToast({
+                            title: 'Error',
+                            description: 'An error occurred',
+                            color: 'danger',
+                          });
                         })
                         .finally(() => {
                           setIsConfirming(false);

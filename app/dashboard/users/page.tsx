@@ -3,8 +3,8 @@ import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'nextjs-toploader/app';
 import axios from 'axios';
-import { toast } from 'sonner';
 import {
+  addToast,
   Button,
   Chip,
   ChipProps,
@@ -111,7 +111,11 @@ const handleExport = async () => {
     setTimeout(() => window.URL.revokeObjectURL(url), 100);
   } catch (error) {
     console.error('Error downloading the file:', error);
-    toast.error('Error downloading the file');
+    addToast({
+      title: 'Error',
+      description: 'Error downloading the file',
+      color: 'danger',
+    });
   }
 };
 
