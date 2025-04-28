@@ -20,7 +20,6 @@ import {
   Tooltip,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { IconPlus, IconX } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
 
 import QuillInput from '@/components/ui/quill-input';
@@ -403,7 +402,7 @@ export default function EditService({ uid }: { uid: string }) {
                                     variant="light"
                                     size="sm"
                                   >
-                                    <IconX size={16} />
+                                    <Icon icon="solar:close-circle-bold-duotone" />
                                   </Button>
                                 </Tooltip>
                               )}
@@ -421,7 +420,7 @@ export default function EditService({ uid }: { uid: string }) {
                                   variant="light"
                                   size="sm"
                                 >
-                                  <IconPlus size={16} />
+                                  <Icon icon="tabler:circle-plus-filled" />
                                 </Button>
                               </Tooltip>
                             </div>
@@ -444,7 +443,7 @@ export default function EditService({ uid }: { uid: string }) {
                               variant="light"
                               onPress={() => handleAddColumn(numCols)}
                             >
-                              <IconPlus size={16} />
+                              <Icon icon="tabler:circle-plus-filled" />
                             </Button>
                           </Tooltip>
                         </th>
@@ -520,7 +519,7 @@ export default function EditService({ uid }: { uid: string }) {
                                     variant="light"
                                     size="sm"
                                   >
-                                    <IconX size={16} />
+                                    <Icon icon="solar:close-circle-bold-duotone" />
                                   </Button>
                                 </Tooltip>
                               )}
@@ -539,7 +538,7 @@ export default function EditService({ uid }: { uid: string }) {
                                   variant="light"
                                   size="sm"
                                 >
-                                  <IconPlus size={16} />
+                                  <Icon icon="tabler:circle-plus-filled" />
                                 </Button>
                               </Tooltip>
                             </div>
@@ -567,7 +566,7 @@ export default function EditService({ uid }: { uid: string }) {
                     variant="light"
                     onPress={() => handleAddRow(numRows)}
                   >
-                    <IconPlus size={16} />
+                    <Icon icon="tabler:circle-plus-filled" />
                   </Button>
                 </Tooltip>
               </div>

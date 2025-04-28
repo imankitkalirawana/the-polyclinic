@@ -10,7 +10,6 @@ import {
   ModalHeader,
 } from '@heroui/react';
 import { CalendarDate, getLocalTimeZone, Time } from '@internationalized/date';
-import { useLocale } from '@react-aria/i18n';
 
 import DateTimePicker from '../new/session/date-time-picker';
 
@@ -28,7 +27,6 @@ export default function RescheduleAppointment({
   setAppointments: any;
 }) {
   const [isLoading, setIsLoading] = useState(false);
-  const { locale } = useLocale();
 
   //   new here
 

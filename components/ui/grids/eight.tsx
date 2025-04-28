@@ -1,4 +1,4 @@
-import { Bot } from 'lucide-react';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 import BarChart from '@/components/animata/graphs/bar-chart';
 import { cn } from '@/lib/utils';
@@ -98,7 +98,7 @@ function FeatureTwo() {
 function FeatureThree() {
   return (
     <BentoCard className="flex flex-col bg-orange-300">
-      <Bot className="size-8 md:size-12" />
+      <Icon icon="tabler:bot" className="size-8 md:size-12" />
       <strong className="mt-1 inline-block text-sm">Integrated AI</strong>
 
       <div className="mt-auto">

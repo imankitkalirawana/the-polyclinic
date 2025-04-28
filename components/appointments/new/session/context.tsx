@@ -4,13 +4,13 @@ import axios from 'axios';
 import { subYears } from 'date-fns';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { addToast } from '@heroui/react';
 
 import registerUser from '@/functions/server-actions/auth/register';
 import { verifyEmail } from '@/functions/server-actions/auth/verification';
 import { AppointmentType } from '@/models/Appointment';
 import { DoctorType } from '@/models/Doctor';
 import { UserType } from '@/models/User';
-import { addToast } from '@heroui/react';
 
 const validationSchema = Yup.object({
   firstName: Yup.string()

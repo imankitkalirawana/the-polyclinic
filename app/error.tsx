@@ -1,13 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { Button, Card, Link as NextLink } from '@heroui/react';
-import {
-  IconArrowNarrowLeft,
-  IconArrowNarrowRight,
-  IconBook,
-  IconFileDescription,
-  IconMessageCircle,
-} from '@tabler/icons-react';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 import { cn } from '@/lib/utils';
 
@@ -28,7 +22,7 @@ export default function Error({
   primaryButton = (
     <Button
       variant="bordered"
-      startContent={<IconArrowNarrowLeft />}
+      startContent={<Icon icon="solar:arrow-left-linear" />}
       // go one step back in the browser history
       onPress={() => window.history.back()}
     >
@@ -64,7 +58,7 @@ export default function Error({
 
           <div className="mx-auto mt-8 grid w-full max-w-6xl grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             <Card radius="lg" className="p-6">
-              <IconFileDescription />
+              <Icon icon="solar:document-bold-duotone" />
 
               <h3 className="mt-6 font-medium">Documentation</h3>
 
@@ -78,12 +72,12 @@ export default function Error({
                 className="mt-4"
               >
                 <span>Start learning</span>
-                <IconArrowNarrowRight />
+                <Icon icon="solar:arrow-right-linear" />
               </NextLink>
             </Card>
 
             <Card radius="lg" className="p-6">
-              <IconBook />
+              <Icon icon="solar:book-bold-duotone" />
 
               <h3 className="mt-6 font-medium">Our blog</h3>
 
@@ -98,12 +92,12 @@ export default function Error({
               >
                 <span>View latest posts</span>
 
-                <IconArrowNarrowRight />
+                <Icon icon="solar:arrow-right-linear" />
               </NextLink>
             </Card>
 
             <Card radius="lg" className="p-6">
-              <IconMessageCircle />
+              <Icon icon="solar:chat-line-bold-duotone" />
 
               <h3 className="mt-6 font-medium">Chat to us</h3>
 
@@ -120,7 +114,7 @@ export default function Error({
               >
                 <span>Chat to our team</span>
 
-                <IconArrowNarrowRight />
+                <Icon icon="solar:arrow-right-linear" />
               </NextLink>
             </Card>
           </div>
