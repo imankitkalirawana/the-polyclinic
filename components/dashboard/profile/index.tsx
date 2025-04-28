@@ -16,16 +16,26 @@ import {
   Textarea,
   useDisclosure,
 } from '@heroui/react';
+import { useQuery } from '@tanstack/react-query';
 
+import { getSelf } from '@/app/dashboard/profile/helper';
 import { UserType } from '@/models/User';
 
-export default function Profile({ self }: { self: UserType }) {
+export default function Profile() {
+  const { data } = useQuery({
+    queryKey: ['self'],
+    queryFn: getSelf,
+  });
+
+  const self: UserType = data?.user || {};
+
   const formik = useFormik({
     initialValues: {
       name: self.name,
       email: self.email,
       phone: self.phone,
     },
+    enableReinitialize: true,
     onSubmit: async (values) => {
       await axios
         .put('/api/users/self', values)

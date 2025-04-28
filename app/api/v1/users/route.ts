@@ -8,9 +8,9 @@ export const GET = auth(async function GET(request: any) {
   try {
     const allowedRoles = ['admin', 'receptionist'];
 
-    // if (!allowedRoles.includes(request.auth?.user?.role)) {
-    //   return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    // }
+    if (!allowedRoles.includes(request.auth?.user?.role)) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
 
     //  GET /api/v1/users?limit=10&page=1&sortColumn=name&sortDirection=ascending&query=&status=%255B%2522inactive%2522%252C%2522blocked%2522%252C%2522deleted%2522%252C%2522unverified%2522%255D 200 in 171ms
 

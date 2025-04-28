@@ -1,17 +1,28 @@
-import { redirect } from 'next/navigation';
+import type { Metadata } from 'next';
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from '@tanstack/react-query';
 
-import { auth } from '@/auth';
+import { getSelf } from './helper';
+
 import Profile from '@/components/dashboard/profile';
-import { getSelf } from '@/functions/server-actions/user';
+
+export const metadata: Metadata = {
+  title: 'Profile',
+};
 
 export default async function ProfilePage() {
-  const session = await auth();
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ['self'],
+    queryFn: () => getSelf(),
+  });
 
-  if (!session) {
-    redirect('/auth/login');
-  }
-
-  const res = await getSelf({ email: session?.user?.email || '' });
-
-  return <Profile self={res.user} />;
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <Profile />
+    </HydrationBoundary>
+  );
 }
