@@ -8,7 +8,7 @@ import AccountDetails from './account-details';
 import NotificationsSettings from './notifications-settings';
 import SecuritySettings from './security-settings';
 
-import { getUserWithUID } from '@/functions/server-actions';
+import { getUserWithUID } from '@/app/dashboard/users/[uid]/helper';
 import { UserType } from '@/models/User';
 
 export default function EditUser({ uid }: { uid: number }) {
