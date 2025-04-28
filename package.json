@@ -45,7 +45,6 @@
     "nextjs-toploader": "^3.7.15",
     "nodemailer": "^6.9.16",
     "nuqs": "^2.2.3",
-    "pdfkit": "^0.16.0",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.8",
     "puppeteer": "^24.1.1",
