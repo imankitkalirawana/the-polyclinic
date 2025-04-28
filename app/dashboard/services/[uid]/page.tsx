@@ -15,7 +15,7 @@ interface Props {
   };
 }
 
-const ServicePage = async ({ params }: Props) => {
+export default async function Page({ params }: Props) {
   const queryClient = new QueryClient();
   const session = await auth();
 
@@ -37,6 +37,4 @@ const ServicePage = async ({ params }: Props) => {
       </div>
     </>
   );
-};
-
-export default ServicePage;
+}

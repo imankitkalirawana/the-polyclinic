@@ -1,11 +1,11 @@
 import Error from '@/app/error';
 import { auth } from '@/auth';
 
-const UserLayout = async ({
+export default async function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) => {
+}>) {
   const session = await auth();
   const allowed = ['admin', 'receptionist', 'doctor'];
   return (
@@ -24,6 +24,4 @@ const UserLayout = async ({
       }
     </>
   );
-};
-
-export default UserLayout;
+}

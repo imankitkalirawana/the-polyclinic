@@ -1,8 +1,11 @@
+import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 
-import { auth } from '@/auth';
-
-const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
+export default async function AuthLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const session = await auth();
 
   if (session) {
@@ -10,6 +13,4 @@ const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
   }
 
   return <>{children}</>;
-};
-
-export default AuthLayout;
+}

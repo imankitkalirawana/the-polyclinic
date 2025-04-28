@@ -14,7 +14,7 @@ interface Props {
   };
 }
 
-const AppointmentProceedPage = async ({ params }: Props) => {
+export default async function Page({ params }: Props) {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ['appointment', params.aid],
@@ -30,6 +30,4 @@ const AppointmentProceedPage = async ({ params }: Props) => {
       </HydrationBoundary>
     </>
   );
-};
-
-export default AppointmentProceedPage;
+}

@@ -1,12 +1,10 @@
 import Banner from '@/components/sections/home/banner';
 
-const Home = () => {
+export default function Home() {
   return (
     <>
       {/* <Homepage /> */}
       <Banner />
     </>
   );
-};
-
-export default Home;
+}

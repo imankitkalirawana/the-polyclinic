@@ -13,7 +13,7 @@ interface Props {
   };
 }
 
-const EmailPage = async ({ params }: Props) => {
+export default async function Page({ params }: Props) {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ['email', params.id],
@@ -27,6 +27,4 @@ const EmailPage = async ({ params }: Props) => {
       </HydrationBoundary>
     </>
   );
-};
-
-export default EmailPage;
+}

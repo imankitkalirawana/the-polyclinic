@@ -5,7 +5,7 @@ import { Button } from '@heroui/react';
 
 import { downloadAppointmentReceipt } from '@/functions/client/appointment/receipt';
 
-const TestPage = () => {
+export default function Page() {
   const [isDownloading, setIsDownloading] = useState(false);
 
   return (
@@ -21,6 +21,4 @@ const TestPage = () => {
       Download PDF
     </Button>
   );
-};
-
-export default TestPage;
+}

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: 'Profile',
 };
 
-const ProfilePage = async () => {
+export default async function ProfilePage() {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ['self'],
@@ -25,6 +25,4 @@ const ProfilePage = async () => {
       <Profile />
     </HydrationBoundary>
   );
-};
-
-export default ProfilePage;
+}

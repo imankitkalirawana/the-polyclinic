@@ -1,7 +1,5 @@
 import FormSkeleton from '@/components/skeletons/form-skeleton';
 
-const Loading = () => {
+export default function Loading() {
   return <FormSkeleton />;
-};
-
-export default Loading;
+}

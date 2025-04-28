@@ -1,9 +1,7 @@
 import { auth } from '@/auth';
 import NewAppointment from '@/components/appointments/new';
 
-const NewAppointmentPage = async () => {
+export default async function Page() {
   const session = await auth();
   return <NewAppointment session={session} />;
-};
-
-export default NewAppointmentPage;
+}

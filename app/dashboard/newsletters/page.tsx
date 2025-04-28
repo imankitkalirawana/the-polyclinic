@@ -7,7 +7,7 @@ import {
 import Newsletters from '@/components/dashboard/newsletters/newsletters';
 import { getAllNewsletters } from '@/functions/server-actions/newsletters';
 
-const NewslettersPage = async () => {
+export default async function Page() {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ['newsletters'],
@@ -22,6 +22,4 @@ const NewslettersPage = async () => {
       </HydrationBoundary>
     </>
   );
-};
-
-export default NewslettersPage;
+}

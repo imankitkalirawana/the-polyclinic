@@ -1,11 +1,9 @@
 import Users from '@/components/dashboard/users';
 
-const UserPage = () => {
+export default async function Page() {
   return (
     <>
       <Users />
     </>
   );
-};
-
-export default UserPage;
+}
