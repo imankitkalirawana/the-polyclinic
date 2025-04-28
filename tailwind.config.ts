@@ -119,7 +119,7 @@ const config = {
               '700': '#9d2f15',
               '800': '#732210',
               '900': '#49160a',
-              foreground: '#000',
+              foreground: '#fff',
               DEFAULT: '#f24821',
             },
             // background: '#E0F5E8',
