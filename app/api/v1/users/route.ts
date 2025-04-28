@@ -8,20 +8,15 @@ export const GET = auth(async function GET(request: any) {
   try {
     const allowedRoles = ['admin', 'receptionist'];
 
-    if (!allowedRoles.includes(request.auth?.user?.role)) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
+    // if (!allowedRoles.includes(request.auth?.user?.role)) {
+    //   return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    // }
 
     //  GET /api/v1/users?limit=10&page=1&sortColumn=name&sortDirection=ascending&query=&status=%255B%2522inactive%2522%252C%2522blocked%2522%252C%2522deleted%2522%252C%2522unverified%2522%255D 200 in 171ms
 
     const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get('limit') || '25', 10);
     const page = parseInt(searchParams.get('page') || '1', 10);
-    const status = JSON.parse(
-      decodeURIComponent(
-        searchParams.get('status') || '%255B%2522all%2522%255D'
-      )
-    );
     const query = searchParams.get('query')?.trim() || '';
     const sort = {
       column: searchParams.get('sortColumn') || 'name',
@@ -39,9 +34,6 @@ export const GET = auth(async function GET(request: any) {
               { uid: isNaN(parseInt(query)) ? undefined : parseInt(query, 10) },
             ].filter(Boolean) as any[],
           }
-        : {}),
-      ...(status.length && !status.includes('all')
-        ? { status: { $in: status } }
         : {}),
     };
 

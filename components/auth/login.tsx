@@ -1,15 +1,15 @@
 'use client';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import { addToast, Avatar, Button, Divider, Input } from '@heroui/react';
-import Link from 'next/link';
 import React, { useState } from 'react';
-import { useFormik } from 'formik';
+import Link from 'next/link';
 import { signIn } from 'next-auth/react';
-import * as Yup from 'yup';
-import { redirect, useSearchParams } from 'next/navigation';
-import Logo from '../ui/logo';
-import { useQueryState } from 'nuqs';
 import { useRouter } from 'nextjs-toploader/app';
+import { useFormik } from 'formik';
+import { useQueryState } from 'nuqs';
+import * as Yup from 'yup';
+import { Button, Input } from '@heroui/react';
+import { Icon } from '@iconify/react/dist/iconify.js';
+
+import Logo from '../ui/logo';
 
 export default function Login() {
   const [isVisible, setIsVisible] = useState(false);

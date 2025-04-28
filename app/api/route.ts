@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-export const GET = async function GET(request: any) {
+export const GET = async function GET() {
   try {
     return NextResponse.json({ message: 'GET request Working' });
   } catch (error: any) {
@@ -9,7 +9,7 @@ export const GET = async function GET(request: any) {
   }
 };
 
-export const POST = async function POST(request: any, context: any) {
+export const POST = async function POST(request: any) {
   try {
     const body = await request.json();
     console.log('body', body);

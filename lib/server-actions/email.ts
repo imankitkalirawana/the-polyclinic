@@ -23,7 +23,7 @@ export const sendHTMLEmail = async (mailOptions: MailOptions) => {
         console.log('Email sent');
       })
       .catch((err) => {
-        console.error(err);
+        console.error('An error occurred while sending the email', err);
         throw new Error(err.message);
       });
   });
