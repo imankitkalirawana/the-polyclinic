@@ -181,9 +181,6 @@ importers:
       slugify:
         specifier: ^1.6.6
         version: 1.6.6
-      sonner:
-        specifier: ^1.5.0
-        version: 1.7.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       string-strip-html:
         specifier: ^13.4.8
         version: 13.4.12
@@ -203,6 +200,9 @@ importers:
       '@commitlint/config-conventional':
         specifier: ^19.8.0
         version: 19.8.0
+      '@iconify/json':
+        specifier: ^2.2.332
+        version: 2.2.332
       '@tanstack/eslint-plugin-query':
         specifier: ^5.62.9
         version: 5.74.7(eslint@8.57.1)(typescript@5.1.6)
@@ -1733,6 +1733,12 @@ packages:
         integrity: sha512-93zYdMES/c1D69yZiKDBj0V24vqNzB/koF26KPaagAfd3P/4gUlh3Dys5ogAK+Exi9QyzlD8x/08Zt7wIKcDcA==,
       }
     deprecated: Use @eslint/object-schema instead
+
+  '@iconify/json@2.2.332':
+    resolution:
+      {
+        integrity: sha512-bIaEG2ecvYiq/lwBF0KIOCEW5zMyBx1WOmBubetZwvKNs+gXbV3ocLCjT3xWBFSD4v29BRpqdtoVOpUlIfDK+g==,
+      }
 
   '@iconify/react@5.2.1':
     resolution:
@@ -9590,6 +9596,12 @@ packages:
       }
     engines: { node: '>=8' }
 
+  pathe@1.1.2:
+    resolution:
+      {
+        integrity: sha512-whLdWMYL2TwI08hn8/ZqAbrVemu0LNaNNJZX73O6qaIdCTfXutsLhMkjdENX0qhsQ9uIimo4/aQOmXkoon2nDQ==,
+      }
+
   pdfkit@0.16.0:
     resolution:
       {
@@ -10749,15 +10761,6 @@ packages:
         integrity: sha512-D3YaD0aRxR3mEcqnidIs7ReYJFVzWdd6fXJYUM8ixcQcJRGTka/b3saV0KflYhyVJXKhb947GndU35SxYNResQ==,
       }
     engines: { node: '>= 10.0.0', npm: '>= 3.0.0' }
-
-  sonner@1.7.4:
-    resolution:
-      {
-        integrity: sha512-DIS8z4PfJRbIyfVFDVnK9rO3eYDtse4Omcm6bt0oEr5/jtLgysmjuBl1frJ9E/EQZrFmKx2A8m/s5s9CRXIzhw==,
-      }
-    peerDependencies:
-      react: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
-      react-dom: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
 
   source-map-js@1.2.1:
     resolution:
@@ -13891,6 +13894,11 @@ snapshots:
   '@humanwhocodes/object-schema@1.2.1': {}
 
   '@humanwhocodes/object-schema@2.0.3': {}
+
+  '@iconify/json@2.2.332':
+    dependencies:
+      '@iconify/types': 2.0.0
+      pathe: 1.1.2
 
   '@iconify/react@5.2.1(react@18.3.1)':
     dependencies:
@@ -19434,6 +19442,8 @@ snapshots:
 
   path-type@4.0.0: {}
 
+  pathe@1.1.2: {}
+
   pdfkit@0.16.0:
     dependencies:
       crypto-js: 4.2.0
@@ -20216,11 +20226,6 @@ snapshots:
     dependencies:
       ip-address: 9.0.5
       smart-buffer: 4.2.0
-
-  sonner@1.7.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
-    dependencies:
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
 
   source-map-js@1.2.1: {}
 

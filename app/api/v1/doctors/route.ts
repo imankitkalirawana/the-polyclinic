@@ -5,7 +5,7 @@ import { connectDB } from '@/lib/db';
 import Doctor from '@/models/Doctor';
 import User, { UserRole, UserStatus } from '@/models/User';
 
-export const GET = auth(async function GET(request: any) {
+export const GET = auth(async function GET() {
   try {
     await connectDB();
     const doctors = await Doctor.find();

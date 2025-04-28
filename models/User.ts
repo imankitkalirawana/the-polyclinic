@@ -3,13 +3,12 @@ import mongooseSequence from 'mongoose-sequence';
 
 import { Base } from '@/lib/interface';
 
-export enum UserStatus {
-  active = 'active',
-  inactive = 'inactive',
-  blocked = 'blocked',
-  deleted = 'deleted',
-  unverified = 'unverified',
-}
+export type UserStatus =
+  | 'active'
+  | 'inactive'
+  | 'blocked'
+  | 'deleted'
+  | 'unverified';
 
 export enum UserRole {
   admin = 'admin',
@@ -108,7 +107,7 @@ const userSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: UserStatus,
+      enum: ['active', 'inactive', 'blocked', 'deleted', 'unverified'],
       default: 'unverified',
     },
     country: {

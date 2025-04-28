@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Outfit } from 'next/font/google';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 
 import { Providers } from './providers';
@@ -6,9 +7,14 @@ import { Providers } from './providers';
 import './globals.css';
 
 import { auth } from '@/auth';
-import Sonner from '@/components/providers';
 import Navbar from '@/components/sections/navbar';
 import { ThemeProvider } from '@/components/theme-provider';
+
+const outfit = Outfit({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-outfit',
+});
 
 export const metadata: Metadata = {
   title: 'The Polyclinic',
@@ -24,14 +30,13 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning className="light">
-      <body className="no-scrollbar">
+      <body className={outfit.className}>
         <Providers>
           <NuqsAdapter>
             <ThemeProvider attribute="class" defaultTheme="light">
               {/* <Nav session={session} /> */}
               <Navbar session={session} />
               {children}
-              <Sonner />
             </ThemeProvider>
           </NuqsAdapter>
         </Providers>

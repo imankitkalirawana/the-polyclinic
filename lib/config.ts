@@ -2,6 +2,13 @@
 export const isCaching = false;
 export const API_BASE_URL = process.env.NEXTAUTH_URL;
 
+export const APP_INFO = {
+  name: 'The Polyclinic',
+  email: 'admin@divinely.dev',
+  url: process.env.NEXTAUTH_URL || '',
+  description: `The Polyclinic is a platform for booking appointments with doctors.`,
+};
+
 export const rowOptions = [
   {
     label: '10',

@@ -1,6 +1,6 @@
 'use client';
 import { saveAs } from 'file-saver';
-import { toast } from 'sonner';
+import { addToast } from '@heroui/react';
 
 import { EventType } from './interface';
 
@@ -77,7 +77,10 @@ END:VCALENDAR
   });
 
   saveAs(blob, `${title}.ics`);
-  toast('Downloaded .ics file,');
+  addToast({
+    title: 'Downloaded .ics file',
+    color: 'success',
+  });
 };
 
 export const addToGoogleCalendar = (event: EventType) => {

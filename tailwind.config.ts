@@ -11,6 +11,9 @@ const config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        manrope: ['Manrope', 'sans-serif'],
+      },
       screens: { xs: '512px' },
       maxWidth: {
         '8xl': '96rem',

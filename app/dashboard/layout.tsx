@@ -1,6 +1,8 @@
-import Error from '@/app/error';
+import { redirect } from 'next/navigation';
+
 import { auth } from '@/auth';
 import DashboardLayout from '@/components/dashboard/layout';
+// import { getSelf } from '@/lib/server-actions/user';
 
 export default async function Layout({
   children,
@@ -9,19 +11,16 @@ export default async function Layout({
 }>) {
   const session = await auth();
 
-  const allowed = ['admin', 'receptionist', 'doctor'];
+  if (!session) {
+    redirect('/auth/login');
+  }
+
   return (
     <>
       {
         // @ts-ignore
-        session && allowed.includes(session.user.role) ? (
+        session && (
           <DashboardLayout session={session}>{children}</DashboardLayout>
-        ) : (
-          <Error
-            code="401"
-            title="Whoops, Not So Fast"
-            description="You're trying to peek behind the curtain, but authorization is required. Let's set things right."
-          />
         )
       }
     </>

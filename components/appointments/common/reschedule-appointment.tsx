@@ -2,8 +2,13 @@
 import { useState } from 'react';
 import React from 'react';
 import { format } from 'date-fns';
-import { toast } from 'sonner';
-import { Button, ModalBody, ModalFooter, ModalHeader } from '@heroui/react';
+import {
+  addToast,
+  Button,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+} from '@heroui/react';
 import { CalendarDate, getLocalTimeZone, Time } from '@internationalized/date';
 import { useLocale } from '@react-aria/i18n';
 
@@ -121,18 +126,21 @@ export default function RescheduleAppointment({
                   });
                   return updatedAppointments;
                 });
-                // remove query params
-                toast(
-                  `Appointment Rescheduled to ${format(new Date(timing), 'PPp')}`,
-                  {
-                    duration: 10000,
-                  }
-                );
+
+                addToast({
+                  title: 'Appointment Rescheduled',
+                  description: `Appointment Rescheduled to ${format(new Date(timing), 'PPp')}`,
+                  color: 'success',
+                });
                 modal.onClose();
               })
               .catch((error) => {
                 console.error(error);
-                toast.error('An error occurred');
+                addToast({
+                  title: 'Error',
+                  description: 'An error occurred',
+                  color: 'danger',
+                });
               });
           }}
         >

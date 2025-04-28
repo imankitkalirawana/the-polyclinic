@@ -11,21 +11,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     credentials({
       credentials: {
-        id: { label: 'Email / Phone Number' },
+        email: { label: 'Email ' },
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
         await connectDB();
         let user = null;
-        if (!credentials?.id || !credentials?.password) {
+        if (!credentials?.email || !credentials?.password) {
           throw new InvalidCredentialsError();
         }
         // @ts-ignore
-        if (!credentials.id.includes('@')) {
-          user = await User.findOne({ phone: credentials.id });
-        } else {
-          user = await User.findOne({ email: credentials.id });
-        }
+        user = await User.findOne({ email: credentials.email });
+
         if (!user) {
           throw new InvalidCredentialsError();
         }
@@ -54,14 +51,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (user) {
         token.role = user.role;
         token.id = user._id;
-        token.uid = user.uid;
       }
       return token;
     },
     session({ session, token }) {
       session.user.role = token.role;
       session.user.id = token.id as string;
-      session.user.uid = token.uid as number;
       return session;
     },
   },

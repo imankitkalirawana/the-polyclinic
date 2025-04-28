@@ -1,8 +1,8 @@
 'use client';
 import { useState } from 'react';
 import { format } from 'date-fns';
-import { toast } from 'sonner';
 import {
+  addToast,
   Button,
   Card,
   CardBody,
@@ -42,7 +42,11 @@ export default function PendingAppointments({
     //dummy 3 seconds delay
     setIsLoading({ ...isLoading, [status]: true });
     await new Promise((resolve) => setTimeout(resolve, 3000)).then(() => {
-      toast.success('Appointment status updated successfully');
+      addToast({
+        title: 'Appointment status updated successfully',
+        description: 'The appointment status has been updated',
+        color: 'success',
+      });
       refetch();
     });
     setIsLoading({ ...isLoading, [status]: false });

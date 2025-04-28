@@ -4,8 +4,8 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { useFormik } from 'formik';
 import slugify from 'slugify';
-import { toast } from 'sonner';
 import {
+  addToast,
   Autocomplete,
   AutocompleteItem,
   Avatar,
@@ -84,12 +84,19 @@ export default function NewUser({ countries }: { countries: CountryProps[] }) {
       await axios
         .post('/api/v1/users', values.user)
         .then(() => {
-          toast.success('UserType added successfully');
+          addToast({
+            title: 'UserType added successfully',
+            color: 'success',
+          });
           router.push('/dashboard/users');
         })
         .catch((error: any) => {
           console.log(error);
-          toast.error(error.response.data.message);
+          addToast({
+            title: 'Error',
+            description: error.response.data.message,
+            color: 'danger',
+          });
         });
     },
   });

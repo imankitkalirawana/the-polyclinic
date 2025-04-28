@@ -4,8 +4,8 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { useFormik } from 'formik';
 import ReactQuill from 'react-quill';
-import { toast } from 'sonner';
 import {
+  addToast,
   Button,
   Card,
   CardBody,
@@ -53,11 +53,18 @@ export default function EditService({ uid }: { uid: string }) {
           `/api/v1/services/${values.service._id}`,
           values.service
         );
-        toast.success('Service updated successfully');
+        addToast({
+          title: 'Updated Successfully',
+          color: 'success',
+        });
         refetch();
         router.push(`/dashboard/services/${values.service.uniqueId}`);
       } catch (error) {
-        toast.error('Failed to update service');
+        addToast({
+          title: 'Error',
+          description: 'Failed to update service',
+          color: 'danger',
+        });
         console.error(error);
       }
     },

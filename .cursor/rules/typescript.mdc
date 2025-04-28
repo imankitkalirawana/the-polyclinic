@@ -1,0 +1,10 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Your rule content
+
+- Follow this typescript guide https://mkosir.github.io/typescript-style-guide/#naming
+- Use TSDoc comments when documenting APIs, libraries, configurations or reusable code.

@@ -1,14 +1,6 @@
-import { redirect } from 'next/navigation';
+import ForgotPassword from '@/components/auth/forgot-password';
 
-import { auth } from '@/auth';
-import ForgotPassword from '@/components/auth/ForgotPassword';
-
-export default async function Page() {
-  const session = await auth();
-
-  if (session) {
-    redirect('/dashboard');
-  }
+export default function ForgotPasswordPage() {
   return (
     <>
       <ForgotPassword />

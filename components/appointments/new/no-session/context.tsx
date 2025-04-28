@@ -2,7 +2,6 @@
 import React, { createContext, useContext } from 'react';
 import { signIn } from 'next-auth/react';
 import { useFormik } from 'formik';
-import { toast } from 'sonner';
 import * as Yup from 'yup';
 
 import registerUser from '@/functions/server-actions/auth/register';
@@ -11,6 +10,7 @@ import {
   verifyEmail,
   verifyOTP,
 } from '@/functions/server-actions/auth/verification';
+import { addToast } from '@heroui/react';
 
 const validationSchema = Yup.object({
   firstName: Yup.string()
@@ -138,12 +138,20 @@ export const FormProvider = ({ children }: { children: React.ReactNode }) => {
           redirectTo: '/appointments/new',
         }).catch((err) => {
           console.log(err);
-          toast.error(err.message);
+          addToast({
+            title: 'Error',
+            description: err.message,
+            color: 'danger',
+          });
         });
       })
       .catch((err) => {
         console.log(err);
-        toast.error(err.message);
+        addToast({
+          title: 'Error',
+          description: err.message,
+          color: 'danger',
+        });
       });
   };
 

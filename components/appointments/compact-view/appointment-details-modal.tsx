@@ -2,8 +2,8 @@
 import { useState } from 'react';
 import { useRouter } from 'nextjs-toploader/app';
 import { format } from 'date-fns';
-import { toast } from 'sonner';
 import {
+  addToast,
   Avatar,
   Button,
   ButtonGroup,
@@ -93,7 +93,11 @@ export default function AppointmentDetailsModal() {
       key: 'download',
       color: 'primary',
       action: async () => {
-        toast('Download');
+        addToast({
+          title: 'Downloading reports',
+          description: 'Downloading reports',
+          color: 'success',
+        });
       },
     },
     {
