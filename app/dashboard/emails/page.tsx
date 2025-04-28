@@ -1,7 +1,7 @@
 import { auth } from '@/auth';
 import Emails from '@/components/dashboard/emails';
 
-export default async function Page() {
+const EmailsPage = async () => {
   const session = await auth();
 
   return (
@@ -9,4 +9,6 @@ export default async function Page() {
       <Emails session={session} />
     </>
   );
-}
+};
+
+export default EmailsPage;

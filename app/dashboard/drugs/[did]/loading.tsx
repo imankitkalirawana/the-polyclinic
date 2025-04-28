@@ -1,5 +1,7 @@
 import DashboardDetailsSkeleton from '@/components/skeletons/dashboard-details-skeleton';
 
-export default function Loading() {
+const Loading = () => {
   return <DashboardDetailsSkeleton />;
-}
+};
+
+export default Loading;

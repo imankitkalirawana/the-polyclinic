@@ -4,6 +4,8 @@ export const metadata: Metadata = {
   title: 'Dashboard',
 };
 
-export default function Dashboard() {
+const Dashboard = () => {
   return <div>Hello</div>;
-}
+};
+
+export default Dashboard;

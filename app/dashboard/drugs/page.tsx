@@ -1,7 +1,7 @@
 import { auth } from '@/auth';
 import Drugs from '@/components/dashboard/drugs';
 
-export default async function Page() {
+const DrugsPage = async () => {
   const session = await auth();
 
   return (
@@ -9,4 +9,6 @@ export default async function Page() {
       <Drugs session={session} />
     </>
   );
-}
+};
+
+export default DrugsPage;

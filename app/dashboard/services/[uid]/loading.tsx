@@ -1,5 +1,7 @@
 import ServiceSkeleton from '@/components/skeletons/services/service-skeleton';
 
-export default function Loading() {
+const Loading = () => {
   return <ServiceSkeleton />;
-}
+};
+
+export default Loading;

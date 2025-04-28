@@ -4,11 +4,11 @@ import { auth } from '@/auth';
 import DashboardLayout from '@/components/dashboard/layout';
 // import { getSelf } from '@/lib/server-actions/user';
 
-export default async function Layout({
+const Layout = async ({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>) => {
   const session = await auth();
 
   if (!session) {
@@ -25,4 +25,6 @@ export default async function Layout({
       }
     </>
   );
-}
+};
+
+export default Layout;

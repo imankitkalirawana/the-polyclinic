@@ -1,7 +1,7 @@
 import { auth } from '@/auth';
 import Services from '@/components/dashboard/services';
 
-export default async function Page() {
+const ServicesPage = async () => {
   const session = await auth();
 
   return (
@@ -9,4 +9,6 @@ export default async function Page() {
       <Services session={session} />
     </>
   );
-}
+};
+
+export default ServicesPage;

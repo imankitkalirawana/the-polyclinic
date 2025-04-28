@@ -13,7 +13,7 @@ interface Props {
   };
 }
 
-export default async function Page({ params }: Props) {
+const EditDrugPage = async ({ params }: Props) => {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ['drug', params.did],
@@ -27,4 +27,6 @@ export default async function Page({ params }: Props) {
       </HydrationBoundary>
     </>
   );
-}
+};
+
+export default EditDrugPage;

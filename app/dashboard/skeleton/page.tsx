@@ -1,5 +1,7 @@
 import ListSkeleton from '@/components/skeletons/list-skeleton';
 
-export default function Page() {
+const SkeletonPage = () => {
   return <ListSkeleton />;
-}
+};
+
+export default SkeletonPage;

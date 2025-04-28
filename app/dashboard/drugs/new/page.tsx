@@ -1,7 +1,7 @@
 import Error from '@/app/error';
 import { auth } from '@/auth';
 
-export default async function Page() {
+const NewDrugPage = async () => {
   const session = await auth();
   const allowed = ['admin'];
   return (
@@ -20,4 +20,6 @@ export default async function Page() {
       }
     </>
   );
-}
+};
+
+export default NewDrugPage;

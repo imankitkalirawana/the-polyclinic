@@ -6,10 +6,12 @@ interface Props {
   };
 }
 
-export default async function Page({ params }: Props) {
+const UserPage = async ({ params }: Props) => {
   return (
     <>
       <UserCard uid={params.uid} />
     </>
   );
-}
+};
+
+export default UserPage;

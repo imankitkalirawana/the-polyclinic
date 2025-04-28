@@ -4,7 +4,7 @@ import { auth } from '@/auth';
 import CompactView from '@/components/appointments/compact-view';
 import UseRedirect from '@/hooks/useRedirect';
 
-export default async function Page() {
+const SchedulesPage = async () => {
   const session = await auth();
 
   if (!session) {
@@ -16,4 +16,6 @@ export default async function Page() {
       <CompactView />
     </>
   );
-}
+};
+
+export default SchedulesPage;

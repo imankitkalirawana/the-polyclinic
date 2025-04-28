@@ -4,7 +4,7 @@ import { auth } from '@/auth';
 import TabularView from '@/components/appointments/tabular-view';
 import UseRedirect from '@/hooks/useRedirect';
 
-export default async function Page() {
+const Appointments = async () => {
   const session = await auth();
 
   if (!session) {
@@ -16,4 +16,6 @@ export default async function Page() {
       <TabularView session={session} />
     </>
   );
-}
+};
+
+export default Appointments;

@@ -2,7 +2,7 @@ import Error from '@/app/error';
 import { auth } from '@/auth';
 import NewService from '@/components/dashboard/services/new';
 
-export default async function Page() {
+const NewServicePage = async () => {
   const session = await auth();
   const allowed = ['admin'];
   return (
@@ -23,4 +23,6 @@ export default async function Page() {
       }
     </>
   );
-}
+};
+
+export default NewServicePage;

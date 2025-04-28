@@ -1,7 +1,7 @@
 'use client';
 import { addToast, Button } from '@heroui/react';
 
-export default function Home() {
+const Home = () => {
   return (
     <>
       <Button
@@ -18,4 +18,6 @@ export default function Home() {
       </Button>
     </>
   );
-}
+};
+
+export default Home;
