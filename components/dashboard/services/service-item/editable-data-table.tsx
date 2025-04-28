@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { useFormik } from 'formik';
 import ReactQuill from 'react-quill';
 import { Button, Tooltip } from '@heroui/react';
-import { IconPlus, IconX } from '@tabler/icons-react';
 
 import 'react-quill/dist/quill.snow.css';
 
 import { cn } from '@/lib/utils';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 interface EditableDataTableProps {
   data: Record<string, string>;
@@ -150,7 +150,7 @@ export default function EditableDataTable({
                         size="sm"
                         onPress={() => handleDeleteColumn(colIndex)}
                       >
-                        <IconX size={16} />
+                        <Icon icon="solar:close-circle-bold-duotone" />
                       </Button>
                     </Tooltip>
                   )}
@@ -168,7 +168,7 @@ export default function EditableDataTable({
                       size="sm"
                       onPress={() => handleAddColumn(colIndex)}
                     >
-                      <IconPlus size={16} />
+                      <Icon icon="tabler:circle-plus-filled" />
                     </Button>
                   </Tooltip>
                 </div>
@@ -223,7 +223,7 @@ export default function EditableDataTable({
                         variant="light"
                         size="sm"
                       >
-                        <IconX size={16} />
+                        <Icon icon="solar:close-circle-bold-duotone" />
                       </Button>
                     </Tooltip>
                   )}
@@ -242,7 +242,7 @@ export default function EditableDataTable({
                       variant="light"
                       size="sm"
                     >
-                      <IconPlus size={16} />
+                      <Icon icon="tabler:circle-plus-filled" />
                     </Button>
                   </Tooltip>
                 </div>

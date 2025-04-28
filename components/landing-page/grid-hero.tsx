@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { AnimationProps, motion } from 'framer-motion';
 // TODO: to be removed
-import { FiArrowRight } from 'react-icons/fi';
 import { Button } from '@heroui/react';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 export default function GridHero() {
   return (
@@ -90,7 +90,7 @@ const Content = () => {
       >
         <Button color="primary" size="lg" radius="lg">
           Try it free
-          <FiArrowRight />
+          <Icon icon="solar:arrow-right-linear" />
         </Button>
         <Button radius="lg" size="lg" variant="ghost">
           Learn more

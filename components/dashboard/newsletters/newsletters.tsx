@@ -29,7 +29,6 @@ import {
   useDisclosure,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { IconTableExport } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
 
 import { getAllNewsletters } from '@/functions/server-actions/newsletters';
@@ -254,7 +253,7 @@ export default function Newsletters() {
                 variant="bordered"
                 isIconOnly
                 radius="full"
-                endContent={<IconTableExport size={20} />}
+                endContent={<Icon icon="solar:export-bold-duotone" />}
                 onPress={handleDownload}
               />
             </Tooltip>

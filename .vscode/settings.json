@@ -1,5 +1,5 @@
 {
-  "iconifySearch.codeType": "iconify-icon",
+  "iconifySearch.codeType": "unplugin-icons",
   "iconifySearch.favorTabs": ["solar", "tabler"],
   "iconifySearch.favorGroup": "solar"
 }

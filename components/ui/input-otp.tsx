@@ -2,9 +2,9 @@
 
 import * as React from 'react';
 import { OTPInput, OTPInputContext } from 'input-otp';
-import { Dot } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 const InputOTP = React.forwardRef<
   React.ElementRef<typeof OTPInput>,
@@ -67,7 +67,7 @@ const InputOTPSeparator = React.forwardRef<
   React.ComponentPropsWithoutRef<'div'>
 >(({ ...props }, ref) => (
   <div ref={ref} role="separator" {...props}>
-    <Dot />
+    <Icon icon="solar:dot-bold-duotone" />
   </div>
 ));
 InputOTPSeparator.displayName = 'InputOTPSeparator';
