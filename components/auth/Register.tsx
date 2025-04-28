@@ -45,8 +45,7 @@ export default function Register() {
           otp: parseInt(values.otp),
         });
         if (res.success) {
-          router.push('/onboarding');
-          window.location.href = '/onboarding';
+          window.location.href = '/dashboard';
         } else {
           formik.setFieldError('otp', res.message);
         }

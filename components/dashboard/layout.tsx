@@ -2,27 +2,31 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { Session } from 'next-auth';
 import { signOut } from 'next-auth/react';
 import {
+  Avatar,
   BreadcrumbItem,
   Breadcrumbs as NextUIBreadcrumbs,
   Button,
   cn,
-  Image,
   ScrollShadow,
   Spacer,
+  Tooltip,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
+
+import Logo from '../ui/logo';
 
 import Sidebar from '@/components/dashboard/sidebar/sidebar';
 import { sectionItemsWithTeams } from '@/components/dashboard/sidebar/sidebar-items';
 
 export default function DashboardLayout({
-  session,
   children,
+  session,
 }: {
-  session: any;
   readonly children: React.ReactNode;
+  session: Session;
 }) {
   const [isHidden, setIsHidden] = useState(true);
 
@@ -45,96 +49,82 @@ export default function DashboardLayout({
     return (
       <div
         className={cn(
-          'relative flex h-full w-72 max-w-[288px] flex-1 flex-col !border-r-small border-divider transition-[transform,opacity,margin] duration-250 ease-in-out',
+          'relative flex h-full w-72 max-w-[288px] flex-1 flex-col !border-r-small border-divider transition-all duration-250 ease-in-out',
           {
-            '-ml-72 -translate-x-72': isHidden,
+            'max-w-16': isHidden,
           }
         )}
       >
         <div
-          //   style={{
-          //     background: "url('/assets/sidebar-profile.png')",
-          //     backgroundSize: 'cover',
-          //     backgroundPosition: 'start'
-          //   }}
-          className="relative aspect-square max-h-56 w-full"
+          className={cn('flex flex-col gap-4 py-2 pl-2', {
+            'px-2': !isHidden,
+          })}
         >
-          <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
-          <div className="absolute left-0 top-0 flex h-full w-full flex-col items-center gap-8 p-4">
-            <div className="flex w-full items-center justify-between">
-              <h2>My Profile</h2>
-              <Button
-                radius="full"
-                className="bg-default/30 backdrop-blur-[1px]"
-                isIconOnly
-                size="sm"
-              >
-                <Icon icon="mingcute:edit-line" width={20} />
-              </Button>
-            </div>
-            <div className="flex flex-col items-center gap-2">
-              <Image
-                className="h-20 w-20 rounded-full"
-                isBlurred
-                // size="lg"
-                src="https://i.pravatar.cc/150?u=a04258114e29026708c"
-                // name={session.user.name}
-              />
-              <div className="flex flex-col items-center">
-                <p className="text-lg font-medium">{session?.user?.name}</p>
-                <p className="text-sm font-light capitalize">
-                  {session.user.role}
-                </p>
-              </div>
-            </div>
-          </div>
+          <Link href="/">
+            <Logo isCompact={isHidden} />
+          </Link>
         </div>
 
         <ScrollShadow className="h-full max-h-full pl-2">
           <Sidebar
-            defaultSelectedKey="home"
+            defaultSelectedKey="mapper"
             items={sectionItemsWithTeams}
-            selectedKeys={[currentPath || 'dashboard']}
+            selectedKeys={[currentPath || 'mapper']}
+            isCompact={isHidden}
           />
         </ScrollShadow>
         <Spacer y={8} />
-        <div className="flex flex-col px-2 pb-4">
-          <Button
-            aria-label="Help & Information"
-            fullWidth
-            className="justify-start text-default-500 data-[hover=true]:text-foreground"
-            startContent={
-              <Icon
-                className="text-default-500"
-                icon="solar:info-circle-line-duotone"
-                width={24}
-              />
-            }
-            variant="light"
-            as={Link}
-            href="/dashboard"
-          >
-            Help & Information
-          </Button>
-          <Button
-            aria-label="Log Out"
-            className="justify-start text-default-500 data-[hover=true]:text-danger"
-            startContent={
-              <Icon
-                className="rotate-180"
-                icon="solar:minus-circle-line-duotone"
-                width={24}
-              />
-            }
-            variant="light"
+        <div
+          className={cn('flex flex-col items-center gap-1 pb-4 pl-2', {
+            'px-2': !isHidden,
+          })}
+        >
+          <Tooltip isDisabled={!isHidden} content="Profile" placement="right">
+            <Button
+              aria-label="Profile"
+              fullWidth
+              className={cn('justify-center text-default-500', {
+                'justify-start text-foreground': !isHidden,
+              })}
+              startContent={
+                <Avatar isBordered name={session.user?.name || ''} size="sm" />
+              }
+              variant="light"
+              as={Link}
+              href="/dashboard/profile"
+              isIconOnly={isHidden}
+            >
+              {!isHidden && 'Profile'}
+            </Button>
+          </Tooltip>
+          <Tooltip
+            isDisabled={!isHidden}
             color="danger"
-            onPress={async () => {
-              await signOut();
-              window.location.href = '/auth/login';
-            }}
+            content="Log Out"
+            placement="right"
           >
-            Log Out
-          </Button>
+            <Button
+              aria-label="Log Out"
+              fullWidth
+              className="justify-start text-default-500 data-[hover=true]:text-danger"
+              startContent={
+                <Icon
+                  className="w-full rotate-180"
+                  icon="solar:logout-bold-duotone"
+                  width={24}
+                />
+              }
+              variant="light"
+              color="danger"
+              onPress={async () => {
+                await signOut();
+                window.location.href = '/auth/login';
+              }}
+              isIconOnly={isHidden}
+            >
+              {!isHidden && 'Log Out'}
+            </Button>
+          </Tooltip>
         </div>
       </div>
     );

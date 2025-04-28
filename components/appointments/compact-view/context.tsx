@@ -32,7 +32,7 @@ export const FormProvider = ({
   children: React.ReactNode;
   session?: AuthUser | null;
 }) => {
-  const [date, setDate] = useQueryState('date', {
+  const [date] = useQueryState('date', {
     defaultValue: new Date().toISOString().split('T')[0],
   });
 
