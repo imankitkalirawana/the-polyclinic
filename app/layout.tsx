@@ -35,7 +35,7 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className="light">
       <body className={outfit.className}>
-        <Providers>
+        <Providers session={session}>
           <NuqsAdapter>
             <ThemeProvider attribute="class" defaultTheme="light">
               {/* <Nav session={session} /> */}

@@ -1,17 +1,19 @@
 'use client';
-import { addToast, Button } from '@heroui/react';
+import { useSession } from 'next-auth/react';
+import { Button } from '@heroui/react';
 
 export default function Home() {
+  const { data: session, update } = useSession();
+
+  console.log(session);
+
   return (
     <>
+      {session && <div>{session.user?.email}</div>}
       <Button
         className="absolute mt-4"
         onPress={() => {
-          addToast({
-            title: 'Hello',
-            description: 'World',
-            color: 'secondary',
-          });
+          update();
         }}
       >
         Click me
