@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Provider as ReduxProvider } from 'react-redux';
+import { Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import NextTopLoader from 'nextjs-toploader';
 import { useRouter } from 'nextjs-toploader/app';
@@ -19,7 +20,13 @@ declare module '@react-types/shared' {
   }
 }
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export function Providers({
+  children,
+  session,
+}: {
+  children: React.ReactNode;
+  session: Session | null;
+}) {
   const router = useRouter();
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -44,7 +51,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       />
 
       <QueryClientProvider client={queryClient}>
-        <SessionProvider>
+        <SessionProvider session={session}>
           <NextTopLoader
             height={5}
             showSpinner={false}
