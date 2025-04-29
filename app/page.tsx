@@ -1,6 +1,6 @@
 'use client';
 import { useSession } from 'next-auth/react';
-import { addToast, Button } from '@heroui/react';
+import { Button } from '@heroui/react';
 
 export default function Home() {
   const { data: session, update } = useSession();
