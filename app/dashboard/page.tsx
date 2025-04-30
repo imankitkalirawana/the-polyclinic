@@ -1,19 +1,20 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Button, Chip } from '@heroui/react';
+import { addToast, Button, Chip } from '@heroui/react';
 import { Icon } from '@iconify/react';
 
 import {
   renderActions,
   renderCopyableText,
   renderDate,
-} from '../../components/ui/data-table/generic/cell-renderers';
-import { GenericTable } from '../../components/ui/data-table/generic/generic-table';
+} from '../../components/ui/data-table/cell-renderers';
 import type {
-  ColumnDefinition,
-  FilterDefinition,
-} from '../../components/ui/data-table/generic/types';
+  ColumnDef,
+  FilterDef,
+} from '../../components/ui/data-table/types';
+
+import { Table } from '@/components/ui/data-table';
 
 // Sample appointment data
 interface Appointment {
@@ -67,7 +68,7 @@ const appointments: Appointment[] = Array.from({ length: 50 }, (_, i) => ({
 
 export default function AppointmentTable() {
   // Define columns with render functions
-  const columns: ColumnDefinition<Appointment>[] = useMemo(
+  const columns: ColumnDef<Appointment>[] = useMemo(
     () => [
       {
         name: 'Appointment ID',
@@ -167,7 +168,7 @@ export default function AppointmentTable() {
   );
 
   // Define filters
-  const filters: FilterDefinition<Appointment>[] = useMemo(
+  const filters: FilterDef<Appointment>[] = useMemo(
     () => [
       {
         name: 'Department',
@@ -262,11 +263,11 @@ export default function AppointmentTable() {
 
   return (
     <div className="p-6">
-      <GenericTable
+      <Table
         data={appointments}
         columns={columns}
         initialVisibleColumns={columns.map((col) => col.uid)}
-        keyField="id"
+        keyField="appointmentId"
         filters={filters}
         searchField={(appointment, searchValue) =>
           appointment.patientName
@@ -280,6 +281,13 @@ export default function AppointmentTable() {
         initialSortDescriptor={{
           column: 'date',
           direction: 'ascending',
+        }}
+        onRowAction={(row) => {
+          addToast({
+            title: 'Appointment',
+            description: `Appointment ${row} clicked`,
+            color: 'success',
+          });
         }}
       />
     </div>

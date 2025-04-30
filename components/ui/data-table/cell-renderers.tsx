@@ -4,9 +4,7 @@ import type React from 'react';
 import { Chip, User } from '@heroui/react';
 import { Icon } from '@iconify/react';
 
-import { CopyText } from '../copy-text';
-import { StatusOptions } from '../data';
-import { Status } from '../Status';
+import { CopyText } from '@/components/ui/copy';
 
 export const renderCopyableText = (text: string) => {
   return <CopyText>{text}</CopyText>;
@@ -92,10 +90,6 @@ export const renderChips = (items: string[]) => {
   );
 };
 
-export const renderStatus = (status: StatusOptions) => {
-  return <Status status={status} />;
-};
-
 export const renderActions = (
   onView?: () => void,
   onEdit?: () => void,
@@ -109,7 +103,10 @@ export const renderActions = (
           className="cursor-pointer text-default-400"
           height={18}
           width={18}
-          onClick={onView}
+          onClick={(e) => {
+            e.stopPropagation();
+            onView?.();
+          }}
         />
       )}
       {onEdit && (
@@ -118,7 +115,10 @@ export const renderActions = (
           className="cursor-pointer text-default-400"
           height={18}
           width={18}
-          onClick={onEdit}
+          onClick={(e) => {
+            e.stopPropagation();
+            onEdit?.();
+          }}
         />
       )}
       {onDelete && (
@@ -127,7 +127,10 @@ export const renderActions = (
           className="cursor-pointer text-default-400"
           height={18}
           width={18}
-          onClick={onDelete}
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete?.();
+          }}
         />
       )}
     </div>

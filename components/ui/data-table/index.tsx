@@ -1,10 +1,9 @@
 'use client';
 
-import React, { useCallback, useMemo, useRef, useState } from 'react';
-import type { Selection, SortDescriptor } from '@heroui/react';
+import { useCallback, useMemo, useState } from 'react';
+import type { Selection } from '@heroui/react';
 import {
   Button,
-  Chip,
   Divider,
   Dropdown,
   DropdownItem,
@@ -17,408 +16,331 @@ import {
   PopoverTrigger,
   Radio,
   RadioGroup,
-  Table,
+  ScrollShadow,
+  Table as HeroTable,
   TableBody,
   TableCell,
   TableColumn,
   TableHeader,
   TableRow,
   Tooltip,
-  useButton,
-  User,
 } from '@heroui/react';
 import { cn } from '@heroui/react';
 import { SearchIcon } from '@heroui/shared-icons';
 import { Icon } from '@iconify/react';
 import type { Key } from '@react-types/shared';
 
-import { ArrowDownIcon } from './arrow-down';
-import { ArrowUpIcon } from './arrow-up';
-import { CopyText } from './copy-text';
-import type { ColumnsKey, StatusOptions, Users } from './data';
-import { columns, INITIAL_VISIBLE_COLUMNS, users } from './data';
-import { DeleteFilledIcon } from './delete';
-import { EditLinearIcon } from './edit';
-import { EyeFilledIcon } from './eye';
-import { Status } from './Status';
+import type { TableItem, TableProps, TableState } from './types';
 import { useMemoizedCallback } from './use-memoized-callback';
 
-export default function DataTable() {
-  const [filterValue, setFilterValue] = useState('');
-  const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
-  const [visibleColumns, setVisibleColumns] = useState<Selection>(
-    new Set(INITIAL_VISIBLE_COLUMNS)
-  );
-  const [rowsPerPage] = useState(10);
-  const [page, setPage] = useState(1);
-  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
-    column: 'memberInfo',
-    direction: 'ascending',
+export function Table<T extends TableItem>({
+  data,
+  columns,
+  initialVisibleColumns,
+  keyField,
+  filters = [],
+  searchField,
+  renderTopBar,
+  onRowAction,
+  rowsPerPage = 10,
+  initialSortDescriptor = { column: '', direction: 'ascending' },
+}: TableProps<T>) {
+  const [state, setState] = useState<TableState>({
+    filterValue: '',
+    selectedKeys: new Set([]),
+    visibleColumns: new Set(
+      initialVisibleColumns || columns.map((col) => col.uid)
+    ),
+    page: 1,
+    sortDescriptor: initialSortDescriptor,
+    filterValues: Object.fromEntries(
+      filters.map((filter) => [filter.key, 'all'])
+    ),
   });
 
-  const [workerTypeFilter, setWorkerTypeFilter] = React.useState('all');
-  const [statusFilter, setStatusFilter] = React.useState('all');
-  const [startDateFilter, setStartDateFilter] = React.useState('all');
+  const updateState = (newState: Partial<TableState>) => {
+    setState((prevState) => ({ ...prevState, ...newState }));
+  };
 
   const headerColumns = useMemo(() => {
-    if (visibleColumns === 'all') return columns;
+    if (state.visibleColumns === 'all') return columns;
 
     return columns
       .map((item) => {
-        if (item.uid === sortDescriptor.column) {
+        if (item.uid === state.sortDescriptor.column) {
           return {
             ...item,
-            sortDirection: sortDescriptor.direction,
+            sortDirection: state.sortDescriptor.direction,
           };
         }
-
         return item;
       })
-      .filter((column) => Array.from(visibleColumns).includes(column.uid));
-  }, [visibleColumns, sortDescriptor]);
+      .filter(
+        (column) =>
+          state.visibleColumns === 'all' ||
+          Array.from(state.visibleColumns).includes(column.uid)
+      );
+  }, [state.visibleColumns, state.sortDescriptor, columns]);
 
   const itemFilter = useCallback(
-    (col: Users) => {
-      let allWorkerType = workerTypeFilter === 'all';
-      let allStatus = statusFilter === 'all';
-      let allStartDate = startDateFilter === 'all';
-
-      return (
-        (allWorkerType || workerTypeFilter === col.workerType.toLowerCase()) &&
-        (allStatus || statusFilter === col.status.toLowerCase()) &&
-        (allStartDate ||
-          new Date(
-            new Date().getTime() -
-              +(startDateFilter.match(/(\d+)(?=Days)/)?.[0] ?? 0) *
-                24 *
-                60 *
-                60 *
-                1000
-          ) <= new Date(col.startDate))
-      );
+    (item: T) => {
+      // Apply all active filters
+      return filters.every((filter) => {
+        const filterValue = state.filterValues[filter.key];
+        if (filterValue === 'all') return true;
+        return filter.filterFn(item, filterValue);
+      });
     },
-    [startDateFilter, statusFilter, workerTypeFilter]
+    [filters, state.filterValues]
   );
 
   const filteredItems = useMemo(() => {
-    let filteredUsers = [...users];
+    let filteredData = [...data];
 
-    if (filterValue) {
-      filteredUsers = filteredUsers.filter((user) =>
-        user.memberInfo.name.toLowerCase().includes(filterValue.toLowerCase())
-      );
+    // Apply search filter
+    if (state.filterValue) {
+      filteredData = filteredData.filter((item) => {
+        if (typeof searchField === 'function') {
+          return searchField(item, state.filterValue);
+        } else if (searchField) {
+          const fieldValue = item[searchField];
+          if (typeof fieldValue === 'string') {
+            return fieldValue
+              .toLowerCase()
+              .includes(state.filterValue.toLowerCase());
+          } else if (
+            typeof fieldValue === 'object' &&
+            fieldValue !== null &&
+            'name' in fieldValue
+          ) {
+            return (fieldValue.name as string)
+              .toLowerCase()
+              .includes(state.filterValue.toLowerCase());
+          }
+        }
+        return false;
+      });
     }
 
-    filteredUsers = filteredUsers.filter(itemFilter);
+    // Apply other filters
+    filteredData = filteredData.filter(itemFilter);
 
-    return filteredUsers;
-  }, [filterValue, itemFilter]);
+    return filteredData;
+  }, [data, state.filterValue, itemFilter, searchField]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage) || 1;
 
   const items = useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
+    const start = (state.page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
 
     return filteredItems.slice(start, end);
-  }, [page, filteredItems, rowsPerPage]);
+  }, [state.page, filteredItems, rowsPerPage]);
 
   const sortedItems = useMemo(() => {
-    return [...items].sort((a: Users, b: Users) => {
-      const col = sortDescriptor.column as keyof Users;
+    if (!state.sortDescriptor.column) return items;
 
-      let first = a[col];
-      let second = b[col];
+    return [...items].sort((a: T, b: T) => {
+      const column = state.sortDescriptor.column;
 
-      if (col === 'memberInfo' || col === 'country') {
-        first = a[col].name;
-        second = b[col].name;
-      } else if (sortDescriptor.column === 'externalWorkerID') {
-        first = +a.externalWorkerID.split('EXT-')[1];
-        second = +b.externalWorkerID.split('EXT-')[1];
+      let first = a[column];
+      let second = b[column];
+
+      // Handle nested properties
+      if (typeof first === 'object' && first !== null && 'name' in first) {
+        first = first.name;
       }
 
+      if (typeof second === 'object' && second !== null && 'name' in second) {
+        second = second.name;
+      }
+
+      // Handle special case for IDs with prefixes
+      if (typeof first === 'string' && typeof second === 'string') {
+        const firstMatch = first.match(/([A-Za-z]+-)?(\d+)/);
+        const secondMatch = second.match(/([A-Za-z]+-)?(\d+)/);
+
+        if (firstMatch && secondMatch) {
+          first = Number.parseInt(firstMatch[2]);
+          second = Number.parseInt(secondMatch[2]);
+        }
+      }
+
+      // Compare values
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
-      return sortDescriptor.direction === 'descending' ? -cmp : cmp;
+      return state.sortDescriptor.direction === 'descending' ? -cmp : cmp;
     });
-  }, [sortDescriptor, items]);
+  }, [state.sortDescriptor, items]);
 
   const filterSelectedKeys = useMemo(() => {
-    if (selectedKeys === 'all') return selectedKeys;
+    if (state.selectedKeys === 'all') return state.selectedKeys;
     let resultKeys = new Set<Key>();
 
-    if (filterValue) {
+    if (state.filterValue) {
       filteredItems.forEach((item) => {
-        const stringId = String(item.id);
+        const stringId = String(item[keyField]);
 
-        if ((selectedKeys as Set<string>).has(stringId)) {
+        if ((state.selectedKeys as Set<string>).has(stringId)) {
           resultKeys.add(stringId);
         }
       });
     } else {
-      resultKeys = selectedKeys;
+      resultKeys = state.selectedKeys;
     }
 
     return resultKeys;
-  }, [selectedKeys, filteredItems, filterValue]);
+  }, [state.selectedKeys, filteredItems, state.filterValue, keyField]);
 
-  const eyesRef = useRef<HTMLButtonElement | null>(null);
-  const editRef = useRef<HTMLButtonElement | null>(null);
-  const deleteRef = useRef<HTMLButtonElement | null>(null);
-  const { getButtonProps: getEyesProps } = useButton({ ref: eyesRef });
-  const { getButtonProps: getEditProps } = useButton({ ref: editRef });
-  const { getButtonProps: getDeleteProps } = useButton({ ref: deleteRef });
-  const getMemberInfoProps = useMemoizedCallback(() => ({
-    onClick: handleMemberClick,
-  }));
+  const renderCell = useMemoizedCallback((item: T, columnKey: string) => {
+    const column = columns.find((col) => col.uid === columnKey);
 
-  const renderCell = useMemoizedCallback(
-    (user: Users, columnKey: React.Key) => {
-      const userKey = columnKey as ColumnsKey;
-
-      const cellValue = user[userKey as unknown as keyof Users] as string;
-
-      switch (userKey) {
-        case 'workerID':
-        case 'externalWorkerID':
-          return <CopyText>{cellValue}</CopyText>;
-        case 'memberInfo':
-          return (
-            <User
-              avatarProps={{ radius: 'lg', src: user[userKey].avatar }}
-              classNames={{
-                name: 'text-default-foreground',
-                description: 'text-default-500',
-              }}
-              description={user[userKey].email}
-              name={user[userKey].name}
-            >
-              {user[userKey].email}
-            </User>
-          );
-        case 'startDate':
-          return (
-            <div className="flex items-center gap-1">
-              <Icon
-                className="h-[16px] w-[16px] text-default-300"
-                icon="solar:calendar-minimalistic-linear"
-              />
-              <p className="text-nowrap text-small capitalize text-default-foreground">
-                {new Intl.DateTimeFormat('en-US', {
-                  month: 'long',
-                  day: 'numeric',
-                  year: 'numeric',
-                }).format(cellValue as unknown as Date)}
-              </p>
-            </div>
-          );
-        case 'country':
-          return (
-            <div className="flex items-center gap-2">
-              <div className="h-[16px] w-[16px]">{user[userKey].icon}</div>
-              <p className="text-nowrap text-small text-default-foreground">
-                {user[userKey].name}
-              </p>
-            </div>
-          );
-        case 'teams':
-          return (
-            <div className="float-start flex gap-1">
-              {user[userKey].map((team, index) => {
-                if (index < 3) {
-                  return (
-                    <Chip
-                      key={team}
-                      className="rounded-xl bg-default-100 px-[6px] capitalize text-default-800"
-                      size="sm"
-                      variant="flat"
-                    >
-                      {team}
-                    </Chip>
-                  );
-                }
-                if (index < 4) {
-                  return (
-                    <Chip
-                      key={team}
-                      className="text-default-500"
-                      size="sm"
-                      variant="flat"
-                    >
-                      {`+${team.length - 3}`}
-                    </Chip>
-                  );
-                }
-
-                return null;
-              })}
-            </div>
-          );
-        case 'role':
-          return (
-            <div className="text-nowrap text-small capitalize text-default-foreground">
-              {cellValue}
-            </div>
-          );
-        case 'workerType':
-          return <div className="text-default-foreground">{cellValue}</div>;
-        case 'status':
-          return <Status status={cellValue as StatusOptions} />;
-        case 'actions':
-          return (
-            <div className="flex items-center justify-end gap-2">
-              <EyeFilledIcon
-                {...getEyesProps()}
-                className="cursor-pointer text-default-400"
-                height={18}
-                width={18}
-              />
-              <EditLinearIcon
-                {...getEditProps()}
-                className="cursor-pointer text-default-400"
-                height={18}
-                width={18}
-              />
-              <DeleteFilledIcon
-                {...getDeleteProps()}
-                className="cursor-pointer text-default-400"
-                height={18}
-                width={18}
-              />
-            </div>
-          );
-        default:
-          return cellValue;
-      }
+    if (column?.renderCell) {
+      return column.renderCell(item, columnKey);
     }
-  );
+
+    const value = item[columnKey];
+
+    if (value === undefined || value === null) {
+      return null;
+    }
+
+    if (typeof value === 'object') {
+      if ('name' in value) {
+        return value.name;
+      }
+      return JSON.stringify(value);
+    }
+
+    return value;
+  });
 
   const onNextPage = useMemoizedCallback(() => {
-    if (page < pages) {
-      setPage(page + 1);
+    if (state.page < pages) {
+      updateState({ page: state.page + 1 });
     }
   });
 
   const onPreviousPage = useMemoizedCallback(() => {
-    if (page > 1) {
-      setPage(page - 1);
+    if (state.page > 1) {
+      updateState({ page: state.page - 1 });
     }
   });
 
   const onSearchChange = useMemoizedCallback((value?: string) => {
-    if (value) {
-      setFilterValue(value);
-      setPage(1);
-    } else {
-      setFilterValue('');
-    }
+    updateState({
+      filterValue: value || '',
+      page: 1,
+    });
   });
 
   const onSelectionChange = useMemoizedCallback((keys: Selection) => {
     if (keys === 'all') {
-      if (filterValue) {
+      if (state.filterValue) {
         const resultKeys = new Set(
-          filteredItems.map((item) => String(item.id))
+          filteredItems.map((item) => String(item[keyField]))
         );
-
-        setSelectedKeys(resultKeys);
+        updateState({ selectedKeys: resultKeys });
       } else {
-        setSelectedKeys(keys);
+        updateState({ selectedKeys: keys });
       }
     } else if (keys.size === 0) {
-      setSelectedKeys(new Set());
+      updateState({ selectedKeys: new Set() });
     } else {
       const resultKeys = new Set<Key>();
 
       keys.forEach((v) => {
         resultKeys.add(v);
       });
+
       const selectedValue =
-        selectedKeys === 'all'
-          ? new Set(filteredItems.map((item) => String(item.id)))
-          : selectedKeys;
+        state.selectedKeys === 'all'
+          ? new Set(filteredItems.map((item) => String(item[keyField])))
+          : state.selectedKeys;
 
       selectedValue.forEach((v) => {
-        if (items.some((item) => String(item.id) === v)) {
+        if (items.some((item) => String(item[keyField]) === v)) {
           return;
         }
         resultKeys.add(v);
       });
-      setSelectedKeys(new Set(resultKeys));
+
+      updateState({ selectedKeys: new Set(resultKeys) });
     }
   });
+
+  const onFilterChange = useMemoizedCallback(
+    (filterKey: string, value: string) => {
+      updateState({
+        filterValues: {
+          ...state.filterValues,
+          [filterKey]: value,
+        },
+        page: 1,
+      });
+    }
+  );
 
   const topContent = useMemo(() => {
     return (
       <div className="flex items-center gap-4 overflow-auto px-[6px] py-[4px]">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-4">
-            <Input
-              className="min-w-[200px]"
-              endContent={
-                <SearchIcon className="text-default-400" width={16} />
-              }
-              placeholder="Search"
-              size="sm"
-              value={filterValue}
-              onValueChange={onSearchChange}
-            />
-            <div>
-              <Popover placement="bottom">
-                <PopoverTrigger>
-                  <Button
-                    className="bg-default-100 text-default-800"
-                    size="sm"
-                    startContent={
-                      <Icon
-                        className="text-default-400"
-                        icon="solar:tuning-2-linear"
-                        width={16}
-                      />
-                    }
-                  >
-                    Filter
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-80">
-                  <div className="flex w-full flex-col gap-6 px-2 py-4">
-                    <RadioGroup
-                      label="Worker Type"
-                      value={workerTypeFilter}
-                      onValueChange={setWorkerTypeFilter}
-                    >
-                      <Radio value="all">All</Radio>
-                      <Radio value="employee">Employee</Radio>
-                      <Radio value="contractor">Contractor</Radio>
-                    </RadioGroup>
+            {searchField && (
+              <Input
+                className="min-w-[200px]"
+                endContent={
+                  <SearchIcon className="text-default-400" width={16} />
+                }
+                placeholder="Search"
+                size="sm"
+                value={state.filterValue}
+                onValueChange={onSearchChange}
+              />
+            )}
 
-                    <RadioGroup
-                      label="Status"
-                      value={statusFilter}
-                      onValueChange={setStatusFilter}
+            {filters.length > 0 && (
+              <div>
+                <Popover placement="bottom">
+                  <PopoverTrigger>
+                    <Button
+                      className="bg-default-100 text-default-800"
+                      size="sm"
+                      startContent={
+                        <Icon
+                          className="text-default-400"
+                          icon="solar:tuning-2-linear"
+                          width={16}
+                        />
+                      }
                     >
-                      <Radio value="all">All</Radio>
-                      <Radio value="active">Active</Radio>
-                      <Radio value="inactive">Inactive</Radio>
-                      <Radio value="paused">Paused</Radio>
-                      <Radio value="vacation">Vacation</Radio>
-                    </RadioGroup>
+                      Filter
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-80">
+                    <ScrollShadow className="flex max-h-96 w-full flex-col gap-6 px-2 py-4 scrollbar-hide">
+                      {filters.map((filter) => (
+                        <RadioGroup
+                          key={filter.key}
+                          label={filter.name}
+                          value={state.filterValues[filter.key]}
+                          onValueChange={(value) =>
+                            onFilterChange(filter.key, value)
+                          }
+                        >
+                          {filter.options.map((option) => (
+                            <Radio key={option.value} value={option.value}>
+                              {option.label}
+                            </Radio>
+                          ))}
+                        </RadioGroup>
+                      ))}
+                    </ScrollShadow>
+                  </PopoverContent>
+                </Popover>
+              </div>
+            )}
 
-                    <RadioGroup
-                      label="Start Date"
-                      value={startDateFilter}
-                      onValueChange={setStartDateFilter}
-                    >
-                      <Radio value="all">All</Radio>
-                      <Radio value="last7Days">Last 7 days</Radio>
-                      <Radio value="last30Days">Last 30 days</Radio>
-                      <Radio value="last60Days">Last 60 days</Radio>
-                    </RadioGroup>
-                  </div>
-                </PopoverContent>
-              </Popover>
-            </div>
             <div>
               <Dropdown>
                 <DropdownTrigger>
@@ -438,20 +360,20 @@ export default function DataTable() {
                 </DropdownTrigger>
                 <DropdownMenu
                   aria-label="Sort"
-                  items={headerColumns.filter(
-                    (c) => !['actions', 'teams'].includes(c.uid)
-                  )}
+                  items={headerColumns.filter((c) => c.sortable !== false)}
                 >
                   {(item) => (
                     <DropdownItem
                       key={item.uid}
                       onPress={() => {
-                        setSortDescriptor({
-                          column: item.uid,
-                          direction:
-                            sortDescriptor.direction === 'ascending'
-                              ? 'descending'
-                              : 'ascending',
+                        updateState({
+                          sortDescriptor: {
+                            column: item.uid,
+                            direction:
+                              state.sortDescriptor.direction === 'ascending'
+                                ? 'descending'
+                                : 'ascending',
+                          },
                         });
                       }}
                     >
@@ -461,6 +383,7 @@ export default function DataTable() {
                 </DropdownMenu>
               </Dropdown>
             </div>
+
             <div>
               <Dropdown closeOnSelect={false}>
                 <DropdownTrigger>
@@ -481,10 +404,12 @@ export default function DataTable() {
                 <DropdownMenu
                   disallowEmptySelection
                   aria-label="Columns"
-                  items={columns.filter((c) => !['actions'].includes(c.uid))}
-                  selectedKeys={visibleColumns}
+                  items={columns}
+                  selectedKeys={state.visibleColumns}
                   selectionMode="multiple"
-                  onSelectionChange={setVisibleColumns}
+                  onSelectionChange={(keys) =>
+                    updateState({ visibleColumns: keys })
+                  }
                 >
                   {(item) => (
                     <DropdownItem key={item.uid}>{item.name}</DropdownItem>
@@ -520,10 +445,11 @@ export default function DataTable() {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu aria-label="Selected Actions">
-                <DropdownItem key="send-email">Send email</DropdownItem>
-                <DropdownItem key="pay-invoices">Pay invoices</DropdownItem>
                 <DropdownItem key="bulk-edit">Bulk edit</DropdownItem>
-                <DropdownItem key="end-contract">End contract</DropdownItem>
+                <DropdownItem key="export">Export</DropdownItem>
+                <DropdownItem key="delete" className="text-danger">
+                  Delete
+                </DropdownItem>
               </DropdownMenu>
             </Dropdown>
           )}
@@ -531,43 +457,17 @@ export default function DataTable() {
       </div>
     );
   }, [
-    filterValue,
-    visibleColumns,
+    state.filterValue,
+    state.visibleColumns,
     filterSelectedKeys,
     headerColumns,
-    sortDescriptor,
-    statusFilter,
-    workerTypeFilter,
-    startDateFilter,
-    setWorkerTypeFilter,
-    setStatusFilter,
-    setStartDateFilter,
+    state.sortDescriptor,
+    state.filterValues,
+    filters,
+    searchField,
     onSearchChange,
-    setVisibleColumns,
+    onFilterChange,
   ]);
-
-  const topBar = useMemo(() => {
-    return (
-      <div className="mb-[18px] flex items-center justify-between">
-        <div className="flex w-[226px] items-center gap-2">
-          <h1 className="text-2xl font-[700] leading-[32px]">Team Members</h1>
-          <Chip
-            className="hidden items-center text-default-500 sm:flex"
-            size="sm"
-            variant="flat"
-          >
-            {users.length}
-          </Chip>
-        </div>
-        <Button
-          color="primary"
-          endContent={<Icon icon="solar:add-circle-bold" width={20} />}
-        >
-          Add Member
-        </Button>
-      </div>
-    );
-  }, []);
 
   const bottomContent = useMemo(() => {
     return (
@@ -577,9 +477,9 @@ export default function DataTable() {
           showControls
           showShadow
           color="primary"
-          page={page}
+          page={state.page}
           total={pages}
-          onChange={setPage}
+          onChange={(page) => updateState({ page })}
         />
         <div className="flex items-center justify-end gap-6">
           <span className="text-small text-default-400">
@@ -589,7 +489,7 @@ export default function DataTable() {
           </span>
           <div className="flex items-center gap-3">
             <Button
-              isDisabled={page === 1}
+              isDisabled={state.page === 1}
               size="sm"
               variant="flat"
               onPress={onPreviousPage}
@@ -597,7 +497,7 @@ export default function DataTable() {
               Previous
             </Button>
             <Button
-              isDisabled={page === pages}
+              isDisabled={state.page === pages}
               size="sm"
               variant="flat"
               onPress={onNextPage}
@@ -610,27 +510,19 @@ export default function DataTable() {
     );
   }, [
     filterSelectedKeys,
-    page,
+    state.page,
     pages,
     filteredItems.length,
     onPreviousPage,
     onNextPage,
   ]);
 
-  const handleMemberClick = useMemoizedCallback(() => {
-    setSortDescriptor({
-      column: 'memberInfo',
-      direction:
-        sortDescriptor.direction === 'ascending' ? 'descending' : 'ascending',
-    });
-  });
-
   return (
-    <div className="h-full w-full p-6">
-      {topBar}
-      <Table
+    <div className="h-full w-full">
+      {renderTopBar && renderTopBar()}
+      <HeroTable
         isHeaderSticky
-        aria-label="Example table with custom cells, pagination and sorting"
+        aria-label="Generic data table with sorting, filtering, and pagination"
         bottomContent={bottomContent}
         bottomContentPlacement="outside"
         classNames={{
@@ -638,13 +530,15 @@ export default function DataTable() {
         }}
         selectedKeys={filterSelectedKeys}
         selectionMode="multiple"
-        sortDescriptor={sortDescriptor}
+        sortDescriptor={state.sortDescriptor}
         topContent={topContent}
         topContentPlacement="outside"
         onSelectionChange={onSelectionChange}
-        onSortChange={setSortDescriptor}
-        onRowAction={(key) => {
-          console.log(key);
+        onSortChange={(descriptor) =>
+          updateState({ sortDescriptor: descriptor })
+        }
+        onRowAction={(row) => {
+          onRowAction?.(row);
         }}
       >
         <TableHeader columns={headerColumns}>
@@ -658,17 +552,34 @@ export default function DataTable() {
                   : '',
               ])}
             >
-              {column.uid === 'memberInfo' ? (
+              {column.sortable !== false ? (
                 <div
-                  {...getMemberInfoProps()}
                   className="flex w-full cursor-pointer items-center justify-between"
+                  onClick={() => {
+                    updateState({
+                      sortDescriptor: {
+                        column: column.uid,
+                        direction:
+                          state.sortDescriptor.direction === 'ascending'
+                            ? 'descending'
+                            : 'ascending',
+                      },
+                    });
+                  }}
                 >
                   {column.name}
-                  {column.sortDirection === 'ascending' ? (
-                    <ArrowUpIcon className="text-default-400" />
-                  ) : (
-                    <ArrowDownIcon className="text-default-400" />
-                  )}
+                  {state.sortDescriptor.column === column.uid &&
+                    (state.sortDescriptor.direction === 'ascending' ? (
+                      <Icon
+                        icon="solar:alt-arrow-up-linear"
+                        className="text-default-400"
+                      />
+                    ) : (
+                      <Icon
+                        icon="solar:alt-arrow-down-linear"
+                        className="text-default-400"
+                      />
+                    ))}
                 </div>
               ) : column.info ? (
                 <div className="flex min-w-[108px] items-center justify-between">
@@ -688,16 +599,16 @@ export default function DataTable() {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody emptyContent={'No users found'} items={sortedItems}>
+        <TableBody emptyContent={'No data found'} items={sortedItems}>
           {(item) => (
-            <TableRow key={item.id}>
+            <TableRow key={String(item[keyField])}>
               {(columnKey) => (
-                <TableCell>{renderCell(item, columnKey)}</TableCell>
+                <TableCell>{renderCell(item, columnKey.toString())}</TableCell>
               )}
             </TableRow>
           )}
         </TableBody>
-      </Table>
+      </HeroTable>
     </div>
   );
 }
