@@ -129,25 +129,28 @@ export default function AppointmentTable() {
           const getStatusColor = () => {
             switch (appointment.status) {
               case 'Scheduled':
-                return 'bg-primary-100 text-primary-700';
+                return 'bg-blue-500 text-blue-700';
               case 'Completed':
-                return 'bg-success-100 text-success-700';
+                return 'bg-success-500 text-success-700';
               case 'Cancelled':
-                return 'bg-danger-100 text-danger-700';
+                return 'bg-danger-500 text-danger-700';
               case 'No-show':
-                return 'bg-warning-100 text-warning-700';
+                return 'bg-warning-500 text-warning-700';
               default:
-                return 'bg-default-100 text-default-700';
+                return 'bg-default-500 text-default-700';
             }
           };
 
           return (
             <Chip
-              className={`${getStatusColor()} px-2 py-1`}
+              className={`gap-1 rounded-lg px-2 py-1 capitalize`}
               size="sm"
               variant="flat"
+              startContent={
+                <span className={`${getStatusColor()} h-2 w-2 rounded-full`} />
+              }
             >
-              {appointment.status}
+              {appointment.status.split('-').join(' ')}
             </Chip>
           );
         },
