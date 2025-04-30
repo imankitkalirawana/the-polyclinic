@@ -24,6 +24,7 @@ import {
   TableHeader,
   TableRow,
   Tooltip,
+  Spinner,
 } from '@heroui/react';
 import { cn } from '@heroui/react';
 import { SearchIcon } from '@heroui/shared-icons';
@@ -34,6 +35,7 @@ import type { TableItem, TableProps, TableState } from './types';
 import { useMemoizedCallback } from './use-memoized-callback';
 
 export function Table<T extends TableItem>({
+  isLoading,
   data,
   columns,
   initialVisibleColumns,
@@ -582,7 +584,12 @@ export function Table<T extends TableItem>({
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody emptyContent={'No data found'} items={sortedItems}>
+        <TableBody
+          isLoading={isLoading}
+          emptyContent={'No data found'}
+          items={sortedItems}
+          loadingContent={<Spinner />}
+        >
           {(item) => (
             <TableRow key={String(item[keyField])}>
               {(columnKey) => (

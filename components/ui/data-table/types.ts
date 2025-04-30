@@ -26,6 +26,7 @@ export interface FilterDef<T extends TableItem> {
 }
 
 export interface TableProps<T extends TableItem> {
+  isLoading?: boolean;
   data: T[];
   columns: ColumnDef<T>[];
   initialVisibleColumns?: string[];

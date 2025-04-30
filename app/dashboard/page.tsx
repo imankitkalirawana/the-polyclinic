@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { addToast, Button, Chip } from '@heroui/react';
 import { Icon } from '@iconify/react';
 
@@ -29,42 +29,47 @@ interface Appointment {
   notes?: string;
 }
 
-const appointments: Appointment[] = Array.from({ length: 50 }, (_, i) => ({
-  id: i + 1,
-  appointmentId: `APT-${1000 + i}`,
-  patientName: [
-    'John Smith',
-    'Emma Johnson',
-    'Michael Brown',
-    'Sophia Davis',
-    'James Wilson',
-  ][Math.floor(Math.random() * 5)],
-  doctorName: [
-    'Dr. Roberts',
-    'Dr. Chen',
-    'Dr. Patel',
-    'Dr. Garcia',
-    'Dr. Thompson',
-  ][Math.floor(Math.random() * 5)],
-  department: [
-    'Cardiology',
-    'Neurology',
-    'Pediatrics',
-    'Orthopedics',
-    'Dermatology',
-  ][Math.floor(Math.random() * 5)],
-  date: new Date(
-    Date.now() + (Math.floor(Math.random() * 30) - 15) * 24 * 60 * 60 * 1000
-  ),
-  time: ['09:00 AM', '10:30 AM', '01:15 PM', '03:45 PM', '05:00 PM'][
-    Math.floor(Math.random() * 5)
-  ],
-  status: ['Scheduled', 'Completed', 'Cancelled', 'No-show'][
-    Math.floor(Math.random() * 4)
-  ] as Appointment['status'],
-  notes:
-    Math.random() > 0.7 ? 'Patient requested follow-up appointment' : undefined,
-}));
+// Function to generate appointments data
+const generateAppointmentsData = (): Array<Appointment> => {
+  return Array.from({ length: 50 }, (_, i) => ({
+    id: i + 1,
+    appointmentId: `APT-${1000 + i}`,
+    patientName: [
+      'John Smith',
+      'Emma Johnson',
+      'Michael Brown',
+      'Sophia Davis',
+      'James Wilson',
+    ][Math.floor(Math.random() * 5)],
+    doctorName: [
+      'Dr. Roberts',
+      'Dr. Chen',
+      'Dr. Patel',
+      'Dr. Garcia',
+      'Dr. Thompson',
+    ][Math.floor(Math.random() * 5)],
+    department: [
+      'Cardiology',
+      'Neurology',
+      'Pediatrics',
+      'Orthopedics',
+      'Dermatology',
+    ][Math.floor(Math.random() * 5)],
+    date: new Date(
+      Date.now() + (Math.floor(Math.random() * 30) - 15) * 24 * 60 * 60 * 1000
+    ),
+    time: ['09:00 AM', '10:30 AM', '01:15 PM', '03:45 PM', '05:00 PM'][
+      Math.floor(Math.random() * 5)
+    ],
+    status: ['Scheduled', 'Completed', 'Cancelled', 'No-show'][
+      Math.floor(Math.random() * 4)
+    ] as Appointment['status'],
+    notes:
+      Math.random() > 0.7
+        ? 'Patient requested follow-up appointment'
+        : undefined,
+  }));
+};
 
 const INITIAL_VISIBLE_COLUMNS = [
   'appointmentId',
@@ -75,6 +80,16 @@ const INITIAL_VISIBLE_COLUMNS = [
 ];
 
 export default function AppointmentTable() {
+  // Client-side data loading to prevent hydration mismatch
+  const [appointments, setAppointments] = useState<Array<Appointment>>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    // Only run on client to avoid hydration mismatch
+    setAppointments(generateAppointmentsData());
+    setIsLoaded(true);
+  }, []);
+
   // Define columns with render functions
   const columns: ColumnDef<Appointment>[] = useMemo(
     () => [
@@ -119,15 +134,8 @@ export default function AppointmentTable() {
         name: 'Date',
         uid: 'date',
         sortable: true,
-        renderCell: (appointment) => renderDate(appointment.date),
-      },
-      {
-        name: 'Time',
-        uid: 'time',
-        sortable: true,
-        renderCell: (appointment) => (
-          <div className="text-default-foreground">{appointment.time}</div>
-        ),
+        renderCell: (appointment) =>
+          renderDate({ date: appointment.date, isTime: true }),
       },
       {
         name: 'Status',
@@ -163,6 +171,15 @@ export default function AppointmentTable() {
           );
         },
       },
+      {
+        name: 'Notes',
+        uid: 'notes',
+        sortable: true,
+        renderCell: (appointment) => (
+          <div className="text-default-foreground">{appointment.notes}</div>
+        ),
+      },
+
       {
         name: 'Actions',
         uid: 'actions',
@@ -273,9 +290,12 @@ export default function AppointmentTable() {
     </div>
   );
 
+  // Show empty state during client-side loading
+
   return (
     <div className="p-6">
       <Table
+        isLoading={!isLoaded}
         data={appointments}
         columns={columns}
         initialVisibleColumns={INITIAL_VISIBLE_COLUMNS}

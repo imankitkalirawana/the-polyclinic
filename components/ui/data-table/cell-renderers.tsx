@@ -14,6 +14,7 @@ import {
 import { Icon } from '@iconify/react';
 
 import { CopyText } from '@/components/ui/copy';
+import { format } from 'date-fns';
 
 export const renderCopyableText = (text: string) => {
   return <CopyText>{text}</CopyText>;
@@ -35,22 +36,25 @@ export const renderUser = (avatar: string, name: string, email: string) => {
   );
 };
 
-export const renderDate = (date: Date | string) => {
+export const renderDate = ({
+  date,
+  isTime = false,
+}: {
+  date: Date | string;
+  isTime?: boolean;
+}) => {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
 
   return (
-    <div className="flex items-center gap-1">
-      <Icon
-        className="h-[16px] w-[16px] text-default-300"
-        icon="solar:calendar-minimalistic-linear"
-      />
+    <div className="flex flex-col">
       <p className="text-nowrap text-small capitalize text-default-foreground">
-        {new Intl.DateTimeFormat('en-US', {
-          month: 'long',
-          day: 'numeric',
-          year: 'numeric',
-        }).format(dateObj)}
+        {format(dateObj, 'PP')}
       </p>
+      {isTime && (
+        <p className="text-nowrap text-xs capitalize text-default-500">
+          {format(dateObj, 'p')}
+        </p>
+      )}
     </div>
   );
 };

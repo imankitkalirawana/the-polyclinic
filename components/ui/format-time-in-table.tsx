@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 
 export default function FormatTimeInTable({
   date,
-  template,
+  template = 'PP p',
   skeleton,
   className,
 }: {
