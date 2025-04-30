@@ -1,7 +1,16 @@
 'use client';
 
 import type React from 'react';
-import { Chip, User } from '@heroui/react';
+import {
+  Button,
+  Chip,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownSection,
+  DropdownTrigger,
+  User,
+} from '@heroui/react';
 import { Icon } from '@iconify/react';
 
 import { CopyText } from '@/components/ui/copy';
@@ -93,46 +102,67 @@ export const renderChips = (items: string[]) => {
 export const renderActions = (
   onView?: () => void,
   onEdit?: () => void,
-  onDelete?: () => void
+  onDelete?: () => void,
+  onCopy?: () => void
 ) => {
   return (
-    <div className="flex items-center justify-end gap-2">
-      {onView && (
-        <Icon
-          icon="solar:eye-bold"
-          className="cursor-pointer text-default-400"
-          height={18}
-          width={18}
-          onClick={(e) => {
-            e.stopPropagation();
-            onView?.();
-          }}
-        />
-      )}
-      {onEdit && (
-        <Icon
-          icon="solar:pen-bold"
-          className="cursor-pointer text-default-400"
-          height={18}
-          width={18}
-          onClick={(e) => {
-            e.stopPropagation();
-            onEdit?.();
-          }}
-        />
-      )}
-      {onDelete && (
-        <Icon
-          icon="solar:trash-bin-trash-bold"
-          className="cursor-pointer text-default-400"
-          height={18}
-          width={18}
-          onClick={(e) => {
-            e.stopPropagation();
-            onDelete?.();
-          }}
-        />
-      )}
-    </div>
+    <Dropdown aria-label="Actions" placement="bottom-end">
+      <DropdownTrigger>
+        <Button variant="light" isIconOnly>
+          <Icon icon="solar:menu-dots-bold" width={18} className="rotate-90" />
+        </Button>
+      </DropdownTrigger>
+      <DropdownMenu aria-label="Dropdown menu with description" variant="flat">
+        <DropdownSection showDivider title="Actions">
+          <DropdownItem
+            key="view"
+            description="View the item"
+            shortcut="⌘V"
+            startContent={<Icon icon="solar:eye-bold-duotone" width={24} />}
+            onClick={onView}
+          >
+            View Item
+          </DropdownItem>
+          <DropdownItem
+            key="copy"
+            description="Copy the link"
+            shortcut="⌘C"
+            startContent={<Icon icon="solar:copy-bold-duotone" width={24} />}
+            onClick={onCopy}
+          >
+            Copy link
+          </DropdownItem>
+          <DropdownItem
+            key="edit"
+            description="Allows you to edit the file"
+            shortcut="⌘⇧E"
+            startContent={
+              <Icon icon="solar:pen-new-square-bold-duotone" width={24} />
+            }
+            onClick={onEdit}
+          >
+            Edit file
+          </DropdownItem>
+        </DropdownSection>
+        <DropdownSection title="Danger zone">
+          <DropdownItem
+            key="delete"
+            className="text-danger"
+            color="danger"
+            description="Permanently delete the file"
+            shortcut="⌘⇧D"
+            startContent={
+              <Icon
+                icon="solar:trash-bin-minimalistic-bold-duotone"
+                width={24}
+              />
+            }
+            onClick={onDelete}
+          >
+            Delete file
+          </DropdownItem>
+        </DropdownSection>
+      </DropdownMenu>
+    </Dropdown>
   );
 };

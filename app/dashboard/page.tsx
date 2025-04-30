@@ -160,7 +160,8 @@ export default function AppointmentTable() {
           renderActions(
             () => console.log('View', appointment.id),
             () => console.log('Edit', appointment.id),
-            () => console.log('Delete', appointment.id)
+            () => console.log('Delete', appointment.id),
+            () => console.log('Copy', appointment.id)
           ),
       },
     ],
