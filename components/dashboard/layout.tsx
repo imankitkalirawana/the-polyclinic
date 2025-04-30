@@ -67,9 +67,9 @@ export default function DashboardLayout({
 
         <ScrollShadow className="h-full max-h-full pl-2">
           <Sidebar
-            defaultSelectedKey="mapper"
+            defaultSelectedKey="dashboard"
             items={sectionItemsWithTeams}
-            selectedKeys={[currentPath || 'mapper']}
+            selectedKeys={[currentPath || 'dashboard']}
             isCompact={isHidden}
           />
         </ScrollShadow>

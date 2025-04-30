@@ -5,8 +5,6 @@ import { Button } from '@heroui/react';
 export default function Home() {
   const { data: session, update } = useSession();
 
-  console.log(session);
-
   return (
     <>
       {session && <div>{session.user?.email}</div>}

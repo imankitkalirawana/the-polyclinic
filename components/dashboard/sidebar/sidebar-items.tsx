@@ -8,8 +8,8 @@ export const sectionItems: SidebarItem[] = [
     title: 'Overview',
     items: [
       {
-        key: 'home',
-        href: '/home',
+        key: 'dashboard',
+        href: '/dashboard',
         icon: 'solar:home-2-bold-duotone',
         title: 'Home',
       },

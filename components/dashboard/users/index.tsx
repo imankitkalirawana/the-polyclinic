@@ -27,6 +27,7 @@ import {
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useQuery } from '@tanstack/react-query';
 
+import { getAllUsers } from '@/app/dashboard/users/helper';
 import { CopyText } from '@/components/ui/copy';
 import FormatTimeInTable from '@/components/ui/format-time-in-table';
 import Skeleton from '@/components/ui/skeleton';
@@ -35,7 +36,6 @@ import { rowOptions } from '@/lib/config';
 import { capitalize } from '@/lib/utility';
 import { UserType } from '@/models/User';
 import { loadTableConfig, saveTableConfig } from '@/utils/localStorageUtil';
-import { getAllUsers } from '@/app/dashboard/users/helper';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   active: 'success',

@@ -1,9 +1,5 @@
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'Dashboard',
-};
+import DataTable from '@/components/ui/data-table';
 
 export default function Dashboard() {
-  return <div>Hello</div>;
+  return <DataTable />;
 }
