@@ -48,9 +48,10 @@ export function Table<T extends TableItem>({
   const [state, setState] = useState<TableState>({
     filterValue: '',
     selectedKeys: new Set([]),
-    visibleColumns: new Set(
-      initialVisibleColumns || columns.map((col) => col.uid)
-    ),
+    visibleColumns: new Set([
+      ...(initialVisibleColumns || columns.map((col) => col.uid)),
+      'actions',
+    ]),
     page: 1,
     sortDescriptor: initialSortDescriptor,
     filterValues: Object.fromEntries(
@@ -424,7 +425,7 @@ export function Table<T extends TableItem>({
           <div className="whitespace-nowrap text-sm text-default-800">
             {filterSelectedKeys === 'all'
               ? 'All items selected'
-              : `${filterSelectedKeys.size} Selected`}
+              : `${filterSelectedKeys.size > 0 ? `${filterSelectedKeys.size} Selected` : ''}`}
           </div>
 
           {(filterSelectedKeys === 'all' || filterSelectedKeys.size > 0) && (
@@ -487,24 +488,6 @@ export function Table<T extends TableItem>({
               ? 'All items selected'
               : `${filterSelectedKeys.size} of ${filteredItems.length} selected`}
           </span>
-          <div className="flex items-center gap-3">
-            <Button
-              isDisabled={state.page === 1}
-              size="sm"
-              variant="flat"
-              onPress={onPreviousPage}
-            >
-              Previous
-            </Button>
-            <Button
-              isDisabled={state.page === pages}
-              size="sm"
-              variant="flat"
-              onPress={onNextPage}
-            >
-              Next
-            </Button>
-          </div>
         </div>
       </div>
     );

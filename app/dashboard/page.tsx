@@ -66,6 +66,14 @@ const appointments: Appointment[] = Array.from({ length: 50 }, (_, i) => ({
     Math.random() > 0.7 ? 'Patient requested follow-up appointment' : undefined,
 }));
 
+const INITIAL_VISIBLE_COLUMNS = [
+  'appointmentId',
+  'patientName',
+  'doctorName',
+  'department',
+  'date',
+];
+
 export default function AppointmentTable() {
   // Define columns with render functions
   const columns: ColumnDef<Appointment>[] = useMemo(
@@ -270,7 +278,7 @@ export default function AppointmentTable() {
       <Table
         data={appointments}
         columns={columns}
-        initialVisibleColumns={columns.map((col) => col.uid)}
+        initialVisibleColumns={INITIAL_VISIBLE_COLUMNS}
         keyField="appointmentId"
         filters={filters}
         searchField={(appointment, searchValue) =>
