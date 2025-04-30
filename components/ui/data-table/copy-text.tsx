@@ -1,7 +1,7 @@
-import {Button, Tooltip} from "@heroui/react";
-import React, {forwardRef, memo, useMemo} from "react";
-import {Icon} from "@iconify/react";
-import {cn} from "@heroui/react";
+import { Button, Tooltip } from '@heroui/react';
+import React, { forwardRef, memo, useMemo } from 'react';
+import { Icon } from '@iconify/react';
+import { cn } from '@heroui/react';
 
 export interface CopyTextProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
@@ -12,11 +12,11 @@ export interface CopyTextProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export const CopyText = memo(
   forwardRef<HTMLDivElement, CopyTextProps>((props, forwardedRef) => {
-    const {className, textClassName, children, copyText = "Copy"} = props;
+    const { className, textClassName, children, copyText = 'Copy' } = props;
     const [copied, setCopied] = React.useState(false);
-    const [copyTimeout, setCopyTimeout] = React.useState<ReturnType<typeof setTimeout> | null>(
-      null,
-    );
+    const [copyTimeout, setCopyTimeout] = React.useState<ReturnType<
+      typeof setTimeout
+    > | null>(null);
     const onClearTimeout = () => {
       if (copyTimeout) {
         clearTimeout(copyTimeout);
@@ -31,14 +31,20 @@ export const CopyText = memo(
       setCopyTimeout(
         setTimeout(() => {
           setCopied(false);
-        }, 3000),
+        }, 3000)
       );
     };
 
-    const content = useMemo(() => (copied ? "Copied" : copyText), [copied, copyText]);
+    const content = useMemo(
+      () => (copied ? 'Copied' : copyText),
+      [copied, copyText]
+    );
 
     return (
-      <div ref={forwardedRef} className={cn("flex items-center gap-3 text-default-500", className)}>
+      <div
+        ref={forwardedRef}
+        className={cn('flex items-center gap-3 text-default-500', className)}
+      >
         <span className={textClassName}>{children}</span>
         <Tooltip className="text-foreground" content={content}>
           <Button
@@ -48,13 +54,20 @@ export const CopyText = memo(
             variant="light"
             onPress={handleClick}
           >
-            {!copied && <Icon className="h-[14px] w-[14px]" icon="solar:copy-linear" />}
-            {copied && <Icon className="h-[14px] w-[14px]" icon="solar:check-read-linear" />}
+            {!copied && (
+              <Icon className="h-[14px] w-[14px]" icon="solar:copy-linear" />
+            )}
+            {copied && (
+              <Icon
+                className="h-[14px] w-[14px]"
+                icon="solar:check-read-linear"
+              />
+            )}
           </Button>
         </Tooltip>
       </div>
     );
-  }),
+  })
 );
 
-CopyText.displayName = "CopyText";
+CopyText.displayName = 'CopyText';
