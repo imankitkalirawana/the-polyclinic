@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { addToast, Button, Chip } from '@heroui/react';
+import { addToast, Button, Chip, user } from '@heroui/react';
 import { Icon } from '@iconify/react';
 
 import {
@@ -15,181 +15,72 @@ import type {
 } from '../../components/ui/data-table/types';
 
 import { Table } from '@/components/ui/data-table';
+import { useQuery } from '@tanstack/react-query';
+import { getAllUsers } from './users/helper';
+import { UserType } from '@/models/User';
 
-// Sample appointment data
-interface Appointment {
-  id: number;
-  appointmentId: string;
-  patientName: string;
-  doctorName: string;
-  department: string;
-  date: Date;
-  time: string;
-  status: 'Scheduled' | 'Completed' | 'Cancelled' | 'No-show';
-  notes?: string;
-}
+const INITIAL_VISIBLE_COLUMNS = ['uid', 'name', 'email', 'role', 'createdAt'];
 
-// Function to generate appointments data
-const generateAppointmentsData = (): Array<Appointment> => {
-  return Array.from({ length: 50 }, (_, i) => ({
-    id: i + 1,
-    appointmentId: `APT-${1000 + i}`,
-    patientName: [
-      'John Smith',
-      'Emma Johnson',
-      'Michael Brown',
-      'Sophia Davis',
-      'James Wilson',
-    ][Math.floor(Math.random() * 5)],
-    doctorName: [
-      'Dr. Roberts',
-      'Dr. Chen',
-      'Dr. Patel',
-      'Dr. Garcia',
-      'Dr. Thompson',
-    ][Math.floor(Math.random() * 5)],
-    department: [
-      'Cardiology',
-      'Neurology',
-      'Pediatrics',
-      'Orthopedics',
-      'Dermatology',
-    ][Math.floor(Math.random() * 5)],
-    date: new Date(
-      Date.now() + (Math.floor(Math.random() * 30) - 15) * 24 * 60 * 60 * 1000
-    ),
-    time: ['09:00 AM', '10:30 AM', '01:15 PM', '03:45 PM', '05:00 PM'][
-      Math.floor(Math.random() * 5)
-    ],
-    status: ['Scheduled', 'Completed', 'Cancelled', 'No-show'][
-      Math.floor(Math.random() * 4)
-    ] as Appointment['status'],
-    notes:
-      Math.random() > 0.7
-        ? 'Patient requested follow-up appointment'
-        : undefined,
-  }));
-};
-
-const INITIAL_VISIBLE_COLUMNS = [
-  'appointmentId',
-  'patientName',
-  'doctorName',
-  'department',
-  'date',
-];
-
-export default function AppointmentTable() {
+export default function UserTable() {
   // Client-side data loading to prevent hydration mismatch
-  const [appointments, setAppointments] = useState<Array<Appointment>>([]);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const { data, isLoading } = useQuery({
+    queryKey: ['users'],
+    queryFn: () => getAllUsers({}),
+  });
 
-  useEffect(() => {
-    // Only run on client to avoid hydration mismatch
-    setAppointments(generateAppointmentsData());
-    setIsLoaded(true);
-  }, []);
+  const users: UserType[] = data?.users || [];
 
   // Define columns with render functions
-  const columns: ColumnDef<Appointment>[] = useMemo(
+  const columns: ColumnDef<UserType>[] = useMemo(
     () => [
       {
-        name: 'Appointment ID',
-        uid: 'appointmentId',
+        name: 'User ID',
+        uid: 'uid',
         sortable: true,
-        renderCell: (appointment) =>
-          renderCopyableText(appointment.appointmentId),
+        renderCell: (user) => renderCopyableText(user.uid.toString()),
       },
       {
-        name: 'Patient',
-        uid: 'patientName',
+        name: 'Name',
+        uid: 'name',
         sortable: true,
-        renderCell: (appointment) => (
-          <div className="font-medium text-default-foreground">
-            {appointment.patientName}
-          </div>
+        renderCell: (user) => (
+          <div className="font-medium text-default-foreground">{user.name}</div>
         ),
       },
       {
         name: 'Doctor',
         uid: 'doctorName',
         sortable: true,
-        renderCell: (appointment) => (
-          <div className="text-default-foreground">
-            {appointment.doctorName}
-          </div>
+        renderCell: (user) => (
+          <div className="text-default-foreground">{user.email}</div>
         ),
       },
       {
         name: 'Department',
         uid: 'department',
         sortable: true,
-        renderCell: (appointment) => (
-          <div className="text-default-foreground">
-            {appointment.department}
-          </div>
+        renderCell: (user) => (
+          <div className="text-default-foreground"> {user.role}</div>
         ),
       },
       {
-        name: 'Date',
-        uid: 'date',
+        name: 'Created At',
+        uid: 'createdAt',
         sortable: true,
-        renderCell: (appointment) =>
-          renderDate({ date: appointment.date, isTime: true }),
-      },
-      {
-        name: 'Status',
-        uid: 'status',
-        sortable: true,
-        renderCell: (appointment) => {
-          const getStatusColor = () => {
-            switch (appointment.status) {
-              case 'Scheduled':
-                return 'bg-blue-500 text-blue-700';
-              case 'Completed':
-                return 'bg-success-500 text-success-700';
-              case 'Cancelled':
-                return 'bg-danger-500 text-danger-700';
-              case 'No-show':
-                return 'bg-warning-500 text-warning-700';
-              default:
-                return 'bg-default-500 text-default-700';
-            }
-          };
-
-          return (
-            <Chip
-              className={`gap-1 rounded-lg px-2 py-1 capitalize`}
-              size="sm"
-              variant="flat"
-              startContent={
-                <span className={`${getStatusColor()} h-2 w-2 rounded-full`} />
-              }
-            >
-              {appointment.status.split('-').join(' ')}
-            </Chip>
-          );
-        },
-      },
-      {
-        name: 'Notes',
-        uid: 'notes',
-        sortable: true,
-        renderCell: (appointment) => (
-          <div className="text-default-foreground">{appointment.notes}</div>
-        ),
+        renderCell: (user) =>
+          renderDate({ date: user.createdAt, isTime: true }),
       },
 
       {
         name: 'Actions',
         uid: 'actions',
         sortable: false,
-        renderCell: (appointment) =>
+        renderCell: (user) =>
           renderActions(
-            () => console.log('View', appointment.id),
-            () => console.log('Edit', appointment.id),
-            () => console.log('Delete', appointment.id),
-            () => console.log('Copy', appointment.id)
+            () => console.log('View', user.uid),
+            () => console.log('Edit', user.uid),
+            () => console.log('Delete', user.uid),
+            () => console.log('Copy', user.uid)
           ),
       },
     ],
@@ -197,34 +88,30 @@ export default function AppointmentTable() {
   );
 
   // Define filters
-  const filters: FilterDef<Appointment>[] = useMemo(
+  const filters: FilterDef<UserType>[] = useMemo(
     () => [
       {
         name: 'Department',
         key: 'department',
         options: [
           { label: 'All', value: 'all' },
-          { label: 'Cardiology', value: 'cardiology' },
-          { label: 'Neurology', value: 'neurology' },
-          { label: 'Pediatrics', value: 'pediatrics' },
-          { label: 'Orthopedics', value: 'orthopedics' },
-          { label: 'Dermatology', value: 'dermatology' },
+          { label: 'Admin', value: 'admin' },
+          { label: 'Doctor', value: 'doctor' },
+          { label: 'Patient', value: 'patient' },
+          { label: 'Receptionist', value: 'receptionist' },
+          { label: 'Nurse', value: 'nurse' },
         ],
-        filterFn: (appointment, value) =>
-          appointment.department.toLowerCase() === value,
+        filterFn: (user, value) => user.role.toLowerCase() === value,
       },
       {
         name: 'Status',
         key: 'status',
         options: [
           { label: 'All', value: 'all' },
-          { label: 'Scheduled', value: 'scheduled' },
-          { label: 'Completed', value: 'completed' },
-          { label: 'Cancelled', value: 'cancelled' },
-          { label: 'No-show', value: 'no-show' },
+          { label: 'Active', value: 'active' },
+          { label: 'Inactive', value: 'inactive' },
         ],
-        filterFn: (appointment, value) =>
-          appointment.status.toLowerCase() === value,
+        filterFn: (user, value) => user.status.toLowerCase() === value,
       },
       {
         name: 'Date',
@@ -233,21 +120,19 @@ export default function AppointmentTable() {
           { label: 'All', value: 'all' },
           { label: 'Today', value: 'today' },
           { label: 'This week', value: 'thisWeek' },
-          { label: 'Next week', value: 'nextWeek' },
-          { label: 'Past appointments', value: 'past' },
+          { label: 'Past Users', value: 'past' },
         ],
-        filterFn: (appointment, value) => {
+        filterFn: (user, value) => {
           if (value === 'all') return true;
 
           const today = new Date();
           today.setHours(0, 0, 0, 0);
 
-          const appointmentDate = new Date(appointment.date);
-          appointmentDate.setHours(0, 0, 0, 0);
+          const createdAt = new Date(user.createdAt);
+          createdAt.setHours(0, 0, 0, 0);
 
           const daysDiff = Math.floor(
-            (appointmentDate.getTime() - today.getTime()) /
-              (1000 * 60 * 60 * 24)
+            (createdAt.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
           );
 
           switch (value) {
@@ -255,8 +140,6 @@ export default function AppointmentTable() {
               return daysDiff === 0;
             case 'thisWeek':
               return daysDiff >= 0 && daysDiff < 7;
-            case 'nextWeek':
-              return daysDiff >= 7 && daysDiff < 14;
             case 'past':
               return daysDiff < 0;
             default:
@@ -272,13 +155,13 @@ export default function AppointmentTable() {
   const renderTopBar = () => (
     <div className="mb-[18px] flex items-center justify-between">
       <div className="flex w-[226px] items-center gap-2">
-        <h1 className="text-2xl font-[700] leading-[32px]">Appointments</h1>
+        <h1 className="text-2xl font-[700] leading-[32px]">Users</h1>
         <Chip
           className="hidden items-center text-default-500 sm:flex"
           size="sm"
           variant="flat"
         >
-          {appointments.length}
+          {data?.total}
         </Chip>
       </div>
       <Button
@@ -295,29 +178,25 @@ export default function AppointmentTable() {
   return (
     <div className="p-6">
       <Table
-        isLoading={!isLoaded}
-        data={appointments}
+        isLoading={isLoading}
+        data={users}
         columns={columns}
         initialVisibleColumns={INITIAL_VISIBLE_COLUMNS}
-        keyField="appointmentId"
+        keyField="uid"
         filters={filters}
-        searchField={(appointment, searchValue) =>
-          appointment.patientName
-            .toLowerCase()
-            .includes(searchValue.toLowerCase()) ||
-          appointment.doctorName
-            .toLowerCase()
-            .includes(searchValue.toLowerCase())
+        searchField={(user, searchValue) =>
+          user.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+          user.email.toLowerCase().includes(searchValue.toLowerCase())
         }
         renderTopBar={renderTopBar}
         initialSortDescriptor={{
-          column: 'date',
-          direction: 'ascending',
+          column: 'createdAt',
+          direction: 'descending',
         }}
         onRowAction={(row) => {
           addToast({
-            title: 'Appointment',
-            description: `Appointment ${row} clicked`,
+            title: 'User',
+            description: `User ${row} clicked`,
             color: 'success',
           });
         }}
