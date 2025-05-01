@@ -117,3 +117,14 @@ export const WEBSITE_SETTING = {
     logo: '/images/logo.png',
   },
 };
+
+export const MOCK_DATA = {
+  users: {
+    isMock: false,
+    count: 100,
+  },
+  appointments: {
+    isMock: true,
+    count: 100,
+  },
+};

@@ -3,7 +3,7 @@
 import { UserRole, UserType, UserStatus } from '@/models/User';
 import { faker } from '@faker-js/faker';
 
-export async function generateRows(count: number) {
+export async function generateUsers(count: number) {
   const generated: UserType[] = [];
 
   for (let i = 0; i < count; i++) {

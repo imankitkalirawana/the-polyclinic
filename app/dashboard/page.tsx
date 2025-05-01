@@ -4,12 +4,10 @@ import { ReactNode, useEffect, useMemo, useState } from 'react';
 import {
   addToast,
   Button,
-  Chip,
   DropdownItem,
   DropdownMenu,
   Selection,
 } from '@heroui/react';
-import { Icon } from '@iconify/react';
 
 import {
   renderActions,
@@ -23,24 +21,19 @@ import type {
 } from '../../components/ui/data-table/types';
 
 import { Table } from '@/components/ui/data-table';
-import { UserType } from '@/models/User';
-import { generateRows } from './users/mock';
+import { UserStatus, UserType } from '@/models/User';
+import { generateUsers } from './users/mock';
+import { useQuery } from '@tanstack/react-query';
 
 const INITIAL_VISIBLE_COLUMNS = ['uid', 'name', 'email', 'role', 'createdAt'];
 
 export default function UserTable() {
-  const [users, setUsers] = useState<UserType[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  useEffect(() => {
-    const fetchUsers = async () => {
-      setIsLoading(true);
-      const rows = await generateRows(100);
-      setUsers(rows);
-      setIsLoading(false);
-    };
+  const { data, isLoading } = useQuery({
+    queryKey: ['users'],
+    queryFn: () => generateUsers(100),
+  });
 
-    fetchUsers();
-  }, []);
+  const users: UserType[] = data ?? [];
 
   // Define columns with render functions
   const columns: ColumnDef<UserType>[] = useMemo(
@@ -134,6 +127,9 @@ export default function UserTable() {
           { label: 'All', value: 'all' },
           { label: 'Active', value: 'active' },
           { label: 'Inactive', value: 'inactive' },
+          { label: 'Blocked', value: 'blocked' },
+          { label: 'Deleted', value: 'deleted' },
+          { label: 'Unverified', value: 'unverified' },
         ],
         filterFn: (user, value) => user.status.toLowerCase() === value,
       },

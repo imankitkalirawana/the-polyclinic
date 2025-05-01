@@ -12,52 +12,11 @@ export const GET = auth(async function GET(request: any) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    //  GET /api/v1/users?limit=10&page=1&sortColumn=name&sortDirection=ascending&query=&status=%255B%2522inactive%2522%252C%2522blocked%2522%252C%2522deleted%2522%252C%2522unverified%2522%255D 200 in 171ms
-
-    const { searchParams } = new URL(request.url);
-    const limit = parseInt(searchParams.get('limit') || '25', 10);
-    const page = parseInt(searchParams.get('page') || '1', 10);
-    const query = searchParams.get('query')?.trim() || '';
-    const sort = {
-      column: searchParams.get('sortColumn') || 'name',
-      direction: searchParams.get('sortDirection') || 'ascending',
-    };
-
-    const searchQuery = {
-      ...(query
-        ? {
-            $or: [
-              { name: { $regex: new RegExp(query.trim(), 'ig') } },
-              { email: { $regex: new RegExp(query.trim(), 'ig') } },
-              { phone: { $regex: new RegExp(query.trim(), 'ig') } },
-              { status: { $regex: new RegExp(query.trim(), 'ig') } },
-              { uid: isNaN(parseInt(query)) ? undefined : parseInt(query, 10) },
-            ].filter(Boolean) as any[],
-          }
-        : {}),
-    };
-
     await connectDB();
 
-    // Build the sort object dynamically
-    const sortObject: Record<string, 1 | -1> = {
-      [sort.column]: (sort.direction === 'ascending' ? 1 : -1) as 1 | -1,
-    };
-    const users = await User.find(searchQuery)
-      .select('-password')
-      .sort(sortObject)
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .lean()
-      .catch((error) => {
-        throw new Error(error.message);
-      });
+    const users = await User.find().select('-password');
 
-    const total = await User.countDocuments(searchQuery);
-
-    const totalPages = Math.ceil(total / limit);
-
-    return NextResponse.json({ users, total, totalPages });
+    return NextResponse.json(users);
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: 'An error occurred' }, { status: 500 });

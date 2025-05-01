@@ -2,25 +2,18 @@
 import { cookies } from 'next/headers';
 import axios from 'axios';
 
-import { API_BASE_URL } from '@/lib/config';
+import { API_BASE_URL, MOCK_DATA } from '@/lib/config';
 import { UserType } from '@/models/User';
+import { generateUsers } from './mock';
 
-export const getAllUsers = async (params: {
-  limit?: number;
-  page?: number;
-  sortColumn?: string;
-  sortDirection?: string;
-  query?: string;
-  status?: string[];
-}): Promise<{
-  users: UserType[];
-  total: number;
-  totalPages: number;
-}> => {
-  let status = encodeURIComponent(JSON.stringify(params.status));
+export const getAllUsers = async (): Promise<UserType[]> => {
+  // If mock data is enabled, return mock data
+  if (MOCK_DATA.users.isMock) {
+    return generateUsers(MOCK_DATA.users.count);
+  }
 
+  // If mock data is disabled, fetch data from the API
   const res = await axios.get(`${API_BASE_URL}/api/v1/users`, {
-    params: { ...params, status },
     headers: {
       Cookie: cookies().toString(),
     },
