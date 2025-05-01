@@ -1,3 +1,3 @@
-export default function Dashboard(){
-  return <>Hello</>
+export default function Dashboard() {
+  return <>Hello</>;
 }

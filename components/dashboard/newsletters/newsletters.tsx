@@ -11,11 +11,9 @@ import {
 
 import {
   renderActions,
-  renderChip,
-  renderCopyableText,
   renderDate,
 } from '@/components/ui/data-table/cell-renderers';
-import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
+import type { ColumnDef } from '@/components/ui/data-table/types';
 
 import { Table } from '@/components/ui/data-table';
 import { NewsletterType } from '@/models/Newsletter';
