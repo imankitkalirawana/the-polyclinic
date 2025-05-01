@@ -138,19 +138,11 @@ export function Table<T extends TableItem>({
     return filteredData;
   }, [data, state.filterValue, itemFilter, searchField]);
 
-  const pages = Math.ceil(filteredItems.length / rowsPerPage) || 1;
-
-  const items = useMemo(() => {
-    const start = (state.page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
-
-    return filteredItems.slice(start, end);
-  }, [state.page, filteredItems, rowsPerPage]);
-
+  // Sort filteredItems before paginating
   const sortedItems = useMemo(() => {
-    if (!state.sortDescriptor.column) return items;
+    if (!state.sortDescriptor.column) return filteredItems;
 
-    return [...items].sort((a: T, b: T) => {
+    return [...filteredItems].sort((a: T, b: T) => {
       const column = state.sortDescriptor.column;
 
       let first = a[column];
@@ -181,14 +173,24 @@ export function Table<T extends TableItem>({
 
       return state.sortDescriptor.direction === 'descending' ? -cmp : cmp;
     });
-  }, [state.sortDescriptor, items]);
+  }, [state.sortDescriptor, filteredItems]);
+
+  const pages = Math.ceil(sortedItems.length / rowsPerPage) || 1;
+
+  // Paginate sortedItems
+  const items = useMemo(() => {
+    const start = (state.page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    return sortedItems.slice(start, end);
+  }, [state.page, sortedItems, rowsPerPage]);
 
   const filterSelectedKeys = useMemo(() => {
     if (state.selectedKeys === 'all') return state.selectedKeys;
     let resultKeys = new Set<Key>();
 
     if (state.filterValue) {
-      filteredItems.forEach((item) => {
+      sortedItems.forEach((item) => {
         const stringId = String(item[keyField]);
 
         if ((state.selectedKeys as Set<string>).has(stringId)) {
@@ -200,7 +202,7 @@ export function Table<T extends TableItem>({
     }
 
     return resultKeys;
-  }, [state.selectedKeys, filteredItems, state.filterValue, keyField]);
+  }, [state.selectedKeys, sortedItems, state.filterValue, keyField]);
 
   const renderCell = useMemoizedCallback((item: T, columnKey: string) => {
     const column = columns.find((col) => col.uid === columnKey);
@@ -233,7 +235,7 @@ export function Table<T extends TableItem>({
     if (keys === 'all') {
       if (state.filterValue) {
         const resultKeys = new Set(
-          filteredItems.map((item) => String(item[keyField]))
+          sortedItems.map((item) => String(item[keyField]))
         );
         updateState({ selectedKeys: resultKeys });
       } else {
@@ -250,7 +252,7 @@ export function Table<T extends TableItem>({
 
       const selectedValue =
         state.selectedKeys === 'all'
-          ? new Set(filteredItems.map((item) => String(item[keyField])))
+          ? new Set(sortedItems.map((item) => String(item[keyField])))
           : state.selectedKeys;
 
       selectedValue.forEach((v) => {
@@ -499,12 +501,12 @@ export function Table<T extends TableItem>({
           <span className="text-small text-default-400">
             {filterSelectedKeys === 'all'
               ? 'All items selected'
-              : `${filterSelectedKeys.size} of ${filteredItems.length} selected`}
+              : `${filterSelectedKeys.size} of ${sortedItems.length} selected`}
           </span>
         </div>
       </div>
     );
-  }, [filterSelectedKeys, state.page, pages, filteredItems.length]);
+  }, [filterSelectedKeys, state.page, pages, sortedItems.length]);
 
   return (
     <div className="h-full w-full">
@@ -591,7 +593,7 @@ export function Table<T extends TableItem>({
         <TableBody
           isLoading={isLoading}
           emptyContent={'No data found'}
-          items={sortedItems}
+          items={items}
           loadingContent={<Spinner />}
         >
           {(item) => (
