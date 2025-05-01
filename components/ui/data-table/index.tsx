@@ -44,7 +44,7 @@ export function Table<T extends TableItem>({
   keyField,
   filters = [],
   searchField,
-  renderTopBar,
+  endContent,
   renderSelectedActions,
   onRowAction,
   rowsPerPage = 10,
@@ -288,7 +288,7 @@ export function Table<T extends TableItem>({
 
   const topContent = useMemo(() => {
     return (
-      <div className="flex items-center gap-4 overflow-auto px-[6px] py-[4px]">
+      <div className="flex items-center justify-between gap-4 overflow-auto px-[6px] py-[4px]">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-4">
             {searchField && (
@@ -466,6 +466,7 @@ export function Table<T extends TableItem>({
               </Dropdown>
             )}
         </div>
+        {endContent && endContent()}
       </div>
     );
   }, [
@@ -506,7 +507,6 @@ export function Table<T extends TableItem>({
 
   return (
     <div className="h-full w-full">
-      {renderTopBar && renderTopBar()}
       <HeroTable
         isHeaderSticky
         aria-label="Generic data table with sorting, filtering, and pagination"

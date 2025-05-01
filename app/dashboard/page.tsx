@@ -176,25 +176,10 @@ export default function UserTable() {
   );
 
   // Render top bar
-  const renderTopBar = () => (
-    <div className="mb-[18px] flex items-center justify-between">
-      <div className="flex w-[226px] items-center gap-2">
-        <h1 className="text-2xl font-[700] leading-[32px]">Users</h1>
-        <Chip
-          className="hidden items-center text-default-500 sm:flex"
-          size="sm"
-          variant="flat"
-        >
-          {users.length}
-        </Chip>
-      </div>
-      <Button
-        color="primary"
-        endContent={<Icon icon="solar:calendar-add-bold" width={20} />}
-      >
-        New Appointment
-      </Button>
-    </div>
+  const endContent = () => (
+    <Button color="primary" size="sm">
+      New User
+    </Button>
   );
 
   const renderSelectedActions = (selectedKeys: Selection) => {
@@ -229,36 +214,32 @@ export default function UserTable() {
     );
   };
 
-  // Show empty state during client-side loading
-
   return (
-    <div className="p-6">
-      <Table
-        key="users"
-        isLoading={isLoading}
-        data={users}
-        columns={columns}
-        initialVisibleColumns={INITIAL_VISIBLE_COLUMNS}
-        keyField="uid"
-        filters={filters}
-        searchField={(user, searchValue) =>
-          user.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-          user.email.toLowerCase().includes(searchValue.toLowerCase())
-        }
-        renderTopBar={renderTopBar}
-        renderSelectedActions={renderSelectedActions}
-        initialSortDescriptor={{
-          column: 'createdAt',
-          direction: 'descending',
-        }}
-        onRowAction={(row) => {
-          addToast({
-            title: 'User',
-            description: `User ${row} clicked`,
-            color: 'success',
-          });
-        }}
-      />
-    </div>
+    <Table
+      key="users"
+      isLoading={isLoading}
+      data={users}
+      columns={columns}
+      initialVisibleColumns={INITIAL_VISIBLE_COLUMNS}
+      keyField="uid"
+      filters={filters}
+      searchField={(user, searchValue) =>
+        user.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchValue.toLowerCase())
+      }
+      endContent={endContent}
+      renderSelectedActions={renderSelectedActions}
+      initialSortDescriptor={{
+        column: 'createdAt',
+        direction: 'descending',
+      }}
+      onRowAction={(row) => {
+        addToast({
+          title: 'User',
+          description: `User ${row} clicked`,
+          color: 'success',
+        });
+      }}
+    />
   );
 }
