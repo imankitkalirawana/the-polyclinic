@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { Selection } from '@heroui/react';
 import {
   Button,
@@ -33,6 +33,7 @@ import type { Key } from '@react-types/shared';
 
 import type { TableItem, TableProps, TableState } from './types';
 import { useMemoizedCallback } from './use-memoized-callback';
+import useDebounce from '@/hooks/useDebounce';
 
 export function Table<T extends TableItem>({
   isLoading,
@@ -45,8 +46,11 @@ export function Table<T extends TableItem>({
   renderTopBar,
   onRowAction,
   rowsPerPage = 10,
-  initialSortDescriptor = { column: '', direction: 'ascending' },
+  initialSortDescriptor = { column: 'createdAt', direction: 'descending' },
 }: TableProps<T>) {
+  const [searchValue, setSearchValue] = useState<string>('');
+  const debouncedSearch = useDebounce(searchValue, 500);
+
   const [state, setState] = useState<TableState>({
     filterValue: '',
     selectedKeys: new Set([]),
@@ -218,23 +222,8 @@ export function Table<T extends TableItem>({
     return value;
   });
 
-  const onNextPage = useMemoizedCallback(() => {
-    if (state.page < pages) {
-      updateState({ page: state.page + 1 });
-    }
-  });
-
-  const onPreviousPage = useMemoizedCallback(() => {
-    if (state.page > 1) {
-      updateState({ page: state.page - 1 });
-    }
-  });
-
   const onSearchChange = useMemoizedCallback((value?: string) => {
-    updateState({
-      filterValue: value || '',
-      page: 1,
-    });
+    setSearchValue(value || '');
   });
 
   const onSelectionChange = useMemoizedCallback((keys: Selection) => {
@@ -284,6 +273,13 @@ export function Table<T extends TableItem>({
     }
   );
 
+  useEffect(() => {
+    updateState({
+      filterValue: debouncedSearch,
+      page: 1,
+    });
+  }, [debouncedSearch]);
+
   const topContent = useMemo(() => {
     return (
       <div className="flex items-center gap-4 overflow-auto px-[6px] py-[4px]">
@@ -297,7 +293,7 @@ export function Table<T extends TableItem>({
                 }
                 placeholder="Search"
                 size="sm"
-                value={state.filterValue}
+                value={searchValue}
                 onValueChange={onSearchChange}
               />
             )}
@@ -379,6 +375,18 @@ export function Table<T extends TableItem>({
                           },
                         });
                       }}
+                      endContent={
+                        state.sortDescriptor.column === item.uid && (
+                          <Icon
+                            icon={
+                              state.sortDescriptor.direction === 'ascending'
+                                ? 'solar:sort-from-top-to-bottom-bold-duotone'
+                                : 'solar:sort-from-bottom-to-top-bold-duotone'
+                            }
+                            width={18}
+                          />
+                        )
+                      }
                     >
                       {item.name}
                     </DropdownItem>
@@ -460,7 +468,7 @@ export function Table<T extends TableItem>({
       </div>
     );
   }, [
-    state.filterValue,
+    searchValue,
     state.visibleColumns,
     filterSelectedKeys,
     headerColumns,
@@ -493,14 +501,7 @@ export function Table<T extends TableItem>({
         </div>
       </div>
     );
-  }, [
-    filterSelectedKeys,
-    state.page,
-    pages,
-    filteredItems.length,
-    onPreviousPage,
-    onNextPage,
-  ]);
+  }, [filterSelectedKeys, state.page, pages, filteredItems.length]);
 
   return (
     <div className="h-full w-full">

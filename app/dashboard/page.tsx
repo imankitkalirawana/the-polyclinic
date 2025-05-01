@@ -1,11 +1,12 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { addToast, Button, Chip, user } from '@heroui/react';
+import { addToast, Button, Chip } from '@heroui/react';
 import { Icon } from '@iconify/react';
 
 import {
   renderActions,
+  renderChip,
   renderCopyableText,
   renderDate,
 } from '../../components/ui/data-table/cell-renderers';
@@ -15,20 +16,24 @@ import type {
 } from '../../components/ui/data-table/types';
 
 import { Table } from '@/components/ui/data-table';
-import { useQuery } from '@tanstack/react-query';
-import { getAllUsers } from './users/helper';
 import { UserType } from '@/models/User';
+import { generateRows } from './users/mock';
 
 const INITIAL_VISIBLE_COLUMNS = ['uid', 'name', 'email', 'role', 'createdAt'];
 
 export default function UserTable() {
-  // Client-side data loading to prevent hydration mismatch
-  const { data, isLoading } = useQuery({
-    queryKey: ['users'],
-    queryFn: () => getAllUsers({}),
-  });
+  const [users, setUsers] = useState<UserType[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    const fetchUsers = async () => {
+      setIsLoading(true);
+      const rows = await generateRows(100);
+      setUsers(rows);
+      setIsLoading(false);
+    };
 
-  const users: UserType[] = data?.users || [];
+    fetchUsers();
+  }, []);
 
   // Define columns with render functions
   const columns: ColumnDef<UserType>[] = useMemo(
@@ -48,20 +53,32 @@ export default function UserTable() {
         ),
       },
       {
-        name: 'Doctor',
-        uid: 'doctorName',
+        name: 'Email',
+        uid: 'email',
         sortable: true,
         renderCell: (user) => (
-          <div className="text-default-foreground">{user.email}</div>
+          <div className="truncate lowercase text-default-foreground">
+            {user.email}
+          </div>
         ),
       },
       {
-        name: 'Department',
-        uid: 'department',
+        name: 'Role',
+        uid: 'role',
         sortable: true,
-        renderCell: (user) => (
-          <div className="text-default-foreground"> {user.role}</div>
-        ),
+        renderCell: (user) =>
+          renderChip({
+            item: user.role,
+          }),
+      },
+      {
+        name: 'Status',
+        uid: 'status',
+        sortable: true,
+        renderCell: (user) =>
+          renderChip({
+            item: user.status,
+          }),
       },
       {
         name: 'Created At',
@@ -91,13 +108,13 @@ export default function UserTable() {
   const filters: FilterDef<UserType>[] = useMemo(
     () => [
       {
-        name: 'Department',
-        key: 'department',
+        name: 'Role',
+        key: 'role',
         options: [
           { label: 'All', value: 'all' },
           { label: 'Admin', value: 'admin' },
           { label: 'Doctor', value: 'doctor' },
-          { label: 'Patient', value: 'patient' },
+          { label: 'Patient', value: 'user' },
           { label: 'Receptionist', value: 'receptionist' },
           { label: 'Nurse', value: 'nurse' },
         ],
@@ -114,8 +131,8 @@ export default function UserTable() {
         filterFn: (user, value) => user.status.toLowerCase() === value,
       },
       {
-        name: 'Date',
-        key: 'date',
+        name: 'Created At',
+        key: 'createdAt',
         options: [
           { label: 'All', value: 'all' },
           { label: 'Today', value: 'today' },
@@ -161,7 +178,7 @@ export default function UserTable() {
           size="sm"
           variant="flat"
         >
-          {data?.total}
+          {users.length}
         </Chip>
       </div>
       <Button

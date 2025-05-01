@@ -4,6 +4,8 @@ import type React from 'react';
 import {
   Button,
   Chip,
+  ChipProps,
+  cn,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -12,6 +14,7 @@ import {
   User,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
+import { UserRole, UserStatus } from '@/models/User';
 
 import { CopyText } from '@/components/ui/copy';
 import { format } from 'date-fns';
@@ -64,6 +67,37 @@ export const renderCountry = (name: string, icon: React.ReactNode) => {
     <div className="flex items-center gap-2">
       <div className="h-[16px] w-[16px]">{icon}</div>
       <p className="text-nowrap text-small text-default-foreground">{name}</p>
+    </div>
+  );
+};
+
+const chipColorMap: Record<UserRole | UserStatus, string> = {
+  // for status
+  active: 'bg-green-500',
+  inactive: 'bg-gray-500',
+  blocked: 'bg-pink-500',
+  deleted: 'bg-red-500',
+  unverified: 'bg-yellow-500',
+
+  // for roles
+  admin: 'bg-red-500',
+  doctor: 'bg-blue-500',
+  nurse: 'bg-amber-500',
+  receptionist: 'bg-yellow-500',
+  pharmacist: 'bg-purple-500',
+  laboratorist: 'bg-teal-500',
+  user: 'bg-gray-500',
+};
+
+export const renderChip = ({ item }: { item: UserRole | UserStatus }) => {
+  return (
+    <div className="flex w-fit items-center gap-[2px] rounded-lg bg-default-100 px-2 py-1">
+      <span
+        className={cn('size-2 rounded-full bg-default-500', chipColorMap[item])}
+      ></span>
+      <span className="px-1 capitalize text-default-800">
+        {item.split('-').join(' ')}
+      </span>
     </div>
   );
 };

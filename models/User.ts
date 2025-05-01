@@ -3,12 +3,13 @@ import mongooseSequence from 'mongoose-sequence';
 
 import { Base } from '@/lib/interface';
 
-export type UserStatus =
-  | 'active'
-  | 'inactive'
-  | 'blocked'
-  | 'deleted'
-  | 'unverified';
+export enum UserStatus {
+  active = 'active',
+  inactive = 'inactive',
+  blocked = 'blocked',
+  deleted = 'deleted',
+  unverified = 'unverified',
+}
 
 export enum UserRole {
   admin = 'admin',
