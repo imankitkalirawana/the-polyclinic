@@ -39,6 +39,12 @@ export const sectionItems: SidebarItem[] = [
         title: 'Emails',
       },
       {
+        key: 'kittis',
+        href: '/dashboard/kittis',
+        icon: 'solar:cat-bold-duotone',
+        title: 'Kittis',
+      },
+      {
         key: 'newsletters',
         href: '/dashboard/newsletters',
         icon: 'solar:inbox-bold-duotone',

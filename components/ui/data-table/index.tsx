@@ -34,7 +34,6 @@ import type { Key } from '@react-types/shared';
 import type { TableItem, TableProps, TableState } from './types';
 import { useMemoizedCallback } from './use-memoized-callback';
 import useDebounce from '@/hooks/useDebounce';
-import Skeleton from '../skeleton';
 
 export function Table<T extends TableItem>({
   key,

@@ -5,7 +5,7 @@ import {
 } from '@tanstack/react-query';
 
 import Newsletters from '@/components/dashboard/newsletters/newsletters';
-import { getAllNewsletters } from '@/functions/server-actions/newsletters';
+import { getAllNewsletters } from './helper';
 
 export default async function Page() {
   const queryClient = new QueryClient();
