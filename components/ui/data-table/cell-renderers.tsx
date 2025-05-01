@@ -18,6 +18,7 @@ import { UserRole, UserStatus } from '@/models/User';
 
 import { CopyText } from '@/components/ui/copy';
 import { format } from 'date-fns';
+import { ServiceStatus, ServiceTypes } from '@/models/Service';
 
 export const renderCopyableText = (text: string) => {
   return <CopyText>{text}</CopyText>;
@@ -71,7 +72,9 @@ export const renderCountry = (name: string, icon: React.ReactNode) => {
   );
 };
 
-const chipColorMap: Record<UserRole | UserStatus, string> = {
+type ChipColorType = UserRole | UserStatus | ServiceStatus | ServiceTypes;
+
+const chipColorMap: Record<ChipColorType, string> = {
   // for status
   active: 'bg-green-500',
   inactive: 'bg-gray-500',
@@ -87,9 +90,15 @@ const chipColorMap: Record<UserRole | UserStatus, string> = {
   pharmacist: 'bg-purple-500',
   laboratorist: 'bg-teal-500',
   user: 'bg-gray-500',
+
+  // for service types
+  medical: 'bg-red-500',
+  surgical: 'bg-blue-500',
+  diagnostic: 'bg-green-500',
+  consultation: 'bg-yellow-500',
 };
 
-export const renderChip = ({ item }: { item: UserRole | UserStatus }) => {
+export const renderChip = ({ item }: { item: ChipColorType }) => {
   return (
     <div className="flex w-fit items-center gap-[2px] rounded-lg bg-default-100 px-2 py-1">
       <span

@@ -60,6 +60,14 @@ export const CLINIC_INFO = {
     country: 'USA',
     zip: '12345',
   },
+  preferences: {
+    currency: {
+      symbol: '₹',
+      code: 'INR',
+    },
+    language: 'en',
+    timezone: 'Asia/Kolkata',
+  },
 };
 
 export const APPOINTMENT = {
@@ -121,6 +129,10 @@ export const WEBSITE_SETTING = {
 export const MOCK_DATA = {
   users: {
     isMock: false,
+    count: 100,
+  },
+  services: {
+    isMock: true,
     count: 100,
   },
   appointments: {

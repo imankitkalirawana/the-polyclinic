@@ -1,12 +1,22 @@
-import { auth } from '@/auth';
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from '@tanstack/react-query';
 import Services from '@/components/dashboard/services';
-
+import { getAllServices } from './helper';
 export default async function Page() {
-  const session = await auth();
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ['services'],
+    queryFn: () => getAllServices(),
+  });
 
   return (
     <>
-      <Services session={session} />
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <Services />
+      </HydrationBoundary>
     </>
   );
 }
