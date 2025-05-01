@@ -26,6 +26,7 @@ export interface FilterDef<T extends TableItem> {
 }
 
 export interface TableProps<T extends TableItem> {
+  key: string;
   isLoading?: boolean;
   data: T[];
   columns: ColumnDef<T>[];
@@ -40,10 +41,12 @@ export interface TableProps<T extends TableItem> {
 }
 
 export interface TableState {
+  key: string;
   filterValue: string;
   selectedKeys: Selection;
   visibleColumns: Selection;
   page: number;
   sortDescriptor: SortDescriptor;
+  rowsPerPage: number;
   filterValues: Record<string, string>;
 }

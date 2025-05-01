@@ -195,6 +195,7 @@ export default function UserTable() {
   return (
     <div className="p-6">
       <Table
+        key="users"
         isLoading={isLoading}
         data={users}
         columns={columns}

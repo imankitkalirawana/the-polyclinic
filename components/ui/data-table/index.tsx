@@ -36,6 +36,7 @@ import { useMemoizedCallback } from './use-memoized-callback';
 import useDebounce from '@/hooks/useDebounce';
 
 export function Table<T extends TableItem>({
+  key,
   isLoading,
   data,
   columns,
@@ -52,7 +53,8 @@ export function Table<T extends TableItem>({
   const debouncedSearch = useDebounce(searchValue, 500);
 
   const [state, setState] = useState<TableState>({
-    filterValue: '',
+    key,
+    filterValue: debouncedSearch,
     selectedKeys: new Set([]),
     visibleColumns: new Set([
       ...(initialVisibleColumns || columns.map((col) => col.uid)),
@@ -60,6 +62,7 @@ export function Table<T extends TableItem>({
     ]),
     page: 1,
     sortDescriptor: initialSortDescriptor,
+    rowsPerPage,
     filterValues: Object.fromEntries(
       filters.map((filter) => [filter.key, 'all'])
     ),
