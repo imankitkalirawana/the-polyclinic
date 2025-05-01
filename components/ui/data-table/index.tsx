@@ -45,6 +45,7 @@ export function Table<T extends TableItem>({
   filters = [],
   searchField,
   renderTopBar,
+  renderSelectedActions,
   onRowAction,
   rowsPerPage = 10,
   initialSortDescriptor = { column: 'createdAt', direction: 'descending' },
@@ -443,32 +444,27 @@ export function Table<T extends TableItem>({
               : `${filterSelectedKeys.size > 0 ? `${filterSelectedKeys.size} Selected` : ''}`}
           </div>
 
-          {(filterSelectedKeys === 'all' || filterSelectedKeys.size > 0) && (
-            <Dropdown>
-              <DropdownTrigger>
-                <Button
-                  className="bg-default-100 text-default-800"
-                  endContent={
-                    <Icon
-                      className="text-default-400"
-                      icon="solar:alt-arrow-down-linear"
-                    />
-                  }
-                  size="sm"
-                  variant="flat"
-                >
-                  Selected Actions
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu aria-label="Selected Actions">
-                <DropdownItem key="bulk-edit">Bulk edit</DropdownItem>
-                <DropdownItem key="export">Export</DropdownItem>
-                <DropdownItem key="delete" className="text-danger">
-                  Delete
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          )}
+          {renderSelectedActions &&
+            (filterSelectedKeys === 'all' || filterSelectedKeys.size > 0) && (
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button
+                    className="bg-default-100 text-default-800"
+                    endContent={
+                      <Icon
+                        className="text-default-400"
+                        icon="solar:alt-arrow-down-linear"
+                      />
+                    }
+                    size="sm"
+                    variant="flat"
+                  >
+                    Selected Actions
+                  </Button>
+                </DropdownTrigger>
+                {renderSelectedActions(filterSelectedKeys)}
+              </Dropdown>
+            )}
         </div>
       </div>
     );

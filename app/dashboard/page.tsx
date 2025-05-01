@@ -1,7 +1,14 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import { addToast, Button, Chip } from '@heroui/react';
+import { ReactNode, useEffect, useMemo, useState } from 'react';
+import {
+  addToast,
+  Button,
+  Chip,
+  DropdownItem,
+  DropdownMenu,
+  Selection,
+} from '@heroui/react';
 import { Icon } from '@iconify/react';
 
 import {
@@ -190,6 +197,38 @@ export default function UserTable() {
     </div>
   );
 
+  const renderSelectedActions = (selectedKeys: Selection) => {
+    return (
+      <DropdownMenu aria-label="Selected Actions">
+        <DropdownItem
+          key="bulk-edit"
+          onPress={() => {
+            console.log('Bulk edit', selectedKeys);
+          }}
+        >
+          Bulk edit
+        </DropdownItem>
+        <DropdownItem
+          key="export"
+          onPress={() => {
+            console.log('Export', selectedKeys);
+          }}
+        >
+          Export
+        </DropdownItem>
+        <DropdownItem
+          key="delete"
+          className="text-danger"
+          onPress={() => {
+            console.log('Delete', selectedKeys);
+          }}
+        >
+          Delete
+        </DropdownItem>
+      </DropdownMenu>
+    );
+  };
+
   // Show empty state during client-side loading
 
   return (
@@ -207,6 +246,7 @@ export default function UserTable() {
           user.email.toLowerCase().includes(searchValue.toLowerCase())
         }
         renderTopBar={renderTopBar}
+        renderSelectedActions={renderSelectedActions}
         initialSortDescriptor={{
           column: 'createdAt',
           direction: 'descending',

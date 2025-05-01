@@ -35,6 +35,7 @@ export interface TableProps<T extends TableItem> {
   filters?: FilterDef<T>[];
   searchField?: keyof T | ((item: T, searchValue: string) => boolean);
   renderTopBar?: () => React.ReactNode;
+  renderSelectedActions?: (selectedKeys: Selection) => React.ReactNode;
   onRowAction?: (row: string | number | bigint) => void;
   rowsPerPage?: number;
   initialSortDescriptor?: SortDescriptor;
