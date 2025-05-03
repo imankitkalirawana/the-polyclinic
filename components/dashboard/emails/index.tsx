@@ -21,6 +21,7 @@ import { Table } from '@/components/ui/data-table';
 import { EmailType } from '@/models/Email';
 import { useQuery } from '@tanstack/react-query';
 import { getAllEmails } from '@/app/dashboard/emails/helper';
+import { useRouter } from 'nextjs-toploader/app';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'id',
@@ -32,6 +33,8 @@ const INITIAL_VISIBLE_COLUMNS = [
 ];
 
 export default function Emails() {
+  const router = useRouter();
+
   const { data, isLoading } = useQuery({
     queryKey: ['emails'],
     queryFn: () => getAllEmails(),
@@ -93,18 +96,17 @@ export default function Emails() {
         renderCell: (email) =>
           renderDate({ date: email.createdAt, isTime: true }),
       },
-
       {
         name: 'Actions',
         uid: 'actions',
         sortable: false,
         renderCell: (email) =>
-          renderActions(
-            () => console.log('View', email._id),
-            () => console.log('Edit', email._id),
-            () => console.log('Delete', email._id),
-            () => console.log('Copy', email._id)
-          ),
+          renderActions({
+            onView: () => router.push(`/dashboard/users/${email._id}`),
+            onEdit: () => router.push(`/dashboard/users/${email._id}/edit`),
+            onDelete: () => console.log('Delete', email._id),
+            key: email._id,
+          }),
       },
     ],
     []

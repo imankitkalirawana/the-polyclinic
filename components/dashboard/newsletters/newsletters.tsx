@@ -19,10 +19,12 @@ import { Table } from '@/components/ui/data-table';
 import { NewsletterType } from '@/models/Newsletter';
 import { useQuery } from '@tanstack/react-query';
 import { getAllNewsletters } from '@/app/dashboard/newsletters/helper';
+import { useRouter } from 'nextjs-toploader/app';
 
 const INITIAL_VISIBLE_COLUMNS = ['email', 'updatedAt', 'createdAt'];
 
 export default function Newsletters() {
+  const router = useRouter();
   const { data, isLoading } = useQuery({
     queryKey: ['newsletters'],
     queryFn: () => getAllNewsletters(),
@@ -58,18 +60,18 @@ export default function Newsletters() {
         renderCell: (newsletter) =>
           renderDate({ date: newsletter.updatedAt, isTime: true }),
       },
-
       {
         name: 'Actions',
         uid: 'actions',
         sortable: false,
         renderCell: (newsletter) =>
-          renderActions(
-            () => console.log('View', newsletter._id),
-            () => console.log('Edit', newsletter._id),
-            () => console.log('Delete', newsletter._id),
-            () => console.log('Copy', newsletter._id)
-          ),
+          renderActions({
+            onView: () => router.push(`/dashboard/users/${newsletter._id}`),
+            onEdit: () =>
+              router.push(`/dashboard/users/${newsletter._id}/edit`),
+            onDelete: () => console.log('Delete', newsletter._id),
+            key: newsletter._id,
+          }),
       },
     ],
     []

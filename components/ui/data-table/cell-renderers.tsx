@@ -21,6 +21,7 @@ import { CopyText } from '@/components/ui/copy';
 import { format } from 'date-fns';
 import { ServiceStatus, ServiceTypes } from '@/models/Service';
 import { DrugStatus } from '@/models/Drug';
+import { AppointmentStatus, AppointmentType } from '@/models/Appointment';
 
 export const renderCopyableText = (text: string) => {
   return <CopyText>{text}</CopyText>;
@@ -79,7 +80,8 @@ type ChipColorType =
   | UserStatus
   | ServiceStatus
   | ServiceTypes
-  | DrugStatus;
+  | DrugStatus
+  | AppointmentStatus;
 
 const chipColorMap: Record<ChipColorType, string> = {
   // for status
@@ -99,7 +101,14 @@ const chipColorMap: Record<ChipColorType, string> = {
   pharmacist: 'bg-purple-500',
   laboratorist: 'bg-teal-500',
   user: 'bg-gray-500',
-
+  //for appointment types
+  overdue: 'bg-red-500',
+  completed: 'bg-green-500',
+  cancelled: 'bg-gray-200',
+  'on-hold': 'bg-gray-500',
+  booked: 'bg-blue-500',
+  confirmed: 'bg-green-500',
+  'in-progress': 'bg-amber-500',
   // for service types
   medical: 'bg-red-500',
   surgical: 'bg-blue-500',

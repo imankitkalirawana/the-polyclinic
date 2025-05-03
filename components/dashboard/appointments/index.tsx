@@ -18,66 +18,74 @@ import {
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 
 import { Table } from '@/components/ui/data-table';
-import { DrugType } from '@/models/Drug';
+import { AppointmentType } from '@/models/Appointment';
 import { useQuery } from '@tanstack/react-query';
-import { getAllDrugs } from '@/app/dashboard/drugs/helper';
+import { getAllAppointments } from '@/app/dashboard/appointments/helper';
 import { useRouter } from 'nextjs-toploader/app';
 
 const INITIAL_VISIBLE_COLUMNS = [
-  'did',
-  'brandName',
-  'genericName',
-  'manufacturer',
+  'aid',
+  'date',
+  'patient.name',
+  'doctor.name',
   'status',
-  'createdAt',
 ];
 
-export default function Drugs() {
+export default function Appointments() {
   const router = useRouter();
 
   const { data, isLoading } = useQuery({
-    queryKey: ['drugs'],
-    queryFn: () => getAllDrugs(),
+    queryKey: ['appointments'],
+    queryFn: () => getAllAppointments(),
   });
 
-  const drugs: DrugType[] = data || [];
+  const appointments: AppointmentType[] = data || [];
 
   // Define columns with render functions
-  const columns: ColumnDef<DrugType>[] = useMemo(
+  const columns: ColumnDef<AppointmentType>[] = useMemo(
     () => [
       {
-        name: 'Drug ID',
-        uid: 'did',
+        name: 'Appointment ID',
+        uid: 'aid',
         sortable: true,
-        renderCell: (drug) => renderCopyableText(drug.did.toString()),
+        renderCell: (appointment) =>
+          renderCopyableText(appointment.aid.toString()),
       },
+
       {
-        name: 'Brand Name',
-        uid: 'brandName',
+        name: 'Patient Name',
+        uid: 'patient.name',
         sortable: true,
-        renderCell: (drug) => (
-          <div className="font-medium text-default-foreground">
-            {drug.brandName}
+        renderCell: (appointment) => (
+          <div className="truncate capitalize text-default-foreground">
+            {appointment.patient.name}
           </div>
         ),
       },
       {
-        name: 'Generic Name',
-        uid: 'genericName',
+        name: 'Doctor Name',
+        uid: 'doctor.name',
         sortable: true,
-        renderCell: (drug) => (
-          <div className="truncate capitalize text-default-foreground">
-            {drug.genericName}
+        renderCell: (appointment) => (
+          <div
+            className={`truncate capitalize ${
+              appointment?.doctor?.name
+                ? 'text-default-foreground'
+                : 'text-gray-400'
+            }`}
+          >
+            {appointment?.doctor?.name || 'Not Assigned'}
           </div>
         ),
       },
+
       {
-        name: 'Manufacturer',
-        uid: 'manufacturer',
+        name: 'Patient Phone',
+        uid: 'patient.phone',
         sortable: true,
-        renderCell: (drug) => (
+        renderCell: (appointment) => (
           <div className="truncate capitalize text-default-foreground">
-            {drug.manufacturer}
+            {appointment.patient.phone}
           </div>
         ),
       },
@@ -85,28 +93,36 @@ export default function Drugs() {
         name: 'Status',
         uid: 'status',
         sortable: true,
-        renderCell: (drug) =>
+        renderCell: (appointment) =>
           renderChip({
-            item: drug.status,
+            item: appointment.status,
           }),
+      },
+      {
+        name: 'Appointment Date',
+        uid: 'date',
+        sortable: true,
+        renderCell: (appointment) =>
+          renderDate({ date: appointment.createdAt, isTime: true }),
       },
       {
         name: 'Created At',
         uid: 'createdAt',
         sortable: true,
-        renderCell: (drug) =>
-          renderDate({ date: drug.createdAt, isTime: true }),
+        renderCell: (appointment) =>
+          renderDate({ date: appointment.createdAt, isTime: true }),
       },
       {
         name: 'Actions',
         uid: 'actions',
         sortable: false,
-        renderCell: (drug) =>
+        renderCell: (appointment) =>
           renderActions({
-            onView: () => router.push(`/dashboard/users/${drug.did}`),
-            onEdit: () => router.push(`/dashboard/users/${drug.did}/edit`),
-            onDelete: () => console.log('Delete', drug.did),
-            key: drug.did,
+            onView: () => router.push(`/dashboard/users/${appointment.aid}`),
+            onEdit: () =>
+              router.push(`/dashboard/users/${appointment.aid}/edit`),
+            onDelete: () => console.log('Delete', appointment.aid),
+            key: appointment.aid,
           }),
       },
     ],
@@ -114,7 +130,7 @@ export default function Drugs() {
   );
 
   // Define filters
-  const filters: FilterDef<DrugType>[] = useMemo(
+  const filters: FilterDef<AppointmentType>[] = useMemo(
     () => [
       {
         name: 'Status',
@@ -124,7 +140,8 @@ export default function Drugs() {
           { label: 'Available', value: 'available' },
           { label: 'Unavailable', value: 'unavailable' },
         ],
-        filterFn: (drug, value) => drug.status.toLowerCase() === value,
+        filterFn: (appointment, value) =>
+          appointment.status.toLowerCase() === value,
       },
       {
         name: 'Created At',
@@ -133,15 +150,15 @@ export default function Drugs() {
           { label: 'All', value: 'all' },
           { label: 'Today', value: 'today' },
           { label: 'This week', value: 'thisWeek' },
-          { label: 'Past Drugs', value: 'past' },
+          { label: 'Past Appointments', value: 'past' },
         ],
-        filterFn: (drug, value) => {
+        filterFn: (appointment, value) => {
           if (value === 'all') return true;
 
           const today = new Date();
           today.setHours(0, 0, 0, 0);
 
-          const createdAt = new Date(drug.createdAt);
+          const createdAt = new Date(appointment.createdAt);
           createdAt.setHours(0, 0, 0, 0);
 
           const daysDiff = Math.floor(
@@ -167,7 +184,7 @@ export default function Drugs() {
   // Render top bar
   const endContent = () => (
     <Button color="primary" size="sm">
-      New Drug
+      New Appointment
     </Button>
   );
 
@@ -205,20 +222,13 @@ export default function Drugs() {
 
   return (
     <Table
-      key="drugs"
+      key="appointments"
       isLoading={isLoading}
-      data={drugs}
+      data={appointments}
       columns={columns}
       initialVisibleColumns={INITIAL_VISIBLE_COLUMNS}
-      keyField="did"
+      keyField="aid"
       filters={filters}
-      searchField={(drug, searchValue) =>
-        drug.brandName.toLowerCase().includes(searchValue.toLowerCase()) ||
-        drug.genericName.toLowerCase().includes(searchValue.toLowerCase()) ||
-        (drug.manufacturer
-          ? drug.manufacturer.toLowerCase().includes(searchValue.toLowerCase())
-          : false)
-      }
       endContent={endContent}
       renderSelectedActions={renderSelectedActions}
       initialSortDescriptor={{
@@ -227,8 +237,8 @@ export default function Drugs() {
       }}
       onRowAction={(row) => {
         addToast({
-          title: 'Drug',
-          description: `Drug ${row} clicked`,
+          title: 'Appointment',
+          description: `Appointment ${row} clicked`,
           color: 'success',
         });
       }}

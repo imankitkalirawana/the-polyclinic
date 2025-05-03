@@ -36,6 +36,7 @@ export function Providers({
       },
     },
   });
+
   return (
     <QueryClientProvider client={queryClient}>
       <HeroUIProvider navigate={router.push}>

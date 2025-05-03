@@ -9,7 +9,7 @@ importers:
     dependencies:
       '@aws-sdk/client-s3':
         specifier: ^3.679.0
-        version: 3.800.0
+        version: 3.802.0
       '@commitlint/types':
         specifier: ^19.8.0
         version: 19.8.0
@@ -36,7 +36,7 @@ importers:
         version: 2.7.0(react-redux@9.2.0(@types/react@18.3.20)(react@18.3.1)(redux@5.0.1))(react@18.3.1)
       '@tanstack/react-query':
         specifier: ^5.62.10
-        version: 5.74.11(react@18.3.1)
+        version: 5.75.1(react@18.3.1)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -111,12 +111,12 @@ importers:
         version: 0.6.11(prettier@3.5.3)
       puppeteer:
         specifier: ^24.1.1
-        version: 24.7.2(typescript@5.1.6)
+        version: 24.8.0(typescript@5.1.6)
       react:
-        specifier: ^18.3.1
+        specifier: ^18.2.0
         version: 18.3.1
       react-dom:
-        specifier: ^18.3.1
+        specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       react-quill:
         specifier: ^2.0.0
@@ -157,13 +157,13 @@ importers:
         version: 19.8.0
       '@iconify/json':
         specifier: ^2.2.332
-        version: 2.2.333
+        version: 2.2.334
       '@tanstack/eslint-plugin-query':
         specifier: ^5.62.9
         version: 5.74.7(eslint@8.57.1)(typescript@5.1.6)
       '@tanstack/react-query-devtools':
         specifier: ^5.66.0
-        version: 5.74.11(@tanstack/react-query@5.74.11(react@18.3.1))(react@18.3.1)
+        version: 5.75.1(@tanstack/react-query@5.75.1(react@18.3.1))(react@18.3.1)
       '@types/bcryptjs':
         specifier: ^2.4.6
         version: 2.4.6
@@ -349,10 +349,10 @@ packages:
       }
     engines: { node: '>=18.0.0' }
 
-  '@aws-sdk/client-s3@3.800.0':
+  '@aws-sdk/client-s3@3.802.0':
     resolution:
       {
-        integrity: sha512-SE33Y1kbeErd5h7KlmgWs1iJ0kKi+/t9XilI6NPIb5J5TmPKVUT5gf3ywa9ZSaq1x7LiAbICm0IPEz6k0WEBbQ==,
+        integrity: sha512-YIwLLiqRZArEmRI94X8MOpWuXlmxI3NnxYv+3kk6HIc2YWPaOAf0YN7vWlnQFWo6Yi1gBRtP0HM8WzK4Bn5ORQ==,
       }
     engines: { node: '>=18.0.0' }
 
@@ -781,10 +781,10 @@ packages:
       }
     engines: { node: '>=v18' }
 
-  '@eslint-community/eslint-utils@4.6.1':
+  '@eslint-community/eslint-utils@4.7.0':
     resolution:
       {
-        integrity: sha512-KTsJMmobmbrFLe3LDh0PC2FXpcSYJt/MLjlkh/9LEnmKYLSYmT/0EW9JWANjeoemiuZrmogti0tW5Ch+qNUYDw==,
+        integrity: sha512-dyybb3AcajC7uha6CvhdVRJqaKyn7w2YKqKyAN37NKYgZT36w+iRb0Dymmc5qEJ549c/S31cMMSFd75bteCpCw==,
       }
     engines: { node: ^12.22.0 || ^14.17.0 || >=16.0.0 }
     peerDependencies:
@@ -1669,10 +1669,10 @@ packages:
       }
     deprecated: Use @eslint/object-schema instead
 
-  '@iconify/json@2.2.333':
+  '@iconify/json@2.2.334':
     resolution:
       {
-        integrity: sha512-GRp9JV9iUILIfeeWCAQRPirY6wP03l5EOeAfWca+qMPDyeCY/hb8LN/sdsGYsK6QAWvyKelkgx/DgcD3V6anEQ==,
+        integrity: sha512-VcnEHMZs1VT8QvU5dzT1Eau35nGSZdIcJlBRHkxe/HLS1kKkyuFFrsA5aIaHeM7vvU6Y8rPS4DDD2xDmnNgP3g==,
       }
 
   '@iconify/react@5.2.1':
@@ -1893,10 +1893,10 @@ packages:
       }
     engines: { node: ^12.20.0 || ^14.18.0 || >=16.0.0 }
 
-  '@puppeteer/browsers@2.10.2':
+  '@puppeteer/browsers@2.10.3':
     resolution:
       {
-        integrity: sha512-i4Ez+s9oRWQbNjtI/3+jxr7OH508mjAKvza0ekPJem0ZtmsYHP3B5dq62+IaBHKaGCOuqJxXzvFLUhJvQ6jtsQ==,
+        integrity: sha512-iPpnFpX25gKIVsHsqVjHV+/GzW36xPgsscWkCnrrETndcdxNsXLdCrTwhkCJNR/FGWr122dJUBeyV4niz/j3TA==,
       }
     engines: { node: '>=18' }
     hasBin: true
@@ -2780,10 +2780,10 @@ packages:
       }
     engines: { node: '>=18.0.0' }
 
-  '@smithy/middleware-retry@4.1.1':
+  '@smithy/middleware-retry@4.1.2':
     resolution:
       {
-        integrity: sha512-mBJOxn9aUYwcBUPQpKv9ifzrCn4EbhPUFguEZv3jB57YOMh0caS4P8HoLvUeNUI1nx4bIVH2SIbogbDfFI9DUA==,
+        integrity: sha512-qN/Mmxm8JWtFAjozJ8VSTM83KOX4cIks8UjDqqNkKIegzPrE5ZKPNCQ/DqUSIF90pue5a/NycNXnBod2NwvZZQ==,
       }
     engines: { node: '>=18.0.0' }
 
@@ -2843,10 +2843,10 @@ packages:
       }
     engines: { node: '>=18.0.0' }
 
-  '@smithy/service-error-classification@4.0.2':
+  '@smithy/service-error-classification@4.0.3':
     resolution:
       {
-        integrity: sha512-LA86xeFpTKn270Hbkixqs5n73S+LVM0/VZco8dqd+JT75Dyx3Lcw/MraL7ybjmz786+160K8rPOmhsq0SocoJQ==,
+        integrity: sha512-FTbcajmltovWMjj3tksDQdD23b2w6gH+A0DYA1Yz3iSpjDj8fmkwy62UnXcWMy4d5YoMoSyLFHMfkEVEzbiN8Q==,
       }
     engines: { node: '>=18.0.0' }
 
@@ -2962,10 +2962,10 @@ packages:
       }
     engines: { node: '>=18.0.0' }
 
-  '@smithy/util-retry@4.0.2':
+  '@smithy/util-retry@4.0.3':
     resolution:
       {
-        integrity: sha512-Qryc+QG+7BCpvjloFLQrmlSd0RsVRHejRXd78jNO3+oREueCjwG1CCEH1vduw/ZkM1U9TztwIKVIi3+8MJScGg==,
+        integrity: sha512-DPuYjZQDXmKr/sNvy9Spu8R/ESa2e22wXZzSAY6NkjOLj6spbIje/Aq8rT97iUMdDj0qHMRIe+bTxvlU74d9Ng==,
       }
     engines: { node: '>=18.0.0' }
 
@@ -3042,10 +3042,10 @@ packages:
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
 
-  '@tanstack/query-core@5.74.9':
+  '@tanstack/query-core@5.75.0':
     resolution:
       {
-        integrity: sha512-qmjXpWyigDw4SfqdSBy24FzRvpBPXlaSbl92N77lcrL+yvVQLQkf0T6bQNbTxl9IEB/SvVFhhVZoIlQvFnNuuw==,
+        integrity: sha512-rk8KQuCdhoRkzjRVF3QxLgAfFUyS0k7+GCQjlGEpEGco+qazJ0eMH6aO1DjDjibH7/ik383nnztua3BG+lOnwg==,
       }
 
   '@tanstack/query-devtools@5.74.7':
@@ -3054,19 +3054,19 @@ packages:
         integrity: sha512-nSNlfuGdnHf4yB0S+BoNYOE1o3oAH093weAYZolIHfS2stulyA/gWfSk/9H4ZFk5mAAHb5vNqAeJOmbdcGPEQw==,
       }
 
-  '@tanstack/react-query-devtools@5.74.11':
+  '@tanstack/react-query-devtools@5.75.1':
     resolution:
       {
-        integrity: sha512-vx8MzH4WUUk4ZW8uHq7T45XNDgePF5ecRoa7haWJZxDMQyAHM80GGMhEW/yRz6TeyS9UlfTUz2OLPvgGRvvVOA==,
+        integrity: sha512-6S71fJRBlb0adlG5z/OHRqZqtHoPYVCklf/KCnOoZ3vdx9O/K9BLvqeeDeMUkZ6Rak/IupbEbvBsFoUiMHwZiQ==,
       }
     peerDependencies:
-      '@tanstack/react-query': ^5.74.11
+      '@tanstack/react-query': ^5.75.1
       react: ^18 || ^19
 
-  '@tanstack/react-query@5.74.11':
+  '@tanstack/react-query@5.75.1':
     resolution:
       {
-        integrity: sha512-FFhn9ZiYRUOsxLAWZYxVfQTpVE7UWRaAeHJIWVDHKlmZZGc16rMHW9KrFZ8peC4hA71QUf/shJD8dPSMqDnRmA==,
+        integrity: sha512-tN+gG+eXCHYm+VpmdXUP1rfE9LUrRzgYozTkBZtJV1/WFM3vwWNKQC8G6b2RKcs+2cPg+hdToZHZfjL3bF4yIQ==,
       }
     peerDependencies:
       react: ^18 || ^19
@@ -4355,10 +4355,10 @@ packages:
       }
     engines: { node: '>=8' }
 
-  browserslist@4.24.4:
+  browserslist@4.24.5:
     resolution:
       {
-        integrity: sha512-KDi1Ny1gSePi1vm0q4oxSF8b4DR44GF4BbmS2YdhPLOEqd8pDviZOGH/GsmRwoWJ2+5Lr085X7naowMwKHDG1A==,
+        integrity: sha512-FDToo4Wo82hIdgc1CQ+NQD0hEhmpPjrZ3hiUgwgOG6IuTdlpr8jdjyG24P6cNP1yJpTLzS5OcGgSw0xmDU1/Tw==,
       }
     engines: { node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7 }
     hasBin: true
@@ -5282,10 +5282,10 @@ packages:
       }
     engines: { node: '>= 0.8.0' }
 
-  devtools-protocol@0.0.1425554:
+  devtools-protocol@0.0.1439962:
     resolution:
       {
-        integrity: sha512-uRfxR6Nlzdzt0ihVIkV+sLztKgs7rgquY/Mhcv1YNCWDh5IZgl5mnn2aeEnW5stYTE0wwiF4RYVz8eMEpV1SEw==,
+        integrity: sha512-jJF48UdryzKiWhJ1bLKr7BFWUQCEIT5uCNbDLqkQJBtkFxYzILJH44WN0PDKMIlGDN7Utb8vyUY85C3w4R/t2g==,
       }
 
   didyoumean@1.2.2:
@@ -5373,10 +5373,10 @@ packages:
         integrity: sha512-1q/3kz+ZwmrrWpJcCCrBZ3JnBzB1BMA5EVW9nxnIP1LxDZ16Cqs9VdolqLWlExet1vU+bar3WSkAa4/YrA9bIw==,
       }
 
-  electron-to-chromium@1.5.148:
+  electron-to-chromium@1.5.149:
     resolution:
       {
-        integrity: sha512-8uc1QXwwqayD4mblcsQYZqoi+cOc97A2XmKSBOIRbEAvbp6vrqmSYs4dHD2qVygUgn7Mi0qdKgPaJ9WC8cv63A==,
+        integrity: sha512-UyiO82eb9dVOx8YO3ajDf9jz2kKyt98DEITRdeLPstOEuTlLzDA4Gyq5K9he71TQziU5jUVu2OAu5N48HmQiyQ==,
       }
 
   emitter@https://codeload.github.com/sindresorhus/component-emitter/tar.gz/refs/tags/1.0.1:
@@ -8956,17 +8956,17 @@ packages:
       }
     engines: { node: '>=6' }
 
-  puppeteer-core@24.7.2:
+  puppeteer-core@24.8.0:
     resolution:
       {
-        integrity: sha512-P9pZyTmJqKODFCnkZgemCpoFA4LbAa8+NumHVQKyP5X9IgdNS1ZnAnIh1sMAwhF8/xEUGf7jt+qmNLlKieFw1Q==,
+        integrity: sha512-tDf2YKIo5kM5r0vOzT52+PTgN0bBZOA4OFgQaqYyfarrcXLLJ92wi/lSMe44hd+F+gk0gw9QsAzyRW8v6ra93w==,
       }
     engines: { node: '>=18' }
 
-  puppeteer@24.7.2:
+  puppeteer@24.8.0:
     resolution:
       {
-        integrity: sha512-ifYqoY6wGs0yZeFuFPn8BE9FhuveXkarF+eO18I2e/axdoCh4Qh1AE+qXdJBhdaeoPt6eRNTY4Dih29Jbq8wow==,
+        integrity: sha512-8GPlUKXvZK8ANxab75UerMar14ZnJTJpPok3XN9Nx6f7SKyabyFK39pQruMni6zfrwVBrPXp3Mo6ztwKEmXaDQ==,
       }
     engines: { node: '>=18' }
     hasBin: true
@@ -10759,10 +10759,10 @@ packages:
       utf-8-validate:
         optional: true
 
-  ws@8.18.1:
+  ws@8.18.2:
     resolution:
       {
-        integrity: sha512-RKW2aJZMXeMxVpnZ6bck+RswznaxmzdULiBr6KY7XkTnW8uvt0iT9H5DkHUChXrc+uurzwa0rVI16n/Xzjdz1w==,
+        integrity: sha512-DMricUmwGZUVr++AEAe2uiVM7UoO9MAVZMDu05UQOaUII0lp+zOzLLU4Xqh/JvTqklB1T4uELaaPBKyjE1r4fQ==,
       }
     engines: { node: '>=10.0.0' }
     peerDependencies:
@@ -10965,7 +10965,7 @@ snapshots:
       '@smithy/invalid-dependency': 4.0.2
       '@smithy/middleware-content-length': 4.0.2
       '@smithy/middleware-endpoint': 4.1.1
-      '@smithy/middleware-retry': 4.1.1
+      '@smithy/middleware-retry': 4.1.2
       '@smithy/middleware-serde': 4.0.3
       '@smithy/middleware-stack': 4.0.2
       '@smithy/node-config-provider': 4.0.2
@@ -10981,14 +10981,14 @@ snapshots:
       '@smithy/util-defaults-mode-node': 4.0.9
       '@smithy/util-endpoints': 3.0.2
       '@smithy/util-middleware': 4.0.2
-      '@smithy/util-retry': 4.0.2
+      '@smithy/util-retry': 4.0.3
       '@smithy/util-utf8': 4.0.0
       tslib: 2.8.1
     transitivePeerDependencies:
       - aws-crt
     optional: true
 
-  '@aws-sdk/client-s3@3.800.0':
+  '@aws-sdk/client-s3@3.802.0':
     dependencies:
       '@aws-crypto/sha1-browser': 5.2.0
       '@aws-crypto/sha256-browser': 5.2.0
@@ -11025,7 +11025,7 @@ snapshots:
       '@smithy/md5-js': 4.0.2
       '@smithy/middleware-content-length': 4.0.2
       '@smithy/middleware-endpoint': 4.1.1
-      '@smithy/middleware-retry': 4.1.1
+      '@smithy/middleware-retry': 4.1.2
       '@smithy/middleware-serde': 4.0.3
       '@smithy/middleware-stack': 4.0.2
       '@smithy/node-config-provider': 4.0.2
@@ -11041,7 +11041,7 @@ snapshots:
       '@smithy/util-defaults-mode-node': 4.0.9
       '@smithy/util-endpoints': 3.0.2
       '@smithy/util-middleware': 4.0.2
-      '@smithy/util-retry': 4.0.2
+      '@smithy/util-retry': 4.0.3
       '@smithy/util-stream': 4.2.0
       '@smithy/util-utf8': 4.0.0
       '@smithy/util-waiter': 4.0.3
@@ -11070,7 +11070,7 @@ snapshots:
       '@smithy/invalid-dependency': 4.0.2
       '@smithy/middleware-content-length': 4.0.2
       '@smithy/middleware-endpoint': 4.1.1
-      '@smithy/middleware-retry': 4.1.1
+      '@smithy/middleware-retry': 4.1.2
       '@smithy/middleware-serde': 4.0.3
       '@smithy/middleware-stack': 4.0.2
       '@smithy/node-config-provider': 4.0.2
@@ -11086,7 +11086,7 @@ snapshots:
       '@smithy/util-defaults-mode-node': 4.0.9
       '@smithy/util-endpoints': 3.0.2
       '@smithy/util-middleware': 4.0.2
-      '@smithy/util-retry': 4.0.2
+      '@smithy/util-retry': 4.0.3
       '@smithy/util-utf8': 4.0.0
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -11344,7 +11344,7 @@ snapshots:
       '@smithy/invalid-dependency': 4.0.2
       '@smithy/middleware-content-length': 4.0.2
       '@smithy/middleware-endpoint': 4.1.1
-      '@smithy/middleware-retry': 4.1.1
+      '@smithy/middleware-retry': 4.1.2
       '@smithy/middleware-serde': 4.0.3
       '@smithy/middleware-stack': 4.0.2
       '@smithy/node-config-provider': 4.0.2
@@ -11360,7 +11360,7 @@ snapshots:
       '@smithy/util-defaults-mode-node': 4.0.9
       '@smithy/util-endpoints': 3.0.2
       '@smithy/util-middleware': 4.0.2
-      '@smithy/util-retry': 4.0.2
+      '@smithy/util-retry': 4.0.3
       '@smithy/util-utf8': 4.0.0
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -11603,7 +11603,7 @@ snapshots:
       '@types/conventional-commits-parser': 5.0.1
       chalk: 5.4.1
 
-  '@eslint-community/eslint-utils@4.6.1(eslint@8.57.1)':
+  '@eslint-community/eslint-utils@4.7.0(eslint@8.57.1)':
     dependencies:
       eslint: 8.57.1
       eslint-visitor-keys: 3.4.3
@@ -12793,7 +12793,7 @@ snapshots:
 
   '@humanwhocodes/object-schema@2.0.3': {}
 
-  '@iconify/json@2.2.333':
+  '@iconify/json@2.2.334':
     dependencies:
       '@iconify/types': 2.0.0
       pathe: 1.1.2
@@ -12905,7 +12905,7 @@ snapshots:
 
   '@pkgr/core@0.2.4': {}
 
-  '@puppeteer/browsers@2.10.2':
+  '@puppeteer/browsers@2.10.3':
     dependencies:
       debug: 4.4.0
       extract-zip: 2.0.1
@@ -13855,15 +13855,15 @@ snapshots:
       '@smithy/util-middleware': 4.0.2
       tslib: 2.8.1
 
-  '@smithy/middleware-retry@4.1.1':
+  '@smithy/middleware-retry@4.1.2':
     dependencies:
       '@smithy/node-config-provider': 4.0.2
       '@smithy/protocol-http': 5.1.0
-      '@smithy/service-error-classification': 4.0.2
+      '@smithy/service-error-classification': 4.0.3
       '@smithy/smithy-client': 4.2.1
       '@smithy/types': 4.2.0
       '@smithy/util-middleware': 4.0.2
-      '@smithy/util-retry': 4.0.2
+      '@smithy/util-retry': 4.0.3
       tslib: 2.8.1
       uuid: 9.0.1
 
@@ -13913,7 +13913,7 @@ snapshots:
       '@smithy/types': 4.2.0
       tslib: 2.8.1
 
-  '@smithy/service-error-classification@4.0.2':
+  '@smithy/service-error-classification@4.0.3':
     dependencies:
       '@smithy/types': 4.2.0
 
@@ -14014,9 +14014,9 @@ snapshots:
       '@smithy/types': 4.2.0
       tslib: 2.8.1
 
-  '@smithy/util-retry@4.0.2':
+  '@smithy/util-retry@4.0.3':
     dependencies:
-      '@smithy/service-error-classification': 4.0.2
+      '@smithy/service-error-classification': 4.0.3
       '@smithy/types': 4.2.0
       tslib: 2.8.1
 
@@ -14074,19 +14074,19 @@ snapshots:
       - supports-color
       - typescript
 
-  '@tanstack/query-core@5.74.9': {}
+  '@tanstack/query-core@5.75.0': {}
 
   '@tanstack/query-devtools@5.74.7': {}
 
-  '@tanstack/react-query-devtools@5.74.11(@tanstack/react-query@5.74.11(react@18.3.1))(react@18.3.1)':
+  '@tanstack/react-query-devtools@5.75.1(@tanstack/react-query@5.75.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@tanstack/query-devtools': 5.74.7
-      '@tanstack/react-query': 5.74.11(react@18.3.1)
+      '@tanstack/react-query': 5.75.1(react@18.3.1)
       react: 18.3.1
 
-  '@tanstack/react-query@5.74.11(react@18.3.1)':
+  '@tanstack/react-query@5.75.1(react@18.3.1)':
     dependencies:
-      '@tanstack/query-core': 5.74.9
+      '@tanstack/query-core': 5.75.0
       react: 18.3.1
 
   '@tanstack/react-table@8.21.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
@@ -14433,7 +14433,7 @@ snapshots:
 
   '@typescript-eslint/utils@5.62.0(eslint@8.57.1)(typescript@5.1.6)':
     dependencies:
-      '@eslint-community/eslint-utils': 4.6.1(eslint@8.57.1)
+      '@eslint-community/eslint-utils': 4.7.0(eslint@8.57.1)
       '@types/json-schema': 7.0.15
       '@types/semver': 7.7.0
       '@typescript-eslint/scope-manager': 5.62.0
@@ -14448,7 +14448,7 @@ snapshots:
 
   '@typescript-eslint/utils@8.31.1(eslint@8.57.1)(typescript@5.1.6)':
     dependencies:
-      '@eslint-community/eslint-utils': 4.6.1(eslint@8.57.1)
+      '@eslint-community/eslint-utils': 4.7.0(eslint@8.57.1)
       '@typescript-eslint/scope-manager': 8.31.1
       '@typescript-eslint/types': 8.31.1
       '@typescript-eslint/typescript-estree': 8.31.1(typescript@5.1.6)
@@ -14930,12 +14930,12 @@ snapshots:
     dependencies:
       fill-range: 7.1.1
 
-  browserslist@4.24.4:
+  browserslist@4.24.5:
     dependencies:
       caniuse-lite: 1.0.30001716
-      electron-to-chromium: 1.5.148
+      electron-to-chromium: 1.5.149
       node-releases: 2.0.19
-      update-browserslist-db: 1.1.3(browserslist@4.24.4)
+      update-browserslist-db: 1.1.3(browserslist@4.24.5)
 
   bson@4.7.2:
     dependencies:
@@ -15046,9 +15046,9 @@ snapshots:
 
   chrome-trace-event@1.0.4: {}
 
-  chromium-bidi@4.1.1(devtools-protocol@0.0.1425554):
+  chromium-bidi@4.1.1(devtools-protocol@0.0.1439962):
     dependencies:
-      devtools-protocol: 0.0.1425554
+      devtools-protocol: 0.0.1439962
       mitt: 3.0.1
       zod: 3.24.3
 
@@ -15393,7 +15393,7 @@ snapshots:
 
   depd@0.4.2: {}
 
-  devtools-protocol@0.0.1425554: {}
+  devtools-protocol@0.0.1439962: {}
 
   didyoumean@1.2.2: {}
 
@@ -15451,7 +15451,7 @@ snapshots:
 
   ee-first@1.0.3: {}
 
-  electron-to-chromium@1.5.148: {}
+  electron-to-chromium@1.5.149: {}
 
   emitter@https://codeload.github.com/sindresorhus/component-emitter/tar.gz/refs/tags/1.0.1:
     dependencies:
@@ -16006,7 +16006,7 @@ snapshots:
 
   eslint@8.57.1:
     dependencies:
-      '@eslint-community/eslint-utils': 4.6.1(eslint@8.57.1)
+      '@eslint-community/eslint-utils': 4.7.0(eslint@8.57.1)
       '@eslint-community/regexpp': 4.12.1
       '@eslint/eslintrc': 2.1.4
       '@eslint/js': 8.57.1
@@ -17764,27 +17764,27 @@ snapshots:
 
   punycode@2.3.1: {}
 
-  puppeteer-core@24.7.2:
+  puppeteer-core@24.8.0:
     dependencies:
-      '@puppeteer/browsers': 2.10.2
-      chromium-bidi: 4.1.1(devtools-protocol@0.0.1425554)
+      '@puppeteer/browsers': 2.10.3
+      chromium-bidi: 4.1.1(devtools-protocol@0.0.1439962)
       debug: 4.4.0
-      devtools-protocol: 0.0.1425554
+      devtools-protocol: 0.0.1439962
       typed-query-selector: 2.12.0
-      ws: 8.18.1
+      ws: 8.18.2
     transitivePeerDependencies:
       - bare-buffer
       - bufferutil
       - supports-color
       - utf-8-validate
 
-  puppeteer@24.7.2(typescript@5.1.6):
+  puppeteer@24.8.0(typescript@5.1.6):
     dependencies:
-      '@puppeteer/browsers': 2.10.2
-      chromium-bidi: 4.1.1(devtools-protocol@0.0.1425554)
+      '@puppeteer/browsers': 2.10.3
+      chromium-bidi: 4.1.1(devtools-protocol@0.0.1439962)
       cosmiconfig: 9.0.0(typescript@5.1.6)
-      devtools-protocol: 0.0.1425554
-      puppeteer-core: 24.7.2
+      devtools-protocol: 0.0.1439962
+      puppeteer-core: 24.8.0
       typed-query-selector: 2.12.0
     transitivePeerDependencies:
       - bare-buffer
@@ -18796,9 +18796,9 @@ snapshots:
       readable-stream: 2.3.8
       setimmediate: 1.0.5
 
-  update-browserslist-db@1.1.3(browserslist@4.24.4):
+  update-browserslist-db@1.1.3(browserslist@4.24.5):
     dependencies:
-      browserslist: 4.24.4
+      browserslist: 4.24.5
       escalade: 3.2.0
       picocolors: 1.1.1
 
@@ -18910,7 +18910,7 @@ snapshots:
       '@webassemblyjs/wasm-edit': 1.14.1
       '@webassemblyjs/wasm-parser': 1.14.1
       acorn: 8.14.1
-      browserslist: 4.24.4
+      browserslist: 4.24.5
       chrome-trace-event: 1.0.4
       enhanced-resolve: 5.18.1
       es-module-lexer: 1.7.0
@@ -19038,7 +19038,7 @@ snapshots:
       options: 0.0.6
       tinycolor: 0.0.1
 
-  ws@8.18.1: {}
+  ws@8.18.2: {}
 
   xmlchars@2.2.0: {}
 
