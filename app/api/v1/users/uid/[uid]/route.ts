@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import User from '@/models/User';
+import { API_ACTIONS } from '@/lib/config';
 
 // get user by id from param
 export const GET = auth(async function GET(request: any, context: any) {
@@ -84,10 +85,13 @@ export const DELETE = auth(async function DELETE(request: any, context: any) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
     }
 
-    await User.findOneAndDelete({ uid });
+    !!API_ACTIONS.isDelete && (await User.findOneAndDelete({ uid }));
     return NextResponse.json({ message: 'User deleted' });
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
-    return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
+    return NextResponse.json(
+      { message: error?.message || 'An error occurred' },
+      { status: 500 }
+    );
   }
 });

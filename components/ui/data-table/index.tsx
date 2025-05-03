@@ -25,6 +25,7 @@ import {
   TableRow,
   Tooltip,
   Spinner,
+  ButtonGroup,
 } from '@heroui/react';
 import { cn } from '@heroui/react';
 import { SearchIcon } from '@heroui/shared-icons';
@@ -449,7 +450,6 @@ export function Table<T extends TableItem>({
               <Dropdown>
                 <DropdownTrigger>
                   <Button
-                    className="bg-default-100 text-default-800"
                     endContent={
                       <Icon
                         className="text-default-400"

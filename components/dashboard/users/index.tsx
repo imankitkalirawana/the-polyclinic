@@ -23,13 +23,14 @@ import { useQuery } from '@tanstack/react-query';
 import { getAllUsers } from '@/app/dashboard/users/helper';
 import { useRouter } from 'nextjs-toploader/app';
 import { toast } from 'sonner';
+import axios from 'axios';
 
 const INITIAL_VISIBLE_COLUMNS = ['uid', 'name', 'email', 'role', 'createdAt'];
 
 export default function Users() {
   const router = useRouter();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['users'],
     queryFn: () => getAllUsers(),
   });
@@ -97,8 +98,22 @@ export default function Users() {
           renderActions({
             onView: () => router.push(`/dashboard/users/${user.uid}`),
             onEdit: () => router.push(`/dashboard/users/${user.uid}/edit`),
-            onDelete: () => console.log('Delete', user.uid),
             key: user.uid,
+            onDelete: async () => {
+              const deletePromise = fetch(`/api/v1/users/uid/${user.uid}`, {
+                method: 'DELETE',
+              });
+              toast.promise(deletePromise, {
+                loading: `Deleting user (${user.name})`,
+                success: `User (${user.name}) was deleted successfully`,
+                error: (err: any) => {
+                  console.error(err);
+                  return err?.message || 'Failed to delete user';
+                },
+              });
+              // remove all selected keys
+              refetch();
+            },
           }),
       },
     ],
@@ -183,40 +198,30 @@ export default function Users() {
     return (
       <DropdownMenu aria-label="Selected Actions">
         <DropdownItem
-          key="bulk-edit"
-          onPress={() => {
-            console.log('Bulk edit', selectedKeys);
-          }}
-        >
-          Bulk edit
-        </DropdownItem>
-        <DropdownItem
           key="export"
           onPress={async () => {
             const ids = Array.from(selectedKeys);
 
             const exportPromise = fetch('/api/v1/users/export', {
               method: 'POST',
-              body: JSON.stringify({
-                ids: selectedKeys === 'all' ? [] : ids,
-              }),
-            }).then(async (response) => {
-              if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to export users');
-              }
-
-              const blob = await response.blob();
-              const url = window.URL.createObjectURL(blob);
-              const a = document.createElement('a');
-              a.href = url;
-              a.download = 'users.xlsx';
-              document.body.appendChild(a);
-              a.click();
-              window.URL.revokeObjectURL(url);
-              document.body.removeChild(a);
-              return 'Users exported successfully';
-            });
+              body: JSON.stringify({ ids: selectedKeys === 'all' ? [] : ids }),
+            })
+              .then(async (res) => {
+                const blob = await res.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `users-${new Date().toISOString().split('T')[0]}.xlsx`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                return 'Users exported successfully';
+              })
+              .catch((err) => {
+                console.error(err);
+                return 'Failed to export users';
+              });
 
             toast.promise(exportPromise, {
               loading: 'Exporting users',
@@ -230,8 +235,22 @@ export default function Users() {
         <DropdownItem
           key="delete"
           className="text-danger"
-          onPress={() => {
-            console.log('Delete', selectedKeys);
+          onPress={async () => {
+            const ids = Array.from(selectedKeys);
+            const deletePromise = fetch('/api/v1/users', {
+              method: 'DELETE',
+              body: JSON.stringify({ ids: selectedKeys === 'all' ? [] : ids }),
+            });
+            toast.promise(deletePromise, {
+              loading: 'Deleting users',
+              success: `${ids.length} Users deleted successfully`,
+              error: 'Failed to delete users',
+            });
+            // remove all selected keys
+            refetch();
+
+            // TODO: remove this and use implement a better way to refresh the page
+            router.refresh();
           }}
         >
           Delete

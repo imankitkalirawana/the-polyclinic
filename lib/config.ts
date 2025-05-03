@@ -140,3 +140,10 @@ export const MOCK_DATA = {
     count: 100,
   },
 };
+
+export const API_ACTIONS = {
+  isDelete: false,
+  isUpdate: true,
+  isCreate: true,
+  isRead: true,
+};
