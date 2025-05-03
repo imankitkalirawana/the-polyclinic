@@ -119,8 +119,8 @@ export default function Users() {
                 method: 'DELETE',
               });
               toast.promise(deletePromise, {
-                loading: `Deleting user (${user.name})`,
-                success: `User (${user.name}) was deleted successfully`,
+                loading: `Deleting ${user.name}`,
+                success: `${user.name} was deleted successfully`,
                 error: (err: any) => {
                   console.error(err);
                   return err?.message || 'Failed to delete user';
