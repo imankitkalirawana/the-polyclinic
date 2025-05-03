@@ -35,6 +35,7 @@ export function Providers({
       },
     },
   });
+
   return (
     <HeroUIProvider navigate={router.push}>
       <ToastProvider
