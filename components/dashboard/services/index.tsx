@@ -22,6 +22,7 @@ import { ServiceType } from '@/models/Service';
 import { useQuery } from '@tanstack/react-query';
 import { getAllServices } from '@/app/dashboard/services/helper';
 import { APPOINTMENT, CLINIC_INFO } from '@/lib/config';
+import { useRouter } from 'nextjs-toploader/app';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'uniqueId',
@@ -34,6 +35,7 @@ const INITIAL_VISIBLE_COLUMNS = [
 ];
 
 export default function Services() {
+  const router = useRouter();
   const { data, isLoading } = useQuery({
     queryKey: ['services'],
     queryFn: () => getAllServices(),
@@ -123,12 +125,12 @@ export default function Services() {
         uid: 'actions',
         sortable: false,
         renderCell: (service) =>
-          renderActions(
-            () => console.log('View', service.uniqueId),
-            () => console.log('Edit', service.uniqueId),
-            () => console.log('Delete', service.uniqueId),
-            () => console.log('Copy', service.uniqueId)
-          ),
+          renderActions({
+            onView: () => router.push(`/dashboard/users/${service._id}`),
+            onEdit: () => router.push(`/dashboard/users/${service._id}/edit`),
+            onDelete: () => console.log('Delete', service._id),
+            key: service._id,
+          }),
       },
     ],
     []
