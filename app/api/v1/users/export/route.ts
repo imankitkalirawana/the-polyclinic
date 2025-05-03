@@ -6,14 +6,24 @@ import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import User from '@/models/User';
 
-export const GET = auth(async function GET(request: any) {
+export const POST = auth(async function POST(request: any) {
   try {
     if (request.auth?.user?.role !== 'admin') {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
+    // return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+
+    const { ids } = await request.json();
+
+    let users;
+
     await connectDB();
-    let users = await User.find().select('-password');
-    users = users.filter((user) => user.email !== 'contact@divinely.dev');
+
+    if (ids.length > 0) {
+      users = await User.find({ uid: { $in: ids } }).select('-password');
+    } else {
+      users = await User.find().select('-password');
+    }
 
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Users');

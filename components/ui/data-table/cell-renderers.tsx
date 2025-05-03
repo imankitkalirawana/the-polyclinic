@@ -2,6 +2,7 @@
 
 import type React from 'react';
 import {
+  addToast,
   Button,
   Chip,
   ChipProps,
@@ -154,12 +155,19 @@ export const renderChips = (items: string[]) => {
   );
 };
 
-export const renderActions = (
-  onView?: () => void,
-  onEdit?: () => void,
-  onDelete?: () => void,
-  onCopy?: () => void
-) => {
+export const renderActions = ({
+  onView,
+  onEdit,
+  onDelete,
+  onCopy,
+  key,
+}: {
+  onView?: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
+  onCopy?: () => void;
+  key?: string | number;
+}) => {
   return (
     <Dropdown aria-label="Actions" placement="bottom-end">
       <DropdownTrigger>
@@ -178,33 +186,49 @@ export const renderActions = (
           >
             View Item
           </DropdownItem>
-          <DropdownItem
-            key="copy"
-            description="Copy the link"
-            shortcut="⌘C"
-            startContent={<Icon icon="solar:copy-bold-duotone" width={24} />}
-            onClick={onCopy}
-          >
-            Copy link
-          </DropdownItem>
-          <DropdownItem
-            key="edit"
-            description="Allows you to edit the file"
-            shortcut="⌘⇧E"
-            startContent={
-              <Icon icon="solar:pen-new-square-bold-duotone" width={24} />
-            }
-            onClick={onEdit}
-          >
-            Edit file
-          </DropdownItem>
+          {onCopy || key ? (
+            <DropdownItem
+              key="copy"
+              description="Copy the link"
+              shortcut="⌘C"
+              startContent={<Icon icon="solar:copy-bold-duotone" width={24} />}
+              onClick={() => {
+                if (onCopy) {
+                  onCopy();
+                } else {
+                  const url = window.location.href;
+                  navigator.clipboard.writeText(url + '/' + key);
+                  addToast({
+                    title: 'Copied',
+                    description: 'Link copied to clipboard',
+                    color: 'success',
+                  });
+                }
+              }}
+            >
+              Copy link
+            </DropdownItem>
+          ) : null}
+          {onEdit ? (
+            <DropdownItem
+              key="edit"
+              description="Allows you to edit the file"
+              shortcut="⌘⇧E"
+              startContent={
+                <Icon icon="solar:pen-new-square-bold-duotone" width={24} />
+              }
+              onClick={onEdit}
+            >
+              Edit file
+            </DropdownItem>
+          ) : null}
         </DropdownSection>
         <DropdownSection title="Danger zone">
           <DropdownItem
             key="delete"
             className="text-danger"
             color="danger"
-            description="Permanently delete the file"
+            description="Permanently delete the item"
             shortcut="⌘⇧D"
             startContent={
               <Icon
@@ -214,7 +238,7 @@ export const renderActions = (
             }
             onClick={onDelete}
           >
-            Delete file
+            Delete item
           </DropdownItem>
         </DropdownSection>
       </DropdownMenu>

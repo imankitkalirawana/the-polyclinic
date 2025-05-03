@@ -21,10 +21,13 @@ import { Table } from '@/components/ui/data-table';
 import { UserType } from '@/models/User';
 import { useQuery } from '@tanstack/react-query';
 import { getAllUsers } from '@/app/dashboard/users/helper';
+import { useRouter } from 'nextjs-toploader/app';
 
 const INITIAL_VISIBLE_COLUMNS = ['uid', 'name', 'email', 'role', 'createdAt'];
 
 export default function Users() {
+  const router = useRouter();
+
   const { data, isLoading } = useQuery({
     queryKey: ['users'],
     queryFn: () => getAllUsers(),
@@ -90,12 +93,12 @@ export default function Users() {
         uid: 'actions',
         sortable: false,
         renderCell: (user) =>
-          renderActions(
-            () => console.log('View', user.uid),
-            () => console.log('Edit', user.uid),
-            () => console.log('Delete', user.uid),
-            () => console.log('Copy', user.uid)
-          ),
+          renderActions({
+            onView: () => router.push(`/dashboard/users/${user.uid}`),
+            onEdit: () => router.push(`/dashboard/users/${user.uid}/edit`),
+            onDelete: () => console.log('Delete', user.uid),
+            key: user.uid,
+          }),
       },
     ],
     []
@@ -188,8 +191,48 @@ export default function Users() {
         </DropdownItem>
         <DropdownItem
           key="export"
-          onPress={() => {
-            console.log('Export', selectedKeys);
+          onPress={async () => {
+            const ids = Array.from(selectedKeys);
+
+            const exportPromise = fetch('/api/v1/users/export', {
+              method: 'POST',
+              body: JSON.stringify({
+                ids: selectedKeys === 'all' ? [] : ids,
+              }),
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            })
+              .then(async (response) => {
+                if (!response.ok) {
+                  const errorData = await response.json();
+                  throw new Error(
+                    errorData.message || 'Failed to export users'
+                  );
+                }
+
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'users.xlsx';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                return 'Users exported successfully';
+              })
+              .catch((error) => {
+                console.error('Export error:', error);
+                throw error;
+              });
+
+            addToast({
+              title: 'Exporting users',
+              description: 'Please wait while we export the users',
+              promise: exportPromise,
+              color: 'success',
+            });
           }}
         >
           Export
@@ -227,11 +270,7 @@ export default function Users() {
         direction: 'descending',
       }}
       onRowAction={(row) => {
-        addToast({
-          title: 'User',
-          description: `User ${row} clicked`,
-          color: 'success',
-        });
+        router.push(`/dashboard/users/${row}`);
       }}
     />
   );

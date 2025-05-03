@@ -1,19 +1,11 @@
 import React from 'react';
 
-import { auth } from '@/auth';
 import TabularView from '@/components/appointments/tabular-view';
-import UseRedirect from '@/hooks/useRedirect';
 
-export default async function Page() {
-  const session = await auth();
-
-  if (!session) {
-    return <UseRedirect />;
-  }
-
+export default async function AppointmentPage() {
   return (
     <>
-      <TabularView session={session} />
+      <TabularView />
     </>
   );
 }

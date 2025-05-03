@@ -7,6 +7,7 @@ export interface EmailType extends Base {
   to: string;
   subject: string;
   message: string;
+  status: string;
 }
 
 const EmailSchema = new mongoose.Schema<EmailType>(
@@ -24,6 +25,10 @@ const EmailSchema = new mongoose.Schema<EmailType>(
       required: true,
     },
     message: {
+      type: String,
+      required: true,
+    },
+    status: {
       type: String,
       required: true,
     },
