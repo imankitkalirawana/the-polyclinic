@@ -11,7 +11,6 @@ export const POST = auth(async function POST(request: any) {
     if (request.auth?.user?.role !== 'admin') {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
-    // return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
 
     const { ids } = await request.json();
 
@@ -20,9 +19,11 @@ export const POST = auth(async function POST(request: any) {
     await connectDB();
 
     if (ids.length > 0) {
-      users = await User.find({ uid: { $in: ids } }).select('-password');
+      users = await User.find({ uid: { $in: ids } })
+        .select('-password')
+        .sort({ uid: 1 });
     } else {
-      users = await User.find().select('-password');
+      users = await User.find().select('-password').sort({ uid: 1 });
     }
 
     const workbook = new ExcelJS.Workbook();

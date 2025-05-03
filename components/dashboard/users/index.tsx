@@ -22,6 +22,7 @@ import { UserType } from '@/models/User';
 import { useQuery } from '@tanstack/react-query';
 import { getAllUsers } from '@/app/dashboard/users/helper';
 import { useRouter } from 'nextjs-toploader/app';
+import { toast } from 'sonner';
 
 const INITIAL_VISIBLE_COLUMNS = ['uid', 'name', 'email', 'role', 'createdAt'];
 
@@ -199,39 +200,28 @@ export default function Users() {
               body: JSON.stringify({
                 ids: selectedKeys === 'all' ? [] : ids,
               }),
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            })
-              .then(async (response) => {
-                if (!response.ok) {
-                  const errorData = await response.json();
-                  throw new Error(
-                    errorData.message || 'Failed to export users'
-                  );
-                }
+            }).then(async (response) => {
+              if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to export users');
+              }
 
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'users.xlsx';
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
-                return 'Users exported successfully';
-              })
-              .catch((error) => {
-                console.error('Export error:', error);
-                throw error;
-              });
+              const blob = await response.blob();
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'users.xlsx';
+              document.body.appendChild(a);
+              a.click();
+              window.URL.revokeObjectURL(url);
+              document.body.removeChild(a);
+              return 'Users exported successfully';
+            });
 
-            addToast({
-              title: 'Exporting users',
-              description: 'Please wait while we export the users',
-              promise: exportPromise,
-              color: 'success',
+            toast.promise(exportPromise, {
+              loading: 'Exporting users',
+              success: 'Users exported successfully',
+              error: 'Failed to export users',
             });
           }}
         >
