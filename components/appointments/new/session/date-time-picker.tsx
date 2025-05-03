@@ -50,7 +50,9 @@ export default function DateTimePicker({
           })}
           // @ts-ignore
           value={date}
-          onChange={onDateChange}
+          onChange={(selectedDate) =>
+            onDateChange?.(selectedDate as CalendarDate)
+          }
           isInvalid={disabledDates[0].map((d) => d.compare(date!)).includes(0)}
           showMonthAndYearPickers
           showHelper

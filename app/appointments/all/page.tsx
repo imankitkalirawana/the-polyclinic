@@ -13,7 +13,7 @@ export default async function Page() {
 
   return (
     <>
-      <TabularView session={session} />
+      <TabularView />
     </>
   );
 }
