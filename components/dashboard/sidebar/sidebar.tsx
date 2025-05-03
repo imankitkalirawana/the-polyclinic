@@ -133,6 +133,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
             }
             title={isCompact || isNestType ? null : item.title}
             aria-label={item.title}
+            textValue={item.title}
           >
             {isCompact ? (
               <Tooltip content={item.title} placement="right">
@@ -241,7 +242,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
                 (item.startContent ?? null)
               )
             }
-            // textValue={item.title}
+            textValue={item.title}
             title={isCompact ? null : item.title}
           >
             {isCompact ? (
