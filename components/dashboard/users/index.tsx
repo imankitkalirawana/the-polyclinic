@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
   addToast,
   Button,
@@ -9,6 +9,7 @@ import {
   DropdownMenu,
   DropdownTrigger,
   Selection,
+  useDisclosure,
 } from '@heroui/react';
 
 import {
@@ -25,13 +26,14 @@ import { useQuery } from '@tanstack/react-query';
 import { getAllUsers } from '@/app/dashboard/users/helper';
 import { useRouter } from 'nextjs-toploader/app';
 import { toast } from 'sonner';
-import axios from 'axios';
-import { Icon } from '@iconify/react/dist/iconify.js';
+import DeleteModal from './delete';
 
 const INITIAL_VISIBLE_COLUMNS = ['uid', 'name', 'email', 'role', 'createdAt'];
 
 export default function Users() {
   const router = useRouter();
+  const deleteModal = useDisclosure();
+  const [selectedKeys, setSelectedKeys] = useState<Selection>();
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['users'],
@@ -64,6 +66,16 @@ export default function Users() {
         renderCell: (user) => (
           <div className="truncate lowercase text-default-foreground">
             {user.email}
+          </div>
+        ),
+      },
+      {
+        name: 'Phone',
+        uid: 'phone',
+        sortable: true,
+        renderCell: (user) => (
+          <div className="truncate text-default-foreground">
+            {user.phone || 'N/A'}
           </div>
         ),
       },
@@ -242,22 +254,10 @@ export default function Users() {
         <DropdownItem
           key="delete"
           className="text-danger"
-          onPress={async () => {
-            const ids = Array.from(selectedKeys);
-            const deletePromise = fetch('/api/v1/users', {
-              method: 'DELETE',
-              body: JSON.stringify({ ids: selectedKeys === 'all' ? [] : ids }),
-            });
-            toast.promise(deletePromise, {
-              loading: 'Deleting users',
-              success: `${ids.length} Users deleted successfully`,
-              error: 'Failed to delete users',
-            });
-            // remove all selected keys
-            refetch();
-
-            // TODO: remove this and use implement a better way to refresh the page
-            router.refresh();
+          color="danger"
+          onPress={() => {
+            setSelectedKeys(selectedKeys);
+            deleteModal.onOpen();
           }}
         >
           Delete
@@ -267,27 +267,67 @@ export default function Users() {
   };
 
   return (
-    <Table
-      key="users"
-      isLoading={isLoading}
-      data={users}
-      columns={columns}
-      initialVisibleColumns={INITIAL_VISIBLE_COLUMNS}
-      keyField="uid"
-      filters={filters}
-      searchField={(user, searchValue) =>
-        user.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchValue.toLowerCase())
-      }
-      endContent={endContent}
-      renderSelectedActions={renderSelectedActions}
-      initialSortDescriptor={{
-        column: 'createdAt',
-        direction: 'descending',
-      }}
-      onRowAction={(row) => {
-        router.push(`/dashboard/users/${row}`);
-      }}
-    />
+    <>
+      <Table
+        key="users"
+        isLoading={isLoading}
+        data={users}
+        columns={columns}
+        initialVisibleColumns={INITIAL_VISIBLE_COLUMNS}
+        keyField="uid"
+        filters={filters}
+        searchField={(user, searchValue) =>
+          user.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+          user.email.toLowerCase().includes(searchValue.toLowerCase()) ||
+          user.uid.toString().includes(searchValue) ||
+          (user.phone
+            ? user.phone.toLowerCase().includes(searchValue.toLowerCase())
+            : false)
+        }
+        endContent={endContent}
+        renderSelectedActions={renderSelectedActions}
+        initialSortDescriptor={{
+          column: 'createdAt',
+          direction: 'descending',
+        }}
+        onRowAction={(row) => {
+          router.push(`/dashboard/users/${row}`);
+        }}
+      />
+      {deleteModal.isOpen && (
+        <DeleteModal
+          key="users"
+          deleteFn={async () => {
+            if (!selectedKeys) return;
+            const ids = Array.from(selectedKeys);
+            const res = await fetch('/api/v1/users', {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ ids }),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok || !data.success) {
+              throw new Error(data.message || 'Deletion failed');
+            }
+
+            return data;
+          }}
+          items={users.filter((user) => {
+            if (selectedKeys === 'all') return true;
+            return selectedKeys?.has(String(user.uid));
+          })}
+          onClose={deleteModal.onClose}
+          onDelete={() => {
+            deleteModal.onClose();
+            refetch();
+            setSelectedKeys(undefined);
+          }}
+        />
+      )}
+    </>
   );
 }

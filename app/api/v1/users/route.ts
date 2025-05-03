@@ -48,20 +48,31 @@ export const DELETE = auth(async function DELETE(request: any) {
   try {
     const allowedRoles = ['admin', 'receptionist'];
     if (!allowedRoles.includes(request.auth?.user?.role)) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(
+        { success: false, message: 'Unauthorized' },
+        { status: 401 }
+      );
     }
+
+    // return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
 
     await connectDB();
     const { ids } = await request.json();
 
     !!API_ACTIONS.isDelete && (await User.deleteMany({ uid: { $in: ids } }));
 
+    // dummy 2 seconds delay
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     return NextResponse.json(
-      { message: `${ids.length} Users deleted` },
+      { success: true, message: `${ids.length} Users deleted` },
       { status: 200 }
     );
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
+    return NextResponse.json(
+      { success: false, message: 'An error occurred' },
+      { status: 500 }
+    );
   }
 });

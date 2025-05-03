@@ -45,7 +45,7 @@ export const CopyText = memo(
         ref={forwardedRef}
         className={cn('flex items-center gap-3 text-default-500', className)}
       >
-        <Tooltip className="text-foreground" content={content}>
+        <Tooltip delay={1000} className="text-foreground" content={content}>
           <Button
             isIconOnly
             className="h-7 w-7 min-w-7 text-default-400"
