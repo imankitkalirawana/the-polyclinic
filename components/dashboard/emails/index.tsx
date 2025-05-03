@@ -38,7 +38,7 @@ export default function Emails() {
   });
 
   const emails: EmailType[] = data || [];
-
+  console.log('emails', emails);
   // Define columns with render functions
   const columns: ColumnDef<EmailType>[] = useMemo(
     () => [
@@ -63,9 +63,7 @@ export default function Emails() {
         uid: 'to',
         sortable: true,
         renderCell: (email) => (
-          <div className="truncate capitalize text-default-foreground">
-            {email.to}
-          </div>
+          <div className="truncate text-default-foreground">{email.to}</div>
         ),
       },
       {
@@ -78,16 +76,16 @@ export default function Emails() {
           </div>
         ),
       },
-      {
-        name: 'Message',
-        uid: 'message',
-        sortable: true,
-        renderCell: (email) => (
-          <div className="truncate capitalize text-default-foreground">
-            {email.message}
-          </div>
-        ),
-      },
+      // {
+      //   name: 'Message',
+      //   uid: 'message',
+      //   sortable: true,
+      //   renderCell: (email) => (
+      //     <div className="truncate capitalize text-default-foreground">
+      //       {email.message}
+      //     </div>
+      //   ),
+      // },
       {
         name: 'Created At',
         uid: 'createdAt',

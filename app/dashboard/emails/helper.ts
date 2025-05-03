@@ -7,7 +7,7 @@ import { EmailType } from '@/models/Email';
 
 export const getAllEmails = async (): Promise<EmailType[]> => {
   // If mock data is disabled, fetch data from the API
-  const res = await axios.get(`${API_BASE_URL}/api/v1/drugs`, {
+  const res = await axios.get(`${API_BASE_URL}/api/v1/emails`, {
     headers: {
       Cookie: cookies().toString(),
     },
