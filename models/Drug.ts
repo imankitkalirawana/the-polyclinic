@@ -1,6 +1,10 @@
 import mongoose, { Model } from 'mongoose';
 
 import { Base } from '@/lib/interface';
+export enum DrugStatus {
+  available = 'available',
+  unavailable = 'unavailable',
+}
 
 export interface DrugType extends Base {
   did: number;
@@ -14,7 +18,7 @@ export interface DrugType extends Base {
   strength?: number;
   quantity?: number;
   price?: number;
-  status: 'available' | 'unavailable';
+  status: DrugStatus;
   stock?: number;
 }
 
@@ -36,8 +40,8 @@ const drugSchema = new mongoose.Schema<DrugType>(
     frequency: String,
     status: {
       type: String,
-      enum: ['available', 'unavailable'],
-      default: 'available',
+      enum: DrugStatus,
+      default: DrugStatus.available,
     },
     stock: Number,
   },

@@ -4,19 +4,20 @@ import {
   QueryClient,
 } from '@tanstack/react-query';
 import Drugs from '@/components/dashboard/drugs';
-import { getAllNewsletters } from './helper';
+import { getAllDrugs } from './helper';
+
 export default async function Page() {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
-    queryKey: ['newsletters'],
-    queryFn: () => getAllNewsletters(),
+    queryKey: ['drugs'],
+    queryFn: () => getAllDrugs(),
     initialData: [],
   });
-  const session = {};
+
   return (
     <>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <Drugs session={session} />
+        <Drugs />
       </HydrationBoundary>
     </>
   );
