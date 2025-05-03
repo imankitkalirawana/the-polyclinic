@@ -8,6 +8,15 @@ export enum AType {
   'follow-up' = 'follow-up',
   emergency = 'emergency',
 }
+export enum AppointmentStatus {
+  booked = 'booked',
+  confirmed = 'confirmed',
+  'in-progress' = 'in-progress',
+  completed = 'completed',
+  cancelled = 'cancelled',
+  overdue = 'overdue',
+  'on-hold' = 'on-hold',
+}
 export interface AppointmentType extends Base {
   aid: number;
   date: string;
@@ -19,7 +28,7 @@ export interface AppointmentType extends Base {
     gender?: 'male' | 'female' | 'other';
     age?: number;
   };
-  doctor?: {
+  doctor: {
     uid: number;
     name: string;
     email: string;
@@ -33,14 +42,8 @@ export interface AppointmentType extends Base {
     instructions?: string;
   };
   progerss?: number;
-  status:
-    | 'booked'
-    | 'confirmed'
-    | 'in-progress'
-    | 'completed'
-    | 'cancelled'
-    | 'overdue'
-    | 'on-hold';
+  status: AppointmentStatus;
+
   data?: Record<string, string>;
   type: AType;
 }
