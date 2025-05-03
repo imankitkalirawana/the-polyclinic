@@ -20,6 +20,12 @@ export const sectionItems: SidebarItem[] = [
         title: 'Users',
       },
       {
+        key: 'appointments',
+        href: '/dashboard/appointments',
+        icon: 'solar:calendar-bold-duotone',
+        title: 'Appointments',
+      },
+      {
         key: 'services',
         href: '/dashboard/services',
         icon: 'solar:test-tube-minimalistic-bold-duotone',
@@ -37,12 +43,6 @@ export const sectionItems: SidebarItem[] = [
         href: '/dashboard/emails',
         icon: 'solar:mailbox-bold-duotone',
         title: 'Emails',
-      },
-      {
-        key: 'kittis',
-        href: '/dashboard/kittis',
-        icon: 'solar:cat-bold-duotone',
-        title: 'Kittis',
       },
       {
         key: 'newsletters',
