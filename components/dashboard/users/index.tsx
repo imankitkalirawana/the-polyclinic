@@ -4,8 +4,10 @@ import { useMemo } from 'react';
 import {
   addToast,
   Button,
+  Dropdown,
   DropdownItem,
   DropdownMenu,
+  DropdownTrigger,
   Selection,
 } from '@heroui/react';
 
@@ -24,6 +26,7 @@ import { getAllUsers } from '@/app/dashboard/users/helper';
 import { useRouter } from 'nextjs-toploader/app';
 import { toast } from 'sonner';
 import axios from 'axios';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 const INITIAL_VISIBLE_COLUMNS = ['uid', 'name', 'email', 'role', 'createdAt'];
 
@@ -189,7 +192,11 @@ export default function Users() {
 
   // Render top bar
   const endContent = () => (
-    <Button color="primary" size="sm">
+    <Button
+      color="primary"
+      size="sm"
+      onPress={() => router.push('/dashboard/users/new')}
+    >
       New User
     </Button>
   );
