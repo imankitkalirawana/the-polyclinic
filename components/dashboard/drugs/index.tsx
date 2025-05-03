@@ -21,6 +21,7 @@ import { Table } from '@/components/ui/data-table';
 import { DrugType } from '@/models/Drug';
 import { useQuery } from '@tanstack/react-query';
 import { getAllDrugs } from '@/app/dashboard/drugs/helper';
+import { useRouter } from 'nextjs-toploader/app';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'did',
@@ -32,6 +33,8 @@ const INITIAL_VISIBLE_COLUMNS = [
 ];
 
 export default function Drugs() {
+  const router = useRouter();
+
   const { data, isLoading } = useQuery({
     queryKey: ['drugs'],
     queryFn: () => getAllDrugs(),
@@ -94,18 +97,17 @@ export default function Drugs() {
         renderCell: (drug) =>
           renderDate({ date: drug.createdAt, isTime: true }),
       },
-
       {
         name: 'Actions',
         uid: 'actions',
         sortable: false,
         renderCell: (drug) =>
-          renderActions(
-            () => console.log('View', drug.did),
-            () => console.log('Edit', drug.did),
-            () => console.log('Delete', drug.did),
-            () => console.log('Copy', drug.did)
-          ),
+          renderActions({
+            onView: () => router.push(`/dashboard/users/${drug.did}`),
+            onEdit: () => router.push(`/dashboard/users/${drug.did}/edit`),
+            onDelete: () => console.log('Delete', drug.did),
+            key: drug.did,
+          }),
       },
     ],
     []
