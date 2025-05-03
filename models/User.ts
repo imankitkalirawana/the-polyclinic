@@ -104,12 +104,12 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       enum: UserRole,
-      default: 'user',
+      default: UserRole.user,
     },
     status: {
       type: String,
       enum: UserStatus,
-      default: 'unverified',
+      default: UserStatus.unverified,
     },
     country: {
       type: String,
