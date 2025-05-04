@@ -6,6 +6,12 @@ export interface Base {
   updatedAt: Date | string;
 }
 
+export enum Gender {
+  male = 'male',
+  female = 'female',
+  other = 'other',
+}
+
 export const ServiceTypes = [
   {
     label: 'Medical',

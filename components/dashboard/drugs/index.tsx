@@ -205,7 +205,7 @@ export default function Drugs() {
 
   return (
     <Table
-      key="drugs"
+      uniqueKey="drugs"
       isLoading={isLoading}
       data={drugs}
       columns={columns}

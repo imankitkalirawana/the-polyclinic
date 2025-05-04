@@ -37,7 +37,7 @@ import { useMemoizedCallback } from './use-memoized-callback';
 import useDebounce from '@/hooks/useDebounce';
 
 export function Table<T extends TableItem>({
-  key,
+  uniqueKey,
   isLoading,
   data,
   columns,
@@ -55,7 +55,7 @@ export function Table<T extends TableItem>({
   const debouncedSearch = useDebounce(searchValue, 500);
 
   const [state, setState] = useState<TableState>({
-    key,
+    key: uniqueKey,
     filterValue: debouncedSearch,
     selectedKeys: new Set([]),
     visibleColumns: new Set([
@@ -422,7 +422,7 @@ export function Table<T extends TableItem>({
                 <DropdownMenu
                   disallowEmptySelection
                   aria-label="Columns"
-                  items={columns}
+                  items={columns.filter((c) => c.uid !== 'actions')}
                   selectedKeys={state.visibleColumns}
                   selectionMode="multiple"
                   onSelectionChange={(keys) =>

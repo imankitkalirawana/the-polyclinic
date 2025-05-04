@@ -1,7 +1,7 @@
 import mongoose, { Model } from 'mongoose';
 import mongooseSequence from 'mongoose-sequence';
 
-import { Base } from '@/lib/interface';
+import { Base, Gender } from '@/lib/interface';
 
 export enum UserStatus {
   active = 'active',
@@ -40,7 +40,7 @@ export interface UserType extends Base {
     month: string;
     year: string;
   };
-  gender: 'male' | 'female' | 'other';
+  gender: Gender;
   image: string;
 }
 
@@ -98,8 +98,7 @@ const userSchema = new mongoose.Schema(
     },
     gender: {
       type: String,
-      enum: ['male', 'female', 'other'],
-      default: 'male',
+      enum: Gender,
     },
     role: {
       type: String,
@@ -125,6 +124,10 @@ const userSchema = new mongoose.Schema(
     passwordResetToken: String,
     updatedBy: String,
     createdBy: String,
+    image: {
+      type: String,
+      default: 'https://cdn.jsdelivr.net/gh/alohe/avatars/png/memo_1.png',
+    },
   },
   {
     timestamps: true,

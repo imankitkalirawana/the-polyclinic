@@ -241,7 +241,7 @@ export default function Services() {
 
   return (
     <Table
-      key="services"
+      uniqueKey="services"
       isLoading={isLoading}
       data={services}
       columns={columns}

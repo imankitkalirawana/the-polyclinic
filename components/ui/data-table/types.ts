@@ -26,7 +26,7 @@ export interface FilterDef<T extends TableItem> {
 }
 
 export interface TableProps<T extends TableItem> {
-  key: string;
+  uniqueKey: string;
   isLoading?: boolean;
   data: T[];
   columns: ColumnDef<T>[];

@@ -118,7 +118,7 @@ export default function Newsletters() {
 
   return (
     <Table
-      key="newsletters"
+      uniqueKey="newsletters"
       isLoading={isLoading}
       data={newsletters}
       columns={columns}

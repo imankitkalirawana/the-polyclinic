@@ -204,7 +204,7 @@ export default function Emails() {
 
   return (
     <Table
-      key="emails"
+      uniqueKey="emails"
       isLoading={isLoading}
       data={emails}
       columns={columns}

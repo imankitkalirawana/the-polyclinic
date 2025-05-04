@@ -1,13 +1,19 @@
 import mongoose, { Model } from 'mongoose';
 import mongooseSequence from 'mongoose-sequence';
 
-import { Base } from '@/lib/interface';
+import { Base, Gender } from '@/lib/interface';
 
 export enum AType {
   consultation = 'consultation',
   'follow-up' = 'follow-up',
   emergency = 'emergency',
 }
+
+export enum AppointmentMode {
+  online = 'online',
+  offline = 'offline',
+}
+
 export enum AppointmentStatus {
   booked = 'booked',
   confirmed = 'confirmed',
@@ -25,25 +31,24 @@ export interface AppointmentType extends Base {
     name: string;
     phone?: string;
     email: string;
-    gender?: 'male' | 'female' | 'other';
+    gender?: Gender;
     age?: number;
   };
-  doctor: {
+  doctor?: {
     uid: number;
     name: string;
     email: string;
     sitting?: string;
   };
+  status: AppointmentStatus;
   additionalInfo: {
     notes?: string;
     symptoms?: string;
-    type: 'online' | 'offline';
+    type: AppointmentMode;
     description?: string;
     instructions?: string;
   };
-  progerss?: number;
-  status: AppointmentStatus;
-
+  progress?: number;
   data?: Record<string, string>;
   type: AType;
 }
@@ -65,7 +70,7 @@ const appointmentSchema = new mongoose.Schema(
       email: String,
       gender: {
         type: String,
-        enum: ['male', 'female', 'other'],
+        enum: Gender,
       },
       age: Number,
     },
@@ -78,27 +83,19 @@ const appointmentSchema = new mongoose.Schema(
     additionalInfo: {
       type: {
         type: String,
-        enum: ['online', 'offline'],
-        default: 'offline',
+        enum: AppointmentMode,
+        default: AppointmentMode.offline,
       },
       notes: String,
       symptoms: String,
       description: String,
       instructions: String,
     },
-    progerss: Number,
+    progress: Number,
     status: {
       type: String,
-      default: 'booked',
-      enum: [
-        'booked',
-        'confirmed',
-        'in-progress',
-        'completed',
-        'cancelled',
-        'overdue',
-        'on-hold',
-      ],
+      default: AppointmentStatus.booked,
+      enum: AppointmentStatus,
     },
     data: {
       type: Map,
@@ -106,8 +103,8 @@ const appointmentSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ['consultation', 'follow-up', 'emergency'],
-      default: 'consultation',
+      enum: AType,
+      default: AType.consultation,
     },
   },
   {

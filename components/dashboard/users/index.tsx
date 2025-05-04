@@ -2,12 +2,9 @@
 
 import { useMemo, useState } from 'react';
 import {
-  addToast,
   Button,
-  Dropdown,
   DropdownItem,
   DropdownMenu,
-  DropdownTrigger,
   Selection,
   useDisclosure,
 } from '@heroui/react';
@@ -27,13 +24,17 @@ import { getAllUsers } from '@/app/dashboard/users/helper';
 import { useRouter } from 'nextjs-toploader/app';
 import { toast } from 'sonner';
 import DeleteModal from './delete';
+import QuickLook from './quick-look';
 
 const INITIAL_VISIBLE_COLUMNS = ['uid', 'name', 'email', 'role', 'createdAt'];
 
 export default function Users() {
   const router = useRouter();
   const deleteModal = useDisclosure();
+  const quickLook = useDisclosure();
+
   const [selectedKeys, setSelectedKeys] = useState<Selection>();
+  const [quickLookItem, setQuickLookItem] = useState<UserType | null>(null);
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['users'],
@@ -269,7 +270,7 @@ export default function Users() {
   return (
     <>
       <Table
-        key="users"
+        uniqueKey="users"
         isLoading={isLoading}
         data={users}
         columns={columns}
@@ -291,12 +292,16 @@ export default function Users() {
           direction: 'descending',
         }}
         onRowAction={(row) => {
-          router.push(`/dashboard/users/${row}`);
+          const user = users.find((user) => user.uid == row);
+          if (user) {
+            setQuickLookItem(user);
+            quickLook.onOpen();
+          }
         }}
       />
       {deleteModal.isOpen && (
         <DeleteModal
-          key="users"
+          modalKey="users"
           deleteFn={async () => {
             if (!selectedKeys) return;
             const ids = Array.from(selectedKeys);
@@ -326,6 +331,13 @@ export default function Users() {
             refetch();
             setSelectedKeys(undefined);
           }}
+        />
+      )}
+      {quickLook.isOpen && quickLookItem && (
+        <QuickLook
+          modalKey="users"
+          onClose={quickLook.onClose}
+          item={quickLookItem}
         />
       )}
     </>

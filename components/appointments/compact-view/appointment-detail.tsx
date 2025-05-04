@@ -14,7 +14,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 
 import AsyncButton from '../../ui/buttons/async-button';
 import CellValue from '../../ui/cell-value';
-import AddtoCalendar from '../common/add-to-calendar';
+import AddtoCalendar from '../../ui/appointments/add-to-calendar';
 import CancelAppointment from '../common/cancel-appointement';
 import RescheduleAppointment from '../common/reschedule-appointment';
 

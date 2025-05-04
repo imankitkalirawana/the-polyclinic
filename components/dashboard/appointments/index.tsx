@@ -1,12 +1,13 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
   addToast,
   Button,
   DropdownItem,
   DropdownMenu,
   Selection,
+  useDisclosure,
 } from '@heroui/react';
 
 import {
@@ -22,6 +23,7 @@ import { AppointmentType } from '@/models/Appointment';
 import { useQuery } from '@tanstack/react-query';
 import { getAllAppointments } from '@/app/dashboard/appointments/helper';
 import { useRouter } from 'nextjs-toploader/app';
+import QuickLook from './quick-look';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'aid',
@@ -33,6 +35,10 @@ const INITIAL_VISIBLE_COLUMNS = [
 
 export default function Appointments() {
   const router = useRouter();
+  const quickLook = useDisclosure();
+
+  const [selectedAppointment, setSelectedAppointment] =
+    useState<AppointmentType | null>(null);
 
   const { data, isLoading } = useQuery({
     queryKey: ['appointments'],
@@ -221,27 +227,40 @@ export default function Appointments() {
   };
 
   return (
-    <Table
-      key="appointments"
-      isLoading={isLoading}
-      data={appointments}
-      columns={columns}
-      initialVisibleColumns={INITIAL_VISIBLE_COLUMNS}
-      keyField="aid"
-      filters={filters}
-      endContent={endContent}
-      renderSelectedActions={renderSelectedActions}
-      initialSortDescriptor={{
-        column: 'createdAt',
-        direction: 'descending',
-      }}
-      onRowAction={(row) => {
-        addToast({
-          title: 'Appointment',
-          description: `Appointment ${row} clicked`,
-          color: 'success',
-        });
-      }}
-    />
+    <>
+      <Table
+        uniqueKey="appointments"
+        isLoading={isLoading}
+        data={appointments}
+        columns={columns}
+        initialVisibleColumns={INITIAL_VISIBLE_COLUMNS}
+        keyField="aid"
+        filters={filters}
+        endContent={endContent}
+        renderSelectedActions={renderSelectedActions}
+        initialSortDescriptor={{
+          column: 'createdAt',
+          direction: 'descending',
+        }}
+        onRowAction={(row) => {
+          const appointment = appointments.find(
+            (appointment) => appointment.aid == row
+          );
+          if (appointment) {
+            setSelectedAppointment(appointment);
+            quickLook.onOpen();
+          }
+        }}
+      />
+      {quickLook.isOpen && selectedAppointment && (
+        <QuickLook
+          onClose={() => {
+            setSelectedAppointment(null);
+            quickLook.onClose();
+          }}
+          item={selectedAppointment}
+        />
+      )}
+    </>
   );
 }
