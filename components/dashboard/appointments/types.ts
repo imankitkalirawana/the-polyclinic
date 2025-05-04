@@ -16,4 +16,5 @@ export type ActionType =
   | 'cancel'
   | 'delete'
   | 'edit'
-  | 'reminder';
+  | 'reminder'
+  | 'addToCalendar';

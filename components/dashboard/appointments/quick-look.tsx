@@ -3,6 +3,7 @@ import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { Subtitle, Title } from '@/components/ui/typography/modal';
 import { AppointmentType } from '@/models/Appointment';
 import {
+  addToast,
   Avatar,
   Button,
   ButtonGroup,
@@ -29,6 +30,8 @@ import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
 import RescheduleModal from '@/components/ui/appointments/reschedule-modal';
 import { UserRole } from '@/models/User';
 import { ActionType, ButtonConfig } from './types';
+import CancelModal from '@/components/ui/appointments/cancel-modal';
+import AsyncButton from '@/components/ui/buttons/async-button';
 
 interface QuickLookProps {
   onClose: () => void;
@@ -37,7 +40,7 @@ interface QuickLookProps {
 
 export default function QuickLook({ onClose, item }: QuickLookProps) {
   const { data: session } = useSession();
-  const [action, setAction] = useState<keyof typeof modalMap | null>(null);
+  const [action, setAction] = useState<keyof typeof ButtonMap | null>(null);
 
   // random number between 1 and 35
   const randomNumber = Math.floor(Math.random() * 34) + 1;
@@ -65,31 +68,26 @@ export default function QuickLook({ onClose, item }: QuickLookProps) {
     laboratorist: ['cancel', 'reschedule'],
   };
 
-  const modalMap = {
+  const ButtonMap: Record<ActionType, ButtonConfig> = {
     addToCalendar: {
-      title: 'Add to Calendar',
-      key: 'addToCalendar',
+      label: 'Add to Calendar',
+      icon: 'solar:calendar-bold-duotone',
+      color: 'warning',
+      variant: 'flat',
+      action: () => {
+        console.log('addToCalendar');
+      },
       content: (
         <AddToCalendar appointment={item} onClose={() => setAction(null)} />
       ),
     },
-    reschedule: {
-      title: 'Reschedule Appointment',
-      key: 'reschedule',
-      content: (
-        <RescheduleModal appointment={item} onClose={() => setAction(null)} />
-      ),
-    },
-  };
-
-  const ButtonMap: Record<ActionType, ButtonConfig> = {
     reschedule: {
       label: 'Reschedule',
       icon: 'solar:calendar-bold-duotone',
       color: 'warning',
       variant: 'flat',
       action: () => {
-        console.log('reschedule');
+        setAction('reschedule');
       },
       content: (
         <RescheduleModal appointment={item} onClose={() => setAction(null)} />
@@ -101,8 +99,11 @@ export default function QuickLook({ onClose, item }: QuickLookProps) {
       color: 'danger',
       variant: 'flat',
       action: () => {
-        console.log('cancel');
+        setAction('cancel');
       },
+      content: (
+        <CancelModal appointment={item} onClose={() => setAction(null)} />
+      ),
     },
     delete: {
       label: 'Delete',
@@ -111,28 +112,68 @@ export default function QuickLook({ onClose, item }: QuickLookProps) {
       variant: 'light',
       isIconOnly: true,
       action: () => {
-        console.log('delete');
+        setAction('delete');
       },
+      content: (
+        <CancelModal
+          appointment={item}
+          onClose={() => setAction(null)}
+          type="delete"
+        />
+      ),
     },
     edit: {
       label: 'Edit',
       icon: 'solar:pen-bold-duotone',
-      color: 'primary',
       variant: 'flat',
       action: () => {
         console.log('edit');
       },
     },
     reminder: {
-      label: 'Send a Reminder',
+      label: 'Send a Reminder to Patient',
       icon: 'solar:bell-bold-duotone',
       variant: 'flat',
       isIconOnly: true,
-      action: () => {
-        console.log('reminder');
+      action: async () => {
+        // dummy 2 second delay
+        await new Promise((resolve) => setTimeout(resolve, 2000)).then(() => {
+          addToast({
+            title: 'Reminder Sent',
+            description: 'Reminder sent to patient',
+            color: 'success',
+          });
+        });
       },
     },
   };
+
+  const downloadOptions = [
+    {
+      label: 'Download Invoice',
+      key: 'invoice',
+      icon: 'solar:file-download-bold-duotone',
+      action: () => {
+        console.log('invoice');
+      },
+    },
+    {
+      label: 'Download Reports',
+      key: 'reports',
+      icon: 'solar:download-twice-square-bold-duotone',
+      action: () => {
+        console.log('invoice');
+      },
+    },
+    {
+      label: 'Download Prescription',
+      key: 'prescription',
+      icon: 'solar:notes-bold-duotone',
+      action: () => {
+        console.log('prescription');
+      },
+    },
+  ];
 
   return (
     <>
@@ -394,7 +435,7 @@ export default function QuickLook({ onClose, item }: QuickLookProps) {
                     content={ButtonMap[btn].label}
                     color={ButtonMap[btn].color}
                   >
-                    <Button
+                    <AsyncButton
                       variant={ButtonMap[btn].variant}
                       startContent={
                         <Icon icon={ButtonMap[btn].icon} width="20" />
@@ -402,9 +443,11 @@ export default function QuickLook({ onClose, item }: QuickLookProps) {
                       onPress={() => ButtonMap[btn].action(item)}
                       color={ButtonMap[btn].color}
                       isIconOnly={ButtonMap[btn].isIconOnly}
+                      // TODO: Add loading state for reminder
+                      fn={async () => ButtonMap[btn].action(item)}
                     >
                       {ButtonMap[btn].isIconOnly ? null : ButtonMap[btn].label}
-                    </Button>
+                    </AsyncButton>
                   </Tooltip>
                 ))}
 
@@ -423,23 +466,22 @@ export default function QuickLook({ onClose, item }: QuickLookProps) {
                   aria-label="Download options"
                   className="max-w-[300px]"
                 >
-                  <DropdownItem
-                    key="download"
-                    startContent={
-                      <Icon
-                        icon="solar:download-square-bold-duotone"
-                        width="20"
-                      />
-                    }
-                  >
-                    Download Receipt
-                  </DropdownItem>
+                  {downloadOptions.map((item) => (
+                    <DropdownItem
+                      key={item.key}
+                      startContent={<Icon icon={item.icon} width="20" />}
+                      onPress={() => item.action()}
+                    >
+                      {item.label}
+                    </DropdownItem>
+                  ))}
                   {
                     permissions[role as keyof typeof permissions]
                       .filter(
                         (btn) =>
                           !['cancel', 'reschedule', 'reminder'].includes(btn)
                       )
+                      .reverse()
                       .map((btn) => (
                         <DropdownItem
                           key={btn}
@@ -447,6 +489,7 @@ export default function QuickLook({ onClose, item }: QuickLookProps) {
                             <Icon icon={ButtonMap[btn].icon} width="20" />
                           }
                           color={ButtonMap[btn].color}
+                          onPress={() => ButtonMap[btn].action(item)}
                         >
                           {ButtonMap[btn].label}
                         </DropdownItem>
@@ -458,73 +501,7 @@ export default function QuickLook({ onClose, item }: QuickLookProps) {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      {action && modalMap[action as keyof typeof modalMap]?.content}
+      {action && ButtonMap[action]?.content}
     </>
-  );
-}
-
-function DownloadButton() {
-  const menuMap = {
-    receipt: {
-      label: 'Receipt',
-      description: 'Download the appointment receipt',
-      icon: 'solar:cloud-download-bold-duotone',
-      classNames: 'text-blue-500 bg-blue-100',
-      action: () => {
-        console.log('receipt');
-      },
-    },
-    prescription: {
-      label: 'Prescription',
-      description: 'Download the appointment prescription',
-      icon: 'solar:download-square-bold-duotone',
-      classNames: 'text-green-500 bg-green-100',
-      action: () => {
-        console.log('prescription');
-      },
-    },
-    report: {
-      label: 'Report',
-      description: 'Download the final appointment report',
-      icon: 'solar:file-download-bold-duotone',
-      classNames: 'text-teal-500 bg-teal-100',
-      action: () => {
-        console.log('report');
-      },
-    },
-  };
-
-  return (
-    <Dropdown placement="top-end">
-      <DropdownTrigger>
-        <Button size="sm" variant="light" isIconOnly>
-          <Icon icon="solar:menu-dots-bold" width="20" className="rotate-90" />
-        </Button>
-      </DropdownTrigger>
-      <DropdownMenu
-        disallowEmptySelection
-        aria-label="Download options"
-        className="max-w-[300px]"
-      >
-        {Object.entries(menuMap).map(([key, value]) => (
-          <DropdownItem
-            key={key}
-            description={value.description}
-            startContent={
-              <div
-                className={cn(
-                  'rounded-medium bg-red-50 p-2 text-red-400',
-                  value.classNames
-                )}
-              >
-                <Icon icon={value.icon} width="24" />
-              </div>
-            }
-          >
-            {value.label}
-          </DropdownItem>
-        ))}
-      </DropdownMenu>
-    </Dropdown>
   );
 }

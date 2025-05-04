@@ -35,8 +35,8 @@ export const chipColorMap: Record<ChipColorType, string> = {
   completed: 'bg-green-500',
   cancelled: 'bg-default-500',
   'on-hold': 'bg-yellow-500',
-  booked: 'bg-blue-500',
-  confirmed: 'bg-teal-500',
+  booked: 'bg-cyan-500',
+  confirmed: 'bg-blue-500',
   'in-progress': 'bg-purple-500',
 
   // for service types
