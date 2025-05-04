@@ -24,13 +24,16 @@ import { useQuery } from '@tanstack/react-query';
 import { getAllAppointments } from '@/app/dashboard/appointments/helper';
 import { useRouter } from 'nextjs-toploader/app';
 import QuickLook from './quick-look';
+import dynamic from 'next/dynamic';
+
+
 
 const INITIAL_VISIBLE_COLUMNS = [
   'aid',
   'date',
   'patient.name',
   'doctor.name',
-  'status',
+  // 'status',
 ];
 
 export default function Appointments() {
@@ -109,7 +112,7 @@ export default function Appointments() {
         uid: 'date',
         sortable: true,
         renderCell: (appointment) =>
-          renderDate({ date: appointment.createdAt, isTime: true }),
+          renderDate({ date: appointment.date, isTime: true }),
       },
       {
         name: 'Created At',
