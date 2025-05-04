@@ -41,7 +41,7 @@ export const sectionItems: SidebarItem[] = [
       {
         key: 'emails',
         href: '/dashboard/emails',
-        icon: 'solar:mailbox-bold-duotone',
+        icon: 'solar:letter-bold-duotone',
         title: 'Emails',
       },
       {

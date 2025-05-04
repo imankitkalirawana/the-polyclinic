@@ -24,14 +24,13 @@ import { useQuery } from '@tanstack/react-query';
 import { getAllAppointments } from '@/app/dashboard/appointments/helper';
 import { useRouter } from 'nextjs-toploader/app';
 import QuickLook from './quick-look';
-import dynamic from 'next/dynamic';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'aid',
   'date',
   'patient.name',
   'doctor.name',
-  // 'status',
+  'status',
 ];
 
 export default function Appointments() {

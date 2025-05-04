@@ -21,17 +21,16 @@ import {
 } from '@/lib/client-functions';
 import { EventType } from '@/lib/interface';
 import { AppointmentType } from '@/models/Appointment';
-import { useQueryState } from 'nuqs';
 
 type ActionType = 'google' | 'outlook' | 'download';
 
-export default function AddtoCalendar({
+export default function AddToCalendar({
   appointment,
+  onClose,
 }: {
   appointment: AppointmentType;
+  onClose: () => void;
 }) {
-  const [action, setAction] = useQueryState('action');
-
   const [selectedOption, setSelectedOption] = useState(new Set(['google']));
   const selectedOptionValue = Array.from(selectedOption)[0] as ActionType;
 
@@ -79,10 +78,7 @@ export default function AddtoCalendar({
 
   return (
     <>
-      <Modal
-        isOpen={action === 'addToCalendar'}
-        onClose={() => setAction(null)}
-      >
+      <Modal isOpen backdrop="blur" onClose={onClose}>
         <ModalContent>
           <ModalHeader className="flex-col items-start gap-2">
             <h2 className="max-w-xs text-center text-base">Add to Calendar</h2>

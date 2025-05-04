@@ -1,11 +1,19 @@
 import { AppointmentType } from '@/models/Appointment';
+import { ButtonProps } from '@heroui/react';
 
 export type ButtonConfig = {
   label: string;
   action: (item: AppointmentType) => void;
-  color: 'primary' | 'danger' | 'success' | 'warning' | 'default';
-  variant: 'solid' | 'flat' | 'bordered' | 'light';
-  icon?: string;
-  tooltip?: string;
+  color?: ButtonProps['color'];
+  variant?: ButtonProps['variant'];
+  icon: string;
   isIconOnly?: boolean;
+  content?: React.ReactNode;
 };
+
+export type ActionType =
+  | 'reschedule'
+  | 'cancel'
+  | 'delete'
+  | 'edit'
+  | 'reminder';

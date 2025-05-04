@@ -17,7 +17,6 @@ import { Icon } from '@iconify/react';
 
 import { CopyText } from '@/components/ui/copy';
 import { format } from 'date-fns';
-import { TZDate } from '@date-fns/tz';
 
 import { chipColorMap, ChipColorType } from '@/lib/chip';
 
@@ -49,12 +48,6 @@ export const renderDate = ({
   isTime?: boolean;
 }) => {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
-
-  if (isNaN(dateObj.getTime())) {
-    return <div className="flex flex-col">Invalid Date</div>;
-  }
-
-  const zonedDate = new TZDate(2022, 2, 13, 'Asia/Singapore');
 
   return (
     <div className="flex flex-col">
