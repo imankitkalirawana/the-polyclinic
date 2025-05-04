@@ -17,7 +17,7 @@ import { Icon } from '@iconify/react';
 
 import { CopyText } from '@/components/ui/copy';
 import { format } from 'date-fns';
-import { TZDate } from "@date-fns/tz";
+import { TZDate } from '@date-fns/tz';
 
 import { chipColorMap, ChipColorType } from '@/lib/chip';
 
@@ -54,12 +54,12 @@ export const renderDate = ({
     return <div className="flex flex-col">Invalid Date</div>;
   }
 
-  const zonedDate = new TZDate(2022, 2, 13, "Asia/Singapore");
+  const zonedDate = new TZDate(2022, 2, 13, 'Asia/Singapore');
 
   return (
     <div className="flex flex-col">
       <p className="text-nowrap text-small capitalize text-default-foreground">
-      {format(dateObj, 'PP')}
+        {format(dateObj, 'PP')}
       </p>
       {isTime && (
         <p className="text-nowrap text-xs capitalize text-default-500">

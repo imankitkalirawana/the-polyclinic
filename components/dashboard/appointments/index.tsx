@@ -26,8 +26,6 @@ import { useRouter } from 'nextjs-toploader/app';
 import QuickLook from './quick-look';
 import dynamic from 'next/dynamic';
 
-
-
 const INITIAL_VISIBLE_COLUMNS = [
   'aid',
   'date',
