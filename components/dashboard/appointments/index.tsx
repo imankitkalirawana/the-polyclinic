@@ -239,7 +239,7 @@ export default function Appointments() {
         endContent={endContent}
         renderSelectedActions={renderSelectedActions}
         initialSortDescriptor={{
-          column: 'createdAt',
+          column: 'date',
           direction: 'descending',
         }}
         onRowAction={(row) => {
