@@ -17,11 +17,11 @@ export async function generateAppointments(count: number) {
 
     const appointment: AppointmentType = {
       aid: faker.number.int({ min: 1000, max: 9999 }),
-      date: faker.date.recent().toISOString(),
+      date: faker.date.recent(),
       patient: {
         uid: faker.number.int({ min: 1000, max: 9999 }),
         name: faker.person.fullName(),
-        phone: faker.phone.number(),
+        phone: faker.phone.number({ style: 'national' }),
         email: faker.internet.email(),
         gender: faker.helpers.arrayElement(Object.values(Gender)),
         age: faker.number.int({ min: 18, max: 80 }),

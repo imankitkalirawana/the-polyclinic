@@ -25,7 +25,7 @@ export enum AppointmentStatus {
 }
 export interface AppointmentType extends Base {
   aid: number;
-  date: string;
+  date: string | Date;
   patient: {
     uid: number;
     name: string;
