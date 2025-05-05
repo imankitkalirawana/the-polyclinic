@@ -81,8 +81,10 @@ export default function AccountDetails({
   });
 
   useEffect(() => {
-    formik.errors?.user && scrollToError(formik.errors?.user, inputRefs);
-  }, [formik.isSubmitting]);
+    if (formik.errors?.user && Object.keys(formik.errors.user).length > 0) {
+      scrollToError(formik.errors.user, inputRefs);
+    }
+  }, [formik.errors]);
 
   const allowedRoles = ['admin', 'doctor', 'receptionist'];
 

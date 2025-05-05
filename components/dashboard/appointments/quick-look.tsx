@@ -351,13 +351,13 @@ function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
           classNames={{
             icon: 'text-purple-500 bg-purple-50',
           }}
-          className={!item.doctor?.name ? 'bg-danger-50/50' : ''}
+          className={!item?.doctor?.name ? 'bg-danger-50/50' : ''}
           cols={2}
         />
         {item.additionalInfo.symptoms && (
           <CellRenderer
             label="Symptoms"
-            value={item.additionalInfo.symptoms || 'N/A'}
+            value={item.additionalInfo.symptoms}
             icon="solar:notes-bold-duotone"
             classNames={{
               icon: 'text-orange-500 bg-orange-50',
@@ -368,7 +368,7 @@ function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
         {item.additionalInfo.notes && (
           <CellRenderer
             label="Notes"
-            value={item.additionalInfo.notes || 'N/A'}
+            value={item.additionalInfo.notes}
             icon="solar:notes-bold-duotone"
             classNames={{
               icon: 'text-amber-500 bg-amber-50',
@@ -379,7 +379,7 @@ function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
         {item.additionalInfo.description && (
           <CellRenderer
             label="Description"
-            value={item.additionalInfo.description || 'N/A'}
+            value={item.additionalInfo.description}
             icon="solar:document-text-bold-duotone"
             classNames={{
               icon: 'text-pink-500 bg-pink-50',
