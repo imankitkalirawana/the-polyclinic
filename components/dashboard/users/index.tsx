@@ -334,11 +334,7 @@ export default function Users() {
         />
       )}
       {quickLook.isOpen && quickLookItem && (
-        <QuickLook
-          modalKey="users"
-          onClose={quickLook.onClose}
-          item={quickLookItem}
-        />
+        <QuickLook onClose={quickLook.onClose} item={quickLookItem} />
       )}
     </>
   );

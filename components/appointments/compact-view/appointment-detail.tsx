@@ -69,7 +69,9 @@ export default function AppointmentDetail({
         setAppointments={setAppointments}
       />
     ),
-    addToCalendar: <AddtoCalendar appointment={appointment} />,
+    addToCalendar: (
+      <AddtoCalendar appointment={appointment} onClose={modal.onClose} />
+    ),
   };
 
   function handleButtonClick(action: string) {
