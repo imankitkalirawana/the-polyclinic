@@ -150,7 +150,7 @@ export default function AppointmentDetail({
             label="Phone"
             value={
               appointment.patient?.phone
-                ? `+91 ${appointment.patient.phone}`
+                ? `+91 ${appointment.patient?.phone}`
                 : 'N/A'
             }
             className="justify-start gap-4"
@@ -180,12 +180,12 @@ export default function AppointmentDetail({
           {appointment.additionalInfo.notes && (
             <CellValue
               label="Appointment Notes"
-              value={appointment?.additionalInfo.notes}
+              value={appointment.additionalInfo.notes}
               className="items-start justify-start gap-4"
             />
           )}
           <CellValue
-            label={`Booked on: ${format(appointment?.createdAt as Date, 'PPp')}`}
+            label={`Booked on: ${format(new Date(appointment.createdAt), 'PPp')}`}
             value={null}
           />
           <div className="col-span-full flex flex-col items-center justify-between gap-2 sm:flex-row">
