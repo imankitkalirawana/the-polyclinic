@@ -1,10 +1,10 @@
 import Users from '@/components/dashboard/users';
+import { getAllUsers } from '@/lib/users/helper';
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from '@tanstack/react-query';
-import { getAllUsers } from './helper';
 
 export default async function Page() {
   const queryClient = new QueryClient();

@@ -1,14 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import {
-  addToast,
-  Button,
-  DropdownItem,
-  DropdownMenu,
-  Selection,
-  useDisclosure,
-} from '@heroui/react';
+import { useMemo } from 'react';
+import { Button, DropdownItem, DropdownMenu, Selection } from '@heroui/react';
 
 import {
   renderActions,
@@ -20,10 +13,9 @@ import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 
 import { Table } from '@/components/ui/data-table';
 import { AppointmentType } from '@/models/Appointment';
-import { useQuery } from '@tanstack/react-query';
-import { getAllAppointments } from '@/app/dashboard/appointments/helper';
 import { useRouter } from 'nextjs-toploader/app';
 import QuickLook from './quick-look';
+import { useAppointment } from './context';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'aid',
@@ -35,17 +27,9 @@ const INITIAL_VISIBLE_COLUMNS = [
 
 export default function Appointments() {
   const router = useRouter();
-  const quickLook = useDisclosure();
+  const { query, formik } = useAppointment();
 
-  const [selectedAppointment, setSelectedAppointment] =
-    useState<AppointmentType | null>(null);
-
-  const { data, isLoading } = useQuery({
-    queryKey: ['appointments'],
-    queryFn: () => getAllAppointments(),
-  });
-
-  const appointments: AppointmentType[] = data || [];
+  const appointments: AppointmentType[] = query.data || [];
 
   // Define columns with render functions
   const columns: ColumnDef<AppointmentType>[] = useMemo(
@@ -230,7 +214,7 @@ export default function Appointments() {
     <>
       <Table
         uniqueKey="appointments"
-        isLoading={isLoading}
+        isLoading={query.isLoading}
         data={appointments}
         columns={columns}
         initialVisibleColumns={INITIAL_VISIBLE_COLUMNS}
@@ -247,20 +231,11 @@ export default function Appointments() {
             (appointment) => appointment.aid == row
           );
           if (appointment) {
-            setSelectedAppointment(appointment);
-            quickLook.onOpen();
+            formik.setFieldValue('selected', appointment);
           }
         }}
       />
-      {quickLook.isOpen && selectedAppointment && (
-        <QuickLook
-          onClose={() => {
-            setSelectedAppointment(null);
-            quickLook.onClose();
-          }}
-          item={selectedAppointment}
-        />
-      )}
+      {formik.values.selected && <QuickLook />}
     </>
   );
 }
