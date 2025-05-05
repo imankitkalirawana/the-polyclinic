@@ -5,10 +5,12 @@ import ExcelJS from 'exceljs';
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import Service from '@/models/Service';
+import { UserRole } from '@/models/User';
 
 export const GET = auth(async function GET(request: any) {
   try {
-    if (request.auth?.user?.role !== 'admin') {
+    const allowedRoles: UserRole[] = [UserRole.admin];
+    if (!allowedRoles.includes(request.auth?.user?.role)) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
     await connectDB();

@@ -2,16 +2,16 @@ import { connectDB } from '@/lib/db';
 
 import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
-import User from '@/models/User';
+import User, { UserRole } from '@/models/User';
 
 export const GET = auth(async function GET(request: any, context: any) {
   try {
-    const allowedRoles = [
-      'admin',
-      'receptionist',
-      'doctor',
-      'nurse',
-      'pharmacist',
+    const allowedRoles: UserRole[] = [
+      UserRole.admin,
+      UserRole.receptionist,
+      UserRole.doctor,
+      UserRole.nurse,
+      UserRole.pharmacist,
     ];
 
     if (!allowedRoles.includes(request.auth?.user?.role)) {
