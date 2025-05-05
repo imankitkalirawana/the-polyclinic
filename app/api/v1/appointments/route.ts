@@ -6,17 +6,23 @@ import { connectDB } from '@/lib/db';
 import Appointment from '@/models/Appointment';
 import { NewAppointment } from '@/utils/email-template/doctor';
 import { AppointmentStatus } from '@/utils/email-template/patient';
+import { UserRole } from '@/models/User';
 
 export const GET = auth(async function GET(request: any) {
   try {
-    const role = request.auth?.user?.role;
+    const disallowedRoles: UserRole[] = [
+      UserRole.nurse,
+      UserRole.pharmacist,
+      UserRole.laboratorist,
+    ];
 
-    if (!request.auth?.user) {
+    if (disallowedRoles.includes(request.auth?.user?.role)) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);
     let date = searchParams.get('date'); // YYYY-MM-DD
+    const role = request.auth?.user?.role;
 
     // query map with respect to user role and status
     const queryMap: Record<string, object> = {

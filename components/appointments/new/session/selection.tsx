@@ -12,21 +12,21 @@ import DateSelection, { DateSelectionTitle } from './date-selection';
 import DoctorSelection, { DoctorSelectionTitle } from './doctor-selection';
 import UserSelection, { UserSelectionTitle } from './user-selection';
 
+const ModalMap: Record<number, React.ReactNode> = {
+  5: <SummaryModal />,
+  6: <ConfirmationModal />,
+  7: <NewUserModal />,
+};
+
+const KeyMap: Record<number, string> = {
+  1: 'user',
+  2: 'time',
+  3: 'doctor',
+  4: 'additional-details',
+};
+
 export default function Selection() {
   const { formik } = useForm();
-
-  const ModalMap: Record<number, React.ReactNode> = {
-    5: <SummaryModal />,
-    6: <ConfirmationModal />,
-    7: <NewUserModal />,
-  };
-
-  const KeyMap: Record<number, string> = {
-    1: 'user',
-    2: 'time',
-    3: 'doctor',
-    4: 'additional-details',
-  };
 
   return (
     <>

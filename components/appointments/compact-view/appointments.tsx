@@ -220,11 +220,15 @@ export default function AppointmentsTimeline() {
 
               {/* Appointments */}
               {appointments
-                ?.sort((a, b) => a.date.localeCompare(b.date))
+                ?.sort((a, b) =>
+                  a.date.toString().localeCompare(b.date.toString())
+                )
                 .map((appointment, index, sortedAppointments) => {
                   const styles = getAppointmentStyles(appointment.status);
 
-                  let startTime = convertISOTimetoTime(appointment.date);
+                  let startTime = convertISOTimetoTime(
+                    appointment.date.toString()
+                  );
                   const [startHour, startMinute] = startTime
                     .split(':')
                     .map(Number);
@@ -242,7 +246,9 @@ export default function AppointmentsTimeline() {
                   sortedAppointments.forEach((other, i) => {
                     if (i >= index) return;
 
-                    const otherTime = convertISOTimetoTime(other.date);
+                    const otherTime = convertISOTimetoTime(
+                      other.date.toString()
+                    );
                     const [otherHour, otherMinute] = otherTime
                       .split(':')
                       .map(Number);
@@ -270,7 +276,9 @@ export default function AppointmentsTimeline() {
                     if (overlappingAppointments.length === 2) {
                       const remainingCount =
                         sortedAppointments.filter((apt) => {
-                          const aptTime = convertISOTimetoTime(apt.date);
+                          const aptTime = convertISOTimetoTime(
+                            apt.date.toString()
+                          );
                           const [aptHour, aptMinute] = aptTime
                             .split(':')
                             .map(Number);
@@ -297,7 +305,6 @@ export default function AppointmentsTimeline() {
                             classNames={{
                               base: 'bg-transparent p-0',
                             }}
-                            // isOpen
                             className="bg-transparent p-0"
                             shadow="none"
                           >

@@ -9,7 +9,13 @@ import {
 } from '@/models/Appointment';
 import { faker } from '@faker-js/faker';
 
-export async function generateAppointments(count: number) {
+export async function generateAppointments({
+  count,
+  status,
+}: {
+  count: number;
+  status?: AppointmentStatus;
+}) {
   const generated: AppointmentType[] = [];
 
   for (let i = 0; i < count; i++) {
@@ -34,15 +40,17 @@ export async function generateAppointments(count: number) {
           sitting: String(faker.number.int({ min: 100, max: 300 })),
         },
       }),
-      status: faker.helpers.arrayElement([
-        AppointmentStatus.booked,
-        AppointmentStatus.confirmed,
-        AppointmentStatus['in-progress'],
-        AppointmentStatus.completed,
-        AppointmentStatus.cancelled,
-        AppointmentStatus.overdue,
-        AppointmentStatus['on-hold'],
-      ]),
+      status: status
+        ? status
+        : faker.helpers.arrayElement([
+            AppointmentStatus.booked,
+            AppointmentStatus.confirmed,
+            AppointmentStatus['in-progress'],
+            AppointmentStatus.completed,
+            AppointmentStatus.cancelled,
+            AppointmentStatus.overdue,
+            AppointmentStatus['on-hold'],
+          ]),
       additionalInfo: {
         notes: faker.lorem.paragraph(),
         symptoms: faker.lorem.sentence(),

@@ -4,7 +4,7 @@ import axios from 'axios';
 
 import { API_BASE_URL, MOCK_DATA } from '@/lib/config';
 import { AppointmentType } from '@/models/Appointment';
-import { generateAppointments } from '../../../lib/appointments/mock';
+import { generateAppointments } from './mock';
 
 export const getAllAppointments = async (): Promise<AppointmentType[]> => {
   // If mock data is disabled, fetch data from the API

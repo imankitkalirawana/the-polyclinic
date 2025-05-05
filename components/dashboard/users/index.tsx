@@ -20,7 +20,7 @@ import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 import { Table } from '@/components/ui/data-table';
 import { UserType } from '@/models/User';
 import { useQuery } from '@tanstack/react-query';
-import { getAllUsers } from '@/app/dashboard/users/helper';
+import { getAllUsers } from '@/lib/users/helper';
 import { useRouter } from 'nextjs-toploader/app';
 import { toast } from 'sonner';
 import DeleteModal from './delete';
