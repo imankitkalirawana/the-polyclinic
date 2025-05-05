@@ -15,7 +15,7 @@ import { Table } from '@/components/ui/data-table';
 import { AppointmentType } from '@/models/Appointment';
 import { useRouter } from 'nextjs-toploader/app';
 import QuickLook from './quick-look';
-import { useAppointment } from './context';
+import { useAppointmentData, useAppointmentStore } from './store';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'aid',
@@ -27,7 +27,8 @@ const INITIAL_VISIBLE_COLUMNS = [
 
 export default function Appointments() {
   const router = useRouter();
-  const { query, formik } = useAppointment();
+  const { selected, setSelected } = useAppointmentStore();
+  const query = useAppointmentData();
 
   const appointments: AppointmentType[] = query.data || [];
 
@@ -231,11 +232,11 @@ export default function Appointments() {
             (appointment) => appointment.aid == row
           );
           if (appointment) {
-            formik.setFieldValue('selected', appointment);
+            setSelected(appointment);
           }
         }}
       />
-      {formik.values.selected && <QuickLook />}
+      {selected && <QuickLook />}
     </>
   );
 }

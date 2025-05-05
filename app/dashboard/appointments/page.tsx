@@ -5,7 +5,6 @@ import {
 } from '@tanstack/react-query';
 import Appointments from '@/components/dashboard/appointments';
 import { getAllAppointments } from './helper';
-import { AppointmentProvider } from '@/components/dashboard/appointments/context';
 
 export default async function Page() {
   const queryClient = new QueryClient();
@@ -18,9 +17,7 @@ export default async function Page() {
   return (
     <>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <AppointmentProvider>
-          <Appointments />
-        </AppointmentProvider>
+        <Appointments />
       </HydrationBoundary>
     </>
   );

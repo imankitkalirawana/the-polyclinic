@@ -29,7 +29,7 @@ import { UserRole } from '@/models/User';
 import { ActionType, ButtonConfig } from './types';
 import CancelModal from '@/components/ui/appointments/cancel-modal';
 import AsyncButton from '@/components/ui/buttons/async-button';
-import { useAppointment } from './context';
+import { useAppointmentStore } from './store';
 
 // Moved outside component to prevent recreation on each render
 const permissions: Record<UserRole, Array<ActionType>> = {
@@ -70,11 +70,10 @@ const downloadOptions = [
 ];
 
 function QuickLook(): React.ReactElement {
-  const { formik } = useAppointment();
+  const { selected, action, setSelected, setAction } = useAppointmentStore();
   const { data: session } = useSession();
 
-  const appointment: AppointmentType =
-    formik.values.selected || ({} as AppointmentType);
+  const appointment: AppointmentType = selected || ({} as AppointmentType);
 
   // Generate random avatar URLs once during component initialization
   const avatars = useMemo(() => {
@@ -104,7 +103,7 @@ function QuickLook(): React.ReactElement {
         content: (
           <AddToCalendar
             appointment={appointment}
-            onClose={() => formik.setFieldValue('action', null)}
+            onClose={() => setAction(null)}
           />
         ),
       },
@@ -114,12 +113,12 @@ function QuickLook(): React.ReactElement {
         color: 'warning',
         variant: 'flat',
         action: () => {
-          formik.setFieldValue('action', 'reschedule');
+          setAction('reschedule');
         },
         content: (
           <RescheduleModal
             appointment={appointment}
-            onClose={() => formik.setFieldValue('action', null)}
+            onClose={() => setAction(null)}
           />
         ),
       },
@@ -129,12 +128,12 @@ function QuickLook(): React.ReactElement {
         color: 'danger',
         variant: 'flat',
         action: () => {
-          formik.setFieldValue('action', 'cancel');
+          setAction('cancel');
         },
         content: (
           <CancelModal
             appointment={appointment}
-            onClose={() => formik.setFieldValue('action', null)}
+            onClose={() => setAction(null)}
           />
         ),
       },
@@ -145,12 +144,12 @@ function QuickLook(): React.ReactElement {
         variant: 'light',
         isIconOnly: true,
         action: () => {
-          formik.setFieldValue('action', 'delete');
+          setAction('delete');
         },
         content: (
           <CancelModal
             appointment={appointment}
-            onClose={() => formik.setFieldValue('action', null)}
+            onClose={() => setAction(null)}
             type="delete"
           />
         ),
@@ -444,7 +443,7 @@ function QuickLook(): React.ReactElement {
         isOpen
         backdrop="blur"
         scrollBehavior="inside"
-        onClose={() => formik.setFieldValue('selected', null)}
+        onClose={() => setSelected(null)}
       >
         <ModalContent className="h-[80vh] overflow-hidden">
           <ModalBody
@@ -476,7 +475,7 @@ function QuickLook(): React.ReactElement {
                   variant="bordered"
                   startContent={<Icon icon="solar:calendar-bold" />}
                   onPress={() => {
-                    formik.setFieldValue('action', 'addToCalendar');
+                    setAction('addToCalendar');
                   }}
                 >
                   Add to Calendar
@@ -537,7 +536,7 @@ function QuickLook(): React.ReactElement {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      {formik.values.action && ButtonMap[formik.values.action]?.content}
+      {action && ButtonMap[action]?.content}
     </>
   );
 }
