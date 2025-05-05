@@ -1,5 +1,6 @@
 'use server';
 
+import { Gender } from '@/lib/interface';
 import { UserRole, UserType, UserStatus } from '@/models/User';
 import { faker } from '@faker-js/faker';
 
@@ -40,7 +41,7 @@ export async function generateUsers(count: number) {
         month: String(faker.number.int({ min: 1, max: 12 })),
         year: String(faker.number.int({ min: 1970, max: 2005 })),
       },
-      gender: faker.helpers.arrayElement(['male', 'female', 'other']),
+      gender: faker.helpers.arrayElement([Gender.male, Gender.female]),
       image: faker.image.avatar(),
       createdAt: faker.date.recent(),
       _id: faker.string.uuid(),
