@@ -290,7 +290,7 @@ export default function Appointments() {
             } else {
               console.log('Cancel', keys);
             }
-            setKeys(undefined as $FixMe);
+            setAction(null);
           }}
           renderItem={(appointment) => (
             <ModalCellRenderer appointment={appointment} />
