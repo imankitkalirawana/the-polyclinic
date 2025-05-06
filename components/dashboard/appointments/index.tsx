@@ -36,9 +36,11 @@ const INITIAL_VISIBLE_COLUMNS = [
 export default function Appointments() {
   const router = useRouter();
   const { selected, setSelected } = useAppointmentStore();
-  const query = useAppointmentData();
+  const { data, isLoading, refetch } = useAppointmentData();
 
-  const appointments: AppointmentType[] = query.data || [];
+  const appointments: AppointmentType[] = useMemo(() => {
+    return data || [];
+  }, [data]);
 
   // Define columns with render functions
   const columns: ColumnDef<AppointmentType>[] = useMemo(
@@ -194,8 +196,8 @@ export default function Appointments() {
 
   // Render top bar
   const endContent = () => (
-    <Button color="primary" size="sm">
-      New Appointment
+    <Button color="primary" size="sm" onPress={() => refetch()}>
+      Refetch
     </Button>
   );
 
@@ -235,7 +237,7 @@ export default function Appointments() {
     <>
       <Table
         uniqueKey="appointments"
-        isLoading={query.isLoading}
+        isLoading={isLoading}
         data={appointments}
         columns={columns}
         initialVisibleColumns={INITIAL_VISIBLE_COLUMNS}

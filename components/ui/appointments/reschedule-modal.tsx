@@ -13,21 +13,26 @@ import {
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { CalendarDate, getLocalTimeZone, Time } from '@internationalized/date';
-import { useLocale } from '@react-aria/i18n';
 
 import AsyncButton from '@/components/ui/buttons/async-button';
 import { TIMINGS } from '@/lib/config';
-import { AppointmentType } from '@/models/Appointment';
 import { Title } from '../typography/modal';
 import DateTimePicker from '@/components/appointments/new/session/date-time-picker';
+import { useSession } from 'next-auth/react';
+import {
+  useAppointmentData,
+  useAppointmentStore,
+} from '@/components/dashboard/appointments/store';
 
-export default function RescheduleModal({
-  appointment,
-  onClose,
-}: {
-  appointment: AppointmentType;
-  onClose: () => void;
-}) {
+export default function RescheduleModal() {
+  const { data: session } = useSession();
+  const { refetch } = useAppointmentData();
+  const {
+    setAction,
+    selected: appointment,
+    setSelected,
+  } = useAppointmentStore();
+
   const [timing, setTiming] = useState<Date>(() => {
     if (appointment?.date) {
       return new Date(appointment.date);
@@ -46,7 +51,12 @@ export default function RescheduleModal({
 
   return (
     <>
-      <Modal isOpen backdrop="blur" onClose={onClose} hideCloseButton>
+      <Modal
+        isOpen
+        backdrop="blur"
+        onClose={() => setAction(null)}
+        hideCloseButton
+      >
         <ModalContent>
           <>
             <ModalHeader className="items-center justify-between">
@@ -100,7 +110,7 @@ export default function RescheduleModal({
                 radius="lg"
                 variant="flat"
                 className="min-w-[50%] p-6 font-medium"
-                onPress={onClose}
+                onPress={() => setAction(null)}
               >
                 Cancel
               </Button>
@@ -111,13 +121,12 @@ export default function RescheduleModal({
                 color="primary"
                 fn={async () => {
                   await axios
-                    .post(
-                      `/api/v1/appointments/${appointment?.aid}/reschedule`,
-                      {
-                        date: timing.toISOString(),
-                      }
-                    )
-                    .then(() => {
+                    .patch(`/api/v1/appointments/${appointment?.aid}`, {
+                      status:
+                        session?.user?.role === 'user' ? 'booked' : 'confirmed',
+                      date: timing,
+                    })
+                    .then((res) => {
                       addToast({
                         title: `Appointment Rescheduled`,
                         description: `Appointment rescheduled to ${format(
@@ -126,16 +135,16 @@ export default function RescheduleModal({
                         )}`,
                         color: 'success',
                       });
-                      // formik.setFieldValue('selected', {
-                      //   ...appointment,
-                      //   date: timing.toISOString(),
-                      //   status:
-                      //     session?.user?.role === 'user'
-                      //       ? 'booked'
-                      //       : 'confirmed',
-                      // });
-                      // refetch();
-                      // formik.setFieldValue('modal', null);
+
+                      refetch();
+                      setAction(null);
+                      setSelected(res.data);
+                    })
+                    .catch((err) => {
+                      addToast({
+                        title: `Error Rescheduling Appointment`,
+                        description: err.response.data.message,
+                      });
                     });
                 }}
                 whileSubmitting="Rescheduling..."

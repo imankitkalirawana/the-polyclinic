@@ -3,8 +3,8 @@ import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { AppointmentType } from '@/models/Appointment';
-import { getAllAppointments } from '@/functions/server-actions/appointment';
 import { ActionType } from './types';
+import { getAllAppointments } from '@/app/dashboard/appointments/helper';
 
 // Store data interfaces
 interface AppointmentStoreState {

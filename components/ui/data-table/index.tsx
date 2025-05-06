@@ -138,7 +138,7 @@ export function Table<T extends TableItem>({
     filteredData = filteredData.filter(itemFilter);
 
     return filteredData;
-  }, [data, state.filterValue, itemFilter, searchField]);
+  }, [data, state.filterValue, itemFilter, searchField, isLoading]);
 
   // Helper function to get nested object values using dot notation
   const getNestedValue = (obj: T, path: string): any => {

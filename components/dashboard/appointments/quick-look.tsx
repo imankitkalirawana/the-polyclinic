@@ -107,12 +107,7 @@ function QuickLook(): React.ReactElement {
         action: () => {
           setAction('reschedule');
         },
-        content: (
-          <RescheduleModal
-            appointment={appointment}
-            onClose={() => setAction(null)}
-          />
-        ),
+        content: <RescheduleModal />,
       },
       cancel: {
         label: 'Cancel',
@@ -122,12 +117,7 @@ function QuickLook(): React.ReactElement {
         action: () => {
           setAction('cancel');
         },
-        content: (
-          <CancelModal
-            appointment={appointment}
-            onClose={() => setAction(null)}
-          />
-        ),
+        content: <CancelModal appointment={appointment} />,
       },
       delete: {
         label: 'Delete',
@@ -138,13 +128,7 @@ function QuickLook(): React.ReactElement {
         action: () => {
           setAction('delete');
         },
-        content: (
-          <CancelModal
-            appointment={appointment}
-            onClose={() => setAction(null)}
-            type="delete"
-          />
-        ),
+        content: <CancelModal appointment={appointment} type="delete" />,
       },
       edit: {
         label: 'Edit',

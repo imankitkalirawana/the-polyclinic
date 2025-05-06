@@ -18,16 +18,21 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import AsyncButton from '@/components/ui/buttons/async-button';
 import { Title } from '../typography/modal';
 import { AppointmentType } from '@/models/Appointment';
+import {
+  useAppointmentData,
+  useAppointmentStore,
+} from '@/components/dashboard/appointments/store';
 
 export default function CancelModal({
   appointment,
-  onClose,
   type = 'cancel',
 }: {
   appointment: AppointmentType;
-  onClose: () => void;
   type?: 'cancel' | 'delete';
 }) {
+  const { refetch } = useAppointmentData();
+  const { setAction } = useAppointmentStore();
+
   const handleSubmit = async () => {
     if (type === 'cancel') {
       await axios
@@ -40,7 +45,8 @@ export default function CancelModal({
             description: 'The appointment has been cancelled',
             color: 'success',
           });
-          onClose();
+          refetch();
+          setAction(null);
         })
         .catch((error) => {
           addToast({
@@ -59,7 +65,8 @@ export default function CancelModal({
             description: 'The appointment has been deleted',
             color: 'success',
           });
-          onClose();
+          refetch();
+          setAction(null);
         })
         .catch((error) => {
           addToast({
@@ -138,7 +145,7 @@ export default function CancelModal({
                 radius="lg"
                 variant="flat"
                 className="min-w-[50%] p-6 font-medium"
-                onPress={onClose}
+                onPress={() => setAction(null)}
               >
                 Keep
               </Button>
