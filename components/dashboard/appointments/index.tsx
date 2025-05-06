@@ -24,6 +24,8 @@ import { useRouter } from 'nextjs-toploader/app';
 import QuickLook from './quick-look';
 import { useAppointmentData, useAppointmentStore } from './store';
 import { avatars } from '@/lib/avatar';
+import BulkDeleteModal from '@/components/ui/common/modals/bulk-delete';
+import { ModalCellRenderer } from './cell-renderer';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'aid',
@@ -35,7 +37,8 @@ const INITIAL_VISIBLE_COLUMNS = [
 
 export default function Appointments() {
   const router = useRouter();
-  const { selected, setSelected } = useAppointmentStore();
+  const { selected, setSelected, keys, setKeys, action, setAction } =
+    useAppointmentStore();
   const { data, isLoading, refetch } = useAppointmentData();
 
   const appointments: AppointmentType[] = useMemo(() => {
@@ -205,26 +208,27 @@ export default function Appointments() {
     return (
       <DropdownMenu aria-label="Selected Actions">
         <DropdownItem
-          key="bulk-edit"
-          onPress={() => {
-            console.log('Bulk edit', selectedKeys);
-          }}
-        >
-          Bulk edit
-        </DropdownItem>
-        <DropdownItem
           key="export"
           onPress={() => {
-            console.log('Export', selectedKeys);
+            setKeys(selectedKeys);
           }}
         >
           Export
         </DropdownItem>
         <DropdownItem
+          key="cancel"
+          onPress={() => {
+            setKeys(selectedKeys);
+          }}
+        >
+          Cancel
+        </DropdownItem>
+        <DropdownItem
           key="delete"
           className="text-danger"
           onPress={() => {
-            console.log('Delete', selectedKeys);
+            setKeys(selectedKeys);
+            setAction('bulk-delete');
           }}
         >
           Delete
@@ -259,6 +263,21 @@ export default function Appointments() {
         }}
       />
       {selected && <QuickLook />}
+      {action === 'bulk-delete' && (
+        <BulkDeleteModal<AppointmentType>
+          modalKey="appointments"
+          renderItem={(appointment) => (
+            <ModalCellRenderer appointment={appointment} />
+          )}
+          items={appointments.filter((appointment) => {
+            if (keys === 'all') return true;
+            return keys?.has(String(appointment.aid));
+          })}
+          deleteFn={async () => {
+            console.log('Delete', keys);
+          }}
+        />
+      )}
     </>
   );
 }

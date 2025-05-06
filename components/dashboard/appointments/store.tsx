@@ -5,13 +5,17 @@ import * as Yup from 'yup';
 import { AppointmentType } from '@/models/Appointment';
 import { ActionType } from './types';
 import { getAllAppointments } from '@/app/dashboard/appointments/helper';
+import { Selection, useDisclosure } from '@heroui/react';
 
 // Store data interfaces
+
 interface AppointmentStoreState {
   selected: AppointmentType | null;
   action: ActionType | null;
+  keys: Selection | undefined;
   setSelected: (selected: AppointmentType | null) => void;
   setAction: (action: ActionType | null) => void;
+  setKeys: (keys: Selection) => void;
   resetState: () => void;
 }
 
@@ -19,9 +23,11 @@ interface AppointmentStoreState {
 export const useAppointmentStore = create<AppointmentStoreState>((set) => ({
   selected: null,
   action: null,
+  keys: undefined,
   setSelected: (selected) => set({ selected }),
   setAction: (action) => set({ action }),
-  resetState: () => set({ selected: null, action: null }),
+  setKeys: (keys) => set({ keys }),
+  resetState: () => set({ selected: null, action: null, keys: undefined }),
 }));
 
 // Custom hook to handle appointment form logic with formik

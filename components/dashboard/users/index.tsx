@@ -315,9 +315,7 @@ export default function Users() {
       {deleteModal.isOpen && (
         <BulkDeleteModal<UserType>
           modalKey="users"
-          getItemId={(user) => user.uid.toString()}
-          getItemDisplayName={(user) => user.name}
-          getItemImage={(user) => user.image}
+          renderItem={(user) => <div>{user.name}</div>}
           deleteFn={async () => {
             if (!selectedKeys) return;
             const ids = Array.from(selectedKeys);

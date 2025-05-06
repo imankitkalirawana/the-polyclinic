@@ -1,11 +1,9 @@
 'use client';
 import {
   Alert,
-  Avatar,
   Button,
   Card,
   CardBody,
-  Chip,
   Modal,
   ModalBody,
   ModalContent,
@@ -25,10 +23,7 @@ interface DeleteModalProps<T> {
   items: Array<T>;
   title?: string;
   deleteFn: () => Promise<any>;
-  renderItem?: (item: T) => ReactNode;
-  getItemId: (item: T) => string;
-  getItemDisplayName: (item: T) => string;
-  getItemImage?: (item: T) => string | undefined;
+  renderItem: (item: T) => ReactNode;
   confirmButtonText?: string;
 }
 
@@ -39,7 +34,6 @@ export default function BulkDeleteModal<T>({
   title = `Delete the selected ${modalKey}?`,
   deleteFn,
   renderItem,
-  getItemId,
   confirmButtonText = 'Confirm Deletion',
 }: DeleteModalProps<T>) {
   return (
@@ -59,43 +53,13 @@ export default function BulkDeleteModal<T>({
                 as={ScrollShadow}
                 className="flex max-h-[300px] flex-col gap-2 scrollbar-hide"
               >
-                {items.map((item) => {
-                  if (renderItem) {
-                    return (
-                      <div key={`delete-item-${getItemId(item)}`}>
-                        {renderItem(item)}
-                        <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20"></div>
-                      </div>
-                    );
-                  }
-
-                  // const id = getItemId(item);
-                  // const displayName = getItemDisplayName(item);
-                  // const image = getItemImage(item);
-
-                  // return (
-                  //   <div key={`delete-item-${id}`}>
-                  //     <div className="flex items-center justify-between gap-4">
-                  //       <div className="flex items-center gap-2">
-                  //         <Avatar src={image} name={displayName} />
-                  //         <span className="text-sm capitalize text-default-400">
-                  //           {displayName}
-                  //         </span>
-                  //       </div>
-                  //       {id && (
-                  //         <Chip
-                  //           className="px-2"
-                  //           variant="flat"
-                  //           size="sm"
-                  //           startContent={<span>#</span>}
-                  //         >
-                  //           {id}
-                  //         </Chip>
-                  //       )}
-                  //     </div>
-                  //     <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20"></div>
-                  //   </div>
-                  // );
+                {items.map((item, index) => {
+                  return (
+                    <div key={`delete-${modalKey}-item-${index}`}>
+                      {renderItem(item)}
+                      <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20"></div>
+                    </div>
+                  );
                 })}
               </CardBody>
             </Card>

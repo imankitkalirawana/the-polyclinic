@@ -5,6 +5,7 @@ import {
   addToast,
   Button,
   Chip,
+  ChipProps,
   cn,
   Dropdown,
   DropdownItem,
@@ -80,14 +81,25 @@ export const renderCountry = (name: string, icon: React.ReactNode) => {
   );
 };
 
-export const renderChip = ({ item }: { item: ChipColorType }) => {
+export const renderChip = ({
+  item,
+  size,
+}: {
+  item: ChipColorType;
+  size?: ChipProps['size'];
+}) => {
   return (
-    <div className="flex w-fit items-center gap-[2px] rounded-lg bg-default-100 px-2 py-1">
-      <span className={cn('size-2 rounded-full', chipColorMap[item])}></span>
-      <span className="px-1 capitalize text-default-800">
+    <Chip
+      className="flex w-fit items-center gap-[2px] rounded-lg bg-default-100 px-2 py-1"
+      size={size}
+      startContent={
+        <span className={cn('size-2 rounded-full', chipColorMap[item])}></span>
+      }
+    >
+      <span className="capitalize text-default-800">
         {item.split('-').join(' ')}
       </span>
-    </div>
+    </Chip>
   );
 };
 
