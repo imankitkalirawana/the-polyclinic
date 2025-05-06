@@ -7,6 +7,7 @@ import Appointment, {
   AppointmentType,
 } from '@/models/Appointment';
 import { UserRole } from '@/models/User';
+import { API_ACTIONS } from '@/lib/config';
 
 // get appointment by id from param
 export const GET = auth(async function GET(request: any, context: any) {
@@ -143,7 +144,9 @@ export const DELETE = auth(async function DELETE(request: any, context: any) {
     await connectDB();
 
     // delete appointment
-    // await Appointment.findOneAndDelete({ aid });
+    if (API_ACTIONS.isDelete) {
+      await Appointment.findOneAndDelete({ aid });
+    }
 
     return NextResponse.json(
       {

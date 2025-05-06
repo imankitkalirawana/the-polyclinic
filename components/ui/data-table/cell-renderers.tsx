@@ -24,7 +24,15 @@ export const renderCopyableText = (text: string) => {
   return <CopyText>{text}</CopyText>;
 };
 
-export const renderUser = (avatar: string, name: string, email: string) => {
+export const renderUser = ({
+  avatar,
+  name,
+  description,
+}: {
+  avatar: string;
+  name: string;
+  description: string;
+}) => {
   return (
     <User
       avatarProps={{ radius: 'lg', src: avatar }}
@@ -32,10 +40,10 @@ export const renderUser = (avatar: string, name: string, email: string) => {
         name: 'text-default-foreground',
         description: 'text-default-500',
       }}
-      description={email}
+      description={description}
       name={name}
     >
-      {email}
+      {description}
     </User>
   );
 };

@@ -24,28 +24,31 @@ import {
 } from '@/components/dashboard/appointments/store';
 
 export default function CancelModal({
-  appointment,
   type = 'cancel',
 }: {
-  appointment: AppointmentType;
   type?: 'cancel' | 'delete';
 }) {
   const { refetch } = useAppointmentData();
-  const { setAction } = useAppointmentStore();
+  const {
+    selected: appointment,
+    setAction,
+    setSelected,
+  } = useAppointmentStore();
 
   const handleSubmit = async () => {
     if (type === 'cancel') {
       await axios
-        .patch(`/api/v1/appointments/${appointment.aid}`, {
+        .patch(`/api/v1/appointments/${appointment?.aid}`, {
           status: 'cancelled',
         })
-        .then(() => {
+        .then(async (res) => {
           addToast({
             title: 'Appointment cancelled',
             description: 'The appointment has been cancelled',
             color: 'success',
           });
-          refetch();
+          await refetch();
+          setSelected(res.data);
           setAction(null);
         })
         .catch((error) => {
@@ -58,14 +61,15 @@ export default function CancelModal({
     }
     if (type === 'delete') {
       await axios
-        .delete(`/api/v1/appointments/${appointment.aid}`)
-        .then(() => {
+        .delete(`/api/v1/appointments/${appointment?.aid}`)
+        .then(async () => {
           addToast({
             title: 'Appointment deleted',
             description: 'The appointment has been deleted',
             color: 'success',
           });
-          refetch();
+          await refetch();
+          setSelected(null);
           setAction(null);
         })
         .catch((error) => {
@@ -102,7 +106,7 @@ export default function CancelModal({
                       <Icon icon="solar:hashtag-circle-bold" width="24" />
                     </div>
                     <div className="flex text-[15px] text-default-400">
-                      <span className="capitalize">{appointment.aid}</span>
+                      <span className="capitalize">{appointment?.aid}</span>
                     </div>
                   </div>
                   <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20"></div>
@@ -112,10 +116,10 @@ export default function CancelModal({
                     </div>
                     <div className="flex gap-2 text-[15px] text-default-400">
                       <span className="capitalize">
-                        {appointment.patient?.name}
+                        {appointment?.patient?.name}
                       </span>
-                      {appointment.doctor && (
-                        <span>with {appointment.doctor?.name}</span>
+                      {appointment?.doctor && (
+                        <span>with {appointment?.doctor?.name}</span>
                       )}
                     </div>
                   </div>
@@ -127,13 +131,13 @@ export default function CancelModal({
                     <div className="flex text-[15px] text-default-400">
                       <span>
                         {format(
-                          new Date(appointment.date as string),
+                          new Date(appointment?.date as string),
                           'hh:mm a'
                         )}
                       </span>
                       <Icon icon="mdi:dot" width="24" height="24" />
                       <span>
-                        {format(new Date(appointment.date as string), 'PP')}
+                        {format(new Date(appointment?.date as string), 'PP')}
                       </span>
                     </div>
                   </div>

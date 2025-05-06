@@ -126,7 +126,7 @@ export default function RescheduleModal() {
                         session?.user?.role === 'user' ? 'booked' : 'confirmed',
                       date: timing,
                     })
-                    .then((res) => {
+                    .then(async (res) => {
                       addToast({
                         title: `Appointment Rescheduled`,
                         description: `Appointment rescheduled to ${format(
@@ -135,8 +135,7 @@ export default function RescheduleModal() {
                         )}`,
                         color: 'success',
                       });
-
-                      refetch();
+                      await refetch();
                       setAction(null);
                       setSelected(res.data);
                     })
