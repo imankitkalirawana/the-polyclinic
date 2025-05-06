@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import {
+  Avatar,
   Button,
   DropdownItem,
   DropdownMenu,
@@ -26,7 +27,14 @@ import { toast } from 'sonner';
 import DeleteModal from './delete';
 import QuickLook from './quick-look';
 
-const INITIAL_VISIBLE_COLUMNS = ['uid', 'name', 'email', 'role', 'createdAt'];
+const INITIAL_VISIBLE_COLUMNS = [
+  'image',
+  'uid',
+  'name',
+  'email',
+  'role',
+  'createdAt',
+];
 
 export default function Users() {
   const router = useRouter();
@@ -44,8 +52,16 @@ export default function Users() {
   const users: UserType[] = data || [];
 
   // Define columns with render functions
-  const columns: ColumnDef<UserType>[] = useMemo(
-    () => [
+  const columns: ColumnDef<UserType>[] = useMemo(() => {
+    return [
+      {
+        name: 'Image',
+        uid: 'image',
+        sortable: false,
+        renderCell: (user) => (
+          <Avatar src={user.image} size="sm" className={`bg-violet-200`} />
+        ),
+      },
       {
         name: 'User ID',
         uid: 'uid',
@@ -132,9 +148,8 @@ export default function Users() {
             },
           }),
       },
-    ],
-    []
-  );
+    ];
+  }, []);
 
   // Define filters
   const filters: FilterDef<UserType>[] = useMemo(

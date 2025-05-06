@@ -30,6 +30,7 @@ import { ActionType, ButtonConfig } from './types';
 import CancelModal from '@/components/ui/appointments/cancel-modal';
 import AsyncButton from '@/components/ui/buttons/async-button';
 import { useAppointmentStore } from './store';
+import { avatars } from '@/lib/avatar';
 
 // Moved outside component to prevent recreation on each render
 const permissions: Record<UserRole, Array<ActionType>> = {
@@ -74,15 +75,6 @@ function QuickLook(): React.ReactElement {
   const { data: session } = useSession();
 
   const appointment: AppointmentType = selected || ({} as AppointmentType);
-
-  // Generate random avatar URLs once during component initialization
-  const avatars = useMemo(() => {
-    const randomNumber = Math.floor(Math.random() * 34) + 1;
-    return {
-      doctor: `https://cdn.jsdelivr.net/gh/alohe/avatars/png/memo_${randomNumber}.png`,
-      patient: `https://cdn.jsdelivr.net/gh/alohe/avatars/png/memo_${randomNumber + 1}.png`,
-    };
-  }, []);
 
   // Use session role or fallback to admin for demo
   const role = useMemo(
@@ -200,7 +192,13 @@ function QuickLook(): React.ReactElement {
     () => (
       <div className="divide-y divide-divider">
         <div className="flex flex-col items-center gap-2 p-4">
-          <Avatar src={avatars.patient} size="lg" className="bg-amber-100" />
+          <Avatar
+            src={
+              appointment.patient.image ||
+              avatars.memoji[Math.floor(Math.random() * avatars.memoji.length)]
+            }
+            size="lg"
+          />
           <div className="flex flex-col items-center">
             <h6 className="font-medium capitalize">
               {appointment.patient.name}
@@ -280,7 +278,7 @@ function QuickLook(): React.ReactElement {
         </div>
       </div>
     ),
-    [avatars.patient, appointment.patient]
+    [appointment.patient]
   );
 
   // Memoize the appointment details section
@@ -349,7 +347,7 @@ function QuickLook(): React.ReactElement {
             appointment.doctor?.name ? (
               <div className="flex items-center gap-1">
                 <Image
-                  src={avatars.doctor}
+                  src={appointment.doctor?.image}
                   width={24}
                   height={24}
                   className="rounded-full bg-purple-200"
@@ -402,7 +400,7 @@ function QuickLook(): React.ReactElement {
         )}
       </div>
     ),
-    [appointment, avatars.doctor]
+    [appointment]
   );
 
   // Memoize action buttons

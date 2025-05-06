@@ -20,24 +20,27 @@ export async function generateAppointments({
 
   for (let i = 0; i < count; i++) {
     const includeDoctor = faker.datatype.boolean(); // randomly true or false
+    const sex = faker.person.sexType();
 
     const appointment: AppointmentType = {
       aid: faker.number.int({ min: 1000, max: 9999 }),
       date: faker.date.recent(),
       patient: {
         uid: faker.number.int({ min: 1000, max: 9999 }),
-        name: faker.person.fullName(),
+        name: faker.person.fullName({ sex }),
         phone: faker.phone.number({ style: 'national' }),
         email: faker.internet.email(),
-        gender: faker.helpers.arrayElement(Object.values(Gender)),
+        gender: sex as Gender,
         age: faker.number.int({ min: 18, max: 80 }),
+        image: faker.image.personPortrait({ size: 256, sex }),
       },
       ...(includeDoctor && {
         doctor: {
           uid: faker.number.int({ min: 1000, max: 9999 }),
-          name: faker.person.fullName(),
+          name: faker.person.fullName({ sex: 'male' }),
           email: faker.internet.email(),
           sitting: String(faker.number.int({ min: 100, max: 300 })),
+          image: faker.image.personPortrait({ size: 256, sex: 'male' }),
         },
       }),
       status: status

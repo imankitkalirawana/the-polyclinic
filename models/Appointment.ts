@@ -52,12 +52,14 @@ export interface AppointmentType extends Base {
     email: string;
     gender?: Gender;
     age?: number;
+    image?: string;
   };
   doctor?: {
     uid: number;
     name: string;
     email: string;
     sitting?: string;
+    image?: string;
   };
   status: AppointmentStatus;
   additionalInfo: {

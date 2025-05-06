@@ -1,7 +1,14 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Button, DropdownItem, DropdownMenu, Selection } from '@heroui/react';
+import {
+  Avatar,
+  Button,
+  DropdownItem,
+  DropdownMenu,
+  Selection,
+  User,
+} from '@heroui/react';
 
 import {
   renderActions,
@@ -16,6 +23,7 @@ import { AppointmentType } from '@/models/Appointment';
 import { useRouter } from 'nextjs-toploader/app';
 import QuickLook from './quick-look';
 import { useAppointmentData, useAppointmentStore } from './store';
+import { avatars } from '@/lib/avatar';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'aid',
@@ -48,9 +56,21 @@ export default function Appointments() {
         uid: 'patient.name',
         sortable: true,
         renderCell: (appointment) => (
-          <div className="truncate capitalize text-default-foreground">
-            {appointment.patient.name}
-          </div>
+          <User
+            name={appointment.patient.name}
+            description={appointment.patient.phone}
+            classNames={{
+              description: 'text-default-500',
+            }}
+            avatarProps={{
+              src:
+                appointment.patient.image ||
+                avatars.memoji[
+                  Math.floor(Math.random() * avatars.memoji.length)
+                ],
+              fallback: appointment.patient.name,
+            }}
+          />
         ),
       },
       {

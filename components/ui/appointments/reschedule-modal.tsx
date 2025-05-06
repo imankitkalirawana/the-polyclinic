@@ -28,8 +28,6 @@ export default function RescheduleModal({
   appointment: AppointmentType;
   onClose: () => void;
 }) {
-  const { locale } = useLocale();
-
   const [timing, setTiming] = useState<Date>(() => {
     if (appointment?.date) {
       return new Date(appointment.date);
