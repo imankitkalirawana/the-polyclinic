@@ -266,16 +266,17 @@ export default function Appointments() {
       {action === 'bulk-delete' && (
         <BulkDeleteModal<AppointmentType>
           modalKey="appointments"
-          renderItem={(appointment) => (
-            <ModalCellRenderer appointment={appointment} />
-          )}
           items={appointments.filter((appointment) => {
             if (keys === 'all') return true;
             return keys?.has(String(appointment.aid));
           })}
-          deleteFn={async () => {
+          onClose={() => setAction(null)}
+          onDelete={async () => {
             console.log('Delete', keys);
           }}
+          renderItem={(appointment) => (
+            <ModalCellRenderer appointment={appointment} />
+          )}
         />
       )}
     </>

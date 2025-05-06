@@ -29,6 +29,7 @@ import { toast } from 'sonner';
 import QuickLook from './quick-look';
 import BulkDeleteModal from '../../ui/common/modals/bulk-delete';
 import axios from 'axios';
+import { ModalCellRenderer } from './cell-renderer';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'image',
@@ -315,8 +316,12 @@ export default function Users() {
       {deleteModal.isOpen && (
         <BulkDeleteModal<UserType>
           modalKey="users"
-          renderItem={(user) => <div>{user.name}</div>}
-          deleteFn={async () => {
+          items={users.filter((user) => {
+            if (selectedKeys === 'all') return true;
+            return selectedKeys?.has(String(user.uid));
+          })}
+          onClose={deleteModal.onClose}
+          onDelete={async () => {
             if (!selectedKeys) return;
             const ids = Array.from(selectedKeys);
             await axios
@@ -344,11 +349,7 @@ export default function Users() {
                 });
               });
           }}
-          items={users.filter((user) => {
-            if (selectedKeys === 'all') return true;
-            return selectedKeys?.has(String(user.uid));
-          })}
-          onClose={deleteModal.onClose}
+          renderItem={(user) => <ModalCellRenderer user={user} />}
         />
       )}
       {quickLook.isOpen && quickLookItem && (

@@ -22,7 +22,7 @@ interface DeleteModalProps<T> {
   onClose?: () => void;
   items: Array<T>;
   title?: string;
-  deleteFn: () => Promise<any>;
+  onDelete: () => Promise<any>;
   renderItem: (item: T) => ReactNode;
   confirmButtonText?: string;
 }
@@ -32,7 +32,7 @@ export default function BulkDeleteModal<T>({
   onClose,
   items,
   title = `Delete the selected ${modalKey}?`,
-  deleteFn,
+  onDelete,
   renderItem,
   confirmButtonText = 'Confirm Deletion',
 }: DeleteModalProps<T>) {
@@ -80,7 +80,7 @@ export default function BulkDeleteModal<T>({
               color="danger"
               whileSubmitting="Deleting..."
               fn={async () => {
-                await deleteFn();
+                await onDelete();
               }}
             >
               {confirmButtonText}
