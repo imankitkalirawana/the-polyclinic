@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { usePathname } from 'next/navigation';
-import { signIn, signOut } from 'next-auth/react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'nextjs-toploader/app';
 import { motion } from 'framer-motion';
 import {
@@ -29,9 +29,11 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import ModeToggle from '../mode-toggle';
 
 import { NavItem } from '@/lib/interface';
+import { avatars } from '@/lib/avatar';
 
-export default function Navbar({ session }: { session: any }) {
+export default function Navbar() {
   const router = useRouter();
+  const { data: session } = useSession();
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [activeMenu, setActiveMenu] = React.useState<
@@ -229,8 +231,9 @@ export default function Navbar({ session }: { session: any }) {
                   <Avatar
                     as="button"
                     size="sm"
-                    className="transition-transform"
-                    src="/assets/placeholder-avatar.jpeg"
+                    className="bg-primary-200 transition-transform"
+                    src={session.user?.image || ''}
+                    fallback={avatars.memoji[2]}
                   />
                 </DropdownTrigger>
                 <DropdownMenu aria-label="Profile Actions" variant="flat">

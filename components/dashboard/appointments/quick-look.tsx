@@ -21,7 +21,7 @@ import {
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { format } from 'date-fns';
 import { useSession } from 'next-auth/react';
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import CellRenderer from './cell-renderer';
 import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
 import RescheduleModal from '@/components/ui/appointments/reschedule-modal';

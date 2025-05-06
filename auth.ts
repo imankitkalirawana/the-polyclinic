@@ -52,12 +52,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (user) {
         token.role = user.role;
         token.id = user._id;
+        token.uid = user.uid;
+        token.image = user.image || '';
       }
       return token;
     },
     session({ session, token }) {
       session.user.role = token.role;
       session.user.id = token.id as string;
+      session.user.uid = token.uid as number;
+      session.user.image = token.image as string;
       return session;
     },
   },
