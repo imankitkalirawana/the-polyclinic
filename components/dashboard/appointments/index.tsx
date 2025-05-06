@@ -26,6 +26,7 @@ import { useAppointmentData, useAppointmentStore } from './store';
 import { avatars } from '@/lib/avatar';
 import BulkDeleteModal from '@/components/ui/common/modals/bulk-delete';
 import { ModalCellRenderer } from './cell-renderer';
+import { $FixMe } from '@/types';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'aid',
@@ -289,6 +290,7 @@ export default function Appointments() {
             } else {
               console.log('Cancel', keys);
             }
+            setKeys(undefined as $FixMe);
           }}
           renderItem={(appointment) => (
             <ModalCellRenderer appointment={appointment} />
