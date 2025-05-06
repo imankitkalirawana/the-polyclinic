@@ -219,6 +219,7 @@ export default function Appointments() {
           key="cancel"
           onPress={() => {
             setKeys(selectedKeys);
+            setAction('bulk-cancel');
           }}
         >
           Cancel
@@ -263,16 +264,31 @@ export default function Appointments() {
         }}
       />
       {selected && <QuickLook />}
-      {action === 'bulk-delete' && (
+      {(action === 'bulk-delete' || action === 'bulk-cancel') && (
         <BulkDeleteModal<AppointmentType>
+          canUndo={action !== 'bulk-delete'}
           modalKey="appointments"
+          title={
+            action === 'bulk-delete'
+              ? 'Delete the selected appointments?'
+              : 'Cancel the selected appointments?'
+          }
+          confirmButtonText={
+            action === 'bulk-delete'
+              ? 'Confirm Deletion'
+              : 'Confirm Cancellation'
+          }
           items={appointments.filter((appointment) => {
             if (keys === 'all') return true;
             return keys?.has(String(appointment.aid));
           })}
           onClose={() => setAction(null)}
           onDelete={async () => {
-            console.log('Delete', keys);
+            if (action === 'bulk-delete') {
+              console.log('Delete', keys);
+            } else {
+              console.log('Cancel', keys);
+            }
           }}
           renderItem={(appointment) => (
             <ModalCellRenderer appointment={appointment} />

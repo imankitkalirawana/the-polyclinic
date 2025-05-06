@@ -25,6 +25,7 @@ interface DeleteModalProps<T> {
   onDelete: () => Promise<any>;
   renderItem: (item: T) => ReactNode;
   confirmButtonText?: string;
+  canUndo?: boolean;
 }
 
 export default function BulkDeleteModal<T>({
@@ -35,6 +36,7 @@ export default function BulkDeleteModal<T>({
   onDelete,
   renderItem,
   confirmButtonText = 'Confirm Deletion',
+  canUndo = false,
 }: DeleteModalProps<T>) {
   return (
     <Modal isOpen backdrop="blur" onClose={onClose} hideCloseButton>
@@ -47,7 +49,14 @@ export default function BulkDeleteModal<T>({
             </Button>
           </ModalHeader>
           <ModalBody className="items-center">
-            <Alert color="danger" title="Are you sure? This can't be undone." />
+            <Alert
+              color="danger"
+              title={
+                canUndo
+                  ? 'Are you sure?'
+                  : "Are you sure? This can't be undone."
+              }
+            />
             <Card className="w-full border border-divider bg-default-50 shadow-none">
               <CardBody
                 as={ScrollShadow}

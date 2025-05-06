@@ -11,10 +11,10 @@ import { Selection, useDisclosure } from '@heroui/react';
 
 interface AppointmentStoreState {
   selected: AppointmentType | null;
-  action: ActionType | null;
+  action: ActionType;
   keys: Selection | undefined;
   setSelected: (selected: AppointmentType | null) => void;
-  setAction: (action: ActionType | null) => void;
+  setAction: (action: ActionType) => void;
   setKeys: (keys: Selection) => void;
   resetState: () => void;
 }
