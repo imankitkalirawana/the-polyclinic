@@ -52,7 +52,6 @@
     "puppeteer": "^24.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-haiku": "^2.2.0",
     "react-quill": "^2.0.0",
     "react-redux": "^9.1.2",
     "recharts": "^2.15.3",
@@ -61,6 +60,7 @@
     "string-strip-html": "^13.4.8",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
+    "usehooks-ts": "^3.1.1",
     "uuid": "^11.1.0",
     "yup": "^1.4.0",
     "zustand": "^5.0.4"

@@ -31,6 +31,7 @@ import CancelModal from '@/components/ui/appointments/cancel-modal';
 import AsyncButton from '@/components/ui/buttons/async-button';
 import { useAppointmentStore } from './store';
 import { avatars } from '@/lib/avatar';
+import { $FixMe } from '@/types';
 
 // Moved outside component to prevent recreation on each render
 const permissions: Record<UserRole, Array<ActionType>> = {
@@ -74,7 +75,10 @@ function QuickLook(): React.ReactElement {
   const { selected, action, setSelected, setAction } = useAppointmentStore();
   const { data: session } = useSession();
 
-  const appointment: AppointmentType = selected || ({} as AppointmentType);
+  const appointment: AppointmentType = useMemo(
+    () => selected || ({} as AppointmentType),
+    [selected]
+  );
 
   // Use session role or fallback to admin for demo
   const role = useMemo(
@@ -82,7 +86,9 @@ function QuickLook(): React.ReactElement {
     [session?.user?.role]
   );
 
-  const ButtonMap: Record<ActionType, ButtonConfig> = useMemo(
+  type ButtonActionType = Exclude<ActionType, 'bulk-cancel' | 'bulk-delete'>;
+
+  const ButtonMap: Record<ButtonActionType, ButtonConfig> = useMemo(
     () => ({
       addToCalendar: {
         label: 'Add to Calendar',
@@ -117,7 +123,7 @@ function QuickLook(): React.ReactElement {
         action: () => {
           setAction('cancel');
         },
-        content: <CancelModal appointment={appointment} />,
+        content: <CancelModal />,
       },
       delete: {
         label: 'Delete',
@@ -128,7 +134,7 @@ function QuickLook(): React.ReactElement {
         action: () => {
           setAction('delete');
         },
-        content: <CancelModal appointment={appointment} type="delete" />,
+        content: <CancelModal type="delete" />,
       },
       edit: {
         label: 'Edit',
@@ -166,7 +172,7 @@ function QuickLook(): React.ReactElement {
   // Memoize the action handling
   const handleAction = useCallback(
     (actionType: ActionType) => {
-      ButtonMap[actionType].action(appointment);
+      ButtonMap[actionType as keyof typeof ButtonMap].action(appointment);
     },
     [ButtonMap, appointment]
   );
@@ -397,19 +403,28 @@ function QuickLook(): React.ReactElement {
             <Tooltip
               key={btn}
               delay={500}
-              isDisabled={!ButtonMap[btn].isIconOnly}
-              content={ButtonMap[btn].label}
-              color={ButtonMap[btn].color}
+              isDisabled={!ButtonMap[btn as keyof typeof ButtonMap].isIconOnly}
+              content={ButtonMap[btn as keyof typeof ButtonMap].label}
+              color={ButtonMap[btn as keyof typeof ButtonMap].color}
             >
               <AsyncButton
-                variant={ButtonMap[btn].variant}
-                startContent={<Icon icon={ButtonMap[btn].icon} width="20" />}
+                variant={ButtonMap[btn as keyof typeof ButtonMap].variant}
+                startContent={
+                  <Icon
+                    icon={ButtonMap[btn as keyof typeof ButtonMap].icon}
+                    width="20"
+                  />
+                }
                 onPress={() => handleAction(btn)}
-                color={ButtonMap[btn].color}
-                isIconOnly={ButtonMap[btn].isIconOnly}
-                fn={async () => ButtonMap[btn].action(appointment)}
+                color={ButtonMap[btn as keyof typeof ButtonMap].color}
+                isIconOnly={ButtonMap[btn as keyof typeof ButtonMap].isIconOnly}
+                fn={async () =>
+                  ButtonMap[btn as keyof typeof ButtonMap].action(appointment)
+                }
               >
-                {ButtonMap[btn].isIconOnly ? null : ButtonMap[btn].label}
+                {ButtonMap[btn as keyof typeof ButtonMap].isIconOnly
+                  ? null
+                  : ButtonMap[btn as keyof typeof ButtonMap].label}
               </AsyncButton>
             </Tooltip>
           ))}
@@ -503,12 +518,17 @@ function QuickLook(): React.ReactElement {
                         <DropdownItem
                           key={btn}
                           startContent={
-                            <Icon icon={ButtonMap[btn].icon} width="20" />
+                            <Icon
+                              icon={
+                                ButtonMap[btn as keyof typeof ButtonMap].icon
+                              }
+                              width="20"
+                            />
                           }
-                          color={ButtonMap[btn].color}
+                          color={ButtonMap[btn as keyof typeof ButtonMap].color}
                           onPress={() => handleAction(btn)}
                         >
-                          {ButtonMap[btn].label}
+                          {ButtonMap[btn as keyof typeof ButtonMap].label}
                         </DropdownItem>
                       )) as any
                   }
@@ -518,7 +538,7 @@ function QuickLook(): React.ReactElement {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      {action && ButtonMap[action]?.content}
+      {action && ButtonMap[action as keyof typeof ButtonMap]?.content}
     </>
   );
 }

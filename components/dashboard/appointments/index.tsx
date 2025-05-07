@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react';
 import {
+  addToast,
   Avatar,
   Button,
   DropdownItem,
@@ -27,6 +28,9 @@ import { avatars } from '@/lib/avatar';
 import BulkDeleteModal from '@/components/ui/common/modals/bulk-delete';
 import { ModalCellRenderer } from './cell-renderer';
 import { $FixMe } from '@/types';
+import axios from 'axios';
+import { deleteAppointments } from './helper';
+import { apiRequest } from '@/lib/axios';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'aid',
@@ -38,6 +42,7 @@ const INITIAL_VISIBLE_COLUMNS = [
 
 export default function Appointments() {
   const router = useRouter();
+
   const { selected, setSelected, keys, setKeys, action, setAction } =
     useAppointmentStore();
   const { data, isLoading, refetch } = useAppointmentData();
@@ -285,12 +290,37 @@ export default function Appointments() {
           })}
           onClose={() => setAction(null)}
           onDelete={async () => {
-            if (action === 'bulk-delete') {
-              console.log('Delete', keys);
+            if (!keys) return;
+            let ids = [];
+            if (keys === 'all') {
+              ids.push(-1); // -1 is the id for all appointments
             } else {
-              console.log('Cancel', keys);
+              ids = Array.from(keys);
             }
-            setAction(null);
+            if (action === 'bulk-delete') {
+              await apiRequest({
+                method: 'DELETE',
+                url: '/api/v1/appointments',
+                data: { ids },
+                onSuccess: () => {
+                  setAction(null);
+                  refetch();
+                },
+                onError: (error) => {
+                  console.log('error', error);
+                },
+              });
+            } else {
+              await apiRequest({
+                method: 'PATCH',
+                url: '/api/v1/appointments',
+                data: { ids },
+                onSuccess: () => {
+                  setAction(null);
+                  refetch();
+                },
+              });
+            }
           }}
           renderItem={(appointment) => (
             <ModalCellRenderer appointment={appointment} />

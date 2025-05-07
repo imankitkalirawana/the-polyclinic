@@ -323,6 +323,7 @@ export default function Users() {
           onClose={deleteModal.onClose}
           onDelete={async () => {
             if (!selectedKeys) return;
+
             const ids = Array.from(selectedKeys);
             await axios
               .delete('/api/v1/users', {

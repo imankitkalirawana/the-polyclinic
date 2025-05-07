@@ -19,5 +19,4 @@ export type ActionType =
   | 'reminder'
   | 'addToCalendar'
   | 'bulk-cancel'
-  | 'bulk-delete'
-  | null;
+  | 'bulk-delete';
