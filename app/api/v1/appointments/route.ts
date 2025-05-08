@@ -118,10 +118,9 @@ export const PATCH = auth(async function PATCH(request: any) {
     await connectDB();
     const { ids } = await request.json();
 
-    await Appointment.updateMany(
-      ids[0] === -1 ? {} : { aid: { $in: ids } },
-      { $set: { status: 'cancelled' } }
-    );
+    await Appointment.updateMany(ids[0] === -1 ? {} : { aid: { $in: ids } }, {
+      $set: { status: 'cancelled' },
+    });
 
     return NextResponse.json(
       { message: 'Appointments cancelled' },

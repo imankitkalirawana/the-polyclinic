@@ -32,8 +32,6 @@ import AsyncButton from '@/components/ui/buttons/async-button';
 import { useAppointmentStore } from './store';
 import { avatars } from '@/lib/avatar';
 
-
-
 const permissions: Record<UserRole, Array<ButtonActionType>> = {
   doctor: ['cancel', 'reschedule', 'reminder'],
   user: ['cancel', 'reschedule'],
@@ -85,7 +83,6 @@ function QuickLook(): React.ReactElement {
     () => session?.user?.role ?? 'admin',
     [session?.user?.role]
   );
-
 
   const ButtonMap: Record<ButtonActionType, ButtonConfig> = useMemo(
     () => ({
@@ -517,17 +514,10 @@ function QuickLook(): React.ReactElement {
                         <DropdownItem
                           key={btn}
                           startContent={
-                            <Icon
-                              icon={
-                                ButtonMap[btn].icon
-                              }
-                              width="20"
-                            />
+                            <Icon icon={ButtonMap[btn].icon} width="20" />
                           }
                           color={ButtonMap[btn].color}
-                          onPress={() =>
-                            handleAction(btn)
-                          }
+                          onPress={() => handleAction(btn)}
                         >
                           {ButtonMap[btn].label}
                         </DropdownItem>

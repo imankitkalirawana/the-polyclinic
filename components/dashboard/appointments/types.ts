@@ -21,4 +21,7 @@ export type ActionType =
   | 'bulk-cancel'
   | 'bulk-delete';
 
-export type ButtonActionType = Exclude<ActionType, 'bulk-cancel' | 'bulk-delete'>;
+export type ButtonActionType = Exclude<
+  ActionType,
+  'bulk-cancel' | 'bulk-delete'
+>;
