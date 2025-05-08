@@ -135,7 +135,9 @@ export default function RescheduleModal() {
                         )}`,
                         color: 'success',
                       });
-                      await refetch();
+
+                      refetch();
+
                       setAction(null);
                       setSelected(res.data);
                     })

@@ -27,9 +27,6 @@ import { useAppointmentData, useAppointmentStore } from './store';
 import { avatars } from '@/lib/avatar';
 import BulkDeleteModal from '@/components/ui/common/modals/bulk-delete';
 import { ModalCellRenderer } from './cell-renderer';
-import { $FixMe } from '@/types';
-import axios from 'axios';
-import { deleteAppointments } from './helper';
 import { apiRequest } from '@/lib/axios';
 
 const INITIAL_VISIBLE_COLUMNS = [
@@ -48,7 +45,7 @@ export default function Appointments() {
   const { data, isLoading, refetch } = useAppointmentData();
 
   const appointments: AppointmentType[] = useMemo(() => {
-    return data || [];
+  return data || [];
   }, [data]);
 
   // Define columns with render functions
@@ -77,7 +74,7 @@ export default function Appointments() {
               src:
                 appointment.patient.image ||
                 avatars.memoji[
-                  Math.floor(Math.random() * avatars.memoji.length)
+                Math.floor(Math.random() * avatars.memoji.length)
                 ],
               fallback: appointment.patient.name,
             }}
@@ -90,11 +87,10 @@ export default function Appointments() {
         sortable: true,
         renderCell: (appointment) => (
           <div
-            className={`truncate capitalize ${
-              appointment?.doctor?.name
-                ? 'text-default-foreground'
-                : 'text-gray-400'
-            }`}
+            className={`truncate capitalize ${appointment?.doctor?.name
+              ? 'text-default-foreground'
+              : 'text-gray-400'
+              }`}
           >
             {appointment?.doctor?.name || 'Not Assigned'}
           </div>

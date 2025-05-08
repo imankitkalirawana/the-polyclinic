@@ -119,7 +119,7 @@ export const PATCH = auth(async function PATCH(request: any) {
     const { ids } = await request.json();
 
     await Appointment.updateMany(
-      { aid: { $in: ids } },
+      ids[0] === -1 ? {} : { aid: { $in: ids } },
       { $set: { status: 'cancelled' } }
     );
 

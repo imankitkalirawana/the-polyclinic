@@ -26,15 +26,15 @@ import CellRenderer from './cell-renderer';
 import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
 import RescheduleModal from '@/components/ui/appointments/reschedule-modal';
 import { UserRole } from '@/models/User';
-import { ActionType, ButtonConfig } from './types';
+import { ButtonActionType, ButtonConfig } from './types';
 import CancelModal from '@/components/ui/appointments/cancel-modal';
 import AsyncButton from '@/components/ui/buttons/async-button';
 import { useAppointmentStore } from './store';
 import { avatars } from '@/lib/avatar';
-import { $FixMe } from '@/types';
 
-// Moved outside component to prevent recreation on each render
-const permissions: Record<UserRole, Array<ActionType>> = {
+
+
+const permissions: Record<UserRole, Array<ButtonActionType>> = {
   doctor: ['cancel', 'reschedule', 'reminder'],
   user: ['cancel', 'reschedule'],
   admin: ['cancel', 'delete', 'edit', 'reschedule', 'reminder'],
@@ -86,7 +86,6 @@ function QuickLook(): React.ReactElement {
     [session?.user?.role]
   );
 
-  type ButtonActionType = Exclude<ActionType, 'bulk-cancel' | 'bulk-delete'>;
 
   const ButtonMap: Record<ButtonActionType, ButtonConfig> = useMemo(
     () => ({
@@ -171,8 +170,8 @@ function QuickLook(): React.ReactElement {
 
   // Memoize the action handling
   const handleAction = useCallback(
-    (actionType: ActionType) => {
-      ButtonMap[actionType as keyof typeof ButtonMap].action(appointment);
+    (actionType: ButtonActionType) => {
+      ButtonMap[actionType].action(appointment);
     },
     [ButtonMap, appointment]
   );
@@ -520,15 +519,17 @@ function QuickLook(): React.ReactElement {
                           startContent={
                             <Icon
                               icon={
-                                ButtonMap[btn as keyof typeof ButtonMap].icon
+                                ButtonMap[btn].icon
                               }
                               width="20"
                             />
                           }
-                          color={ButtonMap[btn as keyof typeof ButtonMap].color}
-                          onPress={() => handleAction(btn)}
+                          color={ButtonMap[btn].color}
+                          onPress={() =>
+                            handleAction(btn)
+                          }
                         >
-                          {ButtonMap[btn as keyof typeof ButtonMap].label}
+                          {ButtonMap[btn].label}
                         </DropdownItem>
                       )) as any
                   }
