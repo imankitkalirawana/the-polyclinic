@@ -1,10 +1,10 @@
 pipeline {
     agent any
     tools {
-        nodejs "Nodejs" 
+        nodejs "Nodejs" // Ensure this matches Global Tool Configuration
     }
     environment {
-        APP_PATH = "/home/ankit/apps/the-polyclinic" 
+        APP_PATH = "/home/ankit/apps/the-polyclinic"
     }
     stages {
         stage('Checkout') {
@@ -14,7 +14,10 @@ pipeline {
         }
         stage('Install Dependencies') {
             steps {
-                sh 'pnpm install'
+                sh '''
+                    npm install -g pnpm
+                    pnpm install || pnpm install --no-frozen-lockfile
+                '''
             }
         }
         stage('Build') {
@@ -25,13 +28,14 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
+                    mkdir -p ${APP_PATH}
                     cp -r .next ${APP_PATH}/.next
                     cp -r public ${APP_PATH}/public
                     cp package.json ${APP_PATH}/package.json
                     cp next.config.js ${APP_PATH}/next.config.js
                     cd ${APP_PATH}
                     pnpm install --production
-                    pm2 restart nextjs-app || pm2 start pnpm --name "nextjs-app" -- start
+                    pm2 restart the-polyclinic || pm2 start pnpm --name "the-polyclinic" -- run start
                 '''
             }
         }
