@@ -28,7 +28,6 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                    mkdir -p ${APP_PATH}
                     cp -r .next ${APP_PATH}/.next
                     cp -r public ${APP_PATH}/public
                     cp package.json ${APP_PATH}/package.json
