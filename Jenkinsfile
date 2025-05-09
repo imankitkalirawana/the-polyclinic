@@ -1,7 +1,7 @@
 pipeline {
     agent any
     tools {
-        nodejs "NodeJS" // Refers to the Node.js installation named "NodeJS" in Global Tool Configuration
+        nodejs "Nodejs" // Refers to the Node.js installation named "NodeJS" in Global Tool Configuration
     }
     environment {
         APP_PATH = "/apps/the-polyclinic" // Path where your app is deployed on the VPS
