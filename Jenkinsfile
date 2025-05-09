@@ -4,7 +4,7 @@ pipeline {
         nodejs "Nodejs" 
     }
     environment {
-        APP_PATH = "/apps/the-polyclinic" 
+        APP_PATH = "/home/ankit/apps/the-polyclinic" 
     }
     stages {
         stage('Checkout') {
