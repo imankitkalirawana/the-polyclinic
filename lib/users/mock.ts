@@ -4,7 +4,13 @@ import { Gender } from '@/lib/interface';
 import { UserRole, UserType, UserStatus } from '@/models/User';
 import { faker } from '@faker-js/faker';
 
-export async function generateUsers(count: number) {
+export async function generateUsers({
+  count,
+  role,
+}: {
+  count: number;
+  role?: UserRole;
+}): Promise<UserType[]> {
   const generated: UserType[] = [];
 
   for (let i = 0; i < count; i++) {
@@ -14,15 +20,17 @@ export async function generateUsers(count: number) {
       phone: faker.phone.number(),
       password: faker.internet.password(),
       name: faker.person.fullName(),
-      role: faker.helpers.arrayElement([
-        UserRole.user,
-        UserRole.admin,
-        UserRole.receptionist,
-        UserRole.nurse,
-        UserRole.doctor,
-        UserRole.pharmacist,
-        UserRole.laboratorist,
-      ]),
+      role: role
+        ? role
+        : faker.helpers.arrayElement([
+            UserRole.user,
+            UserRole.admin,
+            UserRole.receptionist,
+            UserRole.nurse,
+            UserRole.doctor,
+            UserRole.pharmacist,
+            UserRole.laboratorist,
+          ]),
       status: faker.helpers.arrayElement([
         UserStatus.active,
         UserStatus.inactive,

@@ -51,6 +51,7 @@ export interface AuthUser {
     role: UserRole;
     id: string;
     uid: number;
+    image: string;
   };
   expires?: string;
 }

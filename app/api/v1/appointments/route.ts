@@ -6,17 +6,24 @@ import { connectDB } from '@/lib/db';
 import Appointment from '@/models/Appointment';
 import { NewAppointment } from '@/utils/email-template/doctor';
 import { AppointmentStatus } from '@/utils/email-template/patient';
+import { UserRole } from '@/models/User';
+import { API_ACTIONS } from '@/lib/config';
 
 export const GET = auth(async function GET(request: any) {
   try {
-    const role = request.auth?.user?.role;
+    const disallowedRoles: UserRole[] = [
+      UserRole.nurse,
+      UserRole.pharmacist,
+      UserRole.laboratorist,
+    ];
 
-    if (!request.auth?.user) {
+    if (disallowedRoles.includes(request.auth?.user?.role)) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);
     let date = searchParams.get('date'); // YYYY-MM-DD
+    const role = request.auth?.user?.role;
 
     // query map with respect to user role and status
     const queryMap: Record<string, object> = {
@@ -49,7 +56,12 @@ export const GET = auth(async function GET(request: any) {
 
 export const POST = auth(async function POST(request: any) {
   try {
-    const allowedRoles = ['admin', 'doctor', 'receptionist', 'user'];
+    const allowedRoles = [
+      UserRole.admin,
+      UserRole.doctor,
+      UserRole.receptionist,
+      UserRole.user,
+    ];
     // @ts-ignore
     if (!allowedRoles.includes(request.auth?.user?.role)) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -90,5 +102,71 @@ export const POST = auth(async function POST(request: any) {
       { message: 'An error occurred while processing your request' },
       { status: 500 }
     );
+  }
+});
+
+export const PATCH = auth(async function PATCH(request: any) {
+  try {
+    const allowedRoles = [UserRole.admin, UserRole.receptionist];
+    if (!allowedRoles.includes(request.auth?.user?.role)) {
+      return NextResponse.json(
+        { success: false, message: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    await connectDB();
+    const { ids } = await request.json();
+
+    await Appointment.updateMany(ids[0] === -1 ? {} : { aid: { $in: ids } }, {
+      $set: { status: 'cancelled' },
+    });
+
+    return NextResponse.json(
+      { message: 'Appointments cancelled' },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    console.error(error);
+    return NextResponse.json({ message: error.message }, { status: 500 });
+  }
+});
+
+export const DELETE = auth(async function DELETE(request: any) {
+  try {
+    const allowedRoles = [UserRole.admin, UserRole.receptionist];
+    if (!allowedRoles.includes(request.auth?.user?.role)) {
+      return NextResponse.json(
+        { success: false, message: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    await connectDB();
+    const { ids } = await request.json();
+
+    if (ids.length === 0) {
+      return NextResponse.json(
+        { success: false, message: 'No appointments to delete' },
+        { status: 400 }
+      );
+    }
+
+    !!API_ACTIONS.isDelete &&
+      (await Appointment.deleteMany(
+        ids[0] === -1 ? {} : { aid: { $in: ids } }
+      ));
+
+    return NextResponse.json(
+      {
+        message: `${ids[0] === -1 ? 'All' : ids.length} Appointment${
+          ids.length > 1 ? 's' : ''
+        } deleted`,
+      },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    console.error(error);
+    return NextResponse.json({ message: error.message }, { status: 500 });
   }
 });

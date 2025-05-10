@@ -2,18 +2,25 @@ import { NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
-import Appointment from '@/models/Appointment';
+import Appointment, {
+  AppointmentStatus,
+  AppointmentType,
+} from '@/models/Appointment';
+import { UserRole } from '@/models/User';
+import { API_ACTIONS } from '@/lib/config';
 
 // get appointment by id from param
 export const GET = auth(async function GET(request: any, context: any) {
   try {
-    if (!request.auth?.user) {
-      return NextResponse.json(
-        {
-          message: 'Unauthorized',
-        },
-        { status: 401 }
-      );
+    const allowedRoles: UserRole[] = [
+      UserRole.user,
+      UserRole.admin,
+      UserRole.doctor,
+      UserRole.receptionist,
+    ];
+
+    if (!allowedRoles.includes(request.auth?.user?.role)) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
     await connectDB();
@@ -60,14 +67,17 @@ export const GET = auth(async function GET(request: any, context: any) {
 
 export const PATCH = auth(async function PATCH(request: any, context: any) {
   try {
-    // check if user is authenticated
-    if (!request.auth?.user) {
-      return NextResponse.json(
-        {
-          message: 'Unauthorized',
-        },
-        { status: 401 }
-      );
+    const allowedRoles: UserRole[] = [
+      UserRole.user,
+      UserRole.admin,
+      UserRole.doctor,
+      UserRole.receptionist,
+    ];
+
+    const user = request.auth?.user;
+
+    if (!allowedRoles.includes(user?.role)) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
     const aid = context.params.aid;
@@ -84,17 +94,27 @@ export const PATCH = auth(async function PATCH(request: any, context: any) {
     }
 
     // if request role is use and doesn't match appointment patient email, return unauthorized
-    if (
-      request.auth?.user?.role === 'user' &&
-      request.auth?.user?.email !== appointment?.patient?.email
-    ) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    if (user?.role === UserRole.user) {
+      if (user?.email !== appointment?.patient?.email) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+      }
+      if (
+        data.status &&
+        ![AppointmentStatus.booked, AppointmentStatus.cancelled].includes(
+          data.status
+        )
+      ) {
+        return NextResponse.json(
+          { message: 'You are not allowed to update this appointment' },
+          { status: 400 }
+        );
+      }
     }
 
     // if request role is doctor and doesn't match appointment doctor email, return unauthorized
     if (
-      request.auth?.user?.role === 'doctor' &&
-      request.auth?.user?.email !== appointment?.doctor?.email
+      user?.role === UserRole.doctor &&
+      user?.email !== appointment?.doctor?.email
     ) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
@@ -114,9 +134,9 @@ export const PATCH = auth(async function PATCH(request: any, context: any) {
 
 export const DELETE = auth(async function DELETE(request: any, context: any) {
   try {
-    // check if user is authenticated
-    const allowedRoles = ['admin'];
-    if (!allowedRoles.includes(request.auth?.user?.role)) {
+    const user = request.auth?.user;
+    const allowedRoles: UserRole[] = [UserRole.admin];
+    if (!allowedRoles.includes(user?.role)) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
@@ -124,7 +144,9 @@ export const DELETE = auth(async function DELETE(request: any, context: any) {
     await connectDB();
 
     // delete appointment
-    // await Appointment.findOneAndDelete({ aid });
+    if (API_ACTIONS.isDelete) {
+      await Appointment.findOneAndDelete({ aid });
+    }
 
     return NextResponse.json(
       {

@@ -163,8 +163,10 @@ export default function NewUser({ countries }: { countries: CountryProps[] }) {
   }, [formik.values.user.state, formik.values.user.country]);
 
   useEffect(() => {
-    formik.errors?.user && scrollToError(formik.errors?.user, inputRefs);
-  }, [formik.isSubmitting]);
+    if (formik.errors?.user && Object.keys(formik.errors.user).length > 0) {
+      scrollToError(formik.errors.user, inputRefs);
+    }
+  }, [formik.errors]);
 
   return (
     <>

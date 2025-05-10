@@ -2,6 +2,8 @@
 
 import { useMemo, useState } from 'react';
 import {
+  addToast,
+  Avatar,
   Button,
   DropdownItem,
   DropdownMenu,
@@ -14,19 +16,29 @@ import {
   renderChip,
   renderCopyableText,
   renderDate,
+  renderUser,
 } from '@/components/ui/data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 
 import { Table } from '@/components/ui/data-table';
 import { UserType } from '@/models/User';
 import { useQuery } from '@tanstack/react-query';
-import { getAllUsers } from '@/app/dashboard/users/helper';
+import { getAllUsers } from '@/lib/users/helper';
 import { useRouter } from 'nextjs-toploader/app';
 import { toast } from 'sonner';
-import DeleteModal from './delete';
 import QuickLook from './quick-look';
+import BulkDeleteModal from '../../ui/common/modals/bulk-delete';
+import axios from 'axios';
+import { ModalCellRenderer } from './cell-renderer';
 
-const INITIAL_VISIBLE_COLUMNS = ['uid', 'name', 'email', 'role', 'createdAt'];
+const INITIAL_VISIBLE_COLUMNS = [
+  'image',
+  'uid',
+  'name',
+  'email',
+  'role',
+  'createdAt',
+];
 
 export default function Users() {
   const router = useRouter();
@@ -44,8 +56,8 @@ export default function Users() {
   const users: UserType[] = data || [];
 
   // Define columns with render functions
-  const columns: ColumnDef<UserType>[] = useMemo(
-    () => [
+  const columns: ColumnDef<UserType>[] = useMemo(() => {
+    return [
       {
         name: 'User ID',
         uid: 'uid',
@@ -56,9 +68,12 @@ export default function Users() {
         name: 'Name',
         uid: 'name',
         sortable: true,
-        renderCell: (user) => (
-          <div className="font-medium text-default-foreground">{user.name}</div>
-        ),
+        renderCell: (user) =>
+          renderUser({
+            avatar: user.image,
+            name: user.name,
+            description: user.email,
+          }),
       },
       {
         name: 'Email',
@@ -132,9 +147,8 @@ export default function Users() {
             },
           }),
       },
-    ],
-    []
-  );
+    ];
+  }, []);
 
   // Define filters
   const filters: FilterDef<UserType>[] = useMemo(
@@ -300,37 +314,43 @@ export default function Users() {
         }}
       />
       {deleteModal.isOpen && (
-        <DeleteModal
+        <BulkDeleteModal<UserType>
           modalKey="users"
-          deleteFn={async () => {
-            if (!selectedKeys) return;
-            const ids = Array.from(selectedKeys);
-            const res = await fetch('/api/v1/users', {
-              method: 'DELETE',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ ids }),
-            });
-
-            const data = await res.json();
-
-            if (!res.ok || !data.success) {
-              throw new Error(data.message || 'Deletion failed');
-            }
-
-            return data;
-          }}
           items={users.filter((user) => {
             if (selectedKeys === 'all') return true;
             return selectedKeys?.has(String(user.uid));
           })}
           onClose={deleteModal.onClose}
-          onDelete={() => {
-            deleteModal.onClose();
-            refetch();
-            setSelectedKeys(undefined);
+          onDelete={async () => {
+            if (!selectedKeys) return;
+
+            const ids = Array.from(selectedKeys);
+            await axios
+              .delete('/api/v1/users', {
+                data: { ids },
+              })
+              .then(() => {
+                addToast({
+                  title: 'Deleted successfully',
+                  description: `${ids.length} user${
+                    ids.length > 1 ? 's' : ''
+                  } ${ids.length > 1 ? 'were' : 'was'} deleted successfully`,
+                  color: 'success',
+                });
+                deleteModal.onClose();
+                refetch();
+                setSelectedKeys(undefined);
+              })
+              .catch((err) => {
+                console.error(err);
+                addToast({
+                  title: 'Failed to delete users',
+                  description: err?.message || 'Failed to delete users',
+                  color: 'danger',
+                });
+              });
           }}
+          renderItem={(user) => <ModalCellRenderer user={user} />}
         />
       )}
       {quickLook.isOpen && quickLookItem && (

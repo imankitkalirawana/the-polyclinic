@@ -23,9 +23,28 @@ export enum AppointmentStatus {
   overdue = 'overdue',
   'on-hold' = 'on-hold',
 }
+
+export interface PatientInfo {
+  uid: number;
+  name: string;
+  phone?: string;
+  email: string;
+  gender?: Gender;
+  age?: number;
+  image?: string;
+}
+
+export interface DoctorInfo {
+  uid: number;
+  name: string;
+  email: string;
+  sitting?: string;
+  image?: string;
+}
+
 export interface AppointmentType extends Base {
   aid: number;
-  date: string;
+  date: string | Date;
   patient: {
     uid: number;
     name: string;
@@ -33,12 +52,14 @@ export interface AppointmentType extends Base {
     email: string;
     gender?: Gender;
     age?: number;
+    image?: string;
   };
   doctor?: {
     uid: number;
     name: string;
     email: string;
     sitting?: string;
+    image?: string;
   };
   status: AppointmentStatus;
   additionalInfo: {
@@ -73,12 +94,14 @@ const appointmentSchema = new mongoose.Schema(
         enum: Gender,
       },
       age: Number,
+      image: String,
     },
     doctor: {
       uid: Number,
       name: String,
       email: String,
       sitting: String,
+      image: String,
     },
     additionalInfo: {
       type: {

@@ -138,7 +138,47 @@ export function Table<T extends TableItem>({
     filteredData = filteredData.filter(itemFilter);
 
     return filteredData;
-  }, [data, state.filterValue, itemFilter, searchField]);
+  }, [data, state.filterValue, itemFilter, searchField, isLoading]);
+
+  // Helper function to get nested object values using dot notation
+  const getNestedValue = (obj: T, path: string): any => {
+    // If the path doesn't contain dots, it's a direct property
+    if (!path.includes('.')) {
+      const value = obj[path];
+
+      // Handle case where value is an object with a name property
+      if (typeof value === 'object' && value !== null && 'name' in value) {
+        return value.name;
+      }
+
+      return value;
+    }
+
+    // For nested paths like "patient.name", split and traverse
+    const keys = path.split('.');
+    let current = obj as unknown as Record<string, any>;
+
+    // Early return if the root object is null or undefined
+    if (current === null || current === undefined) {
+      return '';
+    }
+
+    for (let i = 0; i < keys.length; i++) {
+      if (current === null || current === undefined) {
+        return '';
+      }
+
+      // Check if the next key exists before accessing it
+      if (!(keys[i] in current)) {
+        return '';
+      }
+
+      current = current[keys[i]];
+    }
+
+    // Return empty string for null/undefined values for consistent sorting
+    return current === null || current === undefined ? '' : current;
+  };
 
   // Sort filteredItems before paginating
   const sortedItems = useMemo(() => {
@@ -147,17 +187,9 @@ export function Table<T extends TableItem>({
     return [...filteredItems].sort((a: T, b: T) => {
       const column = state.sortDescriptor.column;
 
-      let first = a[column];
-      let second = b[column];
-
-      // Handle nested properties
-      if (typeof first === 'object' && first !== null && 'name' in first) {
-        first = first.name;
-      }
-
-      if (typeof second === 'object' && second !== null && 'name' in second) {
-        second = second.name;
-      }
+      // Handle nested object paths with dot notation (e.g., "patient.name")
+      let first = getNestedValue(a, column.toString());
+      let second = getNestedValue(b, column.toString());
 
       // Handle special case for IDs with prefixes
       if (typeof first === 'string' && typeof second === 'string') {
@@ -211,6 +243,12 @@ export function Table<T extends TableItem>({
 
     if (column?.renderCell) {
       return column.renderCell(item, columnKey);
+    }
+
+    // Use the same getNestedValue function for rendering cells with dot notation
+    if (columnKey.includes('.')) {
+      const value = getNestedValue(item, columnKey);
+      return value !== undefined && value !== null ? value : null;
     }
 
     const value = item[columnKey];

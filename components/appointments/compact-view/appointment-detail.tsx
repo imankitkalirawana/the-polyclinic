@@ -70,10 +70,7 @@ export default function AppointmentDetail({
       />
     ),
     addToCalendar: (
-      <AddtoCalendar
-        appointment={appointment}
-        onClose={() => modal.onClose()}
-      />
+      <AddtoCalendar appointment={appointment} onClose={modal.onClose} />
     ),
   };
 
@@ -152,7 +149,7 @@ export default function AppointmentDetail({
           <CellValue
             label="Phone"
             value={
-              appointment.patient?.phone
+              appointment.patient.phone
                 ? `+91 ${appointment.patient.phone}`
                 : 'N/A'
             }
@@ -183,12 +180,12 @@ export default function AppointmentDetail({
           {appointment.additionalInfo.notes && (
             <CellValue
               label="Appointment Notes"
-              value={appointment?.additionalInfo.notes}
+              value={appointment.additionalInfo.notes}
               className="items-start justify-start gap-4"
             />
           )}
           <CellValue
-            label={`Booked on: ${format(appointment?.createdAt as Date, 'PPp')}`}
+            label={`Booked on: ${format(new Date(appointment.createdAt), 'PPp')}`}
             value={null}
           />
           <div className="col-span-full flex flex-col items-center justify-between gap-2 sm:flex-row">
@@ -196,16 +193,16 @@ export default function AppointmentDetail({
               {['booked', 'confirmed', 'overdue'].includes(
                 appointment.status
               ) && (
-                <Button
-                  color={buttonColorMap['reschedule']}
-                  onPress={() => handleButtonClick('reschedule')}
-                  variant="flat"
-                  className="w-full sm:w-fit"
-                  startContent={<Icon icon="solar:calendar-bold" />}
-                >
-                  Reschedule
-                </Button>
-              )}
+                  <Button
+                    color={buttonColorMap['reschedule']}
+                    onPress={() => handleButtonClick('reschedule')}
+                    variant="flat"
+                    className="w-full sm:w-fit"
+                    startContent={<Icon icon="solar:calendar-bold" />}
+                  >
+                    Reschedule
+                  </Button>
+                )}
               {['booked', 'confirmed', 'in-progress'].includes(
                 appointment.status
               ) &&
@@ -241,16 +238,16 @@ export default function AppointmentDetail({
                 'in-progress',
                 'on-hold',
               ].includes(appointment.status) && (
-                <Button
-                  className="w-full sm:w-fit"
-                  color={buttonColorMap['cancel']}
-                  onPress={() => handleButtonClick('cancel')}
-                  variant="bordered"
-                  startContent={<Icon icon="tabler:x" />}
-                >
-                  Cancel
-                </Button>
-              )}
+                  <Button
+                    className="w-full sm:w-fit"
+                    color={buttonColorMap['cancel']}
+                    onPress={() => handleButtonClick('cancel')}
+                    variant="bordered"
+                    startContent={<Icon icon="tabler:x" />}
+                  >
+                    Cancel
+                  </Button>
+                )}
               {['in-progress', 'confirmed', 'on-hold'].includes(
                 appointment.status
               ) &&

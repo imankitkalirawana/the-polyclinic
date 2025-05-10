@@ -1,5 +1,8 @@
-import { cn } from '@heroui/react';
+import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import { AppointmentType } from '@/models/Appointment';
+import { Chip, cn, User } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import { format } from 'date-fns';
 
 export default function CellRenderer({
   icon,
@@ -60,6 +63,30 @@ export default function CellRenderer({
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+export function ModalCellRenderer({
+  appointment,
+}: {
+  appointment: AppointmentType;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-4">
+      <User
+        name={appointment.patient.name}
+        avatarProps={{
+          src: appointment.patient.image,
+          size: 'sm',
+          name: appointment.patient.name,
+        }}
+        classNames={{
+          description: 'text-default-400 text-xs',
+        }}
+        description={`#${appointment.aid} - ${format(new Date(appointment.date), 'PP')}`}
+      />
+      {renderChip({ item: appointment.status })}
     </div>
   );
 }

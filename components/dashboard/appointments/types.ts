@@ -17,4 +17,11 @@ export type ActionType =
   | 'delete'
   | 'edit'
   | 'reminder'
-  | 'addToCalendar';
+  | 'addToCalendar'
+  | 'bulk-cancel'
+  | 'bulk-delete';
+
+export type ButtonActionType = Exclude<
+  ActionType,
+  'bulk-cancel' | 'bulk-delete'
+>;

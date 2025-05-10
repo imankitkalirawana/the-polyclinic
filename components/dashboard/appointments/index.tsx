@@ -1,13 +1,14 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import {
   addToast,
+  Avatar,
   Button,
   DropdownItem,
   DropdownMenu,
   Selection,
-  useDisclosure,
+  User,
 } from '@heroui/react';
 
 import {
@@ -20,10 +21,13 @@ import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 
 import { Table } from '@/components/ui/data-table';
 import { AppointmentType } from '@/models/Appointment';
-import { useQuery } from '@tanstack/react-query';
-import { getAllAppointments } from '@/app/dashboard/appointments/helper';
 import { useRouter } from 'nextjs-toploader/app';
 import QuickLook from './quick-look';
+import { useAppointmentData, useAppointmentStore } from './store';
+import { avatars } from '@/lib/avatar';
+import BulkDeleteModal from '@/components/ui/common/modals/bulk-delete';
+import { ModalCellRenderer } from './cell-renderer';
+import { apiRequest } from '@/lib/axios';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'aid',
@@ -35,17 +39,14 @@ const INITIAL_VISIBLE_COLUMNS = [
 
 export default function Appointments() {
   const router = useRouter();
-  const quickLook = useDisclosure();
 
-  const [selectedAppointment, setSelectedAppointment] =
-    useState<AppointmentType | null>(null);
+  const { selected, setSelected, keys, setKeys, action, setAction } =
+    useAppointmentStore();
+  const { data, isLoading, refetch } = useAppointmentData();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['appointments'],
-    queryFn: () => getAllAppointments(),
-  });
-
-  const appointments: AppointmentType[] = data || [];
+  const appointments: AppointmentType[] = useMemo(() => {
+    return data || [];
+  }, [data]);
 
   // Define columns with render functions
   const columns: ColumnDef<AppointmentType>[] = useMemo(
@@ -63,9 +64,21 @@ export default function Appointments() {
         uid: 'patient.name',
         sortable: true,
         renderCell: (appointment) => (
-          <div className="truncate capitalize text-default-foreground">
-            {appointment.patient.name}
-          </div>
+          <User
+            name={appointment.patient.name}
+            description={appointment.patient.phone}
+            classNames={{
+              description: 'text-default-500',
+            }}
+            avatarProps={{
+              src:
+                appointment.patient.image ||
+                avatars.memoji[
+                  Math.floor(Math.random() * avatars.memoji.length)
+                ],
+              fallback: appointment.patient.name,
+            }}
+          />
         ),
       },
       {
@@ -189,8 +202,8 @@ export default function Appointments() {
 
   // Render top bar
   const endContent = () => (
-    <Button color="primary" size="sm">
-      New Appointment
+    <Button color="primary" size="sm" onPress={() => refetch()}>
+      Refetch
     </Button>
   );
 
@@ -198,26 +211,28 @@ export default function Appointments() {
     return (
       <DropdownMenu aria-label="Selected Actions">
         <DropdownItem
-          key="bulk-edit"
-          onPress={() => {
-            console.log('Bulk edit', selectedKeys);
-          }}
-        >
-          Bulk edit
-        </DropdownItem>
-        <DropdownItem
           key="export"
           onPress={() => {
-            console.log('Export', selectedKeys);
+            setKeys(selectedKeys);
           }}
         >
           Export
         </DropdownItem>
         <DropdownItem
+          key="cancel"
+          onPress={() => {
+            setKeys(selectedKeys);
+            setAction('bulk-cancel');
+          }}
+        >
+          Cancel
+        </DropdownItem>
+        <DropdownItem
           key="delete"
           className="text-danger"
           onPress={() => {
-            console.log('Delete', selectedKeys);
+            setKeys(selectedKeys);
+            setAction('bulk-delete');
           }}
         >
           Delete
@@ -239,7 +254,7 @@ export default function Appointments() {
         endContent={endContent}
         renderSelectedActions={renderSelectedActions}
         initialSortDescriptor={{
-          column: 'createdAt',
+          column: 'date',
           direction: 'descending',
         }}
         onRowAction={(row) => {
@@ -247,18 +262,66 @@ export default function Appointments() {
             (appointment) => appointment.aid == row
           );
           if (appointment) {
-            setSelectedAppointment(appointment);
-            quickLook.onOpen();
+            setSelected(appointment);
           }
         }}
       />
-      {quickLook.isOpen && selectedAppointment && (
-        <QuickLook
-          onClose={() => {
-            setSelectedAppointment(null);
-            quickLook.onClose();
+      {selected && <QuickLook />}
+      {(action === 'bulk-delete' || action === 'bulk-cancel') && (
+        <BulkDeleteModal<AppointmentType>
+          canUndo={action !== 'bulk-delete'}
+          modalKey="appointments"
+          title={
+            action === 'bulk-delete'
+              ? 'Delete the selected appointments?'
+              : 'Cancel the selected appointments?'
+          }
+          confirmButtonText={
+            action === 'bulk-delete'
+              ? 'Confirm Deletion'
+              : 'Confirm Cancellation'
+          }
+          items={appointments.filter((appointment) => {
+            if (keys === 'all') return true;
+            return keys?.has(String(appointment.aid));
+          })}
+          onClose={() => setAction(null)}
+          onDelete={async () => {
+            if (!keys) return;
+            let ids = [];
+            if (keys === 'all') {
+              ids.push(-1); // -1 is the id for all appointments
+            } else {
+              ids = Array.from(keys);
+            }
+            if (action === 'bulk-delete') {
+              await apiRequest({
+                method: 'DELETE',
+                url: '/api/v1/appointments',
+                data: { ids },
+                onSuccess: () => {
+                  setAction(null);
+                  refetch();
+                },
+                onError: (error) => {
+                  console.log('error', error);
+                },
+              });
+            } else {
+              await apiRequest({
+                method: 'PATCH',
+                url: '/api/v1/appointments',
+                data: { ids },
+                onSuccess: () => {
+                  setAction(null);
+                  refetch();
+                },
+              });
+            }
           }}
-          item={selectedAppointment}
+          renderItem={(appointment) => (
+            <ModalCellRenderer appointment={appointment} />
+          )}
         />
       )}
     </>

@@ -21,17 +21,18 @@ import {
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { format } from 'date-fns';
 import { useSession } from 'next-auth/react';
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import CellRenderer from './cell-renderer';
 import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
 import RescheduleModal from '@/components/ui/appointments/reschedule-modal';
 import { UserRole } from '@/models/User';
-import { ActionType, ButtonConfig } from './types';
+import { ButtonActionType, ButtonConfig } from './types';
 import CancelModal from '@/components/ui/appointments/cancel-modal';
 import AsyncButton from '@/components/ui/buttons/async-button';
+import { useAppointmentStore } from './store';
+import { avatars } from '@/lib/avatar';
 
-// Moved outside component to prevent recreation on each render
-const permissions: Record<UserRole, Array<ActionType>> = {
+const permissions: Record<UserRole, Array<ButtonActionType>> = {
   doctor: ['cancel', 'reschedule', 'reminder'],
   user: ['cancel', 'reschedule'],
   admin: ['cancel', 'delete', 'edit', 'reschedule', 'reminder'],
@@ -68,23 +69,14 @@ const downloadOptions = [
   },
 ];
 
-interface QuickLookProps {
-  onClose: () => void;
-  item: AppointmentType;
-}
-
-function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
+function QuickLook(): React.ReactElement {
+  const { selected, action, setSelected, setAction } = useAppointmentStore();
   const { data: session } = useSession();
-  const [action, setAction] = useState<keyof typeof ButtonMap | null>(null);
 
-  // Generate random avatar URLs once during component initialization
-  const avatars = useMemo(() => {
-    const randomNumber = Math.floor(Math.random() * 34) + 1;
-    return {
-      doctor: `https://cdn.jsdelivr.net/gh/alohe/avatars/png/memo_${randomNumber}.png`,
-      patient: `https://cdn.jsdelivr.net/gh/alohe/avatars/png/memo_${randomNumber + 1}.png`,
-    };
-  }, []);
+  const appointment: AppointmentType = useMemo(
+    () => selected || ({} as AppointmentType),
+    [selected]
+  );
 
   // Use session role or fallback to admin for demo
   const role = useMemo(
@@ -92,7 +84,7 @@ function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
     [session?.user?.role]
   );
 
-  const ButtonMap: Record<ActionType, ButtonConfig> = useMemo(
+  const ButtonMap: Record<ButtonActionType, ButtonConfig> = useMemo(
     () => ({
       addToCalendar: {
         label: 'Add to Calendar',
@@ -103,7 +95,10 @@ function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
           console.log('addToCalendar');
         },
         content: (
-          <AddToCalendar appointment={item} onClose={() => setAction(null)} />
+          <AddToCalendar
+            appointment={appointment}
+            onClose={() => setAction(null)}
+          />
         ),
       },
       reschedule: {
@@ -114,9 +109,7 @@ function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
         action: () => {
           setAction('reschedule');
         },
-        content: (
-          <RescheduleModal appointment={item} onClose={() => setAction(null)} />
-        ),
+        content: <RescheduleModal />,
       },
       cancel: {
         label: 'Cancel',
@@ -126,9 +119,7 @@ function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
         action: () => {
           setAction('cancel');
         },
-        content: (
-          <CancelModal appointment={item} onClose={() => setAction(null)} />
-        ),
+        content: <CancelModal />,
       },
       delete: {
         label: 'Delete',
@@ -139,13 +130,7 @@ function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
         action: () => {
           setAction('delete');
         },
-        content: (
-          <CancelModal
-            appointment={item}
-            onClose={() => setAction(null)}
-            type="delete"
-          />
-        ),
+        content: <CancelModal type="delete" />,
       },
       edit: {
         label: 'Edit',
@@ -172,7 +157,7 @@ function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
         },
       },
     }),
-    [item]
+    [appointment]
   );
 
   // Memoize available permissions for the current role
@@ -182,10 +167,10 @@ function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
 
   // Memoize the action handling
   const handleAction = useCallback(
-    (actionType: ActionType) => {
-      ButtonMap[actionType].action(item);
+    (actionType: ButtonActionType) => {
+      ButtonMap[actionType].action(appointment);
     },
-    [ButtonMap, item]
+    [ButtonMap, appointment]
   );
 
   // Memoize the doctor and patient information sections
@@ -193,11 +178,19 @@ function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
     () => (
       <div className="divide-y divide-divider">
         <div className="flex flex-col items-center gap-2 p-4">
-          <Avatar src={avatars.patient} size="lg" className="bg-amber-100" />
+          <Avatar
+            src={
+              appointment.patient.image ||
+              avatars.memoji[Math.floor(Math.random() * avatars.memoji.length)]
+            }
+            size="lg"
+          />
           <div className="flex flex-col items-center">
-            <h6 className="font-medium capitalize">{item.patient.name}</h6>
+            <h6 className="font-medium capitalize">
+              {appointment.patient.name}
+            </h6>
             <p className="text-sm capitalize text-default-500">
-              {item.patient.gender}, {item.patient.age} Years
+              {appointment.patient.gender}, {appointment.patient.age} Years
             </p>
           </div>
           <div className="flex gap-1">
@@ -252,7 +245,7 @@ function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
                 <span className="capitalize text-default-400">UID</span>
               </div>
               <span className="capitalize text-default-foreground">
-                {item.patient.uid}
+                {appointment.patient.uid}
               </span>
             </div>
             <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20"></div>
@@ -264,14 +257,14 @@ function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
                 <span className="capitalize text-default-400">Name</span>
               </div>
               <span className="capitalize text-default-foreground">
-                {item.patient.name}
+                {appointment.patient.name}
               </span>
             </div>
           </div>
         </div>
       </div>
     ),
-    [avatars.patient, item.patient]
+    [appointment.patient]
   );
 
   // Memoize the appointment details section
@@ -283,7 +276,7 @@ function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
         </div>
         <CellRenderer
           label="Appointment ID"
-          value={item.aid}
+          value={appointment.aid}
           icon="solar:hashtag-circle-bold-duotone"
           classNames={{
             icon: 'text-purple-500 bg-purple-50',
@@ -291,7 +284,7 @@ function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
         />
         <CellRenderer
           label="Appointment Status"
-          value={renderChip({ item: item.status })}
+          value={renderChip({ item: appointment.status })}
           icon="solar:watch-square-minimalistic-bold-duotone"
           classNames={{
             icon: 'text-purple-500 bg-purple-50',
@@ -300,7 +293,7 @@ function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
         />
         <CellRenderer
           label="Email"
-          value={item.patient.email}
+          value={appointment.patient.email}
           icon="solar:letter-bold-duotone"
           classNames={{
             icon: 'text-blue-500 bg-blue-50',
@@ -308,7 +301,7 @@ function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
         />
         <CellRenderer
           label="Phone"
-          value={item.patient.phone || 'N/A'}
+          value={appointment.patient.phone || 'N/A'}
           icon="solar:phone-bold-duotone"
           classNames={{
             icon: 'text-green-500 bg-green-50',
@@ -316,7 +309,7 @@ function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
         />
         <CellRenderer
           label="Date & Time"
-          value={format(new Date(item.date), 'MMM d, yyyy - h:mm a')}
+          value={format(new Date(appointment.date), 'MMM d, yyyy - h:mm a')}
           icon="solar:calendar-bold-duotone"
           classNames={{
             icon: 'text-yellow-500 bg-yellow-50',
@@ -324,7 +317,11 @@ function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
         />
         <CellRenderer
           label="Mode"
-          value={item.additionalInfo.type === 'online' ? 'Online' : 'In Clinic'}
+          value={
+            appointment.additionalInfo.type === 'online'
+              ? 'Online'
+              : 'In Clinic'
+          }
           icon="solar:map-point-bold-duotone"
           classNames={{
             icon: 'text-teal-500 bg-teal-50',
@@ -333,15 +330,15 @@ function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
         <CellRenderer
           label="Doctor"
           value={
-            item?.doctor?.name ? (
+            appointment.doctor?.name ? (
               <div className="flex items-center gap-1">
                 <Image
-                  src={avatars.doctor}
+                  src={appointment.doctor?.image}
                   width={24}
                   height={24}
                   className="rounded-full bg-purple-200"
                 />
-                <span>{item?.doctor?.name}</span>
+                <span>{appointment.doctor?.name}</span>
               </div>
             ) : (
               'Not Assigned'
@@ -351,13 +348,13 @@ function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
           classNames={{
             icon: 'text-purple-500 bg-purple-50',
           }}
-          className={!item.doctor?.name ? 'bg-danger-50/50' : ''}
+          className={!appointment.doctor?.name ? 'bg-danger-50/50' : ''}
           cols={2}
         />
-        {item.additionalInfo.symptoms && (
+        {appointment.additionalInfo.symptoms && (
           <CellRenderer
             label="Symptoms"
-            value={item.additionalInfo.symptoms || 'N/A'}
+            value={appointment.additionalInfo.symptoms}
             icon="solar:notes-bold-duotone"
             classNames={{
               icon: 'text-orange-500 bg-orange-50',
@@ -365,10 +362,10 @@ function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
             cols={2}
           />
         )}
-        {item.additionalInfo.notes && (
+        {appointment.additionalInfo.notes && (
           <CellRenderer
             label="Notes"
-            value={item.additionalInfo.notes || 'N/A'}
+            value={appointment.additionalInfo.notes}
             icon="solar:notes-bold-duotone"
             classNames={{
               icon: 'text-amber-500 bg-amber-50',
@@ -376,10 +373,10 @@ function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
             cols={2}
           />
         )}
-        {item.additionalInfo.description && (
+        {appointment.additionalInfo.description && (
           <CellRenderer
             label="Description"
-            value={item.additionalInfo.description || 'N/A'}
+            value={appointment.additionalInfo.description}
             icon="solar:document-text-bold-duotone"
             classNames={{
               icon: 'text-pink-500 bg-pink-50',
@@ -389,7 +386,7 @@ function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
         )}
       </div>
     ),
-    [item, avatars.doctor]
+    [appointment]
   );
 
   // Memoize action buttons
@@ -402,25 +399,34 @@ function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
             <Tooltip
               key={btn}
               delay={500}
-              isDisabled={!ButtonMap[btn].isIconOnly}
-              content={ButtonMap[btn].label}
-              color={ButtonMap[btn].color}
+              isDisabled={!ButtonMap[btn as keyof typeof ButtonMap].isIconOnly}
+              content={ButtonMap[btn as keyof typeof ButtonMap].label}
+              color={ButtonMap[btn as keyof typeof ButtonMap].color}
             >
               <AsyncButton
-                variant={ButtonMap[btn].variant}
-                startContent={<Icon icon={ButtonMap[btn].icon} width="20" />}
+                variant={ButtonMap[btn as keyof typeof ButtonMap].variant}
+                startContent={
+                  <Icon
+                    icon={ButtonMap[btn as keyof typeof ButtonMap].icon}
+                    width="20"
+                  />
+                }
                 onPress={() => handleAction(btn)}
-                color={ButtonMap[btn].color}
-                isIconOnly={ButtonMap[btn].isIconOnly}
-                fn={async () => ButtonMap[btn].action(item)}
+                color={ButtonMap[btn as keyof typeof ButtonMap].color}
+                isIconOnly={ButtonMap[btn as keyof typeof ButtonMap].isIconOnly}
+                fn={async () =>
+                  ButtonMap[btn as keyof typeof ButtonMap].action(appointment)
+                }
               >
-                {ButtonMap[btn].isIconOnly ? null : ButtonMap[btn].label}
+                {ButtonMap[btn as keyof typeof ButtonMap].isIconOnly
+                  ? null
+                  : ButtonMap[btn as keyof typeof ButtonMap].label}
               </AsyncButton>
             </Tooltip>
           ))}
       </div>
     ),
-    [availablePermissions, ButtonMap, handleAction, item]
+    [availablePermissions, ButtonMap, handleAction, appointment]
   );
 
   return (
@@ -430,7 +436,7 @@ function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
         isOpen
         backdrop="blur"
         scrollBehavior="inside"
-        onClose={onClose}
+        onClose={() => setSelected(null)}
       >
         <ModalContent className="h-[80vh] overflow-hidden">
           <ModalBody
@@ -450,7 +456,7 @@ function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
                   }
                   onPress={() => {
                     window.open(
-                      `${window.location.hostname}/dashboard/appointments/${item.aid}`,
+                      `${window.location.hostname}/dashboard/appointments/${appointment.aid}`,
                       '_blank'
                     );
                   }}
@@ -523,7 +529,7 @@ function QuickLook({ onClose, item }: QuickLookProps): React.ReactElement {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      {action && ButtonMap[action]?.content}
+      {action && ButtonMap[action as keyof typeof ButtonMap]?.content}
     </>
   );
 }

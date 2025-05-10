@@ -38,8 +38,7 @@ export default async function RootLayout({
         <Providers session={session}>
           <NuqsAdapter>
             <ThemeProvider attribute="class" defaultTheme="light">
-              {/* <Nav session={session} /> */}
-              <Navbar session={session} />
+              <Navbar />
               {children}
             </ThemeProvider>
           </NuqsAdapter>

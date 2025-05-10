@@ -7,15 +7,27 @@ import { API_ACTIONS } from '@/lib/config';
 
 export const GET = auth(async function GET(request: any) {
   try {
-    const allowedRoles = ['admin', 'receptionist'];
-
-    if (!allowedRoles.includes(request.auth?.user?.role)) {
+    if (!request.auth?.user?.role) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
     await connectDB();
 
-    const users = await User.find().select('-password');
+    let users = [];
+    const role = request.auth?.user?.role;
+
+    switch (role) {
+      case 'user':
+        users = await User.find({ role: 'user' }).select('-password');
+        break;
+      case 'admin':
+        users = await User.find().select('-password');
+        break;
+      default:
+        // get all users except admin
+        users = await User.find({ role: { $ne: 'admin' } }).select('-password');
+        break;
+    }
 
     return NextResponse.json(users);
   } catch (error) {
@@ -54,15 +66,10 @@ export const DELETE = auth(async function DELETE(request: any) {
       );
     }
 
-    // return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-
     await connectDB();
     const { ids } = await request.json();
 
     !!API_ACTIONS.isDelete && (await User.deleteMany({ uid: { $in: ids } }));
-
-    // dummy 2 seconds delay
-    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     return NextResponse.json(
       { success: true, message: `${ids.length} Users deleted` },

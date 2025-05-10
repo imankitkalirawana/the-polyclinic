@@ -9,6 +9,7 @@ import { ActionType } from './appointment-details-modal';
 
 import { AppointmentType } from '@/models/Appointment';
 import { AuthUser } from '@/models/User';
+import { getAllAppointments } from '@/app/dashboard/appointments/helper';
 
 interface FormType {
   selected: AppointmentType | null;
@@ -38,10 +39,7 @@ export const FormProvider = ({
 
   const { data, refetch, isLoading } = useQuery<AppointmentType[]>({
     queryKey: ['appointments', date],
-    queryFn: async () => {
-      const response = await axios.get(`/api/v1/appointments?date=${date}`);
-      return response.data;
-    },
+    queryFn: () => getAllAppointments(),
   });
 
   const appointments = data || [];

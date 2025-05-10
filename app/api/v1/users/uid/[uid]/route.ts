@@ -9,14 +9,22 @@ import { API_ACTIONS } from '@/lib/config';
 // get user by id from param
 export const GET = auth(async function GET(request: any, context: any) {
   try {
-    const allowedRoles = ['admin', 'doctor', 'receptionist'];
+    const allowedRoles = [
+      'admin',
+      'doctor',
+      'receptionist',
+      'nurse',
+      'pharmacist',
+    ];
 
     // @ts-ignore
-    if (!allowedRoles.includes(request.auth?.user?.role)) {
-      return NextResponse.json(
-        { success: false, message: 'Unauthorized' },
-        { status: 401 }
-      );
+    if (request.auth?.user?.uid !== context?.params?.uid) {
+      if (!allowedRoles.includes(request.auth?.user?.role)) {
+        return NextResponse.json(
+          { success: false, message: 'Unauthorized' },
+          { status: 401 }
+        );
+      }
     }
     await connectDB();
     const uid = parseInt(context.params.uid);

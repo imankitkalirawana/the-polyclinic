@@ -2,5 +2,6 @@ onlyBuiltDependencies:
   - '@heroui/shared-utils'
   - core-js
   - puppeteer
+  - sharp
   - unrs-resolver
   - ws

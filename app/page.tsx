@@ -4,7 +4,7 @@ import { addToast, Button } from '@heroui/react';
 import { toast } from 'sonner';
 
 export default function Home() {
-  const { data: session, update } = useSession();
+  const { data: session } = useSession();
 
   return (
     <>
