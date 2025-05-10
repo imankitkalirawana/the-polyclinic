@@ -5,6 +5,7 @@ pipeline {
     }
     environment {
         APP_PATH = "/home/ankit/apps/the-polyclinic"
+        PM2_HOME = "/home/ankit/.pm2"
     }
     stages {
         stage('Checkout') {
@@ -29,6 +30,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
+                    export PM2_HOME=/home/ankit/.pm2
                     cp -r .next ${APP_PATH}
                     cd ${APP_PATH}
                     pnpm install --production
