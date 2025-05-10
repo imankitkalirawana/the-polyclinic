@@ -190,7 +190,10 @@ function QuickLook(): React.ReactElement {
               {appointment.patient.name}
             </h6>
             <p className="text-sm capitalize text-default-500">
-              {appointment.patient.gender}, {appointment.patient.age} Years
+              {appointment.patient.gender
+                ? `${appointment.patient.gender},`
+                : ''}
+              {appointment.patient.age ? `${appointment.patient.age} Years` : ''}
             </p>
           </div>
           <div className="flex gap-1">
