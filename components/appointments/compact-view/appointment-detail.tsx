@@ -196,16 +196,16 @@ export default function AppointmentDetail({
               {['booked', 'confirmed', 'overdue'].includes(
                 appointment.status
               ) && (
-                  <Button
-                    color={buttonColorMap['reschedule']}
-                    onPress={() => handleButtonClick('reschedule')}
-                    variant="flat"
-                    className="w-full sm:w-fit"
-                    startContent={<Icon icon="solar:calendar-bold" />}
-                  >
-                    Reschedule
-                  </Button>
-                )}
+                <Button
+                  color={buttonColorMap['reschedule']}
+                  onPress={() => handleButtonClick('reschedule')}
+                  variant="flat"
+                  className="w-full sm:w-fit"
+                  startContent={<Icon icon="solar:calendar-bold" />}
+                >
+                  Reschedule
+                </Button>
+              )}
               {['booked', 'confirmed', 'in-progress'].includes(
                 appointment.status
               ) &&
@@ -241,16 +241,16 @@ export default function AppointmentDetail({
                 'in-progress',
                 'on-hold',
               ].includes(appointment.status) && (
-                  <Button
-                    className="w-full sm:w-fit"
-                    color={buttonColorMap['cancel']}
-                    onPress={() => handleButtonClick('cancel')}
-                    variant="bordered"
-                    startContent={<Icon icon="tabler:x" />}
-                  >
-                    Cancel
-                  </Button>
-                )}
+                <Button
+                  className="w-full sm:w-fit"
+                  color={buttonColorMap['cancel']}
+                  onPress={() => handleButtonClick('cancel')}
+                  variant="bordered"
+                  startContent={<Icon icon="tabler:x" />}
+                >
+                  Cancel
+                </Button>
+              )}
               {['in-progress', 'confirmed', 'on-hold'].includes(
                 appointment.status
               ) &&
