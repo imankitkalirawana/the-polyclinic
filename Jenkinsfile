@@ -34,7 +34,7 @@ pipeline {
                     cp -r .next ${APP_PATH}
                     cd ${APP_PATH}
                     pnpm install --production
-                    pm2 restart the-polyclinic
+                    pm2 restart the-polyclinic || pm2 start pnpm --name "the-polyclinic" -- run start
                 '''
             }
         }
