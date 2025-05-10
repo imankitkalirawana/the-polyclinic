@@ -22,16 +22,14 @@ pipeline {
         stage('Build') {
             steps {
                 sh '''
-                    rm -rf .build || true
-                    mkdir -p .build
-                    NEXT_OUTPUT_DIR=.build pnpm run build
+                    pnpm run build
                 '''
             }
         }
         stage('Deploy') {
             steps {
                 sh '''
-                    cp -r .build ${APP_PATH}/.next
+                    cp -r .next ${APP_PATH}
                     cd ${APP_PATH}
                     pnpm install --production
                     pm2 restart the-polyclinic || pm2 start pnpm --name "the-polyclinic" -- run start
