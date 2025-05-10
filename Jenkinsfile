@@ -1,7 +1,7 @@
 pipeline {
     agent any
     tools {
-        nodejs "Nodejs" // Ensure this matches Global Tool Configuration
+        nodejs "Nodejs"
     }
     environment {
         APP_PATH = "/home/ankit/apps/the-polyclinic"
@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/imankitkalirawana/the-polyclinic.git', credentialsId: 'github-token', branch: 'master'
+                checkout scm
             }
         }
         stage('Install Dependencies') {
