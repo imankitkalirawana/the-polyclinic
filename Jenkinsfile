@@ -31,7 +31,7 @@ pipeline {
                     cp -r .next ${APP_PATH}/.next
                     cp -r public ${APP_PATH}/public
                     cp package.json ${APP_PATH}/package.json
-                    cp next.config.js ${APP_PATH}/next.config.js
+                    cp next.config.mjs ${APP_PATH}/next.config.mjs
                     cd ${APP_PATH}
                     pnpm install --production
                     pm2 restart the-polyclinic || pm2 start pnpm --name "the-polyclinic" -- run start
