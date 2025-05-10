@@ -22,16 +22,17 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh 'pnpm run build'
+                sh '''
+                    rm -rf .build || true
+                    mkdir -p .build
+                    NEXT_OUTPUT_DIR=.build pnpm run build
+                '''
             }
         }
         stage('Deploy') {
             steps {
                 sh '''
-                    cp -r .next ${APP_PATH}
-                    cp -r public ${APP_PATH}/public
-                    cp package.json ${APP_PATH}/package.json
-                    cp next.config.mjs ${APP_PATH}/next.config.mjs
+                    cp -r .build ${APP_PATH}/.next
                     cd ${APP_PATH}
                     pnpm install --production
                     pm2 restart the-polyclinic || pm2 start pnpm --name "the-polyclinic" -- run start
