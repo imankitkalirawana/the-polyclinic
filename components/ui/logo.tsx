@@ -12,8 +12,7 @@ export default function Logo({ isCompact }: { isCompact?: boolean }) {
           hidden: isCompact,
         })}
       >
-        {/* {APP_INFO.name} */}
-        hello
+        {APP_INFO.name}
       </span>
     </div>
   );
