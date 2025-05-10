@@ -28,7 +28,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                    cp -r .next ${APP_PATH}/.next
+                    cp -r .next ${APP_PATH}
                     cp -r public ${APP_PATH}/public
                     cp package.json ${APP_PATH}/package.json
                     cp next.config.mjs ${APP_PATH}/next.config.mjs
