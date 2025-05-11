@@ -29,7 +29,6 @@ export default function ForgotPassword() {
           const res = await verifyOTP({
             email: values.email,
             otp: parseInt(values.otp),
-            type: 'forgot-password',
           });
           if (res.success) {
             setIsVerified(true);

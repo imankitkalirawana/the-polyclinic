@@ -50,6 +50,7 @@ export const sendOTP = async ({
   }
 
   const otp = generateOtp();
+  // TODO: Remove this
   console.log(otp);
   const res = await Otp.findOne({ id: email });
 
@@ -84,12 +85,11 @@ export const sendOTP = async ({
 export const verifyOTP = async ({
   email,
   otp,
-  type = 'registration',
 }: {
   email: string;
   otp: number;
-  type?: 'registration' | 'forgot-password';
 }): Promise<{ success: boolean; message: string }> => {
+  await connectDB();
   const res = await Otp.findOne({ id: email, otp });
 
   if (!res) {

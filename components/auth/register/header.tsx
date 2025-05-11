@@ -20,7 +20,7 @@ const variants = {
   }),
 };
 
-export const RegisterHeader = ({
+export const Header = ({
   title,
   description,
   isBack,

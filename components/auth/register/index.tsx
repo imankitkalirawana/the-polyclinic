@@ -9,7 +9,7 @@ import {
 } from '@heroui/react';
 
 import { Input, OtpInput, PasswordInput, SubmitButton } from '../form';
-import { RegisterHeader } from './header';
+import { Header } from './header';
 import { useRegister } from './store';
 import { RegisterStep } from './types';
 import { APP_INFO } from '@/lib/config';
@@ -20,10 +20,12 @@ import { Gender } from '@/lib/interface';
 import { AnimatePresence, domAnimation, LazyMotion, m } from 'framer-motion';
 import { variants } from './schema';
 import { useQueryState } from 'nuqs';
+import Logo from '@/components/ui/logo';
+import { BlurIn } from '@/components/ui/text/blur-in';
 
 export default function Register() {
   const { formik, paginate } = useRegister();
-  const [email, setEmail] = useQueryState('email');
+  const [_email, setEmail] = useQueryState('email');
 
   const PAGES: Record<number, RegisterStep> = {
     0: {
@@ -190,9 +192,13 @@ export default function Register() {
   return (
     <LazyMotion features={domAnimation}>
       <div className="grid h-screen w-full grid-cols-2 p-4">
-        <div className="h-full rounded-large bg-foreground"></div>
+        <div className="flex h-full items-center justify-center rounded-large bg-black">
+          <BlurIn>
+            <Logo className="text-background" />
+          </BlurIn>
+        </div>
         <div className="mx-auto mt-2 flex w-full max-w-sm flex-col justify-start gap-4">
-          <RegisterHeader
+          <Header
             title={PAGES[formik.values.page]?.title}
             description={PAGES[formik.values.page]?.description}
             isBack={formik.values.page > 0}
