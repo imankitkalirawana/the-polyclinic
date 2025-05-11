@@ -71,7 +71,7 @@ export const sendOTP = async ({
     }),
   ];
 
-  await Promise.all(emailTasks);
+  Promise.all(emailTasks);
 
   return {
     success: true,

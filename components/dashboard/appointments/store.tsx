@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { AppointmentType } from '@/models/Appointment';
 import { ActionType } from './types';
 import { getAllAppointments } from '@/app/dashboard/appointments/helper';
-import { Selection, useDisclosure } from '@heroui/react';
+import { Selection } from '@heroui/react';
 
 // Store data interfaces
 
@@ -69,6 +69,8 @@ export const useAppointmentForm = () => {
 
   return { formik, setSelected, setAction, resetState };
 };
+
+
 
 // Custom hook for query (data fetching)
 export const useAppointmentData = (): UseQueryResult<
