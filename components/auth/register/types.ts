@@ -22,6 +22,7 @@ export interface RegisterProps {
   isValidation: boolean;
   page: Page;
   direction: number;
+  submitCount: number;
 }
 
 export interface RegisterContextType {

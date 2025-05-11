@@ -11,6 +11,7 @@ import { APP_INFO } from '@/lib/config';
 import Otp from '@/models/Otp';
 import User from '@/models/User';
 import { OtpEmail, WelcomeUser } from '@/templates/email';
+import { Gender } from '../interface';
 
 const passwordGenerator = async () => {
   const password =
@@ -49,6 +50,7 @@ export const sendOTP = async ({
   }
 
   const otp = generateOtp();
+  console.log(otp);
   const res = await Otp.findOne({ id: email });
 
   if (res) {
@@ -87,7 +89,7 @@ export const verifyOTP = async ({
   email: string;
   otp: number;
   type?: 'registration' | 'forgot-password';
-}) => {
+}): Promise<{ success: boolean; message: string }> => {
   const res = await Otp.findOne({ id: email, otp });
 
   if (!res) {
@@ -96,28 +98,11 @@ export const verifyOTP = async ({
       message: 'Invalid OTP',
     };
   }
-  const { password, hashedPassword } = await passwordGenerator();
-  if (type === 'registration') {
-    await User.create({
-      email,
-      password: hashedPassword,
-      onboarding: { isEmailVerified: true },
-    });
 
-    await signIn('credentials', {
-      email,
-      password,
-    });
-    return {
-      success: true,
-      message: 'Verification successful',
-    };
-  } else {
-    return {
-      success: true,
-      message: 'Verification successful',
-    };
-  }
+  return {
+    success: true,
+    message: 'Verification successful',
+  };
 };
 
 export const updatePassword = async ({
@@ -148,11 +133,15 @@ export const register = async ({
   email,
   password,
   name,
+  dob,
+  gender,
 }: {
   email: string;
   password: string;
   name: string;
-}) => {
+  dob?: string;
+  gender: Gender;
+}): Promise<{ success: boolean; message: string }> => {
   await connectDB();
   const user = await User.findOne({ email }).select('+email');
   if (user) {
@@ -162,7 +151,13 @@ export const register = async ({
     };
   }
   const hashedPassword = await bcrypt.hash(password, 12);
-  const newUser = await User.create({ email, password: hashedPassword, name });
+  const newUser = await User.create({
+    email,
+    password: hashedPassword,
+    name,
+    dob,
+    gender,
+  });
 
   if (!newUser) {
     return {

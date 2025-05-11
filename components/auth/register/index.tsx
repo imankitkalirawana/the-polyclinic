@@ -77,6 +77,7 @@ export default function Register() {
             label="Email"
             placeholder="john.doe@example.com"
             autoComplete="email"
+            autoFocus
             isInvalid={
               formik.touched.email && formik.errors.email ? true : false
             }
@@ -103,6 +104,7 @@ export default function Register() {
             onValueChange={(value) => formik.setFieldValue('name', value)}
             isInvalid={formik.touched.name && formik.errors.name ? true : false}
             errorMessage={formik.errors.name}
+            autoFocus
           />
           <Select
             label="Gender"
@@ -133,6 +135,7 @@ export default function Register() {
                 formik.setFieldValue('dob', dob);
               }}
               maxValue={today(getLocalTimeZone())}
+              showMonthAndYearPickers
             />
           </I18nProvider>
         </>
@@ -151,21 +154,35 @@ export default function Register() {
           onValueChange={(value) => formik.setFieldValue('otp', value)}
           isInvalid={formik.touched.otp && formik.errors.otp ? true : false}
           errorMessage={formik.errors.otp}
+          autoFocus
+          onComplete={() => formik.handleSubmit()}
         />
       ),
     },
     4: {
-      title: 'Create your password',
+      title: 'One more step',
       description: `Create a password to secure your account.`,
-      button: 'Continue',
+      button: 'Sign up',
       content: (
-        <PasswordInput
-          isValidation
-          onValueChange={(value) => formik.setFieldValue('password', value)}
-          isInvalid={
-            formik.touched.password && formik.errors.password ? true : false
-          }
-        />
+        <>
+          <Input
+            name="email"
+            type="email"
+            label="Email"
+            placeholder="john.doe@example.com"
+            autoComplete="email"
+            value={formik.values.email}
+            className="sr-only"
+          />
+          <PasswordInput
+            autoFocus
+            isValidation
+            onValueChange={(value) => formik.setFieldValue('password', value)}
+            isInvalid={
+              formik.touched.password && formik.errors.password ? true : false
+            }
+          />
+        </>
       ),
     },
   };

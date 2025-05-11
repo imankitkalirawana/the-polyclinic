@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import React, { createContext, useContext } from 'react';
 import { RegisterContextType, RegisterProps } from './types';
 import { useQueryState } from 'nuqs';
-import { sendOTP, verifyOTP } from '@/lib/server-actions/auth';
+import { register, sendOTP, verifyOTP } from '@/lib/server-actions/auth';
 import { addToast } from '@heroui/react';
 import { registerSchema } from './schema';
 import {
@@ -11,6 +11,8 @@ import {
   verifyEmail,
 } from '@/functions/server-actions/auth/verification';
 import { Gender } from '@/lib/interface';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'nextjs-toploader/app';
 
 const RegisterContext = createContext<RegisterContextType | undefined>(
   undefined
@@ -21,6 +23,7 @@ export const RegisterProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const router = useRouter();
   const [email] = useQueryState('email');
 
   const formik = useFormik<RegisterProps>({
@@ -33,8 +36,9 @@ export const RegisterProvider = ({
       password: '',
       agreed: false,
       isValidation: false,
-      page: 1,
+      page: 0,
       direction: 1,
+      submitCount: 0,
     },
     validationSchema: registerSchema,
     onSubmit: async (values, { setValues, setFieldError, setFieldValue }) => {
@@ -49,14 +53,54 @@ export const RegisterProvider = ({
       } else if (values.page === 2) {
         const res = await sendOTP({ email: values.email });
         if (!res.success) {
-          setFieldError('email', res.message);
+          addToast({
+            title: res.message,
+            description: 'Please try again after some time.',
+            color: 'danger',
+          });
         } else {
+          addToast({
+            title: res.message,
+            color: 'success',
+          });
           paginate(1);
         }
       } else if (values.page === 3) {
-        paginate(1);
+        if (values.submitCount <= 3) {
+          setFieldValue('submitCount', values.submitCount + 1);
+          const res = await verifyOTP({
+            email: values.email,
+            otp: parseInt(values.otp),
+          });
+          if (!res.success) {
+            formik.setFieldError('otp', res.message);
+          } else {
+            paginate(1);
+          }
+        } else {
+          paginate(-2);
+        }
       } else if (values.page === 4) {
-        paginate(1);
+        const res = await register({
+          email: values.email,
+          password: values.password,
+          name: values.name,
+          dob: values.dob ?? undefined,
+          gender: values.gender,
+        });
+        if (res.success) {
+          await signIn('credentials', {
+            email: values.email,
+            password: values.password,
+            redirect: false,
+          });
+          router.push('/');
+        } else {
+          addToast({
+            title: res.message,
+            color: 'danger',
+          });
+        }
       }
     },
   });
