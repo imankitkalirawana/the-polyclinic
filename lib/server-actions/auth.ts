@@ -26,7 +26,7 @@ export const sendOTP = async ({
 }: {
   email: string;
   type?: 'registration' | 'forgot-password';
-}) => {
+}): Promise<{ success: boolean; message: string }> => {
   await connectDB();
   if (type === 'forgot-password') {
     const user = await User.findOne({ email }).select('+email +password');

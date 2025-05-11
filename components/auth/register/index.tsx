@@ -3,9 +3,6 @@ import {
   addToast,
   Button,
   DatePicker,
-  Divider,
-  Form,
-  InputOtp,
   Link,
   Select,
   SelectItem,
@@ -14,38 +11,23 @@ import {
 import { Input, OtpInput, PasswordInput, SubmitButton } from '../form';
 import { RegisterHeader } from './header';
 import { useRegister } from './store';
-import { RegisterStep, Page } from './types';
+import { RegisterStep } from './types';
 import { APP_INFO } from '@/lib/config';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { parseDate, getLocalTimeZone, today } from '@internationalized/date';
 import { I18nProvider } from '@react-aria/i18n';
 import { Gender } from '@/lib/interface';
 import { AnimatePresence, domAnimation, LazyMotion, m } from 'framer-motion';
-
-// Animation variants
-const variants = {
-  enter: (direction: number) => ({
-    x: direction > 0 ? 20 : -20,
-    opacity: 0,
-  }),
-  center: {
-    zIndex: 1,
-    x: 0,
-    opacity: 1,
-  },
-  exit: (direction: number) => ({
-    zIndex: 0,
-    x: direction < 0 ? 20 : -20,
-    opacity: 0,
-  }),
-};
+import { variants } from './schema';
+import { useQueryState } from 'nuqs';
 
 export default function Register() {
   const { formik, paginate } = useRegister();
+  const [email, setEmail] = useQueryState('email');
 
   const PAGES: Record<number, RegisterStep> = {
     0: {
-      title: 'Log in or sign up in seconds',
+      title: 'Sign up in seconds',
       description: `Use your email or another service to continue with ${APP_INFO.name}!`,
       content: (
         <>
@@ -100,7 +82,10 @@ export default function Register() {
             }
             errorMessage={formik.errors.email}
             value={formik.values.email}
-            onChange={formik.handleChange}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              formik.setFieldValue('email', e.target.value);
+            }}
           />
         </>
       ),
@@ -215,11 +200,14 @@ export default function Register() {
                 e.preventDefault();
                 formik.handleSubmit();
               }}
-              className="items-center"
+              className="flex flex-col items-center gap-2"
             >
               {PAGES[formik.values.page]?.content}
               {PAGES[formik.values.page]?.button && (
-                <SubmitButton className="mt-4 w-full py-6">
+                <SubmitButton
+                  isLoading={formik.isSubmitting}
+                  className="mt-4 w-full py-6"
+                >
                   {PAGES[formik.values.page]?.button}
                 </SubmitButton>
               )}
@@ -231,7 +219,7 @@ export default function Register() {
               <m.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 10 }}
+                exit={{ opacity: 0, y: 20 }}
                 transition={{ duration: 0.25 }}
                 className="flex flex-col gap-2"
               >

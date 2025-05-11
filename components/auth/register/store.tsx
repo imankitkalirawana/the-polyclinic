@@ -6,7 +6,10 @@ import { useQueryState } from 'nuqs';
 import { sendOTP, verifyOTP } from '@/lib/server-actions/auth';
 import { addToast } from '@heroui/react';
 import { registerSchema } from './schema';
-import { verifyEmail } from '@/functions/server-actions/auth/verification';
+import {
+  sendMailWithOTP,
+  verifyEmail,
+} from '@/functions/server-actions/auth/verification';
 import { Gender } from '@/lib/interface';
 
 const RegisterContext = createContext<RegisterContextType | undefined>(
@@ -33,9 +36,28 @@ export const RegisterProvider = ({
       page: 1,
       direction: 1,
     },
-    // validationSchema: registerSchema,
+    validationSchema: registerSchema,
     onSubmit: async (values, { setValues, setFieldError, setFieldValue }) => {
-      paginate(1);
+      if (values.page === 0) {
+        paginate(1);
+      } else if (values.page === 1) {
+        if (!(await verifyEmail(values.email))) {
+          paginate(1);
+        } else {
+          setFieldError('email', 'Email already exists');
+        }
+      } else if (values.page === 2) {
+        const res = await sendOTP({ email: values.email });
+        if (!res.success) {
+          setFieldError('email', res.message);
+        } else {
+          paginate(1);
+        }
+      } else if (values.page === 3) {
+        paginate(1);
+      } else if (values.page === 4) {
+        paginate(1);
+      }
     },
   });
 
