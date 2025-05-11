@@ -13,6 +13,7 @@ import { useState } from 'react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { cn } from '@/lib/utils';
 
+// Input component with consistent styling for auth forms
 export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   return (
     <HeroInput
@@ -21,11 +22,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
       {...props}
       classNames={{
         input: 'placeholder:text-default-400',
+        ...props.classNames,
       }}
     />
   );
 });
 
+// Password input with validation
 export const PasswordInput = forwardRef<
   HTMLInputElement,
   InputProps & {
@@ -54,6 +57,10 @@ export const PasswordInput = forwardRef<
     if (isValidation) {
       handleValidation(e);
     }
+
+    if (props.onValueChange) {
+      props.onValueChange(value);
+    }
   };
 
   const handleValidation = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,7 +83,7 @@ export const PasswordInput = forwardRef<
       {...props}
       ref={ref}
       name="password"
-      label="Password"
+      label={props.label || 'Password'}
       radius="lg"
       placeholder={isVisible ? 'Abc@123' : '*******'}
       type={isVisible ? 'text' : 'password'}
@@ -136,13 +143,11 @@ export const PasswordInput = forwardRef<
           </ul>
         )
       }
-      classNames={{
-        input: 'placeholder:text-default-400',
-      }}
     />
   );
 });
 
+// OTP input with resend functionality
 export const OtpInput = forwardRef<
   HTMLInputElement,
   Omit<InputOtpProps, 'length'> & {
@@ -154,17 +159,27 @@ export const OtpInput = forwardRef<
 
   const resendOtp = async () => {
     setIsResendingOtp(true);
-    const res = await sendOTP({ email, type });
-    if (res.success) {
+    try {
+      // Cast type to any to work with our existing sendOTP function
+      const res = await sendOTP({ email, type: type as any });
+      if (res.success) {
+        addToast({
+          title: 'OTP resent',
+          description: 'Please check your email for the verification code',
+          color: 'success',
+        });
+      } else {
+        addToast({ title: res.message, color: 'danger' });
+      }
+    } catch (error) {
       addToast({
-        title: 'OTP resent',
-        description: 'Please check your email for the verification code',
-        color: 'success',
+        title: 'Failed to resend OTP',
+        description: 'Please try again later',
+        color: 'danger',
       });
-    } else {
-      addToast({ title: res.message, color: 'danger' });
+    } finally {
+      setIsResendingOtp(false);
     }
-    setIsResendingOtp(false);
   };
 
   return (
@@ -186,6 +201,7 @@ export const OtpInput = forwardRef<
   );
 });
 
+// Password input group for creating and confirming passwords
 export function PasswordGroupInput({
   passwordProps,
   confirmPasswordProps,
@@ -213,6 +229,7 @@ export function PasswordGroupInput({
   );
 }
 
+// Submit button with consistent styling
 export const SubmitButton = forwardRef<
   HTMLButtonElement,
   ButtonProps & {
