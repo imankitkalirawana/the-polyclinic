@@ -70,8 +70,6 @@ export const useAppointmentForm = () => {
   return { formik, setSelected, setAction, resetState };
 };
 
-
-
 // Custom hook for query (data fetching)
 export const useAppointmentData = (): UseQueryResult<
   Array<AppointmentType>
