@@ -3,14 +3,15 @@ import React from 'react';
 import { Link } from '@heroui/react';
 import { APP_INFO } from '@/lib/config';
 
-import AuthFlow, { AuthFlowStep } from '../AuthFlow';
-import { LoginProvider, useLoginFlow } from '../store';
+import { LoginProvider, useLogin } from '../store';
 import { Input, PasswordInput } from '../form';
+import Auth from '..';
+import { AuthStep } from '../types';
 
 const LoginComponent: React.FC = () => {
-  const { formik, paginate } = useLoginFlow();
+  const { formik, paginate } = useLogin();
 
-  const LOGIN_STEPS: Record<number, AuthFlowStep> = {
+  const LOGIN_STEPS: Record<number, AuthStep> = {
     0: {
       title: 'Log in to your account',
       description: `Welcome back to ${APP_INFO.name}! Please enter your email to continue.`,
@@ -88,7 +89,7 @@ const LoginComponent: React.FC = () => {
   );
 
   return (
-    <AuthFlow
+    <Auth
       flowType="login"
       steps={LOGIN_STEPS}
       formik={formik}

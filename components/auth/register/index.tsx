@@ -15,15 +15,16 @@ import { useQueryState } from 'nuqs';
 import { Gender } from '@/lib/interface';
 import { APP_INFO } from '@/lib/config';
 
-import AuthFlow, { AuthFlowStep } from '../AuthFlow';
-import { RegisterProvider, useRegisterFlow } from '../store';
+import { RegisterProvider, useRegister } from '../store';
 import { Input, OtpInput, PasswordInput } from '../form';
+import { AuthStep } from '../types';
+import Auth from '..';
 
 const RegisterComponent: React.FC = () => {
-  const { formik, paginate } = useRegisterFlow();
+  const { formik, paginate } = useRegister();
   const [_email, setEmail] = useQueryState('email');
 
-  const REGISTER_STEPS: Record<number, AuthFlowStep> = {
+  const REGISTER_STEPS: Record<number, AuthStep> = {
     0: {
       title: 'Sign up in seconds',
       description: `Use your email or another service to continue with ${APP_INFO.name}!`,
@@ -210,7 +211,7 @@ const RegisterComponent: React.FC = () => {
     ) : undefined;
 
   return (
-    <AuthFlow
+    <Auth
       flowType="register"
       steps={REGISTER_STEPS}
       formik={formik}

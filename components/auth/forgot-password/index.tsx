@@ -3,14 +3,15 @@ import React from 'react';
 import { Link } from '@heroui/react';
 import { APP_INFO } from '@/lib/config';
 
-import AuthFlow, { AuthFlowStep } from '../AuthFlow';
-import { ForgotPasswordProvider, useForgotPasswordFlow } from '../store';
+import Auth from '..';
+import { ForgotPasswordProvider, useForgetPassword } from '../store';
 import { Input, OtpInput, PasswordInput } from '../form';
+import { AuthStep } from '../types';
 
 const ForgotPasswordComponent: React.FC = () => {
-  const { formik, paginate } = useForgotPasswordFlow();
+  const { formik, paginate } = useForgetPassword();
 
-  const FORGOT_PASSWORD_STEPS: Record<number, AuthFlowStep> = {
+  const FORGOT_PASSWORD_STEPS: Record<number, AuthStep> = {
     0: {
       title: 'Forgot your password?',
       description: `Enter your email address and we'll send you a code to reset your password.`,
@@ -97,7 +98,7 @@ const ForgotPasswordComponent: React.FC = () => {
   );
 
   return (
-    <AuthFlow
+    <Auth
       flowType="forgot-password"
       steps={FORGOT_PASSWORD_STEPS}
       formik={formik}

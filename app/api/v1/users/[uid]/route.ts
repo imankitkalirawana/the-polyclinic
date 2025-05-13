@@ -25,24 +25,18 @@ export async function GET(_request: any, context: any) {
   }
 }
 
-// update user by id from param
 export const PUT = auth(async function PUT(request: any, context: any) {
   try {
-    const allowedRoles = ['admin', 'doctor', 'receptionist'];
     // @ts-ignore
-    if (request.auth?.user?.id !== context?.params?.id) {
-      if (!allowedRoles.includes(request.auth?.user?.role)) {
-        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-      }
+    if (request.auth?.user?.uid !== context?.params?.uid) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
     const data = await request.json();
 
     await connectDB();
-    const userId = context.params.id;
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return NextResponse.json({ message: 'Invalid user ID' }, { status: 400 });
-    }
-    let user = await User.findById(userId);
+    const uid = context.params.uid;
+
+    let user = await User.findOne({ uid });
     if (!user) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
     }
@@ -51,7 +45,7 @@ export const PUT = auth(async function PUT(request: any, context: any) {
       user.password = await bcrypt.hash(data.password, 10);
       console;
     }
-    user = await User.findByIdAndUpdate(userId, data, {
+    user = await User.findOneAndUpdate({ uid }, data, {
       new: true,
     });
     return NextResponse.json(user);
@@ -64,31 +58,19 @@ export const PUT = auth(async function PUT(request: any, context: any) {
 // delete user by id from param
 export const DELETE = auth(async function DELETE(request: any, context: any) {
   try {
-    const allowedRoles = ['admin', 'doctor', 'receptionist'];
     // @ts-ignore
-    if (request.auth?.user?.id !== context?.params?.id) {
-      if (!allowedRoles.includes(request.auth?.user?.role)) {
-        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-      }
+    if (request.auth?.user?.uid !== context?.params?.uid) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
     await connectDB();
-    const userId = context.params.id;
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return NextResponse.json({ message: 'Invalid user ID' }, { status: 400 });
-    }
-    let user = await User.findById(userId);
+    const uid = context.params.uid;
+
+    let user = await User.findOne({ uid });
     if (!user) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
     }
-    if (
-      request.auth?.user?.role === 'admin' ||
-      request.auth?.user?.id === user.id
-    ) {
-      await User.findByIdAndDelete(userId);
-      return NextResponse.json({ message: 'User deleted' });
-    } else {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
+    await User.findOneAndDelete({ uid });
+    return NextResponse.json({ message: 'User deleted' });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: 'An error occurred' }, { status: 500 });

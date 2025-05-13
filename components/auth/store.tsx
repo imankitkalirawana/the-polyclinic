@@ -9,31 +9,9 @@ import { signIn } from 'next-auth/react';
 import { Gender } from '@/lib/interface';
 import { register, sendOTP, verifyOTP } from '@/lib/server-actions/auth';
 import { verifyEmail } from '@/functions/server-actions/auth/verification';
+import { AuthContextType, FlowType } from './types';
 
-// Auth Flow Types
-export type FlowType = 'register' | 'login' | 'forgot-password';
-
-export interface AuthFlowContextType {
-  formik: ReturnType<typeof useFormik<any>>;
-  paginate: (newDirection: number) => void;
-}
-
-// Base validation schema
-const baseValidationSchema = {
-  email: Yup.string().email('Invalid email').required('Email is required'),
-  password: Yup.string()
-    .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-      'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'
-    )
-    .required('Password is required'),
-  otp: Yup.string().required('OTP is required'),
-};
-
-// Context
-const AuthFlowContext = createContext<AuthFlowContextType | undefined>(
-  undefined
-);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Provider Factory
 export const createAuthProvider = (flowType: FlowType) => {
@@ -195,11 +173,7 @@ export const createAuthProvider = (flowType: FlowType) => {
       } else if (values.page === 1) {
         // Check if email exists
         if (await verifyEmail(values.email)) {
-          addToast({
-            title: 'Email already exists',
-            description: 'Please try a different email.',
-            color: 'danger',
-          });
+          setFieldError('email', 'Email already exists');
           return;
         } else {
           paginate(1);
@@ -208,11 +182,7 @@ export const createAuthProvider = (flowType: FlowType) => {
         // Send OTP
         const res = await sendOTP({ email: values.email });
         if (!res.success) {
-          addToast({
-            title: res.message,
-            description: 'Please try again after some time.',
-            color: 'danger',
-          });
+          setFieldError('email', res.message);
         } else {
           addToast({
             title: res.message,
@@ -261,11 +231,7 @@ export const createAuthProvider = (flowType: FlowType) => {
       if (values.page === 0) {
         // Check if email exists
         if (!(await verifyEmail(values.email))) {
-          addToast({
-            title: 'Email not found',
-            description: 'Please try a different email.',
-            color: 'danger',
-          });
+          setFieldError('email', 'Email not found');
           return;
         } else {
           paginate(1);
@@ -365,33 +331,32 @@ export const createAuthProvider = (flowType: FlowType) => {
     };
 
     return (
-      <AuthFlowContext.Provider value={{ formik, paginate }}>
+      <AuthContext.Provider value={{ formik, paginate }}>
         {children}
-      </AuthFlowContext.Provider>
+      </AuthContext.Provider>
     );
   };
 };
 
 // Custom hooks
-export const useRegisterFlow = () => {
-  const context = useContext(AuthFlowContext);
+export const useRegister = () => {
+  const context = useContext(AuthContext);
   if (!context)
-    throw new Error('useRegisterFlow must be used within a RegisterProvider');
+    throw new Error('useRegister must be used within a RegisterProvider');
   return context;
 };
 
-export const useLoginFlow = () => {
-  const context = useContext(AuthFlowContext);
-  if (!context)
-    throw new Error('useLoginFlow must be used within a LoginProvider');
+export const useLogin = () => {
+  const context = useContext(AuthContext);
+  if (!context) throw new Error('useLogin must be used within a LoginProvider');
   return context;
 };
 
-export const useForgotPasswordFlow = () => {
-  const context = useContext(AuthFlowContext);
+export const useForgetPassword = () => {
+  const context = useContext(AuthContext);
   if (!context)
     throw new Error(
-      'useForgotPasswordFlow must be used within a ForgotPasswordProvider'
+      'useForgetPassword must be used within a ForgotPasswordProvider'
     );
   return context;
 };

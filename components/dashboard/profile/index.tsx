@@ -257,7 +257,7 @@ function DeleteAccountForm({ email }: { email: string }) {
     }),
     onSubmit: async (values) => {
       await axios
-        .delete('/api/users/self', { data: values })
+        .delete(`/api/v1/users/${email}`, { data: values })
         .then(async (res) => {
           await signOut();
           addToast({
@@ -355,7 +355,7 @@ function DeleteAccountForm({ email }: { email: string }) {
                   variant="shadow"
                   color="danger"
                   isLoading={formik.isSubmitting}
-                  type="submit"
+                  onPress={() => formik.handleSubmit()}
                 >
                   Delete Account
                 </Button>
