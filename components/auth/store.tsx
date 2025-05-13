@@ -323,31 +323,25 @@ export const createAuthProvider = (flowType: FlowType) => {
         // Since resetPassword function is not available, use fetch API directly
         try {
           const res = await fetch('/api/auth/reset-password', {
-            method: 'POST',
+            method: 'PATCH',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
               email: values.email,
               password: values.newPassword,
+              otp: parseInt(values.otp),
             }),
           });
 
           const data = await res.json();
 
-          if (!data.success) {
-            addToast({
-              title: data.message || 'Failed to reset password',
-              color: 'danger',
-            });
-          } else {
-            addToast({
-              title: 'Password reset successfully',
-              description: 'You can now login with your new password.',
-              color: 'success',
-            });
-            router.push('/auth/login');
-          }
+          addToast({
+            title: data.message,
+            description: 'You can now login with your new password.',
+            color: 'success',
+          });
+          router.push('/auth/login?email=' + values.email);
         } catch (error) {
           addToast({
             title: 'An error occurred',

@@ -147,7 +147,7 @@ function PasswordForm({ email }: { email: string }) {
     }),
     onSubmit: async (values) => {
       await axios
-        .put('/api/auth/update-password', values)
+        .patch('/api/auth/update-password', values)
         .then((res) => {
           addToast({
             title: 'Success',
