@@ -7,14 +7,19 @@ import { connectDB } from '@/lib/db';
 import User from '@/models/User';
 
 // get user by id from param
-export async function GET(_request: any, context: any) {
+export const GET = auth(async function GET(request: any, context: any) {
   try {
-    await connectDB();
-    const userId = context.params.id;
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return NextResponse.json({ message: 'Invalid user ID' }, { status: 400 });
+    const uid = context.params.uid;
+    if (
+      request.auth?.user?.role === 'user' &&
+      request.auth?.user?.uid !== uid
+    ) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
-    const user = await User.findById(userId);
+
+    await connectDB();
+
+    const user = await User.findOne({ uid });
     if (!user) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
     }
@@ -23,7 +28,7 @@ export async function GET(_request: any, context: any) {
     console.error(error);
     return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
   }
-}
+});
 
 export const PUT = auth(async function PUT(request: any, context: any) {
   try {
