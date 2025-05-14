@@ -10,6 +10,7 @@ import {
   CardFooter,
   CardHeader,
   Chip,
+  Link,
   Tooltip,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -34,18 +35,49 @@ export default function PopoverCard({ uid }: { uid: number }) {
         <div>
           <Avatar src={user.image} name={user.name} size="lg" />
         </div>
-        <div>
-          <p className="text-large font-medium">{user.name}</p>
-          <p className="max-w-[90%] text-small text-default-400">
-            {user.email} {user.phone ? `| ${user.phone}` : ''}
-          </p>
-          <div className="flex gap-2 pb-1 pt-2">
+        <div className="flex flex-col gap-1">
+          <div className="text-large font-medium">{user.name}</div>
+          <Link
+            href={`mailto:${user.email}`}
+            className="flex items-center gap-1 text-small text-default-400"
+          >
+            <Icon icon="solar:letter-bold-duotone" width={16} />
+            <span className="hover:text-primary">{user.email}</span>
+          </Link>
+          {user.phone && (
+            <Link
+              href={`tel:${user.phone}`}
+              className="flex items-center gap-1 text-small text-default-400"
+            >
+              <Icon icon="solar:phone-bold-duotone" width={16} />
+              <span className="hover:text-primary">{user.phone}</span>
+            </Link>
+          )}
+          {user.address && (
+            <div className="flex items-center gap-1 text-small text-default-400">
+              <Icon icon="solar:map-point-bold-duotone" width={16} />
+              <span>{user.address}</span>
+            </div>
+          )}
+          <div className="flex gap-2">
             {renderChip({ item: user.role })}
             {renderChip({ item: user.status })}
           </div>
-          <p className="py-2 text-small text-foreground">{user.address}</p>
         </div>
       </CardBody>
+      <CardFooter>
+        <Button
+          as={Link}
+          target="_blank"
+          href={`/dashboard/users/${user.uid}`}
+          variant="bordered"
+          fullWidth
+          color="default"
+        >
+          <Icon icon="solar:arrow-right-up-line-duotone" width={18} />
+          <span>View Profile</span>
+        </Button>
+      </CardFooter>
     </Card>
   );
 }

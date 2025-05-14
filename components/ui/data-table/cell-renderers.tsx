@@ -40,7 +40,7 @@ export const renderUser = ({
 }) => {
   return (
     <Tooltip
-      // isOpen={name === 'Kitti'}
+      delay={1000}
       classNames={{
         content: 'bg-transparent p-0 shadow-none',
       }}
