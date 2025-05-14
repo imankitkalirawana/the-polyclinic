@@ -52,7 +52,7 @@ export const POST = auth(async function POST(request: any) {
         role: user.role,
         status: user.status,
         gender: user.gender,
-        dob: `${user.dob.day}/${user.dob.month}/${user.dob.year}`,
+        dob: user.dob,
         createdAt: format(new Date(user.createdAt), 'PPPp'),
         createdBy: user.createdBy,
         updatedAt: format(new Date(user.updatedAt), 'PPPp'),

@@ -212,8 +212,40 @@ export default function Appointments() {
       <DropdownMenu aria-label="Selected Actions">
         <DropdownItem
           key="export"
-          onPress={() => {
+          onPress={async () => {
             setKeys(selectedKeys);
+            // convert selectedKeys to array of numbers
+            let keys = [];
+            if (selectedKeys === 'all') {
+              keys = [-1];
+            } else {
+              keys = Array.from(selectedKeys);
+            }
+            await apiRequest({
+              method: 'POST',
+              url: '/api/v1/appointments/export',
+              data: { keys },
+              responseType: 'blob',
+              successMessage: 'Appointments exported successfully',
+              onSuccess: (data) => {
+                setAction(null);
+                // Create a blob URL and trigger download
+                const blob = new Blob([data], {
+                  type: 'application/vnd.ms-excel',
+                });
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute(
+                  'download',
+                  `appointments-export-${new Date().toISOString().split('T')[0]}.xlsx`
+                );
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                window.URL.revokeObjectURL(url);
+              },
+            });
           }}
         >
           Export

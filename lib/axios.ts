@@ -20,6 +20,7 @@ interface ApiOptions {
   url: string;
   data?: AxiosRequestConfig['data']; // Request payload
   headers?: AxiosRequestConfig['headers']; // Optional headers
+  responseType?: AxiosRequestConfig['responseType']; // Optional response type
   successMessage?: string; // Optional success message
   errorMessage?: string; // Optional error message
   onSuccess?: (responseData: any) => void; // Optional success callback
@@ -32,6 +33,7 @@ export const apiRequest = async ({
   url,
   data,
   headers,
+  responseType,
   successMessage,
   errorMessage,
   onSuccess,
@@ -45,6 +47,7 @@ export const apiRequest = async ({
       url,
       data,
       headers,
+      responseType,
     });
 
     // Handle success response

@@ -52,11 +52,7 @@ export default function NewUser({ countries }: { countries: CountryProps[] }) {
         name: '',
         email: '',
         phone: '',
-        dob: {
-          day: '01',
-          month: '01',
-          year: '2000',
-        },
+        dob: '',
         gender: 'male',
         country: 'IN',
         state: '',
