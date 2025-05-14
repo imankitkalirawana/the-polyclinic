@@ -25,7 +25,7 @@ interface ApiOptions {
   errorMessage?: string; // Optional error message
   onSuccess?: (responseData: any) => void; // Optional success callback
   onError?: (error: any) => void; // Optional error callback
-  isToast?: boolean; // Optional toast
+  showToast?: boolean; // Optional toast
 }
 
 export const apiRequest = async ({
@@ -38,7 +38,7 @@ export const apiRequest = async ({
   errorMessage,
   onSuccess,
   onError,
-  isToast = true,
+  showToast = false,
 }: ApiOptions) => {
   try {
     // Send the API request
@@ -51,10 +51,10 @@ export const apiRequest = async ({
     });
 
     // Handle success response
-    if (isToast) {
+    if (showToast) {
       addToast({
         title: 'Success',
-        description: successMessage || response.data.message || 'Success',
+        description: successMessage || response.data.message || null,
         color: 'success',
       });
     }
@@ -69,7 +69,7 @@ export const apiRequest = async ({
     console.error('API Request failed', error);
 
     // Handle error response
-    if (isToast) {
+    if (showToast) {
       addToast({
         title: 'Error',
         description:

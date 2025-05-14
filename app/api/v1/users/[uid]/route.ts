@@ -9,7 +9,8 @@ import User from '@/models/User';
 // get user by id from param
 export const GET = auth(async function GET(request: any, context: any) {
   try {
-    const uid = context.params.uid;
+    const uid = parseInt(context.params.uid);
+
     if (
       request.auth?.user?.role === 'user' &&
       request.auth?.user?.uid !== uid

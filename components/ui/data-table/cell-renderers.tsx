@@ -12,6 +12,7 @@ import {
   DropdownMenu,
   DropdownSection,
   DropdownTrigger,
+  Tooltip,
   User,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
@@ -20,32 +21,48 @@ import { CopyText } from '@/components/ui/copy';
 import { format } from 'date-fns';
 
 import { chipColorMap, ChipColorType } from '@/lib/chip';
+import PopoverCard from '../user/popover-user';
 
 export const renderCopyableText = (text: string) => {
   return <CopyText>{text}</CopyText>;
 };
 
 export const renderUser = ({
+  uid,
   avatar,
   name,
   description,
 }: {
-  avatar: string;
-  name: string;
-  description: string;
+  uid: number;
+  avatar?: string | undefined;
+  name: string | undefined;
+  description?: string | number | undefined;
 }) => {
   return (
-    <User
-      avatarProps={{ radius: 'lg', src: avatar }}
+    <Tooltip
+      // isOpen={name === 'Kitti'}
       classNames={{
-        name: 'text-default-foreground',
-        description: 'text-default-500',
+        content: 'bg-transparent p-0 shadow-none',
       }}
-      description={description}
-      name={name}
+      content={<PopoverCard uid={uid} />}
     >
-      {description}
-    </User>
+      <User
+        avatarProps={{
+          radius: 'lg',
+          src: avatar,
+          size: avatar ? 'md' : 'sm',
+          name,
+        }}
+        classNames={{
+          name: 'text-default-foreground',
+          description: 'text-default-500',
+        }}
+        description={description}
+        name={name}
+      >
+        {description}
+      </User>
+    </Tooltip>
   );
 };
 
@@ -90,10 +107,15 @@ export const renderChip = ({
 }) => {
   return (
     <Chip
-      className="flex w-fit items-center gap-[2px] rounded-lg bg-default-100 px-2 py-1"
+      className={cn(
+        'flex w-fit items-center gap-[2px] rounded-lg px-2 py-1',
+        chipColorMap[item].bg
+      )}
       size={size}
       startContent={
-        <span className={cn('size-2 rounded-full', chipColorMap[item])}></span>
+        <span
+          className={cn('size-2 rounded-full', chipColorMap[item].text)}
+        ></span>
       }
     >
       <span className="capitalize text-default-800">

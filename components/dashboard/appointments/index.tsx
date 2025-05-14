@@ -2,8 +2,6 @@
 
 import { useMemo } from 'react';
 import {
-  addToast,
-  Avatar,
   Button,
   DropdownItem,
   DropdownMenu,
@@ -16,6 +14,7 @@ import {
   renderChip,
   renderCopyableText,
   renderDate,
+  renderUser,
 } from '@/components/ui/data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 
@@ -63,39 +62,27 @@ export default function Appointments() {
         name: 'Patient Name',
         uid: 'patient.name',
         sortable: true,
-        renderCell: (appointment) => (
-          <User
-            name={appointment.patient.name}
-            description={appointment.patient.phone}
-            classNames={{
-              description: 'text-default-500',
-            }}
-            avatarProps={{
-              src:
-                appointment.patient.image ||
-                avatars.memoji[
-                  Math.floor(Math.random() * avatars.memoji.length)
-                ],
-              fallback: appointment.patient.name,
-            }}
-          />
-        ),
+        renderCell: (appointment) =>
+          renderUser({
+            uid: appointment.patient?.uid,
+            avatar: appointment.patient.image,
+            name: appointment.patient.name,
+            description: `#${appointment.patient.uid}`,
+          }),
       },
       {
         name: 'Doctor Name',
         uid: 'doctor.name',
         sortable: true,
-        renderCell: (appointment) => (
-          <div
-            className={`truncate capitalize ${
-              appointment?.doctor?.name
-                ? 'text-default-foreground'
-                : 'text-gray-400'
-            }`}
-          >
-            {appointment?.doctor?.name || 'Not Assigned'}
-          </div>
-        ),
+        renderCell: (appointment) =>
+          appointment.doctor?.uid
+            ? renderUser({
+                uid: appointment.doctor?.uid,
+                avatar: appointment.doctor?.image,
+                name: appointment.doctor?.name,
+                description: `#${appointment.doctor?.uid}`,
+              })
+            : '',
       },
 
       {
