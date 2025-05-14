@@ -132,7 +132,7 @@ export default function DashboardLayout({
 
   const header = useMemo(() => {
     return (
-      <header className="flex items-center gap-3 rounded-medium border-small border-divider p-4">
+      <header className="flex items-center gap-3 rounded-medium border-small border-divider p-4 py-1">
         <Button
           aria-label="Toggle Sidebar"
           isIconOnly
@@ -172,10 +172,10 @@ export default function DashboardLayout({
   return (
     <div className="flex h-dvh w-full overflow-hidden">
       {sidebar}
-      <div className="w-[80vw] flex-1 flex-col md:p-4">
+      <div className="w-[80vw] flex-1 flex-col md:p-2">
         {header}
-        <main className="mt-4 h-full w-full overflow-visible">
-          <div className="flex h-[85vh] flex-col gap-4 overflow-scroll rounded-medium border-small border-divider p-2 pb-12 pt-4 md:p-4">
+        <main className="mt-2 h-full w-full overflow-visible">
+          <div className="flex h-[91vh] flex-col gap-4 overflow-scroll p-2">
             {children}
           </div>
         </main>

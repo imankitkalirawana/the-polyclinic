@@ -8,14 +8,13 @@ import {
   Card,
   CardBody,
   CardFooter,
-  CardHeader,
-  Chip,
   Link,
-  Tooltip,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useQuery } from '@tanstack/react-query';
 import { renderChip } from '../data-table/cell-renderers';
+
+// TODO: Add a loading skeleton and remove this line after done
 
 export default function PopoverCard({ uid }: { uid: number }) {
   const { data: user } = useQuery<UserType>({
