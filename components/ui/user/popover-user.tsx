@@ -59,8 +59,8 @@ export default function PopoverCard({ uid }: { uid: number }) {
             </div>
           )}
           <div className="flex gap-2">
-            {renderChip({ item: user.role })}
-            {renderChip({ item: user.status })}
+            {renderChip({ item: user.role, richColor: true })}
+            {renderChip({ item: user.status, richColor: true })}
           </div>
         </div>
       </CardBody>

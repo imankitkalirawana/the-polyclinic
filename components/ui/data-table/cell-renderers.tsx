@@ -101,15 +101,17 @@ export const renderCountry = (name: string, icon: React.ReactNode) => {
 export const renderChip = ({
   item,
   size,
+  richColor,
 }: {
   item: ChipColorType;
   size?: ChipProps['size'];
+  richColor?: boolean;
 }) => {
   return (
     <Chip
       className={cn(
         'flex w-fit items-center gap-[2px] rounded-lg px-2 py-1',
-        chipColorMap[item].bg
+        richColor ? chipColorMap[item].bg : 'bg-default-100'
       )}
       size={size}
       startContent={
