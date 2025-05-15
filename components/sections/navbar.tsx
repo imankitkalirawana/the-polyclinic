@@ -88,11 +88,6 @@ export default function Navbar() {
               href: '/dashboard/users',
               icon: 'solar:pills-linear',
             },
-            {
-              name: 'Services',
-              href: '/dashboard/services',
-              icon: 'solar:test-tube-minimalistic-linear',
-            },
           ],
         },
         {
