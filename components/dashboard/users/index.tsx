@@ -70,6 +70,7 @@ export default function Users() {
         sortable: true,
         renderCell: (user) =>
           renderUser({
+            uid: user.uid,
             avatar: user.image,
             name: user.name,
             description: user.email,

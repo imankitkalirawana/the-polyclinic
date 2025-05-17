@@ -2,8 +2,6 @@
 
 import { useMemo } from 'react';
 import {
-  addToast,
-  Avatar,
   Button,
   DropdownItem,
   DropdownMenu,
@@ -16,18 +14,18 @@ import {
   renderChip,
   renderCopyableText,
   renderDate,
+  renderUser,
 } from '@/components/ui/data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 
 import { Table } from '@/components/ui/data-table';
 import { AppointmentType } from '@/models/Appointment';
 import { useRouter } from 'nextjs-toploader/app';
-import QuickLook from './quick-look';
 import { useAppointmentData, useAppointmentStore } from './store';
-import { avatars } from '@/lib/avatar';
 import BulkDeleteModal from '@/components/ui/common/modals/bulk-delete';
 import { ModalCellRenderer } from './cell-renderer';
 import { apiRequest } from '@/lib/axios';
+import { AppointmentQuickLook } from './quicklook';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'aid',
@@ -63,39 +61,27 @@ export default function Appointments() {
         name: 'Patient Name',
         uid: 'patient.name',
         sortable: true,
-        renderCell: (appointment) => (
-          <User
-            name={appointment.patient.name}
-            description={appointment.patient.phone}
-            classNames={{
-              description: 'text-default-500',
-            }}
-            avatarProps={{
-              src:
-                appointment.patient.image ||
-                avatars.memoji[
-                  Math.floor(Math.random() * avatars.memoji.length)
-                ],
-              fallback: appointment.patient.name,
-            }}
-          />
-        ),
+        renderCell: (appointment) =>
+          renderUser({
+            uid: appointment.patient?.uid,
+            avatar: appointment.patient.image,
+            name: appointment.patient.name,
+            description: `#${appointment.patient.uid}`,
+          }),
       },
       {
         name: 'Doctor Name',
         uid: 'doctor.name',
         sortable: true,
-        renderCell: (appointment) => (
-          <div
-            className={`truncate capitalize ${
-              appointment?.doctor?.name
-                ? 'text-default-foreground'
-                : 'text-gray-400'
-            }`}
-          >
-            {appointment?.doctor?.name || 'Not Assigned'}
-          </div>
-        ),
+        renderCell: (appointment) =>
+          appointment.doctor?.uid
+            ? renderUser({
+                uid: appointment.doctor?.uid,
+                avatar: appointment.doctor?.image,
+                name: appointment.doctor?.name,
+                description: `#${appointment.doctor?.uid}`,
+              })
+            : '',
       },
 
       {
@@ -137,10 +123,10 @@ export default function Appointments() {
         sortable: false,
         renderCell: (appointment) =>
           renderActions({
-            onView: () => router.push(`/dashboard/users/${appointment.aid}`),
+            onView: () =>
+              router.push(`/dashboard/appointments/${appointment.aid}`),
             onEdit: () =>
-              router.push(`/dashboard/users/${appointment.aid}/edit`),
-            onDelete: () => console.log('Delete', appointment.aid),
+              router.push(`/dashboard/appointments/${appointment.aid}/edit`),
             key: appointment.aid,
           }),
       },
@@ -212,8 +198,40 @@ export default function Appointments() {
       <DropdownMenu aria-label="Selected Actions">
         <DropdownItem
           key="export"
-          onPress={() => {
+          onPress={async () => {
             setKeys(selectedKeys);
+            // convert selectedKeys to array of numbers
+            let keys = [];
+            if (selectedKeys === 'all') {
+              keys = [-1];
+            } else {
+              keys = Array.from(selectedKeys);
+            }
+            await apiRequest({
+              method: 'POST',
+              url: '/api/v1/appointments/export',
+              data: { keys },
+              responseType: 'blob',
+              successMessage: 'Appointments exported successfully',
+              onSuccess: (data) => {
+                setAction(null);
+                // Create a blob URL and trigger download
+                const blob = new Blob([data], {
+                  type: 'application/vnd.ms-excel',
+                });
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute(
+                  'download',
+                  `appointments-export-${new Date().toISOString().split('T')[0]}.xlsx`
+                );
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                window.URL.revokeObjectURL(url);
+              },
+            });
           }}
         >
           Export
@@ -266,7 +284,7 @@ export default function Appointments() {
           }
         }}
       />
-      {selected && <QuickLook />}
+      {selected && <AppointmentQuickLook />}
       {(action === 'bulk-delete' || action === 'bulk-cancel') && (
         <BulkDeleteModal<AppointmentType>
           canUndo={action !== 'bulk-delete'}

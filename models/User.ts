@@ -35,11 +35,7 @@ export interface UserType extends Base {
   address: string;
   zipcode: string;
   passwordResetToken: string;
-  dob: {
-    day: string;
-    month: string;
-    year: string;
-  };
+  dob: string;
   gender: Gender;
   image: string;
 }
@@ -83,20 +79,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Name is required'],
     },
-    dob: {
-      day: {
-        type: String,
-        default: '01',
-      },
-      month: {
-        type: String,
-        default: '01',
-      },
-      year: {
-        type: String,
-        default: '2000',
-      },
-    },
+    dob: String,
     gender: {
       type: String,
       enum: Gender,

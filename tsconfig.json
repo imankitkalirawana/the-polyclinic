@@ -27,7 +27,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "middleware/verifyToken.js",
-    "middleware/verifyAdmin.js"
+    "middleware/verifyAdmin.js",
+    "components/auth/register/data.tsx"
   ],
   "typeRoots": ["./node_modules/@types"],
   "exclude": ["node_modules"]

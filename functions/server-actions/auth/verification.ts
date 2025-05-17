@@ -26,7 +26,9 @@ export const verifyEmail = async (email: string, _id?: string) => {
   return true;
 };
 
-export const sendMailWithOTP = async (id: string) => {
+export const sendMailWithOTP = async (
+  id: string
+): Promise<{ success: boolean; message: string }> => {
   const otp = generateOtp();
 
   const mailOptions: MailOptions = {
@@ -40,20 +42,28 @@ export const sendMailWithOTP = async (id: string) => {
   };
 
   await connectDB();
-  const res = await Otp.findOne({ id });
-  if (res) {
-    if (res.otpCount >= 3) {
+  const otpRes = await Otp.findOne({ id });
+  if (otpRes) {
+    if (otpRes.otpCount >= 3) {
       throw new Error('You have exceeded the OTP limit');
     }
-    await Otp.updateOne({ id }, { otp, otpCount: res.otpCount + 1 });
+    await Otp.updateOne({ id }, { otp, otpCount: otpRes.otpCount + 1 });
   } else {
     await Otp.create({ id, otp });
   }
-  if (id.includes('@')) {
-    return await sendHTMLEmail(mailOptions);
-  } else {
-    return await sendSMS(id, `Your OTP is: ${otp}`);
+
+  const res = await sendHTMLEmail(mailOptions);
+  if (!res.success) {
+    return {
+      success: false,
+      message: res.message,
+    };
   }
+
+  return {
+    success: true,
+    message: 'OTP sent successfully',
+  };
 };
 
 export const verifyOTP = async (id: string, otp: number) => {

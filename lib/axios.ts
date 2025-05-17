@@ -20,11 +20,12 @@ interface ApiOptions {
   url: string;
   data?: AxiosRequestConfig['data']; // Request payload
   headers?: AxiosRequestConfig['headers']; // Optional headers
+  responseType?: AxiosRequestConfig['responseType']; // Optional response type
   successMessage?: string; // Optional success message
   errorMessage?: string; // Optional error message
   onSuccess?: (responseData: any) => void; // Optional success callback
   onError?: (error: any) => void; // Optional error callback
-  isToast?: boolean; // Optional toast
+  showToast?: boolean; // Optional toast
 }
 
 export const apiRequest = async ({
@@ -32,11 +33,12 @@ export const apiRequest = async ({
   url,
   data,
   headers,
+  responseType,
   successMessage,
   errorMessage,
   onSuccess,
   onError,
-  isToast = true,
+  showToast = false,
 }: ApiOptions) => {
   try {
     // Send the API request
@@ -45,13 +47,14 @@ export const apiRequest = async ({
       url,
       data,
       headers,
+      responseType,
     });
 
     // Handle success response
-    if (isToast) {
+    if (showToast) {
       addToast({
         title: 'Success',
-        description: successMessage || response.data.message || 'Success',
+        description: successMessage || response.data.message || null,
         color: 'success',
       });
     }
@@ -66,7 +69,7 @@ export const apiRequest = async ({
     console.error('API Request failed', error);
 
     // Handle error response
-    if (isToast) {
+    if (showToast) {
       addToast({
         title: 'Error',
         description:
