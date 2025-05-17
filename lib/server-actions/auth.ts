@@ -6,20 +6,11 @@ import { connectDB } from '../db';
 import { generateOtp } from '../functions';
 import { sendHTMLEmail } from './email';
 
-import { signIn } from '@/auth';
 import { APP_INFO } from '@/lib/config';
 import Otp from '@/models/Otp';
 import User from '@/models/User';
 import { OtpEmail, WelcomeUser } from '@/templates/email';
 import { Gender } from '../interface';
-
-const passwordGenerator = async () => {
-  const password =
-    Math.random().toString(36).substring(2, 15) +
-    Math.random().toString(36).substring(2, 15);
-  const hashedPassword = await bcrypt.hash(password, 12);
-  return { password, hashedPassword };
-};
 
 export const sendOTP = async ({
   email,

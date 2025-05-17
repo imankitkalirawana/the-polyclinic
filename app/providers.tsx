@@ -8,7 +8,7 @@ import NextTopLoader from 'nextjs-toploader';
 import { useRouter } from 'nextjs-toploader/app';
 import { HeroUIProvider, Spinner, ToastProvider } from '@heroui/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+// import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Toaster } from 'sonner';
 
 import { store } from '@/store';

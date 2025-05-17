@@ -5,7 +5,7 @@ import { sendHTMLEmail } from '../emails/send-email';
 
 import { CLINIC_INFO } from '@/lib/config';
 import { connectDB } from '@/lib/db';
-import { generateOtp, sendSMS } from '@/lib/functions';
+import { generateOtp } from '@/lib/functions';
 import { transporter } from '@/lib/nodemailer';
 import Otp from '@/models/Otp';
 import User from '@/models/User';

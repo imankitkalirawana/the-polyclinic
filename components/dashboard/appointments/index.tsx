@@ -63,7 +63,7 @@ export default function Appointments() {
         sortable: true,
         renderCell: (appointment) =>
           renderUser({
-            uid: appointment.patient?.uid,
+            uid: appointment.patient.uid,
             avatar: appointment.patient.image,
             name: appointment.patient.name,
             description: `#${appointment.patient.uid}`,

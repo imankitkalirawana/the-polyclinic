@@ -39,9 +39,7 @@ const CellRenderer: React.FC<CellRendererProps> = ({
         >
           {label}
         </span>
-        <span className="capitalize text-default-foreground">
-          {typeof value === 'string' ? value : value}
-        </span>
+        <span className="capitalize text-default-foreground">{value}</span>
       </div>
     </div>
   </div>
