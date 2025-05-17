@@ -18,7 +18,11 @@ import {
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { format } from 'date-fns';
 import { useAppointmentStore } from './store';
-import { QuickLookConfig } from '@/components/ui/dashboard/quicklook/types';
+import {
+  ActionType,
+  QuickLookConfig,
+} from '@/components/ui/dashboard/quicklook/types';
+import { useMemo } from 'react';
 
 const appointmentConfig: QuickLookConfig<AppointmentType> = {
   detailsSection: (appointment) => [
@@ -197,75 +201,43 @@ const appointmentConfig: QuickLookConfig<AppointmentType> = {
     </>
   ),
   permissions: {
-    doctor: ['cancel', 'reschedule', 'reminder'],
+    doctor: ['cancel', 'reschedule', 'reminder', 'new-tab', 'add-to-calendar'],
     user: ['cancel', 'reschedule'],
-    admin: ['cancel', 'delete', 'edit', 'reschedule', 'reminder'],
+    admin: ['cancel', 'delete', 'edit', 'reschedule', 'reminder', 'new-tab'],
     nurse: ['cancel', 'reschedule'],
     receptionist: ['cancel', 'reschedule', 'reminder'],
     pharmacist: ['cancel', 'reschedule'],
     laboratorist: ['cancel', 'reschedule'],
   },
-  buttonMap: (appointment, setAction) => ({
-    addToCalendar: {
-      label: 'Add to Calendar',
-      icon: 'solar:calendar-bold-duotone',
-      color: 'warning',
-      variant: 'flat',
-      onPress: () => {},
-      content: (
-        <AddToCalendar
-          appointment={appointment}
-          onClose={() => setAction(null)}
-        />
+  buttons: [
+    {
+      key: 'new-tab',
+      children: 'Open in new tab',
+      startContent: (
+        <Icon icon="solar:arrow-right-up-line-duotone" width="20" />
       ),
+      color: 'default',
+      variant: 'flat',
+      position: 'left',
+      isIconOnly: true,
     },
-    reschedule: {
-      label: 'Reschedule',
-      icon: 'solar:calendar-bold-duotone',
+    {
+      key: 'add-to-calendar',
+      children: 'Add to Calendar',
+      startContent: <Icon icon="solar:calendar-bold-duotone" width="20" />,
       color: 'warning',
       variant: 'flat',
-      onPress: () => setAction('reschedule'),
-      content: <RescheduleModal />,
+      position: 'left',
     },
-    cancel: {
-      label: 'Cancel',
-      icon: 'solar:close-circle-bold-duotone',
-      color: 'danger',
+    {
+      key: 'reschedule',
+      children: 'Reschedule',
+      startContent: <Icon icon="solar:calendar-bold-duotone" width="20" />,
+      color: 'warning',
       variant: 'flat',
-      onPress: () => setAction('cancel'),
-      content: <CancelModal />,
+      position: 'right',
     },
-    delete: {
-      label: 'Delete',
-      icon: 'solar:trash-bin-minimalistic-bold-duotone',
-      color: 'danger',
-      variant: 'light',
-      isIconOnly: true,
-      onPress: () => setAction('delete'),
-      content: <CancelModal type="delete" />,
-    },
-    edit: {
-      label: 'Edit',
-      icon: 'solar:pen-bold-duotone',
-      variant: 'flat',
-      onPress: () => console.log('edit'),
-    },
-    reminder: {
-      label: 'Send a Reminder to Patient',
-      icon: 'solar:bell-bold-duotone',
-      variant: 'flat',
-      isIconOnly: true,
-      onPress: async () => {
-        await new Promise((resolve) => setTimeout(resolve, 2000)).then(() => {
-          addToast({
-            title: 'Reminder Sent',
-            description: 'Reminder sent to patient',
-            color: 'success',
-          });
-        });
-      },
-    },
-  }),
+  ],
   dropdownOptions: [
     {
       key: 'invoice',
@@ -298,14 +270,51 @@ const appointmentConfig: QuickLookConfig<AppointmentType> = {
 
 export const AppointmentQuickLook = () => {
   const { selected, setSelected, setAction, action } = useAppointmentStore();
+
+  const handleButtonPress = (
+    action: ActionType,
+    appointment: AppointmentType
+  ) => {
+    if (action === 'new-tab') {
+      window.open(appointmentConfig.newTabUrl?.(appointment), '_blank');
+    } else {
+      setAction(action);
+    }
+  };
+
+  const contents: Partial<Record<ActionType, React.ReactNode>> = useMemo(() => {
+    return {
+      'add-to-calendar': (
+        <AddToCalendar
+          appointment={selected as AppointmentType}
+          onClose={() => setSelected(null)}
+        />
+      ),
+      reschedule: <RescheduleModal />,
+      cancel: <CancelModal />,
+      'new-tab': <div>New Tab</div>,
+    };
+  }, [selected]);
+
   return (
     <QuickLook
       data={selected}
-      config={appointmentConfig}
+      config={{
+        ...appointmentConfig,
+        buttons: appointmentConfig.buttons.map((btn) => ({
+          ...btn,
+          onPress: () => {
+            if (selected) {
+              handleButtonPress(btn.key as ActionType, selected);
+            }
+          },
+          content: contents[btn.key as ActionType],
+        })),
+      }}
       isOpen={!!selected}
       onClose={() => setSelected(null)}
-      setAction={setAction}
-      action={action}
+      setAction={setAction as (action: ActionType | null) => void}
+      action={action as ActionType | null}
     />
   );
 };

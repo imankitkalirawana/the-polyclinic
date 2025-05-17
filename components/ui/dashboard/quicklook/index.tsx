@@ -62,20 +62,13 @@ export default function QuickLook<T>({
   );
 
   const item = useMemo(() => data || ({} as T), [data]);
-  const buttonMap = useMemo(
-    () => config.buttonMap(item, setAction),
-    [item, config, setAction]
-  );
+  //   const buttonMap = useMemo(
+  //     () => config.buttonMap(item, setAction),
+  //     [item, config, setAction]
+  //   );
   const availablePermissions = useMemo(
     () => config.permissions[role as keyof typeof config.permissions] || [],
     [role, config.permissions]
-  );
-
-  const handleAction = useCallback(
-    (actionType: ActionType) => {
-      buttonMap[actionType]?.onPress?.(item);
-    },
-    [buttonMap, item]
   );
 
   const detailsSection = useMemo(
@@ -109,36 +102,62 @@ export default function QuickLook<T>({
     [item, config]
   );
 
-  const actionButtons = useMemo(
+  const leftButtons = useMemo(
     () => (
       <div className="flex items-center gap-2">
-        {availablePermissions
-          .filter((btn) => !['delete', 'edit'].includes(btn))
+        {config.buttons
+          .filter((btn) => {
+            const isLeftPosition = btn.position === 'left';
+            const isPermission = availablePermissions.includes(btn.key);
+            return isLeftPosition && isPermission;
+          })
           .map((btn) => (
             <Tooltip
-              key={btn}
+              key={btn.key}
               delay={500}
-              isDisabled={!buttonMap[btn]?.isIconOnly}
-              content={buttonMap[btn]?.label}
-              color={buttonMap[btn]?.color}
+              isDisabled={!btn.isIconOnly}
+              content={btn.children}
             >
               <AsyncButton
-                variant={buttonMap[btn]?.variant || 'flat'}
-                startContent={
-                  <Icon icon={buttonMap[btn]?.icon || ''} width="20" />
-                }
-                onPress={() => handleAction(btn)}
-                color={buttonMap[btn]?.color || 'default'}
-                isIconOnly={buttonMap[btn]?.isIconOnly}
-                fn={async () => buttonMap[btn]?.onPress?.(item)}
+                key={btn.key}
+                {...(({ key, content, ref, children, ...rest }) => rest)(btn)}
               >
-                {buttonMap[btn]?.isIconOnly ? null : buttonMap[btn]?.label}
+                {btn.isIconOnly ? null : btn.children}
               </AsyncButton>
             </Tooltip>
           ))}
       </div>
     ),
-    [availablePermissions, buttonMap, handleAction, item]
+    [config.buttons, availablePermissions]
+  );
+
+  const rightButtons = useMemo(
+    () => (
+      <div className="flex items-center gap-2">
+        {config.buttons
+          .filter((btn) => {
+            const isRightPosition = btn.position === 'right';
+            const isPermission = availablePermissions.includes(btn.key);
+            return isRightPosition && isPermission;
+          })
+          .map((btn) => (
+            <Tooltip
+              key={btn.key}
+              delay={500}
+              isDisabled={!btn.isIconOnly}
+              content={btn.children}
+            >
+              <AsyncButton
+                key={btn.key}
+                {...(({ key, content, ref, children, ...rest }) => rest)(btn)}
+              >
+                {btn.isIconOnly ? null : btn.children}
+              </AsyncButton>
+            </Tooltip>
+          ))}
+      </div>
+    ),
+    [config.buttons, availablePermissions]
   );
 
   return (
@@ -162,27 +181,9 @@ export default function QuickLook<T>({
             {config.infoSection && infoSection}
           </ModalBody>
           <ModalFooter className="justify-between border-t border-divider">
+            <div className="flex items-center gap-2">{leftButtons}</div>
             <div className="flex items-center gap-2">
-              {config.newTabUrl && (
-                <Tooltip delay={500} content="Open in new tab">
-                  <Button
-                    variant="flat"
-                    startContent={
-                      <Icon
-                        icon="solar:arrow-right-up-line-duotone"
-                        width="20"
-                      />
-                    }
-                    onPress={() => {
-                      window.open(config.newTabUrl?.(item), '_blank');
-                    }}
-                    isIconOnly
-                  />
-                </Tooltip>
-              )}
-            </div>
-            <div className="flex items-center gap-2">
-              {actionButtons}
+              {rightButtons}
               {config.dropdownOptions && (
                 <Dropdown placement="top-end">
                   <DropdownTrigger>
@@ -208,11 +209,7 @@ export default function QuickLook<T>({
           </ModalFooter>
         </ModalContent>
       </Modal>
-      {action && buttonMap[action]?.content}
+      {action && config.buttons.find((btn) => btn.key === action)?.content}
     </>
   );
 }
-
-// Example configuration for AppointmentType
-
-// export default React.memo(QuickLook);

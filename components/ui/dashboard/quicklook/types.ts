@@ -1,5 +1,6 @@
 import { UserRole } from '@/models/User';
-import { DropdownItemProps } from '@heroui/react';
+import { ButtonProps, DropdownItemProps } from '@heroui/react';
+import { ReactNode } from 'react';
 
 // Primitive types
 export type ActionType =
@@ -8,9 +9,10 @@ export type ActionType =
   | 'delete'
   | 'edit'
   | 'reminder'
-  | 'addToCalendar'
+  | 'add-to-calendar'
   | 'bulk-cancel'
-  | 'bulk-delete';
+  | 'bulk-delete'
+  | 'new-tab';
 
 export type ButtonVariant = 'solid' | 'flat' | 'bordered' | 'light';
 
@@ -43,17 +45,6 @@ export interface QuickLookProps<T> {
   action: ActionType | null;
 }
 
-// Configuration interfaces
-export interface ButtonConfig<T> {
-  label: string;
-  icon: string;
-  color?: ButtonColor;
-  variant?: ButtonVariant;
-  isIconOnly?: boolean;
-  onPress?: (data: T) => void | Promise<void>;
-  content?: React.ReactNode;
-}
-
 export interface CellRenderConfig<T> {
   label: string;
   value: (data: T) => string | React.ReactNode;
@@ -68,10 +59,13 @@ export interface CellRenderConfig<T> {
 
 export interface QuickLookConfig<T> {
   permissions: Record<UserRole, ActionType[]>;
-  buttonMap: (
-    data: T,
-    setAction: (action: ActionType | null) => void
-  ) => Partial<Record<ActionType, ButtonConfig<T>>>;
+  buttons: Array<
+    Omit<ButtonProps, 'content' | 'key'> & {
+      key: ActionType;
+      content?: React.ReactNode;
+      position?: 'left' | 'right';
+    }
+  >;
   detailsSection: (data: T) => CellRenderConfig<T>[];
   infoSection?: (data: T) => React.ReactNode;
   dropdownOptions?: Array<DropdownItemProps>;

@@ -7,7 +7,8 @@ export type ActionType =
   | 'delete'
   | 'edit'
   | 'reminder'
-  | 'addToCalendar'
+  | 'add-to-calendar'
+  | 'new-tab'
   | 'bulk-cancel'
   | 'bulk-delete';
 
