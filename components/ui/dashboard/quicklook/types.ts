@@ -50,7 +50,7 @@ export interface ButtonConfig<T> {
   color?: ButtonColor;
   variant?: ButtonVariant;
   isIconOnly?: boolean;
-  action: (data: T) => void | Promise<void>;
+  onPress?: (data: T) => void | Promise<void>;
   content?: React.ReactNode;
 }
 

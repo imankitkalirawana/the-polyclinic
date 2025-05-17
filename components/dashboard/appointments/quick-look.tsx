@@ -21,76 +21,6 @@ import { useAppointmentStore } from './store';
 import { QuickLookConfig } from '@/components/ui/dashboard/quicklook/types';
 
 const appointmentConfig: QuickLookConfig<AppointmentType> = {
-  permissions: {
-    doctor: ['cancel', 'reschedule', 'reminder'],
-    user: ['cancel', 'reschedule'],
-    admin: ['cancel', 'delete', 'edit', 'reschedule', 'reminder'],
-    nurse: ['cancel', 'reschedule'],
-    receptionist: ['cancel', 'reschedule', 'reminder'],
-    pharmacist: ['cancel', 'reschedule'],
-    laboratorist: ['cancel', 'reschedule'],
-  },
-  buttonMap: (appointment, setAction) => ({
-    addToCalendar: {
-      label: 'Add to Calendar',
-      icon: 'solar:calendar-bold-duotone',
-      color: 'warning',
-      variant: 'flat',
-      action: () => {},
-      content: (
-        <AddToCalendar
-          appointment={appointment}
-          onClose={() => setAction(null)}
-        />
-      ),
-    },
-    reschedule: {
-      label: 'Reschedule',
-      icon: 'solar:calendar-bold-duotone',
-      color: 'warning',
-      variant: 'flat',
-      action: () => setAction('reschedule'),
-      content: <RescheduleModal />,
-    },
-    cancel: {
-      label: 'Cancel',
-      icon: 'solar:close-circle-bold-duotone',
-      color: 'danger',
-      variant: 'flat',
-      action: () => setAction('cancel'),
-      content: <CancelModal />,
-    },
-    delete: {
-      label: 'Delete',
-      icon: 'solar:trash-bin-minimalistic-bold-duotone',
-      color: 'danger',
-      variant: 'light',
-      isIconOnly: true,
-      action: () => setAction('delete'),
-      content: <CancelModal type="delete" />,
-    },
-    edit: {
-      label: 'Edit',
-      icon: 'solar:pen-bold-duotone',
-      variant: 'flat',
-      action: () => console.log('edit'),
-    },
-    reminder: {
-      label: 'Send a Reminder to Patient',
-      icon: 'solar:bell-bold-duotone',
-      variant: 'flat',
-      isIconOnly: true,
-      action: async () => {
-        await new Promise((resolve) => setTimeout(resolve, 2000)).then(() => {
-          addToast({
-            title: 'Reminder Sent',
-            description: 'Reminder sent to patient',
-            color: 'success',
-          });
-        });
-      },
-    },
-  }),
   detailsSection: (appointment) => [
     {
       label: 'Appointment ID',
@@ -266,6 +196,76 @@ const appointmentConfig: QuickLookConfig<AppointmentType> = {
       </div>
     </>
   ),
+  permissions: {
+    doctor: ['cancel', 'reschedule', 'reminder'],
+    user: ['cancel', 'reschedule'],
+    admin: ['cancel', 'delete', 'edit', 'reschedule', 'reminder'],
+    nurse: ['cancel', 'reschedule'],
+    receptionist: ['cancel', 'reschedule', 'reminder'],
+    pharmacist: ['cancel', 'reschedule'],
+    laboratorist: ['cancel', 'reschedule'],
+  },
+  buttonMap: (appointment, setAction) => ({
+    addToCalendar: {
+      label: 'Add to Calendar',
+      icon: 'solar:calendar-bold-duotone',
+      color: 'warning',
+      variant: 'flat',
+      onPress: () => {},
+      content: (
+        <AddToCalendar
+          appointment={appointment}
+          onClose={() => setAction(null)}
+        />
+      ),
+    },
+    reschedule: {
+      label: 'Reschedule',
+      icon: 'solar:calendar-bold-duotone',
+      color: 'warning',
+      variant: 'flat',
+      onPress: () => setAction('reschedule'),
+      content: <RescheduleModal />,
+    },
+    cancel: {
+      label: 'Cancel',
+      icon: 'solar:close-circle-bold-duotone',
+      color: 'danger',
+      variant: 'flat',
+      onPress: () => setAction('cancel'),
+      content: <CancelModal />,
+    },
+    delete: {
+      label: 'Delete',
+      icon: 'solar:trash-bin-minimalistic-bold-duotone',
+      color: 'danger',
+      variant: 'light',
+      isIconOnly: true,
+      onPress: () => setAction('delete'),
+      content: <CancelModal type="delete" />,
+    },
+    edit: {
+      label: 'Edit',
+      icon: 'solar:pen-bold-duotone',
+      variant: 'flat',
+      onPress: () => console.log('edit'),
+    },
+    reminder: {
+      label: 'Send a Reminder to Patient',
+      icon: 'solar:bell-bold-duotone',
+      variant: 'flat',
+      isIconOnly: true,
+      onPress: async () => {
+        await new Promise((resolve) => setTimeout(resolve, 2000)).then(() => {
+          addToast({
+            title: 'Reminder Sent',
+            description: 'Reminder sent to patient',
+            color: 'success',
+          });
+        });
+      },
+    },
+  }),
   dropdownOptions: [
     {
       key: 'invoice',
@@ -275,6 +275,19 @@ const appointmentConfig: QuickLookConfig<AppointmentType> = {
         addToast({
           title: 'Invoice Downloaded',
           description: 'Invoice downloaded successfully',
+          color: 'success',
+        }),
+    },
+    {
+      key: 'reports',
+      children: 'Download Reports',
+      startContent: (
+        <Icon icon="solar:download-twice-square-bold-duotone" width="20" />
+      ),
+      onPress: () =>
+        addToast({
+          title: 'Reports Downloaded',
+          description: 'Reports downloaded successfully',
           color: 'success',
         }),
     },

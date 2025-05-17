@@ -73,7 +73,7 @@ export default function QuickLook<T>({
 
   const handleAction = useCallback(
     (actionType: ActionType) => {
-      buttonMap[actionType]?.action(item);
+      buttonMap[actionType]?.onPress?.(item);
     },
     [buttonMap, item]
   );
@@ -130,7 +130,7 @@ export default function QuickLook<T>({
                 onPress={() => handleAction(btn)}
                 color={buttonMap[btn]?.color || 'default'}
                 isIconOnly={buttonMap[btn]?.isIconOnly}
-                fn={async () => buttonMap[btn]?.action(item)}
+                fn={async () => buttonMap[btn]?.onPress?.(item)}
               >
                 {buttonMap[btn]?.isIconOnly ? null : buttonMap[btn]?.label}
               </AsyncButton>
