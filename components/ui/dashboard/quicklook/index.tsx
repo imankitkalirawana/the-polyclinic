@@ -62,10 +62,6 @@ export default function QuickLook<T>({
   );
 
   const item = useMemo(() => data || ({} as T), [data]);
-  //   const buttonMap = useMemo(
-  //     () => config.buttonMap(item, setAction),
-  //     [item, config, setAction]
-  //   );
   const availablePermissions = useMemo(
     () => config.permissions[role as keyof typeof config.permissions] || [],
     [role, config.permissions]
