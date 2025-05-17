@@ -25,7 +25,7 @@ import { useAppointmentData, useAppointmentStore } from './store';
 import BulkDeleteModal from '@/components/ui/common/modals/bulk-delete';
 import { ModalCellRenderer } from './cell-renderer';
 import { apiRequest } from '@/lib/axios';
-import { AppointmentQuickLook } from './quick-look';
+import { AppointmentQuickLook } from './quicklook';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'aid',

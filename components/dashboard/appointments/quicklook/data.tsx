@@ -1,9 +1,6 @@
-import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
-import CancelModal from '@/components/ui/appointments/cancel-modal';
-import RescheduleModal from '@/components/ui/appointments/reschedule-modal';
-import QuickLook from '@/components/ui/dashboard/quicklook';
-import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { Subtitle } from '@/components/ui/typography/modal';
+import { PermissionProps } from '@/components/ui/dashboard/quicklook/types';
+import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { avatars } from '@/lib/avatar';
 import { AppointmentType } from '@/models/Appointment';
 import {
@@ -11,21 +8,14 @@ import {
   Avatar,
   Button,
   Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
   DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { format } from 'date-fns';
-import { useAppointmentStore } from './store';
-import {
-  ActionType,
-  ButtonProps,
-  PermissionProps,
-} from '@/components/ui/dashboard/quicklook/types';
-import { useMemo } from 'react';
 
-const permissions: PermissionProps = {
+export const permissions: PermissionProps = {
   doctor: ['cancel', 'reschedule', 'reminder', 'new-tab', 'add-to-calendar'],
   user: ['cancel', 'reschedule'],
   admin: ['cancel', 'delete', 'edit', 'reschedule', 'reminder', 'new-tab'],
@@ -33,7 +23,7 @@ const permissions: PermissionProps = {
   receptionist: ['cancel', 'reschedule', 'reminder'],
 };
 
-const content = (appointment: AppointmentType) => [
+export const content = (appointment: AppointmentType) => [
   {
     label: 'Appointment ID',
     value: () => appointment.aid,
@@ -121,7 +111,7 @@ const content = (appointment: AppointmentType) => [
     : []),
 ];
 
-const sidebarContent = (appointment: AppointmentType) => (
+export const sidebarContent = (appointment: AppointmentType) => (
   <>
     <div className="flex flex-col items-center gap-2 p-4">
       <Avatar
@@ -210,7 +200,7 @@ const sidebarContent = (appointment: AppointmentType) => (
   </>
 );
 
-const dropdown = [
+export const dropdown = [
   {
     key: 'invoice',
     children: 'Download Invoice',
@@ -236,71 +226,3 @@ const dropdown = [
       }),
   },
 ];
-
-export const AppointmentQuickLook = () => {
-  const { selected, setSelected, setAction, action } = useAppointmentStore();
-
-  const buttons: ButtonProps[] = useMemo(
-    () => [
-      {
-        key: 'new-tab',
-        children: 'Open in new tab',
-        startContent: (
-          <Icon icon="solar:arrow-right-up-line-duotone" width="20" />
-        ),
-        color: 'default',
-        variant: 'flat',
-        position: 'left',
-        isIconOnly: true,
-      },
-      {
-        key: 'add-to-calendar',
-        children: 'Add to Calendar',
-        startContent: <Icon icon="solar:calendar-bold-duotone" width="20" />,
-        color: 'warning',
-        variant: 'flat',
-        position: 'left',
-        onPress: () => {
-          if (selected) {
-            setAction('add-to-calendar');
-          }
-        },
-        content: (
-          <AddToCalendar
-            appointment={selected as AppointmentType}
-            onClose={() => setSelected(null)}
-          />
-        ),
-      },
-      {
-        key: 'reschedule',
-        children: 'Reschedule',
-        startContent: <Icon icon="solar:calendar-bold-duotone" width="20" />,
-        color: 'warning',
-        variant: 'flat',
-        position: 'right',
-        onPress: () => {
-          if (selected) {
-            setAction('reschedule');
-          }
-        },
-        content: <RescheduleModal />,
-      },
-    ],
-    []
-  );
-
-  return (
-    <QuickLook
-      selectedItem={selected}
-      isOpen={!!selected}
-      onClose={() => setSelected(null)}
-      selectedKey={action as ActionType | null}
-      buttons={buttons}
-      permissions={permissions}
-      dropdown={dropdown}
-      sidebarContent={sidebarContent(selected as AppointmentType)}
-      content={content(selected as AppointmentType)}
-    />
-  );
-};
