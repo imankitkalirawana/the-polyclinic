@@ -230,24 +230,26 @@ export const renderActions = ({
             </DropdownItem>
           ) : null}
         </DropdownSection>
-        <DropdownSection title="Danger zone">
-          <DropdownItem
-            key="delete"
-            className="text-danger"
-            color="danger"
-            description="Permanently delete the item"
-            shortcut="⌘⇧D"
-            startContent={
-              <Icon
-                icon="solar:trash-bin-minimalistic-bold-duotone"
-                width={24}
-              />
-            }
-            onClick={onDelete}
-          >
-            Delete item
-          </DropdownItem>
-        </DropdownSection>
+        {onDelete ? (
+          <DropdownSection title="Danger zone">
+            <DropdownItem
+              key="delete"
+              className="text-danger"
+              color="danger"
+              description="Permanently delete the item"
+              shortcut="⌘⇧D"
+              startContent={
+                <Icon
+                  icon="solar:trash-bin-minimalistic-bold-duotone"
+                  width={24}
+                />
+              }
+              onClick={onDelete}
+            >
+              Delete item
+            </DropdownItem>
+          </DropdownSection>
+        ) : null}
       </DropdownMenu>
     </Dropdown>
   );

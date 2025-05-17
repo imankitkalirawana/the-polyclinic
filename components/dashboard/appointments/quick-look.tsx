@@ -31,6 +31,11 @@ import CancelModal from '@/components/ui/appointments/cancel-modal';
 import AsyncButton from '@/components/ui/buttons/async-button';
 import { useAppointmentStore } from './store';
 import { avatars } from '@/lib/avatar';
+import { apiRequest } from '@/lib/axios';
+
+const getAllDoctors = async () => {
+  const res = await apiRequest;
+};
 
 const permissions: Record<UserRole, Array<ButtonActionType>> = {
   doctor: ['cancel', 'reschedule', 'reminder'],
@@ -337,12 +342,6 @@ function QuickLook(): React.ReactElement {
           value={
             appointment.doctor?.name ? (
               <div className="flex items-center gap-1">
-                <Image
-                  src={appointment.doctor?.image}
-                  width={24}
-                  height={24}
-                  className="rounded-full bg-purple-200"
-                />
                 <span>{appointment.doctor?.name}</span>
               </div>
             ) : (

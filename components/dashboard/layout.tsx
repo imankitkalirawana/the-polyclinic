@@ -174,8 +174,8 @@ export default function DashboardLayout({
       {sidebar}
       <div className="w-[80vw] flex-1 flex-col md:p-2">
         {header}
-        <main className="mt-2 h-full w-full overflow-visible">
-          <div className="flex h-[91vh] flex-col gap-4 overflow-scroll p-2">
+        <main className="h-full w-full overflow-visible">
+          <div className="flex h-[93vh] flex-col gap-4 overflow-scroll p-2">
             {children}
           </div>
         </main>

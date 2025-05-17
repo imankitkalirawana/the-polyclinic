@@ -23,10 +23,10 @@ import { AppointmentType } from '@/models/Appointment';
 import { useRouter } from 'nextjs-toploader/app';
 import QuickLook from './quick-look';
 import { useAppointmentData, useAppointmentStore } from './store';
-import { avatars } from '@/lib/avatar';
 import BulkDeleteModal from '@/components/ui/common/modals/bulk-delete';
 import { ModalCellRenderer } from './cell-renderer';
 import { apiRequest } from '@/lib/axios';
+import CancelModal from '@/components/ui/appointments/cancel-modal';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'aid',
@@ -124,10 +124,10 @@ export default function Appointments() {
         sortable: false,
         renderCell: (appointment) =>
           renderActions({
-            onView: () => router.push(`/dashboard/users/${appointment.aid}`),
+            onView: () =>
+              router.push(`/dashboard/appointments/${appointment.aid}`),
             onEdit: () =>
-              router.push(`/dashboard/users/${appointment.aid}/edit`),
-            onDelete: () => console.log('Delete', appointment.aid),
+              router.push(`/dashboard/appointments/${appointment.aid}/edit`),
             key: appointment.aid,
           }),
       },

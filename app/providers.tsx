@@ -85,7 +85,7 @@ export function Providers({
             color="hsl(var(--heroui-primary))"
           />
           <ReduxProvider store={store}>{children}</ReduxProvider>
-          <ReactQueryDevtools initialIsOpen={false} />
+          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         </SessionProvider>
       </HeroUIProvider>
     </QueryClientProvider>
