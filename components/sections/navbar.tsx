@@ -79,14 +79,9 @@ export default function Navbar() {
               icon: 'solar:window-frame-linear',
             },
             {
-              name: 'Profile',
-              href: '/dashboard/profile',
-              icon: 'solar:user-linear',
-            },
-            {
-              name: 'Services',
-              href: '/dashboard/services',
-              icon: 'solar:test-tube-minimalistic-linear',
+              name: 'Appointments',
+              href: '/dashboard/appointments',
+              icon: 'solar:calendar-linear',
             },
             {
               name: 'Users',

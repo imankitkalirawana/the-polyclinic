@@ -44,11 +44,9 @@ export async function generateUsers({
       address: faker.location.streetAddress(),
       zipcode: faker.location.zipCode(),
       passwordResetToken: faker.string.uuid(),
-      dob: {
-        day: String(faker.number.int({ min: 1, max: 28 })),
-        month: String(faker.number.int({ min: 1, max: 12 })),
-        year: String(faker.number.int({ min: 1970, max: 2005 })),
-      },
+      dob: faker.date
+        .birthdate({ min: 18, max: 60, mode: 'age' })
+        .toISOString(),
       gender: faker.helpers.arrayElement([Gender.male, Gender.female]),
       image: faker.image.avatar(),
       createdAt: faker.date.recent(),

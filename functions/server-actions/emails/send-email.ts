@@ -13,20 +13,34 @@ export const defaultMailOptions: MailOptions = {
   html: '<h1>Hello World</h1>',
 };
 
-export const sendHTMLEmail = async (mailOptions: MailOptions) => {
+export const sendHTMLEmail = async (
+  mailOptions: MailOptions
+): Promise<{ success: boolean; message: string }> => {
   const options = { ...defaultMailOptions, ...mailOptions };
   await checkDomainMx(options.to).then(async () => {
     if (!WEBSITE_SETTING.status.email) {
-      return;
+      return {
+        success: false,
+        message: 'Email is disabled',
+      };
     }
     await transporter
       .sendMail(options)
       .then(async () => {
-        console.log('Email sent');
+        return {
+          success: true,
+          message: 'Email sent successfully',
+        };
       })
       .catch((err) => {
-        console.error(err);
-        throw new Error(err.message);
+        return {
+          success: false,
+          message: err.message,
+        };
       });
   });
+  return {
+    success: false,
+    message: 'Internal server error',
+  };
 };

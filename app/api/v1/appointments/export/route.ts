@@ -6,14 +6,19 @@ import { connectDB } from '@/lib/db';
 import Appointment from '@/models/Appointment';
 import { UserRole } from '@/models/User';
 
-export const GET = auth(async function GET(request: any) {
+export const POST = auth(async function POST(request: any) {
   try {
     const allowedRoles: UserRole[] = [UserRole.admin];
     if (!allowedRoles.includes(request.auth?.user?.role)) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
+
+    const { keys } = await request.json();
+
     await connectDB();
-    let appointments = await Appointment.find();
+    let appointments = await Appointment.find(
+      keys && keys.length > 0 && keys[0] !== -1 ? { aid: { $in: keys } } : {}
+    );
 
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Appointments');
@@ -53,7 +58,6 @@ export const GET = auth(async function GET(request: any) {
         doctorEmail: appointment.doctor?.email,
         doctorSitting: appointment.doctor?.sitting,
         date: format(new Date(appointment.date), 'PPPp'),
-
         createdAt: format(new Date(appointment.createdAt), 'PPPp'),
         createdBy: appointment.createdBy,
         updatedAt: format(new Date(appointment.updatedAt), 'PPPp'),

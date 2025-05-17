@@ -238,5 +238,6 @@ The application is containerized using Docker for easy deployment and scaling. K
 
 - Tailwind CSS:
   - `tailwind.config.ts`: Configures the design system and theme
+  - `tailwind.config.ts`: configure the design system and theme
 
 The infrastructure is designed to be cloud-agnostic and can be deployed to various platforms that support Docker containers.

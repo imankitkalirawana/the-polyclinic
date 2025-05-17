@@ -3,11 +3,9 @@ import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { AppointmentType } from '@/models/Appointment';
-import { ActionType } from './types';
 import { getAllAppointments } from '@/app/dashboard/appointments/helper';
-import { Selection, useDisclosure } from '@heroui/react';
-
-// Store data interfaces
+import { Selection } from '@heroui/react';
+import { ActionType } from '@/components/ui/dashboard/quicklook/types';
 
 interface AppointmentStoreState {
   selected: AppointmentType | null;
@@ -51,10 +49,7 @@ export const useAppointmentForm = () => {
     }),
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        if (values.action === 'edit' && values.selected) {
-          // await updateAppointment(values.selected);
-          console.log('Updating appointment:', values.selected);
-        } else if (values.action === 'reschedule' && values.selected) {
+        if (values.action === 'reschedule' && values.selected) {
           // await rescheduleAppointment(values.selected);
           console.log('Rescheduling appointment:', values.selected);
         }

@@ -11,37 +11,118 @@ export type ChipColorType =
   | DrugStatus
   | AppointmentStatus;
 
-export const chipColorMap: Record<ChipColorType, string> = {
+export const chipColorMap: Record<
+  ChipColorType,
+  {
+    text: string;
+    bg: string;
+  }
+> = {
   // for status
-  active: 'bg-green-500',
-  inactive: 'bg-gray-500',
-  blocked: 'bg-pink-500',
-  deleted: 'bg-red-500',
-  unverified: 'bg-yellow-500',
-  available: 'bg-green-500',
-  unavailable: 'bg-red-500',
+  active: {
+    text: 'bg-green-500',
+    bg: 'bg-green-100',
+  },
+  inactive: {
+    text: 'bg-gray-500',
+    bg: 'bg-gray-100',
+  },
+  blocked: {
+    text: 'bg-pink-500',
+    bg: 'bg-pink-100',
+  },
+  deleted: {
+    text: 'bg-red-500',
+    bg: 'bg-red-100',
+  },
+  unverified: {
+    text: 'bg-yellow-500',
+    bg: 'bg-yellow-100',
+  },
+  available: {
+    text: 'bg-green-500',
+    bg: 'bg-green-100',
+  },
+  unavailable: {
+    text: 'bg-red-500',
+    bg: 'bg-red-100',
+  },
 
   // for roles
-  admin: 'bg-red-500',
-  doctor: 'bg-blue-500',
-  nurse: 'bg-amber-500',
-  receptionist: 'bg-yellow-500',
-  pharmacist: 'bg-purple-500',
-  laboratorist: 'bg-teal-500',
-  user: 'bg-gray-500',
+  admin: {
+    text: 'bg-red-500',
+    bg: 'bg-red-100',
+  },
+  doctor: {
+    text: 'bg-blue-500',
+    bg: 'bg-blue-100',
+  },
+  nurse: {
+    text: 'bg-amber-500',
+    bg: 'bg-amber-100',
+  },
+  receptionist: {
+    text: 'bg-yellow-500',
+    bg: 'bg-yellow-100',
+  },
+  pharmacist: {
+    text: 'bg-purple-500',
+    bg: 'bg-purple-100',
+  },
 
   //for appointment status
-  overdue: 'bg-red-500',
-  completed: 'bg-green-500',
-  cancelled: 'bg-default-500',
-  'on-hold': 'bg-yellow-500',
-  booked: 'bg-cyan-500',
-  confirmed: 'bg-blue-500',
-  'in-progress': 'bg-purple-500',
+  overdue: {
+    text: 'bg-red-500',
+    bg: 'bg-red-100',
+  },
+  completed: {
+    text: 'bg-green-500',
+    bg: 'bg-green-100',
+  },
+  cancelled: {
+    text: 'bg-default-500',
+    bg: 'bg-default-100',
+  },
+  'on-hold': {
+    text: 'bg-yellow-500',
+    bg: 'bg-yellow-100',
+  },
+  booked: {
+    text: 'bg-cyan-500',
+    bg: 'bg-cyan-100',
+  },
 
   // for service types
-  medical: 'bg-red-500',
-  surgical: 'bg-blue-500',
-  diagnostic: 'bg-green-500',
-  consultation: 'bg-yellow-500',
+  medical: {
+    text: 'bg-red-500',
+    bg: 'bg-red-100',
+  },
+  surgical: {
+    text: 'bg-blue-500',
+    bg: 'bg-blue-100',
+  },
+  diagnostic: {
+    text: 'bg-green-500',
+    bg: 'bg-green-100',
+  },
+  consultation: {
+    text: 'bg-yellow-500',
+    bg: 'bg-yellow-100',
+  },
+  laboratorist: {
+    text: 'bg-indigo-500',
+    bg: 'bg-indigo-100',
+  },
+  user: {
+    text: 'bg-emerald-500',
+    bg: 'bg-emerald-100',
+  },
+  confirmed: {
+    text: 'bg-blue-500',
+    bg: 'bg-blue-100',
+  },
+  'in-progress': {
+    text: 'bg-orange-500',
+    bg: 'bg-orange-100',
+  },
 };

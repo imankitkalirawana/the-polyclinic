@@ -565,6 +565,7 @@ export function Table<T extends TableItem>({
         onRowAction={(row) => {
           onRowAction?.(row);
         }}
+        className="max-h-full overflow-y-auto px-px"
       >
         <TableHeader columns={headerColumns}>
           {(column) => (
