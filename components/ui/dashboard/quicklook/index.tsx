@@ -48,23 +48,26 @@ const CellRenderer: React.FC<CellRendererProps> = ({
 );
 
 export default function QuickLook<T>({
-  data,
-  config,
+  selectedItem,
   isOpen,
   onClose,
-  setAction,
-  action,
+  selectedKey,
+  buttons,
+  permissions,
+  dropdown,
+  sidebarContent,
+  content,
 }: QuickLookProps<T>): React.ReactElement {
   const { data: session } = useSession();
   const role = useMemo(
-    () => session?.user?.role ?? 'admin',
+    () => session?.user?.role ?? 'user',
     [session?.user?.role]
   );
 
-  const item = useMemo(() => data || ({} as T), [data]);
+  const item = useMemo(() => selectedItem || ({} as T), [selectedItem]);
   const availablePermissions = useMemo(
-    () => config.permissions[role as keyof typeof config.permissions] || [],
-    [role, config.permissions]
+    () => permissions?.[role as keyof typeof permissions] || [],
+    [role, permissions]
   );
 
   const detailsSection = useMemo(
@@ -73,7 +76,7 @@ export default function QuickLook<T>({
         <div className="col-span-full h-fit p-4">
           <Title level={2} title="Details" />
         </div>
-        {config.detailsSection(item).map((cell, index) => (
+        {content.map((cell, index) => (
           <CellRenderer
             key={index}
             label={cell.label}
@@ -86,74 +89,72 @@ export default function QuickLook<T>({
         ))}
       </div>
     ),
-    [item, config]
+    [item, content]
   );
 
   const infoSection = useMemo(
-    () => (
-      <div className="divide-y divide-divider">
-        {config.infoSection?.(item)}
-      </div>
-    ),
-    [item, config]
+    () => <div className="divide-y divide-divider">{sidebarContent}</div>,
+    [item, sidebarContent]
   );
 
   const leftButtons = useMemo(
     () => (
       <div className="flex items-center gap-2">
-        {config.buttons
-          .filter((btn) => {
-            const isLeftPosition = btn.position === 'left';
-            const isPermission = availablePermissions.includes(btn.key);
-            return isLeftPosition && isPermission;
-          })
-          .map((btn) => (
-            <Tooltip
-              key={btn.key}
-              delay={500}
-              isDisabled={!btn.isIconOnly}
-              content={btn.children}
-            >
-              <AsyncButton
+        {!!buttons &&
+          buttons
+            .filter((btn) => {
+              const isLeftPosition = btn.position === 'left';
+              const isPermission = availablePermissions.includes(btn.key);
+              return isLeftPosition && isPermission;
+            })
+            .map((btn) => (
+              <Tooltip
                 key={btn.key}
-                {...(({ key, content, ref, children, ...rest }) => rest)(btn)}
+                delay={500}
+                isDisabled={!btn.isIconOnly}
+                content={btn.children}
               >
-                {btn.isIconOnly ? null : btn.children}
-              </AsyncButton>
-            </Tooltip>
-          ))}
+                <AsyncButton
+                  key={btn.key}
+                  {...(({ key, content, ref, children, ...rest }) => rest)(btn)}
+                >
+                  {btn.isIconOnly ? null : btn.children}
+                </AsyncButton>
+              </Tooltip>
+            ))}
       </div>
     ),
-    [config.buttons, availablePermissions]
+    [buttons, availablePermissions]
   );
 
   const rightButtons = useMemo(
     () => (
       <div className="flex items-center gap-2">
-        {config.buttons
-          .filter((btn) => {
-            const isRightPosition = btn.position === 'right';
-            const isPermission = availablePermissions.includes(btn.key);
-            return isRightPosition && isPermission;
-          })
-          .map((btn) => (
-            <Tooltip
-              key={btn.key}
-              delay={500}
-              isDisabled={!btn.isIconOnly}
-              content={btn.children}
-            >
-              <AsyncButton
+        {!!buttons &&
+          buttons
+            .filter((btn) => {
+              const isRightPosition = btn.position === 'right';
+              const isPermission = availablePermissions.includes(btn.key);
+              return isRightPosition && isPermission;
+            })
+            .map((btn) => (
+              <Tooltip
                 key={btn.key}
-                {...(({ key, content, ref, children, ...rest }) => rest)(btn)}
+                delay={500}
+                isDisabled={!btn.isIconOnly}
+                content={btn.children}
               >
-                {btn.isIconOnly ? null : btn.children}
-              </AsyncButton>
-            </Tooltip>
-          ))}
+                <AsyncButton
+                  key={btn.key}
+                  {...(({ key, content, ref, children, ...rest }) => rest)(btn)}
+                >
+                  {btn.isIconOnly ? null : btn.children}
+                </AsyncButton>
+              </Tooltip>
+            ))}
       </div>
     ),
-    [config.buttons, availablePermissions]
+    [buttons, availablePermissions]
   );
 
   return (
@@ -170,17 +171,17 @@ export default function QuickLook<T>({
             as={ScrollShadow}
             className={cn(
               'grid w-full grid-cols-3 gap-0 divide-x divide-divider p-0 scrollbar-hide',
-              !config.infoSection && 'grid-cols-2'
+              !sidebarContent && 'grid-cols-2'
             )}
           >
             {detailsSection}
-            {config.infoSection && infoSection}
+            {sidebarContent && infoSection}
           </ModalBody>
           <ModalFooter className="justify-between border-t border-divider">
             <div className="flex items-center gap-2">{leftButtons}</div>
             <div className="flex items-center gap-2">
               {rightButtons}
-              {config.dropdownOptions && (
+              {!!dropdown && (
                 <Dropdown placement="top-end">
                   <DropdownTrigger>
                     <Button size="sm" variant="light" isIconOnly>
@@ -195,7 +196,7 @@ export default function QuickLook<T>({
                     disallowEmptySelection
                     aria-label="Quick Look Options"
                     className="max-w-[300px]"
-                    items={config.dropdownOptions}
+                    items={dropdown}
                   >
                     {(item) => <DropdownItem {...item} />}
                   </DropdownMenu>
@@ -205,7 +206,7 @@ export default function QuickLook<T>({
           </ModalFooter>
         </ModalContent>
       </Modal>
-      {action && config.buttons.find((btn) => btn.key === action)?.content}
+      {selectedKey && buttons?.find((btn) => btn.key === selectedKey)?.content}
     </>
   );
 }
