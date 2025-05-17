@@ -5,9 +5,7 @@ import * as Yup from 'yup';
 import { AppointmentType } from '@/models/Appointment';
 import { getAllAppointments } from '@/app/dashboard/appointments/helper';
 import { Selection } from '@heroui/react';
-import { ActionType } from './types';
-
-// Store data interfaces
+import { ActionType } from '@/components/ui/dashboard/quicklook/types';
 
 interface AppointmentStoreState {
   selected: AppointmentType | null;
