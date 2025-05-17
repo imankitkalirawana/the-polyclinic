@@ -1,6 +1,6 @@
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { AppointmentType } from '@/models/Appointment';
-import { Chip, cn, User } from '@heroui/react';
+import { cn, User } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { format } from 'date-fns';
 

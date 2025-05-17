@@ -21,12 +21,11 @@ import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 import { Table } from '@/components/ui/data-table';
 import { AppointmentType } from '@/models/Appointment';
 import { useRouter } from 'nextjs-toploader/app';
-import QuickLook from './quick-look';
 import { useAppointmentData, useAppointmentStore } from './store';
 import BulkDeleteModal from '@/components/ui/common/modals/bulk-delete';
 import { ModalCellRenderer } from './cell-renderer';
 import { apiRequest } from '@/lib/axios';
-import CancelModal from '@/components/ui/appointments/cancel-modal';
+import { AppointmentQuickLook } from './quick-look';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'aid',
@@ -285,7 +284,7 @@ export default function Appointments() {
           }
         }}
       />
-      {selected && <QuickLook />}
+      {selected && <AppointmentQuickLook />}
       {(action === 'bulk-delete' || action === 'bulk-cancel') && (
         <BulkDeleteModal<AppointmentType>
           canUndo={action !== 'bulk-delete'}
