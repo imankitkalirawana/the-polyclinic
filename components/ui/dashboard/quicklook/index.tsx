@@ -15,10 +15,10 @@ import {
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useSession } from 'next-auth/react';
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo } from 'react';
 import AsyncButton from '@/components/ui/buttons/async-button';
 import { Title } from '@/components/ui/typography/modal';
-import { ActionType, CellRendererProps, QuickLookProps } from './types';
+import { CellRendererProps, QuickLookProps } from './types';
 
 const CellRenderer: React.FC<CellRendererProps> = ({
   label,

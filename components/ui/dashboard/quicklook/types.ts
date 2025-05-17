@@ -1,8 +1,6 @@
 import { UserRole } from '@/models/User';
 import { ButtonProps, DropdownItemProps } from '@heroui/react';
-import { ReactNode } from 'react';
 
-// Primitive types
 export type ActionType =
   | 'reschedule'
   | 'cancel'
@@ -13,16 +11,6 @@ export type ActionType =
   | 'bulk-cancel'
   | 'bulk-delete'
   | 'new-tab';
-
-export type ButtonVariant = 'solid' | 'flat' | 'bordered' | 'light';
-
-export type ButtonColor =
-  | 'primary'
-  | 'secondary'
-  | 'success'
-  | 'warning'
-  | 'danger'
-  | 'default';
 
 export interface CellRendererProps {
   label: string;
