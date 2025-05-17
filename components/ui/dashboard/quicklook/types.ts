@@ -1,6 +1,7 @@
 import { UserRole } from '@/models/User';
+import { DropdownItemProps } from '@heroui/react';
 
-// Define generic types for the component
+// Primitive types
 export type ActionType =
   | 'reschedule'
   | 'cancel'
@@ -12,6 +13,7 @@ export type ActionType =
   | 'bulk-delete';
 
 export type ButtonVariant = 'solid' | 'flat' | 'bordered' | 'light';
+
 export type ButtonColor =
   | 'primary'
   | 'secondary'
@@ -20,7 +22,28 @@ export type ButtonColor =
   | 'danger'
   | 'default';
 
-// Configuration for a button action
+export interface CellRendererProps {
+  label: string;
+  value: string | React.ReactNode;
+  icon: string;
+  classNames?: {
+    icon?: string;
+    label?: string;
+  };
+  className?: string;
+  cols?: number;
+}
+
+export interface QuickLookProps<T> {
+  data: T | null;
+  config: QuickLookConfig<T>;
+  isOpen: boolean;
+  onClose: () => void;
+  setAction: (action: ActionType | null) => void;
+  action: ActionType | null;
+}
+
+// Configuration interfaces
 export interface ButtonConfig<T> {
   label: string;
   icon: string;
@@ -31,7 +54,6 @@ export interface ButtonConfig<T> {
   content?: React.ReactNode;
 }
 
-// Configuration for rendering a detail cell
 export interface CellRenderConfig<T> {
   label: string;
   value: (data: T) => string | React.ReactNode;
@@ -51,24 +73,7 @@ export interface QuickLookConfig<T> {
     setAction: (action: ActionType | null) => void
   ) => Partial<Record<ActionType, ButtonConfig<T>>>;
   detailsSection: (data: T) => CellRenderConfig<T>[];
-  infoSection: (data: T) => React.ReactNode;
-  downloadOptions?: {
-    label: string;
-    key: string;
-    icon: string;
-    action: (data: T) => void;
-  }[];
+  infoSection?: (data: T) => React.ReactNode;
+  dropdownOptions?: Array<DropdownItemProps>;
   newTabUrl?: (data: T) => string;
-}
-
-export interface CellRendererProps {
-  label: string;
-  value: string | React.ReactNode;
-  icon: string;
-  classNames?: {
-    icon?: string;
-    label?: string;
-  };
-  className?: string;
-  cols?: number;
 }

@@ -1,6 +1,7 @@
 'use client';
 import {
   Button,
+  cn,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -17,7 +18,7 @@ import { useSession } from 'next-auth/react';
 import React, { useMemo, useCallback } from 'react';
 import AsyncButton from '@/components/ui/buttons/async-button';
 import { Title } from '@/components/ui/typography/modal';
-import { ActionType, CellRendererProps, QuickLookConfig } from './types';
+import { ActionType, CellRendererProps, QuickLookProps } from './types';
 
 const CellRenderer: React.FC<CellRendererProps> = ({
   label,
@@ -45,16 +46,6 @@ const CellRenderer: React.FC<CellRendererProps> = ({
     </div>
   </div>
 );
-
-// Generic QuickLook component
-interface QuickLookProps<T> {
-  data: T | null;
-  config: QuickLookConfig<T>;
-  isOpen: boolean;
-  onClose: () => void;
-  setAction: (action: ActionType | null) => void;
-  action: ActionType | null;
-}
 
 export default function QuickLook<T>({
   data,
@@ -111,7 +102,9 @@ export default function QuickLook<T>({
 
   const infoSection = useMemo(
     () => (
-      <div className="divide-y divide-divider">{config.infoSection(item)}</div>
+      <div className="divide-y divide-divider">
+        {config.infoSection?.(item)}
+      </div>
     ),
     [item, config]
   );
@@ -160,10 +153,13 @@ export default function QuickLook<T>({
         <ModalContent className="h-[80vh] overflow-hidden">
           <ModalBody
             as={ScrollShadow}
-            className="grid w-full grid-cols-3 gap-0 divide-x divide-divider p-0 scrollbar-hide"
+            className={cn(
+              'grid w-full grid-cols-3 gap-0 divide-x divide-divider p-0 scrollbar-hide',
+              !config.infoSection && 'grid-cols-2'
+            )}
           >
             {detailsSection}
-            {infoSection}
+            {config.infoSection && infoSection}
           </ModalBody>
           <ModalFooter className="justify-between border-t border-divider">
             <div className="flex items-center gap-2">
@@ -187,7 +183,7 @@ export default function QuickLook<T>({
             </div>
             <div className="flex items-center gap-2">
               {actionButtons}
-              {config.downloadOptions && (
+              {config.dropdownOptions && (
                 <Dropdown placement="top-end">
                   <DropdownTrigger>
                     <Button size="sm" variant="light" isIconOnly>
@@ -200,48 +196,11 @@ export default function QuickLook<T>({
                   </DropdownTrigger>
                   <DropdownMenu
                     disallowEmptySelection
-                    aria-label="Download options"
+                    aria-label="Quick Look Options"
                     className="max-w-[300px]"
+                    items={config.dropdownOptions}
                   >
-                    {() => (
-                      <>
-                        {config.downloadOptions?.map((option) => (
-                          <DropdownItem
-                            key={option.key}
-                            startContent={
-                              <Icon icon={option.icon} width="20" />
-                            }
-                            onPress={() => option.action(item as any)}
-                          >
-                            {option.label}
-                          </DropdownItem>
-                        ))}
-
-                        {availablePermissions
-                          .filter(
-                            (btn) =>
-                              !['cancel', 'reschedule', 'reminder'].includes(
-                                btn
-                              )
-                          )
-                          .reverse()
-                          .map((btn) => (
-                            <DropdownItem
-                              key={btn}
-                              startContent={
-                                <Icon
-                                  icon={buttonMap[btn]?.icon || ''}
-                                  width="20"
-                                />
-                              }
-                              color={buttonMap[btn]?.color}
-                              onPress={() => handleAction(btn)}
-                            >
-                              {buttonMap[btn]?.label}
-                            </DropdownItem>
-                          ))}
-                      </>
-                    )}
+                    {(item) => <DropdownItem {...item} />}
                   </DropdownMenu>
                 </Dropdown>
               )}

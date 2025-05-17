@@ -266,24 +266,17 @@ const appointmentConfig: QuickLookConfig<AppointmentType> = {
       </div>
     </>
   ),
-  downloadOptions: [
+  dropdownOptions: [
     {
-      label: 'Download Invoice',
       key: 'invoice',
-      icon: 'solar:file-download-bold-duotone',
-      action: () => console.log('invoice'),
-    },
-    {
-      label: 'Download Reports',
-      key: 'reports',
-      icon: 'solar:download-twice-square-bold-duotone',
-      action: () => console.log('reports'),
-    },
-    {
-      label: 'Download Prescription',
-      key: 'prescription',
-      icon: 'solar:notes-bold-duotone',
-      action: () => console.log('prescription'),
+      children: 'Download Invoice',
+      startContent: <Icon icon="solar:file-download-bold-duotone" width="20" />,
+      onPress: () =>
+        addToast({
+          title: 'Invoice Downloaded',
+          description: 'Invoice downloaded successfully',
+          color: 'success',
+        }),
     },
   ],
   newTabUrl: (appointment) =>
