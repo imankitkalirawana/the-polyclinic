@@ -1,10 +1,11 @@
 import Modal from '@/components/ui/modal';
-import { useAppointmentData, useAppointmentStore } from '../store';
+import { useAppointmentStore } from '../store';
 import { apiRequest } from '@/lib/axios';
 import { format } from 'date-fns';
 import { Card, CardBody } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import React, { useCallback } from 'react';
+import React from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function CancelDeleteAppointment({
   type = 'cancel',
@@ -16,7 +17,7 @@ export default function CancelDeleteAppointment({
     selected: appointment,
     setSelected,
   } = useAppointmentStore();
-  const { refetch } = useAppointmentData();
+  const queryClient = useQueryClient();
 
   const body = React.useMemo(
     () => (
@@ -61,35 +62,29 @@ export default function CancelDeleteAppointment({
     [appointment]
   );
 
-  const handleSubmit = useCallback(async () => {
-    await apiRequest({
-      url: `/api/v1/appointments/${appointment?.aid}`,
-      method: type === 'cancel' ? 'PATCH' : 'DELETE',
-      data: {
-        status: type === 'cancel' ? 'cancelled' : 'deleted',
-      },
-      showToast: true,
-      successMessage: {
-        description:
-          type === 'cancel' ? 'Appointment cancelled' : 'Appointment deleted',
-      },
-      onSuccess: (data) => {
-        refetch();
-        setAction(null);
-        if (type === 'delete') {
-          setSelected(null);
-        } else {
-          setSelected(data);
-        }
-      },
-      errorMessage: {
-        title:
-          type === 'cancel'
-            ? 'Error cancelling appointment'
-            : 'Error deleting appointment',
-      },
-    });
-  }, [appointment?.aid, type]);
+  const cancelDeleteMutation = useMutation({
+    mutationFn: async () => {
+      return apiRequest({
+        url: `/api/v1/appointments/${appointment?.aid}`,
+        method: type === 'cancel' ? 'PATCH' : 'DELETE',
+        data: {
+          status: 'cancelled',
+        },
+        showToast: true,
+        successMessage: {
+          title: `Appointment ${type === 'cancel' ? 'cancelled' : 'deleted'}`,
+        },
+        errorMessage: {
+          title: `Error ${type === 'cancel' ? 'cancelling' : 'deleting'} appointment`,
+        },
+      });
+    },
+    onSuccess: async (res) => {
+      await queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      setAction(null);
+      setSelected(res);
+    },
+  });
 
   return (
     <Modal
@@ -109,7 +104,7 @@ export default function CancelDeleteAppointment({
         whileSubmitting: type === 'cancel' ? 'Cancelling...' : 'Deleting...',
         color: 'danger',
         onPress: async () => {
-          await handleSubmit();
+          await cancelDeleteMutation.mutateAsync();
         },
       }}
       secondaryButton={{

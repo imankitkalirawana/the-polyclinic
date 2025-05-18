@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { useQuery, UseQueryResult } from '@tanstack/react-query';
+import { QueryClient, useQuery, UseQueryResult } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { AppointmentType } from '@/models/Appointment';
@@ -65,7 +65,6 @@ export const useAppointmentForm = () => {
   return { formik, setSelected, setAction, resetState };
 };
 
-// Custom hook for query (data fetching)
 export const useAppointmentData = (): UseQueryResult<
   Array<AppointmentType>
 > => {

@@ -1,5 +1,5 @@
 import Modal from '@/components/ui/modal';
-import { useAppointmentData, useAppointmentStore } from '../store';
+import { useAppointmentStore } from '../store';
 import DateTimePicker from '@/components/appointments/new/session/date-time-picker';
 import { CalendarDate, getLocalTimeZone, Time } from '@internationalized/date';
 import { useState } from 'react';
@@ -7,15 +7,17 @@ import { TIMINGS } from '@/lib/config';
 import { apiRequest } from '@/lib/axios';
 import { useSession } from 'next-auth/react';
 import { format } from 'date-fns';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function RescheduleAppointment() {
   const { data: session } = useSession();
+  const queryClient = useQueryClient();
+
   const {
     setAction,
     selected: appointment,
     setSelected,
   } = useAppointmentStore();
-  const { refetch } = useAppointmentData();
 
   const [timing, setTiming] = useState<Date>(() => {
     if (appointment?.date) {
@@ -31,6 +33,31 @@ export default function RescheduleAppointment() {
       date.setMinutes(date.getMinutes() + 5);
     }
     return date;
+  });
+
+  const rescheduleMutation = useMutation({
+    mutationFn: async () => {
+      return apiRequest({
+        url: `/api/v1/appointments/${appointment?.aid}`,
+        method: 'PATCH',
+        data: {
+          status: session?.user?.role === 'user' ? 'booked' : 'confirmed',
+          date: timing,
+        },
+        showToast: true,
+        successMessage: {
+          title: `Appointment rescheduled to ${format(timing, 'PPp')}`,
+        },
+        errorMessage: {
+          title: 'Error Rescheduling Appointment',
+        },
+      });
+    },
+    onSuccess: async (res) => {
+      await queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      setAction(null);
+      setSelected(res);
+    },
   });
 
   return (
@@ -82,26 +109,7 @@ export default function RescheduleAppointment() {
         whileSubmitting: 'Rescheduling...',
         color: 'warning',
         onPress: async () => {
-          await apiRequest({
-            url: `/api/v1/appointments/${appointment?.aid}`,
-            method: 'PATCH',
-            data: {
-              status: session?.user?.role === 'user' ? 'booked' : 'confirmed',
-              date: timing,
-            },
-            showToast: true,
-            successMessage: {
-              title: `Appointment rescheduled to ${format(timing, 'PPp')}`,
-            },
-            onSuccess: (res) => {
-              refetch();
-              setAction(null);
-              setSelected(res);
-            },
-            errorMessage: {
-              title: 'Error Rescheduling Appointment',
-            },
-          });
+          await rescheduleMutation.mutateAsync();
         },
       }}
       secondaryButton={{
