@@ -74,9 +74,8 @@ export const AppointmentQuickLook = () => {
         key: 'reminder',
         children: 'Send a Reminder',
         startContent: <Icon icon="solar:bell-bold-duotone" width="20" />,
-        // isIconOnly: true,
+        isIconOnly: true,
         variant: 'flat',
-        whileLoading: 'Sending Reminder...',
         position: 'right',
         onPress: async () => {
           await new Promise((resolve) => setTimeout(resolve, 2000));

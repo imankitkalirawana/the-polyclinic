@@ -12,13 +12,7 @@ const AsyncButton = React.forwardRef<
   }
 >(
   (
-    {
-      isLoading: propIsLoading,
-      fn,
-      onPress,
-      whileSubmitting = 'Loading...',
-      ...props
-    },
+    { isLoading: propIsLoading, fn, onPress, whileSubmitting, ...props },
     ref
   ) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +37,7 @@ const AsyncButton = React.forwardRef<
         onPress={onPress || handleSubmit}
         startContent={isLoading ? null : props.startContent}
       >
-        {isLoading ? whileSubmitting : props.children}
+        {isLoading && whileSubmitting ? whileSubmitting : props.children}
       </Button>
     );
   }
