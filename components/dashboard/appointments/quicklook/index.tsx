@@ -94,17 +94,19 @@ export const AppointmentQuickLook = () => {
     []
   );
 
+  if (!selected) return null;
+
   return (
     <QuickLook
       selectedItem={selected}
       isOpen={!!selected}
       onClose={() => setSelected(null)}
-      selectedKey={action as ActionType | null}
+      selectedKey={action}
       buttons={buttons}
       permissions={permissions}
       dropdown={dropdown}
-      sidebarContent={sidebarContent(selected as AppointmentType)}
-      content={content(selected as AppointmentType)}
+      sidebarContent={sidebarContent(selected)}
+      content={content(selected)}
     />
   );
 };
