@@ -14,11 +14,12 @@ import {
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { format } from 'date-fns';
+import { ActionType } from '../store';
 
-export const permissions: PermissionProps = {
+export const permissions: PermissionProps<ActionType> = {
   doctor: ['cancel', 'reschedule', 'reminder', 'new-tab', 'add-to-calendar'],
   user: ['cancel', 'reschedule'],
-  admin: ['cancel', 'delete', 'edit', 'reschedule', 'reminder', 'new-tab'],
+  admin: ['cancel', 'delete', 'reschedule', 'reminder', 'new-tab'],
   nurse: ['cancel', 'reschedule'],
   receptionist: ['cancel', 'reschedule', 'reminder'],
 };
