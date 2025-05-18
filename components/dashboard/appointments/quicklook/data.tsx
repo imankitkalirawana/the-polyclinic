@@ -28,15 +28,8 @@ export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
     'add-to-calendar',
     'invoice',
   ],
-  user: ['cancel', 'reschedule'],
-  admin: [
-    'cancel',
-    'delete',
-    'reschedule',
-    'reminder',
-    'new-tab',
-    'add-to-calendar',
-  ],
+  user: ['cancel', 'reschedule', 'new-tab', 'add-to-calendar', 'invoice'],
+  admin: 'all',
   nurse: ['cancel', 'reschedule'],
   receptionist: ['cancel', 'reschedule', 'reminder'],
 };

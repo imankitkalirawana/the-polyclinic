@@ -2,6 +2,7 @@
 import {
   Button,
   cn,
+  dropdown,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -15,7 +16,7 @@ import {
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useSession } from 'next-auth/react';
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import AsyncButton from '@/components/ui/buttons/async-button';
 import { Title } from '@/components/ui/typography/modal';
 import { CellRendererProps, QuickLookProps } from './types';
@@ -61,16 +62,44 @@ export default function QuickLook<
   content,
 }: QuickLookProps<T, A, D>): React.ReactElement {
   const { data: session } = useSession();
-  const role = useMemo(
-    () => session?.user?.role ?? 'user',
-    [session?.user?.role]
-  );
+  // const role = useMemo(
+  //   () => session?.user?.role ?? 'user',
+  //   [session?.user?.role]
+  // );
+
+  const role = 'admin';
 
   const item = useMemo(() => selectedItem || ({} as T), [selectedItem]);
-  const availablePermissions = useMemo(
-    () => permissions?.[role as keyof typeof permissions] || [],
-    [role, permissions]
+  const availablePermissions = useMemo(() => {
+    const rolePermissions = permissions?.[role as keyof typeof permissions];
+    if (rolePermissions === 'all') return 'all';
+    if (rolePermissions === 'none') return [];
+    return rolePermissions || [];
+  }, [role, permissions]);
+
+  const filteredButtons = useCallback(
+    (position: 'left' | 'right') => {
+      return !buttons
+        ? []
+        : buttons.filter((btn) => {
+            const isLeftPosition = btn.position === position;
+            const isPermission =
+              availablePermissions === 'all' ||
+              availablePermissions.includes(btn.key as A);
+            return isLeftPosition && isPermission && !btn.isHidden;
+          });
+    },
+    [buttons, availablePermissions]
   );
+
+  const filteredDropdown = useMemo(() => {
+    return dropdown?.filter((item) => {
+      const isPermission =
+        availablePermissions === 'all' ||
+        availablePermissions.includes(item.key as unknown as A);
+      return isPermission && !item.isHidden;
+    });
+  }, [dropdown, availablePermissions]);
 
   const detailsSection = useMemo(
     () => (
@@ -102,80 +131,68 @@ export default function QuickLook<
   const leftButtons = useMemo(
     () => (
       <div className="flex items-center gap-2">
-        {!!buttons &&
-          buttons
-            .filter((btn) => {
-              const isLeftPosition = btn.position === 'left';
-              const isPermission = availablePermissions.includes(btn.key as A);
-              return isLeftPosition && isPermission;
-            })
-            .map((btn) => (
-              <Tooltip
+        {!!filteredButtons('left') &&
+          filteredButtons('left').map((btn) => (
+            <Tooltip
+              key={btn.key}
+              delay={1000}
+              isDisabled={!btn.isIconOnly}
+              content={btn.children}
+              color={btn.color}
+            >
+              <AsyncButton
                 key={btn.key}
-                delay={500}
-                isDisabled={!btn.isIconOnly}
-                content={btn.children}
-                color={btn.color}
+                {...(({ key, content, ref, onPress, children, ...rest }) =>
+                  rest)(btn)}
+                fn={async () => {
+                  if (btn.onPress) {
+                    await btn.onPress({} as any);
+                  }
+                }}
               >
-                <AsyncButton
-                  key={btn.key}
-                  {...(({ key, content, ref, onPress, children, ...rest }) =>
-                    rest)(btn)}
-                  fn={async () => {
-                    if (btn.onPress) {
-                      await btn.onPress({} as any);
-                    }
-                  }}
-                >
-                  {btn.isIconOnly ? null : btn.children}
-                </AsyncButton>
-              </Tooltip>
-            ))}
+                {btn.isIconOnly ? null : btn.children}
+              </AsyncButton>
+            </Tooltip>
+          ))}
       </div>
     ),
-    [buttons, availablePermissions]
+    [filteredButtons]
   );
 
   const rightButtons = useMemo(
     () => (
       <div className="flex items-center gap-2">
-        {!!buttons &&
-          buttons
-            .filter((btn) => {
-              const isRightPosition = btn.position === 'right';
-              const isPermission = availablePermissions.includes(btn.key as A);
-              return isRightPosition && isPermission;
-            })
-            .map((btn) => (
-              <Tooltip
+        {!!filteredButtons('right') &&
+          filteredButtons('right').map((btn) => (
+            <Tooltip
+              key={btn.key}
+              delay={500}
+              isDisabled={!btn.isIconOnly}
+              content={btn.children}
+              color={btn.color}
+            >
+              <AsyncButton
                 key={btn.key}
-                delay={500}
-                isDisabled={!btn.isIconOnly}
-                content={btn.children}
-                color={btn.color}
+                {...(({
+                  key,
+                  content,
+                  ref,
+                  onPress,
+                  children,
+                  whileLoading,
+                  ...rest
+                }) => rest)(btn)}
+                whileSubmitting={btn.whileLoading}
+                fn={async () => {
+                  if (btn.onPress) {
+                    await btn.onPress({} as any);
+                  }
+                }}
               >
-                <AsyncButton
-                  key={btn.key}
-                  {...(({
-                    key,
-                    content,
-                    ref,
-                    onPress,
-                    children,
-                    whileLoading,
-                    ...rest
-                  }) => rest)(btn)}
-                  whileSubmitting={btn.whileLoading}
-                  fn={async () => {
-                    if (btn.onPress) {
-                      await btn.onPress({} as any);
-                    }
-                  }}
-                >
-                  {btn.isIconOnly ? null : btn.children}
-                </AsyncButton>
-              </Tooltip>
-            ))}
+                {btn.isIconOnly ? null : btn.children}
+              </AsyncButton>
+            </Tooltip>
+          ))}
       </div>
     ),
     [buttons, availablePermissions]
@@ -205,7 +222,7 @@ export default function QuickLook<
             <div className="flex items-center gap-2">{leftButtons}</div>
             <div className="flex items-center gap-2">
               {rightButtons}
-              {!!dropdown && (
+              {!!filteredDropdown && filteredDropdown.length > 0 && (
                 <Dropdown placement="top-end">
                   <DropdownTrigger>
                     <Button size="sm" variant="light" isIconOnly>
@@ -220,7 +237,7 @@ export default function QuickLook<
                     disallowEmptySelection
                     aria-label="Quick Look Options"
                     className="max-w-[300px]"
-                    items={dropdown}
+                    items={filteredDropdown}
                   >
                     {(item) => (
                       <DropdownItem

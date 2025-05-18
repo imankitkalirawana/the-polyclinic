@@ -40,6 +40,10 @@ export const AppointmentQuickLook = () => {
         startContent: (
           <Icon icon="solar:calendar-add-bold-duotone" width="20" />
         ),
+        isHidden:
+          selected?.status === 'cancelled' ||
+          selected?.status === 'completed' ||
+          selected?.status === 'overdue',
         color: 'default',
         variant: 'flat',
         position: 'left',
@@ -65,6 +69,8 @@ export const AppointmentQuickLook = () => {
         color: 'danger',
         variant: 'flat',
         position: 'right',
+        isHidden:
+          selected?.status === 'cancelled' || selected?.status === 'completed',
         onPress: () => {
           if (selected) {
             setAction('cancel');
@@ -95,6 +101,7 @@ export const AppointmentQuickLook = () => {
         color: 'warning',
         variant: 'flat',
         position: 'right',
+        isHidden: selected?.status === 'completed',
         onPress: () => {
           if (selected) {
             setAction('reschedule');
@@ -103,7 +110,7 @@ export const AppointmentQuickLook = () => {
         content: <RescheduleAppointment />,
       },
     ],
-    []
+    [selected]
   );
 
   const dropdown = useMemo<Array<Partial<DropdownItemProps<DropdownKeyType>>>>(
@@ -160,7 +167,7 @@ export const AppointmentQuickLook = () => {
         content: <CancelDeleteAppointment type="delete" />,
       },
     ],
-    []
+    [selected]
   );
 
   if (!selected) return null;

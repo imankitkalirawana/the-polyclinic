@@ -9,20 +9,22 @@ export type DropdownKeyType<T extends string> = T;
 
 export type ButtonProps<T extends string> = Omit<
   HeroButtonProps,
-  'key' | 'content'
+  'key' | 'content' | 'isHidden'
 > & {
   key: ActionType<T>;
   content?: React.ReactNode;
   position?: 'left' | 'right';
   whileLoading?: string;
+  isHidden?: boolean;
 };
 
 export type DropdownItemProps<T extends string> = Omit<
   HeroDropdownItemProps,
-  'key' | 'content'
+  'key' | 'content' | 'isHidden'
 > & {
   key: DropdownKeyType<T>;
   content?: React.ReactNode;
+  isHidden?: boolean;
 };
 
 export type PermissionProps<T extends string, D extends string> = Partial<
