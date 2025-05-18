@@ -72,6 +72,7 @@ export interface AppointmentType extends Base {
   progress?: number;
   data?: Record<string, string>;
   type: AType;
+  previousAppointments: Array<number>;
 }
 
 // @ts-ignore
@@ -128,6 +129,10 @@ const appointmentSchema = new mongoose.Schema(
       type: String,
       enum: AType,
       default: AType.consultation,
+    },
+    previousAppointments: {
+      type: [Number],
+      default: [],
     },
   },
   {

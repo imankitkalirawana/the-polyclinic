@@ -85,6 +85,10 @@ export const AppointmentQuickLook = () => {
         isIconOnly: true,
         variant: 'flat',
         position: 'right',
+        isHidden:
+          selected?.status === 'completed' ||
+          selected?.status === 'cancelled' ||
+          selected?.status === 'overdue',
         onPress: async () => {
           await new Promise((resolve) => setTimeout(resolve, 2000));
           addToast({
@@ -131,6 +135,10 @@ export const AppointmentQuickLook = () => {
       {
         key: 'reports',
         children: 'Download Reports',
+        // hide if there are no previous appointments or if the appointment is not completed
+        isHidden:
+          selected?.previousAppointments?.length === 0 ||
+          selected?.status !== 'completed',
         startContent: (
           <Icon icon="solar:download-twice-square-bold-duotone" width="20" />
         ),
