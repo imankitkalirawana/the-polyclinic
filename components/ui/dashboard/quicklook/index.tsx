@@ -111,6 +111,7 @@ export default function QuickLook<T, A extends string = string>({
                 delay={500}
                 isDisabled={!btn.isIconOnly}
                 content={btn.children}
+                color={btn.color}
               >
                 <AsyncButton
                   key={btn.key}
@@ -141,6 +142,7 @@ export default function QuickLook<T, A extends string = string>({
                 delay={500}
                 isDisabled={!btn.isIconOnly}
                 content={btn.children}
+                color={btn.color}
               >
                 <AsyncButton
                   key={btn.key}

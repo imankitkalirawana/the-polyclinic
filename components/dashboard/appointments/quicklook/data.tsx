@@ -19,7 +19,14 @@ import { ActionType } from '../store';
 export const permissions: PermissionProps<ActionType> = {
   doctor: ['cancel', 'reschedule', 'reminder', 'new-tab', 'add-to-calendar'],
   user: ['cancel', 'reschedule'],
-  admin: ['cancel', 'delete', 'reschedule', 'reminder', 'new-tab'],
+  admin: [
+    'cancel',
+    'delete',
+    'reschedule',
+    'reminder',
+    'new-tab',
+    'add-to-calendar',
+  ],
   nurse: ['cancel', 'reschedule'],
   receptionist: ['cancel', 'reschedule', 'reminder'],
 };

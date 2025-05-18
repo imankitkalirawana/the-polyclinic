@@ -8,6 +8,7 @@ import { ButtonProps } from '@/components/ui/dashboard/quicklook/types';
 import { useMemo } from 'react';
 import { content, dropdown, permissions, sidebarContent } from './data';
 import { ActionType } from '../store';
+import CancelModal from '@/components/ui/appointments/cancel-modal';
 
 export const AppointmentQuickLook = () => {
   const { selected, setSelected, setAction, action } = useAppointmentStore();
@@ -24,12 +25,18 @@ export const AppointmentQuickLook = () => {
         variant: 'flat',
         position: 'left',
         isIconOnly: true,
+        onPress: () => {
+          const url = `/dashboard/appointments/${selected?.aid}`;
+          window.open(url, '_blank');
+        },
       },
       {
         key: 'add-to-calendar',
         children: 'Add to Calendar',
-        startContent: <Icon icon="solar:calendar-bold-duotone" width="20" />,
-        color: 'warning',
+        startContent: (
+          <Icon icon="solar:calendar-add-bold-duotone" width="20" />
+        ),
+        color: 'default',
         variant: 'flat',
         position: 'left',
         onPress: () => {
@@ -40,9 +47,34 @@ export const AppointmentQuickLook = () => {
         content: (
           <AddToCalendar
             appointment={selected as AppointmentType}
-            onClose={() => setSelected(null)}
+            onClose={() => setAction(null)}
           />
         ),
+      },
+      {
+        key: 'cancel',
+        children: 'Cancel Appointment',
+        startContent: (
+          <Icon icon="solar:close-circle-bold-duotone" width="20" />
+        ),
+        isIconOnly: true,
+        color: 'danger',
+        variant: 'flat',
+        position: 'right',
+        onPress: () => {
+          if (selected) {
+            setAction('cancel');
+          }
+        },
+        content: <CancelModal type="cancel" />,
+      },
+      {
+        key: 'reminder',
+        children: 'Send a Reminder',
+        startContent: <Icon icon="solar:bell-bold-duotone" width="20" />,
+        isIconOnly: true,
+        variant: 'flat',
+        position: 'right',
       },
       {
         key: 'reschedule',
