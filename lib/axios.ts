@@ -21,8 +21,14 @@ interface ApiOptions {
   data?: AxiosRequestConfig['data']; // Request payload
   headers?: AxiosRequestConfig['headers']; // Optional headers
   responseType?: AxiosRequestConfig['responseType']; // Optional response type
-  successMessage?: string; // Optional success message
-  errorMessage?: string; // Optional error message
+  successMessage?: {
+    title?: string;
+    description?: string;
+  }; // Optional success message
+  errorMessage?: {
+    title?: string;
+    description?: string;
+  }; // Optional error message
   onSuccess?: (responseData: any) => void; // Optional success callback
   onError?: (error: any) => void; // Optional error callback
   showToast?: boolean; // Optional toast
@@ -53,8 +59,9 @@ export const apiRequest = async ({
     // Handle success response
     if (showToast) {
       addToast({
-        title: 'Success',
-        description: successMessage || response.data.message || null,
+        title: successMessage?.title || null,
+        description:
+          successMessage?.description || response.data.message || null,
         color: 'success',
       });
     }
@@ -71,9 +78,9 @@ export const apiRequest = async ({
     // Handle error response
     if (showToast) {
       addToast({
-        title: 'Error',
+        title: errorMessage?.title || null,
         description:
-          errorMessage ||
+          errorMessage?.description ||
           error?.response?.data?.message ||
           error?.message ||
           'An unknown error occurred.',

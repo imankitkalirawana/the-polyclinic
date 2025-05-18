@@ -1,5 +1,4 @@
 import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
-import RescheduleModal from '@/components/ui/appointments/reschedule-modal';
 import QuickLook from '@/components/ui/dashboard/quicklook';
 import { AppointmentType } from '@/models/Appointment';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -11,6 +10,8 @@ import CancelModal from '@/components/ui/appointments/cancel-modal';
 import { ActionType } from '../types';
 import Modal from '@/components/ui/modal';
 import { addToast } from '@heroui/react';
+import RescheduleModal from '../modals/reschedule';
+import CancelAppointment from '../modals/cancel';
 
 export const AppointmentQuickLook = () => {
   const { selected, setSelected, setAction, action } = useAppointmentStore();
@@ -68,7 +69,7 @@ export const AppointmentQuickLook = () => {
             setAction('cancel');
           }
         },
-        content: <CancelModal type="cancel" />,
+        content: <CancelAppointment />,
       },
       {
         key: 'reminder',
@@ -98,25 +99,7 @@ export const AppointmentQuickLook = () => {
             setAction('reschedule');
           }
         },
-        content: (
-          <Modal
-            header="Reschedule Appointment"
-            body={<>Hello</>}
-            onClose={() => setAction(null)}
-            primaryButton={{
-              children: 'Reschedule',
-              onPress: async () => {
-                await new Promise((resolve) => setTimeout(resolve, 2000));
-              },
-            }}
-            secondaryButton={{
-              children: 'Cancel',
-              onPress: () => {
-                setAction(null);
-              },
-            }}
-          />
-        ),
+        content: <RescheduleModal />,
       },
     ],
     []

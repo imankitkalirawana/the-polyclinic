@@ -1,5 +1,6 @@
 import {
   Modal as HeroModal,
+  ModalProps as HeroModalProps,
   ModalContent,
   ModalHeader,
   ModalBody,
@@ -17,9 +18,14 @@ interface ModalProps {
   header?: React.ReactNode;
   alert?: AlertProps;
   body: React.ReactNode;
-  primaryButton?: ButtonProps;
-  secondaryButton?: ButtonProps;
+  primaryButton?: ButtonProps & {
+    whileSubmitting?: string;
+  };
+  secondaryButton?: ButtonProps & {
+    whileSubmitting?: string;
+  };
   onClose: () => void;
+  modalProps?: HeroModalProps;
 }
 
 function Modal({
@@ -29,6 +35,7 @@ function Modal({
   primaryButton,
   secondaryButton,
   onClose,
+  modalProps,
 }: ModalProps) {
   const defaultPrimaryButton: ButtonProps = {
     color: 'primary',
@@ -39,7 +46,6 @@ function Modal({
   };
 
   const defaultSecondaryButton: ButtonProps = {
-    color: 'danger',
     variant: 'flat',
     fullWidth: true,
     onPress: onClose,
@@ -54,6 +60,8 @@ function Modal({
         backdrop="blur"
         scrollBehavior="inside"
         onClose={onClose}
+        hideCloseButton
+        {...modalProps}
       >
         <ModalContent>
           {(onClose) => (
@@ -61,17 +69,17 @@ function Modal({
               <ModalHeader className="flex flex-col gap-1">
                 {header}
               </ModalHeader>
-              <ModalBody className="gap-2">
+              <ModalBody as={ScrollShadow} className="items-center gap-2">
                 {alert && <Alert {...alert} />}
-                <ScrollShadow>{body}</ScrollShadow>
+                {body}
               </ModalBody>
               <ModalFooter>
                 {secondaryButton && (
                   <Button
-                    {...(({ ref, children, ...rest }) => rest)(secondaryButton)}
                     {...(({ ref, children, ...rest }) => rest)(
                       defaultSecondaryButton
                     )}
+                    {...(({ ref, children, ...rest }) => rest)(secondaryButton)}
                   >
                     {secondaryButton.isIconOnly
                       ? null
@@ -81,16 +89,17 @@ function Modal({
                 {primaryButton && (
                   <AsyncButton
                     {...(({ ref, children, onPress, ...rest }) => rest)(
-                      primaryButton
+                      defaultPrimaryButton
                     )}
                     {...(({ ref, children, onPress, ...rest }) => rest)(
-                      defaultPrimaryButton
+                      primaryButton
                     )}
                     fn={async () => {
                       if (primaryButton.onPress) {
                         await primaryButton.onPress({} as any);
                       }
                     }}
+                    whileSubmitting={primaryButton.whileSubmitting}
                   >
                     {primaryButton.isIconOnly ? null : primaryButton.children}
                   </AsyncButton>

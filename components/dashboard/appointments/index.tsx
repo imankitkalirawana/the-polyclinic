@@ -212,7 +212,9 @@ export default function Appointments() {
               url: '/api/v1/appointments/export',
               data: { keys },
               responseType: 'blob',
-              successMessage: 'Appointments exported successfully',
+              successMessage: {
+                title: 'Appointments exported successfully',
+              },
               onSuccess: (data) => {
                 setAction(null);
                 // Create a blob URL and trigger download
