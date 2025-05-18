@@ -14,6 +14,7 @@ export type ButtonProps<T extends string> = Omit<
   key: ActionType<T>;
   content?: React.ReactNode;
   position?: 'left' | 'right';
+  whileLoading?: string;
 };
 
 export type DropdownItemProps<T extends string> = Omit<

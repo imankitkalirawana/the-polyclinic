@@ -9,6 +9,8 @@ import { useMemo } from 'react';
 import { content, dropdown, permissions, sidebarContent } from './data';
 import CancelModal from '@/components/ui/appointments/cancel-modal';
 import { ActionType } from '../types';
+import Modal from '@/components/ui/modal';
+import { addToast } from '@heroui/react';
 
 export const AppointmentQuickLook = () => {
   const { selected, setSelected, setAction, action } = useAppointmentStore();
@@ -72,9 +74,18 @@ export const AppointmentQuickLook = () => {
         key: 'reminder',
         children: 'Send a Reminder',
         startContent: <Icon icon="solar:bell-bold-duotone" width="20" />,
-        isIconOnly: true,
+        // isIconOnly: true,
         variant: 'flat',
+        whileLoading: 'Sending Reminder...',
         position: 'right',
+        onPress: async () => {
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+          addToast({
+            title: 'Reminder Sent',
+            description: 'Reminder sent to the patient',
+            color: 'success',
+          });
+        },
       },
       {
         key: 'reschedule',
@@ -88,7 +99,13 @@ export const AppointmentQuickLook = () => {
             setAction('reschedule');
           }
         },
-        content: <RescheduleModal />,
+        content: (
+          <Modal
+            header="Reschedule Appointment"
+            body={<>Hello</>}
+            onClose={() => setAction(null)}
+          />
+        ),
       },
     ],
     []

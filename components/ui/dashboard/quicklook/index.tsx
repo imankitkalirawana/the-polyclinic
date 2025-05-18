@@ -119,7 +119,13 @@ export default function QuickLook<
               >
                 <AsyncButton
                   key={btn.key}
-                  {...(({ key, content, ref, children, ...rest }) => rest)(btn)}
+                  {...(({ key, content, ref, onPress, children, ...rest }) =>
+                    rest)(btn)}
+                  fn={async () => {
+                    if (btn.onPress) {
+                      await btn.onPress({} as any);
+                    }
+                  }}
                 >
                   {btn.isIconOnly ? null : btn.children}
                 </AsyncButton>
@@ -150,7 +156,21 @@ export default function QuickLook<
               >
                 <AsyncButton
                   key={btn.key}
-                  {...(({ key, content, ref, children, ...rest }) => rest)(btn)}
+                  {...(({
+                    key,
+                    content,
+                    ref,
+                    onPress,
+                    children,
+                    whileLoading,
+                    ...rest
+                  }) => rest)(btn)}
+                  whileSubmitting={btn.whileLoading}
+                  fn={async () => {
+                    if (btn.onPress) {
+                      await btn.onPress({} as any);
+                    }
+                  }}
                 >
                   {btn.isIconOnly ? null : btn.children}
                 </AsyncButton>

@@ -24,9 +24,14 @@ const AsyncButton = React.forwardRef<
     const [isLoading, setIsLoading] = useState(false);
 
     const handleSubmit = async () => {
-      setIsLoading(true);
-      fn && (await fn());
-      setIsLoading(false);
+      try {
+        setIsLoading(true);
+        if (fn) {
+          await fn();
+        }
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     return (
