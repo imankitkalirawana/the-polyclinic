@@ -45,7 +45,11 @@ const CellRenderer: React.FC<CellRendererProps> = ({
   </div>
 );
 
-export default function QuickLook<T, A extends string = string>({
+export default function QuickLook<
+  T,
+  A extends string = string,
+  D extends string = string,
+>({
   selectedItem,
   isOpen,
   onClose,
@@ -55,7 +59,7 @@ export default function QuickLook<T, A extends string = string>({
   dropdown,
   sidebarContent,
   content,
-}: QuickLookProps<T, A>): React.ReactElement {
+}: QuickLookProps<T, A, D>): React.ReactElement {
   const { data: session } = useSession();
   const role = useMemo(
     () => session?.user?.role ?? 'user',
@@ -198,7 +202,7 @@ export default function QuickLook<T, A extends string = string>({
                     className="max-w-[300px]"
                     items={dropdown}
                   >
-                    {(item) => <DropdownItem {...item} />}
+                    {(item) => <DropdownItem key={item.key as D} {...item} />}
                   </DropdownMenu>
                 </Dropdown>
               )}

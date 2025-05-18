@@ -7,8 +7,8 @@ import { useAppointmentStore } from '../store';
 import { ButtonProps } from '@/components/ui/dashboard/quicklook/types';
 import { useMemo } from 'react';
 import { content, dropdown, permissions, sidebarContent } from './data';
-import { ActionType } from '../store';
 import CancelModal from '@/components/ui/appointments/cancel-modal';
+import { ActionType } from '../types';
 
 export const AppointmentQuickLook = () => {
   const { selected, setSelected, setAction, action } = useAppointmentStore();

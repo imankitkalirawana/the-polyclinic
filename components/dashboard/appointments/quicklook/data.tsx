@@ -1,5 +1,8 @@
 import { Subtitle } from '@/components/ui/typography/modal';
-import { PermissionProps } from '@/components/ui/dashboard/quicklook/types';
+import {
+  DropdownItemProps,
+  PermissionProps,
+} from '@/components/ui/dashboard/quicklook/types';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { avatars } from '@/lib/avatar';
 import { AppointmentType } from '@/models/Appointment';
@@ -14,10 +17,17 @@ import {
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { format } from 'date-fns';
-import { ActionType } from '../store';
+import { ActionType, DropdownKeyType } from '../types';
 
-export const permissions: PermissionProps<ActionType> = {
-  doctor: ['cancel', 'reschedule', 'reminder', 'new-tab', 'add-to-calendar'],
+export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
+  doctor: [
+    'cancel',
+    'reschedule',
+    'reminder',
+    'new-tab',
+    'add-to-calendar',
+    'invoice',
+  ],
   user: ['cancel', 'reschedule'],
   admin: [
     'cancel',
@@ -208,7 +218,7 @@ export const sidebarContent = (appointment: AppointmentType) => (
   </>
 );
 
-export const dropdown = [
+export const dropdown: Array<Partial<DropdownItemProps<DropdownKeyType>>> = [
   {
     key: 'invoice',
     children: 'Download Invoice',
