@@ -4,9 +4,13 @@ import { apiRequest } from '@/lib/axios';
 import { format } from 'date-fns';
 import { Card, CardBody } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import React from 'react';
+import React, { useCallback } from 'react';
 
-export default function CancelAppointment() {
+export default function CancelDeleteAppointment({
+  type = 'cancel',
+}: {
+  type?: 'cancel' | 'delete';
+}) {
   const {
     setAction,
     selected: appointment,
@@ -57,39 +61,55 @@ export default function CancelAppointment() {
     [appointment]
   );
 
+  const handleSubmit = useCallback(async () => {
+    await apiRequest({
+      url: `/api/v1/appointments/${appointment?.aid}`,
+      method: type === 'cancel' ? 'PATCH' : 'DELETE',
+      data: {
+        status: type === 'cancel' ? 'cancelled' : 'deleted',
+      },
+      showToast: true,
+      successMessage: {
+        description:
+          type === 'cancel' ? 'Appointment cancelled' : 'Appointment deleted',
+      },
+      onSuccess: (data) => {
+        refetch();
+        setAction(null);
+        if (type === 'delete') {
+          setSelected(null);
+        } else {
+          setSelected(data);
+        }
+      },
+      errorMessage: {
+        title:
+          type === 'cancel'
+            ? 'Error cancelling appointment'
+            : 'Error deleting appointment',
+      },
+    });
+  }, [appointment?.aid, type]);
+
   return (
     <Modal
-      header="Cancel Appointment?"
+      header={type === 'cancel' ? 'Cancel Appointment?' : 'Delete Appointment?'}
       alert={{
-        title: 'Are you sure? You want to cancel this appointment.',
+        title:
+          type === 'cancel'
+            ? 'Are you sure? You want to cancel this appointment.'
+            : 'Are you sure? This action cannot be undone.',
         color: 'danger',
       }}
       body={body}
       onClose={() => setAction(null)}
       primaryButton={{
-        children: 'Confirm Cancellation',
-        whileSubmitting: 'Cancelling...',
+        children:
+          type === 'cancel' ? 'Confirm Cancellation' : 'Confirm Deletion',
+        whileSubmitting: type === 'cancel' ? 'Cancelling...' : 'Deleting...',
         color: 'danger',
         onPress: async () => {
-          await apiRequest({
-            url: `/api/v1/appointments/${appointment?.aid}`,
-            method: 'PATCH',
-            data: {
-              status: 'cancelled',
-            },
-            showToast: true,
-            successMessage: {
-              title: `Appointment cancelled`,
-            },
-            onSuccess: (res) => {
-              refetch();
-              setAction(null);
-              setSelected(res);
-            },
-            errorMessage: {
-              title: 'Error Cancelling Appointment',
-            },
-          });
+          await handleSubmit();
         },
       }}
       secondaryButton={{

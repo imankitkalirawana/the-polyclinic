@@ -3,15 +3,16 @@ import QuickLook from '@/components/ui/dashboard/quicklook';
 import { AppointmentType } from '@/models/Appointment';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useAppointmentStore } from '../store';
-import { ButtonProps } from '@/components/ui/dashboard/quicklook/types';
+import {
+  ButtonProps,
+  DropdownItemProps,
+} from '@/components/ui/dashboard/quicklook/types';
 import { useMemo } from 'react';
-import { content, dropdown, permissions, sidebarContent } from './data';
-import CancelModal from '@/components/ui/appointments/cancel-modal';
-import { ActionType } from '../types';
-import Modal from '@/components/ui/modal';
+import { content, permissions, sidebarContent } from './data';
+import { ActionType, DropdownKeyType } from '../types';
 import { addToast } from '@heroui/react';
-import RescheduleModal from '../modals/reschedule';
-import CancelAppointment from '../modals/cancel';
+import CancelDeleteAppointment from '../modals/cancel-delete';
+import RescheduleAppointment from '../modals/reschedule';
 
 export const AppointmentQuickLook = () => {
   const { selected, setSelected, setAction, action } = useAppointmentStore();
@@ -69,7 +70,7 @@ export const AppointmentQuickLook = () => {
             setAction('cancel');
           }
         },
-        content: <CancelAppointment />,
+        content: <CancelDeleteAppointment type="cancel" />,
       },
       {
         key: 'reminder',
@@ -99,7 +100,64 @@ export const AppointmentQuickLook = () => {
             setAction('reschedule');
           }
         },
-        content: <RescheduleModal />,
+        content: <RescheduleAppointment />,
+      },
+    ],
+    []
+  );
+
+  const dropdown = useMemo<Array<Partial<DropdownItemProps<DropdownKeyType>>>>(
+    () => [
+      {
+        key: 'invoice',
+        children: 'Download Invoice',
+        startContent: (
+          <Icon icon="solar:file-download-bold-duotone" width="20" />
+        ),
+        onPress: () =>
+          addToast({
+            title: 'Invoice Downloaded',
+            description: 'Invoice downloaded successfully',
+            color: 'success',
+          }),
+      },
+      {
+        key: 'reports',
+        children: 'Download Reports',
+        startContent: (
+          <Icon icon="solar:download-twice-square-bold-duotone" width="20" />
+        ),
+        onPress: () =>
+          addToast({
+            title: 'Reports Downloaded',
+            description: 'Reports downloaded successfully',
+            color: 'success',
+          }),
+      },
+      {
+        key: 'edit',
+        children: 'Edit Appointment',
+        startContent: (
+          <Icon icon="solar:pen-new-square-bold-duotone" width="20" />
+        ),
+        onPress: () =>
+          addToast({
+            title: 'Appointment Edited',
+            description: 'Appointment edited successfully',
+            color: 'success',
+          }),
+      },
+      {
+        key: 'delete',
+        children: 'Delete Appointment',
+        color: 'danger',
+        startContent: <Icon icon="solar:trash-bin-2-bold-duotone" width="20" />,
+        onPress: () => {
+          if (selected) {
+            setAction('delete');
+          }
+        },
+        content: <CancelDeleteAppointment type="delete" />,
       },
     ],
     []

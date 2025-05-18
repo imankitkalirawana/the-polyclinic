@@ -9,7 +9,7 @@ export type DropdownKeyType<T extends string> = T;
 
 export type ButtonProps<T extends string> = Omit<
   HeroButtonProps,
-  'content' | 'key'
+  'key' | 'content'
 > & {
   key: ActionType<T>;
   content?: React.ReactNode;
@@ -19,9 +19,10 @@ export type ButtonProps<T extends string> = Omit<
 
 export type DropdownItemProps<T extends string> = Omit<
   HeroDropdownItemProps,
-  'key'
+  'key' | 'content'
 > & {
   key: DropdownKeyType<T>;
+  content?: React.ReactNode;
 };
 
 export type PermissionProps<T extends string, D extends string> = Partial<

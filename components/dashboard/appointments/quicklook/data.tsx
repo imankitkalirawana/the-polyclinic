@@ -217,30 +217,3 @@ export const sidebarContent = (appointment: AppointmentType) => (
     </div>
   </>
 );
-
-export const dropdown: Array<Partial<DropdownItemProps<DropdownKeyType>>> = [
-  {
-    key: 'invoice',
-    children: 'Download Invoice',
-    startContent: <Icon icon="solar:file-download-bold-duotone" width="20" />,
-    onPress: () =>
-      addToast({
-        title: 'Invoice Downloaded',
-        description: 'Invoice downloaded successfully',
-        color: 'success',
-      }),
-  },
-  {
-    key: 'reports',
-    children: 'Download Reports',
-    startContent: (
-      <Icon icon="solar:download-twice-square-bold-duotone" width="20" />
-    ),
-    onPress: () =>
-      addToast({
-        title: 'Reports Downloaded',
-        description: 'Reports downloaded successfully',
-        color: 'success',
-      }),
-  },
-];

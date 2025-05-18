@@ -8,4 +8,4 @@ export type ActionType =
   | 'bulk-delete'
   | 'new-tab';
 
-export type DropdownKeyType = 'invoice' | 'reports';
+export type DropdownKeyType = 'invoice' | 'reports' | 'edit' | 'delete';

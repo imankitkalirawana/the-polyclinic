@@ -8,7 +8,7 @@ import { apiRequest } from '@/lib/axios';
 import { useSession } from 'next-auth/react';
 import { format } from 'date-fns';
 
-export default function RescheduleModal() {
+export default function RescheduleAppointment() {
   const { data: session } = useSession();
   const {
     setAction,

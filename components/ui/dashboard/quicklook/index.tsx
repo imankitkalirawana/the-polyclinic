@@ -222,7 +222,12 @@ export default function QuickLook<
                     className="max-w-[300px]"
                     items={dropdown}
                   >
-                    {(item) => <DropdownItem key={item.key as D} {...item} />}
+                    {(item) => (
+                      <DropdownItem
+                        key={item.key as D}
+                        {...(({ content, ...rest }) => rest)(item)}
+                      />
+                    )}
                   </DropdownMenu>
                 </Dropdown>
               )}
@@ -230,7 +235,11 @@ export default function QuickLook<
           </ModalFooter>
         </ModalContent>
       </Modal>
-      {selectedKey && buttons?.find((btn) => btn.key === selectedKey)?.content}
+      {selectedKey &&
+        (buttons?.find((btn) => btn.key === selectedKey)?.content ||
+          dropdown?.find((item) => item.key === (selectedKey as unknown as D))
+            ?.content ||
+          null)}
     </>
   );
 }
