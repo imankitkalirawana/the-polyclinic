@@ -131,7 +131,7 @@ export default function QuickLook<T, A extends string = string>({
         {!!buttons &&
           buttons
             .filter((btn) => {
-              const isRightPosition = btn.position === 'left';
+              const isRightPosition = btn.position === 'right';
               const isPermission = availablePermissions.includes(btn.key as A);
               return isRightPosition && isPermission;
             })
