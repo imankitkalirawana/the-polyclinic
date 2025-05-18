@@ -30,6 +30,23 @@ function Modal({
   secondaryButton,
   onClose,
 }: ModalProps) {
+  const defaultPrimaryButton: ButtonProps = {
+    color: 'primary',
+    variant: 'solid',
+    fullWidth: true,
+    radius: 'lg',
+    className: 'p-6 font-medium',
+  };
+
+  const defaultSecondaryButton: ButtonProps = {
+    color: 'danger',
+    variant: 'flat',
+    fullWidth: true,
+    onPress: onClose,
+    radius: 'lg',
+    className: 'p-6 font-medium',
+  };
+
   return (
     <>
       <HeroModal
@@ -51,10 +68,10 @@ function Modal({
               <ModalFooter>
                 {secondaryButton && (
                   <Button
-                    color="danger"
-                    variant="light"
-                    onPress={onClose}
-                    {...secondaryButton}
+                    {...(({ ref, children, ...rest }) => rest)(secondaryButton)}
+                    {...(({ ref, children, ...rest }) => rest)(
+                      defaultSecondaryButton
+                    )}
                   >
                     {secondaryButton.isIconOnly
                       ? null
@@ -63,9 +80,17 @@ function Modal({
                 )}
                 {primaryButton && (
                   <AsyncButton
-                    {...(({ key, ref, children, ...rest }) => rest)(
+                    {...(({ ref, children, onPress, ...rest }) => rest)(
                       primaryButton
                     )}
+                    {...(({ ref, children, onPress, ...rest }) => rest)(
+                      defaultPrimaryButton
+                    )}
+                    fn={async () => {
+                      if (primaryButton.onPress) {
+                        await primaryButton.onPress({} as any);
+                      }
+                    }}
                   >
                     {primaryButton.isIconOnly ? null : primaryButton.children}
                   </AsyncButton>

@@ -103,6 +103,18 @@ export const AppointmentQuickLook = () => {
             header="Reschedule Appointment"
             body={<>Hello</>}
             onClose={() => setAction(null)}
+            primaryButton={{
+              children: 'Reschedule',
+              onPress: async () => {
+                await new Promise((resolve) => setTimeout(resolve, 2000));
+              },
+            }}
+            secondaryButton={{
+              children: 'Cancel',
+              onPress: () => {
+                setAction(null);
+              },
+            }}
           />
         ),
       },
