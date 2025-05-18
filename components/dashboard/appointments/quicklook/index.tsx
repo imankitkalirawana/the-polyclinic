@@ -4,17 +4,15 @@ import QuickLook from '@/components/ui/dashboard/quicklook';
 import { AppointmentType } from '@/models/Appointment';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useAppointmentStore } from '../store';
-import {
-  ActionType,
-  ButtonProps,
-} from '@/components/ui/dashboard/quicklook/types';
+import { ButtonProps } from '@/components/ui/dashboard/quicklook/types';
 import { useMemo } from 'react';
 import { content, dropdown, permissions, sidebarContent } from './data';
+import { ActionType } from '../store';
 
 export const AppointmentQuickLook = () => {
   const { selected, setSelected, setAction, action } = useAppointmentStore();
 
-  const buttons: ButtonProps[] = useMemo(
+  const buttons: Array<Partial<ButtonProps<ActionType>>> = useMemo(
     () => [
       {
         key: 'new-tab',

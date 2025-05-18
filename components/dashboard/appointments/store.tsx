@@ -5,7 +5,16 @@ import * as Yup from 'yup';
 import { AppointmentType } from '@/models/Appointment';
 import { getAllAppointments } from '@/app/dashboard/appointments/helper';
 import { Selection } from '@heroui/react';
-import { ActionType } from '@/components/ui/dashboard/quicklook/types';
+
+export type ActionType =
+  | 'reschedule'
+  | 'cancel'
+  | 'delete'
+  | 'reminder'
+  | 'add-to-calendar'
+  | 'bulk-cancel'
+  | 'bulk-delete'
+  | 'new-tab';
 
 interface AppointmentStoreState {
   selected: AppointmentType | null;

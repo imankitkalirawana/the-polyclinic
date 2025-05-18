@@ -4,24 +4,20 @@ import {
   DropdownItemProps,
 } from '@heroui/react';
 
-export type ActionType =
-  | 'reschedule'
-  | 'cancel'
-  | 'delete'
-  | 'edit'
-  | 'reminder'
-  | 'add-to-calendar'
-  | 'bulk-cancel'
-  | 'bulk-delete'
-  | 'new-tab';
+export type ActionType<T extends string> = T;
 
-export type ButtonProps = Omit<HeroButtonProps, 'content' | 'key'> & {
-  key: ActionType;
+export type ButtonProps<T extends string> = Omit<
+  HeroButtonProps,
+  'content' | 'key'
+> & {
+  key: ActionType<T>;
   content?: React.ReactNode;
   position?: 'left' | 'right';
 };
 
-export type PermissionProps = Partial<Record<UserRole, ActionType[]>>;
+export type PermissionProps<T extends string> = Partial<
+  Record<UserRole, ActionType<T>[]>
+>;
 
 export interface CellRendererProps {
   label: string;
@@ -35,7 +31,7 @@ export interface CellRendererProps {
   cols?: number;
 }
 
-export interface QuickLookProps<T> {
+export interface QuickLookProps<T, A extends string> {
   /**
    * The currently selected item to display in the quick look modal.
    * This item's data will be used to populate the content cells and sidebar.
@@ -53,23 +49,23 @@ export interface QuickLookProps<T> {
    */
   onClose: () => void;
   /**
-   * The currently selected action key from the available actions (reschedule, cancel, etc).
+   * The currently selected action key from the available actions.
    * Used to determine which action's content to display when a button is clicked.
    * Optional and can be null when no action is selected.
    */
-  selectedKey?: ActionType | null;
+  selectedKey?: ActionType<A> | null;
   /**
    * Array of button configurations to render in the modal footer.
    * Each button can be positioned on the left or right side.
    * Buttons are filtered based on user permissions before being displayed.
    */
-  buttons?: Array<ButtonProps>;
+  buttons?: Array<Partial<ButtonProps<A>>>;
   /**
    * Permission configuration mapping user roles to allowed actions.
    * Used to conditionally render buttons based on the current user's role.
    * If not provided, all buttons will be shown regardless of user role.
    */
-  permissions?: PermissionProps;
+  permissions?: PermissionProps<A>;
   /**
    * Array of dropdown menu items to be displayed in the overflow menu.
    * Appears as a three-dot menu in the top-right corner of the modal.

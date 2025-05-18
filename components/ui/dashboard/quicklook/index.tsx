@@ -45,7 +45,7 @@ const CellRenderer: React.FC<CellRendererProps> = ({
   </div>
 );
 
-export default function QuickLook<T>({
+export default function QuickLook<T, A extends string = string>({
   selectedItem,
   isOpen,
   onClose,
@@ -55,7 +55,7 @@ export default function QuickLook<T>({
   dropdown,
   sidebarContent,
   content,
-}: QuickLookProps<T>): React.ReactElement {
+}: QuickLookProps<T, A>): React.ReactElement {
   const { data: session } = useSession();
   const role = useMemo(
     () => session?.user?.role ?? 'user',
@@ -102,7 +102,7 @@ export default function QuickLook<T>({
           buttons
             .filter((btn) => {
               const isLeftPosition = btn.position === 'left';
-              const isPermission = availablePermissions.includes(btn.key);
+              const isPermission = availablePermissions.includes(btn.key as A);
               return isLeftPosition && isPermission;
             })
             .map((btn) => (
@@ -131,8 +131,8 @@ export default function QuickLook<T>({
         {!!buttons &&
           buttons
             .filter((btn) => {
-              const isRightPosition = btn.position === 'right';
-              const isPermission = availablePermissions.includes(btn.key);
+              const isRightPosition = btn.position === 'left';
+              const isPermission = availablePermissions.includes(btn.key as A);
               return isRightPosition && isPermission;
             })
             .map((btn) => (
