@@ -1,11 +1,6 @@
 import mongoose from 'mongoose';
 
-export enum Schema {
-  APPOINTMENT = 'appointment',
-  USER = 'user',
-  DRUG = 'drug',
-  SERVICE = 'service',
-}
+export type Schema = 'appointment' | 'user' | 'drug' | 'service';
 
 export enum Status {
   SUCCESS = 'success',
@@ -26,10 +21,13 @@ export interface ActivityLogType {
     image: string;
   };
   status?: Status;
-  metadata?: Record<string, any>;
+  metadata?: {
+    fields?: string[];
+    diff?: Record<string, { old: any; new: any }>;
+  };
   ip?: string;
   userAgent?: string;
-  createdAt?: Date;
+  createdAt: Date;
   updatedAt?: Date;
 }
 
@@ -39,8 +37,8 @@ const ActivityLogSchema = new mongoose.Schema<ActivityLogType>(
     title: { type: String, required: true },
     schema: {
       type: String,
-      enum: Object.values(Schema),
       required: true,
+      enum: ['appointment', 'user', 'drug', 'service'],
     },
     description: { type: String },
     by: {

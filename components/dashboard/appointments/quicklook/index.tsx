@@ -8,11 +8,13 @@ import {
   DropdownItemProps,
 } from '@/components/ui/dashboard/quicklook/types';
 import { useMemo } from 'react';
-import { content, permissions, sidebarContent } from './data';
+import { permissions, sidebarContent } from './data';
 import { ActionType, DropdownKeyType } from '../types';
-import { addToast } from '@heroui/react';
+import { addToast, Select, SelectItem } from '@heroui/react';
 import CancelDeleteAppointment from '../modals/cancel-delete';
 import RescheduleAppointment from '../modals/reschedule';
+import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import { format } from 'date-fns';
 
 export const AppointmentQuickLook = () => {
   const { selected, setSelected, setAction, action } = useAppointmentStore();
@@ -177,6 +179,100 @@ export const AppointmentQuickLook = () => {
     ],
     [selected]
   );
+
+  const content = (appointment: AppointmentType) => [
+    {
+      label: 'Appointment ID',
+      value: () => appointment.aid,
+      icon: 'solar:hashtag-circle-bold-duotone',
+      classNames: { icon: 'text-purple-500 bg-purple-50' },
+    },
+    {
+      label: 'Appointment Status',
+      value: () => renderChip({ item: appointment.status }),
+      icon: 'solar:watch-square-minimalistic-bold-duotone',
+      classNames: { icon: 'text-purple-500 bg-purple-50', label: 'mb-1' },
+    },
+    {
+      label: 'Email',
+      value: () => appointment.patient.email,
+      icon: 'solar:letter-bold-duotone',
+      classNames: { icon: 'text-blue-500 bg-blue-50' },
+    },
+    {
+      label: 'Phone',
+      value: () => appointment.patient.phone || 'N/A',
+      icon: 'solar:phone-bold-duotone',
+      classNames: { icon: 'text-green-500 bg-green-50' },
+    },
+    {
+      label: 'Date & Time',
+      value: () => format(new Date(appointment.date), 'MMM d, yyyy - h:mm a'),
+      icon: 'solar:calendar-bold-duotone',
+      classNames: { icon: 'text-yellow-500 bg-yellow-50' },
+    },
+    {
+      label: 'Mode',
+      value: () =>
+        appointment.additionalInfo.type === 'online' ? 'Online' : 'In Clinic',
+      icon: 'solar:map-point-bold-duotone',
+      classNames: { icon: 'text-teal-500 bg-teal-50' },
+    },
+    {
+      label: 'Doctor',
+      value: () =>
+        appointment.doctor?.name ? (
+          <div className="flex items-center gap-1">
+            <span>{appointment.doctor?.name}</span>
+          </div>
+        ) : (
+          <Select
+            label="Select Doctor"
+            className="w-full max-w-sm"
+            aria-label="Select Doctor"
+          >
+            <SelectItem key="not-assigned">Not Assigned</SelectItem>
+          </Select>
+        ),
+      icon: 'solar:stethoscope-bold-duotone',
+      classNames: { icon: 'text-purple-500 bg-purple-50' },
+      className: !appointment.doctor?.name ? 'bg-danger-50/50' : '',
+      cols: 2,
+    },
+    ...(appointment.additionalInfo.symptoms
+      ? [
+          {
+            label: 'Symptoms',
+            value: () => appointment.additionalInfo.symptoms,
+            icon: 'solar:notes-bold-duotone',
+            classNames: { icon: 'text-orange-500 bg-orange-50' },
+            cols: 2,
+          },
+        ]
+      : []),
+    ...(appointment.additionalInfo.notes
+      ? [
+          {
+            label: 'Notes',
+            value: () => appointment.additionalInfo.notes,
+            icon: 'solar:notes-bold-duotone',
+            classNames: { icon: 'text-amber-500 bg-amber-50' },
+            cols: 2,
+          },
+        ]
+      : []),
+    ...(appointment.additionalInfo.description
+      ? [
+          {
+            label: 'Description',
+            value: () => appointment.additionalInfo.description,
+            icon: 'solar:document-text-bold-duotone',
+            classNames: { icon: 'text-pink-500 bg-pink-50' },
+            cols: 2,
+          },
+        ]
+      : []),
+  ];
 
   if (!selected) return null;
 

@@ -148,7 +148,7 @@ export const PATCH = auth(async function PATCH(request: any, context: any) {
     await logActivity({
       id: aid,
       title: 'Appointment updated',
-      schema: Schema.APPOINTMENT,
+      schema: 'appointment',
       by: request.auth?.user,
       status: Status.SUCCESS,
       ip: request.ip,

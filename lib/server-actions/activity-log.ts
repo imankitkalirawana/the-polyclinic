@@ -1,10 +1,7 @@
 'use server';
 
-import ActivityLog, {
-  ActivityLogType,
-  Schema,
-  Status,
-} from '@/models/Activity';
+import ActivityLog, { ActivityLogType, Schema } from '@/models/Activity';
+import { connectDB } from '../db';
 
 export async function logActivity(
   activity: Omit<ActivityLogType, '_id' | 'createdAt' | 'updatedAt'>
@@ -22,6 +19,7 @@ export async function logActivity(
       userAgent,
     } = activity;
 
+    await connectDB();
     return await ActivityLog.create({
       id,
       title,
