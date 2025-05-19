@@ -1,13 +1,9 @@
 import { Subtitle } from '@/components/ui/typography/modal';
-import {
-  DropdownItemProps,
-  PermissionProps,
-} from '@/components/ui/dashboard/quicklook/types';
+import { PermissionProps } from '@/components/ui/dashboard/quicklook/types';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { avatars } from '@/lib/avatar';
 import { AppointmentType } from '@/models/Appointment';
 import {
-  addToast,
   Avatar,
   Button,
   Dropdown,
