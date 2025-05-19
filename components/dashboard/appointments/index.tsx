@@ -20,6 +20,7 @@ import { apiRequest } from '@/lib/axios';
 import { AppointmentQuickLook } from './quicklook';
 import CancelDeleteAppointments from './modals/bulk-cancel-delete';
 import { convertSelectionToKeys } from '@/components/ui/data-table/helper';
+import Link from 'next/link';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'aid',
@@ -34,7 +35,7 @@ export default function Appointments() {
 
   const { selected, setSelected, keys, setKeys, action, setAction } =
     useAppointmentStore();
-  const { data, isLoading, refetch } = useAppointmentData();
+  const { data, isLoading } = useAppointmentData();
 
   const appointments: AppointmentType[] = useMemo(() => {
     return data || [];
@@ -182,8 +183,8 @@ export default function Appointments() {
 
   // Render top bar
   const endContent = () => (
-    <Button color="primary" size="sm" onPress={() => refetch()}>
-      Refetch
+    <Button color="primary" size="sm" as={Link} href="/appointments/new">
+      New Appointment
     </Button>
   );
 
