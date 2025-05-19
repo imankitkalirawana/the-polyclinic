@@ -39,6 +39,8 @@ export interface TableProps<T extends TableItem> {
   onRowAction?: (row: string | number | bigint) => void;
   rowsPerPage?: number;
   initialSortDescriptor?: SortDescriptor;
+  selectedKeys?: Selection;
+  onSelectionChange?: (keys: Selection) => void;
 }
 
 export interface TableState {

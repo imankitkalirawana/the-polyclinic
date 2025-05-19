@@ -8,6 +8,7 @@ import { apiRequest } from '@/lib/axios';
 import { useSession } from 'next-auth/react';
 import { format } from 'date-fns';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { addToast } from '@heroui/react';
 
 export default function RescheduleAppointment() {
   const { data: session } = useSession();
@@ -44,19 +45,24 @@ export default function RescheduleAppointment() {
           status: session?.user?.role === 'user' ? 'booked' : 'confirmed',
           date: timing,
         },
-        showToast: true,
-        successMessage: {
-          title: `Appointment rescheduled to ${format(timing, 'PPp')}`,
-        },
-        errorMessage: {
-          title: 'Error Rescheduling Appointment',
-        },
       });
     },
     onSuccess: async (res) => {
+      addToast({
+        title: `Appointment rescheduled to ${format(timing, 'PPp')}`,
+        description: 'Appointment rescheduled successfully',
+        color: 'success',
+      });
       await queryClient.invalidateQueries({ queryKey: ['appointments'] });
       setAction(null);
       setSelected(res);
+    },
+    onError: (error) => {
+      addToast({
+        title: 'Error rescheduling appointment',
+        description: error.message,
+        color: 'danger',
+      });
     },
   });
 

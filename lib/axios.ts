@@ -74,7 +74,6 @@ export const apiRequest = async ({
     return response.data;
   } catch (error: any) {
     console.error('API Request failed', error);
-
     // Handle error response
     if (showToast) {
       addToast({

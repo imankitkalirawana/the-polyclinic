@@ -25,7 +25,6 @@ import {
   TableRow,
   Tooltip,
   Spinner,
-  ButtonGroup,
 } from '@heroui/react';
 import { cn } from '@heroui/react';
 import { SearchIcon } from '@heroui/shared-icons';
@@ -50,6 +49,8 @@ export function Table<T extends TableItem>({
   onRowAction,
   rowsPerPage = 10,
   initialSortDescriptor = { column: 'createdAt', direction: 'descending' },
+  selectedKeys: controlledSelectedKeys,
+  onSelectionChange: controlledSelectionChange,
 }: TableProps<T>) {
   const [searchValue, setSearchValue] = useState<string>('');
   const debouncedSearch = useDebounce(searchValue, 500);
@@ -69,6 +70,12 @@ export function Table<T extends TableItem>({
       filters.map((filter) => [filter.key, 'all'])
     ),
   });
+
+  // Use controlled selection if provided
+  const selectedKeysValue =
+    controlledSelectedKeys !== undefined
+      ? controlledSelectedKeys
+      : state.selectedKeys;
 
   const updateState = (newState: Partial<TableState>) => {
     setState((prevState) => ({ ...prevState, ...newState }));
@@ -219,24 +226,28 @@ export function Table<T extends TableItem>({
     return sortedItems.slice(start, end);
   }, [state.page, sortedItems, rowsPerPage]);
 
+  // Type-guard function for Selection type
+  const isAll = (selection: Selection): selection is 'all' =>
+    selection === 'all';
+
   const filterSelectedKeys = useMemo(() => {
-    if (state.selectedKeys === 'all') return state.selectedKeys;
+    if (isAll(selectedKeysValue)) return selectedKeysValue;
     let resultKeys = new Set<Key>();
 
     if (state.filterValue) {
       sortedItems.forEach((item) => {
         const stringId = String(item[keyField]);
 
-        if ((state.selectedKeys as Set<string>).has(stringId)) {
+        if (selectedKeysValue.has(stringId)) {
           resultKeys.add(stringId);
         }
       });
     } else {
-      resultKeys = state.selectedKeys;
+      resultKeys = selectedKeysValue;
     }
 
     return resultKeys;
-  }, [state.selectedKeys, sortedItems, state.filterValue, keyField]);
+  }, [selectedKeysValue, sortedItems, state.filterValue, keyField]);
 
   const renderCell = useMemoizedCallback((item: T, columnKey: string) => {
     const column = columns.find((col) => col.uid === columnKey);
@@ -272,37 +283,52 @@ export function Table<T extends TableItem>({
   });
 
   const onSelectionChange = useMemoizedCallback((keys: Selection) => {
-    if (keys === 'all') {
+    let resultKeys: Selection;
+
+    if (isAll(keys)) {
       if (state.filterValue) {
-        const resultKeys = new Set(
-          sortedItems.map((item) => String(item[keyField]))
-        );
-        updateState({ selectedKeys: resultKeys });
+        // If search filter is active and "all" is selected, select all filtered items
+        resultKeys = new Set(sortedItems.map((item) => String(item[keyField])));
       } else {
-        updateState({ selectedKeys: keys });
+        resultKeys = keys;
       }
     } else if (keys.size === 0) {
-      updateState({ selectedKeys: new Set() });
+      // If nothing is selected
+      resultKeys = new Set();
     } else {
-      const resultKeys = new Set<Key>();
+      // Handle partial selection
+      const newKeys = new Set<Key>();
 
+      // Add newly selected keys
       keys.forEach((v) => {
-        resultKeys.add(v);
+        newKeys.add(v);
       });
 
-      const selectedValue =
-        state.selectedKeys === 'all'
-          ? new Set(sortedItems.map((item) => String(item[keyField])))
-          : state.selectedKeys;
+      // Preserve selected keys that are not in the current view
+      // Use the isAll type guard defined above
 
-      selectedValue.forEach((v) => {
-        if (items.some((item) => String(item[keyField]) === v)) {
-          return;
-        }
-        resultKeys.add(v);
-      });
+      // Convert to Set if it's 'all', otherwise use the existing Set
+      const currentSelectedKeys = isAll(selectedKeysValue)
+        ? new Set(sortedItems.map((item) => String(item[keyField])))
+        : selectedKeysValue;
 
-      updateState({ selectedKeys: new Set(resultKeys) });
+      if (!isAll(currentSelectedKeys)) {
+        currentSelectedKeys.forEach((v) => {
+          // If key is not in current view, preserve it
+          if (!items.some((item) => String(item[keyField]) === v)) {
+            newKeys.add(v);
+          }
+        });
+      }
+
+      resultKeys = newKeys;
+    }
+
+    // Either update the internal state or call the controlled prop
+    if (controlledSelectionChange) {
+      controlledSelectionChange(resultKeys);
+    } else {
+      updateState({ selectedKeys: resultKeys });
     }
   });
 
@@ -478,13 +504,13 @@ export function Table<T extends TableItem>({
           <Divider className="h-5" orientation="vertical" />
 
           <div className="whitespace-nowrap text-sm text-default-800">
-            {filterSelectedKeys === 'all'
+            {isAll(filterSelectedKeys)
               ? 'All items selected'
               : `${filterSelectedKeys.size > 0 ? `${filterSelectedKeys.size} Selected` : ''}`}
           </div>
 
           {renderSelectedActions &&
-            (filterSelectedKeys === 'all' || filterSelectedKeys.size > 0) && (
+            (isAll(filterSelectedKeys) || filterSelectedKeys.size > 0) && (
               <Dropdown>
                 <DropdownTrigger>
                   <Button
@@ -534,7 +560,7 @@ export function Table<T extends TableItem>({
         />
         <div className="flex items-center justify-end gap-6">
           <span className="text-small text-default-400">
-            {filterSelectedKeys === 'all'
+            {isAll(filterSelectedKeys)
               ? 'All items selected'
               : `${filterSelectedKeys.size} of ${sortedItems.length} selected`}
           </span>

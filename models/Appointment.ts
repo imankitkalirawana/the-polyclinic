@@ -72,7 +72,7 @@ export interface AppointmentType extends Base {
   progress?: number;
   data?: Record<string, string>;
   type: AType;
-  previousAppointments: Array<number>;
+  previousAppointments?: Array<number>;
 }
 
 // @ts-ignore

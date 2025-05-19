@@ -2,10 +2,11 @@ import Modal from '@/components/ui/modal';
 import { useAppointmentData, useAppointmentStore } from '../store';
 import { apiRequest } from '@/lib/axios';
 import { format } from 'date-fns';
-import { Card, CardBody, ScrollShadow, User } from '@heroui/react';
+import { addToast, Card, CardBody, ScrollShadow, User } from '@heroui/react';
 import React, { useCallback, useMemo } from 'react';
 import { AppointmentType } from '@/models/Appointment';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function CancelDeleteAppointments({
   appointments,
@@ -14,8 +15,8 @@ export default function CancelDeleteAppointments({
   appointments: Array<AppointmentType>;
   type?: 'cancel' | 'delete';
 }) {
-  const { setAction } = useAppointmentStore();
-  const { refetch } = useAppointmentData();
+  const { setAction, setKeys } = useAppointmentStore();
+  const queryClient = useQueryClient();
 
   const body = React.useMemo(
     () => (
@@ -53,23 +54,37 @@ export default function CancelDeleteAppointments({
     return appointments.map((appointment) => appointment.aid);
   }, [appointments, type]);
 
-  const handleSubmit = useCallback(async () => {
-    await apiRequest({
-      url: '/api/v1/appointments',
-      method: type === 'cancel' ? 'PATCH' : 'DELETE',
-      data: {
-        ids,
-      },
-      showToast: true,
-      successMessage: {
+  const cancelDeleteMutation = useMutation({
+    mutationFn: async () =>
+      apiRequest({
+        url: '/api/v1/appointments',
+        method: type === 'cancel' ? 'PATCH' : 'DELETE',
+        data: {
+          ids,
+        },
+        showToast: true,
+        successMessage: {
+          title: `${ids.length} Appointment${ids.length <= 1 ? '' : 's'} ${type === 'cancel' ? 'cancelled' : 'deleted'}`,
+        },
+      }),
+    onSuccess: () => {
+      addToast({
         title: `${ids.length} Appointment${ids.length <= 1 ? '' : 's'} ${type === 'cancel' ? 'cancelled' : 'deleted'}`,
-      },
-      onSuccess: () => {
-        refetch();
-        setAction(null);
-      },
-    });
-  }, [ids, type]);
+        description: 'Appointments cancelled successfully',
+        color: 'success',
+      });
+      queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      setAction(null);
+      setKeys(new Set());
+    },
+    onError: (error) => {
+      addToast({
+        title: 'Error cancelling appointments',
+        description: error.message,
+        color: 'danger',
+      });
+    },
+  });
 
   return (
     <Modal
@@ -85,7 +100,7 @@ export default function CancelDeleteAppointments({
         whileSubmitting: type === 'cancel' ? 'Cancelling...' : 'Deleting...',
         color: 'danger',
         onPress: async () => {
-          await handleSubmit();
+          await cancelDeleteMutation.mutateAsync();
         },
       }}
       secondaryButton={{

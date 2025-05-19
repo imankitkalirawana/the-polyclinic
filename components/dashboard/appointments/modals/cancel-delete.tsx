@@ -2,7 +2,7 @@ import Modal from '@/components/ui/modal';
 import { useAppointmentStore } from '../store';
 import { apiRequest } from '@/lib/axios';
 import { format } from 'date-fns';
-import { Card, CardBody } from '@heroui/react';
+import { addToast, Card, CardBody } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import React from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -70,19 +70,24 @@ export default function CancelDeleteAppointment({
         data: {
           status: 'cancelled',
         },
-        showToast: true,
-        successMessage: {
-          title: `Appointment ${type === 'cancel' ? 'cancelled' : 'deleted'}`,
-        },
-        errorMessage: {
-          title: `Error ${type === 'cancel' ? 'cancelling' : 'deleting'} appointment`,
-        },
       });
     },
     onSuccess: async (res) => {
+      addToast({
+        title: `Appointment ${type === 'cancel' ? 'cancelled' : 'deleted'}`,
+        description: 'Appointment cancelled successfully',
+        color: 'success',
+      });
       await queryClient.invalidateQueries({ queryKey: ['appointments'] });
       setAction(null);
       setSelected(res);
+    },
+    onError: (error) => {
+      addToast({
+        title: 'Error cancelling appointment',
+        description: error.message,
+        color: 'danger',
+      });
     },
   });
 

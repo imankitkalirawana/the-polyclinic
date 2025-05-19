@@ -41,10 +41,9 @@ export default function Appointments() {
 
   const { selected, setSelected, keys, setKeys, action, setAction } =
     useAppointmentStore();
-  const { data, isLoading, refetch, isRefetching } = useAppointmentData();
+  const { data, isLoading, refetch } = useAppointmentData();
 
   const appointments: AppointmentType[] = useMemo(() => {
-    console.log('rendered');
     return data || [];
   }, [data]);
 
@@ -279,6 +278,10 @@ export default function Appointments() {
           column: 'date',
           direction: 'descending',
         }}
+        selectedKeys={keys}
+        onSelectionChange={(selectedKeys) => {
+          setKeys(selectedKeys);
+        }}
         onRowAction={(row) => {
           const appointment = appointments.find(
             (appointment) => appointment.aid == row
@@ -290,61 +293,6 @@ export default function Appointments() {
       />
       {selected && <AppointmentQuickLook />}
       {(action === 'bulk-delete' || action === 'bulk-cancel') && (
-        // <BulkDeleteModal<AppointmentType>
-        //   canUndo={action !== 'bulk-delete'}
-        //   modalKey="appointments"
-        //   title={
-        //     action === 'bulk-delete'
-        //       ? 'Delete the selected appointments?'
-        //       : 'Cancel the selected appointments?'
-        //   }
-        //   confirmButtonText={
-        //     action === 'bulk-delete'
-        //       ? 'Confirm Deletion'
-        //       : 'Confirm Cancellation'
-        //   }
-        //   items={appointments.filter((appointment) => {
-        //     if (keys === 'all') return true;
-        //     return keys?.has(String(appointment.aid));
-        //   })}
-        //   onClose={() => setAction(null)}
-        //   onDelete={async () => {
-        //     if (!keys) return;
-        //     let ids = [];
-        //     if (keys === 'all') {
-        //       ids.push(-1); // -1 is the id for all appointments
-        //     } else {
-        //       ids = Array.from(keys);
-        //     }
-        //     if (action === 'bulk-delete') {
-        //       await apiRequest({
-        //         method: 'DELETE',
-        //         url: '/api/v1/appointments',
-        //         data: { ids },
-        //         onSuccess: () => {
-        //           setAction(null);
-        //           refetch();
-        //         },
-        //         onError: (error) => {
-        //           console.log('error', error);
-        //         },
-        //       });
-        //     } else {
-        //       await apiRequest({
-        //         method: 'PATCH',
-        //         url: '/api/v1/appointments',
-        //         data: { ids },
-        //         onSuccess: () => {
-        //           setAction(null);
-        //           refetch();
-        //         },
-        //       });
-        //     }
-        //   }}
-        //   renderItem={(appointment) => (
-        //     <ModalCellRenderer appointment={appointment} />
-        //   )}
-        // />
         <CancelDeleteAppointments
           appointments={appointments.filter((appointment) => {
             if (keys === 'all') return true;
