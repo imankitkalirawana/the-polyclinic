@@ -8,6 +8,8 @@ import Appointment, {
 } from '@/models/Appointment';
 import { UserRole } from '@/models/User';
 import { API_ACTIONS } from '@/lib/config';
+import { logActivity } from '@/lib/server-actions/activity-log';
+import { Schema, Status } from '@/models/Activity';
 
 // get appointment by id from param
 export const GET = auth(async function GET(request: any, context: any) {
@@ -126,6 +128,36 @@ export const PATCH = auth(async function PATCH(request: any, context: any) {
       { new: true }
     );
 
+    const changedFields = Object.keys(data).filter(
+      (key) =>
+        JSON.stringify(appointment?.[key as keyof AppointmentType]) !==
+        JSON.stringify(updatedAppointment?.[key as keyof AppointmentType])
+    );
+
+    const fieldDiffs = changedFields.reduce(
+      (acc, field) => {
+        acc[field] = {
+          old: appointment?.[field as keyof AppointmentType],
+          new: updatedAppointment?.[field as keyof AppointmentType],
+        };
+        return acc;
+      },
+      {} as Record<string, { old: any; new: any }>
+    );
+
+    await logActivity({
+      id: aid,
+      title: 'Appointment updated',
+      schema: Schema.APPOINTMENT,
+      by: request.auth?.user,
+      status: Status.SUCCESS,
+      ip: request.ip,
+      userAgent: request.headers.get('user-agent'),
+      metadata: {
+        fields: changedFields,
+        diff: fieldDiffs,
+      },
+    });
     return NextResponse.json(updatedAppointment);
   } catch (error) {
     console.error(error);

@@ -1,7 +1,6 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { Selection } from '@heroui/react';
 import {
   Button,
   Divider,
@@ -58,7 +57,7 @@ export function Table<T extends TableItem>({
   const [state, setState] = useState<TableState>({
     key: uniqueKey,
     filterValue: debouncedSearch,
-    selectedKeys: new Set([]),
+    selectedKeys,
     visibleColumns: new Set([
       ...(initialVisibleColumns || columns.map((col) => col.uid)),
       'actions',

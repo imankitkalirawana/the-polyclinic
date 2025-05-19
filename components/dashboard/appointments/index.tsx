@@ -265,6 +265,15 @@ export default function Appointments() {
           column: 'date',
           direction: 'descending',
         }}
+        searchField={(appointment, searchValue) =>
+          appointment.patient.name
+            .toLowerCase()
+            .includes(searchValue.toLowerCase()) ||
+          appointment.patient?.phone
+            ?.toLowerCase()
+            .includes(searchValue.toLowerCase()) ||
+          appointment.aid.toString().includes(searchValue)
+        }
         selectedKeys={keys}
         onSelectionChange={(selectedKeys) => {
           setKeys(selectedKeys);

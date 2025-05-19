@@ -3,7 +3,6 @@
 import { useMemo, useState } from 'react';
 import {
   addToast,
-  Avatar,
   Button,
   DropdownItem,
   DropdownMenu,
