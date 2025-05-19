@@ -27,6 +27,7 @@ import { ModalCellRenderer } from './cell-renderer';
 import { apiRequest } from '@/lib/axios';
 import { AppointmentQuickLook } from './quicklook';
 import CancelDeleteAppointments from './modals/bulk-cancel-delete';
+import { convertSelectionToKeys } from '@/components/ui/data-table/helper';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'aid',
@@ -200,14 +201,9 @@ export default function Appointments() {
         <DropdownItem
           key="export"
           onPress={async () => {
-            setKeys(selectedKeys);
             // convert selectedKeys to array of numbers
-            let keys = [];
-            if (selectedKeys === 'all') {
-              keys = [-1];
-            } else {
-              keys = Array.from(selectedKeys);
-            }
+            const keys = convertSelectionToKeys(selectedKeys);
+
             await apiRequest({
               method: 'POST',
               url: '/api/v1/appointments/export',
@@ -242,7 +238,6 @@ export default function Appointments() {
         <DropdownItem
           key="cancel"
           onPress={() => {
-            setKeys(selectedKeys);
             setAction('bulk-cancel');
           }}
         >
@@ -252,7 +247,6 @@ export default function Appointments() {
           key="delete"
           className="text-danger"
           onPress={() => {
-            setKeys(selectedKeys);
             setAction('bulk-delete');
           }}
         >
