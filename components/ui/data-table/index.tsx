@@ -29,7 +29,6 @@ import {
 import { cn } from '@heroui/react';
 import { SearchIcon } from '@heroui/shared-icons';
 import { Icon } from '@iconify/react';
-import type { Key } from '@react-types/shared';
 
 import type { TableItem, TableProps, TableState } from './types';
 import { useMemoizedCallback } from './use-memoized-callback';
@@ -272,8 +271,6 @@ export function Table<T extends TableItem>({
       page: 1,
     });
   }, [debouncedSearch]);
-
-  console.log('selectedKeys', selectedKeys);
 
   const topContent = useMemo(() => {
     return (

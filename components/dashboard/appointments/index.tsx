@@ -1,13 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import {
-  Button,
-  DropdownItem,
-  DropdownMenu,
-  Selection,
-  User,
-} from '@heroui/react';
+import { Button, DropdownItem, DropdownMenu, Selection } from '@heroui/react';
 
 import {
   renderActions,
@@ -22,8 +16,6 @@ import { Table } from '@/components/ui/data-table';
 import { AppointmentType } from '@/models/Appointment';
 import { useRouter } from 'nextjs-toploader/app';
 import { useAppointmentData, useAppointmentStore } from './store';
-import BulkDeleteModal from '@/components/ui/common/modals/bulk-delete';
-import { ModalCellRenderer } from './cell-renderer';
 import { apiRequest } from '@/lib/axios';
 import { AppointmentQuickLook } from './quicklook';
 import CancelDeleteAppointments from './modals/bulk-cancel-delete';
