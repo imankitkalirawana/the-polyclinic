@@ -15,7 +15,7 @@ import {
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { format } from 'date-fns';
 import { ActionType, DropdownKeyType } from '../types';
-import Activity from './activity';
+import ActivityTimeline from '../../../ui/activity/timeline';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
   doctor: [
@@ -215,7 +215,7 @@ export const sidebarContent = (appointment: AppointmentType) => (
         </div>
       </Tab>
       <Tab title="Activity" key="activity">
-        <Activity aid={appointment.aid} />
+        <ActivityTimeline aid={appointment.aid} schema="appointment" />
       </Tab>
     </Tabs>
   </>
