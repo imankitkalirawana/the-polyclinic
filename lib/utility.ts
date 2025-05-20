@@ -60,3 +60,74 @@ export const convertMinutesToHoursAndMinutes = (minutes: number) => {
 
   return `${hourPart} ${minutePart}`;
 };
+
+// flatten object
+export const flattenObject = (obj: any, prefix = ''): Record<string, any> => {
+  return Object.keys(obj || {}).reduce(
+    (acc: Record<string, any>, key: string) => {
+      const propKey = prefix ? `${prefix}.${key}` : key;
+      if (
+        typeof obj[key] === 'object' &&
+        obj[key] !== null &&
+        !Array.isArray(obj[key])
+      ) {
+        Object.assign(acc, flattenObject(obj[key], propKey));
+      } else {
+        acc[propKey] = obj[key];
+      }
+      return acc;
+    },
+    {}
+  );
+};
+
+/**
+ * Track changes between original and updated objects
+ * Returns an object with changed fields and their differences
+ *
+ * @param originalObj - The original object before changes
+ * @param updatedObj - The updated object after changes
+ * @returns An object containing tracked changes
+ */
+export const trackObjectChanges = (
+  originalObj: any,
+  updatedObj: any
+): {
+  changedFields: string[];
+  fieldDiffs: Record<string, { old: any; new: any }>;
+} => {
+  // Convert mongoose documents to plain objects if needed
+  const original =
+    typeof originalObj?.toObject === 'function'
+      ? originalObj.toObject()
+      : originalObj;
+  const updated =
+    typeof updatedObj?.toObject === 'function'
+      ? updatedObj.toObject()
+      : updatedObj;
+
+  // Flatten both objects
+  const flattenedOriginal = flattenObject(original);
+  const flattenedUpdated = flattenObject(updated);
+
+  // Find all changed fields, including nested ones
+  const changedFields = Object.keys(flattenedUpdated).filter(
+    (key) =>
+      JSON.stringify(flattenedOriginal[key]) !==
+      JSON.stringify(flattenedUpdated[key])
+  );
+
+  // Create a diff object with old and new values
+  const fieldDiffs = changedFields.reduce(
+    (acc, field) => {
+      acc[field] = {
+        old: flattenedOriginal[field],
+        new: flattenedUpdated[field],
+      };
+      return acc;
+    },
+    {} as Record<string, { old: any; new: any }>
+  );
+
+  return { changedFields, fieldDiffs };
+};

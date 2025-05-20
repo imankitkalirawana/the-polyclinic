@@ -53,19 +53,16 @@ export default function ActivityTimeline({
   return (
     <div className="w-full">
       <ul className="relative">
-        {/* Vertical line connecting all events */}
         <div className="absolute bottom-0 left-5 top-5 w-px bg-gradient-to-b from-divider via-divider to-transparent"></div>
 
         {activities?.map((activity) => (
           <li key={activity.id} className="relative pb-8 pl-14 last:pb-0">
-            {/* Activity icon */}
             <div
               className={`absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-full ${getActivityColor(activity.schema)} z-10`}
             >
               <Icon icon={getActivityIcon(activity.schema)} width={18} />
             </div>
 
-            {/* Activity content */}
             <div>
               <div className="text-xs text-default-400">
                 {isToday(new Date(activity?.createdAt))
@@ -125,13 +122,6 @@ export default function ActivityTimeline({
                   )}
                 </div>
               )}
-
-              {/* Manually set indicator */}
-              {/* {activity.manuallySet && (
-                <div className="mt-1 text-default-500">
-                  <span>Manually Set</span>
-                </div>
-              )} */}
             </div>
 
             {/* {index === 2 && !showSimilar && (

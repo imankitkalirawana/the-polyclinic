@@ -10,6 +10,7 @@ import { UserRole } from '@/models/User';
 import { API_ACTIONS } from '@/lib/config';
 import { logActivity } from '@/lib/server-actions/activity-log';
 import { Schema, Status } from '@/models/Activity';
+import { flattenObject, trackObjectChanges } from '@/lib/utility';
 
 // get appointment by id from param
 export const GET = auth(async function GET(request: any, context: any) {
@@ -128,27 +129,15 @@ export const PATCH = auth(async function PATCH(request: any, context: any) {
       { new: true }
     );
 
-    const changedFields = Object.keys(data).filter(
-      (key) =>
-        JSON.stringify(appointment?.[key as keyof AppointmentType]) !==
-        JSON.stringify(updatedAppointment?.[key as keyof AppointmentType])
-    );
-
-    const fieldDiffs = changedFields.reduce(
-      (acc, field) => {
-        acc[field] = {
-          old: appointment?.[field as keyof AppointmentType],
-          new: updatedAppointment?.[field as keyof AppointmentType],
-        };
-        return acc;
-      },
-      {} as Record<string, { old: any; new: any }>
+    const { changedFields, fieldDiffs } = trackObjectChanges(
+      appointment,
+      updatedAppointment
     );
 
     await logActivity({
       id: aid,
       title: 'Appointment updated',
-      schema: 'appointment',
+      schema: 'appointment' as Schema,
       by: request.auth?.user,
       status: Status.SUCCESS,
       ip: request.ip,
