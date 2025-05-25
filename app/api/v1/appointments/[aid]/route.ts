@@ -136,7 +136,9 @@ export const PATCH = auth(async function PATCH(request: any, context: any) {
 
     await logActivity({
       id: aid,
-      title: 'Appointment updated',
+      title: `Appointment ${
+        changedFields.includes('status') ? `status` : 'updated'
+      }`,
       schema: 'appointment' as Schema,
       by: request.auth?.user,
       status: Status.SUCCESS,
@@ -168,6 +170,16 @@ export const DELETE = auth(async function DELETE(request: any, context: any) {
     if (API_ACTIONS.isDelete) {
       await Appointment.findOneAndDelete({ aid });
     }
+
+    await logActivity({
+      id: aid,
+      title: 'Appointment deleted',
+      schema: 'appointment' as Schema,
+      by: user,
+      status: Status.SUCCESS,
+      ip: request.ip,
+      userAgent: request.headers.get('user-agent'),
+    });
 
     return NextResponse.json(
       {

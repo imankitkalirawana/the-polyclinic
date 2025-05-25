@@ -78,9 +78,14 @@ export default function CancelDeleteAppointment({
         description: 'Appointment cancelled successfully',
         color: 'success',
       });
-      await queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['appointments'] }),
+        queryClient.invalidateQueries({
+          queryKey: ['activity', 'appointment', appointment?.aid],
+        }),
+      ]);
       setAction(null);
-      setSelected(res);
+      setSelected(type === 'cancel' ? res : null);
     },
     onError: (error) => {
       addToast({

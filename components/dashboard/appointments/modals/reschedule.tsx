@@ -53,7 +53,12 @@ export default function RescheduleAppointment() {
         description: 'Appointment rescheduled successfully',
         color: 'success',
       });
-      await queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['appointments'] }),
+        queryClient.invalidateQueries({
+          queryKey: ['activity', 'appointment', appointment?.aid],
+        }),
+      ]);
       setAction(null);
       setSelected(res);
     },

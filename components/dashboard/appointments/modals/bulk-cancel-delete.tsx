@@ -67,13 +67,18 @@ export default function CancelDeleteAppointments({
           title: `${ids.length} Appointment${ids.length <= 1 ? '' : 's'} ${type === 'cancel' ? 'cancelled' : 'deleted'}`,
         },
       }),
-    onSuccess: () => {
+    onSuccess: async () => {
       addToast({
         title: `${ids.length} Appointment${ids.length <= 1 ? '' : 's'} ${type === 'cancel' ? 'cancelled' : 'deleted'}`,
         description: 'Appointments cancelled successfully',
         color: 'success',
       });
-      queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['appointments'] }),
+        queryClient.invalidateQueries({
+          queryKey: ['activity', 'appointment'],
+        }),
+      ]);
       setAction(null);
       setKeys(new Set());
     },
