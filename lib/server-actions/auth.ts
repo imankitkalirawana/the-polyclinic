@@ -195,3 +195,7 @@ export const login = async ({
     throw error;
   }
 };
+
+export const googleLogin = async () => {
+  await signIn('google');
+};

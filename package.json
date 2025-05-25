@@ -15,6 +15,7 @@
     "tsc": "tsc"
   },
   "dependencies": {
+    "@auth/mongodb-adapter": "^3.9.1",
     "@aws-sdk/client-s3": "^3.679.0",
     "@commitlint/types": "^19.8.0",
     "@faker-js/faker": "^9.7.0",

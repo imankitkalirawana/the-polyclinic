@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@auth/mongodb-adapter':
+        specifier: ^3.9.1
+        version: 3.9.1(mongodb@6.16.0(@aws-sdk/credential-providers@3.808.0)(socks@2.8.4))(nodemailer@6.10.1)
       '@aws-sdk/client-s3':
         specifier: ^3.679.0
         version: 3.808.0
@@ -233,6 +236,11 @@ packages:
         optional: true
       nodemailer:
         optional: true
+
+  '@auth/mongodb-adapter@3.9.1':
+    resolution: {integrity: sha512-pzJSf1Ehs/wVrCJAFwQLiShw6+RZT23g2Ljpo4c/3iy6LDJhoTjlih9L8B0qCnK1Qv9xYZoQLwrXl6kMSyiHtg==}
+    peerDependencies:
+      mongodb: ^6
 
   '@aws-crypto/crc32@5.2.0':
     resolution: {integrity: sha512-nLbCWqQNgUiwwtFsen1AdzAtvuLRsQS8rYgMuxCrdKf9kOssamGLuPwyTY9wyYblNr9+1XM8v6zoDTPPSIeANg==}
@@ -4784,6 +4792,15 @@ snapshots:
       preact-render-to-string: 6.5.11(preact@10.24.3)
     optionalDependencies:
       nodemailer: 6.10.1
+
+  '@auth/mongodb-adapter@3.9.1(mongodb@6.16.0(@aws-sdk/credential-providers@3.808.0)(socks@2.8.4))(nodemailer@6.10.1)':
+    dependencies:
+      '@auth/core': 0.39.1(nodemailer@6.10.1)
+      mongodb: 6.16.0(@aws-sdk/credential-providers@3.808.0)(socks@2.8.4)
+    transitivePeerDependencies:
+      - '@simplewebauthn/browser'
+      - '@simplewebauthn/server'
+      - nodemailer
 
   '@aws-crypto/crc32@5.2.0':
     dependencies:
