@@ -45,7 +45,18 @@ const LoginComponent: React.FC = () => {
           >
             Continue with Google
           </Button>
-          <Button fullWidth variant="light" size="lg">
+          <Button
+            fullWidth
+            variant="light"
+            size="lg"
+            onPress={() => {
+              addToast({
+                title: 'Coming soon',
+                description: 'This feature is coming soon',
+                color: 'warning',
+              });
+            }}
+          >
             Continue another way
           </Button>
         </>
@@ -105,14 +116,17 @@ const LoginComponent: React.FC = () => {
 
   const loginFooter = (
     <>
-      <div className="flex items-center justify-between px-1 py-2">
-        <Link
-          className="text-small text-default-500 hover:underline"
-          href={`/auth/forgot-password?email=${formik.values.email}`}
-        >
-          Forgot password?
-        </Link>
-      </div>
+      {formik.values.page === 2 && (
+        <div className="flex items-center justify-between px-1 py-2">
+          <Link
+            className="text-small text-default-500 hover:underline"
+            href={`/auth/forgot-password?email=${formik.values.email}`}
+          >
+            Forgot password?
+          </Link>
+        </div>
+      )}
+
       <div className="flex items-center gap-2">
         <div className="h-px w-full bg-divider" />
         <div className="text-small text-default-500">or</div>
