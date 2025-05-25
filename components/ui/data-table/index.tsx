@@ -468,7 +468,7 @@ export function Table<T extends TableItem>({
 
   const bottomContent = useMemo(() => {
     return (
-      <div className="flex flex-col items-center justify-between gap-2 px-2 py-2 sm:flex-row">
+      <div className="flex flex-col items-center justify-between gap-2 sm:flex-row">
         <Pagination
           isCompact
           showControls
@@ -477,6 +477,7 @@ export function Table<T extends TableItem>({
           page={state.page}
           total={pages}
           onChange={(page) => updateState({ page })}
+          size="sm"
         />
         <div className="flex items-center justify-end gap-6">
           <span className="text-small text-default-400">

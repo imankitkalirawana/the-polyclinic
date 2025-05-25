@@ -1,11 +1,17 @@
-import NextAuth from 'next-auth';
+import NextAuth, { AuthError } from 'next-auth';
 import credentials from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 
-import { InvalidCredentialsError } from './authClass';
-
 import { connectDB } from '@/lib/db';
-import User from '@/models/User';
+import User, { UserStatus } from '@/models/User';
+
+class ErrorMessage extends AuthError {
+  code = 'custom';
+  constructor(message = 'Invalid email or password') {
+    super(message);
+    this.message = message;
+  }
+}
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -17,24 +23,34 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       async authorize(credentials) {
         await connectDB();
         let user = null;
+
         if (!credentials?.email || !credentials?.password) {
-          throw new InvalidCredentialsError();
+          throw new ErrorMessage('Invalid Email/Password');
         }
         // @ts-ignore
         user = await User.findOne({ email: credentials.email });
 
+        if (
+          user?.status === UserStatus.inactive ||
+          user?.status === UserStatus.blocked
+        ) {
+          throw new ErrorMessage(
+            `Your account is ${user?.status}. Please contact support.`
+          );
+        }
+
         if (!user) {
-          throw new InvalidCredentialsError();
+          throw new ErrorMessage('Invalid Email/Password');
         }
         if (typeof credentials.password !== 'string') {
-          throw new InvalidCredentialsError();
+          throw new ErrorMessage('Invalid Email/Password');
         }
         const isValid = await bcrypt.compare(
           credentials!.password,
           user.password
         );
         if (!isValid) {
-          throw new InvalidCredentialsError();
+          throw new ErrorMessage('Invalid Email/Password');
         }
         return user;
       },

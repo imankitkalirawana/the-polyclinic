@@ -88,7 +88,7 @@ function ActivityTimelineItem({ activity }: { activity: ActivityLogType }) {
   const [visibleFields, setVisibleFields] = useState<number>(2);
 
   return (
-    <li key={activity.id} className="relative pb-8 pl-14 last:pb-0">
+    <li key={activity.id} className="relative pb-4 pl-14 last:pb-0">
       <div
         className={`absolute left-0 top-0 flex size-8 items-center justify-center rounded-full ${getActivityColor(activity.schema)} z-10`}
       >

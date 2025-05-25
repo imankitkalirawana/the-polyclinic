@@ -5,9 +5,8 @@ import * as Yup from 'yup';
 import { useQueryState } from 'nuqs';
 import { useRouter } from 'nextjs-toploader/app';
 import { addToast } from '@heroui/react';
-import { signIn } from 'next-auth/react';
 import { Gender } from '@/lib/interface';
-import { register, sendOTP, verifyOTP } from '@/lib/server-actions/auth';
+import { register, sendOTP, verifyOTP, login } from '@/lib/server-actions/auth';
 import { verifyEmail } from '@/functions/server-actions/auth/verification';
 import { AuthContextType, FlowType } from './types';
 
@@ -211,10 +210,9 @@ export const createAuthProvider = (flowType: FlowType) => {
           gender: values.gender,
         });
         if (res.success) {
-          await signIn('credentials', {
+          await login({
             email: values.email,
             password: values.password,
-            redirect: false,
           });
           router.push('/');
         } else {
@@ -237,14 +235,13 @@ export const createAuthProvider = (flowType: FlowType) => {
           paginate(1);
         }
       } else if (values.page === 1) {
-        const res = await signIn('credentials', {
+        const res = await login({
           email: values.email,
           password: values.password,
-          redirect: false,
         });
 
         if (res?.error) {
-          setFieldError('password', res.error);
+          setFieldError('password', res.message);
         } else {
           router.push('/dashboard');
         }

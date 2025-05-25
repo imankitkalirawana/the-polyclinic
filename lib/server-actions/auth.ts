@@ -11,6 +11,8 @@ import Otp from '@/models/Otp';
 import User from '@/models/User';
 import { OtpEmail, WelcomeUser } from '@/templates/email';
 import { Gender } from '../interface';
+import { AuthError } from 'next-auth';
+import { signIn } from '@/auth';
 
 export const sendOTP = async ({
   email,
@@ -170,4 +172,26 @@ export const register = async ({
     success: true,
     message: 'Registration successful',
   };
+};
+
+export const login = async ({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) => {
+  try {
+    await signIn('credentials', {
+      email,
+      password,
+      redirect: false,
+    });
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return { error: 'error', message: error.message, status: 401 };
+    }
+
+    throw error;
+  }
 };
