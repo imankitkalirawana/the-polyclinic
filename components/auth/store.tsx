@@ -91,12 +91,12 @@ export const createAuthProvider = (flowType: FlowType) => {
             email: Yup.string()
               .email('Invalid email')
               .when('page', {
-                is: 0,
+                is: 1,
                 then: (schema) => schema.required('Email is required'),
                 otherwise: (schema) => schema,
               }),
             password: Yup.string().when('page', {
-              is: 1,
+              is: 2,
               then: (schema) => schema.required('Password is required'),
               otherwise: (schema) => schema,
             }),
@@ -227,6 +227,9 @@ export const createAuthProvider = (flowType: FlowType) => {
     // Login flow
     const handleLoginSubmit = async (values: any, { setFieldError }: any) => {
       if (values.page === 0) {
+        paginate(1);
+      }
+      if (values.page === 1) {
         // Check if email exists
         if (!(await verifyEmail(values.email))) {
           setFieldError('email', 'Email not found');
@@ -234,7 +237,7 @@ export const createAuthProvider = (flowType: FlowType) => {
         } else {
           paginate(1);
         }
-      } else if (values.page === 1) {
+      } else if (values.page === 2) {
         const res = await login({
           email: values.email,
           password: values.password,

@@ -1,18 +1,57 @@
 'use client';
 import React from 'react';
-import { Link } from '@heroui/react';
+import { addToast, Button, Link } from '@heroui/react';
 import { APP_INFO } from '@/lib/config';
 
 import { LoginProvider, useLogin } from '../store';
 import { Input, PasswordInput } from '../form';
 import Auth from '..';
 import { AuthStep } from '../types';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 const LoginComponent: React.FC = () => {
   const { formik, paginate } = useLogin();
 
   const LOGIN_STEPS: Record<number, AuthStep> = {
     0: {
+      title: 'Log in to your account',
+      description: `Welcome back to ${APP_INFO.name}! Please choose a way to continue.`,
+      content: (
+        <>
+          <Button
+            fullWidth
+            variant="flat"
+            startContent={<Icon icon="solar:letter-bold-duotone" width={20} />}
+            size="lg"
+            color="primary"
+            onPress={() => {
+              paginate(1);
+            }}
+          >
+            Continue with Email
+          </Button>
+          <Button
+            fullWidth
+            variant="bordered"
+            startContent={<Icon icon="devicon:google" width={20} />}
+            size="lg"
+            onPress={() => {
+              addToast({
+                title: 'Coming soon',
+                description: 'This feature is coming soon',
+                color: 'warning',
+              });
+            }}
+          >
+            Continue with Google
+          </Button>
+          <Button fullWidth variant="light" size="lg">
+            Continue another way
+          </Button>
+        </>
+      ),
+    },
+    1: {
       title: 'Log in to your account',
       description: `Welcome back to ${APP_INFO.name}! Please enter your email to continue.`,
       button: 'Continue',
@@ -35,7 +74,7 @@ const LoginComponent: React.FC = () => {
         </>
       ),
     },
-    1: {
+    2: {
       title: 'Enter your password',
       description: 'Enter your password to log in to your account.',
       button: 'Log in',
