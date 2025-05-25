@@ -87,7 +87,11 @@ export default function DashboardLayout({
                 'justify-start text-foreground': !isHidden,
               })}
               startContent={
-                <Avatar isBordered name={session.user?.name || ''} size="sm" />
+                <Avatar
+                  src={session.user?.image}
+                  name={session.user?.name || ''}
+                  size="sm"
+                />
               }
               variant="light"
               as={Link}

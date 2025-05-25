@@ -5,7 +5,7 @@ import credentials from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 
 import client, { connectDB } from '@/lib/db';
-import User, { UserStatus } from '@/models/User';
+import User, { UserRole, UserStatus } from '@/models/User';
 
 class ErrorMessage extends AuthError {
   code = 'custom';
@@ -66,8 +66,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
     strategy: 'jwt',
   },
-
   callbacks: {
+    async signIn({ user, account }) {
+      if (account?.provider === 'google') {
+        await connectDB();
+        const existingUser = await User.findOne({ email: user.email });
+        if (!existingUser) {
+          return '/auth/error?error=UserNotFound';
+        }
+
+        if (
+          existingUser.status === UserStatus.inactive ||
+          existingUser.status === UserStatus.blocked
+        ) {
+          return '/auth/error?error=UserBlocked';
+        }
+      }
+      return true;
+    },
     jwt({ token, user }) {
       if (user) {
         token.role = user.role;
