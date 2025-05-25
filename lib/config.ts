@@ -118,7 +118,7 @@ export const APPOINTMENT = {
 export const WEBSITE_SETTING = {
   status: {
     maintainance: false,
-    registration: true,
+    registration: process.env.NODE_ENV === 'production' ? false : true,
     login: true,
     email: false,
   },
