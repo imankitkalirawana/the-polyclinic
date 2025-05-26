@@ -67,23 +67,29 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     strategy: 'jwt',
   },
   callbacks: {
-    async signIn({ user, account }) {
-      if (account?.provider === 'google') {
-        await connectDB();
-        const existingUser = await User.findOne({ email: user.email });
-        if (!existingUser) {
-          return '/auth/error?error=UserNotFound';
-        }
+    // async signIn({ user, account }) {
+    //   console.log('user', user, 'account', account);
+    //   if (account?.provider === 'google') {
+    //     await connectDB();
+    //     const existingUser = await User.findOne({ email: user.email });
+    //     if (!existingUser) {
+    //       await User.create({
+    //         email: user.email,
+    //         name: user.name,
+    //         image: user.image,
+    //       });
+    //       return true;
+    //     }
 
-        if (
-          existingUser.status === UserStatus.inactive ||
-          existingUser.status === UserStatus.blocked
-        ) {
-          return '/auth/error?error=UserBlocked';
-        }
-      }
-      return true;
-    },
+    //     if (
+    //       existingUser.status === UserStatus.inactive ||
+    //       existingUser.status === UserStatus.blocked
+    //     ) {
+    //       return '/auth/error?error=UserBlocked';
+    //     }
+    //   }
+    //   return true;
+    // },
     jwt({ token, user }) {
       if (user) {
         token.role = user.role;
