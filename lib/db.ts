@@ -2,11 +2,11 @@
 import mongoose from 'mongoose';
 import { MongoClient, ServerApiVersion } from 'mongodb';
 
-const databaseUrl = process.env.MONGODB_URI || '';
+const uri = process.env.MONGODB_URI || '';
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(databaseUrl);
+    await mongoose.connect(uri);
     console.log('Connected to MongoDB');
   } catch (error) {
     console.error('Error connecting to MongoDB:', error);
@@ -16,7 +16,6 @@ const connectDB = async () => {
 
 export { connectDB };
 
-const uri = process.env.MONGODB_URI;
 const options = {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -35,12 +34,12 @@ if (process.env.NODE_ENV === 'development') {
   };
 
   if (!globalWithMongo._mongoClient) {
-    globalWithMongo._mongoClient = new MongoClient(databaseUrl, options);
+    globalWithMongo._mongoClient = new MongoClient(uri, options);
   }
   client = globalWithMongo._mongoClient;
 } else {
   // In production mode, it's best to not use a global variable.
-  client = new MongoClient(databaseUrl, options);
+  client = new MongoClient(uri, options);
 }
 
 // Export a module-scoped MongoClient. By doing this in a

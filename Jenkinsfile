@@ -6,6 +6,7 @@ pipeline {
     environment {
         APP_PATH = "/home/ankit/apps/the-polyclinic"
         PM2_HOME = "/home/ankit/.pm2"
+        MONGODB_URI = credentials('MONGODB_URI')
     }
     stages {
         stage('Checkout') {
@@ -23,6 +24,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh '''
+                    export MONGODB_URI=${MONGODB_URI}
                     pnpm run build
                 '''
             }
