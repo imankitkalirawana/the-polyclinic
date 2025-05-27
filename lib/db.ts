@@ -2,7 +2,7 @@
 import mongoose from 'mongoose';
 import { MongoClient, ServerApiVersion } from 'mongodb';
 
-const databaseUrl = process.env.MONGO_URI || '';
+const databaseUrl = process.env.MONGODB_URI || '';
 
 const connectDB = async () => {
   try {
