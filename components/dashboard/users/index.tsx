@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from 'react';
 import {
-  addToast,
   Button,
   DropdownItem,
   DropdownMenu,
@@ -26,9 +25,6 @@ import { getAllUsers } from '@/lib/users/helper';
 import { useRouter } from 'nextjs-toploader/app';
 import { toast } from 'sonner';
 import QuickLook from './quick-look';
-import BulkDeleteModal from '../../ui/common/modals/bulk-delete';
-import axios from 'axios';
-import { ModalCellRenderer } from './cell-renderer';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'image',
@@ -313,46 +309,7 @@ export default function Users() {
           }
         }}
       />
-      {deleteModal.isOpen && (
-        <BulkDeleteModal<UserType>
-          modalKey="users"
-          items={users.filter((user) => {
-            if (selectedKeys === 'all') return true;
-            return selectedKeys?.has(String(user.uid));
-          })}
-          onClose={deleteModal.onClose}
-          onDelete={async () => {
-            if (!selectedKeys) return;
 
-            const ids = Array.from(selectedKeys);
-            await axios
-              .delete('/api/v1/users', {
-                data: { ids },
-              })
-              .then(() => {
-                addToast({
-                  title: 'Deleted successfully',
-                  description: `${ids.length} user${
-                    ids.length > 1 ? 's' : ''
-                  } ${ids.length > 1 ? 'were' : 'was'} deleted successfully`,
-                  color: 'success',
-                });
-                deleteModal.onClose();
-                refetch();
-                setSelectedKeys(undefined);
-              })
-              .catch((err) => {
-                console.error(err);
-                addToast({
-                  title: 'Failed to delete users',
-                  description: err?.message || 'Failed to delete users',
-                  color: 'danger',
-                });
-              });
-          }}
-          renderItem={(user) => <ModalCellRenderer user={user} />}
-        />
-      )}
       {quickLook.isOpen && quickLookItem && (
         <QuickLook onClose={quickLook.onClose} item={quickLookItem} />
       )}

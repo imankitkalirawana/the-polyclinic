@@ -2,7 +2,6 @@
 import {
   Button,
   cn,
-  dropdown,
   Dropdown,
   DropdownItem,
   DropdownMenu,
