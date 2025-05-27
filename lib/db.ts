@@ -16,9 +16,7 @@ const connectDB = async () => {
 
 export { connectDB };
 
-if (!process.env.MONGODB_URI) {
-  throw new Error('Invalid/Missing environment variable: "MONGODB_URI"');
-}
+
 
 const uri = process.env.MONGODB_URI;
 const options = {
@@ -39,12 +37,12 @@ if (process.env.NODE_ENV === 'development') {
   };
 
   if (!globalWithMongo._mongoClient) {
-    globalWithMongo._mongoClient = new MongoClient(uri, options);
+    globalWithMongo._mongoClient = new MongoClient(databaseUrl, options);
   }
   client = globalWithMongo._mongoClient;
 } else {
   // In production mode, it's best to not use a global variable.
-  client = new MongoClient(uri, options);
+  client = new MongoClient(databaseUrl, options);
 }
 
 // Export a module-scoped MongoClient. By doing this in a
