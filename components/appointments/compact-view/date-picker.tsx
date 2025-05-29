@@ -56,7 +56,7 @@ export default function DatePicker() {
           aria-label="Dates"
           selectedKey={date}
           onSelectionChange={(date) => {
-            setDate(date.toString());
+            if (date) setDate(date.toString());
           }}
           color="primary"
           items={dates}
