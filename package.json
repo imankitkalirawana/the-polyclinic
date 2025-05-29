@@ -21,7 +21,7 @@
     "@faker-js/faker": "^9.7.0",
     "@heroui/react": "^2.7.6",
     "@iconify/react": "^5.0.2",
-    "@internationalized/date": "^3.8.0",
+    "@internationalized/date": "^3.8.1",
     "@react-aria/i18n": "^3.12.8",
     "@react-types/shared": "^3.29.0",
     "@reduxjs/toolkit": "^2.4.0",

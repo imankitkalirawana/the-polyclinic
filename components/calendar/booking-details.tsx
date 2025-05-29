@@ -141,6 +141,7 @@ export default function BookingDetails({
       <Tabs
         classNames={{ tab: 'h-6' }}
         size="sm"
+        // @ts-expect-error
         onSelectionChange={onDurationChange}
       >
         {durations.map((duration) => (

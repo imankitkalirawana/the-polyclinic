@@ -21,7 +21,6 @@ import { CopyText } from '@/components/ui/copy';
 import { format } from 'date-fns';
 
 import { chipColorMap, ChipColorType } from '@/lib/chip';
-import PopoverCard from '../user/popover-user';
 
 export const renderCopyableText = (text: string) => {
   return <CopyText>{text}</CopyText>;
@@ -44,7 +43,6 @@ export const renderUser = ({
       classNames={{
         content: 'bg-transparent p-0 shadow-none',
       }}
-      content={<PopoverCard uid={uid} />}
     >
       <User
         avatarProps={{
