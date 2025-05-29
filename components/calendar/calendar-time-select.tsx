@@ -94,6 +94,7 @@ export default function CalendarTimeSelect({
             cursor: 'rounded-md',
           }}
           size="sm"
+          // @ts-expect-error
           onSelectionChange={onTimeFormatChange}
         >
           {timeFormats.map((timeFormat) => (
