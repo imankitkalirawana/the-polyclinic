@@ -1181,8 +1181,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@internationalized/date@3.8.1':
-    resolution: {integrity: sha512-PgVE6B6eIZtzf9Gu5HvJxRK3ufUFz9DhspELuhW/N0GuMGMTLvPQNRkHP2hTuP9lblOk+f+1xi96sPiPXANXAA==}
+  '@internationalized/date@3.8.0':
+    resolution: {integrity: sha512-J51AJ0fEL68hE4CwGPa6E0PO6JDaVLd8aln48xFCSy7CZkZc96dGEGmLs2OEEbBxcsVZtfrqkXJwI2/MSG8yKw==}
 
   '@internationalized/message@3.1.7':
     resolution: {integrity: sha512-gLQlhEW4iO7DEFPf/U7IrIdA3UyLGS0opeqouaFwlMObLUzwexRjbygONHDVbC9G9oFLXsLyGKYkJwqXw/QADg==}
@@ -6860,10 +6860,7 @@ snapshots:
   '@img/sharp-win32-ia32@0.34.2':
     optional: true
 
-  '@img/sharp-win32-x64@0.34.2':
-    optional: true
-
-  '@internationalized/date@3.8.1':
+  '@internationalized/date@3.8.0':
     dependencies:
       '@swc/helpers': 0.5.17
 
