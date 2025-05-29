@@ -44,7 +44,7 @@ export const renderUser = ({
       classNames={{
         content: 'bg-transparent p-0 shadow-none',
       }}
-      content={<PopoverCard uid={uid} />}
+      // content={<PopoverCard uid={uid} />}
     >
       <User
         avatarProps={{
