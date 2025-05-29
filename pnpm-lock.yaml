@@ -4,9 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-overrides:
-  '@internationalized/date': ^3.8.1
-
 importers:
 
   .:
@@ -1183,6 +1180,9 @@ packages:
 
   '@internationalized/date@3.8.0':
     resolution: {integrity: sha512-J51AJ0fEL68hE4CwGPa6E0PO6JDaVLd8aln48xFCSy7CZkZc96dGEGmLs2OEEbBxcsVZtfrqkXJwI2/MSG8yKw==}
+
+  '@internationalized/date@3.8.1':
+    resolution: {integrity: sha512-PgVE6B6eIZtzf9Gu5HvJxRK3ufUFz9DhspELuhW/N0GuMGMTLvPQNRkHP2hTuP9lblOk+f+1xi96sPiPXANXAA==}
 
   '@internationalized/message@3.1.7':
     resolution: {integrity: sha512-gLQlhEW4iO7DEFPf/U7IrIdA3UyLGS0opeqouaFwlMObLUzwexRjbygONHDVbC9G9oFLXsLyGKYkJwqXw/QADg==}
@@ -5839,7 +5839,7 @@ snapshots:
       '@heroui/system': 2.4.15(@heroui/theme@2.4.15(tailwindcss@3.4.17))(framer-motion@11.18.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@heroui/theme': 2.4.15(tailwindcss@3.4.17)
       '@heroui/use-aria-button': 2.2.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@internationalized/date': 3.8.1
+      '@internationalized/date': 3.8.0
       '@react-aria/calendar': 3.8.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@react-aria/focus': 3.20.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@react-aria/i18n': 3.12.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -5925,7 +5925,7 @@ snapshots:
       '@heroui/shared-utils': 2.1.9
       '@heroui/system': 2.4.15(@heroui/theme@2.4.15(tailwindcss@3.4.17))(framer-motion@11.18.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@heroui/theme': 2.4.15(tailwindcss@3.4.17)
-      '@internationalized/date': 3.8.1
+      '@internationalized/date': 3.8.0
       '@react-aria/datepicker': 3.14.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@react-aria/i18n': 3.12.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@react-aria/utils': 3.28.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -5948,7 +5948,7 @@ snapshots:
       '@heroui/shared-utils': 2.1.9
       '@heroui/system': 2.4.15(@heroui/theme@2.4.15(tailwindcss@3.4.17))(framer-motion@11.18.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@heroui/theme': 2.4.15(tailwindcss@3.4.17)
-      '@internationalized/date': 3.8.1
+      '@internationalized/date': 3.8.0
       '@react-aria/datepicker': 3.14.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@react-aria/i18n': 3.12.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@react-aria/utils': 3.28.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -6507,7 +6507,7 @@ snapshots:
     dependencies:
       '@heroui/react-utils': 2.1.10(react@18.3.1)
       '@heroui/system-rsc': 2.3.13(@heroui/theme@2.4.15(tailwindcss@3.4.17))(react@18.3.1)
-      '@internationalized/date': 3.8.1
+      '@internationalized/date': 3.8.0
       '@react-aria/i18n': 3.12.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@react-aria/overlays': 3.27.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@react-aria/utils': 3.28.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -6860,7 +6860,14 @@ snapshots:
   '@img/sharp-win32-ia32@0.34.2':
     optional: true
 
+  '@img/sharp-win32-x64@0.34.2':
+    optional: true
+
   '@internationalized/date@3.8.0':
+    dependencies:
+      '@swc/helpers': 0.5.17
+
+  '@internationalized/date@3.8.1':
     dependencies:
       '@swc/helpers': 0.5.17
 

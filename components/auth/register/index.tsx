@@ -124,6 +124,7 @@ const RegisterComponent: React.FC = () => {
           <I18nProvider locale="en-IN">
             <DatePicker
               label="Date of Birth (Optional)"
+              // @ts-expect-error
               value={formik.values.dob ? parseDate(formik.values.dob) : null}
               onChange={(value) => {
                 const dob = new Date(value as any).toISOString().split('T')[0];
