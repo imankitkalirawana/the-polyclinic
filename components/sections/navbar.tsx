@@ -34,6 +34,7 @@ import { avatars } from '@/lib/avatar';
 export default function Navbar() {
   const router = useRouter();
   const { data: session } = useSession();
+  console.log('test');
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [activeMenu, setActiveMenu] = React.useState<
