@@ -7,6 +7,7 @@ pipeline {
         APP_PATH = "/home/ankit/apps/the-polyclinic"
         PM2_HOME = "/home/ankit/.pm2"
         MONGODB_URI = credentials('MONGODB_URI')
+        SLACK_CHANNEL = "#jenkins-ci"
     }
     stages {
         stage('Checkout') {
@@ -39,6 +40,18 @@ pipeline {
                     pm2 restart the-polyclinic || pm2 start pnpm --name "the-polyclinic" -- run start
                 '''
             }
+        }
+    }
+    post {
+        success {
+            slackSend channel: "${SLACK_CHANNEL}",
+                      color: 'good',
+                      message: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' completed successfully! (${env.BUILD_URL})"
+        }
+        failure {
+            slackSend channel: "${SLACK_CHANNEL}",
+                      color: 'danger',
+                      message: "FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' failed! (${env.BUILD_URL})"
         }
     }
 }
