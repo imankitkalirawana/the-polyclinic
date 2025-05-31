@@ -46,12 +46,22 @@ pipeline {
         success {
             slackSend channel: "${SLACK_CHANNEL}",
                       color: 'good',
-                      message: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' completed successfully! (${env.BUILD_URL})"
+                      message: """SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'
+Build URL: ${env.BUILD_URL}
+Branch: ${env.GIT_BRANCH}
+Commit: ${env.GIT_COMMIT?.substring(0, 7)}
+Duration: ${currentBuild.durationString}
+Completed successfully!"""
         }
         failure {
             slackSend channel: "${SLACK_CHANNEL}",
                       color: 'danger',
-                      message: "FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' failed! (${env.BUILD_URL})"
+                      message: """FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'
+Build URL: ${env.BUILD_URL}
+Branch: ${env.GIT_BRANCH}
+Commit: ${env.GIT_COMMIT?.substring(0, 7)}
+Duration: ${currentBuild.durationString}
+Failed! Please check the logs for details."""
         }
     }
 }
