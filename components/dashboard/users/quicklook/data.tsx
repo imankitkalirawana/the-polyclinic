@@ -83,39 +83,6 @@ export const content = (user: UserType) => [
     icon: 'solar:map-point-bold-duotone',
     classNames: { icon: 'text-teal-500 bg-teal-50' },
   },
-  ...(user.additionalInfo.symptoms
-    ? [
-        {
-          label: 'Symptoms',
-          value: () => user.additionalInfo.symptoms,
-          icon: 'solar:notes-bold-duotone',
-          classNames: { icon: 'text-orange-500 bg-orange-50' },
-          cols: 2,
-        },
-      ]
-    : []),
-  ...(user.additionalInfo.notes
-    ? [
-        {
-          label: 'Notes',
-          value: () => user.additionalInfo.notes,
-          icon: 'solar:notes-bold-duotone',
-          classNames: { icon: 'text-amber-500 bg-amber-50' },
-          cols: 2,
-        },
-      ]
-    : []),
-  ...(user.additionalInfo.description
-    ? [
-        {
-          label: 'Description',
-          value: () => user.additionalInfo.description,
-          icon: 'solar:document-text-bold-duotone',
-          classNames: { icon: 'text-pink-500 bg-pink-50' },
-          cols: 2,
-        },
-      ]
-    : []),
 ];
 
 export const sidebarContent = (user: UserType) => (

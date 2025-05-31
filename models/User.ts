@@ -30,13 +30,6 @@ export interface UserType extends Base {
   name: string;
   role: UserRole;
   status: UserStatus;
-  additionalInfo: {
-    notes?: string;
-    symptoms?: string;
-    type: UserRole;
-    description?: string;
-    instructions?: string;
-  };
   country: string;
   state: string;
   city: string;
