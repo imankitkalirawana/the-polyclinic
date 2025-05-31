@@ -62,7 +62,6 @@ export default function CancelDeleteAppointments({
         data: {
           ids,
         },
-        showToast: true,
         successMessage: {
           title: `${ids.length} Appointment${ids.length <= 1 ? '' : 's'} ${type === 'cancel' ? 'cancelled' : 'deleted'}`,
         },

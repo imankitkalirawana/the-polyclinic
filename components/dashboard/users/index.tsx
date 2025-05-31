@@ -24,7 +24,9 @@ import { useQuery } from '@tanstack/react-query';
 import { getAllUsers } from '@/lib/users/helper';
 import { useRouter } from 'nextjs-toploader/app';
 import { toast } from 'sonner';
-import QuickLook from './quick-look';
+import QuickLook from '@/components/ui/dashboard/quicklook';
+import { UserQuickLook } from './quicklook';
+import { useUserStore } from './store';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'image',
@@ -38,7 +40,7 @@ const INITIAL_VISIBLE_COLUMNS = [
 export default function Users() {
   const router = useRouter();
   const deleteModal = useDisclosure();
-  const quickLook = useDisclosure();
+  const { selected, setSelected } = useUserStore();
 
   const [selectedKeys, setSelectedKeys] = useState<Selection>();
   const [quickLookItem, setQuickLookItem] = useState<UserType | null>(null);
@@ -304,15 +306,18 @@ export default function Users() {
         onRowAction={(row) => {
           const user = users.find((user) => user.uid == row);
           if (user) {
-            setQuickLookItem(user);
-            quickLook.onOpen();
+            setSelected(user);
           }
         }}
       />
 
-      {quickLook.isOpen && quickLookItem && (
-        <QuickLook onClose={quickLook.onClose} item={quickLookItem} />
-      )}
+      {/* {quickLook.isOpen && quickLookItem && (
+        <QuickLook
+          onClose={quickLook.onClose}
+          item={quickLookItem as UserType}
+        />
+      )} */}
+      <UserQuickLook />
     </>
   );
 }
