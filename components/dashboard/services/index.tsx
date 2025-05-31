@@ -16,14 +16,14 @@ import {
   renderDate,
 } from '@/components/ui/data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
-
+import { useServiceStore } from './store';
 import { Table } from '@/components/ui/data-table';
 import { ServiceType } from '@/models/Service';
 import { useQuery } from '@tanstack/react-query';
 import { getAllServices } from '@/app/dashboard/services/helper';
 import { APPOINTMENT, CLINIC_INFO } from '@/lib/config';
 import { useRouter } from 'nextjs-toploader/app';
-
+import { ServiceQuickLook } from './quicklook';
 const INITIAL_VISIBLE_COLUMNS = [
   'uniqueId',
   'name',
@@ -40,6 +40,7 @@ export default function Services() {
     queryKey: ['services'],
     queryFn: () => getAllServices(),
   });
+  const { selected, setSelected } = useServiceStore();
 
   const services: ServiceType[] = data || [];
 
@@ -126,8 +127,9 @@ export default function Services() {
         sortable: false,
         renderCell: (service) =>
           renderActions({
-            onView: () => router.push(`/dashboard/users/${service._id}`),
-            onEdit: () => router.push(`/dashboard/users/${service._id}/edit`),
+            onView: () => router.push(`/dashboard/services/${service._id}`),
+            onEdit: () =>
+              router.push(`/dashboard/services/${service._id}/edit`),
             onDelete: () => console.log('Delete', service._id),
             key: service._id,
           }),
@@ -240,31 +242,33 @@ export default function Services() {
   };
 
   return (
-    <Table
-      uniqueKey="services"
-      isLoading={isLoading}
-      data={services}
-      columns={columns}
-      initialVisibleColumns={INITIAL_VISIBLE_COLUMNS}
-      keyField="uniqueId"
-      filters={filters}
-      searchField={(service, searchValue) =>
-        service.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-        service.description.toLowerCase().includes(searchValue.toLowerCase())
-      }
-      endContent={endContent}
-      renderSelectedActions={renderSelectedActions}
-      initialSortDescriptor={{
-        column: 'createdAt',
-        direction: 'descending',
-      }}
-      onRowAction={(row) => {
-        addToast({
-          title: 'Service',
-          description: `Service ${row} clicked`,
-          color: 'success',
-        });
-      }}
-    />
+    <>
+      <Table
+        uniqueKey="services"
+        isLoading={isLoading}
+        data={services}
+        columns={columns}
+        initialVisibleColumns={INITIAL_VISIBLE_COLUMNS}
+        keyField="uniqueId"
+        filters={filters}
+        searchField={(service, searchValue) =>
+          service.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+          service.description.toLowerCase().includes(searchValue.toLowerCase())
+        }
+        endContent={endContent}
+        renderSelectedActions={renderSelectedActions}
+        initialSortDescriptor={{
+          column: 'createdAt',
+          direction: 'descending',
+        }}
+        onRowAction={(row) => {
+          const service = services.find((service) => service.uniqueId == row);
+          if (service) {
+            setSelected(service);
+          }
+        }}
+      />
+      <ServiceQuickLook />
+    </>
   );
 }

@@ -54,6 +54,7 @@ export async function generateUsers({
       createdBy: faker.string.uuid(),
       updatedBy: faker.string.uuid(),
       updatedAt: faker.date.recent(),
+      date: faker.date.recent().toISOString(),
     };
 
     generated.push(user);
