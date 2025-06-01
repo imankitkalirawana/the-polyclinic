@@ -24,6 +24,7 @@ export enum UserRole {
 export interface UserType extends Base {
   uid: number;
   email: string;
+  date: string | Date;
   phone: string;
   password: string;
   name: string;
@@ -45,6 +46,7 @@ export interface AuthUser {
     name: string;
     email: string;
     role: UserRole;
+    date: string | Date;
     id: string;
     uid: number;
     image: string;
@@ -66,6 +68,7 @@ const userSchema = new mongoose.Schema(
         'Email is invalid',
       ],
     },
+    date: String,
     uid: {
       type: Number,
       unique: true,
@@ -90,6 +93,17 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: UserStatus,
       default: UserStatus.unverified,
+    },
+    additionalInfo: {
+      type: {
+        type: String,
+        enum: UserRole,
+        default: UserRole.user,
+      },
+      notes: String,
+      symptoms: String,
+      description: String,
+      instructions: String,
     },
     country: {
       type: String,
