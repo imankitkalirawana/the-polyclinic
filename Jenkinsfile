@@ -3,19 +3,18 @@ pipeline {
     tools {
         nodejs "Nodejs"
     }
+    options {
+        disableConcurrentBuilds(abortPrevious: true)
+    }
     environment {
         APP_PATH = "/home/ankit/apps/the-polyclinic"
         PM2_HOME = "/home/ankit/.pm2"
-        MONGODB_URI = credentials('MONGODB_URI')
         SLACK_CHANNEL = "#jenkins-ci"
-        ENV_FILE = credentials('thepolyclinic-env')
     }
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
-                sh 'echo "$ENV_FILE" > .env'
-                bitbucketStatusNotify(buildState: 'INPROGRESS', buildName: "${env.JOB_NAME} #${env.BUILD_NUMBER}")
             }
         }
         stage('Install Dependencies') {
@@ -27,17 +26,19 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh '''
-                    export MONGODB_URI=${MONGODB_URI}
-                    pnpm run build
-                '''
+                withCredentials([file(credentialsId: 'thepolyclinic-env', variable: 'ENV_FILE')]) {
+                    sh '''
+                        cp $ENV_FILE .env
+                        pnpm run build
+                    '''
+                }
             }
         }
         stage('Deploy') {
             steps {
                 sh '''
                     export PM2_HOME=/home/ankit/.pm2
-                    cp -r .next package.json pnpm-lock.yaml public ${APP_PATH}
+                    cp -r .next package.json pnpm-lock.yaml public .env ${APP_PATH}
                     cd ${APP_PATH}
                     pnpm install --production
                     pm2 restart the-polyclinic || pm2 start pnpm --name "the-polyclinic" -- run start
@@ -47,7 +48,6 @@ pipeline {
     }
     post {
         success {
-            bitbucketStatusNotify(buildState: 'SUCCESSFUL', buildName: "${env.JOB_NAME} #${env.BUILD_NUMBER}")
             slackSend channel: "${SLACK_CHANNEL}",
                       color: 'good',
                       message: """SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'
@@ -58,7 +58,6 @@ pipeline {
                                   Completed successfully!"""
         }
         failure {
-            bitbucketStatusNotify(buildState: 'FAILED', buildName: "${env.JOB_NAME} #${env.BUILD_NUMBER}")
             slackSend channel: "${SLACK_CHANNEL}",
                       color: 'danger',
                       message: """FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'
