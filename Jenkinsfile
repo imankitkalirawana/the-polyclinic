@@ -4,6 +4,7 @@ pipeline {
         nodejs "Nodejs"
     }
     options {
+        timeout(time: 10, unit: 'MINUTES')  // change
         disableConcurrentBuilds(abortPrevious: true)
     }
     environment {

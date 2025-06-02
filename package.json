@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "clean": "rm -rf node_modules && rm -rf .next && rm -rf pnpm-lock.yaml && pnpm install",
+    "clean": "rm -rf node_modules && rm -rf .next && rm -rf && pnpm install",
     "prepare": "husky",
     "format": "prettier --write .",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
