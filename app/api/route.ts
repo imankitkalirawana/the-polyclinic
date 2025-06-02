@@ -1,15 +1,10 @@
 import { NextResponse } from 'next/server';
-import { connectDB } from '@/lib/db';
+import client from '@/lib/db';
 
 export const GET = async function GET() {
   try {
-    await connectDB()
-      .then(() => {
-        return NextResponse.json({ message: 'Database Connected' });
-      })
-      .catch((error) => {
-        return NextResponse.json({ message: error.message }, { status: 500 });
-      });
+    await client.connect();
+    return NextResponse.json({ message: 'Database Connected' });
   } catch (error: any) {
     console.error(error);
     return NextResponse.json({ message: error.message }, { status: 500 });
