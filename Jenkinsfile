@@ -4,7 +4,8 @@ pipeline {
         nodejs "Nodejs"
     }
     options {
-        timeout(time: 10, unit: 'MINUTES')  // change
+        retry(2)
+        timeout(time: 10, unit: 'MINUTES')
         disableConcurrentBuilds(abortPrevious: true)
     }
     environment {
@@ -68,5 +69,9 @@ pipeline {
                                   Duration: ${currentBuild.durationString}
                                   Failed! Please check the logs for details."""
         }
+        always {
+            cleanWs()
+        }
     }
+
 }
