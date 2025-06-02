@@ -101,8 +101,7 @@ export const sidebarContent = (drug: DrugType) => (
       <div className="flex flex-col items-center">
         <h6 className="font-medium capitalize">{drug.brandName}</h6>
         <p className="text-sm capitalize text-default-500">
-          {drug.price ? `${drug.price},` : ''}
-          {drug.dosage ? `${drug.dosage} Years` : ''}
+          {drug.manufacturer ? `${drug.manufacturer}` : ''}
         </p>
       </div>
       <div className="flex gap-1">

@@ -239,7 +239,7 @@ export default function Drugs() {
         }}
       />
       {/* Quick Look or Sidebar can be added here */}
-      <DrugQuickLook />
+      {selected && <DrugQuickLook />}
     </>
   );
 }
