@@ -1,13 +1,18 @@
 import mongoose from 'mongoose';
 
 import { Base } from '@/lib/interface';
+export enum EmailStatus {
+  active = 'active',
+  inactive = 'inactive',
+}
 
 export interface EmailType extends Base {
   from: string;
   to: string;
   subject: string;
   message: string;
-  status: string;
+  status: EmailStatus;
+  image?: string;
 }
 
 const EmailSchema = new mongoose.Schema<EmailType>(
@@ -28,9 +33,11 @@ const EmailSchema = new mongoose.Schema<EmailType>(
       type: String,
       required: true,
     },
+    image: String,
     status: {
       type: String,
-      required: true,
+      enum: EmailStatus,
+      default: 'active',
     },
   },
   {

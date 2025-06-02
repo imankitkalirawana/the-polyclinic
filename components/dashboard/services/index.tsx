@@ -268,7 +268,7 @@ export default function Services() {
           }
         }}
       />
-      <ServiceQuickLook />
+      {selected && <ServiceQuickLook />}
     </>
   );
 }

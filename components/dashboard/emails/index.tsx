@@ -22,7 +22,8 @@ import { EmailType } from '@/models/Email';
 import { useQuery } from '@tanstack/react-query';
 import { getAllEmails } from '@/app/dashboard/emails/helper';
 import { useRouter } from 'nextjs-toploader/app';
-
+import { useEmailStore } from './store';
+import { EmailQuickLook } from './quicklook';
 const INITIAL_VISIBLE_COLUMNS = [
   'id',
   'from',
@@ -39,6 +40,7 @@ export default function Emails() {
     queryKey: ['emails'],
     queryFn: () => getAllEmails(),
   });
+  const { selected, setSelected } = useEmailStore();
 
   const emails: EmailType[] = data || [];
   console.log('emails', emails);
@@ -79,16 +81,6 @@ export default function Emails() {
           </div>
         ),
       },
-      // {
-      //   name: 'Message',
-      //   uid: 'message',
-      //   sortable: true,
-      //   renderCell: (email) => (
-      //     <div className="truncate capitalize text-default-foreground">
-      //       {email.message}
-      //     </div>
-      //   ),
-      // },
       {
         name: 'Created At',
         uid: 'createdAt',
@@ -203,34 +195,36 @@ export default function Emails() {
   };
 
   return (
-    <Table
-      uniqueKey="emails"
-      isLoading={isLoading}
-      data={emails}
-      columns={columns}
-      initialVisibleColumns={INITIAL_VISIBLE_COLUMNS}
-      keyField="_id"
-      filters={filters}
-      searchField={(email, searchValue) =>
-        email.from.toLowerCase().includes(searchValue.toLowerCase()) ||
-        email.to.toLowerCase().includes(searchValue.toLowerCase()) ||
-        (email.message
-          ? email.message.toLowerCase().includes(searchValue.toLowerCase())
-          : false)
-      }
-      endContent={endContent}
-      renderSelectedActions={renderSelectedActions}
-      initialSortDescriptor={{
-        column: 'createdAt',
-        direction: 'descending',
-      }}
-      onRowAction={(row) => {
-        addToast({
-          title: 'Email',
-          description: `Email ${row} clicked`,
-          color: 'success',
-        });
-      }}
-    />
+    <>
+      <Table
+        uniqueKey="emails"
+        isLoading={isLoading}
+        data={emails}
+        columns={columns}
+        initialVisibleColumns={INITIAL_VISIBLE_COLUMNS}
+        keyField="_id"
+        filters={filters}
+        searchField={(email, searchValue) =>
+          email.from.toLowerCase().includes(searchValue.toLowerCase()) ||
+          email.to.toLowerCase().includes(searchValue.toLowerCase()) ||
+          (email.message
+            ? email.message.toLowerCase().includes(searchValue.toLowerCase())
+            : false)
+        }
+        endContent={endContent}
+        renderSelectedActions={renderSelectedActions}
+        initialSortDescriptor={{
+          column: 'createdAt',
+          direction: 'descending',
+        }}
+        onRowAction={(row) => {
+          const email = emails.find((email) => email._id == row);
+          if (email) {
+            setSelected(email);
+          }
+        }}
+      />
+      {selected && <EmailQuickLook />}
+    </>
   );
 }
