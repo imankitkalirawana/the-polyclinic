@@ -42,7 +42,7 @@
     "mongodb": "^6.10.0",
     "mongoose": "^8.7.3",
     "mongoose-sequence": "^6.0.1",
-    "next": "14.2.25",
+    "next": "15.2.4",
     "next-auth": "5.0.0-beta.28",
     "next-themes": "^0.3.0",
     "nextjs-toploader": "^3.7.15",
