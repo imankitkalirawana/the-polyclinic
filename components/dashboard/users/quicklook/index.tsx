@@ -131,7 +131,7 @@ export const UserQuickLook = () => {
       classNames: { icon: 'text-green-500 bg-green-50' },
     },
     {
-      label: 'Mode',
+      label: 'Role',
       value: () => (user.role === 'admin' ? 'doctor' : 'Nurse'),
       icon: 'solar:map-point-bold-duotone',
       classNames: { icon: 'text-teal-500 bg-teal-50' },
