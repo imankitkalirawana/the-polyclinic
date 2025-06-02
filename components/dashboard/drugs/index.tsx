@@ -22,6 +22,8 @@ import { DrugType } from '@/models/Drug';
 import { useQuery } from '@tanstack/react-query';
 import { getAllDrugs } from '@/app/dashboard/drugs/helper';
 import { useRouter } from 'nextjs-toploader/app';
+import { useDrugStore } from './store';
+import { DrugQuickLook } from './quicklook';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'did',
@@ -41,6 +43,7 @@ export default function Drugs() {
   });
 
   const drugs: DrugType[] = data || [];
+  const { selected, setSelected } = useDrugStore();
 
   // Define columns with render functions
   const columns: ColumnDef<DrugType>[] = useMemo(
@@ -204,34 +207,39 @@ export default function Drugs() {
   };
 
   return (
-    <Table
-      uniqueKey="drugs"
-      isLoading={isLoading}
-      data={drugs}
-      columns={columns}
-      initialVisibleColumns={INITIAL_VISIBLE_COLUMNS}
-      keyField="did"
-      filters={filters}
-      searchField={(drug, searchValue) =>
-        drug.brandName.toLowerCase().includes(searchValue.toLowerCase()) ||
-        drug.genericName.toLowerCase().includes(searchValue.toLowerCase()) ||
-        (drug.manufacturer
-          ? drug.manufacturer.toLowerCase().includes(searchValue.toLowerCase())
-          : false)
-      }
-      endContent={endContent}
-      renderSelectedActions={renderSelectedActions}
-      initialSortDescriptor={{
-        column: 'createdAt',
-        direction: 'descending',
-      }}
-      onRowAction={(row) => {
-        addToast({
-          title: 'Drug',
-          description: `Drug ${row} clicked`,
-          color: 'success',
-        });
-      }}
-    />
+    <>
+      <Table
+        uniqueKey="drugs"
+        isLoading={isLoading}
+        data={drugs}
+        columns={columns}
+        initialVisibleColumns={INITIAL_VISIBLE_COLUMNS}
+        keyField="did"
+        filters={filters}
+        searchField={(drug, searchValue) =>
+          drug.brandName.toLowerCase().includes(searchValue.toLowerCase()) ||
+          drug.genericName.toLowerCase().includes(searchValue.toLowerCase()) ||
+          (drug.manufacturer
+            ? drug.manufacturer
+                .toLowerCase()
+                .includes(searchValue.toLowerCase())
+            : false)
+        }
+        endContent={endContent}
+        renderSelectedActions={renderSelectedActions}
+        initialSortDescriptor={{
+          column: 'createdAt',
+          direction: 'descending',
+        }}
+        onRowAction={(row) => {
+          const drug = drugs.find((drug) => drug.did == row);
+          if (drug) {
+            setSelected(drug);
+          }
+        }}
+      />
+      {/* Quick Look or Sidebar can be added here */}
+      <DrugQuickLook />
+    </>
   );
 }
