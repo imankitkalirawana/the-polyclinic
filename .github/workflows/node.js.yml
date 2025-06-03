@@ -15,7 +15,10 @@ jobs:
         node-version: [18.20.0]
 
     env:
-      NEXTAUTH_SECRET: T/tLgjjRPdukHenw92N86yA6vbS/M6I+0AbbxtFxCoI=
+      NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+      NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+      MONGODB_URI: ${{ secrets.MONGODB_URI }}
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
     steps:
       - uses: actions/checkout@v4
