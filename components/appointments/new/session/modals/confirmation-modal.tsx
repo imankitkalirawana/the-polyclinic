@@ -97,7 +97,7 @@ export default function ConfirmationModal() {
               <div className="mt-4 flex justify-center">
                 <Image
                   className="rounded-none"
-                  src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${process.env.NEXT_PUBLIC_URL}/formik.values.appointment?s/${formik.values.appointment?.aid}`}
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${process.env.NEXT_PUBLIC_URL}formik.values.appointment?s/${formik.values.appointment?.aid}`}
                 />
               </div>
             </ModalBody>

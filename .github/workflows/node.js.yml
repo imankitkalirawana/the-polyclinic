@@ -13,10 +13,25 @@ jobs:
         node-version: [18.20.0]
 
     env:
+      # Auth.js
       NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
       NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+      AUTH_TRUST_HOST: true
+      # Google
+      AUTH_GOOGLE_ID: ${{ secrets.AUTH_GOOGLE_ID }}
+      AUTH_GOOGLE_SECRET: ${{ secrets.AUTH_GOOGLE_SECRET }}
+      # Email
+      EMAIL: ${{ secrets.EMAIL }}
+      PASSWORD: ${{ secrets.PASSWORD }}
+      # MongoDB
       MONGODB_URI: ${{ secrets.MONGODB_URI }}
+      # Sentry
       SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+
+      # Other
+      NEXT_PUBLIC_URL: ${{ secrets.NEXT_PUBLIC_URL }}
+      NEXT_PUBLIC_PROD_URL: ${{ secrets.NEXT_PUBLIC_PROD_URL }}
+      NEXT_PUBLIC_CSCAPI_KEY: ${{ secrets.NEXT_PUBLIC_CSCAPI_KEY }}
 
     steps:
       - uses: actions/checkout@v4
@@ -40,6 +55,21 @@ jobs:
           key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-
+
+      - name: Set environment variables
+        run: |
+          echo "NEXTAUTH_SECRET=${{ env.NEXTAUTH_SECRET }}" >> .env
+          echo "NEXTAUTH_URL=${{ env.NEXTAUTH_URL }}" >> .env
+          echo "AUTH_TRUST_HOST=${{ env.AUTH_TRUST_HOST }}" >> .env
+          echo "AUTH_GOOGLE_ID=${{ env.AUTH_GOOGLE_ID }}" >> .env
+          echo "AUTH_GOOGLE_SECRET=${{ env.AUTH_GOOGLE_SECRET }}" >> .env
+          echo "EMAIL=${{ env.EMAIL }}" >> .env
+          echo "PASSWORD=${{ env.PASSWORD }}" >> .env
+          echo "MONGODB_URI=${{ env.MONGODB_URI }}" >> .env
+          echo "SENTRY_AUTH_TOKEN=${{ env.SENTRY_AUTH_TOKEN }}" >> .env
+          echo "NEXT_PUBLIC_URL=${{ env.NEXT_PUBLIC_URL }}" >> .env
+          echo "NEXT_PUBLIC_PROD_URL=${{ env.NEXT_PUBLIC_PROD_URL }}" >> .env
+          echo "NEXT_PUBLIC_CSCAPI_KEY=${{ env.NEXT_PUBLIC_CSCAPI_KEY }}" >> .env
 
       - run: pnpm install
       - run: pnpm build
