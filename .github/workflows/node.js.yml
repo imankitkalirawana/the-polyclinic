@@ -19,7 +19,7 @@ jobs:
         node-version: [18.20.0]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     env:
-      NEXTAUTH_SECRET="T/tLgjjRPdukHenw92N86yA6vbS/M6I+0AbbxtFxCoI="
+      NEXTAUTH_SECRET: "T/tLgjjRPdukHenw92N86yA6vbS/M6I+0AbbxtFxCoI="
     steps:
     - uses: actions/checkout@v4
     - name: Use Node.js ${{ matrix.node-version }}
