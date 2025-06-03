@@ -1,4 +1,3 @@
-import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
 import QuickLook from '@/components/ui/dashboard/quicklook';
 import { EmailType } from '@/models/Email';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -8,12 +7,8 @@ import {
   DropdownItemProps,
 } from '@/components/ui/dashboard/quicklook/types';
 import { useMemo } from 'react';
-import { permissions, sidebarContent } from './data';
+import { permissions } from './data';
 import { ActionType, DropdownKeyType } from '../types';
-import { addToast, Select, SelectItem } from '@heroui/react';
-import { renderChip } from '@/components/ui/data-table/cell-renderers';
-import { format } from 'date-fns';
-
 export const EmailQuickLook = () => {
   const { selected, setSelected, setAction, action } = useEmailStore();
 
@@ -34,26 +29,17 @@ export const EmailQuickLook = () => {
           window.open(url, '_blank');
         },
       },
-
       {
-        key: 'reminder',
-        children: 'Send a Reminder',
-        startContent: <Icon icon="solar:bell-bold-duotone" width="20" />,
-        isIconOnly: true,
+        key: 'resend',
+        children: 'Resend Email',
+        startContent: <Icon icon="mdi:email-resend" width="24" height="24" />,
+        color: 'warning',
         variant: 'flat',
         position: 'right',
-        isHidden:
-          selected?.status === 'active' ||
-          selected?.status === 'inactive' ||
-          selected?.status === 'blocked' ||
-          selected?.status === 'deleted',
-        onPress: async () => {
-          await new Promise((resolve) => setTimeout(resolve, 2000));
-          addToast({
-            title: 'Reminder Sent',
-            description: 'Reminder sent to the patient',
-            color: 'success',
-          });
+        onPress: () => {
+          if (selected) {
+            setAction('resend');
+          }
         },
       },
     ],
@@ -62,33 +48,6 @@ export const EmailQuickLook = () => {
 
   const dropdown = useMemo<Array<Partial<DropdownItemProps<DropdownKeyType>>>>(
     () => [
-      {
-        key: 'invoice',
-        children: 'Download Invoice',
-        startContent: (
-          <Icon icon="solar:file-download-bold-duotone" width="20" />
-        ),
-        onPress: () =>
-          addToast({
-            title: 'Invoice Downloaded',
-            description: 'Invoice downloaded successfully',
-            color: 'success',
-          }),
-      },
-
-      {
-        key: 'edit',
-        children: 'Edit Email',
-        startContent: (
-          <Icon icon="solar:pen-new-square-bold-duotone" width="20" />
-        ),
-        onPress: () =>
-          addToast({
-            title: 'Email Edited',
-            description: 'Email edited successfully',
-            color: 'success',
-          }),
-      },
       {
         key: 'delete',
         children: 'Delete Email',
@@ -99,6 +58,7 @@ export const EmailQuickLook = () => {
             setAction('delete');
           }
         },
+
         // content: <CancelDeleteEmail type="delete" />,
       },
     ],
@@ -107,40 +67,30 @@ export const EmailQuickLook = () => {
 
   const content = (email: EmailType) => [
     {
-      label: 'Email ID',
-      value: () => email._id,
-      icon: 'solar:hashtag-circle-bold-duotone',
-      classNames: { icon: 'text-purple-500 bg-purple-50' },
-    },
-    {
       label: 'From',
       value: () => email.from,
       icon: 'solar:letter-bold-duotone',
-      classNames: { icon: 'text-blue-500 bg-blue-50' },
+      classNames: { icon: 'text-blue-500 bg-blue-50', value: 'lowercase' },
     },
     {
       label: 'To',
       value: () => email.to,
       icon: 'solar:letter-bold-duotone',
-      classNames: { icon: 'text-blue-500 bg-blue-50' },
+      classNames: { icon: 'text-blue-500 bg-blue-50', value: 'lowercase' },
     },
     {
       label: 'Subject',
       value: () => email.subject || 'N/A',
       icon: 'solar:phone-bold-duotone',
       classNames: { icon: 'text-green-500 bg-green-50' },
-    },
-    {
-      label: 'Mode',
-      value: () => (email.status === 'active' ? 'Online' : 'Offline'),
-      icon: 'solar:map-point-bold-duotone',
-      classNames: { icon: 'text-teal-500 bg-teal-50' },
+      className: ' col-span-full',
     },
     {
       label: 'Message',
       value: () => email.message || 'N/A',
       icon: 'solar:map-point-bold-duotone',
       classNames: { icon: 'text-teal-500 bg-teal-50' },
+      className: ' col-span-full',
     },
   ];
 
@@ -155,7 +105,6 @@ export const EmailQuickLook = () => {
       buttons={buttons}
       permissions={permissions}
       dropdown={dropdown}
-      sidebarContent={sidebarContent(selected)}
       content={content(selected)}
     />
   );
