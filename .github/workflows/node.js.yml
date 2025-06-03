@@ -2,9 +2,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ['master']
   pull_request:
-    branches: [ "master" ]
+    branches: ['master']
 
 jobs:
   build:
@@ -41,4 +41,4 @@ jobs:
             ${{ runner.os }}-pnpm-
 
       - run: pnpm install
-      - run: pnpm run build --if-present
+      - run: pnpm run build
