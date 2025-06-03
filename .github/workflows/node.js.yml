@@ -44,4 +44,5 @@ jobs:
             ${{ runner.os }}-pnpm-
 
       - run: pnpm install
-      - run: pnpm run build
+      - run: pnpm build
+      - run: pm2 restart the-polyclinic || pm2 start pnpm --name "the-polyclinic" -- start
