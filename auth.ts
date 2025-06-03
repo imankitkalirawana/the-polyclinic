@@ -4,8 +4,8 @@ import { MongoDBAdapter } from '@auth/mongodb-adapter';
 import credentials from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 
-import client, { connectDB } from '@/lib/db';
-import User, { UserRole, UserStatus } from '@/models/User';
+import client from '@/lib/db';
+import User, { UserStatus } from '@/models/User';
 
 class ErrorMessage extends AuthError {
   code = 'custom';
