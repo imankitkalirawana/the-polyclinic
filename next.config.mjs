@@ -3,7 +3,7 @@ import { withSentryConfig } from '@sentry/nextjs';
 const nextConfig = {
   swcMinify: true,
   images: {
-    domains: ['lh3.googleusercontent.com'],
+    remotePatterns: ['lh3.googleusercontent.com'],
   },
 };
 
