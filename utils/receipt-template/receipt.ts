@@ -64,7 +64,7 @@ export function Receipt(appointment: AppointmentType) {
     </head>
     <body>
         <div class="logo">
-            <img src="${process.env.NEXT_PUBLIC_URL}/logo.png" alt="Logo" style="display: block; margin: 0 auto; max-width: 100px;">
+            <img src="${process.env.NEXT_PUBLIC_URL}logo.png" alt="Logo" style="display: block; margin: 0 auto; max-width: 100px;">
         </div>
         <h1 class="title">Appointment Receipt</h1>
         <div class="receipt">
