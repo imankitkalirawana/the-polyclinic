@@ -41,6 +41,7 @@ export interface CellRendererProps {
   classNames?: {
     icon?: string;
     label?: string;
+    value?: string;
   };
   className?: string;
   cols?: number;

@@ -20,26 +20,31 @@ import AsyncButton from '@/components/ui/buttons/async-button';
 import { Title } from '@/components/ui/typography/modal';
 import { CellRendererProps, QuickLookProps } from './types';
 
-const CellRenderer: React.FC<CellRendererProps> = ({
+const CellRenderer = ({
   label,
   value,
   icon,
   classNames,
   className,
   cols = 1,
-}) => (
+}: CellRendererProps) => (
   <div className={`p-4 ${cols === 2 ? 'col-span-2' : ''} ${className || ''}`}>
     <div className="flex items-start gap-2 text-sm">
-      <div className={`rounded-small p-[5px] ${classNames?.icon || ''}`}>
+      <div className={cn('rounded-small p-[5px]', classNames?.icon)}>
         <Icon icon={icon} width="24" />
       </div>
       <div className="flex flex-col gap-1">
-        <span
-          className={`capitalize text-default-400 ${classNames?.label || ''}`}
-        >
+        <span className={cn('capitalize text-default-400', classNames?.label)}>
           {label}
         </span>
-        <span className="capitalize text-default-foreground">{value}</span>
+        <span
+          className={cn(
+            'capitalize text-default-foreground',
+            classNames?.value
+          )}
+        >
+          {value}
+        </span>
       </div>
     </div>
   </div>
