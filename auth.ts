@@ -25,7 +25,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        await connectDB();
+        await client.connect();
         let user = null;
 
         if (!credentials?.email || !credentials?.password) {
@@ -56,6 +56,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (!isValid) {
           throw new ErrorMessage('Invalid Email/Password');
         }
+        await client.close();
         return user;
       },
     }),

@@ -4,6 +4,8 @@ pipeline {
         nodejs "Nodejs"
     }
     options {
+        retry(2)
+        timeout(time: 10, unit: 'MINUTES')
         disableConcurrentBuilds(abortPrevious: true)
     }
     environment {
@@ -28,6 +30,7 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'thepolyclinic-env', variable: 'ENV_FILE')]) {
                     sh '''
+                        export NODE_OPTIONS="--max-old-space-size=1536"
                         cp $ENV_FILE .env
                         pnpm run build
                     '''
@@ -67,5 +70,9 @@ pipeline {
                                   Duration: ${currentBuild.durationString}
                                   Failed! Please check the logs for details."""
         }
+        always {
+            cleanWs()
+        }
     }
+
 }
