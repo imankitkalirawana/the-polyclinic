@@ -24,6 +24,7 @@ for branch in $(git branch -r | grep -v 'master' | grep -v 'HEAD' | sed 's/origi
 done
 
 git checkout master >/dev/null 2>&1
+git branch | grep -v "master" | xargs git branch -D
 
 # Show summary
 echo ""
