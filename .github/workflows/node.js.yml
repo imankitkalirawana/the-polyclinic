@@ -46,18 +46,6 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        run: echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-
-      - name: Cache pnpm dependencies
-        uses: actions/cache@v3
-        with:
-          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
-
       - name: Set environment variables
         run: |
           echo "NEXTAUTH_SECRET=${{ env.NEXTAUTH_SECRET }}" >> .env
