@@ -1,4 +1,3 @@
-import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
 import QuickLook from '@/components/ui/dashboard/quicklook';
 import { UserType } from '@/models/User';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -12,7 +11,6 @@ import { permissions, sidebarContent } from './data';
 import { ActionType, DropdownKeyType } from '../types';
 import { addToast, Select, SelectItem } from '@heroui/react';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
-import { format } from 'date-fns';
 
 export const UserQuickLook = () => {
   const { selected, setSelected, setAction, action } = useUserStore();
@@ -120,9 +118,9 @@ export const UserQuickLook = () => {
     },
     {
       label: 'Email',
-      value: () => user.email,
+      value: () => user.email.toLowerCase(),
       icon: 'solar:letter-bold-duotone',
-      classNames: { icon: 'text-blue-500 bg-blue-50' },
+      classNames: { icon: 'text-blue-500 bg-blue-50', value: 'lowercase' },
     },
     {
       label: 'Phone',
@@ -140,7 +138,7 @@ export const UserQuickLook = () => {
       label: 'Address',
       value: () => user.address || 'N/A',
       icon: 'solar:map-point-bold-duotone',
-      classNames: { icon: 'text-teal-500 bg-teal-50' },
+      classNames: { icon: 'text-teal-500 bg-teal-50', value: 'lowercase' },
     },
   ];
 

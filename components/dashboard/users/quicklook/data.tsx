@@ -1,5 +1,4 @@
 import { PermissionProps } from '@/components/ui/dashboard/quicklook/types';
-import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { avatars } from '@/lib/avatar';
 import { UserType } from '@/models/User';
 import {
@@ -13,7 +12,6 @@ import {
   Tabs,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { format } from 'date-fns';
 import { ActionType, DropdownKeyType } from '../types';
 import ActivityTimeline from '../../../ui/activity/timeline';
 
@@ -39,52 +37,6 @@ export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
   nurse: ['cancel', 'reschedule'],
   receptionist: ['cancel', 'reschedule', 'reminder'],
 };
-
-export const content = (user: UserType) => [
-  {
-    label: 'User ID',
-    value: () => user.uid,
-    icon: 'solar:hashtag-circle-bold-duotone',
-    classNames: { icon: 'text-purple-500 bg-purple-50' },
-  },
-  {
-    label: 'User Status',
-    value: () => renderChip({ item: user.status }),
-    icon: 'solar:watch-square-minimalistic-bold-duotone',
-    classNames: { icon: 'text-purple-500 bg-purple-50', label: 'mb-1' },
-  },
-  {
-    label: 'Email',
-    value: () => user.email,
-    icon: 'solar:letter-bold-duotone',
-    classNames: { icon: 'text-blue-500 bg-blue-50' },
-  },
-  {
-    label: 'Phone',
-    value: () => user.phone || 'N/A',
-    icon: 'solar:phone-bold-duotone',
-    classNames: { icon: 'text-green-500 bg-green-50' },
-  },
-  {
-    label: 'Date & Time',
-    value: () => format(new Date(user.date), 'MMM d, yyyy - h:mm a'),
-    icon: 'solar:calendar-bold-duotone',
-    classNames: { icon: 'text-yellow-500 bg-yellow-50' },
-  },
-  {
-    label: 'Mode',
-    value: () => (user.role === 'admin' ? 'doctor' : 'Nurse'),
-    icon: 'solar:map-point-bold-duotone',
-    classNames: { icon: 'text-teal-500 bg-teal-50' },
-  },
-  {
-    label: 'Address',
-    value: () => user.address || 'N/A',
-    icon: 'solar:map-point-bold-duotone',
-    classNames: { icon: 'text-teal-500 bg-teal-50' },
-  },
-];
-
 export const sidebarContent = (user: UserType) => (
   <>
     <div className="flex flex-col items-center gap-2 p-4">
@@ -98,8 +50,7 @@ export const sidebarContent = (user: UserType) => (
       <div className="flex flex-col items-center">
         <h6 className="font-medium capitalize">{user.name}</h6>
         <p className="text-sm capitalize text-default-500">
-          {user.gender ? `${user.gender},` : ''}
-          {user.dob ? `${user.dob} Years` : ''}
+          {user.gender ? `${user.gender}` : ''}
         </p>
       </div>
       <div className="flex gap-1">
@@ -168,6 +119,16 @@ export const sidebarContent = (user: UserType) => (
             <span className="capitalize text-default-foreground">
               {user.name}
             </span>
+          </div>
+          <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20"></div>
+          <div className="flex items-center justify-between gap-4 text-sm">
+            <div className="flex items-center gap-2">
+              <div className="rounded-medium bg-blue-200 p-[5px] text-blue-400">
+                <Icon icon="uim:calender" width="24" height="24" />
+              </div>
+              <span className="capitalize text-default-400">Date of Birth</span>
+            </div>
+            <span className="text-default-foreground">{user.dob}</span>
           </div>
         </div>
       </Tab>
