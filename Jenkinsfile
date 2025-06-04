@@ -30,7 +30,6 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'thepolyclinic-env', variable: 'ENV_FILE')]) {
                     sh '''
-                        export NODE_OPTIONS="--max-old-space-size=1536"
                         cp $ENV_FILE .env
                         pnpm run build
                     '''
