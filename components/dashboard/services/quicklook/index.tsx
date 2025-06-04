@@ -1,4 +1,3 @@
-import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
 import QuickLook from '@/components/ui/dashboard/quicklook';
 import { ServiceType } from '@/models/Service';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -8,11 +7,10 @@ import {
   DropdownItemProps,
 } from '@/components/ui/dashboard/quicklook/types';
 import { useMemo } from 'react';
-import { permissions, sidebarContent } from './data';
+import { permissions } from './data';
 import { ActionType, DropdownKeyType } from '../types';
 import { addToast, Select, SelectItem } from '@heroui/react';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
-import { format } from 'date-fns';
 
 export const ServiceQuickLook = () => {
   const { selected, setSelected, setAction, action } = useServiceStore();
@@ -34,61 +32,12 @@ export const ServiceQuickLook = () => {
           window.open(url, '_blank');
         },
       },
-
-      {
-        key: 'reminder',
-        children: 'Send a Reminder',
-        startContent: <Icon icon="solar:bell-bold-duotone" width="20" />,
-        isIconOnly: true,
-        variant: 'flat',
-        position: 'right',
-        isHidden:
-          selected?.status === 'active' ||
-          selected?.status === 'inactive' ||
-          selected?.status === 'blocked' ||
-          selected?.status === 'deleted',
-        onPress: async () => {
-          await new Promise((resolve) => setTimeout(resolve, 2000));
-          addToast({
-            title: 'Reminder Sent',
-            description: 'Reminder sent to the patient',
-            color: 'success',
-          });
-        },
-      },
     ],
     [selected]
   );
 
   const dropdown = useMemo<Array<Partial<DropdownItemProps<DropdownKeyType>>>>(
     () => [
-      {
-        key: 'invoice',
-        children: 'Download Invoice',
-        startContent: (
-          <Icon icon="solar:file-download-bold-duotone" width="20" />
-        ),
-        onPress: () =>
-          addToast({
-            title: 'Invoice Downloaded',
-            description: 'Invoice downloaded successfully',
-            color: 'success',
-          }),
-      },
-
-      {
-        key: 'edit',
-        children: 'Edit Service',
-        startContent: (
-          <Icon icon="solar:pen-new-square-bold-duotone" width="20" />
-        ),
-        onPress: () =>
-          addToast({
-            title: 'Service Edited',
-            description: 'Service edited successfully',
-            color: 'success',
-          }),
-      },
       {
         key: 'delete',
         children: 'Delete Service',
@@ -111,6 +60,18 @@ export const ServiceQuickLook = () => {
       value: () => service.uniqueId,
       icon: 'solar:hashtag-circle-bold-duotone',
       classNames: { icon: 'text-purple-500 bg-purple-50' },
+    },
+    {
+      label: 'Service Name',
+      value: () => service.name,
+      icon: 'hugeicons:service',
+      classNames: { icon: 'text-blue-500 bg-blue-50' },
+    },
+    {
+      label: 'Price',
+      value: () => service.price || 'N/A',
+      icon: 'solar:tag-price-bold',
+      classNames: { icon: 'text-orange-500 bg-orange-50' },
     },
     {
       label: 'Service Status',
@@ -137,7 +98,7 @@ export const ServiceQuickLook = () => {
       classNames: { icon: 'text-teal-500 bg-teal-50' },
     },
     {
-      label: 'Address',
+      label: 'Type',
       value: () => service.type || 'N/A',
       icon: 'solar:map-point-bold-duotone',
       classNames: { icon: 'text-teal-500 bg-teal-50' },
@@ -155,7 +116,6 @@ export const ServiceQuickLook = () => {
       buttons={buttons}
       permissions={permissions}
       dropdown={dropdown}
-      sidebarContent={sidebarContent(selected)}
       content={content(selected)}
     />
   );
