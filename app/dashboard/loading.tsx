@@ -1,4 +1,4 @@
-import DashboardTableSkeleton from '@/components/skeletons/dashboard-table-skeleton';
+import DashboardTableSkeleton from '@/components/skeletons/dashboard/dashboard-table-skeleton';
 
 export default function Loading() {
   // You can add any UI inside Loading, including a Skeleton.
