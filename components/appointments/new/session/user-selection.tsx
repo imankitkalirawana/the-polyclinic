@@ -124,15 +124,14 @@ export default function UserSelection() {
                             formik.setFieldValue('patient', user);
                           }}
                         >
-                          <CardBody className="items-center gap-4 p-8">
+                          <CardBody className="items-center gap-4 p-6">
                             <div>
                               <Image
-                                src="/assets/placeholder-avatar.jpeg"
-                                alt="User"
-                                width={80}
-                                height={80}
-                                className="rounded-full"
-                                isBlurred
+                                src={user.image}
+                                alt={user.name}
+                                width={100}
+                                height={100}
+                                className="rounded-full bg-slate-300"
                               />
                             </div>
                             <div>
