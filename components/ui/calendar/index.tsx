@@ -9,13 +9,12 @@ import { ScheduleView } from './views/schedule';
 import { YearView } from './views/year';
 import { AppointmentDialog } from './dialog';
 import { AppointmentType } from '@/models/Appointment';
+import { useCalendar } from './store';
 
 interface CalendarProps {
   appointments: AppointmentType[];
   currentDate: Date;
   onDateChange: (date: Date) => void;
-  view: 'month' | 'week' | 'day' | 'schedule' | 'year';
-  onViewChange: (view: 'month' | 'week' | 'day' | 'schedule' | 'year') => void;
   onCreateAppointment: (date: Date, time?: string) => void;
 }
 
@@ -23,10 +22,9 @@ export function Calendar({
   appointments,
   currentDate,
   onDateChange,
-  view,
-  onViewChange,
   onCreateAppointment,
 }: CalendarProps) {
+  const { view } = useCalendar();
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [showDialog, setShowDialog] = useState(false);
@@ -96,12 +94,7 @@ export function Calendar({
 
   return (
     <div className="flex h-full flex-col">
-      <CalendarHeader
-        currentDate={currentDate}
-        onDateChange={onDateChange}
-        view={view}
-        onViewChange={onViewChange}
-      />
+      <CalendarHeader currentDate={currentDate} onDateChange={onDateChange} />
       <div className="flex-1 overflow-hidden">{renderView()}</div>
       <AppointmentDialog
         open={showDialog}

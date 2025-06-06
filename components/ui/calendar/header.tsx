@@ -13,12 +13,11 @@ import {
   addDays,
   subDays,
 } from 'date-fns';
+import { useCalendar, View } from './store';
 
 interface CalendarHeaderProps {
   currentDate: Date;
   onDateChange: (date: Date) => void;
-  view: 'month' | 'week' | 'day' | 'schedule' | 'year';
-  onViewChange: (view: 'month' | 'week' | 'day' | 'schedule' | 'year') => void;
 }
 
 const views = [
@@ -32,9 +31,8 @@ const views = [
 export function CalendarHeader({
   currentDate,
   onDateChange,
-  view,
-  onViewChange,
 }: CalendarHeaderProps) {
+  const { view, setView } = useCalendar();
   const navigatePrevious = () => {
     switch (view) {
       case 'month':
@@ -122,7 +120,7 @@ export function CalendarHeader({
         <h2 className="min-w-[200px] text-xl font-medium">{getDateTitle()}</h2>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex w-full items-center justify-end gap-2">
         <Button variant="ghost" isIconOnly>
           <Icon icon="mdi:search" className="h-4 w-4" />
         </Button>
@@ -130,21 +128,29 @@ export function CalendarHeader({
           <Icon icon="mdi:settings" className="h-4 w-4" />
         </Button>
         <Select
+          aria-label="View"
           selectedKeys={[view]}
           defaultSelectedKeys={[view]}
           disallowEmptySelection
-          onSelectionChange={(value: any) => onViewChange(value)}
-          className="w-full max-w-56"
+          onChange={(e) => setView(e.target.value as View)}
+          className="max-w-36"
           items={views}
         >
           {(item) => (
-            <SelectItem key={item.value} textValue={item.value}>
+            <SelectItem
+              key={item.value}
+              textValue={
+                item.value.charAt(0).toUpperCase() + item.value.slice(1)
+              }
+            >
               {item.label}
             </SelectItem>
           )}
         </Select>
-        <Button className="gap-2">
-          <Icon icon="mdi:plus" className="h-4 w-4" />
+        <Button
+          className="gap-2"
+          startContent={<Icon icon="mdi:plus" className="h-4 w-4" />}
+        >
           Create
         </Button>
       </div>
