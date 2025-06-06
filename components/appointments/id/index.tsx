@@ -164,7 +164,9 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                     DATE & TIME
                   </p>
                   <p className="text-lg font-semibold text-gray-900">
-                    {appointment.date}
+                    {typeof appointment.date === 'string'
+                      ? appointment.date
+                      : appointment.date.toString()}
                   </p>
                 </div>
               </div>

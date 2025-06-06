@@ -44,8 +44,7 @@ export interface DoctorInfo {
 
 export interface AppointmentType extends Base {
   aid: number;
-  date: string;
-  time: string;
+  date: string | Date;
   patient: {
     uid: number;
     name: string;
@@ -86,7 +85,6 @@ const appointmentSchema = new mongoose.Schema(
       unique: true,
     },
     date: String,
-    time: String,
     patient: {
       uid: Number,
       name: String,
