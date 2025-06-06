@@ -4,13 +4,18 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Avatar,
   Chip,
   Divider,
   Progress,
   ProgressProps,
+  Button,
+  Calendar,
+  Image,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useQuery } from '@tanstack/react-query';
+import { CheckCircle, MapPin } from 'lucide-react';
 
 import NoResults from '@/components/ui/no-results';
 import { getAppointmentWithAID } from '@/functions/server-actions/appointment';
@@ -84,63 +89,93 @@ export default function Appointment({ aid, session }: AppointmentProps) {
           </Chip>
         </div>
 
-        <Card>
+        {/* <Card>
           <CardHeader className="pb-2">
             <h3 className="text-lg">Appointment Progress</h3>
           </CardHeader>
           <CardBody>
             <Progress value={40} className="h-2" />
             <p className="text-muted-foreground mt-1 text-right text-sm">
-              {/* {appointment.progress}% Complete */}
+             // {appointment.progress}% Complete
             </p>
           </CardBody>
-        </Card>
+        </Card> */}
 
         <div className="grid gap-6 md:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <h3>Patient Information</h3>
+          <Card className="w-full max-w-md bg-white shadow-lg">
+            <CardHeader className="pb-4">
+              <div className="mb-4 flex items-center gap-2 text-green-600">
+                <CheckCircle className="h-5 w-5" />
+                <span className="text-sm font-medium">
+                  Your appointment is confirmed
+                </span>
+              </div>
             </CardHeader>
-            <CardBody className="space-y-4">
+
+            <CardBody className="space-y-6">
               <div>
-                <h3 className="font-medium">{appointment.patient.name}</h3>
-                <p className="text-muted-foreground text-sm">
-                  ID: {appointment.patient.uid}
-                </p>
+                <h2 className="mb-3 text-2xl font-bold text-gray-900">
+                  Appointment scheduled
+                </h2>
+
+                <div className="flex items-center gap-3">
+                  <Image
+                    src={appointment.patient.image}
+                    alt={appointment.patient.name}
+                    width={100}
+                    height={100}
+                    className="rounded-full bg-slate-300"
+                  />
+                  <span className="text-gray-600">
+                    with {appointment.patient.name}
+                  </span>
+                </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                {appointment.patient.age && (
-                  <div>
-                    <p className="text-sm font-medium">Age</p>
-                    <p className="text-sm">{appointment.patient.age} years</p>
+              {appointment.doctor && (
+                <div className="space-y-3">
+                  <h3 className="text-xl font-semibold text-gray-900">
+                    {appointment.doctor.name}
+                  </h3>
+
+                  {/* <div className="flex items-center gap-2 text-blue-600">
+                    <MapPin className="h-4 w-4" />
+                    <span className="text-sm">
+                      {appointment.doctor?.sitting}
+                    </span>
+                  </div> */}
+                </div>
+              )}
+
+              <div className="flex items-start gap-4 py-4">
+                <div className="flex-shrink-0">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
+                    <Icon
+                      icon="uil:calender"
+                      width="24"
+                      height="24"
+                      className="text-blue-500"
+                    />
                   </div>
-                )}
-
-                {appointment.patient.gender && (
-                  <div>
-                    <p className="text-sm font-medium">Gender</p>
-                    <p className="text-sm capitalize">
-                      {appointment.patient.gender}
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              <Divider />
-
-              <div className="space-y-2">
-                <div>
-                  <p className="text-sm font-medium">Email</p>
-                  <p className="text-sm">{appointment.patient.email}</p>
                 </div>
 
-                {appointment.patient.phone && (
-                  <div>
-                    <p className="text-sm font-medium">Phone</p>
-                    <p className="text-sm">{appointment.patient.phone}</p>
-                  </div>
-                )}
+                <div>
+                  <p className="mb-1 text-xs font-medium uppercase tracking-wide text-gray-500">
+                    DATE & TIME
+                  </p>
+                  <p className="text-lg font-semibold text-gray-900">
+                    {appointment.date}
+                  </p>
+                </div>
+              </div>
+
+              <div className="pt-4">
+                <Button
+                  variant="bordered"
+                  className="w-full border-blue-600 text-blue-600 hover:bg-blue-50"
+                >
+                  Reschedule appointment
+                </Button>
               </div>
             </CardBody>
           </Card>
