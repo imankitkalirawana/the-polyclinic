@@ -51,7 +51,7 @@ export function MonthView({
   };
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex flex-col">
       {/* Week header */}
       <div className="grid grid-cols-7 border-b">
         {weekDays.map((day) => (
