@@ -7,6 +7,7 @@ import {
   TimeInput,
   TimeInputProps,
   TimeInputValue,
+  Tooltip,
 } from '@heroui/react';
 import {
   CalendarDate,
@@ -60,17 +61,28 @@ export default function DateTimePicker({
             return disabledDates[0].map((d) => d.compare(date)).includes(0);
           }}
         />
-        <TimeInput
-          {...timeProps}
-          label="Appointment Time"
-          className="max-w-64"
-          minValue={new Time(TIMINGS.appointment.start)}
-          maxValue={new Time(TIMINGS.appointment.end)}
-          isRequired
-          value={time}
-          // onChange={(value) => handleChangeTime(value as TimeInputValue)}
-          onChange={onTimeChange as any}
-        />
+        <Tooltip
+          content={
+            <div className="px-1 py-2">
+              <div className="text-tiny">
+                We book appointments between 11am to 7pm only
+              </div>
+            </div>
+          }
+        >
+          <div className="inline-block">
+            <TimeInput
+              {...timeProps}
+              className="max-w-64"
+              label="Appointment Time"
+              minValue={new Time(TIMINGS.appointment.start)}
+              maxValue={new Time(TIMINGS.appointment.end)}
+              isRequired
+              value={time}
+              onChange={onTimeChange as any}
+            />
+          </div>
+        </Tooltip>
       </div>
     </>
   );
