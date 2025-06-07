@@ -12,6 +12,9 @@ import { AppointmentType } from '@/models/Appointment';
 import { chipColorMap } from '@/lib/chip';
 import { Tooltip } from '@heroui/react';
 import { useCalendar } from '../store';
+import DateChip from '../ui/date-chip';
+import StatusDot from '../ui/status-dot';
+import { formatTime } from '../helper';
 
 interface ScheduleViewProps {
   appointments: AppointmentType[];
@@ -58,20 +61,11 @@ export function ScheduleView({
               return (
                 <div key={dateKey} className="flex w-full items-start py-1">
                   <div className="flex w-28 items-center gap-2">
-                    <button
-                      className={cn(
-                        'flex aspect-square w-8 cursor-pointer items-center justify-center rounded-full font-medium leading-none transition-all hover:bg-default-100',
-                        {
-                          'bg-primary-500 text-primary-foreground hover:bg-primary-400':
-                            isToday(new Date(dateKey)),
-                        }
-                      )}
-                      onClick={() =>
-                        setView('day', { date: new Date(dateKey) })
-                      }
-                    >
-                      {format(date, 'd')}
-                    </button>
+                    <DateChip
+                      date={date}
+                      onClick={() => setView('day', { date: date })}
+                      size="md"
+                    />
                     <p className="mt-1.5 text-xs uppercase text-default-600">
                       {format(date, 'MMM, EEE')}
                     </p>
@@ -85,24 +79,9 @@ export function ScheduleView({
                         onClick={() => onTimeSlotClick(new Date(apt.date))}
                       >
                         <div className="flex w-full max-w-24 items-center gap-2">
-                          <Tooltip
-                            content={apt.status}
-                            classNames={{
-                              content: cn(
-                                'capitalize',
-                                chipColorMap[apt.status].bg
-                              ),
-                            }}
-                          >
-                            <span
-                              className={cn(
-                                'size-3 rounded-full',
-                                chipColorMap[apt.status].text
-                              )}
-                            ></span>
-                          </Tooltip>
+                          <StatusDot status={apt.status} />
                           <p className="text-sm">
-                            {format(new Date(apt.date), 'HH:mm a')}
+                            {formatTime(new Date(apt.date))}
                           </p>
                         </div>
                         <div className="flex gap-1">

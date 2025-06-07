@@ -91,12 +91,13 @@ export function CalendarHeader({
   };
 
   return (
-    <header className="flex items-center justify-between border-b p-4">
+    <header className="flex items-center justify-between border-b px-4 py-2">
       <div className="flex items-center gap-4">
         <Button
           variant="bordered"
           onPress={() => onDateChange(new Date())}
-          className="px-4"
+          className="px-2"
+          size="sm"
         >
           Today
         </Button>
@@ -128,17 +129,15 @@ export function CalendarHeader({
           </Button>
         </div>
 
-        <h2 className="whitespace-nowrap text-lg font-medium">
-          {getDateTitle()}
-        </h2>
+        <h2 className="whitespace-nowrap font-medium">{getDateTitle()}</h2>
       </div>
 
       <div className="flex w-full items-center justify-end gap-2">
-        <Button variant="light" radius="full" isIconOnly>
-          <Icon icon="fluent:search-24-regular" width={20} />
+        <Button variant="light" radius="full" isIconOnly size="sm">
+          <Icon icon="fluent:search-24-regular" width={18} />
         </Button>
-        <Button variant="light" isIconOnly radius="full">
-          <Icon icon="solar:settings-linear" strokeWidth={2} width={20} />
+        <Button variant="light" isIconOnly radius="full" size="sm">
+          <Icon icon="solar:settings-linear" strokeWidth={2} width={18} />
         </Button>
         <Select
           aria-label="View"
@@ -148,6 +147,7 @@ export function CalendarHeader({
           onChange={(e) => setView(e.target.value as View)}
           className="max-w-36"
           items={views}
+          size="sm"
         >
           {(item) => (
             <SelectItem
@@ -162,8 +162,11 @@ export function CalendarHeader({
           )}
         </Select>
         <Button
-          className="gap-2"
-          startContent={<Icon icon="mdi:plus" className="h-4 w-4" />}
+          size="sm"
+          color="primary"
+          startContent={
+            <Icon icon="solar:add-circle-bold-duotone" className="h-4 w-4" />
+          }
         >
           Create
         </Button>
