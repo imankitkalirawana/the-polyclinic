@@ -2,7 +2,7 @@
 
 import { SortDescriptor } from '@heroui/react';
 
-import { connectDB } from '@/lib/db';
+import { connectDB, disconnectDB } from '@/lib/db';
 import Service from '@/models/Service';
 
 export const getAllServices = async (options?: {
@@ -11,7 +11,9 @@ export const getAllServices = async (options?: {
   query?: string;
   sort?: SortDescriptor;
 }) => {
-  const limit = options?.limit || 25;
+  try {
+    await connectDB();
+    const limit = options?.limit || 25;
   const page = options?.page || 1;
   const query = options?.query || '';
   const sort = options?.sort || { column: 'name', direction: 'ascending' };
@@ -33,8 +35,6 @@ export const getAllServices = async (options?: {
         }
       : {}),
   };
-
-  await connectDB();
 
   const sortObject: Record<string, 1 | -1> = {
     [sort.column]: (sort.direction === 'ascending' ? 1 : -1) as 1 | -1,
@@ -66,4 +66,7 @@ export const getAllServices = async (options?: {
     total,
     totalPages,
   };
+  } finally {
+    await disconnectDB();
+  }
 };

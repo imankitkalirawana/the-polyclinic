@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
-import { connectDB } from '@/lib/db';
+import { connectDB, disconnectDB } from '@/lib/db';
 import User from '@/models/User';
 
 export const GET = auth(async function GET(request: any) {
@@ -24,6 +24,8 @@ export const GET = auth(async function GET(request: any) {
   } catch (error: any) {
     console.error(error);
     return NextResponse.json({ message: error.message }, { status: 500 });
+  } finally {
+    await disconnectDB();
   }
 });
 
@@ -64,5 +66,7 @@ export const POST = auth(async function POST(request: any) {
   } catch (error: any) {
     console.error(error);
     return NextResponse.json({ message: error.message }, { status: 500 });
+  } finally {
+    await disconnectDB();
   }
 });

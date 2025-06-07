@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-import { connectDB } from '@/lib/db';
+import { connectDB, disconnectDB } from '@/lib/db';
 import Newsletter from '@/models/Newsletter';
 
 export const DELETE = async function DELETE(_request: any, context: any) {
@@ -18,5 +18,7 @@ export const DELETE = async function DELETE(_request: any, context: any) {
   } catch (error: any) {
     console.error(error);
     return NextResponse.json({ message: error.message }, { status: 500 });
+  } finally {
+    await disconnectDB();
   }
 };

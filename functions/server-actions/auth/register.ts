@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 import { sendHTMLEmail } from '../emails/send-email';
 
 import { CLINIC_INFO } from '@/lib/config';
-import { connectDB } from '@/lib/db';
+import { connectDB, disconnectDB } from '@/lib/db';
 import User from '@/models/User';
 import { WelcomeUser } from '@/utils/email-template/patient/new-user';
 
@@ -19,9 +19,10 @@ export default async function registerUser(data: {
   password?: string;
   gender?: 'male' | 'female' | 'other';
 }) {
-  await connectDB();
+  try {
+    await connectDB();
 
-  if (!data.name || !data.id) {
+    if (!data.name || !data.id) {
     throw new Error('Please enter all fields');
   }
 
@@ -62,6 +63,9 @@ export default async function registerUser(data: {
     createdAt: user.createdAt.toLocaleString(),
     updatedAt: user.updatedAt.toLocaleString(),
   };
+  } finally {
+    await disconnectDB();
+  }
 }
 
 export const generatePassword = (length: number) => {

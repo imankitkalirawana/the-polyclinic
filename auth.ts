@@ -25,39 +25,49 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        await client.connect();
-        let user = null;
+        let user = null; // Declare user outside try to be accessible for return
+        try {
+          await client.connect();
+          console.log("MongoClient connected in auth.ts authorize");
 
-        if (!credentials?.email || !credentials?.password) {
-          throw new ErrorMessage('Invalid Email/Password');
-        }
-        // @ts-ignore
-        user = await User.findOne({ email: credentials.email });
+          if (!credentials?.email || !credentials?.password) {
+            throw new ErrorMessage('Invalid Email/Password');
+          }
+          // @ts-ignore
+          user = await User.findOne({ email: credentials.email });
 
-        if (
-          user?.status === UserStatus.inactive ||
-          user?.status === UserStatus.blocked
-        ) {
-          throw new ErrorMessage(
-            `Your account is ${user?.status}. Please contact support.`
+          if (
+            user?.status === UserStatus.inactive ||
+            user?.status === UserStatus.blocked
+          ) {
+            throw new ErrorMessage(
+              `Your account is ${user?.status}. Please contact support.`
+            );
+          }
+
+          if (!user) {
+            throw new ErrorMessage('Invalid Email/Password');
+          }
+          if (typeof credentials.password !== 'string') {
+            throw new ErrorMessage('Invalid Email/Password');
+          }
+          const isValid = await bcrypt.compare(
+            credentials!.password,
+            user.password
           );
+          if (!isValid) {
+            throw new ErrorMessage('Invalid Email/Password');
+          }
+          // The original client.close() is removed from here
+        } catch (error) {
+          // Re-throw the error so NextAuth handles it, or handle as before
+          // Important: If an error is thrown, client.close() in finally still runs
+          throw error;
+        } finally {
+          await client.close();
+          console.log("MongoClient closed in auth.ts authorize");
         }
-
-        if (!user) {
-          throw new ErrorMessage('Invalid Email/Password');
-        }
-        if (typeof credentials.password !== 'string') {
-          throw new ErrorMessage('Invalid Email/Password');
-        }
-        const isValid = await bcrypt.compare(
-          credentials!.password,
-          user.password
-        );
-        if (!isValid) {
-          throw new ErrorMessage('Invalid Email/Password');
-        }
-        await client.close();
-        return user;
+        return user; // Return user after finally block
       },
     }),
   ],

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 import { sendHTMLEmail } from '@/functions/server-actions/emails/send-email';
-import { connectDB } from '@/lib/db';
+import { connectDB, disconnectDB } from '@/lib/db';
 import Appointment from '@/models/Appointment';
 import { AppointmentStatus } from '@/utils/email-template/patient';
 
@@ -36,5 +36,7 @@ export const POST = async function POST(request: any) {
   } catch (error: any) {
     console.error(error);
     return NextResponse.json({ message: error.message }, { status: 500 });
+  } finally {
+    await disconnectDB();
   }
 };

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
-import { connectDB } from '@/lib/db';
+import { connectDB, disconnectDB } from '@/lib/db';
 import Drug from '@/models/Drug';
 
 // get drug by id from param
@@ -17,6 +17,8 @@ export async function GET(_request: any, context: any) {
   } catch (error: any) {
     console.error(error);
     return NextResponse.json({ message: error.message }, { status: 500 });
+  } finally {
+    await disconnectDB();
   }
 }
 
@@ -49,6 +51,8 @@ export const PUT = auth(async function PUT(request: any, context: any) {
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
+  } finally {
+    await disconnectDB();
   }
 });
 
@@ -75,5 +79,7 @@ export const DELETE = auth(async function DELETE(request: any, context: any) {
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
+  } finally {
+    await disconnectDB();
   }
 });

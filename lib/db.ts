@@ -5,6 +5,10 @@ import { MongoClient, ServerApiVersion } from 'mongodb';
 const uri = process.env.MONGODB_URI || '';
 
 const connectDB = async () => {
+  console.log("MongoDB connection state:", mongoose.connection.readyState);
+  if (mongoose.connection.readyState === 1) {
+    return;
+  }
   try {
     await mongoose.connect(uri);
   } catch (error) {
@@ -13,7 +17,22 @@ const connectDB = async () => {
   }
 };
 
-export { connectDB };
+const disconnectDB = async () => {
+  console.log("MongoDB connection state:", mongoose.connection.readyState);
+  if (mongoose.connection.readyState === 1) {
+    try {
+      await mongoose.disconnect();
+      console.log("MongoDB disconnected.");
+    } catch (error) {
+      console.error('Error disconnecting MongoDB:', error);
+      throw error;
+    }
+  } else {
+    console.log("MongoDB already disconnected or not connected.");
+  }
+};
+
+export { connectDB, disconnectDB };
 
 const options = {
   serverApi: {

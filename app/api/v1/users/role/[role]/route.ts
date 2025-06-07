@@ -1,4 +1,4 @@
-import { connectDB } from '@/lib/db';
+import { connectDB, disconnectDB } from '@/lib/db';
 
 import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
@@ -28,5 +28,7 @@ export const GET = auth(async function GET(request: any, context: any) {
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
+  } finally {
+    await disconnectDB();
   }
 });

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { connectDB } from '@/lib/db';
+import { connectDB, disconnectDB } from '@/lib/db';
 import Service from '@/models/Service';
 import { auth } from '@/auth';
 import { UserRole } from '@/models/User';
@@ -17,6 +17,8 @@ export const GET = auth(async function GET(request: any, context: any) {
   } catch (error: any) {
     console.error(error);
     return NextResponse.json({ message: error.message }, { status: 500 });
+  } finally {
+    await disconnectDB();
   }
 });
 
@@ -43,6 +45,8 @@ export const PATCH = auth(async function PATCH(request: any, context: any) {
   } catch (error: any) {
     console.error(error);
     return NextResponse.json({ message: error.message }, { status: 500 });
+  } finally {
+    await disconnectDB();
   }
 });
 
@@ -60,5 +64,7 @@ export const DELETE = auth(async function DELETE(request: any, context: any) {
   } catch (error: any) {
     console.error(error);
     return NextResponse.json({ message: error.message }, { status: 500 });
+  } finally {
+    await disconnectDB();
   }
 });

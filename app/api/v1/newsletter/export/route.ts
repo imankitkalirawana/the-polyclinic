@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import ExcelJS from 'exceljs';
 
 import { auth } from '@/auth';
-import { connectDB } from '@/lib/db';
+import { connectDB, disconnectDB } from '@/lib/db';
 import { humanReadableDate } from '@/lib/utility';
 import Newsletter from '@/models/Newsletter';
 
@@ -39,5 +39,7 @@ export const GET = auth(async function GET(request: any) {
   } catch (error: any) {
     console.error(error);
     return NextResponse.json({ message: error.message }, { status: 500 });
+  } finally {
+    await disconnectDB();
   }
 });

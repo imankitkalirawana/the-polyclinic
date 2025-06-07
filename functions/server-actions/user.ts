@@ -1,6 +1,6 @@
 'use server';
 
-import { connectDB } from '@/lib/db';
+import { connectDB, disconnectDB } from '@/lib/db';
 import User, { UserType } from '@/models/User';
 
 export async function getSelf({ email }: { email: string }) {
@@ -21,5 +21,7 @@ export async function getSelf({ email }: { email: string }) {
       user: {} as UserType,
       message: 'Error fetching user',
     };
+  } finally {
+    await disconnectDB();
   }
 }
