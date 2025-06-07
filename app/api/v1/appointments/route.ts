@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
 import { sendHTMLEmail } from '@/functions/server-actions/emails/send-email';
-import { connectDB } from '@/lib/db';
+import { connectDB, disconnectDB } from '@/lib/db';
 import Appointment from '@/models/Appointment';
 import { NewAppointment } from '@/utils/email-template/doctor';
 import { AppointmentStatus } from '@/utils/email-template/patient';
@@ -51,6 +51,8 @@ export const GET = auth(async function GET(request: any) {
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
+  } finally {
+    await disconnectDB();
   }
 });
 
@@ -102,6 +104,8 @@ export const POST = auth(async function POST(request: any) {
       { message: 'An error occurred while processing your request' },
       { status: 500 }
     );
+  } finally {
+    await disconnectDB();
   }
 });
 
@@ -129,6 +133,8 @@ export const PATCH = auth(async function PATCH(request: any) {
   } catch (error: any) {
     console.error(error);
     return NextResponse.json({ message: error.message }, { status: 500 });
+  } finally {
+    await disconnectDB();
   }
 });
 
@@ -168,5 +174,7 @@ export const DELETE = auth(async function DELETE(request: any) {
   } catch (error: any) {
     console.error(error);
     return NextResponse.json({ message: error.message }, { status: 500 });
+  } finally {
+    await disconnectDB();
   }
 });

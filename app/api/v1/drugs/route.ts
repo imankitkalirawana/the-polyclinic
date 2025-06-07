@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
-import { connectDB } from '@/lib/db';
+import { connectDB, disconnectDB } from '@/lib/db';
 import Drug from '@/models/Drug';
 
 export const GET = auth(async function GET(request: any) {
@@ -19,6 +19,8 @@ export const GET = auth(async function GET(request: any) {
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
+  } finally {
+    await disconnectDB();
   }
 });
 
@@ -36,6 +38,8 @@ export const POST = auth(async function POST(request: any) {
     return NextResponse.json(drug);
   } catch (error: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });
+  } finally {
+    await disconnectDB();
   }
 });
 
@@ -59,5 +63,7 @@ export const PUT = auth(async function PUT(request: any) {
     return NextResponse.json(drugs);
   } catch (error: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });
+  } finally {
+    await disconnectDB();
   }
 });

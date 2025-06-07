@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { connectDB } from '@/lib/db';
+import { connectDB, disconnectDB } from '@/lib/db';
 import { auth } from '@/auth';
 import ActivityLog, { Schema } from '@/models/Activity';
 
@@ -24,5 +24,7 @@ export const GET = auth(async function GET(request: any, context: any) {
       { error: 'Internal Server Error' },
       { status: 500 }
     );
+  } finally {
+    await disconnectDB();
   }
 });

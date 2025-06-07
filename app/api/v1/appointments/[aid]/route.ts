@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
-import { connectDB } from '@/lib/db';
+import { connectDB, disconnectDB } from '@/lib/db';
 import Appointment, { AppointmentStatus } from '@/models/Appointment';
 import { UserRole } from '@/models/User';
 import { API_ACTIONS } from '@/lib/config';
@@ -62,6 +62,8 @@ export const GET = auth(async function GET(request: any, context: any) {
       },
       { status: 500 }
     );
+  } finally {
+    await disconnectDB();
   }
 });
 
@@ -149,6 +151,8 @@ export const PATCH = auth(async function PATCH(request: any, context: any) {
     return NextResponse.json(updatedAppointment);
   } catch (error) {
     console.error(error);
+  } finally {
+    await disconnectDB();
   }
 });
 
@@ -192,5 +196,7 @@ export const DELETE = auth(async function DELETE(request: any, context: any) {
       },
       { status: 500 }
     );
+  } finally {
+    await disconnectDB();
   }
 });

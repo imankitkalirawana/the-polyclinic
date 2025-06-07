@@ -4,7 +4,7 @@ import { SortDescriptor } from '@heroui/react';
 
 import { sendHTMLEmail } from './emails/send-email';
 
-import { connectDB } from '@/lib/db';
+import { connectDB, disconnectDB } from '@/lib/db';
 import Appointment from '@/models/Appointment';
 import { RescheduledAppointment } from '@/utils/email-template/patient';
 
@@ -15,7 +15,9 @@ export const getAllAppointments = async (options?: {
   query?: string;
   sort?: SortDescriptor;
 }) => {
-  const limit = options?.limit || 25;
+  try {
+    await connectDB();
+    const limit = options?.limit || 25;
   const page = options?.page || 1;
   const status = options?.status || ['all']; //can be  'booked', 'confirmed', 'in-progress', 'completed', 'cancelled', 'overdue', 'on-hold'
   const query = options?.query || '';
@@ -39,8 +41,6 @@ export const getAllAppointments = async (options?: {
       ? { status: { $in: status } }
       : {}),
   };
-
-  await connectDB();
 
   // Build the sort object dynamically
   const sortObject: Record<string, 1 | -1> = {
@@ -73,13 +73,17 @@ export const getAllAppointments = async (options?: {
     total,
     totalPages,
   };
+  } finally {
+    await disconnectDB();
+  }
 };
 
 export const getAppointmentWithAID = async (aid: number) => {
-  await connectDB();
-  const appointment = await Appointment.findOne({
-    aid,
-  }).lean();
+  try {
+    await connectDB();
+    const appointment = await Appointment.findOne({
+      aid,
+    }).lean();
   if (!appointment) {
     throw new Error('Appointment not found');
   }
@@ -87,13 +91,17 @@ export const getAppointmentWithAID = async (aid: number) => {
     ...appointment,
     _id: appointment?._id.toString(),
   };
+  } finally {
+    await disconnectDB();
+  }
 };
 
 export const rescheduleAppointment = async (aid: number, date: string) => {
-  await connectDB();
-  const previousAppointment = await Appointment.findOne({ aid })
-    .select('date aid')
-    .lean();
+  try {
+    await connectDB();
+    const previousAppointment = await Appointment.findOne({ aid })
+      .select('date aid')
+      .lean();
   const previousDate = previousAppointment?.date;
   const appointment = await Appointment.findOneAndUpdate(
     { aid },
@@ -119,15 +127,19 @@ export const rescheduleAppointment = async (aid: number, date: string) => {
 
     return true;
   }
+  } finally {
+    await disconnectDB();
+  }
 };
 
 // over due appointments
 
 export const overdueAppointments = async () => {
   // find appointments that are in past and status is not overdue, cancelled or completed
-  await connectDB();
-  const appointments = await Appointment.find({
-    date: { $lt: new Date().toISOString() },
+  try {
+    await connectDB();
+    const appointments = await Appointment.find({
+      date: { $lt: new Date().toISOString() },
     status: { $nin: ['overdue', 'cancelled', 'completed'] },
   }).lean();
 
@@ -143,5 +155,8 @@ export const overdueAppointments = async () => {
         html: 'Your appointment is overdue',
       });
     });
+  }
+  } finally {
+    await disconnectDB();
   }
 };

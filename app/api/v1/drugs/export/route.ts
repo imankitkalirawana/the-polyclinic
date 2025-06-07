@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 import ExcelJS from 'exceljs';
 
 import { auth } from '@/auth';
-import { connectDB } from '@/lib/db';
+import { connectDB, disconnectDB } from '@/lib/db';
 import Drug from '@/models/Drug';
 
 export const GET = auth(async function GET(request: any) {
@@ -62,5 +62,7 @@ export const GET = auth(async function GET(request: any) {
   } catch (error: any) {
     console.error(error);
     return NextResponse.json({ message: error.message }, { status: 500 });
+  } finally {
+    await disconnectDB();
   }
 });
