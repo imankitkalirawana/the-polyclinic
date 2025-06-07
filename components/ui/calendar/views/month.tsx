@@ -16,6 +16,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@heroui/react';
 import DateChip from '../ui/date-chip';
 import { formatTime } from '../helper';
 import StatusDot from '../ui/status-dot';
+import AppointmentPopover from '../ui/appointment-popover';
 
 interface MonthViewProps {
   appointments: AppointmentType[];
@@ -80,10 +81,10 @@ export function MonthView({
             <div
               key={day.toISOString()}
               className={cn(
-                'flex flex-col justify-start border-b border-r p-1 last:border-r-0',
+                'flex select-none flex-col justify-start border-b border-r p-1 last:border-r-0',
                 !isCurrentMonth && 'bg-default-100 text-default-500'
               )}
-              onClick={() => onTimeSlotClick(day)}
+              onDoubleClick={() => onTimeSlotClick(day)}
             >
               <DateChip
                 date={day}
@@ -92,7 +93,7 @@ export function MonthView({
 
               <div>
                 {dayAppointments.slice(0, maxAppointmentsToShow).map((apt) => (
-                  <Popover showArrow>
+                  <Popover placement="right">
                     <PopoverTrigger>
                       <div
                         key={apt.aid}
@@ -112,12 +113,7 @@ export function MonthView({
                       </div>
                     </PopoverTrigger>
                     <PopoverContent>
-                      <div className="flex flex-col gap-2">
-                        <div className="flex items-center gap-2">
-                          <span>{apt.patient.name}</span>
-                          <span>{formatTime(new Date(apt.date))}</span>
-                        </div>
-                      </div>
+                      <AppointmentPopover appointment={apt} />
                     </PopoverContent>
                   </Popover>
                 ))}
