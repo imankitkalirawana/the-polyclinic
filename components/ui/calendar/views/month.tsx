@@ -13,6 +13,9 @@ import {
 } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { AppointmentType } from '@/models/Appointment';
+import { useCalendar } from '../store';
+import { Popover, PopoverContent, PopoverTrigger } from '@heroui/react';
+import { chipColorMap } from '@/lib/chip';
 
 interface MonthViewProps {
   appointments: AppointmentType[];
@@ -20,44 +23,38 @@ interface MonthViewProps {
   onTimeSlotClick: (date: Date) => void;
 }
 
+const MAX_APPOINTMENTS_PER_DAY = 2;
+
 export function MonthView({
   appointments,
   currentDate,
   onTimeSlotClick,
 }: MonthViewProps) {
+  const { setView } = useCalendar();
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
   const calendarStart = startOfWeek(monthStart);
   const calendarEnd = endOfWeek(monthEnd);
 
   const days = eachDayOfInterval({ start: calendarStart, end: calendarEnd });
-  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const weekDays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+
+  const numberOfWeeks = Math.ceil(days.length / 7);
 
   const getAppointmentsForDay = (date: Date) => {
     return appointments.filter((apt) => isSameDay(new Date(apt.date), date));
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'booked':
-        return 'bg-blue-500';
-      case 'cancelled':
-        return 'bg-red-500';
-      case 'completed':
-        return 'bg-green-500';
-      default:
-        return 'bg-gray-500';
-    }
-  };
-
   return (
-    <div className="flex flex-col">
+    <div className="flex h-full flex-col">
       {/* Week header */}
-      <div className="grid grid-cols-7 border-b">
+      <div className="grid grid-cols-7">
         {weekDays.map((day) => (
           <div
             key={day}
-            className="text-muted-foreground border-r p-2 text-center text-sm font-medium last:border-r-0"
+            className={cn(
+              'border-r text-center text-xs font-medium uppercase text-default-500 last:border-r-0'
+            )}
           >
             {day}
           </div>
@@ -65,50 +62,91 @@ export function MonthView({
       </div>
 
       {/* Calendar grid */}
-      <div className="grid flex-1 grid-cols-7 grid-rows-6">
+      <div
+        className="grid h-full flex-1 grid-cols-7"
+        style={{
+          gridTemplateRows: `repeat(${numberOfWeeks}, minmax(100px, 1fr))`,
+        }}
+      >
         {days.map((day) => {
           const dayAppointments = getAppointmentsForDay(day);
           const isCurrentMonth = isSameMonth(day, currentDate);
-          const isDayToday = isToday(day);
 
           return (
             <div
               key={day.toISOString()}
               className={cn(
-                'hover:bg-muted/50 min-h-[120px] cursor-pointer border-b border-r p-1 last:border-r-0',
-                !isCurrentMonth && 'bg-muted/20 text-muted-foreground'
+                'flex flex-col justify-start border-b border-r p-1 last:border-r-0',
+                !isCurrentMonth && 'bg-default-100 text-default-500'
               )}
               onClick={() => onTimeSlotClick(day)}
             >
-              <div
+              <button
                 className={cn(
-                  'mb-1 flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium',
-                  isDayToday && 'bg-blue-600 text-white'
+                  'mb-1 flex size-6 items-center justify-center self-center rounded-full text-sm font-medium transition-colors hover:bg-default-100',
+                  {
+                    'bg-primary-500 text-primary-foreground hover:bg-primary-400':
+                      isToday(day),
+                  }
                 )}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setView('day', { date: day });
+                }}
               >
                 {format(day, 'd')}
-              </div>
+              </button>
 
               <div className="space-y-1">
-                {dayAppointments.slice(0, 3).map((apt) => (
-                  <div
-                    key={apt._id}
-                    className={cn(
-                      'truncate rounded p-1 text-xs text-white',
-                      getStatusColor(apt.status)
-                    )}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      // Handle appointment click
-                    }}
-                  >
-                    {format(new Date(apt.date), 'HH:mm')} {apt.patient.name}
-                  </div>
-                ))}
-                {dayAppointments.length > 3 && (
-                  <div className="text-muted-foreground text-xs">
-                    +{dayAppointments.length - 3} more
-                  </div>
+                {dayAppointments
+                  .slice(0, MAX_APPOINTMENTS_PER_DAY)
+                  .map((apt) => (
+                    <Popover showArrow>
+                      <PopoverTrigger>
+                        <div
+                          key={apt._id}
+                          className={cn(
+                            'flex cursor-pointer items-center justify-start gap-1 truncate rounded-lg p-1 px-2 text-xs text-white hover:opacity-90',
+                            chipColorMap[apt.status].text,
+                            apt.status === 'cancelled' && 'line-through'
+                          )}
+                        >
+                          <span className="font-extralight">
+                            {format(new Date(apt.date), 'HH:mm')}
+                          </span>
+                          <span>
+                            {apt.patient.name}{' '}
+                            {apt.doctor?.name ? `- ${apt.doctor.name}` : ''}
+                          </span>
+                        </div>
+                      </PopoverTrigger>
+                      <PopoverContent>
+                        <div className="flex flex-col gap-2">
+                          <div className="flex items-center gap-2">
+                            <span>{apt.patient.name}</span>
+                            <span>{format(new Date(apt.date), 'HH:mm')}</span>
+                          </div>
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                  ))}
+                {dayAppointments.length > MAX_APPOINTMENTS_PER_DAY && (
+                  <Popover>
+                    <PopoverTrigger>
+                      <button className="w-full truncate rounded-lg p-1 px-2 text-start text-xs hover:bg-default-100">
+                        {dayAppointments.length - MAX_APPOINTMENTS_PER_DAY} more
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent>
+                      <div className="flex flex-col gap-2">
+                        {dayAppointments
+                          .slice(MAX_APPOINTMENTS_PER_DAY)
+                          .map((apt) => (
+                            <div key={apt._id}>{apt.patient.name}</div>
+                          ))}
+                      </div>
+                    </PopoverContent>
+                  </Popover>
                 )}
               </div>
             </div>

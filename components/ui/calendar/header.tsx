@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Select, SelectItem } from '@heroui/react';
+import { Button, Kbd, Select, SelectItem } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import {
   format,
@@ -21,11 +21,11 @@ interface CalendarHeaderProps {
 }
 
 const views = [
-  { label: 'Schedule', value: 'schedule' },
-  { label: 'Day', value: 'day' },
-  { label: 'Week', value: 'week' },
-  { label: 'Month', value: 'month' },
-  { label: 'Year', value: 'year' },
+  { label: 'Schedule', value: 'schedule', shortcut: 's' },
+  { label: 'Day', value: 'day', shortcut: 'd' },
+  { label: 'Week', value: 'week', shortcut: 'w' },
+  { label: 'Month', value: 'month', shortcut: 'm' },
+  { label: 'Year', value: 'year', shortcut: 'y' },
 ];
 
 export function CalendarHeader({
@@ -102,23 +102,43 @@ export function CalendarHeader({
         </Button>
 
         <div className="flex items-center gap-1">
-          <Button variant="ghost" isIconOnly onPress={navigatePrevious}>
-            <Icon icon="mdi:chevron-left" className="h-4 w-4" />
+          <Button
+            variant="light"
+            size="sm"
+            isIconOnly
+            radius="full"
+            onPress={navigatePrevious}
+          >
+            <Icon
+              icon="solar:alt-arrow-left-line-duotone"
+              className="h-4 w-4"
+            />
           </Button>
-          <Button variant="ghost" isIconOnly onPress={navigateNext}>
-            <Icon icon="mdi:chevron-right" className="h-4 w-4" />
+          <Button
+            variant="light"
+            size="sm"
+            isIconOnly
+            radius="full"
+            onPress={navigateNext}
+          >
+            <Icon
+              icon="solar:alt-arrow-right-line-duotone"
+              className="h-4 w-4"
+            />
           </Button>
         </div>
 
-        <h2 className="min-w-[200px] text-xl font-medium">{getDateTitle()}</h2>
+        <h2 className="whitespace-nowrap text-lg font-medium">
+          {getDateTitle()}
+        </h2>
       </div>
 
       <div className="flex w-full items-center justify-end gap-2">
-        <Button variant="ghost" isIconOnly>
-          <Icon icon="mdi:search" className="h-4 w-4" />
+        <Button variant="light" radius="full" isIconOnly>
+          <Icon icon="fluent:search-24-regular" width={20} />
         </Button>
-        <Button variant="ghost" isIconOnly>
-          <Icon icon="mdi:settings" className="h-4 w-4" />
+        <Button variant="light" isIconOnly radius="full">
+          <Icon icon="solar:settings-linear" strokeWidth={2} width={20} />
         </Button>
         <Select
           aria-label="View"
@@ -135,6 +155,7 @@ export function CalendarHeader({
               textValue={
                 item.value.charAt(0).toUpperCase() + item.value.slice(1)
               }
+              endContent={<Kbd className="capitalize">{item.shortcut}</Kbd>}
             >
               {item.label}
             </SelectItem>

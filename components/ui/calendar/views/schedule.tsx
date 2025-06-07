@@ -8,11 +8,9 @@ import {
   isToday,
 } from 'date-fns';
 import { cn } from '@/lib/utils';
-import { AppointmentStatus, AppointmentType } from '@/models/Appointment';
-import { getStatusColor } from '@/lib/tailwind';
+import { AppointmentType } from '@/models/Appointment';
 import { chipColorMap } from '@/lib/chip';
 import { Tooltip } from '@heroui/react';
-import { today } from '@internationalized/date';
 import { useCalendar } from '../store';
 
 interface ScheduleViewProps {
@@ -60,7 +58,7 @@ export function ScheduleView({
               return (
                 <div key={dateKey} className="flex w-full items-start py-1">
                   <div className="flex w-28 items-center gap-2">
-                    <h5
+                    <button
                       className={cn(
                         'flex aspect-square w-8 cursor-pointer items-center justify-center rounded-full font-medium leading-none transition-all hover:bg-default-100',
                         {
@@ -73,7 +71,7 @@ export function ScheduleView({
                       }
                     >
                       {format(date, 'd')}
-                    </h5>
+                    </button>
                     <p className="mt-1.5 text-xs uppercase text-default-600">
                       {format(date, 'MMM, EEE')}
                     </p>

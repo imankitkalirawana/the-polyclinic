@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CalendarHeader } from './header';
 import { MonthView } from './views/month';
 import { WeekView } from './views/week';
@@ -24,7 +24,7 @@ export function Calendar({
   onDateChange,
   onCreateAppointment,
 }: CalendarProps) {
-  const { view } = useCalendar();
+  const { view, setView } = useCalendar();
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [showDialog, setShowDialog] = useState(false);
@@ -35,7 +35,7 @@ export function Calendar({
     setShowDialog(true);
   };
 
-  const handleCreateAppointment = (appointmentData: any) => {
+  const handleCreateAppointment = () => {
     if (selectedDate) {
       onCreateAppointment(selectedDate, selectedTime || undefined);
       setShowDialog(false);
@@ -92,10 +92,32 @@ export function Calendar({
     }
   };
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'm') {
+        setView('month');
+      } else if (event.key === 'y') {
+        setView('year');
+      } else if (event.key === 'w') {
+        setView('week');
+      } else if (event.key === 'd') {
+        setView('day');
+      } else if (event.key === 's') {
+        setView('schedule');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [setView]);
+
   return (
-    <div className="flex max-h-[calc(100vh_-_100px)] flex-col">
+    <div className="flex h-[calc(100vh_-_60px)] max-h-[calc(100vh_-_60px)] flex-col overflow-hidden">
       <CalendarHeader currentDate={currentDate} onDateChange={onDateChange} />
-      <div className="flex-1">{renderView()}</div>
+      <div className="h-full flex-1">{renderView()}</div>
       <AppointmentDialog
         open={showDialog}
         onOpenChange={setShowDialog}

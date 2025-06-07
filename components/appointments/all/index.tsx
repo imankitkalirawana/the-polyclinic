@@ -20,13 +20,11 @@ export default function Appointments() {
   };
 
   return (
-    <div>
-      <Calendar
-        appointments={appointments}
-        currentDate={currentDate}
-        onDateChange={setCurrentDate}
-        onCreateAppointment={handleCreateAppointment}
-      />
-    </div>
+    <Calendar
+      appointments={appointments}
+      currentDate={currentDate}
+      onDateChange={setCurrentDate}
+      onCreateAppointment={handleCreateAppointment}
+    />
   );
 }
