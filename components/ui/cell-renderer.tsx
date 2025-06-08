@@ -24,7 +24,15 @@ export const CellRenderer = ({
   iconSize = 24,
   cols = 1,
 }: CellRendererProps) => (
-  <div className={`p-2 ${cols === 2 ? 'col-span-2' : ''} ${className || ''}`}>
+  <div
+    className={cn(
+      'p-2',
+      {
+        'col-span-2': cols === 2,
+      },
+      className
+    )}
+  >
     <div
       className={cn('flex items-center gap-2 text-sm', {
         'items-start': label,

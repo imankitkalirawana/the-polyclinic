@@ -14,12 +14,14 @@ import {
   ButtonGroup,
   User,
   divider,
+  Progress,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { AppointmentType } from '@/models/Appointment';
 import StatusRenderer from './status-renderer';
 import { format } from 'date-fns';
 import { CLINIC_INFO } from '@/lib/config';
+import { CellRenderer } from '../../cell-renderer';
 
 export default function MeetingEventCard({
   appointment,
@@ -159,77 +161,67 @@ export default function MeetingEventCard({
           )}
         </div>
 
-        <div className="flex flex-col items-start gap-1">
-          <AppointmentHeading title="Additional Information" />
-          <div className="mb-3 flex items-center gap-3">
-            <Icon
-              icon="solar:users-group-linear"
-              className="h-5 w-5 text-default-600"
-            />
-            <div>
-              <div className="font-medium">1 guests</div>
-              <div className="text-sm text-default-600">1 yes</div>
-              <div className="text-sm text-default-600">1 no, 0 awaiting</div>
+        {(appointment.additionalInfo.symptoms ||
+          appointment.additionalInfo.notes ||
+          appointment.additionalInfo.description ||
+          appointment.additionalInfo.instructions) && (
+          <>
+            <Divider className="my-2" />
+            <div className="flex flex-col items-start gap-1">
+              <AppointmentHeading title="Additional Information" />
+              {appointment.additionalInfo.symptoms && (
+                <CellRenderer
+                  label="Symptoms"
+                  icon="solar:notes-bold-duotone"
+                  value={appointment.additionalInfo.symptoms}
+                  className="p-0"
+                  classNames={{
+                    icon: 'text-orange-500 bg-orange-50',
+                    label: 'text-xs',
+                    value: 'text-xs',
+                  }}
+                />
+              )}
+              {appointment.additionalInfo.notes && (
+                <CellRenderer
+                  label="Notes"
+                  icon="solar:notes-bold-duotone"
+                  value={appointment.additionalInfo.notes}
+                  classNames={{
+                    icon: 'text-amber-500 bg-amber-50',
+                  }}
+                />
+              )}
+              {appointment.additionalInfo.description && (
+                <CellRenderer
+                  label="Description"
+                  icon="solar:document-text-bold-duotone"
+                  value={appointment.additionalInfo.description}
+                  classNames={{
+                    icon: 'text-pink-500 bg-pink-50',
+                  }}
+                />
+              )}
+              {appointment.additionalInfo.instructions && (
+                <CellRenderer
+                  label="Instructions"
+                  icon="solar:document-text-bold-duotone"
+                  value={appointment.additionalInfo.instructions}
+                />
+              )}
             </div>
-            <div className="ml-auto flex items-center gap-2">
-              <Button isIconOnly size="sm" variant="light">
-                <Icon icon="solar:copy-linear" className="h-4 w-4" />
-              </Button>
-              <Button isIconOnly size="sm" variant="light">
-                <Icon icon="solar:pen-new-square-linear" className="h-4 w-4" />
-              </Button>
-              <Button isIconOnly size="sm" variant="light">
-                <Icon icon="solar:chevron-down-linear" className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        <Divider />
-
-        {/* Notifications */}
-        <div className="p-4">
-          <div className="flex items-center gap-3">
-            <Icon
-              icon="solar:bell-linear"
-              className="h-5 w-5 text-default-600"
-            />
-            <div>
-              <div className="font-medium">When event starts</div>
-              <div className="text-sm text-default-600">10 minutes before</div>
-            </div>
-          </div>
-        </div>
-
-        <Divider />
-
-        {/* Organizer */}
-        <div className="p-4">
-          <div className="flex items-center gap-3">
-            <Icon
-              icon="solar:calendar-linear"
-              className="h-5 w-5 text-default-600"
-            />
-            <div className="text-default-900">Ankit Kalirawana</div>
-          </div>
-        </div>
-
-        <Divider />
-
-        {/* Response Options */}
-        <div className="p-4">
-          <div className="flex items-center gap-3">
-            <span className="font-medium text-default-900">Going?</span>
-            <div className="flex gap-2">
-              <Chip>✓ Yes</Chip>
-              <Chip>No</Chip>
-              <Chip>Maybe</Chip>
-            </div>
-            <Button isIconOnly size="sm" variant="light">
-              <Icon icon="solar:chevron-down-linear" className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
+          </>
+        )}
+        <Divider className="my-2" />
+        <Progress
+          showValueLabel
+          value={50}
+          color="primary"
+          size="sm"
+          className="mt-2"
+          label={<AppointmentHeading title="Progress" />}
+          valueLabel={<AppointmentHeading title="50%" />}
+        />
       </CardBody>
     </Card>
   );
@@ -243,7 +235,7 @@ function AppointmentHeading({
   description?: string | React.ReactNode;
 }) {
   return (
-    <div className="flex w-full items-center justify-between gap-2 text-[10px] font-medium uppercase tracking-wide text-default-500">
+    <div className="flex w-full items-center justify-between gap-2 text-xs font-medium uppercase tracking-wide text-default-500">
       <h2>{title}</h2>
       {description}
     </div>
