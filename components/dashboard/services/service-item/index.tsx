@@ -102,7 +102,7 @@ export default function ServiceViewItem({
               className="-mx-1 mt-2"
               itemClasses={{
                 title: 'text-default-400',
-                content: 'pt-0 pb-6 text-base text-default-500',
+                content: 'pt-0 pb-6 text-medium text-default-500',
               }}
             >
               <AccordionItem title="Description">

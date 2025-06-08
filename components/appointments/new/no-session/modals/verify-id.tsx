@@ -65,9 +65,13 @@ export default function VerifyId() {
                 }
                 onComplete={() => formik.handleSubmit()}
               />
-              <div className="flex items-center gap-2 text-sm">
+              <div className="flex items-center gap-2 text-small">
                 <p>Didn&apos;t receive the code?</p>
-                <Link href="#" isDisabled className="text-sm hover:underline">
+                <Link
+                  href="#"
+                  isDisabled
+                  className="text-small hover:underline"
+                >
                   Resend
                 </Link>
               </div>

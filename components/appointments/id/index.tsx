@@ -83,14 +83,14 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                 value={format(new Date(appointment.date), 'EEEE, MMM d, yyyy ')}
                 classNames={{ icon: 'text-gray-500 bg-gray-100' }}
                 iconSize={18}
-                className="items-center rounded-lg bg-gray-100 px-2 py-1 text-xs text-gray-500"
+                className="items-center rounded-lg bg-gray-100 px-2 py-1 text-tiny text-gray-500"
               />
               <CellRenderer
                 icon="mdi:clock-outline"
                 value={format(new Date(appointment.date), 'h:mm a')}
                 classNames={{ icon: 'text-gray-500 bg-gray-100' }}
                 iconSize={18}
-                className="items-center rounded-lg bg-gray-100 px-2 py-1 text-xs text-gray-500"
+                className="items-center rounded-lg bg-gray-100 px-2 py-1 text-tiny text-gray-500"
               />
             </div>
           </div>
@@ -118,28 +118,28 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                     icon="solar:hashtag-circle-bold-duotone"
                     value={appointment.patient.uid}
                     classNames={{ icon: 'text-yellow-500 bg-yellow-50' }}
-                    className="text-lg text-black"
+                    className="text-large text-black"
                   />
                   <CellRenderer
                     label="Name"
                     icon="cbi:abc"
                     value={appointment.patient.name}
                     classNames={{ icon: 'text-pink-500 bg-pink-50' }}
-                    className="text-lg text-black"
+                    className="text-large text-black"
                   />
                   <CellRenderer
                     label="Email"
                     icon="material-symbols:mail"
                     value={appointment.patient.email}
                     classNames={{ icon: 'text-blue-500 bg-blue-50' }}
-                    className="text-lg text-black"
+                    className="text-large text-black"
                   />
                   <CellRenderer
                     label="Phone Number"
                     icon="ic:baseline-phone"
                     value={appointment.patient.phone}
                     classNames={{ icon: 'text-green-500 bg-green-50' }}
-                    className="text-lg text-black"
+                    className="text-large text-black"
                   />
                 </div>
               </div>
@@ -172,28 +172,28 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                     icon="cbi:abc"
                     value={appointment.doctor?.name}
                     classNames={{ icon: 'text-pink-500 bg-pink-50' }}
-                    className="text-lg text-black"
+                    className="text-large text-black"
                   />
                   <CellRenderer
                     label="Email"
                     icon="material-symbols:mail"
                     value={appointment.doctor?.email}
                     classNames={{ icon: 'text-blue-500 bg-blue-50' }}
-                    className="text-lg text-black"
+                    className="text-large text-black"
                   />
                   <CellRenderer
                     label="Phone Number"
                     icon="ic:baseline-phone"
                     value={appointment.doctor?.phone}
                     classNames={{ icon: 'text-green-500 bg-green-50' }}
-                    className="text-lg text-black"
+                    className="text-large text-black"
                   />
                   <CellRenderer
                     label="Sitting"
                     icon="fluent:status-20-filled"
                     value={appointment.doctor?.sitting}
                     classNames={{ icon: 'text-purple-500 bg-purple-50' }}
-                    className="text-lg text-black"
+                    className="text-large text-black"
                   />
                 </div>
               </div>
@@ -221,7 +221,7 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                 </div>
 
                 <div>
-                  <p className="mb-1 text-xs font-medium uppercase tracking-wide text-gray-500">
+                  <p className="mb-1 text-tiny font-medium uppercase tracking-wide text-gray-500">
                     DATE & TIME
                   </p>
                   <CellRenderer
@@ -241,8 +241,8 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                 <Icon icon="solar:map-pin-bold" />
               )}
               <div>
-                <p className="text-sm font-medium">Appointment Type</p>
-                <p className="text-sm capitalize">
+                <p className="text-small font-medium">Appointment Type</p>
+                <p className="text-small capitalize">
                   {appointment.additionalInfo.type}
                 </p>
               </div>
@@ -252,12 +252,12 @@ export default function Appointment({ aid, session }: AppointmentProps) {
 
             {appointment.data && Object.keys(appointment.data).length > 0 && (
               <div>
-                <h3 className="mb-2 text-sm font-medium">Additional Data</h3>
+                <h3 className="mb-2 text-small font-medium">Additional Data</h3>
                 <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                   {Object.entries(appointment.data).map(([key, value]) => (
                     <div key={key}>
-                      <p className="text-sm font-medium capitalize">{key}</p>
-                      <p className="text-sm">{value}</p>
+                      <p className="text-small font-medium capitalize">{key}</p>
+                      <p className="text-small">{value}</p>
                     </div>
                   ))}
                 </div>

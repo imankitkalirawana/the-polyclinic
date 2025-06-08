@@ -78,7 +78,7 @@ export default function DatePicker() {
                     }}
                   >
                     <div className="flex flex-col">
-                      <span className="text-xs font-medium text-default-400">
+                      <span className="text-tiny font-medium text-default-400">
                         {format(date, 'cccccc').toUpperCase()}
                       </span>
                       <span className="font-semibold">{format(date, 'd')}</span>

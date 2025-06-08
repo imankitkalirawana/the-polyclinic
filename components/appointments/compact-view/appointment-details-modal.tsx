@@ -220,7 +220,7 @@ export default function AppointmentDetailsModal() {
                               ).avatarBg
                             )}
                           />
-                          <span className="text-sm capitalize text-default-700">
+                          <span className="text-small capitalize text-default-700">
                             {formik.values.selected?.status
                               .split('-')
                               .join(' ')}
@@ -444,7 +444,7 @@ export function Title({
 }) {
   return (
     <>
-      <h2 className={cn('text-lg font-semibold', className)}>{title}</h2>
+      <h2 className={cn('text-large font-semibold', className)}>{title}</h2>
     </>
   );
 }

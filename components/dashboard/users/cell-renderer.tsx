@@ -13,7 +13,7 @@ export function ModalCellRenderer({ user }: { user: UserType }) {
           name: user.name,
         }}
         classNames={{
-          description: 'text-default-400 text-xs',
+          description: 'text-default-400 text-tiny',
         }}
         description={`#${user.uid} - ${user.email}`}
       />

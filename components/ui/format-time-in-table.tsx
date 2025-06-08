@@ -27,7 +27,7 @@ export default function FormatTimeInTable({
   return (
     <div
       className={cn(
-        'text-bold whitespace-nowrap text-sm capitalize',
+        'text-bold whitespace-nowrap text-small capitalize',
         className
       )}
     >

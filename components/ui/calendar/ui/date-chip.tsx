@@ -13,9 +13,9 @@ export default function DateChip({
   size?: 'sm' | 'md' | 'lg';
 }) {
   const sizeClass = {
-    sm: 'size-6 text-xs',
-    md: 'size-8 text-sm',
-    lg: 'size-10 text-base',
+    sm: 'size-6 text-tiny',
+    md: 'size-8 text-small',
+    lg: 'size-10 text-medium',
   };
 
   return (

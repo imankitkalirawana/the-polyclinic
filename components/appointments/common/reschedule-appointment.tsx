@@ -42,10 +42,10 @@ export default function RescheduleAppointment({
   return (
     <>
       <ModalHeader className="flex-col items-start gap-4">
-        <h2 className="mt-4 max-w-xs text-center text-base">
+        <h2 className="mt-4 max-w-xs text-center text-medium">
           Reschedule Appointment
         </h2>
-        <p className="text-sm font-light">
+        <p className="text-small font-light">
           This appointment will be rescheduled and the patient will be notified.
         </p>
       </ModalHeader>

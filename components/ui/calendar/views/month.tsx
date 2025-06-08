@@ -64,7 +64,7 @@ export function MonthView({
           <div
             key={day}
             className={cn(
-              'border-r text-center text-xs font-medium uppercase text-default-500 last:border-r-0'
+              'border-r text-center text-tiny font-medium uppercase text-default-500 last:border-r-0'
             )}
           >
             {day}
@@ -118,7 +118,7 @@ export function MonthView({
                 {dayAppointments.length > maxAppointmentsToShow && (
                   <Popover onOpenChange={setIsPopoverOpen}>
                     <PopoverTrigger>
-                      <button className="w-full truncate rounded-lg p-1 px-2 text-start text-xs hover:bg-default-100">
+                      <button className="w-full truncate rounded-lg p-1 px-2 text-start text-tiny hover:bg-default-100">
                         {dayAppointments.length - maxAppointmentsToShow} more
                       </button>
                     </PopoverTrigger>
@@ -151,7 +151,7 @@ function AppointmentList({
   return (
     <Card className="flex max-w-xs flex-col gap-2 shadow-none">
       <CardHeader className="flex-col items-center gap-2 pb-0">
-        <span className="text-sm font-medium">{format(date, 'E')}</span>
+        <span className="text-small font-medium">{format(date, 'E')}</span>
         <DateChip
           date={date}
           size="lg"
@@ -185,7 +185,7 @@ function Appointment({
         <div
           key={appointment.aid}
           className={cn(
-            'flex cursor-pointer items-center justify-start gap-1 truncate rounded-lg p-1 px-2 text-xs hover:bg-default-100',
+            'flex cursor-pointer items-center justify-start gap-1 truncate rounded-lg p-1 px-2 text-tiny hover:bg-default-100',
             appointment.status === 'cancelled' && 'line-through'
           )}
         >

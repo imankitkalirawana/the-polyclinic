@@ -423,7 +423,7 @@ export function Table<T extends TableItem>({
 
           <Divider className="h-5" orientation="vertical" />
 
-          <div className="whitespace-nowrap text-sm text-default-800">
+          <div className="whitespace-nowrap text-small text-default-800">
             {isAll(selectedKeys)
               ? 'All items selected'
               : `${selectedKeys.size > 0 ? `${selectedKeys.size} Selected` : ''}`}

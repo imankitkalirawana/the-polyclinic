@@ -34,7 +34,7 @@ export const CellRenderer = ({
     )}
   >
     <div
-      className={cn('flex items-center gap-2 text-sm', {
+      className={cn('flex items-center gap-2 text-small', {
         'items-start': label,
       })}
     >

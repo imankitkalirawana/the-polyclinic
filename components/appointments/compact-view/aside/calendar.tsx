@@ -86,7 +86,7 @@ export default function Calendar({
         </div>
         <div className="grid grid-cols-7 gap-2">
           {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => (
-            <div key={`${day}-${index}`} className="text-center text-sm">
+            <div key={`${day}-${index}`} className="text-center text-small">
               {day}
             </div>
           ))}

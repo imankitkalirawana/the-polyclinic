@@ -196,7 +196,7 @@ export default function Navbar() {
                 <Link
                   aria-label={item.name}
                   // href={item.href}
-                  className="cursor-pointer text-sm text-default-500"
+                  className="cursor-pointer text-small text-default-500"
                   onMouseEnter={() => {
                     clearTimeoutRef();
                     timeoutRef.current = setTimeout(() => {
@@ -238,7 +238,7 @@ export default function Navbar() {
                     className="h-14 gap-2"
                   >
                     <p className="font-semibold">{session.user?.name}</p>
-                    <p className="text-xs capitalize text-default-500">
+                    <p className="text-tiny capitalize text-default-500">
                       {session.user?.role}
                     </p>
                   </DropdownItem>
@@ -328,7 +328,7 @@ export default function Navbar() {
                 {activeMenu.subItems.map((subItem, idx) => (
                   <div key={`${subItem.title}-${idx}`}>
                     <motion.h3
-                      className="mb-4 text-xs font-light text-default-500"
+                      className="mb-4 text-tiny font-light text-default-500"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                     >

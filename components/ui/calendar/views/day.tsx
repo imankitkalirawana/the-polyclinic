@@ -46,7 +46,7 @@ export function DayView({
       {/* Day header */}
       <div className="border-b p-4">
         <div className="text-center">
-          <div className="text-muted-foreground text-sm uppercase tracking-wide">
+          <div className="text-muted-foreground text-small uppercase tracking-wide">
             {format(currentDate, 'EEEE')}
           </div>
           <div className="text-2xl font-bold">{format(currentDate, 'd')}</div>
@@ -66,7 +66,7 @@ export function DayView({
                 className="hover:bg-muted/50 flex cursor-pointer border-b"
                 onClick={() => onTimeSlotClick(currentDate, timeString)}
               >
-                <div className="text-muted-foreground w-20 border-r p-2 text-right text-sm">
+                <div className="text-muted-foreground w-20 border-r p-2 text-right text-small">
                   {hour === 0
                     ? '12 AM'
                     : hour < 12
@@ -79,7 +79,7 @@ export function DayView({
                   {appointment && (
                     <div
                       className={cn(
-                        'absolute inset-x-2 bottom-1 top-1 rounded p-2 text-sm text-white',
+                        'absolute inset-x-2 bottom-1 top-1 rounded p-2 text-small text-white',
                         getStatusColor(appointment.status)
                       )}
                       onClick={(e) => {
@@ -90,7 +90,7 @@ export function DayView({
                       <div className="font-medium">
                         {appointment.patient.name}
                       </div>
-                      <div className="text-xs opacity-90">
+                      <div className="text-tiny opacity-90">
                         {format(new Date(appointment.date), 'HH:mm')} -{' '}
                         {appointment.type}
                       </div>

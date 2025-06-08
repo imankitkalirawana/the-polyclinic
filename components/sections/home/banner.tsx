@@ -159,7 +159,7 @@ export default function Banner({
               width={20}
               height={20}
             />
-            <span className="text-sm tracking-wide text-foreground/60">
+            <span className="text-small tracking-wide text-foreground/60">
               {badge}
             </span>
           </motion.div>
@@ -191,7 +191,7 @@ export default function Banner({
             initial="hidden"
             animate="visible"
           >
-            <p className="mx-auto mb-8 max-w-xl px-4 text-base font-light leading-relaxed tracking-wide text-foreground/40 sm:text-lg md:text-xl">
+            <p className="mx-auto mb-8 max-w-xl px-4 text-medium font-light leading-relaxed tracking-wide text-foreground/40 sm:text-large md:text-xl">
               Crafting exceptional digital experiences through innovative design
               and cutting-edge technology.
             </p>

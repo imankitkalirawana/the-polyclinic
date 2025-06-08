@@ -67,13 +67,13 @@ export function AppointmentDialog({
     <Modal isOpen={open} onOpenChange={onOpenChange}>
       <ModalContent className="max-w-md">
         <ModalHeader>
-          <h3 className="text-lg font-medium">Create New Appointment</h3>
+          <h3 className="text-large font-medium">Create New Appointment</h3>
         </ModalHeader>
 
         <Form onSubmit={handleSubmit} className="space-y-4">
           <div className="bg-muted rounded-lg p-3">
-            <div className="text-sm font-medium">Date & Time</div>
-            <div className="text-muted-foreground text-sm">
+            <div className="text-small font-medium">Date & Time</div>
+            <div className="text-muted-foreground text-small">
               {formatDateTime()}
             </div>
           </div>

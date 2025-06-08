@@ -10,7 +10,7 @@ export default function NotFound() {
         <div className="container mx-auto flex min-h-screen items-center justify-center px-6 py-12">
           <div className="w-full">
             <div className="mx-auto flex max-w-lg flex-col items-center text-center">
-              <p className="text-sm font-medium text-primary">404 error</p>
+              <p className="text-small font-medium text-primary">404 error</p>
               <h1 className="mt-3 text-2xl font-semibold md:text-3xl">
                 We lost this page
               </h1>

@@ -57,7 +57,7 @@ export function ScheduleView({
                       onClick={() => setView('day', { date: date })}
                       size="md"
                     />
-                    <p className="mt-1.5 text-xs uppercase text-default-600">
+                    <p className="mt-1.5 text-tiny uppercase text-default-600">
                       {format(date, 'MMM, EEE')}
                     </p>
                   </div>
@@ -71,12 +71,12 @@ export function ScheduleView({
                       >
                         <div className="flex w-full max-w-24 items-center gap-2">
                           <StatusRenderer isDotOnly status={apt.status} />
-                          <p className="text-sm">
+                          <p className="text-small">
                             {formatTime(new Date(apt.date))}
                           </p>
                         </div>
                         <div className="flex gap-1">
-                          <p className="text-sm font-medium">
+                          <p className="text-small font-medium">
                             {apt.patient.name}
                           </p>
                         </div>
@@ -90,10 +90,10 @@ export function ScheduleView({
 
           {Object.keys(groupedAppointments).length === 0 && (
             <div className="text-muted-foreground py-12 text-center">
-              <div className="mb-2 text-lg font-medium">
+              <div className="mb-2 text-large font-medium">
                 No appointments this month
               </div>
-              <div className="text-sm">
+              <div className="text-small">
                 Click anywhere to create a new appointment
               </div>
             </div>

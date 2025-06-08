@@ -60,8 +60,8 @@ export default function BookingDetails({
         size="sm"
         src="https://i.pravatar.cc/150?u=a042581f4e29026704k"
       />
-      <p className="text-xs font-medium text-default-500">Zoey Lang</p>
-      <p className="mb-2 text-lg font-semibold text-default-foreground">
+      <p className="text-tiny font-medium text-default-500">Zoey Lang</p>
+      <p className="mb-2 text-large font-semibold text-default-foreground">
         Demo call
       </p>
       <p className="mb-4 text-small text-default-500">
@@ -79,7 +79,7 @@ export default function BookingDetails({
             icon="solar:calendar-minimalistic-bold"
             width={16}
           />
-          <div className="text-xs font-medium text-default-600">
+          <div className="text-tiny font-medium text-default-600">
             <p>{bookingDate}</p>
             <p>{`${selectedTimeSlotRange?.[0].label} - ${selectedTimeSlotRange?.[1].label}`}</p>
           </div>
@@ -90,7 +90,7 @@ export default function BookingDetails({
             icon="solar:clock-circle-bold"
             width={16}
           />
-          <p className="text-xs font-medium text-default-600">
+          <p className="text-tiny font-medium text-default-600">
             {selectedDuration}
           </p>
         </div>
@@ -100,7 +100,7 @@ export default function BookingDetails({
             icon="solar:videocamera-bold"
             width={16}
           />
-          <p className="text-xs font-medium text-default-600">Zoom</p>
+          <p className="text-tiny font-medium text-default-600">Zoom</p>
         </div>
         <div className="flex items-center">
           <Icon
@@ -114,7 +114,7 @@ export default function BookingDetails({
             classNames={{
               trigger: 'h-4 min-h-4 bg-transparent border-none shadow-none',
               value:
-                'text-xs font-medium group-data-[has-value=true]:text-default-600',
+                'text-tiny font-medium group-data-[has-value=true]:text-default-600',
             }}
             items={timeZoneOptions}
             placeholder="Select time zone"
@@ -128,8 +128,8 @@ export default function BookingDetails({
                 key={option.value}
                 className="capitalize"
                 classNames={{
-                  title: 'text-xs font-medium text-default-600',
-                  description: 'text-xs font-medium text-default-600',
+                  title: 'text-tiny font-medium text-default-600',
+                  description: 'text-tiny font-medium text-default-600',
                 }}
               >
                 {option.label}

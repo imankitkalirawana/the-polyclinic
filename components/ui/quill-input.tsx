@@ -38,8 +38,8 @@ export default function QuillInput({
       >
         <label
           htmlFor={id}
-          className={cn('text-sm text-default-500 transition-all', {
-            'text-xs': isFocused || value,
+          className={cn('text-small text-default-500 transition-all', {
+            'text-tiny': isFocused || value,
           })}
         >
           {label}
@@ -56,7 +56,7 @@ export default function QuillInput({
           onBlur={() => setIsFocused(false)}
         />
       </div>
-      <p className="pl-2 text-xs text-default-400">{description}</p>
+      <p className="pl-2 text-tiny text-default-400">{description}</p>
     </div>
   );
 }

@@ -63,12 +63,12 @@ export default function PendingAppointments({
                 key={appointment.aid}
                 className="min-h-[106px] w-full rounded-medium border border-divider bg-default-100 shadow-none"
               >
-                <CardBody className="flex flex-row items-start justify-between gap-4 pb-0 text-sm">
+                <CardBody className="flex flex-row items-start justify-between gap-4 pb-0 text-small">
                   <div className="flex flex-col">
                     <span className="line-clamp-1 font-semibold capitalize text-default-900">
                       {appointment.patient.name}
                     </span>
-                    <span className="text-xs text-default-500">
+                    <span className="text-tiny text-default-500">
                       {format(new Date(appointment.date), 'PPp')}
                     </span>
                   </div>

@@ -97,10 +97,10 @@ export default function UserSelection() {
                         />
                       </div>
                       <div>
-                        <h2 className="text-center text-lg font-semibold text-primary">
+                        <h2 className="text-center text-large font-semibold text-primary">
                           Register New Patient
                         </h2>
-                        <p className="text-sm font-light text-default-500">
+                        <p className="text-small font-light text-default-500">
                           Add a new patient to your list
                         </p>
                       </div>
@@ -135,10 +135,10 @@ export default function UserSelection() {
                               />
                             </div>
                             <div>
-                              <h2 className="text-center text-lg font-semibold">
+                              <h2 className="text-center text-large font-semibold">
                                 {user.name}
                               </h2>
-                              <p className="text-sm font-light text-default-500">
+                              <p className="text-small font-light text-default-500">
                                 {user.email}
                               </p>
                             </div>
@@ -192,7 +192,9 @@ export function UserSelectionTitle() {
         />
       </div>
       <div>
-        <h2 className="text-lg font-semibold">{formik.values.patient?.name}</h2>
+        <h2 className="text-large font-semibold">
+          {formik.values.patient?.name}
+        </h2>
         <p>{formik.values.patient?.email}</p>
         <Link
           className="hover:underline"

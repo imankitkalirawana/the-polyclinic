@@ -101,10 +101,10 @@ export default function DoctorSelection() {
                         />
                       </div>
                       <div>
-                        <h2 className="text-center text-lg font-semibold">
+                        <h2 className="text-center text-large font-semibold">
                           {doctor.name}
                         </h2>
-                        <p className="text-sm font-light text-default-500">
+                        <p className="text-small font-light text-default-500">
                           {doctor.email}
                         </p>
                       </div>
