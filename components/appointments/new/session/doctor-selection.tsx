@@ -75,9 +75,9 @@ export default function DoctorSelection() {
                     isPressable
                     key={doctor.uid}
                     className={cn(
-                      'no-scrollbar min-w-64 rounded-medium border border-divider shadow-none sm:min-w-72',
+                      'no-scrollbar rounded-mediumborder-smallborder-divider min-w-64 shadow-none sm:min-w-72',
                       {
-                        'border-2 border-primary-400':
+                        'border-medium border-primary-400':
                           doctor.uid === formik.values.doctor?.uid,
                       }
                     )}

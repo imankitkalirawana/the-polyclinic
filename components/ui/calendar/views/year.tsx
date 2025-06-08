@@ -46,7 +46,7 @@ export function YearView({
     const days = eachDayOfInterval({ start: calendarStart, end: calendarEnd });
 
     return (
-      <div className="cursor-pointer rounded-lg border p-2 transition-shadow hover:shadow-sm">
+      <div className="rounded-lgborder-smallp-2 cursor-pointer transition-shadow hover:shadow-sm">
         <div className="mb-2 text-center text-small font-medium">
           {format(month, 'MMM')}
         </div>

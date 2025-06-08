@@ -60,7 +60,7 @@ function ElegantShape({
             'absolute inset-0 rounded-full',
             'bg-gradient-to-r to-transparent',
             gradient,
-            'border-2 border-divider/[0.15] backdrop-blur-[2px]',
+            'border-medium border-divider/[0.15] backdrop-blur-[2px]',
             'shadow-[0_8px_32px_0_rgba(255,255,255,0.1)]',
             'after:absolute after:inset-0 after:rounded-full',
             'after:bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.2),transparent_70%)]'
@@ -151,7 +151,7 @@ export default function Banner({
             variants={fadeUpVariants}
             initial="hidden"
             animate="visible"
-            className="mb-8 inline-flex items-center gap-2 rounded-full border border-divider bg-background/[0.03] px-3 py-1 md:mb-12"
+            className="rounded-fullborder-smallborder-divider mb-8 inline-flex items-center gap-2 bg-background/[0.03] px-3 py-1 md:mb-12"
           >
             <Image
               src="https://kokonutui.com/logo.svg"

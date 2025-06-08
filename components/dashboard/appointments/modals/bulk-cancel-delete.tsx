@@ -20,7 +20,7 @@ export default function CancelDeleteAppointments({
 
   const body = React.useMemo(
     () => (
-      <Card className="w-full border border-divider bg-default-50 shadow-none">
+      <Card className="w-fullborder-smallborder-divider bg-default-50 shadow-none">
         <CardBody
           as={ScrollShadow}
           className="flex max-h-[300px] flex-col gap-2 scrollbar-hide"
