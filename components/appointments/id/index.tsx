@@ -107,7 +107,7 @@ export default function Appointment({ aid, session }: AppointmentProps) {
             />
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center">
           <Button
             color="primary"
             variant="light"
@@ -170,16 +170,10 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                   <h3 className="pl-8 text-xl text-black">
                     {appointment.patient.name}
                   </h3>
-                  <CellRenderer
-                    label="Patient ID"
-                    icon="tabler:hash"
-                    value={appointment.patient.uid}
-                    classNames={{
-                      icon: 'text-default-500 ',
-                      label: 'text-xs',
-                      value: 'text-black',
-                    }}
-                  />
+                  <p className="pl-8 text-sm text-gray-500">
+                    <span className="text-gray-500">Patient ID: </span>
+                    {appointment.patient.uid}
+                  </p>
 
                   {/* Patient Details using CellRenderer */}
                   <div>
@@ -248,15 +242,10 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                   <h3 className="pl-6 text-xl text-black">
                     {appointment.doctor?.name}
                   </h3>
-                  <CellRenderer
-                    label="Doctor ID"
-                    icon="tabler:hash"
-                    value={appointment.doctor?.uid}
-                    classNames={{
-                      icon: 'text-default-500 ',
-                      value: 'text-black',
-                    }}
-                  />
+                  <p className="pl-8 text-sm text-gray-500">
+                    <span className="text-gray-500">Doctor ID: </span>
+                    {appointment.doctor?.uid}
+                  </p>
 
                   {/* Patient Details using CellRenderer */}
                   <div>
