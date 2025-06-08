@@ -7,6 +7,7 @@ import {
   Button,
   Form,
   Input,
+  Kbd,
   Modal,
   ModalBody,
   ModalContent,
@@ -18,14 +19,10 @@ import {
   Textarea,
 } from '@heroui/react';
 import { useFormik } from 'formik';
-import { useSession } from 'next-auth/react';
-import { UserType } from '@/models/User';
-import { AppointmentType } from '@/models/Appointment';
+import { useLinkedUsers, useSelf } from '@/store/user';
 
 interface NewAppointmentModalProps {
   open: boolean;
-  user: Pick<UserType, 'uid' | 'name' | 'email' | 'phone' | 'image'>;
-  linkedUsers: UserType[];
   onOpenChange: (open: boolean) => void;
   selectedDate: Date | null;
   selectedTime: string | null;
@@ -34,17 +31,19 @@ interface NewAppointmentModalProps {
 
 export default function NewAppointmentModal({
   open,
-  user,
   onOpenChange,
   selectedDate,
   selectedTime,
   onCreateAppointment,
-  linkedUsers,
 }: NewAppointmentModalProps) {
+  console.log('this is called');
+  const { data: self } = useSelf();
+  const { data: linkedUsers } = useLinkedUsers();
+
   const formik = useFormik({
     initialValues: {
       appointment: {
-        patient: user,
+        patient: self,
         doctor: '',
         date: selectedDate,
         type: 'consultation',
@@ -85,10 +84,22 @@ export default function NewAppointmentModal({
             </div>
           </div>
 
+          <Select
+            label="Patient"
+            items={linkedUsers}
+            placeholder="Select Patient"
+          >
+            {(item) => (
+              <SelectItem key={item.uid} endContent={<Kbd />}>
+                {item.name}
+              </SelectItem>
+            )}
+          </Select>
+
           <Input
             label="Patient Name"
             id="patientName"
-            value={formik.values.appointment.patient.name}
+            value={formik.values.appointment.patient?.name}
             onChange={formik.handleChange}
             required
           />
@@ -98,7 +109,7 @@ export default function NewAppointmentModal({
               label="Patient Email"
               id="patientEmail"
               type="email"
-              value={formik.values.appointment.patient.email}
+              value={formik.values.appointment.patient?.email}
               onChange={formik.handleChange}
               required
             />
@@ -108,7 +119,7 @@ export default function NewAppointmentModal({
             <Input
               label="Patient Phone"
               id="patientPhone"
-              value={formik.values.appointment.patient.phone}
+              value={formik.values.appointment.patient?.phone}
               onChange={formik.handleChange}
             />
           </div>

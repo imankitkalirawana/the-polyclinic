@@ -10,10 +10,6 @@ import { YearView } from './views/year';
 import NewAppointmentModal from './new';
 import { AppointmentType } from '@/models/Appointment';
 import { useCalendar } from './store';
-import { useSession } from 'next-auth/react';
-import { useQuery } from '@tanstack/react-query';
-import { getLinkedUsers, getSelf } from '@/functions/server-actions/user';
-import { UserType } from '@/models/User';
 
 interface CalendarProps {
   appointments: AppointmentType[];
@@ -29,16 +25,6 @@ export function Calendar({
   onCreateAppointment,
 }: CalendarProps) {
   const { view, setView } = useCalendar();
-
-  const { data: user } = useQuery<UserType>({
-    queryKey: ['user'],
-    queryFn: () => getSelf(),
-  });
-
-  const { data: linkedUsers } = useQuery<UserType[]>({
-    queryKey: ['linkedUsers'],
-    queryFn: () => getLinkedUsers(),
-  });
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
@@ -133,17 +119,13 @@ export function Calendar({
     <div className="flex h-[calc(100vh_-_60px)] max-h-[calc(100vh_-_60px)] flex-col overflow-hidden">
       <CalendarHeader currentDate={currentDate} onDateChange={onDateChange} />
       <div className="h-full flex-1">{renderView()}</div>
-      {!!user && !!linkedUsers && (
-        <NewAppointmentModal
-          open={showDialog}
-          onOpenChange={setShowDialog}
-          selectedDate={selectedDate}
-          selectedTime={selectedTime}
-          onCreateAppointment={handleCreateAppointment}
-          user={user}
-          linkedUsers={linkedUsers}
-        />
-      )}
+      <NewAppointmentModal
+        open={showDialog}
+        onOpenChange={setShowDialog}
+        selectedDate={selectedDate}
+        selectedTime={selectedTime}
+        onCreateAppointment={handleCreateAppointment}
+      />
     </div>
   );
 }
