@@ -8,11 +8,19 @@ import {
   eachDayOfInterval,
   isSameMonth,
   isSameDay,
+  format,
 } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { AppointmentType } from '@/models/Appointment';
 import { useCalendar } from '../store';
-import { Popover, PopoverContent, PopoverTrigger } from '@heroui/react';
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@heroui/react';
 import DateChip from '../ui/date-chip';
 import { formatTime } from '../helper';
 import StatusRenderer from '../ui/status-renderer';
@@ -92,35 +100,14 @@ export function MonthView({
               />
 
               <div>
-                {dayAppointments.slice(0, maxAppointmentsToShow).map((apt) => (
-                  <Popover
-                    placement="right"
-                    shouldCloseOnScroll={false}
-                    shouldBlockScroll
-                  >
-                    <PopoverTrigger>
-                      <div
-                        key={apt.aid}
-                        className={cn(
-                          'flex cursor-pointer items-center justify-start gap-1 truncate rounded-lg p-1 px-2 text-xs hover:bg-default-100',
-                          apt.status === 'cancelled' && 'line-through'
-                        )}
-                      >
-                        <StatusRenderer isDotOnly status={apt.status} />
-                        <span className="font-light">
-                          {formatTime(new Date(apt.date))}
-                        </span>
-                        <span className="font-medium">
-                          {apt.patient.name}{' '}
-                          {apt.doctor?.name ? `- ${apt.doctor.name}` : ''}
-                        </span>
-                      </div>
-                    </PopoverTrigger>
-                    <PopoverContent className="p-0">
-                      <AppointmentPopover appointment={apt} />
-                    </PopoverContent>
-                  </Popover>
-                ))}
+                {dayAppointments
+                  .slice(0, maxAppointmentsToShow)
+                  .map((appointment) => (
+                    <Appointment
+                      appointment={appointment}
+                      key={appointment.aid}
+                    />
+                  ))}
                 {dayAppointments.length > maxAppointmentsToShow && (
                   <Popover>
                     <PopoverTrigger>
@@ -128,14 +115,11 @@ export function MonthView({
                         {dayAppointments.length - maxAppointmentsToShow} more
                       </button>
                     </PopoverTrigger>
-                    <PopoverContent>
-                      <div className="flex flex-col gap-2">
-                        {dayAppointments
-                          .slice(maxAppointmentsToShow)
-                          .map((apt) => (
-                            <div key={apt._id}>{apt.patient.name}</div>
-                          ))}
-                      </div>
+                    <PopoverContent className="p-0">
+                      <AppointmentList
+                        appointments={dayAppointments}
+                        date={day}
+                      />
                     </PopoverContent>
                   </Popover>
                 )}
@@ -145,5 +129,61 @@ export function MonthView({
         })}
       </div>
     </div>
+  );
+}
+
+function AppointmentList({
+  appointments,
+  date,
+}: {
+  appointments: AppointmentType[];
+  date: Date;
+}) {
+  const { setView } = useCalendar();
+
+  return (
+    <Card className="flex flex-col gap-2 shadow-none">
+      <CardHeader className="flex-col items-center gap-2 pb-0">
+        <span className="text-sm font-medium">{format(date, 'E')}</span>
+        <DateChip
+          date={date}
+          size="lg"
+          onClick={() => setView('day', { date })}
+        />
+      </CardHeader>
+      <CardBody className="pt-2">
+        {appointments.map((appointment) => (
+          <Appointment appointment={appointment} key={appointment.aid} />
+        ))}
+      </CardBody>
+    </Card>
+  );
+}
+
+function Appointment({ appointment }: { appointment: AppointmentType }) {
+  return (
+    <Popover placement="right" shouldCloseOnScroll={false} shouldBlockScroll>
+      <PopoverTrigger>
+        <div
+          key={appointment.aid}
+          className={cn(
+            'flex cursor-pointer items-center justify-start gap-1 truncate rounded-lg p-1 px-2 text-xs hover:bg-default-100',
+            appointment.status === 'cancelled' && 'line-through'
+          )}
+        >
+          <StatusRenderer isDotOnly status={appointment.status} />
+          <span className="font-light">
+            {formatTime(new Date(appointment.date))}
+          </span>
+          <span className="font-medium">
+            {appointment.patient.name}{' '}
+            {appointment.doctor?.name ? `- ${appointment.doctor.name}` : ''}
+          </span>
+        </div>
+      </PopoverTrigger>
+      <PopoverContent className="p-0">
+        <AppointmentPopover appointment={appointment} />
+      </PopoverContent>
+    </Popover>
   );
 }

@@ -3,7 +3,6 @@ import {
   Card,
   CardBody,
   Button,
-  Chip,
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
@@ -13,8 +12,8 @@ import {
   Tooltip,
   ButtonGroup,
   User,
-  divider,
   Progress,
+  ScrollShadow,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { AppointmentType } from '@/models/Appointment';
@@ -29,8 +28,8 @@ export default function MeetingEventCard({
   appointment: AppointmentType;
 }) {
   return (
-    <Card className="shadow-none">
-      <CardHeader className="flex flex-row items-center justify-between gap-1 border-b border-divider bg-primary-500 text-primary-foreground">
+    <Card className="w-[420px] shadow-none">
+      <CardHeader className="flex flex-row items-start justify-between gap-8 border-b border-divider bg-primary-500 text-primary-foreground">
         <div>
           <h2 className="text-large font-medium capitalize text-primary-foreground">
             #{appointment.aid} - {appointment.type}
@@ -167,7 +166,10 @@ export default function MeetingEventCard({
           appointment.additionalInfo.instructions) && (
           <>
             <Divider className="my-2" />
-            <div className="flex flex-col items-start gap-1">
+            <ScrollShadow
+              className="flex max-h-[200px] flex-col items-start gap-1"
+              hideScrollBar
+            >
               <AppointmentHeading title="Additional Information" />
               {appointment.additionalInfo.symptoms && (
                 <CellRenderer
@@ -209,7 +211,7 @@ export default function MeetingEventCard({
                   value={appointment.additionalInfo.instructions}
                 />
               )}
-            </div>
+            </ScrollShadow>
           </>
         )}
         <Divider className="my-2" />
