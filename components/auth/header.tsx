@@ -51,7 +51,7 @@ export const Header = ({
       {description && (
         <m.p
           layout
-          className="text-sm text-default-500"
+          className="text-small text-default-500"
           transition={{ duration: 0.25 }}
         >
           {description}

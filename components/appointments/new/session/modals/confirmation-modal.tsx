@@ -48,12 +48,12 @@ export default function ConfirmationModal() {
                 />
               </div>
               <h3>Appointment Booked!</h3>
-              <p className="text-center text-xs font-light text-default-500">
+              <p className="text-center text-tiny font-light text-default-500">
                 Confirmation email has been sent to:{' '}
                 <strong>{formik.values.patient?.email}</strong>
               </p>
             </ModalHeader>
-            <ModalBody className="gap-0 rounded-2xl bg-default-100">
+            <ModalBody className="gap-0 rounded-medium bg-default-100">
               <CellValue
                 label="Appointment ID"
                 value={`#${formik.values.appointment?.aid}`}

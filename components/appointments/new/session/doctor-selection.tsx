@@ -75,9 +75,9 @@ export default function DoctorSelection() {
                     isPressable
                     key={doctor.uid}
                     className={cn(
-                      'no-scrollbar min-w-64 rounded-medium border border-divider shadow-none sm:min-w-72',
+                      'no-scrollbar min-w-64 rounded-medium border-small border-divider shadow-none sm:min-w-72',
                       {
-                        'border-2 border-primary-400':
+                        'border-medium border-primary-400':
                           doctor.uid === formik.values.doctor?.uid,
                       }
                     )}
@@ -101,10 +101,10 @@ export default function DoctorSelection() {
                         />
                       </div>
                       <div>
-                        <h2 className="text-center text-lg font-semibold">
+                        <h2 className="text-center text-large font-semibold">
                           {doctor.name}
                         </h2>
-                        <p className="text-sm font-light text-default-500">
+                        <p className="text-small font-light text-default-500">
                           {doctor.email}
                         </p>
                       </div>

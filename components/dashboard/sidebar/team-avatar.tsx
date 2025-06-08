@@ -13,7 +13,7 @@ const TeamAvatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
       classNames={{
         ...classNames,
         base: cn(
-          'bg-transparent border border-divider',
+          'bg-transparent border-small border-divider',
           classNames?.base,
           className
         ),

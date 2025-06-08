@@ -37,7 +37,7 @@ export default function MeetingEventCard({
           <div className="flex items-center gap-1">
             <StatusRenderer status={appointment.status} />
             &middot;
-            <span className="text-xs text-primary-foreground/90">
+            <span className="text-tiny text-primary-foreground/90">
               {format(new Date(appointment.date), 'EEEE, MMMM d · hh:mm a')}
             </span>
           </div>
@@ -90,7 +90,7 @@ export default function MeetingEventCard({
               name: appointment.patient.name,
             }}
             classNames={{
-              description: 'text-default-400 text-xs',
+              description: 'text-default-400 text-tiny',
             }}
             description={[
               `Patient • #${appointment.patient.uid}`,
@@ -112,7 +112,7 @@ export default function MeetingEventCard({
                 name: appointment.doctor.name,
               }}
               classNames={{
-                description: 'text-default-400 text-xs',
+                description: 'text-default-400 text-tiny',
               }}
               description={[
                 `Doctor • #${appointment.doctor.uid}`,
@@ -179,8 +179,8 @@ export default function MeetingEventCard({
                   className="p-0"
                   classNames={{
                     icon: 'text-orange-500 bg-orange-50',
-                    label: 'text-xs',
-                    value: 'text-xs',
+                    label: 'text-tiny',
+                    value: 'text-tiny',
                   }}
                 />
               )}
@@ -237,7 +237,7 @@ function AppointmentHeading({
   description?: string | React.ReactNode;
 }) {
   return (
-    <div className="flex w-full items-center justify-between gap-2 text-xs font-medium uppercase tracking-wide text-default-500">
+    <div className="flex w-full items-center justify-between gap-2 text-tiny font-medium uppercase tracking-wide text-default-500">
       <h2>{title}</h2>
       {description}
     </div>
@@ -273,7 +273,7 @@ function MeetDirections({
             <Icon icon="solar:copy-linear" width={18} />
           </Button>
         </ButtonGroup>
-        <span className="text-xs text-default-500">{description}</span>
+        <span className="text-tiny text-default-500">{description}</span>
       </div>
     </div>
   );

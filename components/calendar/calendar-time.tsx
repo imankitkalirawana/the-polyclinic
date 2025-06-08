@@ -29,7 +29,7 @@ export default function CalendarTime({
         initial={false}
       >
         <Button
-          className="w-full bg-default-100 text-xs font-semibold leading-4 text-default-500"
+          className="leading-tiny w-full bg-default-100 text-tiny font-semibold text-default-500"
           onPress={() => {
             const selectedTimeSlotRange = [];
             const index = timeSlots.findIndex((s) => s.value === slot.value);

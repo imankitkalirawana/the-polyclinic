@@ -20,7 +20,7 @@ export default function CancelDeleteAppointments({
 
   const body = React.useMemo(
     () => (
-      <Card className="w-full border border-divider bg-default-50 shadow-none">
+      <Card className="w-full border-small border-divider bg-default-50 shadow-none">
         <CardBody
           as={ScrollShadow}
           className="flex max-h-[300px] flex-col gap-2 scrollbar-hide"
@@ -36,7 +36,7 @@ export default function CancelDeleteAppointments({
                     name: appointment.patient.name,
                   }}
                   classNames={{
-                    description: 'text-default-400 text-xs',
+                    description: 'text-default-400 text-tiny',
                   }}
                   description={`#${appointment.aid} - ${format(new Date(appointment.date), 'PP')}`}
                 />

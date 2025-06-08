@@ -81,8 +81,10 @@ export default function AddToCalendar({
       <Modal isOpen backdrop="blur" onClose={onClose}>
         <ModalContent>
           <ModalHeader className="flex-col items-start gap-2">
-            <h2 className="max-w-xs text-center text-base">Add to Calendar</h2>
-            <p className="text-sm font-normal text-default-500">
+            <h2 className="max-w-xs text-center text-medium">
+              Add to Calendar
+            </h2>
+            <p className="text-small font-normal text-default-500">
               Add this appointment to your calendar by downloading the{' '}
               <span className="font-medium text-foreground">event file</span> or
               adding it to your{' '}

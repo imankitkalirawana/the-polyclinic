@@ -57,12 +57,12 @@ export function WeekView({
             key={day.toISOString()}
             className="flex-1 border-r p-2 text-center last:border-r-0"
           >
-            <div className="text-muted-foreground text-sm">
+            <div className="text-muted-foreground text-small">
               {format(day, 'EEE')}
             </div>
             <div
               className={cn(
-                'mx-auto flex h-8 w-8 items-center justify-center rounded-full text-lg font-medium',
+                'mx-auto flex h-8 w-8 items-center justify-center rounded-full text-large font-medium',
                 isToday(day) && 'bg-blue-600 text-white'
               )}
             >
@@ -77,7 +77,7 @@ export function WeekView({
         <div className="relative">
           {hours.map((hour) => (
             <div key={hour} className="flex border-b">
-              <div className="text-muted-foreground w-20 border-r p-2 text-right text-sm">
+              <div className="text-muted-foreground w-20 border-r p-2 text-right text-small">
                 {hour === 0
                   ? '12 AM'
                   : hour < 12
@@ -100,7 +100,7 @@ export function WeekView({
                       <div
                         key={apt._id}
                         className={cn(
-                          'absolute inset-1 rounded p-1 text-xs text-white',
+                          'absolute inset-1 rounded p-1 text-tiny text-white',
                           getStatusColor(apt.status)
                         )}
                         onClick={(e) => {

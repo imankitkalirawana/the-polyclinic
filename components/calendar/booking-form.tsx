@@ -71,13 +71,13 @@ export default function BookingForm({
         minRows={4}
         name="notes"
       />
-      <p className="text-xs text-default-500">
+      <p className="text-tiny text-default-500">
         By proceeding you agree to our{' '}
-        <Link className="text-xs text-default-800" href="#" size="sm">
+        <Link className="text-tiny text-default-800" href="#" size="sm">
           Terms
         </Link>{' '}
         and{' '}
-        <Link className="text-xs text-default-800" href="#" size="sm">
+        <Link className="text-tiny text-default-800" href="#" size="sm">
           Privacy Policy
         </Link>
         .

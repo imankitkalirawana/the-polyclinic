@@ -157,10 +157,10 @@ export default function NewService() {
     <>
       <div className="pb-12">
         <div className="mt-4 px-4 sm:px-0">
-          <h3 className="text-base font-semibold leading-7 text-gray-900">
+          <h3 className="leading-large text-medium font-semibold text-gray-900">
             Add New Service
           </h3>
-          <p className="max-w-2xl text-sm leading-6 text-gray-500">
+          <p className="leading-medium max-w-2xl text-small text-gray-500">
             Fill in the form below to add a new service.
           </p>
         </div>

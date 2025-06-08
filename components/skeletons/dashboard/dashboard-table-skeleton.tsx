@@ -24,7 +24,7 @@ export default function DashboardTableSkeleton() {
       <Card className="w-full overflow-hidden">
         {/* Table Header */}
         <div className="p-2">
-          <div className="grid grid-cols-12 rounded-xl border bg-gray-100 p-3 text-sm font-semibold">
+          <div className="grid grid-cols-12 rounded-small border-small bg-gray-100 p-3 text-small font-semibold">
             <div className="col-span-1">
               <Skeleton className="h-4 w-4 bg-gray-200" /> {/* Checkbox */}
             </div>

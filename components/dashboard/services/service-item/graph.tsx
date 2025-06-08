@@ -65,7 +65,7 @@ export const CircleChartCard = React.forwardRef<
                             backgroundColor: `hsl(var(--heroui-${color}-${(index + 1) * 200}))`,
                           }}
                         />
-                        <div className="flex w-full items-center justify-between gap-x-2 pr-1 text-xs text-default-700">
+                        <div className="flex w-full items-center justify-between gap-x-2 pr-1 text-tiny text-default-700">
                           <span className="text-default-500">{category}</span>
                           <span className="font-mono font-medium text-default-700">
                             {formatTotal(value as number)}

@@ -18,7 +18,7 @@ export function ModalCellRenderer({
           name: appointment.patient.name,
         }}
         classNames={{
-          description: 'text-default-400 text-xs',
+          description: 'text-default-400 text-tiny',
         }}
         description={`#${appointment.aid} - ${format(new Date(appointment.date), 'PP')}`}
       />

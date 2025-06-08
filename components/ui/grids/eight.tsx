@@ -56,7 +56,7 @@ function BentoCard({
   return (
     <div
       className={cn(
-        'relative h-full w-full overflow-hidden rounded-2xl p-4',
+        'relative h-full w-full overflow-hidden rounded-medium p-4',
         className
       )}
     >
@@ -99,10 +99,10 @@ function FeatureThree() {
   return (
     <BentoCard className="flex flex-col bg-orange-300">
       <Icon icon="tabler:bot" className="size-8 md:size-12" />
-      <strong className="mt-1 inline-block text-sm">Integrated AI</strong>
+      <strong className="mt-1 inline-block text-small">Integrated AI</strong>
 
       <div className="mt-auto">
-        <div className="text-sm font-medium">What is 4 times 4?</div>
+        <div className="text-small font-medium">What is 4 times 4?</div>
         <div className="font-semibold">
           {/* <TypingText
             text="4 times 4 is 16"
@@ -214,8 +214,10 @@ function FeatureEight() {
     <BentoCard className="relative flex flex-col bg-blue-200 sm:col-span-2">
       {/* <WideCard /> */}
       <div className="mt-4">
-        <div className="text-lg font-black text-blue-800">Daily reminders</div>
-        <p className="text-sm">
+        <div className="text-large font-black text-blue-800">
+          Daily reminders
+        </div>
+        <p className="text-small">
           Our daily reminder helps you keep focused on your goals.
         </p>
       </div>

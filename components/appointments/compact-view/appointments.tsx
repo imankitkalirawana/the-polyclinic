@@ -183,7 +183,7 @@ export default function AppointmentsTimeline() {
           >
             <div className="absolute left-0 top-4 flex w-16 flex-col gap-[53.6px]">
               {timeSlots.map((time) => (
-                <div key={time} className="text-xs text-default-500">
+                <div key={time} className="text-tiny text-default-500">
                   {time}
                 </div>
               ))}
@@ -379,7 +379,7 @@ export default function AppointmentsTimeline() {
                           />
                         </div>
                         <div className="flex flex-1 items-center justify-between">
-                          <div className="flex flex-col items-start text-xs">
+                          <div className="flex flex-col items-start text-tiny">
                             <h3 className="line-clamp-1 font-semibold capitalize text-default-900">
                               {appointment.patient.name}
                             </h3>

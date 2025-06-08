@@ -60,7 +60,7 @@ function ElegantShape({
             'absolute inset-0 rounded-full',
             'bg-gradient-to-r to-transparent',
             gradient,
-            'border-2 border-divider/[0.15] backdrop-blur-[2px]',
+            'border-medium border-divider/[0.15] backdrop-blur-[2px]',
             'shadow-[0_8px_32px_0_rgba(255,255,255,0.1)]',
             'after:absolute after:inset-0 after:rounded-full',
             'after:bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.2),transparent_70%)]'
@@ -151,7 +151,7 @@ export default function Banner({
             variants={fadeUpVariants}
             initial="hidden"
             animate="visible"
-            className="mb-8 inline-flex items-center gap-2 rounded-full border border-divider bg-background/[0.03] px-3 py-1 md:mb-12"
+            className="mb-8 inline-flex items-center gap-2 rounded-full border-small border-divider bg-background/[0.03] px-3 py-1 md:mb-12"
           >
             <Image
               src="https://kokonutui.com/logo.svg"
@@ -159,7 +159,7 @@ export default function Banner({
               width={20}
               height={20}
             />
-            <span className="text-sm tracking-wide text-foreground/60">
+            <span className="text-small tracking-wide text-foreground/60">
               {badge}
             </span>
           </motion.div>
@@ -191,7 +191,7 @@ export default function Banner({
             initial="hidden"
             animate="visible"
           >
-            <p className="mx-auto mb-8 max-w-xl px-4 text-base font-light leading-relaxed tracking-wide text-foreground/40 sm:text-lg md:text-xl">
+            <p className="mx-auto mb-8 max-w-xl px-4 text-medium font-light leading-relaxed tracking-wide text-foreground/40 sm:text-large md:text-xl">
               Crafting exceptional digital experiences through innovative design
               and cutting-edge technology.
             </p>

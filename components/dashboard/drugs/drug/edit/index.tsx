@@ -65,10 +65,10 @@ export default function EditDrug({ did }: { did: number }) {
       className="bg-transparent shadow-none"
     >
       <CardHeader className="flex-col items-start p-0">
-        <h3 className="text-base font-semibold leading-7 text-default-900">
+        <h3 className="leading-large text-medium font-semibold text-default-900">
           Edit Drug
         </h3>
-        <p className="max-w-2xl text-sm leading-6 text-default-500">
+        <p className="leading-medium max-w-2xl text-small text-default-500">
           Update drug details
         </p>
       </CardHeader>

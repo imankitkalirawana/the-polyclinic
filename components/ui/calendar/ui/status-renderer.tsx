@@ -37,7 +37,7 @@ export default function StatusRenderer({
           )}
         ></span>
         {!isDotOnly && (
-          <span className={cn('text-xs capitalize', className)}>
+          <span className={cn('text-tiny capitalize', className)}>
             {status.split('-').join(' ')}
           </span>
         )}

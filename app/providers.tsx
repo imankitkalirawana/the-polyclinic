@@ -61,7 +61,7 @@ export function Providers({
             style: { borderRadius: 'var(--heroui-radius-large)' },
             classNames: {
               description: '!text-[inherit]',
-              toast: 'w-full max-w-sm group bg-red-500 p-2 text-xs',
+              toast: 'w-full max-w-sm group bg-red-500 p-2 text-tiny',
               error: '!text-danger-500 !bg-danger-50 !border-danger-100',
               success: '!text-success-500 !bg-success-50 !border-success-100',
               warning: '!text-warning-500 !bg-warning-50 !border-warning-100',

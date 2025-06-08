@@ -41,7 +41,7 @@ export default function ServiceSkeleton() {
                 'Created By',
                 'Updated By',
               ].map((_section, index) => (
-                <div key={index} className="rounded-lg border p-4">
+                <div key={index} className="rounded-lgborder-smallp-4">
                   <div className="flex items-center justify-between">
                     <Skeleton className="h-5 w-32" />
                     <Skeleton className="h-4 w-4" /> {/* Chevron icon */}
