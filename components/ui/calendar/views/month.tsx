@@ -15,9 +15,8 @@ import { useCalendar } from '../store';
 import { Popover, PopoverContent, PopoverTrigger } from '@heroui/react';
 import DateChip from '../ui/date-chip';
 import { formatTime } from '../helper';
-import StatusDot from '../ui/status-dot';
+import StatusRenderer from '../ui/status-renderer';
 import AppointmentPopover from '../ui/appointment-popover';
-import { useState } from 'react';
 
 interface MonthViewProps {
   appointments: AppointmentType[];
@@ -107,7 +106,7 @@ export function MonthView({
                           apt.status === 'cancelled' && 'line-through'
                         )}
                       >
-                        <StatusDot status={apt.status} />
+                        <StatusRenderer isDotOnly status={apt.status} />
                         <span className="font-light">
                           {formatTime(new Date(apt.date))}
                         </span>
@@ -117,7 +116,7 @@ export function MonthView({
                         </span>
                       </div>
                     </PopoverTrigger>
-                    <PopoverContent>
+                    <PopoverContent className="p-0">
                       <AppointmentPopover appointment={apt} />
                     </PopoverContent>
                   </Popover>

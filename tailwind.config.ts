@@ -51,6 +51,9 @@ const config = {
     heroui({
       themes: {
         light: {
+          layout: {
+            dividerWeight: '1px',
+          },
           colors: {
             primary: {
               50: '#F4F7F5',
@@ -128,6 +131,9 @@ const config = {
           },
         },
         dark: {
+          layout: {
+            dividerWeight: '1px',
+          },
           colors: {
             default: {
               '50': '#121414',
