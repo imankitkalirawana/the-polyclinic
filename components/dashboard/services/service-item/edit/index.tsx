@@ -449,7 +449,7 @@ export default function EditService({ uid }: { uid: string }) {
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="">
+                    <tbody >
                       {Array.from({ length: numRows }).map((_, rowIndex) => (
                         <tr
                           key={rowIndex}

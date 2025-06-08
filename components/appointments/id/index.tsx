@@ -71,12 +71,12 @@ export default function Appointment({ aid, session }: AppointmentProps) {
 
   return (
     <div className="container mx-auto p-8">
-      <nav className="mb-4 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
+      <nav className="mb-6 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-xl">Appointment Details</h1>
             <p>
-              <span className="">#{appointment.aid}</span>
+              <span>#{appointment.aid}</span>
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -139,11 +139,12 @@ export default function Appointment({ aid, session }: AppointmentProps) {
           </Dropdown>
         </div>
       </nav>
-      <div className="grid md:grid-cols-2">
-        <div className="flex flex-col gap-4">
+      <div className="flex w-full gap-6">
+        <div className="flex flex-1 flex-col gap-4">
+          {/* {pateint card} */}
           <Card className="mx-auto w-full max-w-md">
             <CardHeader className="flex flex-row justify-between text-center">
-              <h2 className="text-default-500">Pateint Details</h2>
+              <h2 className="pl-6 text-xl text-black">Pateint Details</h2>
               <Icon
                 icon="tabler:edit"
                 width="24"
@@ -151,9 +152,9 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                 className="text-gray-400"
               />
             </CardHeader>
-            <Divider className="my-2 border-dashed border-divider" />
+            <Divider className="border-dashed border-divider" />
 
-            <CardBody className="">
+            <CardBody>
               {/* Patient Avatar and Name */}
               <div className="flex items-start gap-4 pb-4">
                 <div className="flex-shrink-0">
@@ -166,74 +167,72 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <h2 className="text-xl text-default-500">
+                  <h3 className="pl-8 text-xl text-black">
                     {appointment.patient.name}
-                  </h2>
+                  </h3>
                   <CellRenderer
                     label="Patient ID"
                     icon="tabler:hash"
                     value={appointment.patient.uid}
                     classNames={{
-                      icon: 'text-yellow-600 bg-yellow-50',
+                      icon: 'text-default-500 ',
                       label: 'text-xs',
-                      value: ' text-gray-500',
+                      value: 'text-black',
                     }}
                   />
 
                   {/* Patient Details using CellRenderer */}
-                  <div className="">
+                  <div>
                     <CellRenderer
                       icon="iconamoon:profile"
                       value={`${appointment.patient.gender}, ${appointment.patient.age} years`}
                       classNames={{
-                        icon: 'text-pink-600 bg-pink-50',
-                        value: 'text-gray-600',
+                        icon: 'text-default-500 ',
+                        value: 'text-black',
                       }}
+                      iconSize={18}
                     />
 
                     <CellRenderer
                       icon="ic:baseline-phone"
                       value={appointment.patient.phone}
                       classNames={{
-                        icon: 'text-green-600 bg-green-50',
-                        value: 'text-gray-600',
+                        icon: 'text-default-500 ',
+                        value: 'text-black',
                       }}
+                      iconSize={18}
                     />
 
                     <CellRenderer
                       icon="material-symbols:mail"
                       value={appointment.patient.email}
                       classNames={{
-                        icon: 'text-blue-600 bg-blue-50',
-                        value: 'text-gray-600',
+                        icon: 'text-default-500 ',
+                        value: 'text-black',
                       }}
+                      iconSize={18}
                     />
                   </div>
                 </div>
               </div>
-              <Divider className="my-2 border-dashed border-divider" />
+              <Divider className="border-dashed border-divider" />
 
               {/* View Full Profile Link */}
-              <div className="flex justify-end">
+              <div className="mt-2 flex justify-end">
                 <Button variant="flat" color="warning">
                   View full Profile
                 </Button>
               </div>
             </CardBody>
           </Card>
+          {/* {doctor card} */}
           <Card className="mx-auto w-full max-w-md">
-            <CardHeader className="flex flex-row items-center justify-between pb-4">
-              <h2 className="text-default-500">Doctor Details</h2>
-              <Icon
-                icon="tabler:edit"
-                width="24"
-                height="24"
-                className="text-gray-400"
-              />
+            <CardHeader className="flex flex-row items-center justify-between">
+              <h2 className="pl-6 text-xl text-black">Doctor Details</h2>
             </CardHeader>
-            <Divider className="my-2 border-dashed border-divider" />
+            <Divider className="border-dashed border-divider" />
 
-            <CardBody className="">
+            <CardBody>
               {/* Patient Avatar and Name */}
               <div className="flex items-start gap-4 pb-4">
                 <div className="flex-shrink-0">
@@ -246,38 +245,39 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <h2 className="text-xl text-default-500">
+                  <h3 className="pl-6 text-xl text-black">
                     {appointment.doctor?.name}
-                  </h2>
+                  </h3>
                   <CellRenderer
-                    label="Patient ID"
+                    label="Doctor ID"
                     icon="tabler:hash"
                     value={appointment.doctor?.uid}
                     classNames={{
-                      icon: 'text-yellow-600 bg-yellow-50',
-                      label: 'text-xs',
-                      value: ' text-gray-500',
+                      icon: 'text-default-500 ',
+                      value: 'text-black',
                     }}
                   />
 
                   {/* Patient Details using CellRenderer */}
-                  <div className="">
+                  <div>
                     <CellRenderer
                       icon="ic:baseline-phone"
                       value={appointment.doctor?.phone}
                       classNames={{
-                        icon: 'text-green-600 bg-green-50',
-                        value: 'text-gray-600',
+                        icon: 'text-default-500 ',
+                        value: 'text-black',
                       }}
+                      iconSize={18}
                     />
 
                     <CellRenderer
                       icon="material-symbols:mail"
                       value={appointment.doctor?.email}
                       classNames={{
-                        icon: 'text-blue-600 bg-blue-50',
-                        value: 'text-gray-600',
+                        icon: 'text-default-500 ',
+                        value: 'text-black',
                       }}
+                      iconSize={18}
                     />
                   </div>
                 </div>
@@ -292,71 +292,74 @@ export default function Appointment({ aid, session }: AppointmentProps) {
             </CardBody>
           </Card>
         </div>
-
-        <Card>
-          <CardHeader>
-            {/* <CardTitle>Appointment Details</CardTitle>
+        <div className="flex-[2]">
+          <Card>
+            <CardHeader>
+              {/* <CardTitle>Appointment Details</CardTitle>
             <CardDescription>Type: {appointment.type}</CardDescription> */}
-          </CardHeader>
-          <CardBody className="space-y-4">
-            {
-              <div className="flex items-start gap-4 py-4">
-                <div className="flex-shrink-0">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
-                    <Icon
-                      icon="uil:calender"
-                      width="24"
-                      height="24"
-                      className="text-blue-500"
+            </CardHeader>
+            <CardBody className="space-y-4">
+              {
+                <div className="flex items-start gap-4 py-4">
+                  <div className="flex-shrink-0">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
+                      <Icon
+                        icon="uil:calender"
+                        width="24"
+                        height="24"
+                        className="text-blue-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <p className="mb-1 text-xs font-medium uppercase tracking-wide text-gray-500">
+                      DATE & TIME
+                    </p>
+                    <CellRenderer
+                      label="Date & Time"
+                      icon="solar:calendar-bold-duotone"
+                      value={
+                        (new Date(appointment.date), 'MMM d, yyyy - h:mm a')
+                      }
+                      classNames={{ icon: 'text-yellow-500 bg-yellow-50' }}
                     />
                   </div>
                 </div>
+              }
 
+              <div className="flex items-center gap-2">
+                {appointment.additionalInfo.type === 'online' ? (
+                  <Icon icon="solar:video-chat-bold" />
+                ) : (
+                  <Icon icon="solar:map-pin-bold" />
+                )}
                 <div>
-                  <p className="mb-1 text-xs font-medium uppercase tracking-wide text-gray-500">
-                    DATE & TIME
+                  <p className="text-sm font-medium">Appointment Type</p>
+                  <p className="text-sm capitalize">
+                    {appointment.additionalInfo.type}
                   </p>
-                  <CellRenderer
-                    label="Date & Time"
-                    icon="solar:calendar-bold-duotone"
-                    value={(new Date(appointment.date), 'MMM d, yyyy - h:mm a')}
-                    classNames={{ icon: 'text-yellow-500 bg-yellow-50' }}
-                  />
                 </div>
               </div>
-            }
 
-            <div className="flex items-center gap-2">
-              {appointment.additionalInfo.type === 'online' ? (
-                <Icon icon="solar:video-chat-bold" />
-              ) : (
-                <Icon icon="solar:map-pin-bold" />
+              <Divider />
+
+              {appointment.data && Object.keys(appointment.data).length > 0 && (
+                <div>
+                  <h3 className="mb-2 text-sm font-medium">Additional Data</h3>
+                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                    {Object.entries(appointment.data).map(([key, value]) => (
+                      <div key={key}>
+                        <p className="text-sm font-medium capitalize">{key}</p>
+                        <p className="text-sm">{value}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               )}
-              <div>
-                <p className="text-sm font-medium">Appointment Type</p>
-                <p className="text-sm capitalize">
-                  {appointment.additionalInfo.type}
-                </p>
-              </div>
-            </div>
-
-            <Divider />
-
-            {appointment.data && Object.keys(appointment.data).length > 0 && (
-              <div>
-                <h3 className="mb-2 text-sm font-medium">Additional Data</h3>
-                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                  {Object.entries(appointment.data).map(([key, value]) => (
-                    <div key={key}>
-                      <p className="text-sm font-medium capitalize">{key}</p>
-                      <p className="text-sm">{value}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </CardBody>
-        </Card>
+            </CardBody>
+          </Card>
+        </div>
       </div>
     </div>
   );
