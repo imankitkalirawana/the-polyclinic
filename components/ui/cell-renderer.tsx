@@ -2,7 +2,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { cn } from '@heroui/react';
 
 export interface CellRendererProps {
-  label: string;
+  label?: string;
   value: string | React.ReactNode;
   icon: string;
   classNames?: {

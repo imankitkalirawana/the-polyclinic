@@ -22,6 +22,7 @@ import { getAppointmentWithAID } from '@/functions/server-actions/appointment';
 import { AppointmentType } from '@/models/Appointment';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { CellRenderer } from '@/components/ui/cell-renderer';
+import { format } from 'date-fns';
 
 interface AppointmentProps {
   aid: number;
@@ -69,8 +70,29 @@ export default function Appointment({ aid, session }: AppointmentProps) {
       <div className="mx-auto flex max-w-6xl flex-col gap-6">
         <nav className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
           <div>
-            <h1 className="">Appointment Details</h1>
-            {renderChip({ item: appointment.status })}
+            <div className="flex items-center gap-2">
+              <h1 className="text-xl">Appointment Details</h1>
+              <p>
+                <span className="">#{appointment.aid}</span>
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              {renderChip({ item: appointment.status })}
+              <CellRenderer
+                label=""
+                icon="solar:calendar-bold-duotone"
+                value={format(new Date(appointment.date), 'EEEE, MMM d, yyyy ')}
+                classNames={{ icon: 'text-gray-500 bg-gray-100' }}
+                className="items-center rounded-lg bg-gray-100 px-2 py-1 text-xs text-gray-500"
+              />
+              <CellRenderer
+                label=""
+                icon="mdi:clock-outline"
+                value={format(new Date(appointment.date), 'h:mm a')}
+                classNames={{ icon: 'text-gray-500 bg-gray-100' }}
+                className="items-center rounded-lg bg-gray-100 px-2 py-1 text-xs text-gray-500"
+              />
+            </div>
           </div>
         </nav>
 
