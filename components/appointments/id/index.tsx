@@ -13,6 +13,10 @@ import {
   Calendar,
   Image,
   CardFooter,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useQuery } from '@tanstack/react-query';
@@ -66,44 +70,93 @@ export default function Appointment({ aid, session }: AppointmentProps) {
   };
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="mx-auto flex max-w-6xl flex-col gap-6">
-        <nav className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl">Appointment Details</h1>
-              <p>
-                <span className="">#{appointment.aid}</span>
-              </p>
-            </div>
-            <div className="flex items-center gap-2">
-              {renderChip({ item: appointment.status })}
-              <CellRenderer
-                icon="solar:calendar-bold-duotone"
-                value={format(new Date(appointment.date), 'EEEE, MMM d, yyyy ')}
-                classNames={{ icon: 'text-gray-500 bg-gray-100' }}
-                iconSize={18}
-                className="items-center rounded-lg bg-gray-100 px-2 py-1 text-xs text-gray-500"
-              />
-              <CellRenderer
-                icon="mdi:clock-outline"
-                value={format(new Date(appointment.date), 'h:mm a')}
-                classNames={{ icon: 'text-gray-500 bg-gray-100' }}
-                iconSize={18}
-                className="items-center rounded-lg bg-gray-100 px-2 py-1 text-xs text-gray-500"
-              />
-            </div>
+    <div className="container mx-auto p-8">
+      <nav className="mb-4 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
+        <div>
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl">Appointment Details</h1>
+            <p>
+              <span className="">#{appointment.aid}</span>
+            </p>
           </div>
-        </nav>
-
-        <div className="grid gap-6 md:grid-cols-2">
-          <Card className="w-full">
-            <CardHeader>
+          <div className="flex items-center gap-2">
+            {renderChip({ item: appointment.status })}
+            <CellRenderer
+              icon="solar:calendar-bold-duotone"
+              value={format(new Date(appointment.date), 'EEEE, MMM d, yyyy ')}
+              classNames={{ icon: 'text-gray-500 bg-gray-100' }}
+              iconSize={18}
+              className="rounded-lg bg-gray-100 px-2 py-1"
+            />
+            <CellRenderer
+              icon="mdi:clock-outline"
+              value={format(new Date(appointment.date), 'h:mm a')}
+              classNames={{ icon: 'text-gray-500 bg-gray-100' }}
+              iconSize={18}
+              className="rounded-lg bg-gray-100 px-2 py-1"
+            />
+            <CellRenderer
+              icon="mynaui:label-solid"
+              iconSize={18}
+              value={appointment.type}
+              classNames={{
+                icon: 'text-primary bg-primary-50',
+                value: 'text-primary',
+              }}
+              className="rounded-lg bg-gray-100 px-2 py-1"
+            />
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            color="primary"
+            variant="light"
+            startContent={
+              <Icon icon="material-symbols:print-outline" width="18" />
+            }
+          >
+            Print
+          </Button>
+          <Button
+            color="primary"
+            variant="light"
+            startContent={<Icon icon="material-symbols:share" width="18" />}
+          >
+            Share
+          </Button>
+          <Dropdown>
+            <DropdownTrigger>
+              <Icon icon="entypo:dots-three-vertical" width="18" />
+            </DropdownTrigger>
+            <DropdownMenu aria-label="Static Actions">
+              <DropdownItem key="new">New file</DropdownItem>
+              <DropdownItem key="copy">Copy link</DropdownItem>
+              <DropdownItem key="edit">Edit file</DropdownItem>
+              <DropdownItem key="delete" className="text-danger" color="danger">
+                Delete file
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        </div>
+      </nav>
+      <div className="grid md:grid-cols-2">
+        <div className="flex flex-col gap-4">
+          <Card className="mx-auto w-full max-w-md">
+            <CardHeader className="flex flex-row justify-between text-center">
               <h2 className="text-default-500">Pateint Details</h2>
+              <Icon
+                icon="tabler:edit"
+                width="24"
+                height="24"
+                className="text-gray-400"
+              />
             </CardHeader>
-            <CardBody>
-              <div className="flex items-center">
-                <div>
+            <Divider className="my-2 border-dashed border-divider" />
+
+            <CardBody className="">
+              {/* Patient Avatar and Name */}
+              <div className="flex items-start gap-4 pb-4">
+                <div className="flex-shrink-0">
                   <Image
                     src={'/assets/placeholder-avatar.jpeg'}
                     alt={appointment.patient.name}
@@ -112,90 +165,129 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                     className="rounded-full text-slate-300"
                   />
                 </div>
-                <div className="">
+                <div className="flex flex-col">
+                  <h2 className="text-xl text-default-500">
+                    {appointment.patient.name}
+                  </h2>
                   <CellRenderer
                     label="Patient ID"
-                    icon="solar:hashtag-circle-bold-duotone"
+                    icon="tabler:hash"
                     value={appointment.patient.uid}
-                    classNames={{ icon: 'text-yellow-500 bg-yellow-50' }}
-                    className="text-lg text-black"
+                    classNames={{
+                      icon: 'text-yellow-600 bg-yellow-50',
+                      label: 'text-xs',
+                      value: ' text-gray-500',
+                    }}
                   />
-                  <CellRenderer
-                    label="Name"
-                    icon="cbi:abc"
-                    value={appointment.patient.name}
-                    classNames={{ icon: 'text-pink-500 bg-pink-50' }}
-                    className="text-lg text-black"
-                  />
-                  <CellRenderer
-                    label="Email"
-                    icon="material-symbols:mail"
-                    value={appointment.patient.email}
-                    classNames={{ icon: 'text-blue-500 bg-blue-50' }}
-                    className="text-lg text-black"
-                  />
-                  <CellRenderer
-                    label="Phone Number"
-                    icon="ic:baseline-phone"
-                    value={appointment.patient.phone}
-                    classNames={{ icon: 'text-green-500 bg-green-50' }}
-                    className="text-lg text-black"
-                  />
+
+                  {/* Patient Details using CellRenderer */}
+                  <div className="">
+                    <CellRenderer
+                      icon="iconamoon:profile"
+                      value={`${appointment.patient.gender}, ${appointment.patient.age} years`}
+                      classNames={{
+                        icon: 'text-pink-600 bg-pink-50',
+                        value: 'text-gray-600',
+                      }}
+                    />
+
+                    <CellRenderer
+                      icon="ic:baseline-phone"
+                      value={appointment.patient.phone}
+                      classNames={{
+                        icon: 'text-green-600 bg-green-50',
+                        value: 'text-gray-600',
+                      }}
+                    />
+
+                    <CellRenderer
+                      icon="material-symbols:mail"
+                      value={appointment.patient.email}
+                      classNames={{
+                        icon: 'text-blue-600 bg-blue-50',
+                        value: 'text-gray-600',
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
-              <CardFooter>
+              <Divider className="my-2 border-dashed border-divider" />
+
+              {/* View Full Profile Link */}
+              <div className="flex justify-end">
                 <Button variant="flat" color="warning">
-                  <Icon icon="solar:calendar-bold-duotone" width="20" />
-                  Reschedule appointment
+                  View full Profile
                 </Button>
-              </CardFooter>
+              </div>
             </CardBody>
           </Card>
-          <Card className="w-full">
-            <CardHeader className="">
+          <Card className="mx-auto w-full max-w-md">
+            <CardHeader className="flex flex-row items-center justify-between pb-4">
               <h2 className="text-default-500">Doctor Details</h2>
+              <Icon
+                icon="tabler:edit"
+                width="24"
+                height="24"
+                className="text-gray-400"
+              />
             </CardHeader>
-            <CardBody>
-              <div className="flex items-center">
-                <div>
+            <Divider className="my-2 border-dashed border-divider" />
+
+            <CardBody className="">
+              {/* Patient Avatar and Name */}
+              <div className="flex items-start gap-4 pb-4">
+                <div className="flex-shrink-0">
                   <Image
                     src={'/assets/placeholder-avatar.jpeg'}
-                    alt={appointment.patient.name}
+                    alt={appointment.doctor?.name}
                     width={100}
                     height={100}
                     className="rounded-full text-slate-300"
                   />
                 </div>
-                <div className="">
+                <div className="flex flex-col">
+                  <h2 className="text-xl text-default-500">
+                    {appointment.doctor?.name}
+                  </h2>
                   <CellRenderer
-                    label="Name"
-                    icon="cbi:abc"
-                    value={appointment.doctor?.name}
-                    classNames={{ icon: 'text-pink-500 bg-pink-50' }}
-                    className="text-lg text-black"
+                    label="Patient ID"
+                    icon="tabler:hash"
+                    value={appointment.doctor?.uid}
+                    classNames={{
+                      icon: 'text-yellow-600 bg-yellow-50',
+                      label: 'text-xs',
+                      value: ' text-gray-500',
+                    }}
                   />
-                  <CellRenderer
-                    label="Email"
-                    icon="material-symbols:mail"
-                    value={appointment.doctor?.email}
-                    classNames={{ icon: 'text-blue-500 bg-blue-50' }}
-                    className="text-lg text-black"
-                  />
-                  <CellRenderer
-                    label="Phone Number"
-                    icon="ic:baseline-phone"
-                    value={appointment.doctor?.phone}
-                    classNames={{ icon: 'text-green-500 bg-green-50' }}
-                    className="text-lg text-black"
-                  />
-                  <CellRenderer
-                    label="Sitting"
-                    icon="fluent:status-20-filled"
-                    value={appointment.doctor?.sitting}
-                    classNames={{ icon: 'text-purple-500 bg-purple-50' }}
-                    className="text-lg text-black"
-                  />
+
+                  {/* Patient Details using CellRenderer */}
+                  <div className="">
+                    <CellRenderer
+                      icon="ic:baseline-phone"
+                      value={appointment.doctor?.phone}
+                      classNames={{
+                        icon: 'text-green-600 bg-green-50',
+                        value: 'text-gray-600',
+                      }}
+                    />
+
+                    <CellRenderer
+                      icon="material-symbols:mail"
+                      value={appointment.doctor?.email}
+                      classNames={{
+                        icon: 'text-blue-600 bg-blue-50',
+                        value: 'text-gray-600',
+                      }}
+                    />
+                  </div>
                 </div>
+              </div>
+
+              {/* View Full Profile Link */}
+              <div className="flex justify-end">
+                <Button variant="flat" color="success">
+                  Contact Doctor
+                </Button>
               </div>
             </CardBody>
           </Card>
