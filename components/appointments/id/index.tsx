@@ -12,14 +12,16 @@ import {
   Button,
   Calendar,
   Image,
+  CardFooter,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useQuery } from '@tanstack/react-query';
-import { CheckCircle, MapPin } from 'lucide-react';
 
 import NoResults from '@/components/ui/no-results';
 import { getAppointmentWithAID } from '@/functions/server-actions/appointment';
 import { AppointmentType } from '@/models/Appointment';
+import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import { CellRenderer } from '@/components/ui/cell-renderer';
 
 interface AppointmentProps {
   aid: number;
@@ -45,18 +47,6 @@ export default function Appointment({ aid, session }: AppointmentProps) {
   if (!appointment) {
     return <NoResults message="Appointment Not Found" />;
   }
-
-  function getStatusColor(status: string) {
-    switch (status) {
-      case 'booked':
-        return 'bg-blue-500';
-      case 'confirmed':
-        return 'bg-green-500';
-      default:
-        return 'bg-gray-500';
-    }
-  }
-
   const progress: Record<
     string,
     {
@@ -75,78 +65,127 @@ export default function Appointment({ aid, session }: AppointmentProps) {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mx-auto flex max-w-4xl flex-col gap-6">
-        <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
+    <div className="container mx-auto py-8">
+      <div className="mx-auto flex max-w-6xl flex-col gap-6">
+        <nav className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
           <div>
-            <h1 className="text-3xl font-bold">Appointment Details</h1>
-            <p className="text-muted-foreground">
-              Appointment #{appointment.aid}
-            </p>
+            <h1 className="">Appointment Details</h1>
+            {renderChip({ item: appointment.status })}
           </div>
-          <Chip className={`capitalize ${getStatusColor(appointment.status)}`}>
-            {appointment.status}
-          </Chip>
-        </div>
-
-        {/* <Card>
-          <CardHeader className="pb-2">
-            <h3 className="text-lg">Appointment Progress</h3>
-          </CardHeader>
-          <CardBody>
-            <Progress value={40} className="h-2" />
-            <p className="text-muted-foreground mt-1 text-right text-sm">
-             // {appointment.progress}% Complete
-            </p>
-          </CardBody>
-        </Card> */}
+        </nav>
 
         <div className="grid gap-6 md:grid-cols-2">
-          <Card className="w-full max-w-md bg-white shadow-lg">
-            <CardHeader className="pb-4">
-              <div className="mb-4 flex items-center gap-2 text-green-600">
-                <CheckCircle className="h-5 w-5" />
-                <span className="text-sm font-medium">
-                  Your appointment is confirmed
-                </span>
-              </div>
+          <Card className="w-full">
+            <CardHeader>
+              <h2 className="text-default-500">Pateint Details</h2>
             </CardHeader>
-
-            <CardBody className="space-y-6">
-              <div>
-                <h2 className="mb-3 text-2xl font-bold text-gray-900">
-                  Appointment scheduled
-                </h2>
-
-                <div className="flex items-center gap-3">
+            <CardBody>
+              <div className="flex items-center">
+                <div>
                   <Image
-                    src={appointment.patient.image}
+                    src={'/assets/placeholder-avatar.jpeg'}
                     alt={appointment.patient.name}
                     width={100}
                     height={100}
-                    className="rounded-full bg-slate-300"
+                    className="rounded-full text-slate-300"
                   />
-                  <span className="text-gray-600">
-                    with {appointment.patient.name}
-                  </span>
+                </div>
+                <div className="">
+                  <CellRenderer
+                    label="Patient ID"
+                    icon="solar:hashtag-circle-bold-duotone"
+                    value={appointment.patient.uid}
+                    classNames={{ icon: 'text-yellow-500 bg-yellow-50' }}
+                    className="text-lg text-black"
+                  />
+                  <CellRenderer
+                    label="Name"
+                    icon="cbi:abc"
+                    value={appointment.patient.name}
+                    classNames={{ icon: 'text-pink-500 bg-pink-50' }}
+                    className="text-lg text-black"
+                  />
+                  <CellRenderer
+                    label="Email"
+                    icon="material-symbols:mail"
+                    value={appointment.patient.email}
+                    classNames={{ icon: 'text-blue-500 bg-blue-50' }}
+                    className="text-lg text-black"
+                  />
+                  <CellRenderer
+                    label="Phone Number"
+                    icon="ic:baseline-phone"
+                    value={appointment.patient.phone}
+                    classNames={{ icon: 'text-green-500 bg-green-50' }}
+                    className="text-lg text-black"
+                  />
                 </div>
               </div>
-
-              {appointment.doctor && (
-                <div className="space-y-3">
-                  <h3 className="text-xl font-semibold text-gray-900">
-                    {appointment.doctor.name}
-                  </h3>
-
-                  {/* <div className="flex items-center gap-2 text-blue-600">
-                    <MapPin className="h-4 w-4" />
-                    <span className="text-sm">
-                      {appointment.doctor?.sitting}
-                    </span>
-                  </div> */}
+              <CardFooter>
+                <Button variant="flat" color="warning">
+                  <Icon icon="solar:calendar-bold-duotone" width="20" />
+                  Reschedule appointment
+                </Button>
+              </CardFooter>
+            </CardBody>
+          </Card>
+          <Card className="w-full">
+            <CardHeader className="">
+              <h2 className="text-default-500">Doctor Details</h2>
+            </CardHeader>
+            <CardBody>
+              <div className="flex items-center">
+                <div>
+                  <Image
+                    src={'/assets/placeholder-avatar.jpeg'}
+                    alt={appointment.patient.name}
+                    width={100}
+                    height={100}
+                    className="rounded-full text-slate-300"
+                  />
                 </div>
-              )}
+                <div className="">
+                  <CellRenderer
+                    label="Name"
+                    icon="cbi:abc"
+                    value={appointment.doctor?.name}
+                    classNames={{ icon: 'text-pink-500 bg-pink-50' }}
+                    className="text-lg text-black"
+                  />
+                  <CellRenderer
+                    label="Email"
+                    icon="material-symbols:mail"
+                    value={appointment.doctor?.email}
+                    classNames={{ icon: 'text-blue-500 bg-blue-50' }}
+                    className="text-lg text-black"
+                  />
+                  <CellRenderer
+                    label="Phone Number"
+                    icon="ic:baseline-phone"
+                    value={appointment.doctor?.phone}
+                    classNames={{ icon: 'text-green-500 bg-green-50' }}
+                    className="text-lg text-black"
+                  />
+                  <CellRenderer
+                    label="Sitting"
+                    icon="fluent:status-20-filled"
+                    value={appointment.doctor?.sitting}
+                    classNames={{ icon: 'text-purple-500 bg-purple-50' }}
+                    className="text-lg text-black"
+                  />
+                </div>
+              </div>
+            </CardBody>
+          </Card>
+        </div>
 
+        <Card>
+          <CardHeader>
+            {/* <CardTitle>Appointment Details</CardTitle>
+            <CardDescription>Type: {appointment.type}</CardDescription> */}
+          </CardHeader>
+          <CardBody className="space-y-4">
+            {
               <div className="flex items-start gap-4 py-4">
                 <div className="flex-shrink-0">
                   <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
@@ -163,89 +202,27 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                   <p className="mb-1 text-xs font-medium uppercase tracking-wide text-gray-500">
                     DATE & TIME
                   </p>
-                  <p className="text-lg font-semibold text-gray-900">
-                    {typeof appointment.date === 'string'
-                      ? appointment.date
-                      : appointment.date.toString()}
-                  </p>
+                  <CellRenderer
+                    label="Date & Time"
+                    icon="solar:calendar-bold-duotone"
+                    value={(new Date(appointment.date), 'MMM d, yyyy - h:mm a')}
+                    classNames={{ icon: 'text-yellow-500 bg-yellow-50' }}
+                  />
                 </div>
               </div>
+            }
 
-              <div className="pt-4">
-                <Button
-                  variant="bordered"
-                  className="w-full border-blue-600 text-blue-600 hover:bg-blue-50"
-                >
-                  Reschedule appointment
-                </Button>
-              </div>
-            </CardBody>
-          </Card>
-
-          {appointment.doctor && (
-            <Card>
-              <CardHeader>
-                <h2>Doctor Information</h2>
-              </CardHeader>
-              <CardBody className="space-y-4">
-                <div>
-                  <h3 className="font-medium">{appointment.doctor.name}</h3>
-                  <p className="text-muted-foreground text-sm">
-                    ID: {appointment.doctor.uid}
-                  </p>
-                </div>
-
-                <div>
-                  <p className="text-sm font-medium">Email</p>
-                  <p className="text-sm">{appointment.doctor.email}</p>
-                </div>
-
-                {appointment.doctor.sitting && (
-                  <div>
-                    <p className="text-sm font-medium">Location</p>
-                    <p className="text-sm">{appointment.doctor.sitting}</p>
-                  </div>
-                )}
-              </CardBody>
-            </Card>
-          )}
-        </div>
-
-        <Card>
-          <CardHeader>
-            {/* <CardTitle>Appointment Details</CardTitle>
-            <CardDescription>Type: {appointment.type}</CardDescription> */}
-          </CardHeader>
-          <CardBody className="space-y-4">
-            <div className="flex flex-col gap-4 sm:flex-row sm:gap-8">
-              <div className="flex items-center gap-2">
-                {/* <Calendar className="text-muted-foreground h-5 w-5" /> */}
-                <div>
-                  <p className="text-sm font-medium">Date</p>
-                  {/* <p className="text-sm">{formatDate(appointment.date)}</p> */}
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                {/* <Clock className="text-muted-foreground h-5 w-5" /> */}
-                <div>
-                  <p className="text-sm font-medium">Time</p>
-                  {/* <p className="text-sm">{formatTime(appointment.date)}</p> */}
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                {appointment.additionalInfo.type === 'online' ? (
-                  <Icon icon="solar:video-chat-bold" />
-                ) : (
-                  <Icon icon="solar:map-pin-bold" />
-                )}
-                <div>
-                  <p className="text-sm font-medium">Appointment Type</p>
-                  <p className="text-sm capitalize">
-                    {appointment.additionalInfo.type}
-                  </p>
-                </div>
+            <div className="flex items-center gap-2">
+              {appointment.additionalInfo.type === 'online' ? (
+                <Icon icon="solar:video-chat-bold" />
+              ) : (
+                <Icon icon="solar:map-pin-bold" />
+              )}
+              <div>
+                <p className="text-sm font-medium">Appointment Type</p>
+                <p className="text-sm capitalize">
+                  {appointment.additionalInfo.type}
+                </p>
               </div>
             </div>
 
@@ -262,45 +239,6 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                     </div>
                   ))}
                 </div>
-              </div>
-            )}
-          </CardBody>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <h1>Additional Information</h1>
-          </CardHeader>
-          <CardBody className="space-y-4">
-            {appointment.additionalInfo.description && (
-              <div>
-                <h3 className="text-sm font-medium">Description</h3>
-                <p className="text-sm">
-                  {appointment.additionalInfo.description}
-                </p>
-              </div>
-            )}
-
-            {appointment.additionalInfo.symptoms && (
-              <div>
-                <h3 className="text-sm font-medium">Symptoms</h3>
-                <p className="text-sm">{appointment.additionalInfo.symptoms}</p>
-              </div>
-            )}
-
-            {appointment.additionalInfo.notes && (
-              <div>
-                <h3 className="text-sm font-medium">Notes</h3>
-                <p className="text-sm">{appointment.additionalInfo.notes}</p>
-              </div>
-            )}
-
-            {appointment.additionalInfo.instructions && (
-              <div>
-                <h3 className="text-sm font-medium">Instructions</h3>
-                <p className="text-sm">
-                  {appointment.additionalInfo.instructions}
-                </p>
               </div>
             )}
           </CardBody>
