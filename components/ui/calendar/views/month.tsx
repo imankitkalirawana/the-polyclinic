@@ -17,6 +17,7 @@ import DateChip from '../ui/date-chip';
 import { formatTime } from '../helper';
 import StatusDot from '../ui/status-dot';
 import AppointmentPopover from '../ui/appointment-popover';
+import { useState } from 'react';
 
 interface MonthViewProps {
   appointments: AppointmentType[];
@@ -93,7 +94,11 @@ export function MonthView({
 
               <div>
                 {dayAppointments.slice(0, maxAppointmentsToShow).map((apt) => (
-                  <Popover placement="right">
+                  <Popover
+                    placement="right"
+                    shouldCloseOnScroll={false}
+                    shouldBlockScroll
+                  >
                     <PopoverTrigger>
                       <div
                         key={apt.aid}

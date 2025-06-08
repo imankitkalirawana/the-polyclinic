@@ -18,6 +18,7 @@ import { AppointmentType } from '@/models/Appointment';
 import StatusDot from './status-dot';
 import { formatTime } from '../helper';
 import { format } from 'date-fns';
+import { CLINIC_INFO } from '@/lib/config';
 
 export default function MeetingEventCard({
   appointment,
@@ -29,7 +30,7 @@ export default function MeetingEventCard({
   };
 
   return (
-    <Card className="w-[512px] shadow-none">
+    <Card className="w-[472px] shadow-none">
       <CardHeader className="flex flex-row items-center justify-end gap-1">
         <Button
           isIconOnly
@@ -121,14 +122,21 @@ export default function MeetingEventCard({
             </div>
           ) : (
             <div className="flex items-start gap-4">
-              <Icon icon="logos:google-maps" className="mt-1" width={20} />
               <div className="flex w-full flex-col">
                 <div className="flex items-center justify-between">
                   <Button
                     color="primary"
+                    variant="bordered"
                     onPress={() => {
                       console.log('get directions');
                     }}
+                    startContent={
+                      <Icon
+                        icon="logos:google-maps"
+                        // className="mt-1"
+                        width={12}
+                      />
+                    }
                   >
                     Get Directions to Clinic
                   </Button>
@@ -144,23 +152,12 @@ export default function MeetingEventCard({
                 </div>
                 <div className="mt-1">
                   <Link href="#" size="sm" className="text-xs text-default-500">
-                    meet.google.com/yzg-fdrq-sga
+                    {CLINIC_INFO.location.address}
                   </Link>
                 </div>
               </div>
             </div>
           )}
-
-          <Button
-            variant="light"
-            size="sm"
-            className="text-primary"
-            onPress={() => {
-              console.log('more phone numbers');
-            }}
-          >
-            More phone numbers
-          </Button>
         </div>
 
         <Divider />
