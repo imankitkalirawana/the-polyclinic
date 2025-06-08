@@ -8,7 +8,7 @@ export const LoadingUsers = () => {
       {Array.from({ length: 5 }).map((_, index) => (
         <Card
           key={`skeleton-${index}`}
-          className="rounded-mediumborder-smallborder-divider flex min-w-64 flex-row justify-between p-3 shadow-none transition-all"
+          className="flex min-w-64 flex-row justify-between rounded-medium border-small border-divider p-3 shadow-none transition-all"
         >
           <CardBody className="items-center gap-2 p-8">
             <div>

@@ -61,7 +61,7 @@ export default function PendingAppointments({
             return (
               <Card
                 key={appointment.aid}
-                className="rounded-mediumborder-smallborder-divider min-h-[106px] w-full bg-default-100 shadow-none"
+                className="min-h-[106px] w-full rounded-medium border-small border-divider bg-default-100 shadow-none"
               >
                 <CardBody className="flex flex-row items-start justify-between gap-4 pb-0 text-small">
                   <div className="flex flex-col">

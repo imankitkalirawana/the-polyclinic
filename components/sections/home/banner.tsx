@@ -151,7 +151,7 @@ export default function Banner({
             variants={fadeUpVariants}
             initial="hidden"
             animate="visible"
-            className="rounded-fullborder-smallborder-divider mb-8 inline-flex items-center gap-2 bg-background/[0.03] px-3 py-1 md:mb-12"
+            className="mb-8 inline-flex items-center gap-2 rounded-full border-small border-divider bg-background/[0.03] px-3 py-1 md:mb-12"
           >
             <Image
               src="https://kokonutui.com/logo.svg"

@@ -200,7 +200,7 @@ export default function AppointmentDetailsModal() {
               </ModalHeader>
               <ModalBody>
                 <ScrollShadow className="no-scrollbar py-4 pb-12">
-                  <Card className="w-fullborder-smallborder-divider mt-4 bg-default-50 shadow-none">
+                  <Card className="mt-4 w-full border-small border-divider bg-default-50 shadow-none">
                     <CardBody className="flex-row items-center gap-6 p-4">
                       <Avatar
                         radius="md"
@@ -229,7 +229,7 @@ export default function AppointmentDetailsModal() {
                       </div>
                     </CardBody>
                   </Card>
-                  <Card className="w-fullborder-smallborder-divider mt-4 bg-default-50 shadow-none">
+                  <Card className="mt-4 w-full border-small border-divider bg-default-50 shadow-none">
                     <CardBody className="flex flex-col gap-4">
                       <div className="flex items-center gap-4">
                         <div className="rounded-medium bg-orange-100 p-2 text-orange-500">
@@ -293,7 +293,7 @@ export default function AppointmentDetailsModal() {
                   </Card>
 
                   {formik.values.selected?.additionalInfo && (
-                    <Card className="w-fullborder-smallborder-divider mt-4 bg-default-50 shadow-none">
+                    <Card className="mt-4 w-full border-small border-divider bg-default-50 shadow-none">
                       <CardBody className="flex flex-col gap-4">
                         <div className="flex items-center gap-4">
                           <div className="rounded-medium bg-violet-100 p-2 text-violet-500">
