@@ -13,15 +13,15 @@ export default function DateChip({
   size?: 'sm' | 'md' | 'lg';
 }) {
   const sizeClass = {
-    sm: 'size-6',
-    md: 'size-8',
-    lg: 'size-10',
+    sm: 'size-6 text-xs',
+    md: 'size-8 text-sm',
+    lg: 'size-10 text-base',
   };
 
   return (
     <button
       className={cn(
-        'mb-1 flex items-center justify-center self-center rounded-full text-sm font-medium transition-colors hover:bg-default-100',
+        'mb-1 flex items-center justify-center self-center rounded-full font-medium transition-colors hover:bg-default-100',
         sizeClass[size],
         {
           'bg-primary-500 text-primary-foreground hover:bg-primary-400':

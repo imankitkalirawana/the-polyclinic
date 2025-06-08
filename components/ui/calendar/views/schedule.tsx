@@ -1,20 +1,11 @@
 'use client';
 
-import {
-  format,
-  isWithinInterval,
-  startOfMonth,
-  endOfMonth,
-  isToday,
-} from 'date-fns';
-import { cn } from '@/lib/utils';
+import { format, isWithinInterval, startOfMonth, endOfMonth } from 'date-fns';
 import { AppointmentType } from '@/models/Appointment';
-import { chipColorMap } from '@/lib/chip';
-import { Tooltip } from '@heroui/react';
 import { useCalendar } from '../store';
 import DateChip from '../ui/date-chip';
-import StatusDot from '../ui/status-dot';
 import { formatTime } from '../helper';
+import StatusRenderer from '../ui/status-renderer';
 
 interface ScheduleViewProps {
   appointments: AppointmentType[];
@@ -79,7 +70,7 @@ export function ScheduleView({
                         onClick={() => onTimeSlotClick(new Date(apt.date))}
                       >
                         <div className="flex w-full max-w-24 items-center gap-2">
-                          <StatusDot status={apt.status} />
+                          <StatusRenderer isDotOnly status={apt.status} />
                           <p className="text-sm">
                             {formatTime(new Date(apt.date))}
                           </p>
