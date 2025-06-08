@@ -33,7 +33,7 @@ export default function MeetingEventCard({
       <CardHeader className="flex flex-row items-center justify-between gap-1 border-b border-divider bg-primary-500 text-primary-foreground">
         <div>
           <h2 className="text-large font-medium capitalize text-primary-foreground">
-            {appointment.type}
+            #{appointment.aid} - {appointment.type}
           </h2>
           <div className="flex items-center gap-1">
             <StatusRenderer status={appointment.status} />
