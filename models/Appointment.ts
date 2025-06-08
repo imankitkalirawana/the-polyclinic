@@ -38,6 +38,7 @@ export interface DoctorInfo {
   uid: number;
   name: string;
   email: string;
+  phone: string;
   sitting?: string;
   image?: string;
 }
@@ -58,6 +59,7 @@ export interface AppointmentType extends Base {
     uid: number;
     name: string;
     email: string;
+    phone?: string;
     sitting?: string;
     image?: string;
   };
