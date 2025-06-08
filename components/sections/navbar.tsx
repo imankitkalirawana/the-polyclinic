@@ -309,7 +309,7 @@ export default function Navbar() {
         </NavbarMenu>
 
         <NavbarMenu
-          className="top-[calc(var(--navbar-height)_+_8px)] mx-auto hidden max-h-72 max-w-4xl rounded-3xl bg-default-200/80 py-6 shadow-xl backdrop-blur-md backdrop-saturate-150 md:flex"
+          className="top-[calc(var(--navbar-height)_+_8px)] mx-auto hidden max-h-72 max-w-4xl rounded-large bg-default-200/80 py-6 shadow-xl backdrop-blur-md backdrop-saturate-150 md:flex"
           onMouseEnter={clearTimeoutRef}
           onMouseLeave={startCloseTimeout}
           motionProps={{
@@ -363,7 +363,7 @@ export default function Navbar() {
                 style={{
                   backgroundImage: `url(${activeMenu.thumbnail})`,
                 }}
-                className="aspect-[2.1] h-full min-h-48 max-w-sm place-self-end self-end justify-self-end rounded-2xl bg-gradient-to-r from-[#F2F0FF] to-[#F0F6FF] bg-cover p-4 text-default-500"
+                className="aspect-[2.1] h-full min-h-48 max-w-sm place-self-end self-end justify-self-end rounded-medium bg-gradient-to-r from-[#F2F0FF] to-[#F0F6FF] bg-cover p-4 text-default-500"
               ></div>
             </div>
           )}

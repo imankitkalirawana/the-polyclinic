@@ -56,7 +56,7 @@ function BentoCard({
   return (
     <div
       className={cn(
-        'relative h-full w-full overflow-hidden rounded-2xl p-4',
+        'relative h-full w-full overflow-hidden rounded-medium p-4',
         className
       )}
     >

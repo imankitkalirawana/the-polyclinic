@@ -32,7 +32,7 @@ export default function QuillInput({
     <div>
       <div
         className={cn(
-          'relative rounded-2xl bg-default-100 p-4 py-2 transition-all hover:bg-default-200',
+          'relative rounded-medium bg-default-100 p-4 py-2 transition-all hover:bg-default-200',
           { 'pt-0': isFocused || value }
         )}
       >

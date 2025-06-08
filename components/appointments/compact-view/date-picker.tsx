@@ -62,8 +62,8 @@ export default function DatePicker() {
           items={dates}
           classNames={{
             tabList: 'bg-transparent flex whitespace-nowrap',
-            tab: 'min-w-[56px] min-h-20 rounded-3xl border border-divider',
-            cursor: 'rounded-3xl ring-4 ring-primary',
+            tab: 'min-w-[56px] min-h-20 rounded-large border border-divider',
+            cursor: 'rounded-large ring-4 ring-primary',
           }}
         >
           {(date) => {

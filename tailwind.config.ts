@@ -236,7 +236,7 @@ const config = {
         radius: {
           small: '0.75rem',
           medium: '1rem',
-          large: '1.25rem',
+          large: '1.5rem',
         },
         borderWidth: {
           small: '1px',

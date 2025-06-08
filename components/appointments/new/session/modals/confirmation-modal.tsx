@@ -53,7 +53,7 @@ export default function ConfirmationModal() {
                 <strong>{formik.values.patient?.email}</strong>
               </p>
             </ModalHeader>
-            <ModalBody className="gap-0 rounded-2xl bg-default-100">
+            <ModalBody className="gap-0 rounded-medium bg-default-100">
               <CellValue
                 label="Appointment ID"
                 value={`#${formik.values.appointment?.aid}`}
