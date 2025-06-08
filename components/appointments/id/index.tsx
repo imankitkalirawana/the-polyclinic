@@ -79,17 +79,17 @@ export default function Appointment({ aid, session }: AppointmentProps) {
             <div className="flex items-center gap-2">
               {renderChip({ item: appointment.status })}
               <CellRenderer
-                label=""
                 icon="solar:calendar-bold-duotone"
                 value={format(new Date(appointment.date), 'EEEE, MMM d, yyyy ')}
                 classNames={{ icon: 'text-gray-500 bg-gray-100' }}
+                iconSize={18}
                 className="items-center rounded-lg bg-gray-100 px-2 py-1 text-xs text-gray-500"
               />
               <CellRenderer
-                label=""
                 icon="mdi:clock-outline"
                 value={format(new Date(appointment.date), 'h:mm a')}
                 classNames={{ icon: 'text-gray-500 bg-gray-100' }}
+                iconSize={18}
                 className="items-center rounded-lg bg-gray-100 px-2 py-1 text-xs text-gray-500"
               />
             </div>
