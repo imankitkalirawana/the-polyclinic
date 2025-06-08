@@ -26,7 +26,7 @@ import { getAppointmentWithAID } from '@/functions/server-actions/appointment';
 import { AppointmentType } from '@/models/Appointment';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { CellRenderer } from '@/components/ui/cell-renderer';
-import { format } from 'date-fns';
+import { format, formatDate } from 'date-fns';
 
 interface AppointmentProps {
   aid: number;
@@ -89,14 +89,14 @@ export default function Appointment({ aid, session }: AppointmentProps) {
               className="rounded-lg bg-gray-100 px-2 py-1"
             />
             <CellRenderer
-              icon="mdi:clock-outline"
+              icon="solar:clock-circle-linear"
               value={format(new Date(appointment.date), 'h:mm a')}
               classNames={{ icon: 'text-gray-500 bg-gray-100' }}
               iconSize={18}
               className="rounded-lg bg-gray-100 px-2 py-1"
             />
             <CellRenderer
-              icon="mynaui:label-solid"
+              icon="solar:tag-bold"
               iconSize={18}
               value={appointment.type}
               classNames={{
@@ -111,16 +111,14 @@ export default function Appointment({ aid, session }: AppointmentProps) {
           <Button
             color="primary"
             variant="light"
-            startContent={
-              <Icon icon="material-symbols:print-outline" width="18" />
-            }
+            startContent={<Icon icon="solar:printer-outline" width="18" />}
           >
             Print
           </Button>
           <Button
             color="primary"
             variant="light"
-            startContent={<Icon icon="material-symbols:share" width="18" />}
+            startContent={<Icon icon="solar:share-bold" width="18" />}
           >
             Share
           </Button>
@@ -180,7 +178,7 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                     {(appointment.patient.gender ||
                       appointment.patient.age) && (
                       <CellRenderer
-                        icon="iconamoon:profile"
+                        icon="solar:user-line-duotone"
                         value={[
                           appointment.patient.gender || appointment.patient.age
                             ? [
@@ -200,7 +198,7 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                     )}
                     {appointment.patient.phone && (
                       <CellRenderer
-                        icon="ic:baseline-phone"
+                        icon="solar:phone-linear"
                         value={[
                           appointment.patient.phone
                             ? appointment.patient.phone
@@ -215,7 +213,7 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                     )}
 
                     <CellRenderer
-                      icon="material-symbols:mail"
+                      icon="solar:letter-bold"
                       value={appointment.patient.email}
                       classNames={{
                         icon: 'text-default-500 ',
@@ -269,7 +267,7 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                     <div>
                       {appointment.doctor.phone && (
                         <CellRenderer
-                          icon="ic:baseline-phone"
+                          icon="solar:map-point-bold"
                           value={[
                             appointment.doctor.phone
                               ? appointment.doctor.phone
@@ -284,7 +282,7 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                       )}
 
                       <CellRenderer
-                        icon="material-symbols:mail"
+                        icon="solar:letter-bold"
                         value={appointment.doctor?.email}
                         classNames={{
                           icon: 'text-default-500 ',
@@ -321,71 +319,119 @@ export default function Appointment({ aid, session }: AppointmentProps) {
             </Card>
           )}
         </div>
-        <div className="flex-[2]">
+        <div className="flex flex-[2] flex-col gap-4">
+          {/* first card  second column*/}
           <Card>
             <CardHeader>
-              {/* <CardTitle>Appointment Details</CardTitle>
-            <CardDescription>Type: {appointment.type}</CardDescription> */}
+              <h2 className="pl-6 text-xl text-black">
+                Appointment Information
+              </h2>
             </CardHeader>
-            <CardBody className="space-y-4">
-              {
-                <div className="flex items-start gap-4 py-4">
-                  <div className="flex-shrink-0">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
-                      <Icon
-                        icon="uil:calender"
-                        width="24"
-                        height="24"
-                        className="text-blue-500"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <p className="mb-1 text-xs font-medium uppercase tracking-wide text-gray-500">
-                      DATE & TIME
-                    </p>
-                    <CellRenderer
-                      label="Date & Time"
-                      icon="solar:calendar-bold-duotone"
-                      value={
-                        (new Date(appointment.date), 'MMM d, yyyy - h:mm a')
-                      }
-                      classNames={{ icon: 'text-yellow-500 bg-yellow-50' }}
-                    />
-                  </div>
-                </div>
-              }
-
-              <div className="flex items-center gap-2">
-                {appointment.additionalInfo.type === 'online' ? (
-                  <Icon icon="solar:video-chat-bold" />
-                ) : (
-                  <Icon icon="solar:map-pin-bold" />
-                )}
+            <Divider className="border-dashed border-divider" />
+            <CardBody className="space-y-4 p-6">
+              <div className="flex max-w-xl items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium">Appointment Type</p>
-                  <p className="text-sm capitalize">
-                    {appointment.additionalInfo.type}
-                  </p>
+                  <CellRenderer
+                    label="Date & Time"
+                    icon="solar:calendar-bold-duotone"
+                    value={format(
+                      new Date(appointment.date),
+                      'MMM d, yyyy - h:mm a'
+                    )}
+                    classNames={{ icon: 'text-yellow-500 bg-yellow-50' }}
+                  />
+                  <CellRenderer
+                    label="Appointment Type"
+                    icon="solar:stethoscope-bold"
+                    value={appointment.type}
+                    classNames={{
+                      icon: 'text-primary bg-primary-50',
+                    }}
+                  />
+                </div>
+                <div>
+                  <CellRenderer
+                    label="Mode"
+                    icon="solar:hospital-bold"
+                    value={appointment.additionalInfo.type}
+                    classNames={{ icon: 'text-blue-500 bg-blue-50' }}
+                  />
+                  <CellRenderer
+                    label="Created At"
+                    icon="solar:clock-circle-linear"
+                    value={
+                      appointment.createdAt
+                        ? formatDate(new Date(appointment.createdAt), 'PPP')
+                        : 'N/A'
+                    }
+                    classNames={{ icon: 'text-pink-500 bg-pink-50' }}
+                  />
                 </div>
               </div>
-
-              <Divider />
-
-              {appointment.data && Object.keys(appointment.data).length > 0 && (
-                <div>
-                  <h3 className="mb-2 text-sm font-medium">Additional Data</h3>
-                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                    {Object.entries(appointment.data).map(([key, value]) => (
-                      <div key={key}>
-                        <p className="text-sm font-medium capitalize">{key}</p>
-                        <p className="text-sm">{value}</p>
-                      </div>
-                    ))}
-                  </div>
+              <div>
+                <Progress
+                  aria-label="Loading..."
+                  label="Appointment Progress"
+                  className="max-w-2xl"
+                  value={60}
+                />
+                <div className="grid grid-cols-4 gap-8">
+                  <div>Booked</div>
+                  <div>Confirmed</div>
+                  <div>In Progress</div>
+                  <div>Completed</div>
                 </div>
-              )}
+              </div>
+              <Divider className="border-dashed border-divider" />
+              <div>
+                <CellRenderer
+                  label="Symptoms"
+                  icon="solar:clipboard-list-bold-duotone"
+                  value={
+                    appointment.additionalInfo.symptoms ||
+                    'No symptoms provided.'
+                  }
+                  classNames={{ icon: 'text-blue-500 bg-blue-50' }}
+                />
+                <CellRenderer
+                  label="Description"
+                  icon="solar:list-up-outline"
+                  value={
+                    appointment.additionalInfo.description ||
+                    'No description provided.'
+                  }
+                  classNames={{ icon: 'text-primary-500 bg-primary-50' }}
+                />
+              </div>
+            </CardBody>
+          </Card>
+          {/* last card */}
+          <Card>
+            <CardHeader className="pl-8 text-xl text-black">
+              Additional Information
+            </CardHeader>
+            <Divider className="border-dashed border-divider" />
+            <CardBody className="space-y-4 p-6">
+              <div>
+                <CellRenderer
+                  label="Symptoms"
+                  icon="solar:notes-bold"
+                  value={
+                    appointment.additionalInfo.notes ||
+                    'No additional information provided.'
+                  }
+                  classNames={{ icon: 'text-purple-500 bg-purple-50' }}
+                />
+                <CellRenderer
+                  label=" Pre-appointment Instructions"
+                  icon="solar:list-check-minimalistic-bold"
+                  value={
+                    appointment.additionalInfo.instructions ||
+                    'No additional information provided.'
+                  }
+                  classNames={{ icon: 'text-orange-500 bg-orange-50' }}
+                />
+              </div>
             </CardBody>
           </Card>
         </div>

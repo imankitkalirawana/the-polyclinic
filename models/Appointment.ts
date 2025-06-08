@@ -11,7 +11,7 @@ export enum AType {
 
 export enum AppointmentMode {
   online = 'online',
-  offline = 'offline',
+  offline = 'offline(in-person)',
 }
 
 export enum AppointmentStatus {
