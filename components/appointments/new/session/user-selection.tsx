@@ -22,7 +22,7 @@ import {
   getAllPatients,
   getAllPatientsWithEmail,
 } from '@/functions/server-actions/users';
-import useDebounce from '@/hooks/useDebounce';
+import { useDebounce } from 'react-haiku';
 import { UserRole, UserType } from '@/models/User';
 
 export default function UserSelection() {

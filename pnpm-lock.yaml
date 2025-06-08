@@ -83,9 +83,6 @@ importers:
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.2
-      lucide-react:
-        specifier: ^0.513.0
-        version: 0.513.0(react@18.3.1)
       mongodb:
         specifier: ^6.10.0
         version: 6.16.0(@aws-sdk/credential-providers@3.817.0)(socks@2.8.4)
@@ -128,6 +125,9 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
+      react-haiku:
+        specifier: ^2.3.0
+        version: 2.3.0(react@18.3.1)
       react-quill:
         specifier: ^2.0.0
         version: 2.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -4374,11 +4374,6 @@ packages:
     resolution: {integrity: sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==}
     engines: {node: '>=12'}
 
-  lucide-react@0.513.0:
-    resolution: {integrity: sha512-CJZKq2g8Y8yN4Aq002GahSXbG2JpFv9kXwyiOAMvUBv7pxeOFHUWKB0mO7MiY4ZVFCV4aNjv2BJFq/z3DgKPQg==}
-    peerDependencies:
-      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
-
   magic-string@0.30.17:
     resolution: {integrity: sha512-sNPKHvyjVf7gyjwS4xGTaW/mCnF8wnjtifKBEhxfZ7E/S8tQ0rssrwGNn6q8JH/ohItJfSQp9mBtQYuTlH5QnA==}
 
@@ -5085,6 +5080,11 @@ packages:
 
   react-fast-compare@2.0.4:
     resolution: {integrity: sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==}
+
+  react-haiku@2.3.0:
+    resolution: {integrity: sha512-4bDW2uEQdHwjUbxWzTtUsO02Oic9fo+B9RlYDsz1zkYa7S/BvwRcIrzVPmNJfQLlGAj5xnCJi2qTEWlGsRHWBw==}
+    peerDependencies:
+      react: '>=16.8.0'
 
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
@@ -11646,10 +11646,6 @@ snapshots:
 
   lru-cache@7.18.3: {}
 
-  lucide-react@0.513.0(react@18.3.1):
-    dependencies:
-      react: 18.3.1
-
   magic-string@0.30.17:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.0
@@ -12274,6 +12270,10 @@ snapshots:
       scheduler: 0.23.2
 
   react-fast-compare@2.0.4: {}
+
+  react-haiku@2.3.0(react@18.3.1):
+    dependencies:
+      react: 18.3.1
 
   react-is@16.13.1: {}
 
