@@ -25,6 +25,7 @@ import DateChip from '../ui/date-chip';
 import { formatTime } from '../helper';
 import StatusRenderer from '../ui/status-renderer';
 import AppointmentPopover from '../ui/appointment-popover';
+import { useState } from 'react';
 
 interface MonthViewProps {
   appointments: AppointmentType[];
@@ -40,6 +41,8 @@ export function MonthView({
   onTimeSlotClick,
 }: MonthViewProps) {
   const { setView } = useCalendar();
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
   const calendarStart = startOfWeek(monthStart);
@@ -47,7 +50,6 @@ export function MonthView({
 
   const days = eachDayOfInterval({ start: calendarStart, end: calendarEnd });
   const weekDays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-
   const numberOfWeeks = Math.ceil(days.length / 7);
 
   const getAppointmentsForDay = (date: Date) => {
@@ -92,7 +94,11 @@ export function MonthView({
                 'flex select-none flex-col justify-start border-b border-r p-1 last:border-r-0',
                 !isCurrentMonth && 'bg-default-100 text-default-500'
               )}
-              onDoubleClick={() => onTimeSlotClick(day)}
+              onDoubleClick={() => {
+                if (!isPopoverOpen) {
+                  onTimeSlotClick(day);
+                }
+              }}
             >
               <DateChip
                 date={day}
@@ -106,10 +112,11 @@ export function MonthView({
                     <Appointment
                       appointment={appointment}
                       key={appointment.aid}
+                      onOpenChange={setIsPopoverOpen}
                     />
                   ))}
                 {dayAppointments.length > maxAppointmentsToShow && (
-                  <Popover>
+                  <Popover onOpenChange={setIsPopoverOpen}>
                     <PopoverTrigger>
                       <button className="w-full truncate rounded-lg p-1 px-2 text-start text-xs hover:bg-default-100">
                         {dayAppointments.length - maxAppointmentsToShow} more
@@ -142,7 +149,7 @@ function AppointmentList({
   const { setView } = useCalendar();
 
   return (
-    <Card className="flex flex-col gap-2 shadow-none">
+    <Card className="flex max-w-xs flex-col gap-2 shadow-none">
       <CardHeader className="flex-col items-center gap-2 pb-0">
         <span className="text-sm font-medium">{format(date, 'E')}</span>
         <DateChip
@@ -160,9 +167,20 @@ function AppointmentList({
   );
 }
 
-function Appointment({ appointment }: { appointment: AppointmentType }) {
+function Appointment({
+  appointment,
+  onOpenChange,
+}: {
+  appointment: AppointmentType;
+  onOpenChange?: (isOpen: boolean) => void;
+}) {
   return (
-    <Popover placement="right" shouldCloseOnScroll={false} shouldBlockScroll>
+    <Popover
+      placement="right"
+      shouldCloseOnScroll={false}
+      shouldBlockScroll
+      onOpenChange={onOpenChange}
+    >
       <PopoverTrigger>
         <div
           key={appointment.aid}
