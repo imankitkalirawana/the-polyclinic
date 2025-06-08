@@ -177,32 +177,49 @@ export default function Appointment({ aid, session }: AppointmentProps) {
 
                   {/* Patient Details using CellRenderer */}
                   <div>
-                    <CellRenderer
-                      icon="iconamoon:profile"
-                      value={`${appointment.patient.gender}, ${appointment.patient.age} years`}
-                      classNames={{
-                        icon: 'text-default-500 ',
-                        value: 'text-black',
-                      }}
-                      iconSize={18}
-                    />
-
-                    <CellRenderer
-                      icon="ic:baseline-phone"
-                      value={appointment.patient.phone}
-                      classNames={{
-                        icon: 'text-default-500 ',
-                        value: 'text-black',
-                      }}
-                      iconSize={18}
-                    />
+                    {(appointment.patient.gender ||
+                      appointment.patient.age) && (
+                      <CellRenderer
+                        icon="iconamoon:profile"
+                        value={[
+                          appointment.patient.gender || appointment.patient.age
+                            ? [
+                                appointment.patient.gender,
+                                appointment.patient.age,
+                              ]
+                                .filter(Boolean)
+                                .join(', ')
+                            : '',
+                        ]}
+                        classNames={{
+                          icon: 'text-default-500 ',
+                          value: 'text-black',
+                        }}
+                        iconSize={18}
+                      />
+                    )}
+                    {appointment.patient.phone && (
+                      <CellRenderer
+                        icon="ic:baseline-phone"
+                        value={[
+                          appointment.patient.phone
+                            ? appointment.patient.phone
+                            : '',
+                        ]}
+                        classNames={{
+                          icon: 'text-default-500 ',
+                          value: 'text-black',
+                        }}
+                        iconSize={18}
+                      />
+                    )}
 
                     <CellRenderer
                       icon="material-symbols:mail"
                       value={appointment.patient.email}
                       classNames={{
                         icon: 'text-default-500 ',
-                        value: 'text-black',
+                        value: 'text-black lowercase',
                       }}
                       iconSize={18}
                     />
@@ -220,66 +237,89 @@ export default function Appointment({ aid, session }: AppointmentProps) {
             </CardBody>
           </Card>
           {/* {doctor card} */}
-          <Card className="mx-auto w-full max-w-md">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <h2 className="pl-6 text-xl text-black">Doctor Details</h2>
-            </CardHeader>
-            <Divider className="border-dashed border-divider" />
+          {!!appointment.doctor && (
+            <Card className="mx-auto w-full max-w-md">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <h2 className="pl-6 text-xl text-black">Doctor Details</h2>
+              </CardHeader>
+              <Divider className="border-dashed border-divider" />
 
-            <CardBody>
-              {/* Patient Avatar and Name */}
-              <div className="flex items-start gap-4 pb-4">
-                <div className="flex-shrink-0">
-                  <Image
-                    src={'/assets/placeholder-avatar.jpeg'}
-                    alt={appointment.doctor?.name}
-                    width={100}
-                    height={100}
-                    className="rounded-full text-slate-300"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <h3 className="pl-6 text-xl text-black">
-                    {appointment.doctor?.name}
-                  </h3>
-                  <p className="pl-8 text-sm text-gray-500">
-                    <span className="text-gray-500">Doctor ID: </span>
-                    {appointment.doctor?.uid}
-                  </p>
-
-                  {/* Patient Details using CellRenderer */}
-                  <div>
-                    <CellRenderer
-                      icon="ic:baseline-phone"
-                      value={appointment.doctor?.phone}
-                      classNames={{
-                        icon: 'text-default-500 ',
-                        value: 'text-black',
-                      }}
-                      iconSize={18}
-                    />
-
-                    <CellRenderer
-                      icon="material-symbols:mail"
-                      value={appointment.doctor?.email}
-                      classNames={{
-                        icon: 'text-default-500 ',
-                        value: 'text-black',
-                      }}
-                      iconSize={18}
+              <CardBody>
+                {/* Patient Avatar and Name */}
+                <div className="flex items-start gap-4 pb-4">
+                  <div className="flex-shrink-0">
+                    <Image
+                      src={'/assets/placeholder-avatar.jpeg'}
+                      alt={appointment.doctor?.name}
+                      width={100}
+                      height={100}
+                      className="rounded-full text-slate-300"
                     />
                   </div>
-                </div>
-              </div>
+                  <div className="flex flex-col">
+                    <h3 className="pl-6 text-xl text-black">
+                      {appointment.doctor?.name}
+                    </h3>
+                    <p className="pl-6 text-sm text-gray-500">
+                      <span className="text-gray-500">Doctor ID: </span>
+                      {appointment.doctor?.uid}
+                    </p>
 
-              {/* View Full Profile Link */}
-              <div className="flex justify-end">
-                <Button variant="flat" color="success">
-                  Contact Doctor
-                </Button>
-              </div>
-            </CardBody>
-          </Card>
+                    {/* Patient Details using CellRenderer */}
+                    <div>
+                      {appointment.doctor.phone && (
+                        <CellRenderer
+                          icon="ic:baseline-phone"
+                          value={[
+                            appointment.doctor.phone
+                              ? appointment.doctor.phone
+                              : '',
+                          ]}
+                          classNames={{
+                            icon: 'text-default-500 ',
+                            value: 'text-black',
+                          }}
+                          iconSize={18}
+                        />
+                      )}
+
+                      <CellRenderer
+                        icon="material-symbols:mail"
+                        value={appointment.doctor?.email}
+                        classNames={{
+                          icon: 'text-default-500 ',
+                          value: 'text-black lowercase',
+                        }}
+                        iconSize={18}
+                      />
+                      {appointment.doctor.sitting && (
+                        <CellRenderer
+                          icon="mdi:location"
+                          value={[
+                            appointment.doctor.sitting
+                              ? appointment.doctor.sitting
+                              : '',
+                          ]}
+                          classNames={{
+                            icon: 'text-default-500 ',
+                            value: 'text-black',
+                          }}
+                          iconSize={18}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* View Full Profile Link */}
+                <div className="flex justify-end">
+                  <Button variant="flat" color="success">
+                    Contact Doctor
+                  </Button>
+                </div>
+              </CardBody>
+            </Card>
+          )}
         </div>
         <div className="flex-[2]">
           <Card>
