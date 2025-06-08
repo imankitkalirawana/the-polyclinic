@@ -103,7 +103,7 @@ export default function MeetingEventCard({
               .filter(Boolean)
               .join(' • ')}
           />
-          {appointment.doctor && (
+          {!!appointment.doctor?.uid && (
             <User
               name={appointment.doctor.name}
               avatarProps={{

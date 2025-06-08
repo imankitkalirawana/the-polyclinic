@@ -34,7 +34,7 @@ interface MonthViewProps {
 }
 
 const MAX_APPOINTMENTS_PER_DAY = 2;
-const POPOVER_DELAY = 100;
+const POPOVER_DELAY = 200;
 
 export function MonthView({
   appointments,
