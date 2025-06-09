@@ -1,30 +1,24 @@
 'use client';
 
 import type React from 'react';
-
 import { format } from 'date-fns';
 import {
   Button,
   Form,
-  Input,
-  Kbd,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
   ScrollShadow,
-  Select,
-  SelectItem,
-  Textarea,
 } from '@heroui/react';
 import { useFormik } from 'formik';
-import { useLinkedUsers, useSelf } from '@/services/user';
-import { useState } from 'react';
-import { UserType } from '@/models/User';
 import UsersList from './ui/users-list';
+import { UserType } from '@/models/User';
+import { useState } from 'react';
 
 interface NewAppointmentModalProps {
+  self: UserType;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   selectedDate: Date | null;
@@ -32,21 +26,18 @@ interface NewAppointmentModalProps {
 }
 
 export default function NewAppointmentModal({
+  self,
   open,
   onOpenChange,
   selectedDate,
   selectedTime,
 }: NewAppointmentModalProps) {
-  const { data: self } = useSelf();
-  const { data: linkedUsers } = useLinkedUsers();
-  const [selectedPatient, setSelectedPatient] = useState<UserType | null>(
-    self || null
-  );
+  const [selectedPatient, setSelectedPatient] = useState<UserType>(self);
 
   const formik = useFormik({
     initialValues: {
       appointment: {
-        patient: self ?? null,
+        patient: self,
         doctor: '',
         date: selectedDate,
         type: 'consultation',
@@ -91,7 +82,10 @@ export default function NewAppointmentModal({
               {formatDateTime()}
             </div>
           </div>
-          <UsersList />
+          <UsersList
+            selectedUser={selectedPatient}
+            onSelectionChange={setSelectedPatient}
+          />
         </ModalBody>
         <ModalFooter className="w-full">
           <Button

@@ -1,9 +1,27 @@
+import { UserType } from '@/models/User';
 import { useLinkedUsers } from '@/services/user';
-import { Card, CardBody, cn, Image, ScrollShadow } from '@heroui/react';
+import { Button, Card, CardBody, cn, Image, ScrollShadow } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-export default function UsersList({ size }: { size?: 'sm' | 'md' | 'lg' }) {
+const SizeMap = {
+  sm: 'w-48',
+  md: 'w-64',
+  lg: 'w-72',
+};
+
+export default function UsersList({
+  selectedUser,
+  size,
+  onSelectionChange,
+}: {
+  selectedUser: UserType;
+  size?: 'sm' | 'md' | 'lg';
+  onSelectionChange: (user: UserType) => void;
+}) {
   const { data: linkedUsers, isLoading } = useLinkedUsers();
+
+  // TODO: Add a loading state
+  if (isLoading) return <div>Loading...</div>;
 
   if (!linkedUsers) return null;
 
@@ -12,25 +30,23 @@ export default function UsersList({ size }: { size?: 'sm' | 'md' | 'lg' }) {
       <Card
         isPressable
         className={cn(
-          'no-scrollbar min-w-64 rounded-medium border-small border-divider shadow-none sm:min-w-72'
+          'no-scrollbar aspect-square rounded-medium border-small border-divider shadow-none',
+          SizeMap[size ?? 'sm']
         )}
       >
-        <CardBody className="items-center gap-4 p-8">
+        <CardBody className="items-center justify-center gap-4">
           <div>
             <Icon
               icon="solar:add-circle-line-duotone"
-              width={80}
-              height={80}
+              width={60}
+              height={60}
               className="text-default-500"
             />
           </div>
           <div>
             <h2 className="text-center text-large font-semibold text-primary">
-              Register New Patient
+              New Patient
             </h2>
-            <p className="text-small font-light text-default-500">
-              Add a new patient to your list
-            </p>
           </div>
         </CardBody>
       </Card>
@@ -42,32 +58,42 @@ export default function UsersList({ size }: { size?: 'sm' | 'md' | 'lg' }) {
               isPressable
               key={user.uid}
               className={cn(
-                'no-scrollbar min-w-64 rounded-medium border-small border-divider shadow-none sm:min-w-72',
+                'no-scrollbar rounded-medium border-small border-divider shadow-none',
+                SizeMap[size ?? 'sm'],
                 {
-                  'border-medium border-primary-400': true,
-                  // user.uid === formik.values.patient?.uid,
+                  'border-medium border-primary-400':
+                    user.uid === selectedUser.uid,
                 }
               )}
-              //   onPress={() => {
-              //     formik.setFieldValue('patient', user);
-              //   }}
+              onPress={() => onSelectionChange(user)}
             >
-              <CardBody className="items-center gap-4 p-6">
+              <CardBody className="group relative items-center gap-4 overflow-hidden p-6">
+                <div className="absolute right-2 top-2 opacity-0 transition-opacity group-hover:opacity-100">
+                  <Button
+                    isIconOnly
+                    variant="light"
+                    className="absolute right-1 top-1"
+                    radius="full"
+                    size="sm"
+                  >
+                    <Icon icon="solar:pen-new-round-line-duotone" width={18} />
+                  </Button>
+                </div>
                 <div>
                   <Image
                     src={user.image}
                     alt={user.name}
                     width={100}
                     height={100}
-                    className="rounded-full bg-slate-300"
+                    className="rounded-full bg-primary-200"
                   />
                 </div>
-                <div>
+                <div className="flex flex-col items-center">
                   <h2 className="text-center text-large font-semibold">
                     {user.name}
                   </h2>
-                  <p className="text-small font-light text-default-500">
-                    {user.email}
+                  <p className="block text-center text-small font-light text-default-500">
+                    #{user.uid}
                   </p>
                 </div>
               </CardBody>
