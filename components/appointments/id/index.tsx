@@ -127,17 +127,16 @@ export default function Appointment({ aid, session }: AppointmentProps) {
               <Icon icon="entypo:dots-three-vertical" width="18" />
             </DropdownTrigger>
             <DropdownMenu aria-label="Static Actions">
-              <DropdownItem key="new">New file</DropdownItem>
               <DropdownItem key="copy">Copy link</DropdownItem>
-              <DropdownItem key="edit">Edit file</DropdownItem>
+              <DropdownItem key="edit">Edit Appointment</DropdownItem>
               <DropdownItem key="delete" className="text-danger" color="danger">
-                Delete file
+                Delete Appointment
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
         </div>
       </nav>
-      <div className="flex w-full gap-6">
+      <div className="mb-20 flex w-full gap-6">
         <div className="flex flex-1 flex-col gap-4">
           {/* {pateint card} */}
           <Card className="mx-auto w-full max-w-md">
@@ -348,6 +347,14 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                       icon: 'text-primary bg-primary-50',
                     }}
                   />
+                  <CellRenderer
+                    label="created by"
+                    icon="solar:people-nearby-bold"
+                    value={appointment.createdBy || 'System'}
+                    classNames={{
+                      icon: 'text-purple-500 bg-purple-50',
+                    }}
+                  />
                 </div>
                 <div>
                   <CellRenderer
@@ -365,6 +372,16 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                         : 'N/A'
                     }
                     classNames={{ icon: 'text-pink-500 bg-pink-50' }}
+                  />
+                  <CellRenderer
+                    label="Updated At"
+                    icon="solar:sort-by-time-broken"
+                    value={
+                      appointment.updatedAt
+                        ? formatDate(new Date(appointment.updatedAt), 'PPP')
+                        : 'N/A'
+                    }
+                    classNames={{ icon: 'text-green-500 bg-green-50 ' }}
                   />
                 </div>
               </div>
@@ -436,6 +453,38 @@ export default function Appointment({ aid, session }: AppointmentProps) {
           </Card>
         </div>
       </div>
+      <footer className="fixed bottom-0 left-0 w-full border-t bg-background/30 px-8 shadow-md backdrop-blur">
+        <div className="m-4 flex justify-between">
+          <Button
+            color="default"
+            variant="flat"
+            startContent={<Icon icon="solar:calendar-add-bold" width="24" />}
+          >
+            Add to Calender
+          </Button>
+          <div className="flex items-center">
+            <CellRenderer
+              icon="solar:bell-bing-bold"
+              value={''}
+              classNames={{ icon: 'text-gray-500 bg-gray-300' }}
+              className="px-2 py-1"
+            />
+            <CellRenderer
+              icon="solar:shield-cross-bold"
+              value={''}
+              classNames={{ icon: 'text-red-500 bg-red-200' }}
+              className="px-2 py-1"
+            />
+            <Button
+              color="warning"
+              variant="flat"
+              startContent={<Icon icon="solar:calendar-bold" width="24" />}
+            >
+              Reschedule
+            </Button>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
