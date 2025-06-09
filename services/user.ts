@@ -1,4 +1,4 @@
-import { getLinkedUsers, getSelf } from '@/functions/server-actions/user';
+import { getLinkedUsers, getSelf } from '@/services/api/user';
 import { UserType } from '@/models/User';
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 

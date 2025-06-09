@@ -19,7 +19,7 @@ import {
   Textarea,
 } from '@heroui/react';
 import { useFormik } from 'formik';
-import { useLinkedUsers, useSelf } from '@/store/user';
+import { useLinkedUsers, useSelf } from '@/services/user';
 import { useState } from 'react';
 import { UserType } from '@/models/User';
 import UsersList from './ui/users-list';

@@ -1,12 +1,12 @@
 'use server';
 
-import { API_BASE_URL } from '@/lib/config';
 import { UserType } from '@/models/User';
 import axios from 'axios';
 import { cookies } from 'next/headers';
+import { BASE_URL } from '.';
 
 export async function getSelf(): Promise<UserType> {
-  const res = await axios.get(`${API_BASE_URL}/api/v1/users/self`, {
+  const res = await axios.get(`${BASE_URL}/users/self`, {
     headers: {
       Cookie: cookies().toString(),
     },
@@ -15,7 +15,7 @@ export async function getSelf(): Promise<UserType> {
 }
 
 export async function getLinkedUsers(): Promise<UserType[]> {
-  const res = await axios.get(`${API_BASE_URL}/api/v1/users/linked`, {
+  const res = await axios.get(`${BASE_URL}/users/linked`, {
     headers: {
       Cookie: cookies().toString(),
     },

@@ -1,4 +1,4 @@
-import { useLinkedUsers } from '@/store/user';
+import { useLinkedUsers } from '@/services/user';
 import { Card, CardBody, cn, Image, ScrollShadow } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
