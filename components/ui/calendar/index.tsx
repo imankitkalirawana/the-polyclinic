@@ -15,14 +15,12 @@ interface CalendarProps {
   appointments: AppointmentType[];
   currentDate: Date;
   onDateChange: (date: Date) => void;
-  onCreateAppointment: (date: Date, time?: string) => void;
 }
 
 export function Calendar({
   appointments,
   currentDate,
   onDateChange,
-  onCreateAppointment,
 }: CalendarProps) {
   const { view, setView } = useCalendar();
 
@@ -34,15 +32,6 @@ export function Calendar({
     setSelectedDate(date);
     setSelectedTime(time || null);
     setShowDialog(true);
-  };
-
-  const handleCreateAppointment = () => {
-    if (selectedDate) {
-      onCreateAppointment(selectedDate, selectedTime || undefined);
-      setShowDialog(false);
-      setSelectedDate(null);
-      setSelectedTime(null);
-    }
   };
 
   const renderView = () => {
@@ -124,7 +113,6 @@ export function Calendar({
         onOpenChange={setShowDialog}
         selectedDate={selectedDate}
         selectedTime={selectedTime}
-        onCreateAppointment={handleCreateAppointment}
       />
     </div>
   );

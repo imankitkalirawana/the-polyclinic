@@ -20,13 +20,15 @@ import {
 } from '@heroui/react';
 import { useFormik } from 'formik';
 import { useLinkedUsers, useSelf } from '@/store/user';
+import { useState } from 'react';
+import { UserType } from '@/models/User';
+import UsersList from './ui/users-list';
 
 interface NewAppointmentModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   selectedDate: Date | null;
   selectedTime: string | null;
-  onCreateAppointment: (appointmentData: any) => void;
 }
 
 export default function NewAppointmentModal({
@@ -34,16 +36,17 @@ export default function NewAppointmentModal({
   onOpenChange,
   selectedDate,
   selectedTime,
-  onCreateAppointment,
 }: NewAppointmentModalProps) {
-  console.log('this is called');
   const { data: self } = useSelf();
   const { data: linkedUsers } = useLinkedUsers();
+  const [selectedPatient, setSelectedPatient] = useState<UserType | null>(
+    self || null
+  );
 
   const formik = useFormik({
     initialValues: {
       appointment: {
-        patient: self,
+        patient: self ?? null,
         doctor: '',
         date: selectedDate,
         type: 'consultation',
@@ -53,7 +56,7 @@ export default function NewAppointmentModal({
     },
     enableReinitialize: true,
     onSubmit: (values) => {
-      onCreateAppointment(values);
+      console.log(values);
     },
   });
 
@@ -64,7 +67,12 @@ export default function NewAppointmentModal({
   };
 
   return (
-    <Modal isOpen={open} onOpenChange={onOpenChange} scrollBehavior="inside">
+    <Modal
+      size="5xl"
+      isOpen={open}
+      onOpenChange={onOpenChange}
+      scrollBehavior="inside"
+    >
       <ModalContent
         as={Form}
         onSubmit={(e) => {
@@ -77,99 +85,13 @@ export default function NewAppointmentModal({
         </ModalHeader>
 
         <ModalBody as={ScrollShadow} className="w-full">
-          <div className="rounded-lg bg-default p-3">
+          <div className="rounded-small bg-default p-3">
             <div className="text-small font-medium">Date & Time</div>
             <div className="text-small text-default-foreground">
               {formatDateTime()}
             </div>
           </div>
-
-          <Select
-            label="Patient"
-            items={linkedUsers}
-            placeholder="Select Patient"
-          >
-            {(item) => (
-              <SelectItem key={item.uid} endContent={<Kbd />}>
-                {item.name}
-              </SelectItem>
-            )}
-          </Select>
-
-          <Input
-            label="Patient Name"
-            id="patientName"
-            value={formik.values.appointment.patient?.name}
-            onChange={formik.handleChange}
-            required
-          />
-
-          <div className="space-y-2">
-            <Input
-              label="Patient Email"
-              id="patientEmail"
-              type="email"
-              value={formik.values.appointment.patient?.email}
-              onChange={formik.handleChange}
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Input
-              label="Patient Phone"
-              id="patientPhone"
-              value={formik.values.appointment.patient?.phone}
-              onChange={formik.handleChange}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Select
-              label="Doctor"
-              value={formik.values.appointment.doctor}
-              onChange={formik.handleChange}
-            >
-              <SelectItem key="Dr. Smith">Dr. Smith</SelectItem>
-              <SelectItem key="Dr. Johnson">Dr. Johnson</SelectItem>
-              <SelectItem key="Dr. Williams">Dr. Williams</SelectItem>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Select
-              label="Appointment Type"
-              value={formik.values.appointment.type}
-              onChange={formik.handleChange}
-            >
-              <SelectItem key="consultation">Consultation</SelectItem>
-              <SelectItem key="follow-up">Follow-up</SelectItem>
-              <SelectItem key="emergency">Emergency</SelectItem>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Input
-              label="Symptoms"
-              id="symptoms"
-              value={formik.values.appointment.symptoms}
-              onChange={formik.handleChange}
-              placeholder="e.g., headache, fever"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Textarea
-              label="Additional Notes"
-              id="notes"
-              value={formik.values.appointment.notes}
-              onChange={formik.handleChange}
-              placeholder="Any additional information..."
-              rows={3}
-            />
-          </div>
-
-          <div className="flex gap-2 pt-4"></div>
+          <UsersList />
         </ModalBody>
         <ModalFooter className="w-full">
           <Button

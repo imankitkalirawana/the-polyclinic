@@ -15,16 +15,11 @@ export default function Appointments() {
 
   const appointments: AppointmentType[] = data || [];
 
-  const handleCreateAppointment = (date: Date, time?: string) => {
-    console.log(date, time);
-  };
-
   return (
     <Calendar
       appointments={appointments}
       currentDate={currentDate}
       onDateChange={setCurrentDate}
-      onCreateAppointment={handleCreateAppointment}
     />
   );
 }
