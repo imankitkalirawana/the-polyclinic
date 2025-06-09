@@ -19,13 +19,10 @@ import {
 import { useQuery } from '@tanstack/react-query';
 
 import { UserType } from '@/models/User';
-import { getSelf } from '@/functions/server-actions/user';
+import { useSelf } from '@/services/user';
 
 export default function Profile() {
-  const { data } = useQuery<UserType>({
-    queryKey: ['self'],
-    queryFn: () => getSelf(),
-  });
+  const { data } = useSelf();
 
   const self: UserType = data || ({} as UserType);
 
