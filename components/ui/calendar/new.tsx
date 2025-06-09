@@ -13,11 +13,13 @@ import {
   ScrollShadow,
 } from '@heroui/react';
 import { useFormik } from 'formik';
-import UsersList from './ui/users-list';
+import UsersList from '../appointments/users-list';
 import { UserType } from '@/models/User';
 import { useState } from 'react';
+import { useLinkedUsers } from '@/services/user';
 
 interface NewAppointmentModalProps {
+  users: UserType[];
   self: UserType;
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -33,6 +35,7 @@ export default function NewAppointmentModal({
   selectedTime,
 }: NewAppointmentModalProps) {
   const [selectedPatient, setSelectedPatient] = useState<UserType>(self);
+  const { data: users, isLoading } = useLinkedUsers();
 
   const formik = useFormik({
     initialValues: {
@@ -83,6 +86,10 @@ export default function NewAppointmentModal({
             </div>
           </div>
           <UsersList
+            id="patient"
+            users={users ?? []}
+            isLoading={isLoading}
+            size="sm"
             selectedUser={selectedPatient}
             onSelectionChange={setSelectedPatient}
           />

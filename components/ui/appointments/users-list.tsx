@@ -1,0 +1,155 @@
+import { UserType } from '@/models/User';
+import { useLinkedUsers } from '@/services/user';
+import {
+  Button,
+  Card,
+  CardBody,
+  cn,
+  Image,
+  Input,
+  ScrollShadow,
+} from '@heroui/react';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import NoResults from '../no-results';
+import { useState } from 'react';
+
+const SizeMap = {
+  sm: {
+    card: 'w-48',
+    image: 80,
+    name: 'text-large font-medium',
+  },
+  md: {
+    card: 'w-64',
+    image: 100,
+    name: 'text-large font-semibold',
+  },
+  lg: {
+    card: 'w-72',
+    image: 120,
+    name: 'text-large font-semibold',
+  },
+};
+
+export default function UsersList({
+  id,
+  users,
+  isLoading,
+  selectedUser,
+  size = 'md',
+  onSelectionChange,
+}: {
+  id: string;
+  users: UserType[];
+  isLoading?: boolean;
+  selectedUser: UserType;
+  size?: 'sm' | 'md' | 'lg';
+  onSelectionChange: (user: UserType) => void;
+}) {
+  const [query, setQuery] = useState('');
+  // TODO: Add a loading state
+  if (isLoading) return <div>Loading...</div>;
+
+  if (!users) return null;
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="xs:max-w-xs">
+        <Input
+          placeholder={`Search for a ${id}`}
+          startContent={<Icon icon="fluent:search-24-regular" width={18} />}
+          className="w-full"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+      </div>
+      <div className="flex gap-4">
+        <Card
+          isPressable
+          className={cn(
+            'no-scrollbar aspect-square rounded-medium border-small border-divider shadow-none',
+            SizeMap[size].card
+          )}
+        >
+          <CardBody className="items-center justify-center gap-4">
+            <div>
+              <Icon
+                icon="solar:add-circle-line-duotone"
+                width={60}
+                height={60}
+                className="text-default-500"
+              />
+            </div>
+            <div>
+              <h2 className="text-center text-large font-semibold text-primary">
+                New Patient
+              </h2>
+            </div>
+          </CardBody>
+        </Card>
+        <ScrollShadow orientation="horizontal" className="flex gap-4">
+          {users.filter((user) =>
+            user.name.toLowerCase().includes(query.toLowerCase())
+          ).length < 1 ? (
+            <div className="flex justify-center">
+              {/* TODO: This needs to be a changed */}
+              <NoResults message="No User Found" />
+            </div>
+          ) : (
+            users
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((user) => (
+                <Card
+                  isPressable
+                  key={user.uid}
+                  className={cn(
+                    'no-scrollbar rounded-medium border-small border-divider shadow-none',
+                    SizeMap[size].card,
+                    {
+                      'border-medium border-primary-400':
+                        user.uid === selectedUser.uid,
+                    }
+                  )}
+                  onPress={() => onSelectionChange(user)}
+                >
+                  <CardBody className="group relative items-center justify-center gap-4 overflow-hidden p-6">
+                    <div className="absolute right-2 top-2 opacity-0 transition-opacity group-hover:opacity-100">
+                      <Button
+                        isIconOnly
+                        variant="light"
+                        className="absolute right-1 top-1"
+                        radius="full"
+                        size="sm"
+                      >
+                        <Icon
+                          icon="solar:pen-new-round-line-duotone"
+                          width={18}
+                        />
+                      </Button>
+                    </div>
+                    <div>
+                      <Image
+                        src={user.image}
+                        alt={user.name}
+                        width={SizeMap[size].image}
+                        height={SizeMap[size].image}
+                        className="rounded-full bg-primary-200"
+                      />
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <h2 className={cn('text-center', SizeMap[size].name)}>
+                        {user.name}
+                      </h2>
+                      <p className="block text-center text-small font-light text-default-500">
+                        #{user.uid}
+                      </p>
+                    </div>
+                  </CardBody>
+                </Card>
+              ))
+          )}
+        </ScrollShadow>
+      </div>
+    </div>
+  );
+}

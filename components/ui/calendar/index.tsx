@@ -10,7 +10,7 @@ import { YearView } from './views/year';
 import NewAppointmentModal from './new';
 import { AppointmentType } from '@/models/Appointment';
 import { useCalendar } from './store';
-import { useSelf } from '@/services/user';
+import { useLinkedUsers, useSelf } from '@/services/user';
 
 interface CalendarProps {
   appointments: AppointmentType[];
@@ -25,6 +25,7 @@ export function Calendar({
 }: CalendarProps) {
   const { view, setView } = useCalendar();
   const { data: self } = useSelf();
+  const { data: linkedUsers } = useLinkedUsers();
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
@@ -117,6 +118,7 @@ export function Calendar({
           onOpenChange={setShowDialog}
           selectedDate={selectedDate}
           selectedTime={selectedTime}
+          users={linkedUsers ?? []}
         />
       )}
     </div>

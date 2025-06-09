@@ -24,6 +24,7 @@ import {
 } from '@/functions/server-actions/users';
 import { useDebounce } from 'react-haiku';
 import { UserRole, UserType } from '@/models/User';
+import UsersList from '@/components/ui/appointments/users-list';
 
 export default function UserSelection() {
   const { formik, session } = useForm();
@@ -40,6 +41,7 @@ export default function UserSelection() {
   const { data: users, isLoading } = useQuery<UserType[]>({
     queryKey: ['user', session?.user?.uid],
     queryFn: fetchFunctionMap[session?.user?.role as UserRole],
+    refetchOnWindowFocus: false,
   });
 
   const filteredUsers = useMemo(() => {
@@ -64,112 +66,36 @@ export default function UserSelection() {
           </div>
         ) : (
           <div className="flex flex-col gap-4">
-            <div className="xs:max-w-sm">
-              <Input
-                placeholder="Search for a user"
-                // icon={<Icon icon="tabler:search" />}
-                className="w-full"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-              />
-            </div>
-            {filteredUsers.length < 1 ? (
-              <div className="flex justify-center">
-                <NoResults message="No User Found" />
+            <UsersList
+              id="patient"
+              users={users ?? []}
+              size="sm"
+              selectedUser={formik.values.patient}
+              onSelectionChange={(user) => {
+                formik.setFieldValue('patient', user);
+              }}
+            />
+            {!isLoading && session.user.role === 'user' && (
+              <div>
+                Patient not shown?{' '}
+                <Link href="#">
+                  Register <Icon icon="tabler:chevron-right" />
+                </Link>
               </div>
-            ) : (
-              <>
-                <div className="mt-8 flex gap-4">
-                  <Card
-                    isPressable
-                    className={cn(
-                      'no-scrollbar min-w-64 rounded-medium border-small border-divider shadow-none sm:min-w-72'
-                    )}
-                    onPress={() => formik.setFieldValue('step', 7)}
-                  >
-                    <CardBody className="items-center gap-4 p-8">
-                      <div>
-                        <Icon
-                          icon="solar:add-circle-line-duotone"
-                          width={80}
-                          height={80}
-                          className="text-default-500"
-                        />
-                      </div>
-                      <div>
-                        <h2 className="text-center text-large font-semibold text-primary">
-                          Register New Patient
-                        </h2>
-                        <p className="text-small font-light text-default-500">
-                          Add a new patient to your list
-                        </p>
-                      </div>
-                    </CardBody>
-                  </Card>
-                  <ScrollShadow orientation="horizontal" className="flex gap-4">
-                    {filteredUsers
-                      .sort((a, b) => a.name.localeCompare(b.name))
-                      .map((user) => (
-                        <Card
-                          isPressable
-                          key={user.uid}
-                          className={cn(
-                            'no-scrollbar min-w-64 rounded-medium border-small border-divider shadow-none sm:min-w-72',
-                            {
-                              'border-medium border-primary-400':
-                                user.uid === formik.values.patient?.uid,
-                            }
-                          )}
-                          onPress={() => {
-                            formik.setFieldValue('patient', user);
-                          }}
-                        >
-                          <CardBody className="items-center gap-4 p-6">
-                            <div>
-                              <Image
-                                src={user.image}
-                                alt={user.name}
-                                width={100}
-                                height={100}
-                                className="rounded-full bg-slate-300"
-                              />
-                            </div>
-                            <div>
-                              <h2 className="text-center text-large font-semibold">
-                                {user.name}
-                              </h2>
-                              <p className="text-small font-light text-default-500">
-                                {user.email}
-                              </p>
-                            </div>
-                          </CardBody>
-                        </Card>
-                      ))}
-                  </ScrollShadow>
-                </div>
-                {!isLoading && session.user.role === 'user' && (
-                  <div>
-                    Patient not shown?{' '}
-                    <Link href="#">
-                      Register <Icon icon="tabler:chevron-right" />
-                    </Link>
-                  </div>
-                )}
-                <div className="mt-4">
-                  <Button
-                    color="primary"
-                    radius="lg"
-                    className="w-full xs:w-fit"
-                    endContent={<Icon icon="tabler:chevron-right" />}
-                    onPress={() => formik.setFieldValue('step', 2)}
-                    isDisabled={!formik.values.patient?.uid}
-                    variant={formik.values.patient ? 'solid' : 'flat'}
-                  >
-                    Continue
-                  </Button>
-                </div>
-              </>
             )}
+            <div className="mt-4">
+              <Button
+                color="primary"
+                radius="lg"
+                className="w-full xs:w-fit"
+                endContent={<Icon icon="tabler:chevron-right" />}
+                onPress={() => formik.setFieldValue('step', 2)}
+                isDisabled={!formik.values.patient?.uid}
+                variant={formik.values.patient ? 'solid' : 'flat'}
+              >
+                Continue
+              </Button>
+            </div>
           </div>
         )}
       </div>
