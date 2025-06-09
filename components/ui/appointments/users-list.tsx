@@ -1,5 +1,4 @@
 import { UserType } from '@/models/User';
-import { useLinkedUsers } from '@/services/user';
 import {
   Button,
   Card,
@@ -12,6 +11,8 @@ import {
 import { Icon } from '@iconify/react/dist/iconify.js';
 import NoResults from '../no-results';
 import { useState } from 'react';
+import { useDebounce } from 'react-haiku';
+import Skeleton from '../skeleton';
 
 const SizeMap = {
   sm: {
@@ -47,8 +48,7 @@ export default function UsersList({
   onSelectionChange: (user: UserType) => void;
 }) {
   const [query, setQuery] = useState('');
-  // TODO: Add a loading state
-  if (isLoading) return <div>Loading...</div>;
+  const debounce = useDebounce(query, 500);
 
   if (!users) return null;
 
@@ -63,93 +63,120 @@ export default function UsersList({
           onChange={(e) => setQuery(e.target.value)}
         />
       </div>
-      <div className="flex gap-4">
-        <Card
-          isPressable
-          className={cn(
-            'no-scrollbar aspect-square rounded-medium border-small border-divider shadow-none',
-            SizeMap[size].card
-          )}
-        >
-          <CardBody className="items-center justify-center gap-4">
-            <div>
-              <Icon
-                icon="solar:add-circle-line-duotone"
-                width={60}
-                height={60}
-                className="text-default-500"
-              />
-            </div>
-            <div>
-              <h2 className="text-center text-large font-semibold text-primary">
-                New Patient
-              </h2>
-            </div>
-          </CardBody>
-        </Card>
-        <ScrollShadow orientation="horizontal" className="flex gap-4">
-          {users.filter((user) =>
-            user.name.toLowerCase().includes(query.toLowerCase())
-          ).length < 1 ? (
-            <div className="flex justify-center">
-              {/* TODO: This needs to be a changed */}
-              <NoResults message="No User Found" />
-            </div>
-          ) : (
-            users
-              .sort((a, b) => a.name.localeCompare(b.name))
-              .map((user) => (
-                <Card
-                  isPressable
-                  key={user.uid}
-                  className={cn(
-                    'no-scrollbar rounded-medium border-small border-divider shadow-none',
-                    SizeMap[size].card,
-                    {
-                      'border-medium border-primary-400':
-                        user.uid === selectedUser.uid,
-                    }
-                  )}
-                  onPress={() => onSelectionChange(user)}
-                >
-                  <CardBody className="group relative items-center justify-center gap-4 overflow-hidden p-6">
-                    <div className="absolute right-2 top-2 opacity-0 transition-opacity group-hover:opacity-100">
-                      <Button
-                        isIconOnly
-                        variant="light"
-                        className="absolute right-1 top-1"
-                        radius="full"
-                        size="sm"
-                      >
-                        <Icon
-                          icon="solar:pen-new-round-line-duotone"
-                          width={18}
+      {isLoading ? (
+        <LoadingUsers />
+      ) : (
+        <div className="flex gap-4">
+          <Card
+            isPressable
+            className={cn(
+              'no-scrollbar aspect-square rounded-medium border-small border-divider shadow-none',
+              SizeMap[size].card
+            )}
+          >
+            <CardBody className="items-center justify-center gap-4">
+              <div>
+                <Icon
+                  icon="solar:add-circle-line-duotone"
+                  width={60}
+                  height={60}
+                  className="text-default-500"
+                />
+              </div>
+              <div>
+                <h2 className="text-center text-large font-semibold text-primary">
+                  New Patient
+                </h2>
+              </div>
+            </CardBody>
+          </Card>
+          <ScrollShadow orientation="horizontal" className="flex gap-4">
+            {users.filter((user) =>
+              user.name.toLowerCase().includes(debounce.toLowerCase())
+            ).length < 1 ? (
+              <div className="flex justify-center">
+                {/* TODO: This needs to be a changed */}
+                <NoResults message="No User Found" />
+              </div>
+            ) : (
+              users
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map((user) => (
+                  <Card
+                    isPressable
+                    key={user.uid}
+                    className={cn(
+                      'no-scrollbar rounded-medium border-small border-divider shadow-none',
+                      SizeMap[size].card,
+                      {
+                        'border-medium border-primary-400':
+                          user.uid === selectedUser.uid,
+                      }
+                    )}
+                    onPress={() => onSelectionChange(user)}
+                  >
+                    <CardBody className="group relative items-center justify-center gap-4 overflow-hidden p-6">
+                      <div className="absolute right-2 top-2 opacity-0 transition-opacity group-hover:opacity-100">
+                        <Button
+                          isIconOnly
+                          variant="light"
+                          className="absolute right-1 top-1"
+                          radius="full"
+                          size="sm"
+                        >
+                          <Icon
+                            icon="solar:pen-new-round-line-duotone"
+                            width={18}
+                          />
+                        </Button>
+                      </div>
+                      <div>
+                        <Image
+                          src={user.image}
+                          alt={user.name}
+                          width={SizeMap[size].image}
+                          height={SizeMap[size].image}
+                          className="rounded-full bg-primary-200"
                         />
-                      </Button>
-                    </div>
-                    <div>
-                      <Image
-                        src={user.image}
-                        alt={user.name}
-                        width={SizeMap[size].image}
-                        height={SizeMap[size].image}
-                        className="rounded-full bg-primary-200"
-                      />
-                    </div>
-                    <div className="flex flex-col items-center">
-                      <h2 className={cn('text-center', SizeMap[size].name)}>
-                        {user.name}
-                      </h2>
-                      <p className="block text-center text-small font-light text-default-500">
-                        #{user.uid}
-                      </p>
-                    </div>
-                  </CardBody>
-                </Card>
-              ))
-          )}
-        </ScrollShadow>
-      </div>
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <h2 className={cn('text-center', SizeMap[size].name)}>
+                          {user.name}
+                        </h2>
+                        <p className="block text-center text-small font-light text-default-500">
+                          #{user.uid}
+                        </p>
+                      </div>
+                    </CardBody>
+                  </Card>
+                ))
+            )}
+          </ScrollShadow>
+        </div>
+      )}
     </div>
   );
 }
+
+const LoadingUsers = () => {
+  return (
+    <>
+      {Array.from({ length: 5 }).map((_, index) => (
+        <Card
+          key={`skeleton-${index}`}
+          className="flex min-w-64 flex-row justify-between rounded-medium border-small border-divider p-3 shadow-none transition-all"
+        >
+          <CardBody className="items-center gap-2 p-8">
+            <div>
+              <Skeleton className="h-20 w-20 rounded-full" />
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <Skeleton className="h-6 w-28" />
+              <Skeleton className="h-4 w-40" />
+            </div>
+          </CardBody>
+        </Card>
+      ))}
+    </>
+  );
+};

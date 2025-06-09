@@ -1,36 +1,21 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import {
-  Button,
-  Card,
-  CardBody,
-  cn,
-  Image,
-  Input,
-  Link,
-  ScrollShadow,
-} from '@heroui/react';
+import { Button, Image, Link } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useQuery } from '@tanstack/react-query';
 
 import { useForm } from './context';
 import { LoadingUsers } from './loading-user';
 
-import NoResults from '@/components/ui/no-results';
 import {
   getAllPatients,
   getAllPatientsWithEmail,
 } from '@/functions/server-actions/users';
-import { useDebounce } from 'react-haiku';
 import { UserRole, UserType } from '@/models/User';
 import UsersList from '@/components/ui/appointments/users-list';
 
 export default function UserSelection() {
   const { formik, session } = useForm();
-
-  const [query, setQuery] = useState('');
-  const debounce = useDebounce(query, 500);
 
   const fetchFunctionMap: Record<string, () => Promise<UserType[]>> = {
     user: () => getAllPatientsWithEmail(session?.user?.email),
@@ -43,19 +28,6 @@ export default function UserSelection() {
     queryFn: fetchFunctionMap[session?.user?.role as UserRole],
     refetchOnWindowFocus: false,
   });
-
-  const filteredUsers = useMemo(() => {
-    if (!users) return [];
-    return users.filter((user) => {
-      if (query === '') return true;
-      return (
-        user?.name?.toLowerCase().includes(query.toLowerCase()) ||
-        user?.email?.toLowerCase().includes(query.toLowerCase()) ||
-        user?.phone?.toLowerCase().includes(query.toLowerCase()) ||
-        user.uid.toString().includes(query.toLowerCase())
-      );
-    });
-  }, [debounce, users]);
 
   return (
     <>
