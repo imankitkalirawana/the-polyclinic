@@ -17,8 +17,8 @@ import { LoadingUsers } from './loading-user';
 
 import NoResults from '@/components/ui/no-results';
 import { getAllDoctors } from '@/functions/server-actions/doctor';
-import useDebounce from '@/hooks/useDebounce';
 import { DoctorType } from '@/models/Doctor';
+import { useDebounce } from 'react-haiku';
 
 export default function DoctorSelection() {
   const { formik } = useForm();

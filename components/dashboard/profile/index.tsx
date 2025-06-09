@@ -18,16 +18,16 @@ import {
 } from '@heroui/react';
 import { useQuery } from '@tanstack/react-query';
 
-import { getSelf } from '@/app/dashboard/profile/helper';
 import { UserType } from '@/models/User';
+import { getSelf } from '@/functions/server-actions/user';
 
 export default function Profile() {
-  const { data } = useQuery({
+  const { data } = useQuery<UserType>({
     queryKey: ['self'],
-    queryFn: getSelf,
+    queryFn: () => getSelf(),
   });
 
-  const self: UserType = data?.user || {};
+  const self: UserType = data || ({} as UserType);
 
   const formik = useFormik({
     initialValues: {

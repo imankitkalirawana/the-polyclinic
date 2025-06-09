@@ -34,6 +34,7 @@ interface MonthViewProps {
 }
 
 const MAX_APPOINTMENTS_PER_DAY = 2;
+const POPOVER_DELAY = 200;
 
 export function MonthView({
   appointments,
@@ -94,7 +95,7 @@ export function MonthView({
                 'flex select-none flex-col justify-start border-b border-r p-1 last:border-r-0',
                 !isCurrentMonth && 'bg-default-100 text-default-500'
               )}
-              onDoubleClick={() => {
+              onClick={() => {
                 if (!isPopoverOpen) {
                   onTimeSlotClick(day);
                 }
@@ -112,11 +113,30 @@ export function MonthView({
                     <Appointment
                       appointment={appointment}
                       key={appointment.aid}
-                      onOpenChange={setIsPopoverOpen}
+                      onOpenChange={(open) => {
+                        if (open) {
+                          setIsPopoverOpen(true);
+                        } else {
+                          setTimeout(() => {
+                            setIsPopoverOpen(false);
+                          }, POPOVER_DELAY);
+                        }
+                      }}
                     />
                   ))}
                 {dayAppointments.length > maxAppointmentsToShow && (
-                  <Popover onOpenChange={setIsPopoverOpen}>
+                  <Popover
+                    onOpenChange={(open) => {
+                      // instantly open the popover but delay by 100ms when closing
+                      if (open) {
+                        setIsPopoverOpen(true);
+                      } else {
+                        setTimeout(() => {
+                          setIsPopoverOpen(false);
+                        }, POPOVER_DELAY);
+                      }
+                    }}
+                  >
                     <PopoverTrigger>
                       <button className="w-full truncate rounded-lg p-1 px-2 text-start text-tiny hover:bg-default-100">
                         {dayAppointments.length - maxAppointmentsToShow} more

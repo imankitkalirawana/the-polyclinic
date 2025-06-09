@@ -30,7 +30,7 @@ import FormatTimeInTable from '@/components/ui/format-time-in-table';
 import Skeleton from '@/components/ui/skeleton';
 import { redirectTo } from '@/functions/server-actions';
 import { getAllAppointments } from '@/functions/server-actions/appointment';
-import useDebounce from '@/hooks/useDebounce';
+import { useDebounce } from 'react-haiku';
 import { rowOptions } from '@/lib/config';
 import { capitalize } from '@/lib/utility';
 import { AppointmentType } from '@/models/Appointment';

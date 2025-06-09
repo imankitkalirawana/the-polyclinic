@@ -31,7 +31,7 @@ import { Icon } from '@iconify/react';
 
 import type { TableItem, TableProps, TableState } from './types';
 import { useMemoizedCallback } from './use-memoized-callback';
-import useDebounce from '@/hooks/useDebounce';
+import { useDebounce } from 'react-haiku';
 import { isAll } from './helper';
 
 export function Table<T extends TableItem>({

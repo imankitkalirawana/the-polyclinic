@@ -7,7 +7,7 @@ import { WeekView } from './views/week';
 import { DayView } from './views/day';
 import { ScheduleView } from './views/schedule';
 import { YearView } from './views/year';
-import { AppointmentDialog } from './dialog';
+import NewAppointmentModal from './new';
 import { AppointmentType } from '@/models/Appointment';
 import { useCalendar } from './store';
 
@@ -15,16 +15,15 @@ interface CalendarProps {
   appointments: AppointmentType[];
   currentDate: Date;
   onDateChange: (date: Date) => void;
-  onCreateAppointment: (date: Date, time?: string) => void;
 }
 
 export function Calendar({
   appointments,
   currentDate,
   onDateChange,
-  onCreateAppointment,
 }: CalendarProps) {
   const { view, setView } = useCalendar();
+
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [showDialog, setShowDialog] = useState(false);
@@ -33,15 +32,6 @@ export function Calendar({
     setSelectedDate(date);
     setSelectedTime(time || null);
     setShowDialog(true);
-  };
-
-  const handleCreateAppointment = () => {
-    if (selectedDate) {
-      onCreateAppointment(selectedDate, selectedTime || undefined);
-      setShowDialog(false);
-      setSelectedDate(null);
-      setSelectedTime(null);
-    }
   };
 
   const renderView = () => {
@@ -118,12 +108,11 @@ export function Calendar({
     <div className="flex h-[calc(100vh_-_60px)] max-h-[calc(100vh_-_60px)] flex-col overflow-hidden">
       <CalendarHeader currentDate={currentDate} onDateChange={onDateChange} />
       <div className="h-full flex-1">{renderView()}</div>
-      <AppointmentDialog
+      <NewAppointmentModal
         open={showDialog}
         onOpenChange={setShowDialog}
         selectedDate={selectedDate}
         selectedTime={selectedTime}
-        onCreateAppointment={handleCreateAppointment}
       />
     </div>
   );

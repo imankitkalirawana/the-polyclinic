@@ -10,17 +10,12 @@ export const GET = auth(async function GET(request: any) {
     const user = await User.findOne({
       email: request.auth?.user?.email,
     }).select('-password');
-    return NextResponse.json({
-      success: true,
-      user,
-    });
+
+    return NextResponse.json(user);
   } catch (error) {
     console.error(error);
     return NextResponse.json(
-      {
-        success: false,
-        message: 'Internal Server Error',
-      },
+      { message: 'Internal Server Error' },
       { status: 500 }
     );
   }
