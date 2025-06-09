@@ -13,7 +13,7 @@ import {
   ScrollShadow,
 } from '@heroui/react';
 import { useFormik } from 'formik';
-import UsersList from '../appointments/users-list';
+import UsersList from '../../appointments/users-list';
 import { UserType } from '@/models/User';
 import { useState } from 'react';
 import { useLinkedUsers } from '@/services/user';

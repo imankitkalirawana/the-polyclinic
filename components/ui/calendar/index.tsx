@@ -7,7 +7,7 @@ import { WeekView } from './views/week';
 import { DayView } from './views/day';
 import { ScheduleView } from './views/schedule';
 import { YearView } from './views/year';
-import NewAppointmentModal from './new';
+import NewAppointmentModal from './new/new';
 import { AppointmentType } from '@/models/Appointment';
 import { useCalendar } from './store';
 import { useLinkedUsers, useSelf } from '@/services/user';

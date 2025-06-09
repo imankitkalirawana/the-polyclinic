@@ -63,8 +63,8 @@ export default function UsersList({
           onChange={(e) => setQuery(e.target.value)}
         />
       </div>
-      {isLoading ? (
-        <LoadingUsers />
+      {!isLoading ? (
+        <LoadingUsers size={size} />
       ) : (
         <div className="flex gap-4">
           <Card
@@ -158,15 +158,18 @@ export default function UsersList({
   );
 }
 
-const LoadingUsers = () => {
+const LoadingUsers = ({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) => {
   return (
-    <>
+    <div className="flex gap-4 overflow-hidden">
       {Array.from({ length: 5 }).map((_, index) => (
         <Card
           key={`skeleton-${index}`}
-          className="flex min-w-64 flex-row justify-between rounded-medium border-small border-divider p-3 shadow-none transition-all"
+          className={cn(
+            'flex flex-row justify-between rounded-medium border-small border-divider p-3 shadow-none transition-all',
+            SizeMap[size].card
+          )}
         >
-          <CardBody className="items-center gap-2 p-8">
+          <CardBody className="items-center gap-2 overflow-hidden p-4">
             <div>
               <Skeleton className="h-20 w-20 rounded-full" />
             </div>
@@ -177,6 +180,6 @@ const LoadingUsers = () => {
           </CardBody>
         </Card>
       ))}
-    </>
+    </div>
   );
 };
