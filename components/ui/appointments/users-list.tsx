@@ -61,9 +61,10 @@ export default function UsersList({
           className="w-full"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          isDisabled={isLoading}
         />
       </div>
-      {!isLoading ? (
+      {isLoading ? (
         <LoadingUsers size={size} />
       ) : (
         <div className="flex gap-4">
@@ -165,7 +166,7 @@ const LoadingUsers = ({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) => {
         <Card
           key={`skeleton-${index}`}
           className={cn(
-            'flex flex-row justify-between rounded-medium border-small border-divider p-3 shadow-none transition-all',
+            'flex flex-row justify-between rounded-medium border-small border-divider p-3 shadow-none',
             SizeMap[size].card
           )}
         >
