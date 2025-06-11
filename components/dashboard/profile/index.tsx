@@ -18,16 +18,13 @@ import {
 } from '@heroui/react';
 import { useQuery } from '@tanstack/react-query';
 
-import { getSelf } from '@/app/dashboard/profile/helper';
 import { UserType } from '@/models/User';
+import { useSelf } from '@/services/user';
 
 export default function Profile() {
-  const { data } = useQuery({
-    queryKey: ['self'],
-    queryFn: getSelf,
-  });
+  const { data } = useSelf();
 
-  const self: UserType = data?.user || {};
+  const self: UserType = data || ({} as UserType);
 
   const formik = useFormik({
     initialValues: {
@@ -65,7 +62,7 @@ export default function Profile() {
           onSubmit={formik.handleSubmit}
         >
           <h2 className="font-semibold">Personal Information</h2>
-          <p className="mt-1 text-sm/6 text-default-600">
+          <p className="mt-1 text-small/6 text-default-600">
             This information can be used to identify you in the system.
           </p>
 
@@ -177,7 +174,7 @@ function PasswordForm({ email }: { email: string }) {
         onSubmit={formik.handleSubmit}
       >
         <h2 className="font-semibold">Security</h2>
-        <p className="mt-1 text-sm/6 text-default-600">
+        <p className="mt-1 text-small/6 text-default-600">
           Manage your account security settings.
         </p>
 
@@ -285,7 +282,7 @@ function DeleteAccountForm({ email }: { email: string }) {
     <>
       <div className="border-b border-default-900/10 pb-12">
         <h2 className="font-semibold">Danger Zone</h2>
-        <p className="mt-1 text-sm/6 text-default-600">
+        <p className="mt-1 text-small/6 text-default-600">
           Delete your account and all associated data.
         </p>
         <div className="mt-6 flex items-center justify-end gap-x-4">
@@ -308,10 +305,10 @@ function DeleteAccountForm({ email }: { email: string }) {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                <h3 className="text-lg font-medium leading-6 text-default-900">
+                <h3 className="leading-medium text-large font-medium text-default-900">
                   Delete Account
                 </h3>
-                <p className="mt-2 text-base font-normal text-default-500">
+                <p className="mt-2 text-medium font-normal text-default-500">
                   Your account will be deleted, along with all of its data.
                 </p>
                 <Alert

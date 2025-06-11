@@ -30,7 +30,7 @@ import FormatTimeInTable from '@/components/ui/format-time-in-table';
 import Skeleton from '@/components/ui/skeleton';
 import { redirectTo } from '@/functions/server-actions';
 import { getAllAppointments } from '@/functions/server-actions/appointment';
-import useDebounce from '@/hooks/useDebounce';
+import { useDebounce } from 'react-haiku';
 import { rowOptions } from '@/lib/config';
 import { capitalize } from '@/lib/utility';
 import { AppointmentType } from '@/models/Appointment';
@@ -164,10 +164,10 @@ export default function TabularView() {
             <>
               <div className="flex items-center gap-2">
                 <div className="flex flex-col">
-                  <p className="text-bold whitespace-nowrap text-sm capitalize">
+                  <p className="text-bold whitespace-nowrap text-small capitalize">
                     {appointment.patient.name}
                   </p>
-                  <p className="whitespace-nowrap text-xs capitalize text-default-400">
+                  <p className="whitespace-nowrap text-tiny capitalize text-default-400">
                     {appointment.patient.phone || 'N/A'}
                   </p>
                 </div>
@@ -181,7 +181,7 @@ export default function TabularView() {
               <FormatTimeInTable
                 date={appointment.date}
                 template="p"
-                className="text-xs text-default-400"
+                className="text-tiny text-default-400"
                 skeleton={<Skeleton className="h-4 w-20" />}
               />
             </div>
@@ -189,7 +189,7 @@ export default function TabularView() {
         case 'doctor.name':
           return (
             <div className="flex flex-col">
-              <p className="text-bold max-w-sm overflow-hidden text-ellipsis whitespace-nowrap text-sm capitalize text-default-400">
+              <p className="text-bold max-w-sm overflow-hidden text-ellipsis whitespace-nowrap text-small capitalize text-default-400">
                 {appointment.doctor?.name || 'N/A'}
               </p>
             </div>
@@ -197,7 +197,7 @@ export default function TabularView() {
         case 'patient.phone':
           return (
             <div className="flex flex-col">
-              <p className="text-bold max-w-sm overflow-hidden text-ellipsis whitespace-nowrap text-sm text-default-400">
+              <p className="text-bold max-w-sm overflow-hidden text-ellipsis whitespace-nowrap text-small text-default-400">
                 {appointment.patient?.phone || 'N/A'}
               </p>
             </div>
@@ -205,7 +205,7 @@ export default function TabularView() {
         case 'patient.email':
           return (
             <div className="flex flex-col">
-              <p className="text-bold max-w-sm overflow-hidden text-ellipsis whitespace-nowrap text-sm text-default-400">
+              <p className="text-bold max-w-sm overflow-hidden text-ellipsis whitespace-nowrap text-small text-default-400">
                 {appointment.patient?.email || 'N/A'}
               </p>
             </div>
@@ -222,7 +222,7 @@ export default function TabularView() {
                   <FormatTimeInTable
                     date={appointment.createdAt}
                     template="p"
-                    className="text-xs text-default-400"
+                    className="text-tiny text-default-400"
                     skeleton={<Skeleton className="h-4 w-20" />}
                   />
                 </>

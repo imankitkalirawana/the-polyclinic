@@ -5,9 +5,8 @@ import {
   QueryClient,
 } from '@tanstack/react-query';
 
-import { getSelf } from './helper';
-
 import Profile from '@/components/dashboard/profile';
+import { useSelf } from '@/services/user';
 
 export const metadata: Metadata = {
   title: 'Profile',
@@ -17,7 +16,7 @@ export default async function ProfilePage() {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ['self'],
-    queryFn: () => getSelf(),
+    queryFn: () => useSelf(),
   });
 
   return (

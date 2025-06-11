@@ -49,7 +49,7 @@ export const sidebarContent = (user: UserType) => (
       />
       <div className="flex flex-col items-center">
         <h6 className="font-medium capitalize">{user.name}</h6>
-        <p className="text-sm capitalize text-default-500">
+        <p className="text-small capitalize text-default-500">
           {user.gender ? `${user.gender}` : ''}
         </p>
       </div>
@@ -97,7 +97,7 @@ export const sidebarContent = (user: UserType) => (
     <Tabs size="sm" className="flex flex-col gap-2 p-4">
       <Tab title="Patient Details" key="patient-details">
         <div className="flex flex-col gap-2">
-          <div className="flex items-center justify-between gap-4 text-sm">
+          <div className="flex items-center justify-between gap-4 text-small">
             <div className="flex items-center gap-2">
               <div className="rounded-medium bg-orange-200 p-[5px] text-orange-400">
                 <Icon icon="solar:hashtag-circle-bold" width="24" />
@@ -109,7 +109,7 @@ export const sidebarContent = (user: UserType) => (
             </span>
           </div>
           <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20"></div>
-          <div className="flex items-center justify-between gap-4 text-sm">
+          <div className="flex items-center justify-between gap-4 text-small">
             <div className="flex items-center gap-2">
               <div className="rounded-medium bg-pink-200 p-[5px] text-pink-400">
                 <Icon icon="material-symbols:abc-rounded" width="24" />
@@ -121,7 +121,7 @@ export const sidebarContent = (user: UserType) => (
             </span>
           </div>
           <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20"></div>
-          <div className="flex items-center justify-between gap-4 text-sm">
+          <div className="flex items-center justify-between gap-4 text-small">
             <div className="flex items-center gap-2">
               <div className="rounded-medium bg-blue-200 p-[5px] text-blue-400">
                 <Icon icon="uim:calender" width="24" height="24" />

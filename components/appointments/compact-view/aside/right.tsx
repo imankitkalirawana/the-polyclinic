@@ -22,7 +22,7 @@ export default function AsideRight() {
   return (
     <>
       <div className="h-full w-fit px-4">
-        <Card className="mt-4 w-full border border-divider bg-default-50 shadow-none">
+        <Card className="mt-4 w-full border-small border-divider bg-default-50 shadow-none">
           <CardBody className="flex flex-col gap-4 p-0">
             <Calendar appointments={appointments} />
             {appointments.filter(

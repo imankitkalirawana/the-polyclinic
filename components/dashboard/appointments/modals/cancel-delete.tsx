@@ -21,7 +21,7 @@ export default function CancelDeleteAppointment({
 
   const body = React.useMemo(
     () => (
-      <Card className="w-full border border-divider bg-default-50 shadow-none">
+      <Card className="w-full border-small border-divider bg-default-50 shadow-none">
         <CardBody className="flex flex-col gap-4">
           <div className="flex items-center gap-4">
             <div className="rounded-medium bg-orange-100 p-2 text-orange-500">

@@ -3,16 +3,18 @@
 import bcrypt from 'bcryptjs';
 
 import { connectDB } from '../db';
-import { generateOtp } from '../functions';
 import { sendHTMLEmail } from './email';
 
-import { APP_INFO } from '@/lib/config';
+import { API_BASE_URL, APP_INFO } from '@/lib/config';
 import Otp from '@/models/Otp';
 import User from '@/models/User';
 import { OtpEmail, WelcomeUser } from '@/templates/email';
 import { Gender } from '../interface';
 import { AuthError } from 'next-auth';
 import { signIn } from '@/auth';
+import { generateOtp } from '@/functions/server-actions';
+import axios from 'axios';
+import { cookies } from 'next/headers';
 
 export const sendOTP = async ({
   email,
@@ -95,30 +97,6 @@ export const verifyOTP = async ({
   return {
     success: true,
     message: 'Verification successful',
-  };
-};
-
-export const updatePassword = async ({
-  email,
-  password,
-}: {
-  email: string;
-  password: string;
-}) => {
-  await connectDB();
-  const user = await User.findOne({ email });
-  if (!user) {
-    return {
-      success: false,
-      message: 'User not Found',
-    };
-  }
-  const hashedPassword = await bcrypt.hash(password, 12);
-  user.password = hashedPassword;
-  await user.save();
-  return {
-    success: true,
-    message: 'Password updated successfully',
   };
 };
 

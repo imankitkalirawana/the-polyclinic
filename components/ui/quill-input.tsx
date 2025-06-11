@@ -32,14 +32,14 @@ export default function QuillInput({
     <div>
       <div
         className={cn(
-          'relative rounded-2xl bg-default-100 p-4 py-2 transition-all hover:bg-default-200',
+          'relative rounded-medium bg-default-100 p-4 py-2 transition-all hover:bg-default-200',
           { 'pt-0': isFocused || value }
         )}
       >
         <label
           htmlFor={id}
-          className={cn('text-sm text-default-500 transition-all', {
-            'text-xs': isFocused || value,
+          className={cn('text-small text-default-500 transition-all', {
+            'text-tiny': isFocused || value,
           })}
         >
           {label}
@@ -56,7 +56,7 @@ export default function QuillInput({
           onBlur={() => setIsFocused(false)}
         />
       </div>
-      <p className="pl-2 text-xs text-default-400">{description}</p>
+      <p className="pl-2 text-tiny text-default-400">{description}</p>
     </div>
   );
 }

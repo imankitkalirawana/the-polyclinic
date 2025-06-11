@@ -1,11 +1,24 @@
-import React from 'react';
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from '@tanstack/react-query';
+import Appointments from '@/components/appointments/all';
+import { getAllAppointments } from '../helper';
 
-import TabularView from '@/components/appointments/tabular-view';
+export default async function AppointmentsPage() {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ['appointments'],
+    queryFn: () => getAllAppointments(),
+    initialData: [],
+  });
 
-export default async function Page() {
   return (
     <>
-      <TabularView />
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <Appointments />
+      </HydrationBoundary>
     </>
   );
 }

@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { Provider as ReduxProvider } from 'react-redux';
 import { Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import NextTopLoader from 'nextjs-toploader';
@@ -10,8 +9,6 @@ import { HeroUIProvider, Spinner, ToastProvider } from '@heroui/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Toaster } from 'sonner';
-
-import { store } from '@/store';
 
 declare module '@react-types/shared' {
   interface RouterConfig {
@@ -61,7 +58,7 @@ export function Providers({
             style: { borderRadius: 'var(--heroui-radius-large)' },
             classNames: {
               description: '!text-[inherit]',
-              toast: 'w-full max-w-sm group bg-red-500 p-2 text-xs',
+              toast: 'w-full max-w-sm group bg-red-500 p-2 text-tiny',
               error: '!text-danger-500 !bg-danger-50 !border-danger-100',
               success: '!text-success-500 !bg-success-50 !border-success-100',
               warning: '!text-warning-500 !bg-warning-50 !border-warning-100',
@@ -84,7 +81,7 @@ export function Providers({
             easing="ease"
             color="hsl(var(--heroui-primary))"
           />
-          <ReduxProvider store={store}>{children}</ReduxProvider>
+          {children}
           <ReactQueryDevtools initialIsOpen={false} />
         </SessionProvider>
       </HeroUIProvider>

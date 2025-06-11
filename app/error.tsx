@@ -45,7 +45,7 @@ export default function Error({
       >
         <div className="w-full">
           <div className="mx-auto flex max-w-lg flex-col items-center text-center">
-            <p className="text-sm font-medium uppercase text-primary">
+            <p className="text-small font-medium uppercase text-primary">
               {code} error
             </p>
             <h1 className="mt-3 text-2xl font-semibold md:text-3xl">{title}</h1>

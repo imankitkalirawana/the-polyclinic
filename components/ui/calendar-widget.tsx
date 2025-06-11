@@ -115,7 +115,7 @@ function Appointment({
           </Chip>
         )}
         <div className="flex flex-1 items-center justify-between">
-          <div className="flex flex-col items-start text-xs">
+          <div className="flex flex-col items-start text-tiny">
             <h3 className="line-clamp-1 font-semibold capitalize text-default-900">
               {appointment.patient.name}
             </h3>

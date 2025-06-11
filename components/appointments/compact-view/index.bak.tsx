@@ -229,7 +229,7 @@ export default function CompactView({ session }: { session: any }) {
                     <NoResults />
                   ) : (
                     <div className="flex flex-col gap-2">
-                      <p className="pl-2 text-xs text-default-500">
+                      <p className="pl-2 text-tiny text-default-500">
                         Total {sortedItems.length} Appointments
                       </p>
                       <Accordion
@@ -284,7 +284,7 @@ export default function CompactView({ session }: { session: any }) {
                                   <div className="hidden flex-col gap-2 sm:flex">
                                     <div className="flex min-w-24 max-w-24 flex-col gap-4 sm:min-w-40 sm:max-w-40">
                                       <div className="flex-col gap-4">
-                                        <h4 className="text-xs text-default-500">
+                                        <h4 className="text-tiny text-default-500">
                                           On
                                         </h4>
                                         <p className="whitespace-nowrap font-semibold">
@@ -292,7 +292,7 @@ export default function CompactView({ session }: { session: any }) {
                                         </p>
                                       </div>
                                       <div className="flex flex-col gap-1">
-                                        <h4 className="text-xs text-default-500">
+                                        <h4 className="text-tiny text-default-500">
                                           At
                                         </h4>
                                         <p className="whitespace-nowrap font-semibold">
@@ -426,7 +426,7 @@ export type CellValueProps = React.HTMLAttributes<HTMLDivElement> & {
 const CellValue = React.forwardRef<HTMLDivElement, CellValueProps>(
   ({ label, value, children, ...props }, ref) => (
     <div ref={ref} className="flex flex-col py-1 sm:py-2" {...props}>
-      <div className="text-xs text-default-500">{label}</div>
+      <div className="text-tiny text-default-500">{label}</div>
       <div className="text-small font-medium">{value || children}</div>
     </div>
   )

@@ -38,7 +38,7 @@ export default function SummaryModal() {
                 />
               </div>
               <h3>Appointment Summary</h3>
-              <p className="text-center text-xs font-light text-default-500">
+              <p className="text-center text-tiny font-light text-default-500">
                 Please check the details below before proceeding.
               </p>
             </ModalHeader>

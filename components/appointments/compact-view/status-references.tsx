@@ -25,7 +25,7 @@ export default function StatusReferences() {
               getAppointmentStyles(status as any).avatarBg
             )}
           />
-          <span className="text-sm capitalize text-default-700">
+          <span className="text-small capitalize text-default-700">
             {status.split('-').join(' ')}
           </span>
         </div>
