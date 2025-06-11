@@ -4,15 +4,11 @@ import {
   Card,
   CardBody,
   CardHeader,
-  Avatar,
-  Chip,
   Divider,
   Progress,
   ProgressProps,
   Button,
-  Calendar,
   Image,
-  CardFooter,
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
@@ -26,7 +22,7 @@ import { getAppointmentWithAID } from '@/functions/server-actions/appointment';
 import { AppointmentType } from '@/models/Appointment';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { CellRenderer } from '@/components/ui/cell-renderer';
-import { format, formatDate } from 'date-fns';
+import { format } from 'date-fns';
 
 interface AppointmentProps {
   aid: number;
@@ -368,7 +364,7 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                     icon="solar:clock-circle-linear"
                     value={
                       appointment.createdAt
-                        ? formatDate(new Date(appointment.createdAt), 'PPP')
+                        ? format(new Date(appointment.createdAt), 'PPP')
                         : 'N/A'
                     }
                     classNames={{ icon: 'text-pink-500 bg-pink-50' }}
@@ -378,7 +374,7 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                     icon="solar:sort-by-time-broken"
                     value={
                       appointment.updatedAt
-                        ? formatDate(new Date(appointment.updatedAt), 'PPP')
+                        ? format(new Date(appointment.updatedAt), 'PPP')
                         : 'N/A'
                     }
                     classNames={{ icon: 'text-green-500 bg-green-50 ' }}
