@@ -79,21 +79,21 @@ export default function Appointment({ aid, session }: AppointmentProps) {
               <span>#{appointment.aid}</span>
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 md:flex-wrap">
             {renderChip({ item: appointment.status })}
             <CellRenderer
               icon="solar:calendar-bold-duotone"
               value={format(new Date(appointment.date), 'EEEE, MMM d, yyyy ')}
               classNames={{ icon: 'text-gray-500 bg-gray-100' }}
               iconSize={18}
-              className="rounded-lg bg-gray-100 px-2 py-1"
+              className="rounded-lg px-2 py-1"
             />
             <CellRenderer
               icon="solar:clock-circle-linear"
               value={format(new Date(appointment.date), 'h:mm a')}
               classNames={{ icon: 'text-gray-500 bg-gray-100' }}
               iconSize={18}
-              className="rounded-lg bg-gray-100 px-2 py-1"
+              className="rounded-lg px-2 py-1"
             />
             <CellRenderer
               icon="solar:tag-bold"
@@ -103,7 +103,7 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                 icon: 'text-primary bg-primary-50',
                 value: 'text-primary',
               }}
-              className="rounded-lg bg-gray-100 px-2 py-1"
+              className="rounded-lg px-2 py-1"
             />
           </div>
         </div>
@@ -136,7 +136,7 @@ export default function Appointment({ aid, session }: AppointmentProps) {
           </Dropdown>
         </div>
       </nav>
-      <div className="mb-20 flex w-full gap-6">
+      <div className="mb-20 flex w-full flex-col gap-8 lg:flex-row">
         <div className="flex flex-1 flex-col gap-4">
           {/* {pateint card} */}
           <Card className="mx-auto w-full max-w-md">
