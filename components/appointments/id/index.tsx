@@ -13,6 +13,7 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  Chip,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useQuery } from '@tanstack/react-query';
@@ -23,6 +24,7 @@ import { AppointmentType } from '@/models/Appointment';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { format } from 'date-fns';
+import ActivityTimeline from '@/components/ui/activity/timeline';
 
 interface AppointmentProps {
   aid: number;
@@ -75,52 +77,59 @@ export default function Appointment({ aid, session }: AppointmentProps) {
               <span>#{appointment.aid}</span>
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-2 md:flex-wrap">
+          <div className="flex flex-wrap items-center gap-2">
             {renderChip({ item: appointment.status })}
-            <CellRenderer
-              icon="solar:calendar-bold-duotone"
-              value={format(new Date(appointment.date), 'EEEE, MMM d, yyyy ')}
-              classNames={{ icon: 'text-gray-500 bg-gray-100' }}
-              iconSize={18}
-              className="rounded-lg px-2 py-1"
-            />
-            <CellRenderer
-              icon="solar:clock-circle-linear"
-              value={format(new Date(appointment.date), 'h:mm a')}
-              classNames={{ icon: 'text-gray-500 bg-gray-100' }}
-              iconSize={18}
-              className="rounded-lg px-2 py-1"
-            />
-            <CellRenderer
-              icon="solar:tag-bold"
-              iconSize={18}
-              value={appointment.type}
-              classNames={{
-                icon: 'text-primary bg-primary-50',
-                value: 'text-primary',
-              }}
-              className="rounded-lg px-2 py-1"
-            />
+            <Chip
+              color="default"
+              startContent={
+                <Icon icon="solar:calendar-bold-duotone" width={18} />
+              }
+              variant="flat"
+            >
+              {format(new Date(appointment.date), 'EEEE, MMM d, yyyy ')}
+            </Chip>
+            <Chip
+              color="default"
+              startContent={
+                <Icon icon="solar:clock-circle-bold-duotone" width={18} />
+              }
+              variant="flat"
+            >
+              {format(new Date(appointment.date), 'h:mm a')}
+            </Chip>
+            <Chip
+              color="success"
+              startContent={<Icon icon="solar:tag-bold-duotone" width={18} />}
+              variant="flat"
+            >
+              {appointment.type}
+            </Chip>
           </div>
         </div>
         <div className="flex items-center">
           <Button
             color="primary"
+            size="sm"
             variant="light"
-            startContent={<Icon icon="solar:printer-outline" width="18" />}
+            startContent={
+              <Icon icon="solar:printer-2-bold-duotone" width="16" />
+            }
           >
             Print
           </Button>
           <Button
             color="primary"
             variant="light"
-            startContent={<Icon icon="solar:share-bold" width="18" />}
+            size="sm"
+            startContent={<Icon icon="solar:share-bold-duotone" width="16" />}
           >
             Share
           </Button>
-          <Dropdown>
+          <Dropdown placement="bottom-end">
             <DropdownTrigger>
-              <Icon icon="entypo:dots-three-vertical" width="18" />
+              <Button variant="light" size="sm" isIconOnly>
+                <Icon icon="entypo:dots-three-vertical" width="18" />
+              </Button>
             </DropdownTrigger>
             <DropdownMenu aria-label="Static Actions">
               <DropdownItem key="copy">Copy link</DropdownItem>
@@ -134,17 +143,20 @@ export default function Appointment({ aid, session }: AppointmentProps) {
       </nav>
       <div className="mb-20 flex w-full flex-col gap-8 lg:flex-row">
         <div className="flex flex-1 flex-col gap-4">
-          {/* {pateint card} */}
+          {/* {patient card} */}
           <Card className="mx-auto w-full max-w-md">
-            <CardHeader className="flex flex-row justify-between text-center">
-              <h2 className="pl-6 text-xl text-black">Pateint Details</h2>
-              <Icon
-                icon="tabler:edit"
-                width="24"
-                height="24"
-                className="text-gray-400"
-              />
-            </CardHeader>
+            <CustomCardHeader
+              title="Patient Details"
+              endContent={
+                <Button variant="light" color="default" isIconOnly size="sm">
+                  <Icon
+                    icon="solar:pen-new-square-line-duotone"
+                    width="20"
+                    className="text-gray-400"
+                  />
+                </Button>
+              }
+            />
             <Divider className="border-dashed border-divider" />
 
             <CardBody>
@@ -152,7 +164,10 @@ export default function Appointment({ aid, session }: AppointmentProps) {
               <div className="flex items-start gap-4 pb-4">
                 <div className="flex-shrink-0">
                   <Image
-                    src={'/assets/placeholder-avatar.jpeg'}
+                    src={
+                      appointment.patient.image ||
+                      '/assets/placeholder-avatar.jpeg'
+                    }
                     alt={appointment.patient.name}
                     width={100}
                     height={100}
@@ -173,7 +188,7 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                     {(appointment.patient.gender ||
                       appointment.patient.age) && (
                       <CellRenderer
-                        icon="solar:user-line-duotone"
+                        icon="solar:user-bold-duotone"
                         value={[
                           appointment.patient.gender || appointment.patient.age
                             ? [
@@ -193,7 +208,7 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                     )}
                     {appointment.patient.phone && (
                       <CellRenderer
-                        icon="solar:phone-linear"
+                        icon="solar:phone-bold-duotone"
                         value={[
                           appointment.patient.phone
                             ? appointment.patient.phone
@@ -208,7 +223,7 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                     )}
 
                     <CellRenderer
-                      icon="solar:letter-bold"
+                      icon="solar:letter-bold-duotone"
                       value={appointment.patient.email}
                       classNames={{
                         icon: 'text-default-500 ',
@@ -223,8 +238,8 @@ export default function Appointment({ aid, session }: AppointmentProps) {
 
               {/* View Full Profile Link */}
               <div className="mt-2 flex justify-end">
-                <Button variant="flat" color="warning">
-                  View full Profile
+                <Button color="default" variant="light">
+                  View full profile
                 </Button>
               </div>
             </CardBody>
@@ -232,9 +247,7 @@ export default function Appointment({ aid, session }: AppointmentProps) {
           {/* {doctor card} */}
           {!!appointment.doctor && (
             <Card className="mx-auto w-full max-w-md">
-              <CardHeader className="flex flex-row items-center justify-between">
-                <h2 className="pl-6 text-xl text-black">Doctor Details</h2>
-              </CardHeader>
+              <CustomCardHeader title="Doctor Details" endContent={''} />
               <Divider className="border-dashed border-divider" />
 
               <CardBody>
@@ -242,7 +255,10 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                 <div className="flex items-start gap-4 pb-4">
                   <div className="flex-shrink-0">
                     <Image
-                      src={'/assets/placeholder-avatar.jpeg'}
+                      src={
+                        appointment.doctor.image ||
+                        '/assets/placeholder-avatar.jpeg'
+                      }
                       alt={appointment.doctor?.name}
                       width={100}
                       height={100}
@@ -262,7 +278,7 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                     <div>
                       {appointment.doctor.phone && (
                         <CellRenderer
-                          icon="solar:map-point-bold"
+                          icon="solar:phone-bold-duotone"
                           value={[
                             appointment.doctor.phone
                               ? appointment.doctor.phone
@@ -277,7 +293,7 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                       )}
 
                       <CellRenderer
-                        icon="solar:letter-bold"
+                        icon="solar:letter-bold-duotone"
                         value={appointment.doctor?.email}
                         classNames={{
                           icon: 'text-default-500 ',
@@ -287,7 +303,7 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                       />
                       {appointment.doctor.sitting && (
                         <CellRenderer
-                          icon="mdi:location"
+                          icon="solar:map-point-bold-duotone"
                           value={[
                             appointment.doctor.sitting
                               ? appointment.doctor.sitting
@@ -313,15 +329,20 @@ export default function Appointment({ aid, session }: AppointmentProps) {
               </CardBody>
             </Card>
           )}
+          <Card>
+            <CustomCardHeader title="Activity" endContent={''} />
+            <Divider className="border-dashed border-divider" />
+            <CardBody className="p-6">
+              <div>
+                <ActivityTimeline aid={appointment.aid} schema="appointment" />
+              </div>
+            </CardBody>
+          </Card>
         </div>
         <div className="flex flex-[2] flex-col gap-4">
           {/* first card  second column*/}
           <Card>
-            <CardHeader>
-              <h2 className="pl-6 text-xl text-black">
-                Appointment Information
-              </h2>
-            </CardHeader>
+            <CustomCardHeader title="Appointment Details" endContent={''} />
             <Divider className="border-dashed border-divider" />
             <CardBody className="space-y-4 p-6">
               <div className="flex max-w-xl items-center justify-between">
@@ -337,47 +358,29 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                   />
                   <CellRenderer
                     label="Appointment Type"
-                    icon="solar:stethoscope-bold"
+                    icon="solar:stethoscope-bold-duotone"
                     value={appointment.type}
                     classNames={{
                       icon: 'text-primary bg-primary-50',
-                    }}
-                  />
-                  <CellRenderer
-                    label="created by"
-                    icon="solar:people-nearby-bold"
-                    value={appointment.createdBy || 'System'}
-                    classNames={{
-                      icon: 'text-purple-500 bg-purple-50',
                     }}
                   />
                 </div>
                 <div>
                   <CellRenderer
                     label="Mode"
-                    icon="solar:hospital-bold"
+                    icon="solar:hospital-bold-duotone"
                     value={appointment.additionalInfo.type}
                     classNames={{ icon: 'text-blue-500 bg-blue-50' }}
                   />
                   <CellRenderer
                     label="Created At"
-                    icon="solar:clock-circle-linear"
+                    icon="solar:clock-circle-bold-duotone"
                     value={
                       appointment.createdAt
                         ? format(new Date(appointment.createdAt), 'PPP')
                         : 'N/A'
                     }
                     classNames={{ icon: 'text-pink-500 bg-pink-50' }}
-                  />
-                  <CellRenderer
-                    label="Updated At"
-                    icon="solar:sort-by-time-broken"
-                    value={
-                      appointment.updatedAt
-                        ? format(new Date(appointment.updatedAt), 'PPP')
-                        : 'N/A'
-                    }
-                    classNames={{ icon: 'text-green-500 bg-green-50 ' }}
                   />
                 </div>
               </div>
@@ -408,7 +411,7 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                 />
                 <CellRenderer
                   label="Description"
-                  icon="solar:list-up-outline"
+                  icon="solar:list-up-bold-duotone"
                   value={
                     appointment.additionalInfo.description ||
                     'No description provided.'
@@ -420,15 +423,13 @@ export default function Appointment({ aid, session }: AppointmentProps) {
           </Card>
           {/* last card */}
           <Card>
-            <CardHeader className="pl-8 text-xl text-black">
-              Additional Information
-            </CardHeader>
+            <CustomCardHeader title="Additional Information" endContent={''} />
             <Divider className="border-dashed border-divider" />
             <CardBody className="space-y-4 p-6">
               <div>
                 <CellRenderer
-                  label="Symptoms"
-                  icon="solar:notes-bold"
+                  label=" Notes"
+                  icon="solar:notes-bold-duotone"
                   value={
                     appointment.additionalInfo.notes ||
                     'No additional information provided.'
@@ -437,7 +438,7 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                 />
                 <CellRenderer
                   label=" Pre-appointment Instructions"
-                  icon="solar:list-check-minimalistic-bold"
+                  icon="solar:list-check-minimalistic-bold-duotone"
                   value={
                     appointment.additionalInfo.instructions ||
                     'No additional information provided.'
@@ -449,24 +450,26 @@ export default function Appointment({ aid, session }: AppointmentProps) {
           </Card>
         </div>
       </div>
-      <footer className="fixed bottom-0 left-0 w-full border-t bg-background/30 px-8 shadow-md backdrop-blur">
+      <footer className="fixed bottom-0 left-0 z-20 w-full border-t bg-background/30 px-8 shadow-md backdrop-blur">
         <div className="m-4 flex justify-between">
           <Button
             color="default"
             variant="flat"
-            startContent={<Icon icon="solar:calendar-add-bold" width="24" />}
+            startContent={
+              <Icon icon="solar:calendar-add-bold-duotone" width="24" />
+            }
           >
             Add to Calender
           </Button>
           <div className="flex items-center">
             <CellRenderer
-              icon="solar:bell-bing-bold"
+              icon="solar:bell-bing-bold-duotone"
               value={''}
               classNames={{ icon: 'text-gray-500 bg-gray-300' }}
               className="px-2 py-1"
             />
             <CellRenderer
-              icon="solar:shield-cross-bold"
+              icon="solar:close-circle-bold-duotone"
               value={''}
               classNames={{ icon: 'text-red-500 bg-red-200' }}
               className="px-2 py-1"
@@ -474,7 +477,9 @@ export default function Appointment({ aid, session }: AppointmentProps) {
             <Button
               color="warning"
               variant="flat"
-              startContent={<Icon icon="solar:calendar-bold" width="24" />}
+              startContent={
+                <Icon icon="solar:calendar-bold-duotone" width="24" />
+              }
             >
               Reschedule
             </Button>
@@ -482,5 +487,21 @@ export default function Appointment({ aid, session }: AppointmentProps) {
         </div>
       </footer>
     </div>
+  );
+}
+function CustomCardHeader({
+  title,
+  endContent,
+}: {
+  title: string;
+  endContent?: React.ReactNode;
+}) {
+  return (
+    <>
+      <CardHeader className="flex flex-row justify-between text-center">
+        <h2 className="pl-2 text-xl text-black">{title}</h2>
+        {endContent}
+      </CardHeader>
+    </>
   );
 }
