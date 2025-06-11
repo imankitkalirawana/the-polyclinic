@@ -49,6 +49,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (typeof credentials.password !== 'string') {
           throw new ErrorMessage('Invalid Email/Password');
         }
+
         const isValid = await bcrypt.compare(
           credentials!.password,
           user.password
@@ -94,7 +95,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     jwt({ token, user }) {
       if (user) {
         token.role = user.role;
-        token.id = user._id;
+        token.id = user._id.toString();
         token.uid = user.uid;
         token.image = user.image || '';
       }
@@ -102,7 +103,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     session({ session, token }) {
       session.user.role = token.role;
-      session.user.id = token.id as string;
+      session.user.id = token.id.toString();
       session.user.uid = token.uid as number;
       session.user.image = token.image as string;
       return session;

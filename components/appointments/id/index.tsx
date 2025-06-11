@@ -23,13 +23,16 @@ import { AppointmentType } from '@/models/Appointment';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { format } from 'date-fns';
+import { useSession } from 'next-auth/react';
 
 interface AppointmentProps {
   aid: number;
   session: any;
 }
 
-export default function Appointment({ aid, session }: AppointmentProps) {
+export default function Appointment({ aid }: AppointmentProps) {
+  const { data: session } = useSession();
+
   const {
     data: appointment,
     isError,

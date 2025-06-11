@@ -113,12 +113,10 @@ export function Calendar({
       <div className="h-full flex-1">{renderView()}</div>
       {self && (
         <NewAppointmentModal
-          self={self}
           open={showDialog}
           onOpenChange={setShowDialog}
           selectedDate={selectedDate}
           selectedTime={selectedTime}
-          users={linkedUsers ?? []}
         />
       )}
     </div>

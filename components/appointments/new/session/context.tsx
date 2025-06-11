@@ -64,7 +64,12 @@ export const FormProvider = ({
 }) => {
   const formik = useFormik<AppointmentForm>({
     initialValues: {
-      patient: {} as UserType,
+      patient: {
+        uid: session?.user?.uid,
+        name: session?.user?.name,
+        email: session?.user?.email,
+        image: session?.user?.image,
+      } as UserType,
       doctor: {} as DoctorType,
       appointment: {} as AppointmentType,
       date: new Date(),
@@ -75,6 +80,7 @@ export const FormProvider = ({
       },
       step: 1,
     },
+    enableReinitialize: true,
     onSubmit: async (values) => {
       await axios
         .post('/api/v1/appointments', {
@@ -111,6 +117,8 @@ export const FormProvider = ({
         });
     },
   });
+
+  console.log(formik.values);
 
   const register = useFormik<RegisterFormType>({
     initialValues: {
