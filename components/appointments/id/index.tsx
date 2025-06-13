@@ -30,12 +30,30 @@ import ActivityTimeline from '@/components/ui/activity/timeline';
 import CancelDeleteAppointment from '@/components/dashboard/appointments/modals/cancel-delete';
 import RescheduleAppointment from '@/components/dashboard/appointments/modals/reschedule'; // Ensure this path is correct
 import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
+
+const progress: Record<
+  string,
+  {
+    value: number;
+    color: ProgressProps['color'];
+  }
+> = {
+  booked: {
+    value: 10,
+    color: 'primary',
+  },
+  confirmed: {
+    value: 50,
+    color: 'success',
+  },
+};
 interface AppointmentProps {
   aid: number;
   session: any;
 }
 
 export default function Appointment({ aid, session }: AppointmentProps) {
+  const { action, setAction, setSelected } = useAppointmentStore();
   const {
     data: appointment,
     isError,
@@ -54,24 +72,7 @@ export default function Appointment({ aid, session }: AppointmentProps) {
   if (!appointment) {
     return <NoResults message="Appointment Not Found" />;
   }
-  const progress: Record<
-    string,
-    {
-      value: number;
-      color: ProgressProps['color'];
-    }
-  > = {
-    booked: {
-      value: 10,
-      color: 'primary',
-    },
-    confirmed: {
-      value: 50,
-      color: 'success',
-    },
-  };
-  const { action, setAction } = useAppointmentStore();
-  const { setSelected } = useAppointmentStore();
+
   return (
     <div className="container mx-auto p-8">
       <nav className="mb-6 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
