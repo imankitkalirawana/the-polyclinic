@@ -10,7 +10,6 @@ import {
   Progress,
   ProgressProps,
   Button,
-  Calendar,
   Image,
   CardFooter,
   Dropdown,
@@ -462,6 +461,7 @@ export default function Appointment({ aid, session }: AppointmentProps) {
           >
             Add to Calender
           </Button>
+
           <div className="flex items-center">
             <CellRenderer
               icon="solar:bell-bing-bold"
