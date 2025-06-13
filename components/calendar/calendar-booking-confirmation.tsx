@@ -28,7 +28,7 @@ export default function CalendarBookingConfirmation({
           icon="solar:check-circle-bold-duotone"
           width={56}
         />
-        <p className="mb-2 text-base font-medium text-default-foreground">
+        <p className="mb-2 text-medium font-medium text-default-foreground">
           This meeting is scheduled
         </p>
         <p className="text-center text-tiny text-default-500">

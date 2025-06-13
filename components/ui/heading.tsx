@@ -25,7 +25,7 @@ export default function Heading(props: HeadingProps) {
           <h1 className="text-xl font-semibold sm:text-3xl">
             {props.title || 'Title'}
           </h1>
-          <p className="text-sm text-default-500">{props.subtitle}</p>
+          <p className="text-small text-default-500">{props.subtitle}</p>
         </div>
         <div>{props.button}</div>
       </div>

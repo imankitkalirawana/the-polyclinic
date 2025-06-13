@@ -170,10 +170,10 @@ export default function EditService({ uid }: { uid: string }) {
         className="bg-transparent shadow-none"
       >
         <CardHeader className="flex-col items-start p-0">
-          <h3 className="text-base font-semibold leading-7 text-default-900">
+          <h3 className="leading-large text-medium font-semibold text-default-900">
             Edit Service
           </h3>
-          <p className="max-w-2xl text-sm leading-6 text-default-500">
+          <p className="leading-medium max-w-2xl text-small text-default-500">
             Edit the service details below.
           </p>
         </CardHeader>
@@ -449,7 +449,7 @@ export default function EditService({ uid }: { uid: string }) {
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="">
+                    <tbody>
                       {Array.from({ length: numRows }).map((_, rowIndex) => (
                         <tr
                           key={rowIndex}

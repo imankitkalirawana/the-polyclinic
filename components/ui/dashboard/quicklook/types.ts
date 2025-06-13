@@ -33,20 +33,6 @@ export type PermissionProps<T extends string, D extends string> = Partial<
     Array<ActionType<T> | DropdownKeyType<D>> | 'all' | 'none' | undefined
   >
 >;
-
-export interface CellRendererProps {
-  label: string;
-  value: string | React.ReactNode;
-  icon: string;
-  classNames?: {
-    icon?: string;
-    label?: string;
-    value?: string;
-  };
-  className?: string;
-  cols?: number;
-}
-
 export interface QuickLookProps<T, A extends string, D extends string> {
   /**
    * The currently selected item to display in the quick look modal.

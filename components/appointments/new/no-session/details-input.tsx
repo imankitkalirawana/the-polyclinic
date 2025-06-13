@@ -217,7 +217,7 @@ export default function DetailsInput() {
                           otp: '',
                         });
                       }}
-                      className="text-xs"
+                      className="text-tiny"
                     >
                       Change
                     </Link>

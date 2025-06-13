@@ -19,12 +19,15 @@ export default function Email({ _id }: { _id: string }) {
     <div className="mx-auto w-full">
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between border-b p-4">
-        <h1 title={email?.subject} className="line-clamp-1 text-lg font-medium">
+        <h1
+          title={email?.subject}
+          className="line-clamp-1 text-large font-medium"
+        >
           {email?.subject}
         </h1>
         <span
           title={format(email?.createdAt as Date, 'PPp')}
-          className="line-clamp-1 text-xs text-default-500"
+          className="line-clamp-1 text-tiny text-default-500"
         >
           {format(email?.createdAt as Date, 'PPp')}
         </span>
@@ -35,15 +38,15 @@ export default function Email({ _id }: { _id: string }) {
         {/* Recipients */}
         <div className="space-y-4">
           <div className="flex items-center gap-8">
-            <span className="w-8 text-sm text-default-500">From:</span>
+            <span className="w-8 text-small text-default-500">From:</span>
             <Chip variant="flat">
-              <span className="text-sm">{email?.from}</span>
+              <span className="text-small">{email?.from}</span>
             </Chip>
           </div>
           <div className="flex items-center gap-8">
-            <span className="w-8 text-sm text-default-500">To:</span>
+            <span className="w-8 text-small text-default-500">To:</span>
             <Chip variant="flat">
-              <span className="text-sm">{email?.to}</span>
+              <span className="text-small">{email?.to}</span>
             </Chip>
           </div>
         </div>

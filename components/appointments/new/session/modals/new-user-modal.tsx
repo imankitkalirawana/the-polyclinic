@@ -46,7 +46,7 @@ export default function NewUserModal() {
                 <Icon icon="solar:user-bold" width="36" />
               </div>
               <h3>Register New Patient</h3>
-              <p className="text-center text-xs font-light text-default-500">
+              <p className="text-center text-tiny font-light text-default-500">
                 Please enter details to continue appointment
               </p>
             </ModalHeader>
@@ -178,7 +178,7 @@ export default function NewUserModal() {
                               otp: '',
                             });
                           }}
-                          className="text-xs"
+                          className="text-tiny"
                         >
                           Change
                         </Link>

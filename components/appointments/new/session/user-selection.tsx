@@ -22,7 +22,7 @@ import {
   getAllPatients,
   getAllPatientsWithEmail,
 } from '@/functions/server-actions/users';
-import useDebounce from '@/hooks/useDebounce';
+import { useDebounce } from 'react-haiku';
 import { UserRole, UserType } from '@/models/User';
 
 export default function UserSelection() {
@@ -83,7 +83,7 @@ export default function UserSelection() {
                   <Card
                     isPressable
                     className={cn(
-                      'no-scrollbar min-w-64 rounded-medium border border-divider shadow-none sm:min-w-72'
+                      'no-scrollbar min-w-64 rounded-medium border-small border-divider shadow-none sm:min-w-72'
                     )}
                     onPress={() => formik.setFieldValue('step', 7)}
                   >
@@ -97,10 +97,10 @@ export default function UserSelection() {
                         />
                       </div>
                       <div>
-                        <h2 className="text-center text-lg font-semibold text-primary">
+                        <h2 className="text-center text-large font-semibold text-primary">
                           Register New Patient
                         </h2>
-                        <p className="text-sm font-light text-default-500">
+                        <p className="text-small font-light text-default-500">
                           Add a new patient to your list
                         </p>
                       </div>
@@ -114,9 +114,9 @@ export default function UserSelection() {
                           isPressable
                           key={user.uid}
                           className={cn(
-                            'no-scrollbar min-w-64 rounded-medium border border-divider shadow-none sm:min-w-72',
+                            'no-scrollbar min-w-64 rounded-medium border-small border-divider shadow-none sm:min-w-72',
                             {
-                              'border-2 border-primary-400':
+                              'border-medium border-primary-400':
                                 user.uid === formik.values.patient?.uid,
                             }
                           )}
@@ -124,22 +124,21 @@ export default function UserSelection() {
                             formik.setFieldValue('patient', user);
                           }}
                         >
-                          <CardBody className="items-center gap-4 p-8">
+                          <CardBody className="items-center gap-4 p-6">
                             <div>
                               <Image
-                                src="/assets/placeholder-avatar.jpeg"
-                                alt="User"
-                                width={80}
-                                height={80}
-                                className="rounded-full"
-                                isBlurred
+                                src={user.image}
+                                alt={user.name}
+                                width={100}
+                                height={100}
+                                className="rounded-full bg-slate-300"
                               />
                             </div>
                             <div>
-                              <h2 className="text-center text-lg font-semibold">
+                              <h2 className="text-center text-large font-semibold">
                                 {user.name}
                               </h2>
-                              <p className="text-sm font-light text-default-500">
+                              <p className="text-small font-light text-default-500">
                                 {user.email}
                               </p>
                             </div>
@@ -193,7 +192,9 @@ export function UserSelectionTitle() {
         />
       </div>
       <div>
-        <h2 className="text-lg font-semibold">{formik.values.patient?.name}</h2>
+        <h2 className="text-large font-semibold">
+          {formik.values.patient?.name}
+        </h2>
         <p>{formik.values.patient?.email}</p>
         <Link
           className="hover:underline"

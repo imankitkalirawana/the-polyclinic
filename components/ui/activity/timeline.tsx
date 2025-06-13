@@ -96,21 +96,21 @@ function ActivityTimelineItem({ activity }: { activity: ActivityLogType }) {
       </div>
 
       <div>
-        <div className="text-xs text-default-400">
+        <div className="text-tiny text-default-400">
           {isToday(new Date(activity?.createdAt))
             ? `Today ${format(new Date(activity?.createdAt), 'HH:mm a')}`
             : isYesterday(new Date(activity?.createdAt))
               ? `Yesterday ${format(new Date(activity?.createdAt), 'HH:mm a')}`
               : format(new Date(activity?.createdAt), 'dd/MM/yyyy')}
         </div>
-        <h3 className="mb-1 text-sm font-medium text-default-800">
+        <h3 className="mb-1 text-small font-medium text-default-800">
           {activity.title}
         </h3>
 
         {activity.metadata && (
           <ul className="mt-1 text-default-500">
             {activity.metadata.fields?.slice(0, visibleFields).map((field) => (
-              <li key={field} className="text-xs">
+              <li key={field} className="text-tiny">
                 <div className="absolute left-4 h-5 w-8 -translate-y-1/2 rounded-bl-2xl border-b border-l border-divider"></div>
                 <div className="line-clamp-1 hover:line-clamp-none">
                   <span className="capitalize">
@@ -144,7 +144,7 @@ function ActivityTimelineItem({ activity }: { activity: ActivityLogType }) {
                   onClick={() =>
                     setVisibleFields(activity.metadata?.fields?.length || 2)
                   }
-                  className="flex items-center text-xs text-primary-500 hover:underline"
+                  className="flex items-center text-tiny text-primary-500 hover:underline"
                 >
                   <div className="flex h-6 w-6 items-center justify-center rounded-full">
                     <Icon
@@ -163,7 +163,7 @@ function ActivityTimelineItem({ activity }: { activity: ActivityLogType }) {
 
         {activity.by &&
           visibleFields >= (activity.metadata?.fields?.length ?? 0) && (
-            <div className="mt-1 flex items-center overflow-hidden text-xs text-default-500">
+            <div className="mt-1 flex items-center overflow-hidden text-tiny text-default-500">
               <Avatar
                 src={activity.by.image}
                 className="mr-2 h-5 w-5 flex-shrink-0 rounded-full bg-default-300"

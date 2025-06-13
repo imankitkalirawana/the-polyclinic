@@ -200,7 +200,7 @@ export default function AppointmentDetailsModal() {
               </ModalHeader>
               <ModalBody>
                 <ScrollShadow className="no-scrollbar py-4 pb-12">
-                  <Card className="mt-4 w-full border border-divider bg-default-50 shadow-none">
+                  <Card className="mt-4 w-full border-small border-divider bg-default-50 shadow-none">
                     <CardBody className="flex-row items-center gap-6 p-4">
                       <Avatar
                         radius="md"
@@ -220,7 +220,7 @@ export default function AppointmentDetailsModal() {
                               ).avatarBg
                             )}
                           />
-                          <span className="text-sm capitalize text-default-700">
+                          <span className="text-small capitalize text-default-700">
                             {formik.values.selected?.status
                               .split('-')
                               .join(' ')}
@@ -229,7 +229,7 @@ export default function AppointmentDetailsModal() {
                       </div>
                     </CardBody>
                   </Card>
-                  <Card className="mt-4 w-full border border-divider bg-default-50 shadow-none">
+                  <Card className="mt-4 w-full border-small border-divider bg-default-50 shadow-none">
                     <CardBody className="flex flex-col gap-4">
                       <div className="flex items-center gap-4">
                         <div className="rounded-medium bg-orange-100 p-2 text-orange-500">
@@ -293,7 +293,7 @@ export default function AppointmentDetailsModal() {
                   </Card>
 
                   {formik.values.selected?.additionalInfo && (
-                    <Card className="mt-4 w-full border border-divider bg-default-50 shadow-none">
+                    <Card className="mt-4 w-full border-small border-divider bg-default-50 shadow-none">
                       <CardBody className="flex flex-col gap-4">
                         <div className="flex items-center gap-4">
                           <div className="rounded-medium bg-violet-100 p-2 text-violet-500">
@@ -444,7 +444,7 @@ export function Title({
 }) {
   return (
     <>
-      <h2 className={cn('text-lg font-semibold', className)}>{title}</h2>
+      <h2 className={cn('text-large font-semibold', className)}>{title}</h2>
     </>
   );
 }

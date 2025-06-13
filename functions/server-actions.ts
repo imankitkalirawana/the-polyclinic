@@ -7,7 +7,6 @@ import { MailOptions } from 'nodemailer/lib/json-transport';
 import { sendHTMLEmail } from './server-actions/emails/send-email';
 
 import { connectDB } from '@/lib/db';
-import { generateOtp, sendSMS } from '@/lib/functions';
 import { transporter } from '@/lib/nodemailer';
 import Appointment from '@/models/Appointment';
 import Doctor from '@/models/Doctor';
@@ -15,6 +14,16 @@ import Otp from '@/models/Otp';
 import Service from '@/models/Service';
 import User from '@/models/User';
 import { AppointmentStatus } from '@/utils/email-template/patient';
+
+export const generateOtp = () => {
+  const otp = Math.floor(1000 + Math.random() * 9000);
+  return otp;
+};
+
+export const sendSMS = async (phone: string, message: string) => {
+  console.log(`Your otp for ${phone} is ${message}`);
+  return `Your otp for ${phone} is ${message}`;
+};
 
 export const verifyUID = async (uid: string, _id?: string) => {
   await connectDB();

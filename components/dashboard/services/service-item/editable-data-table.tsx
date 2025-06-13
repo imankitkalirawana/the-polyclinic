@@ -188,12 +188,6 @@ export default function EditableDataTable({
                     onMouseLeave={() => setHoveredColIndex(null)}
                     className="h-full"
                   >
-                    {/* <input
-                      type="text"
-                      value={formik.values.data[key] || ''}
-                      onChange={(e) => handleInputChange(key, e.target.value)}
-                      className="w-full border border-default-300 px-2 py-1"
-                    /> */}
                     <ReactQuill
                       theme="snow"
                       value={formik.values.data[key] || ''}

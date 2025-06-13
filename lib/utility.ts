@@ -9,22 +9,7 @@ export const formatPrice = (price: number) => {
     .toString();
 };
 
-// function to check if the file type is an image or not
-export const isImage = (filename: string) => {
-  if (!filename) return false;
-  const ext = filename.split('.').pop();
-  if (
-    ext === 'jpg' ||
-    ext === 'jpeg' ||
-    ext === 'png' ||
-    ext === 'gif' ||
-    ext === 'webp'
-  ) {
-    return true;
-  }
-  return false;
-};
-
+// TODO: be removed after migration
 export const humanReadableDate = (
   date: string | Date,
   format: 'full' | 'day-month' = 'full'
@@ -37,6 +22,7 @@ export const humanReadableDate = (
   return new Date(date).toLocaleDateString('en-US', options);
 };
 
+// TODO: be removed after migration
 export const humanReadableTime = (date: string | Date) => {
   return new Date(date).toLocaleTimeString('en-US', {
     hour: 'numeric',
@@ -48,6 +34,7 @@ export function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+// TODO: be removed after migration
 export const convertMinutesToHoursAndMinutes = (minutes: number) => {
   const hours = Math.floor(minutes / 60); // Get the number of hours
   const remainingMinutes = minutes % 60; // Get the remaining minutes

@@ -4,10 +4,19 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Avatar,
   Chip,
   Divider,
   Progress,
   ProgressProps,
+  Button,
+  Calendar,
+  Image,
+  CardFooter,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useQuery } from '@tanstack/react-query';
@@ -15,6 +24,9 @@ import { useQuery } from '@tanstack/react-query';
 import NoResults from '@/components/ui/no-results';
 import { getAppointmentWithAID } from '@/functions/server-actions/appointment';
 import { AppointmentType } from '@/models/Appointment';
+import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import { CellRenderer } from '@/components/ui/cell-renderer';
+import { format, formatDate } from 'date-fns';
 
 interface AppointmentProps {
   aid: number;
@@ -40,18 +52,6 @@ export default function Appointment({ aid, session }: AppointmentProps) {
   if (!appointment) {
     return <NoResults message="Appointment Not Found" />;
   }
-
-  function getStatusColor(status: string) {
-    switch (status) {
-      case 'booked':
-        return 'bg-blue-500';
-      case 'confirmed':
-        return 'bg-green-500';
-      default:
-        return 'bg-gray-500';
-    }
-  }
-
   const progress: Record<
     string,
     {
@@ -70,205 +70,421 @@ export default function Appointment({ aid, session }: AppointmentProps) {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mx-auto flex max-w-4xl flex-col gap-6">
-        <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
-          <div>
-            <h1 className="text-3xl font-bold">Appointment Details</h1>
-            <p className="text-muted-foreground">
-              Appointment #{appointment.aid}
+    <div className="container mx-auto p-8">
+      <nav className="mb-6 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
+        <div>
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl">Appointment Details</h1>
+            <p>
+              <span>#{appointment.aid}</span>
             </p>
           </div>
-          <Chip className={`capitalize ${getStatusColor(appointment.status)}`}>
-            {appointment.status}
-          </Chip>
+          <div className="flex items-center gap-2">
+            {renderChip({ item: appointment.status })}
+            <CellRenderer
+              icon="solar:calendar-bold-duotone"
+              value={format(new Date(appointment.date), 'EEEE, MMM d, yyyy ')}
+              classNames={{ icon: 'text-gray-500 bg-gray-100' }}
+              iconSize={18}
+              className="rounded-lg bg-gray-100 px-2 py-1"
+            />
+            <CellRenderer
+              icon="solar:clock-circle-linear"
+              value={format(new Date(appointment.date), 'h:mm a')}
+              classNames={{ icon: 'text-gray-500 bg-gray-100' }}
+              iconSize={18}
+              className="rounded-lg bg-gray-100 px-2 py-1"
+            />
+            <CellRenderer
+              icon="solar:tag-bold"
+              iconSize={18}
+              value={appointment.type}
+              classNames={{
+                icon: 'text-primary bg-primary-50',
+                value: 'text-primary',
+              }}
+              className="rounded-lg bg-gray-100 px-2 py-1"
+            />
+          </div>
         </div>
-
-        <Card>
-          <CardHeader className="pb-2">
-            <h3 className="text-lg">Appointment Progress</h3>
-          </CardHeader>
-          <CardBody>
-            <Progress value={40} className="h-2" />
-            <p className="text-muted-foreground mt-1 text-right text-sm">
-              {/* {appointment.progress}% Complete */}
-            </p>
-          </CardBody>
-        </Card>
-
-        <div className="grid gap-6 md:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <h3>Patient Information</h3>
+        <div className="flex items-center">
+          <Button
+            color="primary"
+            variant="light"
+            startContent={<Icon icon="solar:printer-outline" width="18" />}
+          >
+            Print
+          </Button>
+          <Button
+            color="primary"
+            variant="light"
+            startContent={<Icon icon="solar:share-bold" width="18" />}
+          >
+            Share
+          </Button>
+          <Dropdown>
+            <DropdownTrigger>
+              <Icon icon="entypo:dots-three-vertical" width="18" />
+            </DropdownTrigger>
+            <DropdownMenu aria-label="Static Actions">
+              <DropdownItem key="copy">Copy link</DropdownItem>
+              <DropdownItem key="edit">Edit Appointment</DropdownItem>
+              <DropdownItem key="delete" className="text-danger" color="danger">
+                Delete Appointment
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        </div>
+      </nav>
+      <div className="mb-20 flex w-full gap-6">
+        <div className="flex flex-1 flex-col gap-4">
+          {/* {pateint card} */}
+          <Card className="mx-auto w-full max-w-md">
+            <CardHeader className="flex flex-row justify-between text-center">
+              <h2 className="pl-6 text-xl text-black">Pateint Details</h2>
+              <Icon
+                icon="tabler:edit"
+                width="24"
+                height="24"
+                className="text-gray-400"
+              />
             </CardHeader>
-            <CardBody className="space-y-4">
-              <div>
-                <h3 className="font-medium">{appointment.patient.name}</h3>
-                <p className="text-muted-foreground text-sm">
-                  ID: {appointment.patient.uid}
-                </p>
-              </div>
+            <Divider className="border-dashed border-divider" />
 
-              <div className="grid grid-cols-2 gap-4">
-                {appointment.patient.age && (
-                  <div>
-                    <p className="text-sm font-medium">Age</p>
-                    <p className="text-sm">{appointment.patient.age} years</p>
-                  </div>
-                )}
-
-                {appointment.patient.gender && (
-                  <div>
-                    <p className="text-sm font-medium">Gender</p>
-                    <p className="text-sm capitalize">
-                      {appointment.patient.gender}
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              <Divider />
-
-              <div className="space-y-2">
-                <div>
-                  <p className="text-sm font-medium">Email</p>
-                  <p className="text-sm">{appointment.patient.email}</p>
+            <CardBody>
+              {/* Patient Avatar and Name */}
+              <div className="flex items-start gap-4 pb-4">
+                <div className="flex-shrink-0">
+                  <Image
+                    src={'/assets/placeholder-avatar.jpeg'}
+                    alt={appointment.patient.name}
+                    width={100}
+                    height={100}
+                    className="rounded-full text-slate-300"
+                  />
                 </div>
+                <div className="flex flex-col">
+                  <h3 className="pl-8 text-xl text-black">
+                    {appointment.patient.name}
+                  </h3>
+                  <p className="pl-8 text-sm text-gray-500">
+                    <span className="text-gray-500">Patient ID: </span>
+                    {appointment.patient.uid}
+                  </p>
 
-                {appointment.patient.phone && (
+                  {/* Patient Details using CellRenderer */}
                   <div>
-                    <p className="text-sm font-medium">Phone</p>
-                    <p className="text-sm">{appointment.patient.phone}</p>
+                    {(appointment.patient.gender ||
+                      appointment.patient.age) && (
+                      <CellRenderer
+                        icon="solar:user-line-duotone"
+                        value={[
+                          appointment.patient.gender || appointment.patient.age
+                            ? [
+                                appointment.patient.gender,
+                                appointment.patient.age,
+                              ]
+                                .filter(Boolean)
+                                .join(', ')
+                            : '',
+                        ]}
+                        classNames={{
+                          icon: 'text-default-500 ',
+                          value: 'text-black',
+                        }}
+                        iconSize={18}
+                      />
+                    )}
+                    {appointment.patient.phone && (
+                      <CellRenderer
+                        icon="solar:phone-linear"
+                        value={[
+                          appointment.patient.phone
+                            ? appointment.patient.phone
+                            : '',
+                        ]}
+                        classNames={{
+                          icon: 'text-default-500 ',
+                          value: 'text-black',
+                        }}
+                        iconSize={18}
+                      />
+                    )}
+
+                    <CellRenderer
+                      icon="solar:letter-bold"
+                      value={appointment.patient.email}
+                      classNames={{
+                        icon: 'text-default-500 ',
+                        value: 'text-black lowercase',
+                      }}
+                      iconSize={18}
+                    />
                   </div>
-                )}
+                </div>
+              </div>
+              <Divider className="border-dashed border-divider" />
+
+              {/* View Full Profile Link */}
+              <div className="mt-2 flex justify-end">
+                <Button variant="flat" color="warning">
+                  View full Profile
+                </Button>
               </div>
             </CardBody>
           </Card>
-
-          {appointment.doctor && (
-            <Card>
-              <CardHeader>
-                <h2>Doctor Information</h2>
+          {/* {doctor card} */}
+          {!!appointment.doctor && (
+            <Card className="mx-auto w-full max-w-md">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <h2 className="pl-6 text-xl text-black">Doctor Details</h2>
               </CardHeader>
-              <CardBody className="space-y-4">
-                <div>
-                  <h3 className="font-medium">{appointment.doctor.name}</h3>
-                  <p className="text-muted-foreground text-sm">
-                    ID: {appointment.doctor.uid}
-                  </p>
-                </div>
+              <Divider className="border-dashed border-divider" />
 
-                <div>
-                  <p className="text-sm font-medium">Email</p>
-                  <p className="text-sm">{appointment.doctor.email}</p>
-                </div>
-
-                {appointment.doctor.sitting && (
-                  <div>
-                    <p className="text-sm font-medium">Location</p>
-                    <p className="text-sm">{appointment.doctor.sitting}</p>
+              <CardBody>
+                {/* Patient Avatar and Name */}
+                <div className="flex items-start gap-4 pb-4">
+                  <div className="flex-shrink-0">
+                    <Image
+                      src={'/assets/placeholder-avatar.jpeg'}
+                      alt={appointment.doctor?.name}
+                      width={100}
+                      height={100}
+                      className="rounded-full text-slate-300"
+                    />
                   </div>
-                )}
+                  <div className="flex flex-col">
+                    <h3 className="pl-6 text-xl text-black">
+                      {appointment.doctor?.name}
+                    </h3>
+                    <p className="pl-6 text-sm text-gray-500">
+                      <span className="text-gray-500">Doctor ID: </span>
+                      {appointment.doctor?.uid}
+                    </p>
+
+                    {/* Patient Details using CellRenderer */}
+                    <div>
+                      {appointment.doctor.phone && (
+                        <CellRenderer
+                          icon="solar:map-point-bold"
+                          value={[
+                            appointment.doctor.phone
+                              ? appointment.doctor.phone
+                              : '',
+                          ]}
+                          classNames={{
+                            icon: 'text-default-500 ',
+                            value: 'text-black',
+                          }}
+                          iconSize={18}
+                        />
+                      )}
+
+                      <CellRenderer
+                        icon="solar:letter-bold"
+                        value={appointment.doctor?.email}
+                        classNames={{
+                          icon: 'text-default-500 ',
+                          value: 'text-black lowercase',
+                        }}
+                        iconSize={18}
+                      />
+                      {appointment.doctor.sitting && (
+                        <CellRenderer
+                          icon="mdi:location"
+                          value={[
+                            appointment.doctor.sitting
+                              ? appointment.doctor.sitting
+                              : '',
+                          ]}
+                          classNames={{
+                            icon: 'text-default-500 ',
+                            value: 'text-black',
+                          }}
+                          iconSize={18}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* View Full Profile Link */}
+                <div className="flex justify-end">
+                  <Button variant="flat" color="success">
+                    Contact Doctor
+                  </Button>
+                </div>
               </CardBody>
             </Card>
           )}
         </div>
-
-        <Card>
-          <CardHeader>
-            {/* <CardTitle>Appointment Details</CardTitle>
-            <CardDescription>Type: {appointment.type}</CardDescription> */}
-          </CardHeader>
-          <CardBody className="space-y-4">
-            <div className="flex flex-col gap-4 sm:flex-row sm:gap-8">
-              <div className="flex items-center gap-2">
-                {/* <Calendar className="text-muted-foreground h-5 w-5" /> */}
+        <div className="flex flex-[2] flex-col gap-4">
+          {/* first card  second column*/}
+          <Card>
+            <CardHeader>
+              <h2 className="pl-6 text-xl text-black">
+                Appointment Information
+              </h2>
+            </CardHeader>
+            <Divider className="border-dashed border-divider" />
+            <CardBody className="space-y-4 p-6">
+              <div className="flex max-w-xl items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium">Date</p>
-                  {/* <p className="text-sm">{formatDate(appointment.date)}</p> */}
+                  <CellRenderer
+                    label="Date & Time"
+                    icon="solar:calendar-bold-duotone"
+                    value={format(
+                      new Date(appointment.date),
+                      'MMM d, yyyy - h:mm a'
+                    )}
+                    classNames={{ icon: 'text-yellow-500 bg-yellow-50' }}
+                  />
+                  <CellRenderer
+                    label="Appointment Type"
+                    icon="solar:stethoscope-bold"
+                    value={appointment.type}
+                    classNames={{
+                      icon: 'text-primary bg-primary-50',
+                    }}
+                  />
+                  <CellRenderer
+                    label="created by"
+                    icon="solar:people-nearby-bold"
+                    value={appointment.createdBy || 'System'}
+                    classNames={{
+                      icon: 'text-purple-500 bg-purple-50',
+                    }}
+                  />
                 </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                {/* <Clock className="text-muted-foreground h-5 w-5" /> */}
                 <div>
-                  <p className="text-sm font-medium">Time</p>
-                  {/* <p className="text-sm">{formatTime(appointment.date)}</p> */}
+                  <CellRenderer
+                    label="Mode"
+                    icon="solar:hospital-bold"
+                    value={appointment.additionalInfo.type}
+                    classNames={{ icon: 'text-blue-500 bg-blue-50' }}
+                  />
+                  <CellRenderer
+                    label="Created At"
+                    icon="solar:clock-circle-linear"
+                    value={
+                      appointment.createdAt
+                        ? formatDate(new Date(appointment.createdAt), 'PPP')
+                        : 'N/A'
+                    }
+                    classNames={{ icon: 'text-pink-500 bg-pink-50' }}
+                  />
+                  <CellRenderer
+                    label="Updated At"
+                    icon="solar:sort-by-time-broken"
+                    value={
+                      appointment.updatedAt
+                        ? formatDate(new Date(appointment.updatedAt), 'PPP')
+                        : 'N/A'
+                    }
+                    classNames={{ icon: 'text-green-500 bg-green-50 ' }}
+                  />
                 </div>
               </div>
-
-              <div className="flex items-center gap-2">
-                {appointment.additionalInfo.type === 'online' ? (
-                  <Icon icon="solar:video-chat-bold" />
-                ) : (
-                  <Icon icon="solar:map-pin-bold" />
-                )}
-                <div>
-                  <p className="text-sm font-medium">Appointment Type</p>
-                  <p className="text-sm capitalize">
-                    {appointment.additionalInfo.type}
-                  </p>
+              <div>
+                <Progress
+                  aria-label="Loading..."
+                  label="Appointment Progress"
+                  className="max-w-2xl"
+                  value={60}
+                />
+                <div className="grid grid-cols-4 gap-8">
+                  <div>Booked</div>
+                  <div>Confirmed</div>
+                  <div>In Progress</div>
+                  <div>Completed</div>
                 </div>
               </div>
-            </div>
-
-            <Divider />
-
-            {appointment.data && Object.keys(appointment.data).length > 0 && (
+              <Divider className="border-dashed border-divider" />
               <div>
-                <h3 className="mb-2 text-sm font-medium">Additional Data</h3>
-                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                  {Object.entries(appointment.data).map(([key, value]) => (
-                    <div key={key}>
-                      <p className="text-sm font-medium capitalize">{key}</p>
-                      <p className="text-sm">{value}</p>
-                    </div>
-                  ))}
-                </div>
+                <CellRenderer
+                  label="Symptoms"
+                  icon="solar:clipboard-list-bold-duotone"
+                  value={
+                    appointment.additionalInfo.symptoms ||
+                    'No symptoms provided.'
+                  }
+                  classNames={{ icon: 'text-blue-500 bg-blue-50' }}
+                />
+                <CellRenderer
+                  label="Description"
+                  icon="solar:list-up-outline"
+                  value={
+                    appointment.additionalInfo.description ||
+                    'No description provided.'
+                  }
+                  classNames={{ icon: 'text-primary-500 bg-primary-50' }}
+                />
               </div>
-            )}
-          </CardBody>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <h1>Additional Information</h1>
-          </CardHeader>
-          <CardBody className="space-y-4">
-            {appointment.additionalInfo.description && (
+            </CardBody>
+          </Card>
+          {/* last card */}
+          <Card>
+            <CardHeader className="pl-8 text-xl text-black">
+              Additional Information
+            </CardHeader>
+            <Divider className="border-dashed border-divider" />
+            <CardBody className="space-y-4 p-6">
               <div>
-                <h3 className="text-sm font-medium">Description</h3>
-                <p className="text-sm">
-                  {appointment.additionalInfo.description}
-                </p>
+                <CellRenderer
+                  label="Symptoms"
+                  icon="solar:notes-bold"
+                  value={
+                    appointment.additionalInfo.notes ||
+                    'No additional information provided.'
+                  }
+                  classNames={{ icon: 'text-purple-500 bg-purple-50' }}
+                />
+                <CellRenderer
+                  label=" Pre-appointment Instructions"
+                  icon="solar:list-check-minimalistic-bold"
+                  value={
+                    appointment.additionalInfo.instructions ||
+                    'No additional information provided.'
+                  }
+                  classNames={{ icon: 'text-orange-500 bg-orange-50' }}
+                />
               </div>
-            )}
-
-            {appointment.additionalInfo.symptoms && (
-              <div>
-                <h3 className="text-sm font-medium">Symptoms</h3>
-                <p className="text-sm">{appointment.additionalInfo.symptoms}</p>
-              </div>
-            )}
-
-            {appointment.additionalInfo.notes && (
-              <div>
-                <h3 className="text-sm font-medium">Notes</h3>
-                <p className="text-sm">{appointment.additionalInfo.notes}</p>
-              </div>
-            )}
-
-            {appointment.additionalInfo.instructions && (
-              <div>
-                <h3 className="text-sm font-medium">Instructions</h3>
-                <p className="text-sm">
-                  {appointment.additionalInfo.instructions}
-                </p>
-              </div>
-            )}
-          </CardBody>
-        </Card>
+            </CardBody>
+          </Card>
+        </div>
       </div>
+      <footer className="fixed bottom-0 left-0 w-full border-t bg-background/30 px-8 shadow-md backdrop-blur">
+        <div className="m-4 flex justify-between">
+          <Button
+            color="default"
+            variant="flat"
+            startContent={<Icon icon="solar:calendar-add-bold" width="24" />}
+          >
+            Add to Calender
+          </Button>
+          <div className="flex items-center">
+            <CellRenderer
+              icon="solar:bell-bing-bold"
+              value={''}
+              classNames={{ icon: 'text-gray-500 bg-gray-300' }}
+              className="px-2 py-1"
+            />
+            <CellRenderer
+              icon="solar:shield-cross-bold"
+              value={''}
+              classNames={{ icon: 'text-red-500 bg-red-200' }}
+              className="px-2 py-1"
+            />
+            <Button
+              color="warning"
+              variant="flat"
+              startContent={<Icon icon="solar:calendar-bold" width="24" />}
+            >
+              Reschedule
+            </Button>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

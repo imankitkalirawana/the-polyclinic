@@ -21,20 +21,6 @@ export const calculateAge = (dob: string) => {
   return age;
 };
 
-export const dobFormat = (date: {
-  day: string;
-  month: string;
-  year: string;
-}) => {
-  if (date.day.length === 1) {
-    date.day = `0${date.day}`;
-  }
-  if (date.month.length === 1) {
-    date.month = `0${date.month}`;
-  }
-  return `${date.year}-${date.month}-${date.day}`;
-};
-
 export const calculateDOB = (age: number) => {
   const currentDate = new Date();
   const birthYear = currentDate.getFullYear() - age;

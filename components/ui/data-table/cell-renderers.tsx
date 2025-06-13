@@ -79,7 +79,7 @@ export const renderDate = ({
         {format(dateObj, 'PP')}
       </p>
       {isTime && (
-        <p className="text-nowrap text-xs capitalize text-default-500">
+        <p className="text-nowrap text-tiny capitalize text-default-500">
           {format(dateObj, 'p')}
         </p>
       )}
@@ -133,7 +133,7 @@ export const renderChips = (items: string[]) => {
           return (
             <Chip
               key={item}
-              className="rounded-xl bg-default-100 px-[6px] capitalize text-default-800"
+              className="rounded-small bg-default-100 px-[6px] capitalize text-default-800"
               size="sm"
               variant="flat"
             >
