@@ -50,10 +50,12 @@ export default function CancelDeleteAppointment({
             </div>
             <div className="flex text-[15px] text-default-400">
               <span>
-                {format(new Date(appointment?.date as string), 'hh:mm a')}
+                {format(new Date(appointment?.date || new Date()), 'hh:mm a')}
               </span>
               <Icon icon="mdi:dot" width="24" height="24" />
-              <span>{format(new Date(appointment?.date as string), 'PP')}</span>
+              <span>
+                {format(new Date(appointment?.date || new Date()), 'PP')}
+              </span>
             </div>
           </div>
         </CardBody>
@@ -95,6 +97,9 @@ export default function CancelDeleteAppointment({
       });
     },
   });
+  if (!appointment) {
+    return null;
+  }
 
   return (
     <Modal

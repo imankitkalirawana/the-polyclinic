@@ -14,10 +14,12 @@ import {
   DropdownMenu,
   DropdownItem,
   Chip,
+  Tooltip,
 } from '@heroui/react';
+import { useState } from 'react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useQuery } from '@tanstack/react-query';
-
+import { useAppointmentStore } from '@/components/dashboard/appointments/store';
 import NoResults from '@/components/ui/no-results';
 import { getAppointmentWithAID } from '@/functions/server-actions/appointment';
 import { AppointmentType } from '@/models/Appointment';
@@ -25,7 +27,9 @@ import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { format } from 'date-fns';
 import ActivityTimeline from '@/components/ui/activity/timeline';
-
+import CancelDeleteAppointment from '@/components/dashboard/appointments/modals/cancel-delete';
+import RescheduleAppointment from '@/components/dashboard/appointments/modals/reschedule'; // Ensure this path is correct
+import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
 interface AppointmentProps {
   aid: number;
   session: any;
@@ -66,7 +70,8 @@ export default function Appointment({ aid, session }: AppointmentProps) {
       color: 'success',
     },
   };
-
+  const { action, setAction } = useAppointmentStore();
+  const { setSelected } = useAppointmentStore();
   return (
     <div className="container mx-auto p-8">
       <nav className="mb-6 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
@@ -81,6 +86,7 @@ export default function Appointment({ aid, session }: AppointmentProps) {
             {renderChip({ item: appointment.status })}
             <Chip
               color="default"
+              radius="sm"
               startContent={
                 <Icon icon="solar:calendar-bold-duotone" width={18} />
               }
@@ -90,6 +96,7 @@ export default function Appointment({ aid, session }: AppointmentProps) {
             </Chip>
             <Chip
               color="default"
+              radius="sm"
               startContent={
                 <Icon icon="solar:clock-circle-bold-duotone" width={18} />
               }
@@ -99,6 +106,7 @@ export default function Appointment({ aid, session }: AppointmentProps) {
             </Chip>
             <Chip
               color="success"
+              radius="sm"
               startContent={<Icon icon="solar:tag-bold-duotone" width={18} />}
               variant="flat"
             >
@@ -458,31 +466,59 @@ export default function Appointment({ aid, session }: AppointmentProps) {
             startContent={
               <Icon icon="solar:calendar-add-bold-duotone" width="24" />
             }
+            onPress={() => setAction('add-to-calendar')}
           >
             Add to Calender
           </Button>
           <div className="flex items-center">
-            <CellRenderer
-              icon="solar:bell-bing-bold-duotone"
-              value={''}
-              classNames={{ icon: 'text-gray-500 bg-gray-300' }}
-              className="px-2 py-1"
-            />
-            <CellRenderer
-              icon="solar:close-circle-bold-duotone"
-              value={''}
-              classNames={{ icon: 'text-red-500 bg-red-200' }}
-              className="px-2 py-1"
-            />
-            <Button
-              color="warning"
-              variant="flat"
-              startContent={
-                <Icon icon="solar:calendar-bold-duotone" width="24" />
-              }
-            >
-              Reschedule
-            </Button>
+            <div>
+              <Tooltip content="Cancel Appointment" color="danger">
+                <Button
+                  color="danger"
+                  variant="flat"
+                  isIconOnly
+                  className="mr-2"
+                  onPress={() => {
+                    setSelected(appointment);
+                    setAction('cancel');
+                  }}
+                >
+                  <Icon icon="solar:close-circle-bold-duotone" width="24" />
+                </Button>
+              </Tooltip>
+              {action === 'cancel' && <CancelDeleteAppointment />}
+            </div>
+
+            <Tooltip content="Send a Reminder">
+              <Button
+                color="default"
+                variant="flat"
+                isIconOnly
+                className="mr-2"
+              >
+                <Icon icon="solar:bell-bing-bold-duotone" width="24" />
+              </Button>
+            </Tooltip>
+            <div>
+              <Button
+                color="warning"
+                variant="flat"
+                startContent={
+                  <Icon icon="solar:calendar-bold-duotone" width="24" />
+                }
+                onPress={() => setAction('reschedule')}
+              >
+                Reschedule
+              </Button>
+              {action === 'reschedule' && <RescheduleAppointment />}
+
+              {action === 'add-to-calendar' && (
+                <AddToCalendar
+                  appointment={appointment}
+                  onClose={() => setAction(null)}
+                />
+              )}
+            </div>
           </div>
         </div>
       </footer>
