@@ -306,7 +306,7 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                         value={appointment.doctor?.email}
                         classNames={{
                           icon: 'text-default-500 ',
-                          value: 'text-black lowercase',
+                          value: 'text-black lowercase truncate',
                         }}
                         iconSize={18}
                       />
