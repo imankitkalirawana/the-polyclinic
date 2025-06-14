@@ -118,10 +118,9 @@ export default function Appointment({ aid, session }: AppointmentProps) {
         <div className="flex items-center">
           <Button
             color="primary"
-            size="sm"
             variant="light"
             startContent={
-              <Icon icon="solar:printer-2-bold-duotone" width="16" />
+              <Icon icon="solar:printer-2-bold-duotone" width="18" />
             }
           >
             Print
@@ -129,8 +128,7 @@ export default function Appointment({ aid, session }: AppointmentProps) {
           <Button
             color="primary"
             variant="light"
-            size="sm"
-            startContent={<Icon icon="solar:share-bold-duotone" width="16" />}
+            startContent={<Icon icon="solar:share-bold-duotone" width="18" />}
           >
             Share
           </Button>
@@ -306,7 +304,7 @@ export default function Appointment({ aid, session }: AppointmentProps) {
                         value={appointment.doctor?.email}
                         classNames={{
                           icon: 'text-default-500 ',
-                          value: 'text-black lowercase truncate',
+                          value: 'text-black lowercase truncate line-clamp-1',
                         }}
                         iconSize={18}
                       />
