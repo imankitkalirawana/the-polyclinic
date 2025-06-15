@@ -78,7 +78,7 @@ export const FormProvider = ({
         type: 'online',
         symptoms: '',
       },
-      step: 1,
+      step: 2,
     },
     enableReinitialize: true,
     onSubmit: async (values) => {
@@ -117,8 +117,6 @@ export const FormProvider = ({
         });
     },
   });
-
-  console.log(formik.values);
 
   const register = useFormik<RegisterFormType>({
     initialValues: {

@@ -37,7 +37,7 @@ export const PATCH = async (request: any) => {
       { status: 200 }
     );
   } catch (error: any) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { message: error.message || 'Internal server error' },
       { status: 500 }

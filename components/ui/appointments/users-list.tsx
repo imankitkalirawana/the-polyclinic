@@ -6,6 +6,7 @@ import {
   cn,
   Image,
   Input,
+  Link,
   ScrollShadow,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -116,7 +117,7 @@ export default function UsersList({
                     )}
                     onPress={() => onSelectionChange(user)}
                   >
-                    <CardBody className="group relative items-center justify-center gap-4 overflow-hidden p-6">
+                    <CardBody className="group relative items-center justify-center gap-4 overflow-hidden p-6 hover:bg-default-50">
                       <div className="absolute right-2 top-2 opacity-0 transition-opacity group-hover:opacity-100">
                         <Button
                           isIconOnly
@@ -124,6 +125,8 @@ export default function UsersList({
                           className="absolute right-1 top-1"
                           radius="full"
                           size="sm"
+                          as={Link}
+                          href={`/users/${user.uid}`}
                         >
                           <Icon
                             icon="solar:pen-new-round-line-duotone"

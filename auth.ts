@@ -70,7 +70,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   callbacks: {
     // async signIn({ user, account }) {
-    //   console.log('user', user, 'account', account);
     //   if (account?.provider === 'google') {
     //     await connectDB();
     //     const existingUser = await User.findOne({ email: user.email });

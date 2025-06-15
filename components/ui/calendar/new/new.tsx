@@ -1,9 +1,7 @@
 'use client';
 import type React from 'react';
 import { Modal, ModalBody, ModalContent, ScrollShadow } from '@heroui/react';
-import { FormProvider } from '@/components/appointments/new/session/context';
-import { useSession } from 'next-auth/react';
-import AccordionWrapper from '@/components/appointments/new/session/selection';
+import CreateAppointment from '@/components/appointments/create';
 
 interface NewAppointmentModalProps {
   open: boolean;
@@ -13,13 +11,11 @@ interface NewAppointmentModalProps {
 }
 
 export default function NewAppointmentModal({
+  selectedDate,
+  selectedTime,
   open,
   onOpenChange,
 }: NewAppointmentModalProps) {
-  const { data: session } = useSession();
-
-  if (!open) return null;
-
   return (
     <Modal
       size="5xl"
@@ -30,9 +26,10 @@ export default function NewAppointmentModal({
     >
       <ModalContent>
         <ModalBody as={ScrollShadow} className="w-full">
-          <FormProvider session={session}>
-            <AccordionWrapper />
-          </FormProvider>
+          <CreateAppointment
+            selectedDate={selectedDate}
+            selectedTime={selectedTime}
+          />
         </ModalBody>
       </ModalContent>
     </Modal>

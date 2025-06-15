@@ -14,7 +14,6 @@ export const GET = async function GET() {
 export const POST = async function POST(request: any) {
   try {
     const body = await request.json();
-    console.log('body', body);
     return NextResponse.json({ message: 'POST request', body });
   } catch (error: any) {
     console.error(error);
