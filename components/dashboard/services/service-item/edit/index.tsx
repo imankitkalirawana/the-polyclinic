@@ -26,7 +26,7 @@ import QuillInput from '@/components/ui/quill-input';
 import { getServiceWithUID, verifyUID } from '@/functions/server-actions';
 import { ServiceStatuses, ServiceTypes } from '@/lib/interface';
 import { serviceValidationSchema } from '@/lib/validation';
-import { ServiceType } from '@/models/Service';
+import { ServiceType } from '@/types/service';
 
 export default function EditService({ uid }: { uid: string }) {
   const {

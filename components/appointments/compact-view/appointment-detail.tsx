@@ -24,8 +24,8 @@ import {
   getUserWithUID,
 } from '@/functions/server-actions';
 import { buttonColorMap, genderMap } from '@/lib/maps';
-import { AppointmentType } from '@/models/Appointment';
-import { UserType } from '@/models/User';
+import { AppointmentType } from '@/types/appointment';
+import { UserType } from '@/types/user';
 
 export default function AppointmentDetail({
   appointment,

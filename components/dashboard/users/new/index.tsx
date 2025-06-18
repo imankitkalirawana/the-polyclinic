@@ -32,7 +32,7 @@ import { scrollToError } from '@/lib/formik';
 import { CityProps, CountryProps, StateProps } from '@/lib/interface';
 import { Genders } from '@/lib/options';
 import { userValidationSchema } from '@/lib/validation';
-import { UserType } from '@/models/User';
+import { UserType } from '@/types/user';
 
 export default function NewUser({ countries }: { countries: CountryProps[] }) {
   const router = useRouter();

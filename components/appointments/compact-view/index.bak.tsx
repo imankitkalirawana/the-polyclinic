@@ -27,7 +27,7 @@ import AppointmentDetail from './appointment-detail';
 
 import { ChipColorMap } from '@/lib/maps';
 import { capitalize } from '@/lib/utility';
-import { AppointmentType } from '@/models/Appointment';
+import { AppointmentType } from '@/types/appointment';
 
 export default function CompactView({ session }: { session: any }) {
   const [status, setStatus] = useQueryState('status', {

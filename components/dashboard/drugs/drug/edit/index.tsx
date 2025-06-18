@@ -20,7 +20,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { getDrugWithDid } from '@/functions/server-actions/drugs';
 import { drugValidationSchema } from '@/lib/validation';
-import { DrugType } from '@/models/Drug';
+import { DrugType } from '@/types/drug';
 
 export default function EditDrug({ did }: { did: number }) {
   const { data } = useQuery<DrugType>({

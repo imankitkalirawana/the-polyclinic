@@ -1,7 +1,7 @@
 'use client';
 import { Calendar } from '@/components/ui/calendar';
 import { getAllAppointments } from '@/app/appointments/helper';
-import { AppointmentType } from '@/models/Appointment';
+import { AppointmentType } from '@/types/appointment';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 

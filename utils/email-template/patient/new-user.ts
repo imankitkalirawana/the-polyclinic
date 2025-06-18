@@ -1,5 +1,5 @@
 import { CLINIC_INFO } from '@/lib/config';
-import { UserType } from '@/models/User';
+import { UserType } from '@/types/user';
 
 export function WelcomeUser(user: UserType) {
   return `

@@ -5,7 +5,7 @@ import ExcelJS from 'exceljs';
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import Service from '@/models/Service';
-import { UserRole } from '@/models/User';
+import { UserRole } from '@/types/user';
 
 export const GET = auth(async function GET(request: any) {
   try {

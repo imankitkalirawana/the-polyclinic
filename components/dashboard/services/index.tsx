@@ -18,7 +18,7 @@ import {
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 import { useServiceStore } from './store';
 import { Table } from '@/components/ui/data-table';
-import { ServiceType } from '@/models/Service';
+import { ServiceType } from '@/types/service';
 import { useQuery } from '@tanstack/react-query';
 import { getAllServices } from '@/app/dashboard/services/helper';
 import { APPOINTMENT, CLINIC_INFO } from '@/lib/config';

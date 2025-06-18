@@ -16,7 +16,7 @@ import {
   ScrollShadow,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { AppointmentType } from '@/models/Appointment';
+import { AppointmentType } from '@/types/appointment';
 import StatusRenderer from './status-renderer';
 import { format } from 'date-fns';
 import { CLINIC_INFO } from '@/lib/config';

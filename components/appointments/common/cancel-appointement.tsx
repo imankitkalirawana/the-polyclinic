@@ -10,7 +10,7 @@ import {
 } from '@heroui/react';
 
 import { changeAppointmentStatus } from '@/functions/server-actions';
-import { AppointmentType } from '@/models/Appointment';
+import { AppointmentType } from '@/types/appointment';
 
 export default function CancelAppointment({
   appointment,

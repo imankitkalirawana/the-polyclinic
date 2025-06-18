@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
 import Service from '@/models/Service';
 import { auth } from '@/auth';
-import { UserRole } from '@/models/User';
+import { UserRole } from '@/types/user';
 
 export const GET = auth(async function GET(request: any, context: any) {
   try {

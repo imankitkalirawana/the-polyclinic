@@ -11,7 +11,7 @@ import {
   format,
 } from 'date-fns';
 import { cn } from '@/lib/utils';
-import { AppointmentType } from '@/models/Appointment';
+import { AppointmentType } from '@/types/appointment';
 import { useCalendar } from '../store';
 import {
   Card,

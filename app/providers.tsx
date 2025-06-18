@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import NextTopLoader from 'nextjs-toploader';
@@ -26,17 +26,21 @@ export function Providers({
   session: Session | null;
 }) {
   const router = useRouter();
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: 60 * 1000,
-      },
-    },
-  });
+  // Create a client
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 60 * 1000,
+          },
+        },
+      })
+  );
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <HeroUIProvider navigate={router.push}>
+    <HeroUIProvider navigate={router.push}>
+      <QueryClientProvider client={queryClient}>
         <ToastProvider
           toastProps={{
             variant: 'flat',
@@ -84,7 +88,7 @@ export function Providers({
           {children}
           <ReactQueryDevtools initialIsOpen={false} />
         </SessionProvider>
-      </HeroUIProvider>
-    </QueryClientProvider>
+      </QueryClientProvider>
+    </HeroUIProvider>
   );
 }

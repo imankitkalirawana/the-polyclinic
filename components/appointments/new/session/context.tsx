@@ -8,9 +8,9 @@ import { addToast } from '@heroui/react';
 
 import registerUser from '@/functions/server-actions/auth/register';
 import { verifyEmail } from '@/functions/server-actions/auth/verification';
-import { AppointmentType } from '@/models/Appointment';
-import { DoctorType } from '@/models/Doctor';
-import { UserType } from '@/models/User';
+import { AppointmentType } from '@/types/appointment';
+import { DoctorType } from '@/types/doctor';
+import { UserType } from '@/types/user';
 
 const validationSchema = Yup.object({
   firstName: Yup.string()
@@ -64,7 +64,12 @@ export const FormProvider = ({
 }) => {
   const formik = useFormik<AppointmentForm>({
     initialValues: {
-      patient: {} as UserType,
+      patient: {
+        uid: session?.user?.uid,
+        name: session?.user?.name,
+        email: session?.user?.email,
+        image: session?.user?.image,
+      } as UserType,
       doctor: {} as DoctorType,
       appointment: {} as AppointmentType,
       date: new Date(),
@@ -73,8 +78,9 @@ export const FormProvider = ({
         type: 'online',
         symptoms: '',
       },
-      step: 1,
+      step: 2,
     },
+    enableReinitialize: true,
     onSubmit: async (values) => {
       await axios
         .post('/api/v1/appointments', {

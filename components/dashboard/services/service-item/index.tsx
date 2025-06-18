@@ -23,8 +23,8 @@ import {
   humanReadableDate,
   humanReadableTime,
 } from '@/lib/utility';
-import { ServiceType } from '@/models/Service';
-import { AuthUser } from '@/models/User';
+import { ServiceType } from '@/types/service';
+import { AuthUser } from '@/types/user';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   active: 'success',

@@ -1,6 +1,6 @@
 import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
 import QuickLook from '@/components/ui/dashboard/quicklook';
-import { DrugType } from '@/models/Drug';
+import { DrugType } from '@/types/drug';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useDrugStore } from '../store';
 import {

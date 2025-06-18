@@ -5,7 +5,8 @@ import credentials from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 
 import client from '@/lib/db';
-import User, { UserStatus } from '@/models/User';
+import User from '@/models/User';
+import { UserStatus } from '@/types/user';
 
 class ErrorMessage extends AuthError {
   code = 'custom';
@@ -49,6 +50,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (typeof credentials.password !== 'string') {
           throw new ErrorMessage('Invalid Email/Password');
         }
+
         const isValid = await bcrypt.compare(
           credentials!.password,
           user.password
@@ -69,7 +71,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   callbacks: {
     // async signIn({ user, account }) {
-    //   console.log('user', user, 'account', account);
     //   if (account?.provider === 'google') {
     //     await connectDB();
     //     const existingUser = await User.findOne({ email: user.email });
@@ -94,17 +95,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     jwt({ token, user }) {
       if (user) {
         token.role = user.role;
-        token.id = user._id;
         token.uid = user.uid;
-        token.image = user.image || '';
+        token.picture = user.image || '';
       }
       return token;
     },
     session({ session, token }) {
       session.user.role = token.role;
-      session.user.id = token.id as string;
       session.user.uid = token.uid as number;
-      session.user.image = token.image as string;
+      session.user.image = token.picture as string;
       return session;
     },
   },

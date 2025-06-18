@@ -5,7 +5,7 @@ import { Chip } from '@heroui/react';
 import { useQuery } from '@tanstack/react-query';
 
 import { getEmailWithID } from '@/functions/server-actions/emails';
-import { EmailType } from '@/models/Email';
+import { EmailType } from '@/types/email';
 
 export default function Email({ _id }: { _id: string }) {
   const { data } = useQuery<EmailType>({

@@ -1,4 +1,4 @@
-import { UserRole } from '@/models/User';
+import { UserRole } from '@/types/user';
 import {
   ButtonProps as HeroButtonProps,
   DropdownItemProps as HeroDropdownItemProps,

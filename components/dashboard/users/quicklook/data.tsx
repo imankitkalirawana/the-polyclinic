@@ -1,6 +1,6 @@
 import { PermissionProps } from '@/components/ui/dashboard/quicklook/types';
 import { avatars } from '@/lib/avatar';
-import { UserType } from '@/models/User';
+import { UserType } from '@/types/user';
 import {
   Avatar,
   Button,

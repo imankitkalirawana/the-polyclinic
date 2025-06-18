@@ -7,8 +7,8 @@ import { useQuery } from '@tanstack/react-query';
 
 import { ActionType } from './appointment-details-modal';
 
-import { AppointmentType } from '@/models/Appointment';
-import { AuthUser } from '@/models/User';
+import { AppointmentType } from '@/types/appointment';
+import { AuthUser } from '@/types/user';
 import { getAllAppointments } from '@/app/dashboard/appointments/helper';
 
 interface FormType {

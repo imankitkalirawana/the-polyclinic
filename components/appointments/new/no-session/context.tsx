@@ -137,7 +137,7 @@ export const FormProvider = ({ children }: { children: React.ReactNode }) => {
           redirect: true,
           redirectTo: '/appointments/new',
         }).catch((err) => {
-          console.log(err);
+          console.error(err);
           addToast({
             title: 'Error',
             description: err.message,
@@ -146,7 +146,7 @@ export const FormProvider = ({ children }: { children: React.ReactNode }) => {
         });
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         addToast({
           title: 'Error',
           description: err.message,

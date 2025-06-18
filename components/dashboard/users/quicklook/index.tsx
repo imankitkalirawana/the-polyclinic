@@ -1,5 +1,5 @@
 import QuickLook from '@/components/ui/dashboard/quicklook';
-import { UserType } from '@/models/User';
+import { UserType } from '@/types/user';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useUserStore } from '../store';
 import {

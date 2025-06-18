@@ -15,7 +15,7 @@ import DateTimePicker from '../new/session/date-time-picker';
 
 import { rescheduleAppointment } from '@/functions/server-actions/appointment';
 import { TIMINGS } from '@/lib/config';
-import { AppointmentType } from '@/models/Appointment';
+import { AppointmentType } from '@/types/appointment';
 
 export default function RescheduleAppointment({
   appointment,

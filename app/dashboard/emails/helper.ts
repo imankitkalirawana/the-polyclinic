@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import axios from 'axios';
 
 import { API_BASE_URL } from '@/lib/config';
-import { EmailType } from '@/models/Email';
+import { EmailType } from '@/types/email';
 
 export const getAllEmails = async (): Promise<EmailType[]> => {
   // If mock data is disabled, fetch data from the API

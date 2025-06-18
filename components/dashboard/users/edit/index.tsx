@@ -9,7 +9,7 @@ import NotificationsSettings from './notifications-settings';
 import SecuritySettings from './security-settings';
 
 import { getUserWithUID } from '@/app/dashboard/users/[uid]/helper';
-import { UserType } from '@/models/User';
+import { UserType } from '@/types/user';
 
 export default function EditUser({ uid }: { uid: number }) {
   const [tab, setTab] = useQueryState('tab', {

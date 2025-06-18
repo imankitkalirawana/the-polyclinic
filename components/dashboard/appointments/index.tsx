@@ -13,7 +13,7 @@ import {
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 
 import { Table } from '@/components/ui/data-table';
-import { AppointmentType } from '@/models/Appointment';
+import { AppointmentType } from '@/types/appointment';
 import { useRouter } from 'nextjs-toploader/app';
 import { useAppointmentData, useAppointmentStore } from './store';
 import { apiRequest } from '@/lib/axios';

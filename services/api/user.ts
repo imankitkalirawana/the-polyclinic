@@ -1,6 +1,6 @@
 'use server';
 
-import { UserType } from '@/models/User';
+import { UserType } from '@/types/user';
 import axios from 'axios';
 import { cookies } from 'next/headers';
 import { BASE_URL } from '.';

@@ -16,7 +16,7 @@ import {
 import type { ColumnDef } from '@/components/ui/data-table/types';
 
 import { Table } from '@/components/ui/data-table';
-import { NewsletterType } from '@/models/Newsletter';
+import { NewsletterType } from '@/types/newsletter';
 import { useQuery } from '@tanstack/react-query';
 import { getAllNewsletters } from '@/app/dashboard/newsletters/helper';
 import { useRouter } from 'nextjs-toploader/app';

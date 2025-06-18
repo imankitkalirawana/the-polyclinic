@@ -3,7 +3,8 @@
 import { SortDescriptor } from '@heroui/react';
 
 import { connectDB } from '@/lib/db';
-import User, { UserType } from '@/models/User';
+import User from '@/models/User';
+import { UserType } from '@/types/user';
 
 // get all patients
 export const getAllPatients = async () => {

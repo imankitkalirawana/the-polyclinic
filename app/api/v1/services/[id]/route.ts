@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
-import Service, { ServiceType } from '@/models/Service';
+import Service from '@/models/Service';
+import { ServiceType } from '@/types/service';
 
 export const GET = async function GET(_request: any, context: any) {
   try {

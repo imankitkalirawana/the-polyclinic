@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import axios from 'axios';
 
 import { API_BASE_URL, MOCK_DATA } from '@/lib/config';
-import { AppointmentType } from '@/models/Appointment';
+import { AppointmentType } from '@/types/appointment';
 import { generateAppointments } from '../../../lib/appointments/mock';
 
 export const getAllAppointments = async (): Promise<AppointmentType[]> => {

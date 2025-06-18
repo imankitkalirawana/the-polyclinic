@@ -1,6 +1,6 @@
 import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
 import QuickLook from '@/components/ui/dashboard/quicklook';
-import { AppointmentType } from '@/models/Appointment';
+import { AppointmentType } from '@/types/appointment';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useAppointmentStore } from '../store';
 import {

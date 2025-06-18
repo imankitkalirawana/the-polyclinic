@@ -33,7 +33,7 @@ import { getAllAppointments } from '@/functions/server-actions/appointment';
 import { useDebounce } from 'react-haiku';
 import { rowOptions } from '@/lib/config';
 import { capitalize } from '@/lib/utility';
-import { AppointmentType } from '@/models/Appointment';
+import { AppointmentType } from '@/types/appointment';
 import { loadTableConfig, saveTableConfig } from '@/utils/localStorageUtil';
 
 const statusColorMap: Record<string, ChipProps['color']> = {

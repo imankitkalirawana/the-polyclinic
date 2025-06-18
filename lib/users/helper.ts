@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import axios from 'axios';
 
 import { API_BASE_URL, MOCK_DATA } from '@/lib/config';
-import { UserRole, UserType } from '@/models/User';
+import { UserRole, UserType } from '@/types/user';
 import { generateUsers } from './mock';
 
 export const getAllUsers = async (count?: number): Promise<UserType[]> => {

@@ -1,12 +1,9 @@
-'use client';
-import * as React from 'react';
-
+import { auth } from '@/auth';
 import NoSession from './no-session';
 import Session from './session';
-import { useSession } from 'next-auth/react';
 
 export default async function NewAppointment() {
-  const { data: session } = useSession();
+  const session = await auth();
 
   if (!session) {
     return <NoSession />;

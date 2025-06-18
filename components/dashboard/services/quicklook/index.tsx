@@ -1,5 +1,5 @@
 import QuickLook from '@/components/ui/dashboard/quicklook';
-import { ServiceType } from '@/models/Service';
+import { ServiceType } from '@/types/service';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useServiceStore } from '../store';
 import {

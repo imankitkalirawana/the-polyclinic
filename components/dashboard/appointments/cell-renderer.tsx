@@ -1,5 +1,5 @@
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
-import { AppointmentType } from '@/models/Appointment';
+import { AppointmentType } from '@/types/appointment';
 import { User } from '@heroui/react';
 import { format } from 'date-fns';
 

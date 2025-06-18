@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { QueryClient, useQuery, UseQueryResult } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { ServiceType } from '@/models/Service';
+import { ServiceType } from '@/types/service';
 import { getAllServices } from '@/app/dashboard/services/helper';
 import { Selection } from '@heroui/react';
 import { ActionType } from './types';

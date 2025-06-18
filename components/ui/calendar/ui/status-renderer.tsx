@@ -1,5 +1,5 @@
 import { chipColorMap } from '@/lib/chip';
-import { AppointmentStatus } from '@/models/Appointment';
+import { AppointmentStatus } from '@/types/appointment';
 import { cn, Tooltip } from '@heroui/react';
 
 export default function StatusRenderer({

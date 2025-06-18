@@ -13,7 +13,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 
 import CalendarWidget from '@/components/ui/calendar-widget';
 import { cn } from '@/lib/utils';
-import { AppointmentType } from '@/models/Appointment';
+import { AppointmentType } from '@/types/appointment';
 
 export enum AType {
   consultation = 'consultation',

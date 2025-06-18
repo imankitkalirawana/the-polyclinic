@@ -18,7 +18,7 @@ import {
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 
 import { Table } from '@/components/ui/data-table';
-import { DrugType } from '@/models/Drug';
+import { DrugType } from '@/types/drug';
 import { useQuery } from '@tanstack/react-query';
 import { getAllDrugs } from '@/app/dashboard/drugs/helper';
 import { useRouter } from 'nextjs-toploader/app';
