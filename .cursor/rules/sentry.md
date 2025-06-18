@@ -22,19 +22,19 @@ function TestComponent() {
     // Create a transaction/span to measure performance
     Sentry.startSpan(
       {
-        op: "ui.click",
-        name: "Test Button Click",
+        op: 'ui.click',
+        name: 'Test Button Click',
       },
       (span) => {
-        const value = "some config";
-        const metric = "some metric";
+        const value = 'some config';
+        const metric = 'some metric';
 
         // Metrics can be added to the span
-        span.setAttribute("config", value);
-        span.setAttribute("metric", metric);
+        span.setAttribute('config', value);
+        span.setAttribute('metric', metric);
 
         doSomething();
-      },
+      }
     );
   };
 
@@ -55,14 +55,14 @@ Attach attributes based on relevant information and metrics from the request
 async function fetchUserData(userId) {
   return Sentry.startSpan(
     {
-      op: "http.client",
+      op: 'http.client',
       name: `GET /api/users/${userId}`,
     },
     async () => {
       const response = await fetch(`/api/users/${userId}`);
       const data = await response.json();
       return data;
-    },
+    }
   );
 }
 ```
@@ -82,10 +82,10 @@ Initialization does not need to be repeated in other files, it only needs to hap
 ### Baseline
 
 ```javascript
-import * as Sentry from "@sentry/nextjs";
+import * as Sentry from '@sentry/nextjs';
 
 Sentry.init({
-  dsn: "https://examplePublicKey@o0.ingest.sentry.io/0",
+  dsn: 'https://examplePublicKey@o0.ingest.sentry.io/0',
 
   _experiments: {
     enableLogs: true,
@@ -97,10 +97,10 @@ Sentry.init({
 
 ```javascript
 Sentry.init({
-  dsn: "https://examplePublicKey@o0.ingest.sentry.io/0",
+  dsn: 'https://examplePublicKey@o0.ingest.sentry.io/0',
   integrations: [
     // send console.log, console.error, and console.warn calls as logs to Sentry
-    Sentry.consoleLoggingIntegration({ levels: ["log", "error", "warn"] }),
+    Sentry.consoleLoggingIntegration({ levels: ['log', 'error', 'warn'] }),
   ],
 });
 ```
@@ -110,19 +110,19 @@ Sentry.init({
 `logger.fmt` is a template literal function that should be used to bring variables into the structured logs.
 
 ```javascript
-logger.trace("Starting database connection", { database: "users" });
+logger.trace('Starting database connection', { database: 'users' });
 logger.debug(logger.fmt`Cache miss for user: ${userId}`);
-logger.info("Updated profile", { profileId: 345 });
-logger.warn("Rate limit reached for endpoint", {
-  endpoint: "/api/results/",
+logger.info('Updated profile', { profileId: 345 });
+logger.warn('Rate limit reached for endpoint', {
+  endpoint: '/api/results/',
   isEnterprise: false,
 });
-logger.error("Failed to process payment", {
-  orderId: "order_123",
+logger.error('Failed to process payment', {
+  orderId: 'order_123',
   amount: 99.99,
 });
-logger.fatal("Database connection pool exhausted", {
-  database: "users",
+logger.fatal('Database connection pool exhausted', {
+  database: 'users',
   activeConnections: 100,
 });
 ```
