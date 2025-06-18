@@ -1,7 +1,7 @@
 'use client';
 
 import { apiRequest } from '@/lib/axios';
-import { ActivityLogType, Schema } from '@/models/Activity';
+import { ActivityLogType, Schema } from '@/types/activity';
 import { Avatar, ScrollShadow } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useQuery } from '@tanstack/react-query';

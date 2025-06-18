@@ -1,7 +1,7 @@
 'use client';
 
 import { format, isWithinInterval, startOfMonth, endOfMonth } from 'date-fns';
-import { AppointmentType } from '@/models/Appointment';
+import { AppointmentType } from '@/types/appointment';
 import { useCalendar } from '../store';
 import DateChip from '../ui/date-chip';
 import { formatTime } from '../helper';

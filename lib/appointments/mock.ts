@@ -6,7 +6,7 @@ import {
   AppointmentStatus,
   AppointmentType,
   AType,
-} from '@/models/Appointment';
+} from '@/types/appointment';
 import { faker } from '@faker-js/faker';
 
 export async function generateAppointments({
@@ -39,6 +39,7 @@ export async function generateAppointments({
           uid: faker.number.int({ min: 1000, max: 9999 }),
           name: faker.person.fullName({ sex: 'male' }),
           email: faker.internet.email(),
+          phone: faker.phone.number({ style: 'national' }),
           sitting: String(faker.number.int({ min: 100, max: 300 })),
           image: faker.image.personPortrait({ size: 256, sex: 'male' }),
         },

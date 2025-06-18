@@ -18,7 +18,7 @@ import {
 } from '@heroui/react';
 import { useQuery } from '@tanstack/react-query';
 
-import { UserType } from '@/models/User';
+import { UserType } from '@/types/user';
 import { useSelf } from '@/services/user';
 
 export default function Profile() {

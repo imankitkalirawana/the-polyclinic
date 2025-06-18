@@ -8,7 +8,7 @@ import { DayView } from './views/day';
 import { ScheduleView } from './views/schedule';
 import { YearView } from './views/year';
 import NewAppointmentModal from './new/new';
-import { AppointmentType } from '@/models/Appointment';
+import { AppointmentType } from '@/types/appointment';
 import { useCalendar } from './store';
 
 interface CalendarProps {

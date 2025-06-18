@@ -18,7 +18,7 @@ import {
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 
 import { Table } from '@/components/ui/data-table';
-import { EmailType } from '@/models/Email';
+import { EmailType } from '@/types/email';
 import { useQuery } from '@tanstack/react-query';
 import { getAllEmails } from '@/app/dashboard/emails/helper';
 import { useRouter } from 'nextjs-toploader/app';

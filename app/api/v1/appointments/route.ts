@@ -6,7 +6,7 @@ import { connectDB } from '@/lib/db';
 import Appointment from '@/models/Appointment';
 import { NewAppointment } from '@/utils/email-template/doctor';
 import { AppointmentStatus } from '@/utils/email-template/patient';
-import { UserRole } from '@/models/User';
+import { UserRole } from '@/types/user';
 import { API_ACTIONS } from '@/lib/config';
 
 export const GET = auth(async function GET(request: any) {

@@ -1,7 +1,7 @@
 import { PermissionProps } from '@/components/ui/dashboard/quicklook/types';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { avatars } from '@/lib/avatar';
-import { DrugType } from '@/models/Drug';
+import { DrugType } from '@/types/drug';
 import {
   Avatar,
   Button,

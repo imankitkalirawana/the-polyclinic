@@ -20,7 +20,7 @@ import { useForm } from './context';
 import StatusReferences from './status-references';
 
 import CalendarWidget from '@/components/ui/calendar-widget';
-import { AppointmentType, AType } from '@/models/Appointment';
+import { AppointmentType, AType } from '@/types/appointment';
 
 // Get background and icon colors based on appointment type
 export const getAppointmentStyles = (status: AppointmentType['status']) => {

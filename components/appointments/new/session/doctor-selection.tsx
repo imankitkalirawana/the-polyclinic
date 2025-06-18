@@ -17,7 +17,7 @@ import { LoadingUsers } from './loading-user';
 
 import NoResults from '@/components/ui/no-results';
 import { getAllDoctors } from '@/functions/server-actions/doctor';
-import { DoctorType } from '@/models/Doctor';
+import { DoctorType } from '@/types/doctor';
 import { useDebounce } from 'react-haiku';
 
 export default function DoctorSelection() {

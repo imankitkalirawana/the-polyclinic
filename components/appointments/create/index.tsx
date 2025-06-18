@@ -3,8 +3,8 @@
 import { Accordion, AccordionItem, Link } from '@heroui/react';
 import { AccordionTitle } from './title';
 import { useFormik } from 'formik';
-import { UserType } from '@/models/User';
-import { DoctorType } from '@/models/Doctor';
+import { UserType } from '@/types/user';
+import { DoctorType } from '@/types/doctor';
 import { useLinkedUsers } from '@/services/user';
 import UsersList from '@/components/ui/appointments/users-list';
 import { useState } from 'react';
@@ -15,16 +15,8 @@ import AdditionalDetailsSelection, {
 } from '../new/session/additional-details-selection';
 import { AppointmentFormType } from './types';
 import { Gender } from '@/lib/interface';
+import { AppointmentMode, AType } from '@/types/appointment';
 
-enum AppointmentMode {
-  online = 'online',
-  offline = 'offline',
-}
-
-enum AType {
-  consultation = 'consultation',
-  test = 'test',
-}
 const KeyMap: Record<number, string> = {
   1: 'patient',
   2: 'time',

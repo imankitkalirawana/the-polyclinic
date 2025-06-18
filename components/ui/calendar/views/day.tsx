@@ -2,7 +2,7 @@
 
 import { format, isSameDay } from 'date-fns';
 import { cn } from '@/lib/utils';
-import { AppointmentType } from '@/models/Appointment';
+import { AppointmentType } from '@/types/appointment';
 
 interface DayViewProps {
   appointments: AppointmentType[];

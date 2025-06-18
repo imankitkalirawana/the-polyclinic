@@ -1,4 +1,4 @@
-import { AppointmentStatus } from '@/models/Appointment';
+import { AppointmentStatus } from '@/types/appointment';
 import { format } from 'date-fns';
 
 export const formatTime = (date: Date) => {

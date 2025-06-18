@@ -14,7 +14,7 @@ import { useQuery } from '@tanstack/react-query';
 import CellValue from '@/components/ui/cell-value';
 import { getDrugWithDid } from '@/functions/server-actions/drugs';
 import { humanReadableDate, humanReadableTime } from '@/lib/utility';
-import { DrugType } from '@/models/Drug';
+import { DrugType } from '@/types/drug';
 
 interface Props {
   drug: DrugType;

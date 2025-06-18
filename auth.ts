@@ -5,7 +5,8 @@ import credentials from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 
 import client from '@/lib/db';
-import User, { UserStatus } from '@/models/User';
+import User from '@/models/User';
+import { UserStatus } from '@/types/user';
 
 class ErrorMessage extends AuthError {
   code = 'custom';

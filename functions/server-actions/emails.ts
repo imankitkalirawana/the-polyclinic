@@ -1,7 +1,8 @@
 'use server';
 
 import { connectDB } from '@/lib/db';
-import Email, { EmailType } from '@/models/Email';
+import Email from '@/models/Email';
+import { EmailType } from '@/types/email';
 
 export const getAllEmails = async () => {
   await connectDB();

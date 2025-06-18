@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import Calendar from './calendar';
 import PendingAppointments from './pending-appointments';
 
-import { AppointmentType } from '@/models/Appointment';
+import { AppointmentType } from '@/types/appointment';
 
 export default function AsideRight() {
   const { data } = useQuery<AppointmentType[]>({

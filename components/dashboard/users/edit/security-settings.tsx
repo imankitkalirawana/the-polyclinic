@@ -35,7 +35,7 @@ import {
   verifyOTP,
 } from '@/functions/server-actions';
 import { UserRoles } from '@/lib/options';
-import { UserType } from '@/models/User';
+import { UserType } from '@/types/user';
 
 export default function SecuritySettings({
   user,

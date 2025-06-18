@@ -1,19 +1,5 @@
+import { EmailStatus, EmailType } from '@/types/email';
 import mongoose from 'mongoose';
-
-import { Base } from '@/lib/interface';
-export enum EmailStatus {
-  active = 'active',
-  inactive = 'inactive',
-}
-
-export interface EmailType extends Base {
-  from: string;
-  to: string;
-  subject: string;
-  message: string;
-  status: EmailStatus;
-  image?: string;
-}
 
 const EmailSchema = new mongoose.Schema<EmailType>(
   {

@@ -1,5 +1,5 @@
 import { getLinkedUsers, getSelf } from '@/services/api/user';
-import { UserType } from '@/models/User';
+import { UserType } from '@/types/user';
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 
 export const useSelf = (): UseQueryResult<UserType> => {

@@ -1,6 +1,6 @@
 'use server';
 
-import { ServiceStatus, ServiceType, ServiceTypes } from '@/models/Service';
+import { ServiceStatus, ServiceType, ServiceTypes } from '@/types/service';
 import { faker } from '@faker-js/faker';
 
 export async function generateServices(count: number) {

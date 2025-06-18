@@ -2,7 +2,8 @@ import { connectDB } from '@/lib/db';
 
 import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
-import User, { UserRole } from '@/models/User';
+import User from '@/models/User';
+import { UserRole } from '@/types/user';
 
 export const GET = auth(async function GET(request: any, context: any) {
   try {

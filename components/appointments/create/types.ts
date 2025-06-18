@@ -1,4 +1,4 @@
-import { AppointmentType } from '@/models/Appointment';
+import { AppointmentType } from '@/types/appointment';
 
 export type AppointmentFormType = Omit<
   AppointmentType,

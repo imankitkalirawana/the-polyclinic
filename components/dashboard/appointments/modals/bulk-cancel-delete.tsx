@@ -4,7 +4,7 @@ import { apiRequest } from '@/lib/axios';
 import { format } from 'date-fns';
 import { addToast, Card, CardBody, ScrollShadow, User } from '@heroui/react';
 import React, { useCallback, useMemo } from 'react';
-import { AppointmentType } from '@/models/Appointment';
+import { AppointmentType } from '@/types/appointment';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 

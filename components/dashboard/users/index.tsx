@@ -19,7 +19,7 @@ import {
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 
 import { Table } from '@/components/ui/data-table';
-import { UserType } from '@/models/User';
+import { UserType } from '@/types/user';
 import { useQuery } from '@tanstack/react-query';
 import { getAllUsers } from '@/lib/users/helper';
 import { useRouter } from 'nextjs-toploader/app';

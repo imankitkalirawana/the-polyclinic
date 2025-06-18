@@ -1,7 +1,7 @@
-import { AppointmentStatus } from '@/models/Appointment';
-import { DrugStatus } from '@/models/Drug';
-import { ServiceStatus, ServiceTypes } from '@/models/Service';
-import { UserRole, UserStatus } from '@/models/User';
+import { AppointmentStatus } from '@/types/appointment';
+import { DrugStatus } from '@/types/drug';
+import { ServiceStatus, ServiceTypes } from '@/types/service';
+import { UserRole, UserStatus } from '@/types/user';
 
 export type ChipColorType =
   | UserRole

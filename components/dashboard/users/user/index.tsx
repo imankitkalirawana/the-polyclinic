@@ -17,7 +17,7 @@ import CellValue from '../../../ui/cell-value';
 
 import { getUserWithUID } from '@/app/dashboard/users/[uid]/helper';
 import { humanReadableDate, humanReadableTime } from '@/lib/utility';
-import { UserType } from '@/models/User';
+import { UserType } from '@/types/user';
 
 export default function UserCard({ uid }: { uid: number }) {
   const { data: user, isError } = useQuery<UserType>({

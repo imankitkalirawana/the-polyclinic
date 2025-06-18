@@ -4,7 +4,7 @@ import axios from 'axios';
 
 import { API_BASE_URL, MOCK_DATA } from '@/lib/config';
 import { generateServices } from './mock';
-import { ServiceType } from '@/models/Service';
+import { ServiceType } from '@/types/service';
 
 export const getAllServices = async (): Promise<ServiceType[]> => {
   // If mock data is enabled, return mock data

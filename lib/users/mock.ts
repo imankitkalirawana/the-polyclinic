@@ -1,7 +1,7 @@
 'use server';
 
 import { Gender } from '@/lib/interface';
-import { UserRole, UserType, UserStatus } from '@/models/User';
+import { UserRole, UserType, UserStatus } from '@/types/user';
 import { faker } from '@faker-js/faker';
 
 export async function generateUsers({

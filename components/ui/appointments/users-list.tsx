@@ -1,4 +1,3 @@
-import { UserType } from '@/models/User';
 import {
   Button,
   Card,
@@ -15,6 +14,8 @@ import { useState } from 'react';
 import { useDebounce } from 'react-haiku';
 import Skeleton from '../skeleton';
 import { AppointmentFormType } from '@/components/appointments/create/types';
+import { UserType } from '@/types/user';
+import { DoctorType } from '@/types/doctor';
 
 const SizeMap = {
   sm: {
@@ -43,7 +44,7 @@ export default function UsersList({
   onSelectionChange,
 }: {
   id: string;
-  users: AppointmentFormType['patient'][] | AppointmentFormType['doctor'][];
+  users: (UserType | DoctorType)[];
   isLoading?: boolean;
   selectedUser: AppointmentFormType['patient'] | AppointmentFormType['doctor'];
   size?: 'sm' | 'md' | 'lg';
@@ -97,7 +98,7 @@ export default function UsersList({
           </Card>
           <ScrollShadow orientation="horizontal" className="flex gap-4">
             {users.filter((user) =>
-              user?.name?.toLowerCase().includes(debounce.toLowerCase())
+              user.name.toLowerCase().includes(debounce.toLowerCase())
             ).length < 1 ? (
               <div className="flex justify-center">
                 {/* TODO: This needs to be a changed */}
@@ -105,17 +106,17 @@ export default function UsersList({
               </div>
             ) : (
               users
-                .sort((a, b) => a?.name?.localeCompare(b?.name || '') || 0)
+                .sort((a, b) => a.name.localeCompare(b.name || '') || 0)
                 .map((user) => (
                   <Card
                     isPressable
-                    key={user?.uid}
+                    key={user.uid}
                     className={cn(
                       'no-scrollbar rounded-medium border-small border-divider shadow-none',
                       SizeMap[size].card,
                       {
                         'border-medium border-primary-400':
-                          user?.uid === selectedUser?.uid,
+                          user.uid === selectedUser?.uid,
                       }
                     )}
                     onPress={() => onSelectionChange(user)}
@@ -129,7 +130,7 @@ export default function UsersList({
                           radius="full"
                           size="sm"
                           as={Link}
-                          href={`/users/${user?.uid}`}
+                          href={`/users/${user.uid}`}
                         >
                           <Icon
                             icon="solar:pen-new-round-line-duotone"
@@ -139,8 +140,8 @@ export default function UsersList({
                       </div>
                       <div>
                         <Image
-                          src={user?.image}
-                          alt={user?.name}
+                          src={user.image}
+                          alt={user.name}
                           width={SizeMap[size].image}
                           height={SizeMap[size].image}
                           className="rounded-full bg-primary-200"

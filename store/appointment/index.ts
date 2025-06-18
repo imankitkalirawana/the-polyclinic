@@ -1,6 +1,6 @@
-import { AppointmentType } from '@/models/Appointment';
-import { DoctorType } from '@/models/Doctor';
-import { UserType } from '@/models/User';
+import { AppointmentType } from '@/types/appointment';
+import { DoctorType } from '@/types/doctor';
+import { UserType } from '@/types/user';
 import { useFormik } from 'formik';
 
 export const useNewAppointmentForm = (session: any) => {

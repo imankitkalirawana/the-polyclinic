@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { QueryClient, useQuery, UseQueryResult } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { EmailType } from '@/models/Email';
+import { EmailType } from '@/types/email';
 import { getAllEmails } from '@/app/dashboard/emails/helper';
 import { Selection } from '@heroui/react';
 import { ActionType } from './types';

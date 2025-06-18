@@ -7,7 +7,7 @@ import {
 import { auth } from '@/auth';
 import ServiceViewItem from '@/components/dashboard/services/service-item';
 import { getServiceWithUID } from '@/functions/server-actions';
-import { AuthUser } from '@/models/User';
+import { AuthUser } from '@/types/user';
 
 interface Props {
   params: {

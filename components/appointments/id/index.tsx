@@ -19,7 +19,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import NoResults from '@/components/ui/no-results';
 import { getAppointmentWithAID } from '@/functions/server-actions/appointment';
-import { AppointmentType } from '@/models/Appointment';
+import { AppointmentType } from '@/types/appointment';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { format } from 'date-fns';

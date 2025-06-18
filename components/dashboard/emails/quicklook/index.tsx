@@ -1,5 +1,5 @@
 import QuickLook from '@/components/ui/dashboard/quicklook';
-import { EmailType } from '@/models/Email';
+import { EmailType } from '@/types/email';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useEmailStore } from '../store';
 import {

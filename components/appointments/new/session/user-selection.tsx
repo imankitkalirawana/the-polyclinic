@@ -11,7 +11,7 @@ import {
   getAllPatients,
   getAllPatientsWithEmail,
 } from '@/functions/server-actions/users';
-import { UserRole, UserType } from '@/models/User';
+import { UserRole, UserType } from '@/types/user';
 import UsersList from '@/components/ui/appointments/users-list';
 
 export default function UserSelection() {

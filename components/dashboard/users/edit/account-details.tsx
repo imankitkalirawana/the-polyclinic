@@ -28,7 +28,7 @@ import { calculateAge, calculateDOB } from '@/lib/client-functions';
 import { scrollToError } from '@/lib/formik';
 import { Genders } from '@/lib/options';
 import { userValidationSchema } from '@/lib/validation';
-import { UserType } from '@/models/User';
+import { UserType } from '@/types/user';
 
 export default function AccountDetails({
   user,

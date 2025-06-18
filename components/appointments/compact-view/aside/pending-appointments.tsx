@@ -15,7 +15,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { Subtitle } from '../appointment-details-modal';
 import { useForm } from '../context';
 
-import { AppointmentType } from '@/models/Appointment';
+import { AppointmentType } from '@/types/appointment';
 
 export default function PendingAppointments({
   appointments,

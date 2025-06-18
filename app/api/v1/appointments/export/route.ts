@@ -4,7 +4,7 @@ import ExcelJS from 'exceljs';
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import Appointment from '@/models/Appointment';
-import { UserRole } from '@/models/User';
+import { UserRole } from '@/types/user';
 
 export const POST = auth(async function POST(request: any) {
   try {

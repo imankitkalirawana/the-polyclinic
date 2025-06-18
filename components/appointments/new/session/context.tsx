@@ -8,9 +8,9 @@ import { addToast } from '@heroui/react';
 
 import registerUser from '@/functions/server-actions/auth/register';
 import { verifyEmail } from '@/functions/server-actions/auth/verification';
-import { AppointmentType } from '@/models/Appointment';
-import { DoctorType } from '@/models/Doctor';
-import { UserType } from '@/models/User';
+import { AppointmentType } from '@/types/appointment';
+import { DoctorType } from '@/types/doctor';
+import { UserType } from '@/types/user';
 
 const validationSchema = Yup.object({
   firstName: Yup.string()
