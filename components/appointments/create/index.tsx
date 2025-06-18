@@ -4,13 +4,27 @@ import { Accordion, AccordionItem, Link } from '@heroui/react';
 import { AccordionTitle } from './title';
 import { useFormik } from 'formik';
 import { UserType } from '@/models/User';
-import { AppointmentType } from '@/models/Appointment';
 import { DoctorType } from '@/models/Doctor';
 import { useLinkedUsers } from '@/services/user';
 import UsersList from '@/components/ui/appointments/users-list';
 import { useState } from 'react';
 import DateSelection, { DateSelectionTitle } from './date-selection';
+import { DoctorSelectionTitle } from '../new/session/doctor-selection';
+import AdditionalDetailsSelection, {
+  AdditionalDetailsSelectionTitle,
+} from '../new/session/additional-details-selection';
+import { AppointmentFormType } from './types';
+import { Gender } from '@/lib/interface';
 
+enum AppointmentMode {
+  online = 'online',
+  offline = 'offline',
+}
+
+enum AType {
+  consultation = 'consultation',
+  test = 'test',
+}
 const KeyMap: Record<number, string> = {
   1: 'patient',
   2: 'time',
@@ -29,15 +43,27 @@ export default function CreateAppointment({
   const { data: linkedUsers, isLoading: isLinkedUsersLoading } =
     useLinkedUsers();
 
-  const formik = useFormik({
+  const formik = useFormik<AppointmentFormType>({
     initialValues: {
-      patient: {} as UserType,
-      doctor: {} as DoctorType,
-      appointment: {} as AppointmentType,
+      patient: {
+        uid: 0,
+        name: '',
+        email: '',
+        phone: '',
+        gender: Gender.male,
+      },
+      doctor: {
+        uid: 0,
+        name: '',
+        email: '',
+        phone: '',
+        sitting: '',
+      },
       date: selectedDate || new Date(),
+      type: AType.consultation,
       additionalInfo: {
         notes: '',
-        type: 'online',
+        type: AppointmentMode.online,
         symptoms: '',
       },
     },
@@ -46,7 +72,11 @@ export default function CreateAppointment({
     },
   });
 
-  const { values: appointment, setFieldValue: setAppointment } = formik;
+  const {
+    values: appointment,
+    setFieldValue: setAppointment,
+    handleChange: handleAppointmentChange,
+  } = formik;
 
   return (
     <div>
@@ -55,6 +85,7 @@ export default function CreateAppointment({
         selectedKeys={[KeyMap[currentStep]]}
       >
         <AccordionItem
+          hideIndicator
           key="patient"
           textValue="patient"
           title={
@@ -101,12 +132,56 @@ export default function CreateAppointment({
             </Link>
           }
           hideIndicator={currentStep <= 2}
-          title={<DateSelectionTitle date={appointment.date} />}
+          title={<DateSelectionTitle date={new Date(appointment.date)} />}
         >
           <DateSelection
-            date={appointment.date}
+            date={new Date(appointment.date)}
             setDate={(date) => setAppointment('date', date)}
             onSubmit={() => setCurrentStep(3)}
+          />
+        </AccordionItem>
+        <AccordionItem
+          textValue="Doctor Selection"
+          isDisabled={currentStep < 3}
+          key="doctor"
+          indicator={
+            <Link
+              href="#"
+              onPress={() => {
+                setCurrentStep(3);
+                setAppointment('doctor', {} as DoctorType);
+              }}
+            >
+              Change
+            </Link>
+          }
+          hideIndicator={currentStep <= 3}
+          title={
+            <DoctorSelectionTitle doctor={appointment.doctor as DoctorType} />
+          }
+        >
+          <UsersList
+            id="doctor"
+            size="sm"
+            isLoading={isLinkedUsersLoading}
+            users={linkedUsers || []}
+            selectedUser={appointment.doctor as unknown as UserType}
+            onSelectionChange={(user) => {
+              setAppointment('doctor', user);
+              setCurrentStep(4);
+            }}
+          />
+        </AccordionItem>
+        <AccordionItem
+          textValue="Additional Details"
+          isDisabled={currentStep < 4}
+          key="additional-details"
+          title={<AdditionalDetailsSelectionTitle />}
+        >
+          <AdditionalDetailsSelection
+            appointment={appointment}
+            handleAppointmentChange={handleAppointmentChange}
+            onContinue={() => setCurrentStep(5)}
           />
         </AccordionItem>
       </Accordion>

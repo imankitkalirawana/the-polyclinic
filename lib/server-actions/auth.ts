@@ -44,9 +44,11 @@ export const sendOTP = async ({
     }
   }
 
+  console.log('email', email);
+
   const otp = generateOtp();
   // TODO: Remove this
-  console.log(otp);
+  console.log('otp', otp);
   const res = await Otp.findOne({ id: email });
 
   if (res) {

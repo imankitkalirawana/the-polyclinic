@@ -137,13 +137,10 @@ export default function DoctorSelection() {
   );
 }
 
-export function DoctorSelectionTitle() {
-  const { formik } = useForm();
-  return formik.values.doctor && formik.values.step > 3 ? (
+export function DoctorSelectionTitle({ doctor }: { doctor: DoctorType }) {
+  return doctor.uid ? (
     <h3 className="text-2xl font-semibold">
-      {formik.values.doctor?.uid === 0
-        ? 'No Doctor Selected'
-        : formik.values.doctor?.name}
+      {doctor?.uid === 0 ? 'No Doctor Selected' : doctor?.name}
     </h3>
   ) : (
     <div className="space-y-4">

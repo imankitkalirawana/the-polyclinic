@@ -4,9 +4,7 @@ import { Accordion, AccordionItem, Link } from '@heroui/react';
 import ConfirmationModal from './modals/confirmation-modal';
 import NewUserModal from './modals/new-user-modal';
 import SummaryModal from './modals/summary-modal';
-import AdditionalDetailsSelection, {
-  AdditionalDetailsSelectionTitle,
-} from './additional-details-selection';
+import { AdditionalDetailsSelectionTitle } from './additional-details-selection';
 import { useForm } from './context';
 import DateSelection, { DateSelectionTitle } from './date-selection';
 import DoctorSelection, { DoctorSelectionTitle } from './doctor-selection';
@@ -79,7 +77,7 @@ export default function Selection() {
             </Link>
           }
           hideIndicator={formik.values.step <= 3}
-          title={<DoctorSelectionTitle />}
+          title={<DoctorSelectionTitle doctor={formik.values.doctor} />}
         >
           <DoctorSelection />
         </AccordionItem>
@@ -89,7 +87,7 @@ export default function Selection() {
           key="additional-details"
           title={<AdditionalDetailsSelectionTitle />}
         >
-          <AdditionalDetailsSelection />
+          {/* <AdditionalDetailsSelection /> */}
         </AccordionItem>
       </Accordion>
 

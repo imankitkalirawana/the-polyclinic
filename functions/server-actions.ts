@@ -15,7 +15,7 @@ import Service from '@/models/Service';
 import User from '@/models/User';
 import { AppointmentStatus } from '@/utils/email-template/patient';
 
-export const generateOtp = () => {
+export const generateOtp = (): number => {
   const otp = Math.floor(1000 + Math.random() * 9000);
   return otp;
 };
