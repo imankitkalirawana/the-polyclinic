@@ -13,5 +13,6 @@ export const useLinkedUsers = (): UseQueryResult<Array<UserType>> => {
   return useQuery({
     queryKey: ['linkedUsers'],
     queryFn: () => getLinkedUsers(),
+    staleTime: 1000 * 60 * 5,
   });
 };
