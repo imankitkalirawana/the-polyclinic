@@ -19,6 +19,7 @@ import {
   CardHeader,
   Popover,
   PopoverContent,
+  PopoverProps,
   PopoverTrigger,
 } from '@heroui/react';
 import DateChip from '../ui/date-chip';
@@ -206,13 +207,17 @@ export function AppointmentList({
 export function Appointment({
   appointment,
   onOpenChange,
+  popoverPlacement = 'right',
+  fullWidth = true,
 }: {
   appointment: AppointmentType;
   onOpenChange?: (isOpen: boolean) => void;
+  popoverPlacement?: PopoverProps['placement'];
+  fullWidth?: boolean;
 }) {
   return (
     <Popover
-      placement="right"
+      placement={popoverPlacement}
       shouldCloseOnScroll={false}
       shouldBlockScroll
       onOpenChange={onOpenChange}
@@ -222,7 +227,8 @@ export function Appointment({
           key={appointment.aid}
           className={cn(
             'flex cursor-pointer items-center justify-start gap-1 truncate rounded-lg p-1 px-2 text-tiny hover:bg-default-100',
-            appointment.status === 'cancelled' && 'line-through'
+            appointment.status === 'cancelled' && 'line-through',
+            !fullWidth && 'w-fit'
           )}
         >
           <StatusRenderer isDotOnly status={appointment.status} />
