@@ -72,12 +72,7 @@ export function Calendar({
         );
       case 'year':
         return (
-          <YearView
-            appointments={appointments}
-            currentDate={currentDate}
-            onDateChange={onDateChange}
-            onTimeSlotClick={handleTimeSlotClick}
-          />
+          <YearView appointments={appointments} currentDate={currentDate} />
         );
       default:
         return null;
