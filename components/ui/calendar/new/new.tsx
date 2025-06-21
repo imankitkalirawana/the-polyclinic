@@ -29,6 +29,7 @@ export default function NewAppointmentModal({
           <CreateAppointment
             selectedDate={selectedDate}
             selectedTime={selectedTime}
+            onClose={() => onOpenChange(false)}
           />
         </ModalBody>
       </ModalContent>
