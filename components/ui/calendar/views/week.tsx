@@ -55,7 +55,7 @@ export function WeekView({
   };
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col pb-16">
       {/* Week header using Grid */}
       <div className="grid grid-cols-[auto_repeat(7,1fr)] border-b">
         <div className="w-20 shrink-0 border-r"></div>
@@ -85,8 +85,8 @@ export function WeekView({
         <div
           className="grid h-full"
           style={{
-            gridTemplateColumns: 'auto repeat(7, 1fr)',
-            gridTemplateRows: `repeat(${displayHours.length}, minmax(80px, auto))`,
+            gridTemplateColumns: '80px repeat(7, minmax(100px, 1fr))',
+            gridTemplateRows: `repeat(${displayHours.length}, minmax(80px, 1fr))`,
           }}
         >
           {displayHours.map((hour, hourIndex) => (
