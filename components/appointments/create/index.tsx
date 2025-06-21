@@ -1,6 +1,6 @@
 'use client';
 
-import { Accordion, AccordionItem, Link } from '@heroui/react';
+import { Accordion, AccordionItem, addToast, Link } from '@heroui/react';
 import { AccordionTitle } from './title';
 import { useFormik } from 'formik';
 import { UserType } from '@/types/user';
@@ -16,6 +16,11 @@ import AdditionalDetailsSelection, {
 import { AppointmentFormType } from './types';
 import { Gender } from '@/lib/interface';
 import { AppointmentMode, AType } from '@/types/appointment';
+import axios from 'axios';
+import { useAppointmentData } from '@/components/dashboard/appointments/store';
+import { useQueryClient } from '@tanstack/react-query';
+import { apiRequest } from '@/lib/axios';
+import { format } from 'date-fns';
 
 const KeyMap: Record<number, string> = {
   1: 'patient',
@@ -27,10 +32,14 @@ const KeyMap: Record<number, string> = {
 export default function CreateAppointment({
   selectedDate,
   selectedTime,
+  onClose,
 }: {
   selectedDate: Date | null;
   selectedTime: string | null;
+  onClose?: () => void;
 }) {
+  const { refetch } = useAppointmentData();
+  const queryClient = useQueryClient();
   const [currentStep, setCurrentStep] = useState(1);
   const { data: linkedUsers, isLoading: isLinkedUsersLoading } =
     useLinkedUsers();
@@ -60,7 +69,33 @@ export default function CreateAppointment({
       },
     },
     onSubmit: async (values) => {
-      console.log(values);
+      try {
+        await apiRequest({
+          method: 'POST',
+          url: '/api/v1/appointments',
+          data: values,
+          onSuccess: async () => {
+            addToast({
+              title: 'Appointment Scheduled',
+              description: `Your appointment with ${values.doctor?.name} has been scheduled for ${format(values.date, 'PPp')}.`,
+              color: 'success',
+            });
+            await Promise.all([
+              queryClient.invalidateQueries({
+                queryKey: ['appointments'],
+              }),
+              refetch(),
+            ]);
+            onClose?.();
+          },
+        });
+      } catch (error) {
+        addToast({
+          title: 'Appointment creation failed',
+          description: 'Appointment creation failed',
+          color: 'danger',
+        });
+      }
     },
   });
 
@@ -173,7 +208,8 @@ export default function CreateAppointment({
           <AdditionalDetailsSelection
             appointment={appointment}
             handleAppointmentChange={handleAppointmentChange}
-            onContinue={() => setCurrentStep(5)}
+            onContinue={formik.handleSubmit}
+            isSubmitting={formik.isSubmitting}
           />
         </AccordionItem>
       </Accordion>

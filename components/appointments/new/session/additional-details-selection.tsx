@@ -8,12 +8,14 @@ export default function AdditionalDetailsSelection({
   appointment,
   handleAppointmentChange,
   onContinue,
+  isSubmitting,
 }: {
   appointment: AppointmentFormType;
   handleAppointmentChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => void;
   onContinue: () => void;
+  isSubmitting?: boolean;
 }) {
   return (
     <>
@@ -54,6 +56,7 @@ export default function AdditionalDetailsSelection({
             className="w-full xs:w-fit"
             endContent={<Icon icon="tabler:chevron-right" />}
             onPress={onContinue}
+            isLoading={isSubmitting}
           >
             Continue
           </Button>
