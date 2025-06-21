@@ -12,7 +12,7 @@ import {
 } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { AppointmentType } from '@/types/appointment';
-import { useCalendar } from '../store';
+import { View, views } from '../types';
 import {
   Card,
   CardBody,
@@ -26,6 +26,8 @@ import { formatTime } from '../helper';
 import StatusRenderer from '../ui/status-renderer';
 import AppointmentPopover from '../ui/appointment-popover';
 import { useState } from 'react';
+import { TIMINGS } from '@/lib/config';
+import { parseAsStringEnum, useQueryState } from 'nuqs';
 
 interface MonthViewProps {
   appointments: AppointmentType[];
@@ -35,13 +37,14 @@ interface MonthViewProps {
 
 const MAX_APPOINTMENTS_PER_DAY = 2;
 const POPOVER_DELAY = 200;
+const TIME_INTERVAL = 15;
 
 export function MonthView({
   appointments,
   currentDate,
   onTimeSlotClick,
 }: MonthViewProps) {
-  const { setView } = useCalendar();
+  const [_view, setView] = useQueryState('view', parseAsStringEnum(views));
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   const monthStart = startOfMonth(currentDate);
@@ -95,16 +98,34 @@ export function MonthView({
                 'flex select-none flex-col justify-start border-b border-r p-1 last:border-r-0',
                 !isCurrentMonth && 'bg-default-100 text-default-500'
               )}
-              onClick={() => {
+              onClick={(e) => {
                 if (!isPopoverOpen) {
-                  onTimeSlotClick(day);
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  const clickY = e.clientY - rect.top;
+                  const cellHeight = rect.height;
+
+                  const startHour = TIMINGS.appointment.start;
+                  const endHour = TIMINGS.appointment.end;
+                  const hourRange = endHour - startHour;
+
+                  const clickRatio = Math.max(
+                    0,
+                    Math.min(1, clickY / cellHeight)
+                  );
+                  const selectedHour = startHour + clickRatio * hourRange;
+
+                  const minutes =
+                    Math.round((selectedHour % 1) * 4) * TIME_INTERVAL;
+                  const hour = Math.floor(selectedHour);
+
+                  const selectedDateTime = new Date(day);
+                  selectedDateTime.setHours(hour, minutes, 0, 0);
+
+                  onTimeSlotClick(selectedDateTime);
                 }
               }}
             >
-              <DateChip
-                date={day}
-                onClick={() => setView('day', { date: day })}
-              />
+              <DateChip date={day} onClick={() => setView(View.Day)} />
 
               <div>
                 {dayAppointments
@@ -166,17 +187,12 @@ function AppointmentList({
   appointments: AppointmentType[];
   date: Date;
 }) {
-  const { setView } = useCalendar();
-
+  const [_view, setView] = useQueryState('view', parseAsStringEnum(views));
   return (
     <Card className="flex max-w-xs flex-col gap-2 shadow-none">
       <CardHeader className="flex-col items-center gap-2 pb-0">
         <span className="text-small font-medium">{format(date, 'E')}</span>
-        <DateChip
-          date={date}
-          size="lg"
-          onClick={() => setView('day', { date })}
-        />
+        <DateChip date={date} size="lg" onClick={() => setView(View.Day)} />
       </CardHeader>
       <CardBody className="pt-2">
         {appointments.map((appointment) => (

@@ -9,7 +9,8 @@ import { ScheduleView } from './views/schedule';
 import { YearView } from './views/year';
 import NewAppointmentModal from './new/new';
 import { AppointmentType } from '@/types/appointment';
-import { useCalendar } from './store';
+import { View, views } from './types';
+import { parseAsStringEnum, useQueryState } from 'nuqs';
 
 interface CalendarProps {
   appointments: AppointmentType[];
@@ -22,15 +23,16 @@ export function Calendar({
   currentDate,
   onDateChange,
 }: CalendarProps) {
-  const { view, setView } = useCalendar();
+  const [view, setView] = useQueryState(
+    'view',
+    parseAsStringEnum(views).withDefault(View.Month)
+  );
 
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date>(currentDate);
   const [showDialog, setShowDialog] = useState(false);
 
   const handleTimeSlotClick = (date: Date, time?: string) => {
     setSelectedDate(date);
-    setSelectedTime(time || null);
     setShowDialog(true);
   };
 
@@ -112,7 +114,6 @@ export function Calendar({
         open={showDialog}
         onOpenChange={setShowDialog}
         selectedDate={selectedDate}
-        selectedTime={selectedTime}
       />
     </div>
   );

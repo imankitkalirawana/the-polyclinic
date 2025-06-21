@@ -13,7 +13,8 @@ import {
   addDays,
   subDays,
 } from 'date-fns';
-import { useCalendar, View } from './store';
+import { View, views as Views } from './types';
+import { parseAsStringEnum, useQueryState } from 'nuqs';
 
 interface CalendarHeaderProps {
   currentDate: Date;
@@ -32,7 +33,7 @@ export function CalendarHeader({
   currentDate,
   onDateChange,
 }: CalendarHeaderProps) {
-  const { view, setView } = useCalendar();
+  const [view, setView] = useQueryState('view', parseAsStringEnum(Views));
   const navigatePrevious = () => {
     switch (view) {
       case 'month':
@@ -141,8 +142,8 @@ export function CalendarHeader({
         </Button>
         <Select
           aria-label="View"
-          selectedKeys={[view]}
-          defaultSelectedKeys={[view]}
+          selectedKeys={[view || '']}
+          defaultSelectedKeys={[view || '']}
           disallowEmptySelection
           onChange={(e) => setView(e.target.value as View)}
           className="max-w-36"

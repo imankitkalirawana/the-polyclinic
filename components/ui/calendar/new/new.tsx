@@ -6,13 +6,11 @@ import CreateAppointment from '@/components/appointments/create';
 interface NewAppointmentModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  selectedDate: Date | null;
-  selectedTime: string | null;
+  selectedDate: Date;
 }
 
 export default function NewAppointmentModal({
   selectedDate,
-  selectedTime,
   open,
   onOpenChange,
 }: NewAppointmentModalProps) {
@@ -28,7 +26,6 @@ export default function NewAppointmentModal({
         <ModalBody as={ScrollShadow} className="w-full">
           <CreateAppointment
             selectedDate={selectedDate}
-            selectedTime={selectedTime}
             onClose={() => onOpenChange(false)}
           />
         </ModalBody>
