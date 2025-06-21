@@ -26,7 +26,6 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { useQuery } from '@tanstack/react-query';
 
 import { CopyText } from '@/components/ui/copy';
-import FormatTimeInTable from '@/components/ui/format-time-in-table';
 import Skeleton from '@/components/ui/skeleton';
 import { redirectTo } from '@/functions/server-actions';
 import { getAllAppointments } from '@/functions/server-actions/appointment';
@@ -35,6 +34,7 @@ import { rowOptions } from '@/lib/config';
 import { capitalize } from '@/lib/utility';
 import { AppointmentType } from '@/types/appointment';
 import { loadTableConfig, saveTableConfig } from '@/utils/localStorageUtil';
+import { format } from 'date-fns';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   booked: 'default',
@@ -177,13 +177,8 @@ export default function TabularView() {
         case 'date':
           return (
             <div className="space-y-1">
-              <FormatTimeInTable date={appointment.date} template="PP" />
-              <FormatTimeInTable
-                date={appointment.date}
-                template="p"
-                className="text-tiny text-default-400"
-                skeleton={<Skeleton className="h-4 w-20" />}
-              />
+              {format(appointment.date, 'PP')}
+              {format(appointment.date, 'p')}
             </div>
           );
         case 'doctor.name':
@@ -215,16 +210,8 @@ export default function TabularView() {
             <div className="space-y-1">
               {appointment.createdAt && (
                 <>
-                  <FormatTimeInTable
-                    date={appointment.createdAt}
-                    template="PP"
-                  />
-                  <FormatTimeInTable
-                    date={appointment.createdAt}
-                    template="p"
-                    className="text-tiny text-default-400"
-                    skeleton={<Skeleton className="h-4 w-20" />}
-                  />
+                  {format(appointment.createdAt, 'PP')}
+                  {format(appointment.createdAt, 'p')}
                 </>
               )}
             </div>

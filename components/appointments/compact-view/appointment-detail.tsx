@@ -15,8 +15,6 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import AsyncButton from '../../ui/buttons/async-button';
 import CellValue from '../../ui/cell-value';
 import AddtoCalendar from '../../ui/appointments/add-to-calendar';
-import CancelAppointment from '../common/cancel-appointement';
-import RescheduleAppointment from '../common/reschedule-appointment';
 
 import { downloadAppointmentReceipt } from '@/functions/client/appointment/receipt';
 import {
@@ -54,20 +52,10 @@ export default function AppointmentDetail({
   }, []);
 
   const modalMap: Record<string, JSX.Element> = {
-    cancel: (
-      <CancelAppointment
-        appointment={appointment}
-        modal={modal}
-        setAppointments={setAppointments}
-      />
-    ),
+    cancel: <AddtoCalendar appointment={appointment} onClose={modal.onClose} />,
     download: <div>Download</div>,
     reschedule: (
-      <RescheduleAppointment
-        appointment={appointment}
-        modal={modal}
-        setAppointments={setAppointments}
-      />
+      <AddtoCalendar appointment={appointment} onClose={modal.onClose} />
     ),
     addToCalendar: (
       <AddtoCalendar appointment={appointment} onClose={modal.onClose} />

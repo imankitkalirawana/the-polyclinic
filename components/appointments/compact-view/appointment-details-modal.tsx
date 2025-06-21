@@ -24,13 +24,12 @@ import {
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import CancelModal from '../modals/cancel-modal';
-import RescheduleModal from '../modals/reschedule-modal';
 import { getAppointmentStyles } from './appointments';
 import { useForm } from './context';
 
 import { downloadAppointmentReceipt } from '@/functions/client/appointment/receipt';
 import { cn } from '@/lib/utils';
+import FixMeModal from '@/components/ui/fix-me/modal';
 
 interface DropdownItemProps {
   key: string;
@@ -154,8 +153,8 @@ export default function AppointmentDetailsModal() {
   );
 
   const modalMap: Record<string, React.ReactNode> = {
-    reschedule: <RescheduleModal />,
-    cancel: <CancelModal />,
+    reschedule: <FixMeModal />,
+    cancel: <FixMeModal />,
   };
 
   return (
