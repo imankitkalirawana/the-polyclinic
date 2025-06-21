@@ -8,6 +8,7 @@ import {
   AType,
 } from '@/types/appointment';
 import { faker } from '@faker-js/faker';
+import { addDays, subDays } from 'date-fns';
 
 export async function generateAppointments({
   count,
@@ -24,7 +25,10 @@ export async function generateAppointments({
 
     const appointment: AppointmentType = {
       aid: faker.number.int({ min: 1000, max: 9999 }),
-      date: faker.date.recent(),
+      date: faker.date.between({
+        from: subDays(new Date(), 365),
+        to: addDays(new Date(), 365),
+      }),
       patient: {
         uid: faker.number.int({ min: 1000, max: 9999 }),
         name: faker.person.fullName({ sex }),

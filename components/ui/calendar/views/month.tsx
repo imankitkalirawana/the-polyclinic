@@ -16,11 +16,13 @@ import { View, views } from '../types';
 import {
   Card,
   CardBody,
+  CardFooter,
   CardHeader,
   Popover,
   PopoverContent,
   PopoverProps,
   PopoverTrigger,
+  ScrollShadow,
 } from '@heroui/react';
 import DateChip from '../ui/date-chip';
 import { formatTime } from '../helper';
@@ -185,21 +187,36 @@ export function AppointmentList({
   appointments,
   date,
 }: {
-  appointments: AppointmentType[];
+  appointments: AppointmentType[] | null;
   date: Date;
 }) {
   const [_view, setView] = useQueryState('view', parseAsStringEnum(views));
   return (
-    <Card className="flex max-w-xs flex-col gap-2 shadow-none">
+    <Card className="flex max-w-xs flex-col shadow-none">
       <CardHeader className="flex-col items-center gap-2 pb-0">
-        <span className="text-small font-medium">{format(date, 'E')}</span>
+        <span className="text-small font-medium uppercase">
+          {format(date, 'E')}
+        </span>
         <DateChip date={date} size="lg" onClick={() => setView(View.Day)} />
       </CardHeader>
-      <CardBody className="pt-2">
-        {appointments.map((appointment) => (
-          <Appointment appointment={appointment} key={appointment.aid} />
-        ))}
+      <CardBody as={ScrollShadow} className="max-h-40 flex-col pt-2">
+        {appointments && appointments.length > 0 ? (
+          appointments.map((appointment) => (
+            <Appointment appointment={appointment} key={appointment.aid} />
+          ))
+        ) : (
+          <p className="pb-4 text-center text-small text-default-500">
+            There are no appointments for this day
+          </p>
+        )}
       </CardBody>
+      <CardFooter className="pt-0">
+        {appointments && appointments.length > 0 && (
+          <p className="text-center text-tiny text-default-500">
+            Total appointments: {appointments.length}
+          </p>
+        )}
+      </CardFooter>
     </Card>
   );
 }
@@ -226,19 +243,19 @@ export function Appointment({
         <div
           key={appointment.aid}
           className={cn(
-            'flex cursor-pointer items-center justify-start gap-1 truncate rounded-lg p-1 px-2 text-tiny hover:bg-default-100',
+            'flex min-h-6 cursor-pointer items-center justify-start gap-1 truncate rounded-lg p-1 px-2 text-tiny hover:bg-default-100',
             appointment.status === 'cancelled' && 'line-through',
             !fullWidth && 'w-fit'
           )}
         >
           <StatusRenderer isDotOnly status={appointment.status} />
-          <span className="font-light">
+          <div className="font-light">
             {formatTime(new Date(appointment.date))}
-          </span>
-          <span className="font-medium">
+          </div>
+          <div className="font-medium">
             {appointment.patient.name}{' '}
             {appointment.doctor?.name ? `- ${appointment.doctor.name}` : ''}
-          </span>
+          </div>
         </div>
       </PopoverTrigger>
       <PopoverContent className="p-0">
