@@ -1,5 +1,4 @@
 'use client';
-
 import { Accordion, AccordionItem, addToast, Link } from '@heroui/react';
 import { AccordionTitle } from './title';
 import { useFormik } from 'formik';
@@ -16,7 +15,6 @@ import AdditionalDetailsSelection, {
 import { AppointmentFormType } from './types';
 import { Gender } from '@/lib/interface';
 import { AppointmentMode, AType } from '@/types/appointment';
-import axios from 'axios';
 import { useAppointmentData } from '@/components/dashboard/appointments/store';
 import { useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/axios';
@@ -86,6 +84,7 @@ export default function CreateAppointment({
               }),
               refetch(),
             ]);
+            formik.resetForm();
             onClose?.();
           },
         });
