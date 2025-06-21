@@ -1,6 +1,4 @@
-import { AppointmentStatus } from '@/types/appointment';
-
-type Color =
+export type Color =
   | 'red'
   | 'orange'
   | 'amber'
@@ -97,17 +95,4 @@ export const randomColorClass = ({
   const result = `${resolvedType}-${resolvedColor}-${resolvedWeight}`;
   console.log(result);
   return result;
-};
-
-export const getStatusColor = (status: AppointmentStatus) => {
-  switch (status.toLowerCase()) {
-    case 'booked':
-      return 'text-blue-600 bg-blue-50';
-    case 'cancelled':
-      return 'text-red-600 bg-red-50';
-    case 'completed':
-      return 'text-green-600 bg-green-50';
-    default:
-      return 'text-gray-600 bg-gray-50';
-  }
 };
