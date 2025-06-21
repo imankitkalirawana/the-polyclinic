@@ -159,7 +159,7 @@ export function MonthView({
                     }}
                   >
                     <PopoverTrigger>
-                      <button className="w-full truncate rounded-lg p-1 px-2 text-start text-tiny hover:bg-default-100">
+                      <button className="truncate rounded-lg p-1 px-2 text-start text-tiny hover:bg-default-100">
                         {dayAppointments.length - maxAppointmentsToShow} more
                       </button>
                     </PopoverTrigger>
@@ -180,7 +180,7 @@ export function MonthView({
   );
 }
 
-function AppointmentList({
+export function AppointmentList({
   appointments,
   date,
 }: {
@@ -203,7 +203,7 @@ function AppointmentList({
   );
 }
 
-function Appointment({
+export function Appointment({
   appointment,
   onOpenChange,
 }: {

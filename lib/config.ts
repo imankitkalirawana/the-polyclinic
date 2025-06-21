@@ -29,7 +29,7 @@ export const rowOptions = [
 export const TIMINGS = {
   appointment: {
     start: 9,
-    end: 17,
+    end: 23,
   },
   booking: {
     maximum: 30, // in days
