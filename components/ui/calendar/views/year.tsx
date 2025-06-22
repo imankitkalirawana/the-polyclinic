@@ -27,7 +27,7 @@ import {
 } from '@heroui/react';
 import { AppointmentList } from './month';
 import { AppointmentType } from '@/types/appointment';
-import { memo, useMemo, useCallback } from 'react';
+import { memo, useMemo, useCallback, useState } from 'react';
 
 interface YearViewProps {
   appointments: AppointmentType[];
@@ -60,6 +60,10 @@ const DayCell = memo(
     dayAppointments: AppointmentType[];
   }) => {
     const isDayToday = isToday(day);
+    const [appointment, setAppointment] = useState<AppointmentType | null>(
+      null
+    );
+    const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
     return (
       <Popover shouldCloseOnScroll={false} shouldBlockScroll>
@@ -82,7 +86,12 @@ const DayCell = memo(
           </div>
         </PopoverTrigger>
         <PopoverContent className="p-0">
-          <AppointmentList appointments={dayAppointments} date={day} />
+          <AppointmentList
+            appointments={dayAppointments}
+            date={day}
+            setAppointment={setAppointment}
+            setIsPopoverOpen={setIsPopoverOpen}
+          />
         </PopoverContent>
       </Popover>
     );

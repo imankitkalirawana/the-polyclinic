@@ -10,9 +10,8 @@ import {
 } from 'date-fns';
 import { cn } from '@/lib/utils';
 import type { AppointmentType } from '@/types/appointment';
-// Assuming Appointment component is correctly imported from month.tsx or a shared components directory
-import { Appointment, AppointmentList } from './month'; // Or adjust path if it's shared
-import { TIMINGS } from '@/lib/config'; // Assuming this provides start/end hours
+import { AppointmentList } from './month';
+import { TIMINGS } from '@/lib/config';
 import {
   Popover,
   PopoverContent,
@@ -21,11 +20,14 @@ import {
 } from '@heroui/react';
 import { useEffect, useRef, useState } from 'react';
 import { CurrentHourIndicator } from '../ui/current-hour-indicator';
+import StatusRenderer from '../ui/status-renderer';
+import { formatTime } from '../helper';
+import AppointmentDrawer from '../ui/appointment-drawer';
 
 interface WeekViewProps {
   appointments: AppointmentType[];
   currentDate: Date;
-  onTimeSlotClick: (date: Date) => void; // Matches MonthView's onTimeSlotClick signature
+  onTimeSlotClick: (date: Date) => void;
 }
 
 const MAX_APPOINTMENTS_PER_HOUR_DISPLAY = 2;
@@ -42,6 +44,7 @@ export function WeekView({
   const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd });
 
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const [appointment, setAppointment] = useState<AppointmentType | null>(null);
 
   const displayHours = Array.from(
     { length: TIMINGS.appointment.end - TIMINGS.appointment.start },
@@ -70,114 +73,148 @@ export function WeekView({
   }, []);
 
   return (
-    <div className="flex h-full flex-col">
-      {/* Week header using Grid */}
-      <div className="grid grid-cols-[auto_repeat(7,1fr)] border-b">
-        <div className="w-20 shrink-0 border-r"></div>
-        {/* Empty top-left cell */}
-        {weekDays.map((day) => (
-          <div
-            key={`header-${day.toISOString()}`}
-            className="border-r p-2 text-center last:border-r-0"
-          >
-            <div className="text-small text-default-500">
-              {format(day, 'EEE')}
-            </div>
+    <>
+      <div className="flex h-full flex-col">
+        {/* Week header using Grid */}
+        <div className="grid grid-cols-[auto_repeat(7,1fr)] border-b">
+          <div className="w-20 shrink-0 border-r"></div>
+          {/* Empty top-left cell */}
+          {weekDays.map((day) => (
             <div
-              className={cn(
-                'mx-auto flex h-8 w-8 items-center justify-center rounded-full text-large font-medium',
-                isToday(day) && 'bg-primary text-primary-foreground'
-              )}
+              key={`header-${day.toISOString()}`}
+              className="border-r p-2 text-center last:border-r-0"
             >
-              {format(day, 'd')}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Time grid using Grid */}
-      <ScrollShadow className="flex-1 overflow-auto">
-        <div
-          className="grid h-full"
-          style={{
-            gridTemplateColumns: '80px repeat(7, minmax(100px, 1fr))',
-            gridTemplateRows: `repeat(${displayHours.length}, minmax(80px, 1fr))`,
-          }}
-        >
-          {displayHours.map((hour, hourIndex) => (
-            <>
-              {/* Time Label Cell */}
-              <div
-                key={`time-${hour}`}
-                className="row-span-1 w-20 shrink-0 border-b border-r p-2 text-right text-small text-default-500"
-                style={{ gridRowStart: hourIndex + 1, gridColumnStart: 1 }}
-              >
-                {hour < 12
-                  ? `${hour} AM`
-                  : hour === 12
-                    ? '12 PM'
-                    : `${hour - 12} PM`}
+              <div className="text-small text-default-500">
+                {format(day, 'EEE')}
               </div>
+              <div
+                className={cn(
+                  'mx-auto flex h-8 w-8 items-center justify-center rounded-full text-large font-medium',
+                  isToday(day) && 'bg-primary text-primary-foreground'
+                )}
+              >
+                {format(day, 'd')}
+              </div>
+            </div>
+          ))}
+        </div>
 
-              {/* Day Cells for this Hour */}
-              {weekDays.map((day, dayIndex) => {
-                const dayAppointments = getAppointmentsForDayAndHour(day, hour);
-                return (
-                  <div
-                    key={`cell-${day.toISOString()}-${hour}`}
-                    className={cn(
-                      'relative min-h-[80px] cursor-pointer border-b border-r p-1',
-                      dayIndex === weekDays.length - 1 && 'last:border-r-0' // Ensure last column has no right border
-                    )}
-                    style={{
-                      gridRowStart: hourIndex + 1,
-                      gridColumnStart: dayIndex + 2, // +2 because time label is column 1
-                    }}
-                    onClick={(e) => {
-                      if (!isPopoverOpen) {
-                        const rect = e.currentTarget.getBoundingClientRect();
-                        const clickY = e.clientY - rect.top;
-                        const cellHeight = rect.height;
+        {/* Time grid using Grid */}
+        <ScrollShadow className="flex-1 overflow-auto">
+          <div
+            className="grid h-full"
+            style={{
+              gridTemplateColumns: '80px repeat(7, minmax(100px, 1fr))',
+              gridTemplateRows: `repeat(${displayHours.length}, minmax(80px, 1fr))`,
+            }}
+          >
+            {displayHours.map((hour, hourIndex) => (
+              <>
+                {/* Time Label Cell */}
+                <div
+                  key={`time-${hour}`}
+                  className="row-span-1 w-20 shrink-0 border-b border-r p-2 text-right text-small text-default-500"
+                  style={{ gridRowStart: hourIndex + 1, gridColumnStart: 1 }}
+                >
+                  {hour < 12
+                    ? `${hour} AM`
+                    : hour === 12
+                      ? '12 PM'
+                      : `${hour - 12} PM`}
+                </div>
 
-                        const clickRatio =
-                          cellHeight > 0
-                            ? Math.max(0, Math.min(1, clickY / cellHeight))
-                            : 0;
+                {/* Day Cells for this Hour */}
+                {weekDays.map((day, dayIndex) => {
+                  const dayAppointments = getAppointmentsForDayAndHour(
+                    day,
+                    hour
+                  );
+                  return (
+                    <div
+                      key={`cell-${day.toISOString()}-${hour}`}
+                      className={cn(
+                        'relative min-h-[80px] cursor-pointer overflow-hidden border-b border-r p-1',
+                        dayIndex === weekDays.length - 1 && 'last:border-r-0' // Ensure last column has no right border
+                      )}
+                      style={{
+                        gridRowStart: hourIndex + 1,
+                        gridColumnStart: dayIndex + 2, // +2 because time label is column 1
+                      }}
+                      onClick={(e) => {
+                        if (!isPopoverOpen) {
+                          const rect = e.currentTarget.getBoundingClientRect();
+                          const clickY = e.clientY - rect.top;
+                          const cellHeight = rect.height;
 
-                        const minutesOffset =
-                          Math.round((clickRatio * 60) / 15) * 15;
+                          const clickRatio =
+                            cellHeight > 0
+                              ? Math.max(0, Math.min(1, clickY / cellHeight))
+                              : 0;
 
-                        let targetHour = hour;
-                        let targetMinutes = minutesOffset;
+                          const minutesOffset =
+                            Math.round((clickRatio * 60) / 15) * 15;
 
-                        if (targetMinutes >= 60) {
-                          targetHour += 1;
-                          targetMinutes -= 60;
+                          let targetHour = hour;
+                          let targetMinutes = minutesOffset;
+
+                          if (targetMinutes >= 60) {
+                            targetHour += 1;
+                            targetMinutes -= 60;
+                          }
+
+                          const clickedDateTime = new Date(day);
+                          clickedDateTime.setHours(
+                            targetHour,
+                            targetMinutes,
+                            0,
+                            0
+                          );
+
+                          onTimeSlotClick(clickedDateTime);
                         }
-
-                        const clickedDateTime = new Date(day);
-                        clickedDateTime.setHours(
-                          targetHour,
-                          targetMinutes,
-                          0,
-                          0
-                        );
-
-                        onTimeSlotClick(clickedDateTime);
-                      }
-                    }}
-                  >
-                    {new Date().getHours() === hour && isToday(day) && (
-                      <CurrentHourIndicator ref={ref} />
-                    )}
-                    {dayAppointments
-                      .slice(0, MAX_APPOINTMENTS_PER_HOUR_DISPLAY)
-                      .map((apt) => (
-                        // Assuming Appointment component handles its own popover and styling
-                        <Appointment
-                          appointment={apt}
-                          key={apt.aid}
+                      }}
+                    >
+                      {new Date().getHours() === hour && isToday(day) && (
+                        <CurrentHourIndicator ref={ref} />
+                      )}
+                      {dayAppointments
+                        .slice(0, MAX_APPOINTMENTS_PER_HOUR_DISPLAY)
+                        .map((appointment) => (
+                          // Assuming Appointment component handles its own popover and styling
+                          <button
+                            key={appointment.aid}
+                            className={cn(
+                              'flex min-h-6 cursor-pointer items-center justify-start gap-1 truncate rounded-lg p-1 text-tiny hover:bg-default-100 md:px-2',
+                              appointment.status === 'cancelled' &&
+                                'line-through'
+                            )}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setAppointment(appointment);
+                              setIsPopoverOpen(true);
+                            }}
+                          >
+                            <StatusRenderer
+                              isDotOnly
+                              status={appointment.status}
+                            />
+                            <div className="hidden font-light sm:block">
+                              {formatTime(new Date(appointment.date))}
+                            </div>
+                            <div className="font-medium">
+                              {appointment.patient.name}{' '}
+                              {appointment.doctor?.name
+                                ? `- ${appointment.doctor.name}`
+                                : ''}
+                            </div>
+                          </button>
+                        ))}
+                      {/* Optionally, add a "X more" indicator if needed */}
+                      {dayAppointments.length >
+                        MAX_APPOINTMENTS_PER_HOUR_DISPLAY && (
+                        <Popover
                           onOpenChange={(open) => {
+                            // instantly open the popover but delay by 100ms when closing
                             if (open) {
                               setIsPopoverOpen(true);
                             } else {
@@ -186,45 +223,46 @@ export function WeekView({
                               }, POPOVER_DELAY);
                             }
                           }}
-                        />
-                      ))}
-                    {/* Optionally, add a "X more" indicator if needed */}
-                    {dayAppointments.length >
-                      MAX_APPOINTMENTS_PER_HOUR_DISPLAY && (
-                      <Popover
-                        onOpenChange={(open) => {
-                          // instantly open the popover but delay by 100ms when closing
-                          if (open) {
-                            setIsPopoverOpen(true);
-                          } else {
-                            setTimeout(() => {
-                              setIsPopoverOpen(false);
-                            }, POPOVER_DELAY);
-                          }
-                        }}
-                      >
-                        <PopoverTrigger>
-                          <button className="truncate rounded-lg p-1 px-2 text-start text-tiny hover:bg-default-100">
-                            {dayAppointments.length -
-                              MAX_APPOINTMENTS_PER_HOUR_DISPLAY}{' '}
-                            more
-                          </button>
-                        </PopoverTrigger>
-                        <PopoverContent className="p-0">
-                          <AppointmentList
-                            appointments={dayAppointments}
-                            date={day}
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    )}
-                  </div>
-                );
-              })}
-            </>
-          ))}
-        </div>
-      </ScrollShadow>
-    </div>
+                        >
+                          <PopoverTrigger>
+                            <button className="truncate rounded-lg p-1 px-2 text-start text-tiny hover:bg-default-100">
+                              {dayAppointments.length -
+                                MAX_APPOINTMENTS_PER_HOUR_DISPLAY}{' '}
+                              more
+                            </button>
+                          </PopoverTrigger>
+                          <PopoverContent className="p-0">
+                            <AppointmentList
+                              appointments={dayAppointments}
+                              date={day}
+                              setAppointment={setAppointment}
+                              setIsPopoverOpen={setIsPopoverOpen}
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      )}
+                    </div>
+                  );
+                })}
+              </>
+            ))}
+          </div>
+        </ScrollShadow>
+      </div>
+      <AppointmentDrawer
+        isOpen={isPopoverOpen}
+        appointment={appointment}
+        key={appointment?.aid}
+        onOpenChange={(open) => {
+          if (open) {
+            setIsPopoverOpen(true);
+          } else {
+            setTimeout(() => {
+              setIsPopoverOpen(false);
+            }, POPOVER_DELAY);
+          }
+        }}
+      />
+    </>
   );
 }
