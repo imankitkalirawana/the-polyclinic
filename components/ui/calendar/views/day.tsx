@@ -5,27 +5,20 @@ import { cn } from '@/lib/utils';
 import type { AppointmentType } from '@/types/appointment';
 import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import { TIMINGS } from '@/lib/config'; // Assuming this provides start/end hours
-import { AppointmentList } from './month'; // Assuming Appointment component is in ./month.tsx
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  ScrollShadow,
-} from '@heroui/react';
+import { ScrollShadow, Tooltip } from '@heroui/react';
 import { CurrentHourIndicator } from '../ui/current-hour-indicator';
 import DateChip from '../ui/date-chip';
-import StatusRenderer from '../ui/status-renderer';
-import { formatTime } from '../helper';
 import AppointmentDrawer from '../ui/appointment-drawer';
+import { useCalendarStore } from '../store';
+import AppointmentTriggerItem from '../ui/appointment-trigger-item';
+import AppointmentList from '../ui/appointment-list';
+import { MAX_APPOINTMENTS_IN_CELL } from '../data';
 
 interface DayViewProps {
   appointments: AppointmentType[];
   currentDate: Date;
-  onTimeSlotClick: (date: Date) => void; // Updated signature
+  onTimeSlotClick: (date: Date) => void;
 }
-
-const MAX_APPOINTMENTS_PER_HOUR_DISPLAY = 2; // Or your preferred limit
-const POPOVER_DELAY = 200;
 
 export function DayView({
   appointments,
@@ -33,21 +26,17 @@ export function DayView({
   onTimeSlotClick,
 }: DayViewProps) {
   const ref = useRef<HTMLDivElement>(null);
-  // Display hours based on TIMINGS config
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  const [appointment, setAppointment] = useState<AppointmentType | null>(null);
+  const { appointment, setIsTooltipOpen } = useCalendarStore();
 
   const displayHours = Array.from(
     { length: TIMINGS.appointment.end - TIMINGS.appointment.start },
     (_, i) => i + TIMINGS.appointment.start
-  ); // e.g., 9, 10, ..., 16 (for 9 AM to 5 PM view)
+  );
 
-  // Filter appointments for the current day once
   const dayAppointments = appointments.filter((apt) =>
     isSameDay(new Date(apt.date), currentDate)
   );
 
-  // Get all appointments for a specific hour on the current day
   const getAppointmentsForHour = (hour: number) => {
     return dayAppointments.filter((apt) => {
       const aptDate = new Date(apt.date);
@@ -119,7 +108,7 @@ export function DayView({
                       gridColumnStart: 2,
                     }}
                     onClick={(e: MouseEvent<HTMLDivElement>) => {
-                      if (!isPopoverOpen) {
+                      if (!appointment) {
                         const rect = e.currentTarget.getBoundingClientRect();
                         const clickY = e.clientY - rect.top;
                         const cellHeight = rect.height;
@@ -163,66 +152,28 @@ export function DayView({
                       <CurrentHourIndicator ref={ref} />
                     )}
                     {appointmentsInHour
-                      .slice(0, MAX_APPOINTMENTS_PER_HOUR_DISPLAY)
+                      .slice(0, MAX_APPOINTMENTS_IN_CELL)
                       .map((appointment) => (
-                        <button
+                        <AppointmentTriggerItem
                           key={appointment.aid}
-                          className={cn(
-                            'flex min-h-6 cursor-pointer items-center justify-start gap-1 truncate rounded-lg p-1 text-tiny hover:bg-default-100 md:px-2',
-                            appointment.status === 'cancelled' && 'line-through'
-                          )}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setAppointment(appointment);
-                            setIsPopoverOpen(true);
-                          }}
-                        >
-                          <StatusRenderer
-                            isDotOnly
-                            status={appointment.status}
-                          />
-                          <div className="hidden font-light sm:block">
-                            {formatTime(new Date(appointment.date))}
-                          </div>
-                          <div className="font-medium">
-                            {appointment.patient.name}{' '}
-                            {appointment.doctor?.name
-                              ? `- ${appointment.doctor.name}`
-                              : ''}
-                          </div>
-                        </button>
+                          appointment={appointment}
+                        />
                       ))}
-                    {appointmentsInHour.length >
-                      MAX_APPOINTMENTS_PER_HOUR_DISPLAY && (
-                      <Popover
-                        shouldCloseOnScroll={false}
-                        shouldBlockScroll
-                        onOpenChange={(open) => {
-                          if (open) {
-                            setIsPopoverOpen(true);
-                          } else {
-                            setTimeout(() => {
-                              setIsPopoverOpen(false);
-                            }, POPOVER_DELAY);
-                          }
-                        }}
-                      >
-                        <PopoverTrigger>
-                          <button className="truncate rounded-lg p-1 px-2 text-start text-tiny hover:bg-default-100">
-                            {dayAppointments.length -
-                              MAX_APPOINTMENTS_PER_HOUR_DISPLAY}{' '}
-                            more
-                          </button>
-                        </PopoverTrigger>
-                        <PopoverContent className="p-0">
+                    {appointmentsInHour.length > MAX_APPOINTMENTS_IN_CELL && (
+                      <Tooltip
+                        content={
                           <AppointmentList
                             appointments={appointmentsInHour}
                             date={currentDate}
-                            setAppointment={setAppointment}
-                            setIsPopoverOpen={setIsPopoverOpen}
                           />
-                        </PopoverContent>
-                      </Popover>
+                        }
+                        onOpenChange={setIsTooltipOpen}
+                      >
+                        <button className="truncate rounded-lg p-1 px-2 text-start text-tiny hover:bg-default-100">
+                          {dayAppointments.length - MAX_APPOINTMENTS_IN_CELL}{' '}
+                          more
+                        </button>
+                      </Tooltip>
                     )}
                   </div>
                 </>
@@ -231,20 +182,7 @@ export function DayView({
           </div>
         </ScrollShadow>
       </div>
-      <AppointmentDrawer
-        isOpen={isPopoverOpen}
-        appointment={appointment}
-        key={appointment?.aid}
-        onOpenChange={(open) => {
-          if (open) {
-            setIsPopoverOpen(true);
-          } else {
-            setTimeout(() => {
-              setIsPopoverOpen(false);
-            }, POPOVER_DELAY);
-          }
-        }}
-      />
+      <AppointmentDrawer />
     </>
   );
 }

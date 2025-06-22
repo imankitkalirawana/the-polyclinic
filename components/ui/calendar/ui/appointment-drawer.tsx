@@ -28,6 +28,9 @@ import { format } from 'date-fns';
 import StatusRenderer from './status-renderer';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { memo, useMemo, useCallback } from 'react';
+import { useCalendarStore } from '../store';
+
+const DRAWER_DELAY = 200;
 
 // Memoized subcomponents
 const AppointmentHeading = memo(function AppointmentHeading({
@@ -359,22 +362,23 @@ const AppointmentFooter = memo(function AppointmentFooter() {
   );
 });
 
-const AppointmentDrawerDesktop = memo(function AppointmentDrawerDesktop({
-  isOpen,
-  appointment,
-  onOpenChange,
-}: {
-  isOpen: boolean;
-  appointment: AppointmentType;
-  onOpenChange?: (isOpen: boolean) => void;
-}) {
+const AppointmentDrawerDesktop = memo(function AppointmentDrawerDesktop() {
+  const { appointment, setAppointment, isTooltipOpen } = useCalendarStore();
+
+  if (!appointment) return null;
+
   return (
     <Drawer
-      backdrop="blur"
       placement="right"
       shouldBlockScroll
-      onOpenChange={onOpenChange}
-      isOpen={isOpen}
+      isOpen={!!appointment}
+      onOpenChange={(open) => {
+        if (!open && !isTooltipOpen) {
+          setTimeout(() => {
+            setAppointment(null);
+          }, DRAWER_DELAY);
+        }
+      }}
       hideCloseButton={true}
       scrollBehavior="inside"
     >
@@ -397,22 +401,24 @@ const AppointmentDrawerDesktop = memo(function AppointmentDrawerDesktop({
   );
 });
 
-const AppointmentDrawerMobile = memo(function AppointmentDrawerMobile({
-  isOpen,
-  appointment,
-  onOpenChange,
-}: {
-  isOpen: boolean;
-  appointment: AppointmentType;
-  onOpenChange?: (isOpen: boolean) => void;
-}) {
+const AppointmentDrawerMobile = memo(function AppointmentDrawerMobile() {
+  const { appointment, setAppointment, isTooltipOpen } = useCalendarStore();
+
+  if (!appointment) return null;
+
   return (
     <Modal
       backdrop="blur"
       placement="bottom"
       shouldBlockScroll
-      onOpenChange={onOpenChange}
-      isOpen={isOpen}
+      isOpen={!!appointment}
+      onOpenChange={(open) => {
+        if (!open && !isTooltipOpen) {
+          setTimeout(() => {
+            setAppointment(null);
+          }, DRAWER_DELAY);
+        }
+      }}
       hideCloseButton={true}
       scrollBehavior="inside"
     >
@@ -435,30 +441,8 @@ const AppointmentDrawerMobile = memo(function AppointmentDrawerMobile({
   );
 });
 
-export default function AppointmentDrawer({
-  isOpen,
-  appointment,
-  onOpenChange,
-}: {
-  isOpen: boolean;
-  appointment: AppointmentType | null;
-  onOpenChange?: (isOpen: boolean) => void;
-}) {
+export default function AppointmentDrawer() {
   const isMobile = useIsMobile();
 
-  if (!appointment) return null;
-
-  return isMobile ? (
-    <AppointmentDrawerMobile
-      isOpen={isOpen}
-      appointment={appointment}
-      onOpenChange={onOpenChange}
-    />
-  ) : (
-    <AppointmentDrawerDesktop
-      isOpen={isOpen}
-      appointment={appointment}
-      onOpenChange={onOpenChange}
-    />
-  );
+  return isMobile ? <AppointmentDrawerMobile /> : <AppointmentDrawerDesktop />;
 }

@@ -10,28 +10,21 @@ import {
 } from 'date-fns';
 import { cn } from '@/lib/utils';
 import type { AppointmentType } from '@/types/appointment';
-import { AppointmentList } from './month';
 import { TIMINGS } from '@/lib/config';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  ScrollShadow,
-} from '@heroui/react';
-import { useEffect, useRef, useState } from 'react';
+import { ScrollShadow, Tooltip } from '@heroui/react';
+import { useEffect, useRef } from 'react';
 import { CurrentHourIndicator } from '../ui/current-hour-indicator';
-import StatusRenderer from '../ui/status-renderer';
-import { formatTime } from '../helper';
 import AppointmentDrawer from '../ui/appointment-drawer';
+import AppointmentList from '../ui/appointment-list';
+import { useCalendarStore } from '../store';
+import AppointmentTriggerItem from '../ui/appointment-trigger-item';
+import { MAX_APPOINTMENTS_IN_CELL } from '../data';
 
 interface WeekViewProps {
   appointments: AppointmentType[];
   currentDate: Date;
   onTimeSlotClick: (date: Date) => void;
 }
-
-const MAX_APPOINTMENTS_PER_HOUR_DISPLAY = 2;
-const POPOVER_DELAY = 200;
 
 export function WeekView({
   appointments,
@@ -43,9 +36,7 @@ export function WeekView({
   const weekEnd = endOfWeek(currentDate);
   const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd });
 
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  const [appointment, setAppointment] = useState<AppointmentType | null>(null);
-
+  const { appointment, setIsTooltipOpen, setAppointment } = useCalendarStore();
   const displayHours = Array.from(
     { length: TIMINGS.appointment.end - TIMINGS.appointment.start },
     (_, i) => i + TIMINGS.appointment.start
@@ -100,7 +91,7 @@ export function WeekView({
         </div>
 
         {/* Time grid using Grid */}
-        <ScrollShadow className="flex-1 overflow-auto">
+        <ScrollShadow hideScrollBar className="flex-1 overflow-auto">
           <div
             className="grid h-full"
             style={{
@@ -141,7 +132,7 @@ export function WeekView({
                         gridColumnStart: dayIndex + 2, // +2 because time label is column 1
                       }}
                       onClick={(e) => {
-                        if (!isPopoverOpen) {
+                        if (!appointment) {
                           const rect = e.currentTarget.getBoundingClientRect();
                           const clickY = e.clientY - rect.top;
                           const cellHeight = rect.height;
@@ -178,68 +169,29 @@ export function WeekView({
                         <CurrentHourIndicator ref={ref} />
                       )}
                       {dayAppointments
-                        .slice(0, MAX_APPOINTMENTS_PER_HOUR_DISPLAY)
+                        .slice(0, MAX_APPOINTMENTS_IN_CELL)
                         .map((appointment) => (
-                          // Assuming Appointment component handles its own popover and styling
-                          <button
+                          <AppointmentTriggerItem
                             key={appointment.aid}
-                            className={cn(
-                              'flex min-h-6 cursor-pointer items-center justify-start gap-1 truncate rounded-lg p-1 text-tiny hover:bg-default-100 md:px-2',
-                              appointment.status === 'cancelled' &&
-                                'line-through'
-                            )}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setAppointment(appointment);
-                              setIsPopoverOpen(true);
-                            }}
-                          >
-                            <StatusRenderer
-                              isDotOnly
-                              status={appointment.status}
-                            />
-                            <div className="hidden font-light sm:block">
-                              {formatTime(new Date(appointment.date))}
-                            </div>
-                            <div className="font-medium">
-                              {appointment.patient.name}{' '}
-                              {appointment.doctor?.name
-                                ? `- ${appointment.doctor.name}`
-                                : ''}
-                            </div>
-                          </button>
+                            appointment={appointment}
+                          />
                         ))}
                       {/* Optionally, add a "X more" indicator if needed */}
-                      {dayAppointments.length >
-                        MAX_APPOINTMENTS_PER_HOUR_DISPLAY && (
-                        <Popover
-                          onOpenChange={(open) => {
-                            // instantly open the popover but delay by 100ms when closing
-                            if (open) {
-                              setIsPopoverOpen(true);
-                            } else {
-                              setTimeout(() => {
-                                setIsPopoverOpen(false);
-                              }, POPOVER_DELAY);
-                            }
-                          }}
-                        >
-                          <PopoverTrigger>
-                            <button className="truncate rounded-lg p-1 px-2 text-start text-tiny hover:bg-default-100">
-                              {dayAppointments.length -
-                                MAX_APPOINTMENTS_PER_HOUR_DISPLAY}{' '}
-                              more
-                            </button>
-                          </PopoverTrigger>
-                          <PopoverContent className="p-0">
+                      {dayAppointments.length > MAX_APPOINTMENTS_IN_CELL && (
+                        <Tooltip
+                          content={
                             <AppointmentList
                               appointments={dayAppointments}
                               date={day}
-                              setAppointment={setAppointment}
-                              setIsPopoverOpen={setIsPopoverOpen}
                             />
-                          </PopoverContent>
-                        </Popover>
+                          }
+                          onOpenChange={setIsTooltipOpen}
+                        >
+                          <button className="truncate rounded-lg p-1 px-2 text-start text-tiny hover:bg-default-100">
+                            {dayAppointments.length - MAX_APPOINTMENTS_IN_CELL}{' '}
+                            more
+                          </button>
+                        </Tooltip>
                       )}
                     </div>
                   );
@@ -249,20 +201,7 @@ export function WeekView({
           </div>
         </ScrollShadow>
       </div>
-      <AppointmentDrawer
-        isOpen={isPopoverOpen}
-        appointment={appointment}
-        key={appointment?.aid}
-        onOpenChange={(open) => {
-          if (open) {
-            setIsPopoverOpen(true);
-          } else {
-            setTimeout(() => {
-              setIsPopoverOpen(false);
-            }, POPOVER_DELAY);
-          }
-        }}
-      />
+      <AppointmentDrawer />
     </>
   );
 }
