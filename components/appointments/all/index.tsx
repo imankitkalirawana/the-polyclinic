@@ -3,13 +3,8 @@ import { Calendar } from '@/components/ui/calendar';
 import { getAllAppointments } from '@/app/appointments/helper';
 import { AppointmentType } from '@/types/appointment';
 import { useQuery } from '@tanstack/react-query';
-import { useQueryState } from 'nuqs';
 
 export default function Appointments() {
-  const [currentDate, setCurrentDate] = useQueryState('date', {
-    defaultValue: new Date().toISOString(),
-  });
-
   const { data } = useQuery({
     queryKey: ['appointments'],
     queryFn: () => getAllAppointments(),
@@ -17,11 +12,5 @@ export default function Appointments() {
 
   const appointments: AppointmentType[] = data || [];
 
-  return (
-    <Calendar
-      appointments={appointments}
-      currentDate={new Date(currentDate)}
-      onDateChange={(date) => setCurrentDate(date.toISOString())}
-    />
-  );
+  return <Calendar appointments={appointments} />;
 }

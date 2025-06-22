@@ -19,6 +19,9 @@ import AppointmentList from '../ui/appointment-list';
 import { useCalendarStore } from '../store';
 import AppointmentTriggerItem from '../ui/appointment-trigger-item';
 import { MAX_APPOINTMENTS_IN_CELL } from '../data';
+import DateChip from '../ui/date-chip';
+import { View, views } from '../types';
+import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs';
 
 interface WeekViewProps {
   appointments: AppointmentType[];
@@ -32,6 +35,12 @@ export function WeekView({
   onTimeSlotClick,
 }: WeekViewProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const [_currentDate, setCurrentDate] = useQueryState(
+    'date',
+    parseAsIsoDateTime.withDefault(new Date())
+  );
+  const [_view, setView] = useQueryState('view', parseAsStringEnum(views));
+
   const weekStart = startOfWeek(currentDate);
   const weekEnd = endOfWeek(currentDate);
   const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd });
@@ -73,19 +82,19 @@ export function WeekView({
           {weekDays.map((day) => (
             <div
               key={`header-${day.toISOString()}`}
-              className="border-r p-2 text-center last:border-r-0"
+              className="flex flex-col items-center border-r p-2 text-center last:border-r-0"
             >
               <div className="text-small text-default-500">
                 {format(day, 'EEE')}
               </div>
-              <div
-                className={cn(
-                  'mx-auto flex h-8 w-8 items-center justify-center rounded-full text-large font-medium',
-                  isToday(day) && 'bg-primary text-primary-foreground'
-                )}
-              >
-                {format(day, 'd')}
-              </div>
+              <DateChip
+                date={day}
+                size="md"
+                onClick={() => {
+                  setView(View.Day);
+                  setCurrentDate(day);
+                }}
+              />
             </div>
           ))}
         </div>

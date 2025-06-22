@@ -10,29 +10,26 @@ import { YearView } from './views/year';
 import NewAppointmentModal from './new/new';
 import { AppointmentType } from '@/types/appointment';
 import { View, views } from './types';
-import { parseAsStringEnum, useQueryState } from 'nuqs';
+import { parseAsStringEnum, useQueryState, parseAsIsoDateTime } from 'nuqs';
 
 interface CalendarProps {
   appointments: AppointmentType[];
-  currentDate: Date;
-  onDateChange: (date: Date) => void;
 }
 
-export function Calendar({
-  appointments,
-  currentDate,
-  onDateChange,
-}: CalendarProps) {
+export function Calendar({ appointments }: CalendarProps) {
   const [view, setView] = useQueryState(
     'view',
     parseAsStringEnum(views).withDefault(View.Month)
   );
+  const [currentDate, setCurrentDate] = useQueryState(
+    'date',
+    parseAsIsoDateTime.withDefault(new Date())
+  );
 
-  const [selectedDate, setSelectedDate] = useState<Date>(currentDate);
   const [showDialog, setShowDialog] = useState(false);
 
   const handleTimeSlotClick = (date: Date, time?: string) => {
-    setSelectedDate(date);
+    setCurrentDate(date);
     setShowDialog(true);
   };
 
@@ -42,7 +39,6 @@ export function Calendar({
         return (
           <MonthView
             appointments={appointments}
-            currentDate={currentDate}
             onTimeSlotClick={handleTimeSlotClick}
           />
         );
@@ -103,12 +99,12 @@ export function Calendar({
 
   return (
     <div className="flex h-[calc(100vh_-_60px)] max-h-[calc(100vh_-_60px)] flex-col overflow-hidden">
-      <CalendarHeader currentDate={currentDate} onDateChange={onDateChange} />
+      <CalendarHeader currentDate={currentDate} onDateChange={setCurrentDate} />
       <div className="h-[calc(100vh_-_120px)] flex-1">{renderView()}</div>
       <NewAppointmentModal
         open={showDialog}
         onOpenChange={setShowDialog}
-        selectedDate={selectedDate}
+        selectedDate={currentDate}
       />
     </div>
   );

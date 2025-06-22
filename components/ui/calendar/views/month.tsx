@@ -10,22 +10,29 @@ import {
   isSameDay,
 } from 'date-fns';
 import { cn } from '@/lib/utils';
-import { MonthViewProps, View, views } from '../types';
+import { View, views } from '../types';
 import { Tooltip } from '@heroui/react';
 import DateChip from '../ui/date-chip';
 import { TIMINGS } from '@/lib/config';
-import { parseAsStringEnum, useQueryState } from 'nuqs';
+import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs';
 import AppointmentDrawer from '../ui/appointment-drawer';
 import { useCalendarStore } from '../store';
 import AppointmentTriggerItem from '../ui/appointment-trigger-item';
 import AppointmentList from '../ui/appointment-list';
 import { MAX_APPOINTMENTS_IN_CELL, TIME_INTERVAL } from '../data';
+import { AppointmentType } from '@/types/appointment';
 
-export function MonthView({
-  appointments,
-  currentDate,
-  onTimeSlotClick,
-}: MonthViewProps) {
+interface MonthViewProps {
+  appointments: AppointmentType[];
+  onTimeSlotClick: (date: Date) => void;
+}
+
+export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
+  const [currentDate, setCurrentDate] = useQueryState(
+    'date',
+    parseAsIsoDateTime.withDefault(new Date())
+  );
+
   const { appointment, setIsTooltipOpen } = useCalendarStore();
 
   const [_view, setView] = useQueryState('view', parseAsStringEnum(views));
@@ -109,7 +116,13 @@ export function MonthView({
                   }
                 }}
               >
-                <DateChip date={day} onClick={() => setView(View.Day)} />
+                <DateChip
+                  date={day}
+                  onClick={() => {
+                    setCurrentDate(day);
+                    setView(View.Day);
+                  }}
+                />
 
                 <div className="flex flex-col">
                   {dayAppointments

@@ -7,7 +7,7 @@ import {
   cn,
   ScrollShadow,
 } from '@heroui/react';
-import { parseAsStringEnum, useQueryState } from 'nuqs';
+import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs';
 import { useCalendarStore } from '../store';
 import { format } from 'date-fns';
 import DateChip from './date-chip';
@@ -22,6 +22,10 @@ export default function AppointmentList({
   appointments: AppointmentType[] | null;
   date: Date;
 }) {
+  const [_currentDate, setCurrentDate] = useQueryState(
+    'date',
+    parseAsIsoDateTime.withDefault(new Date())
+  );
   const [_view, setView] = useQueryState('view', parseAsStringEnum(views));
   const { setAppointment } = useCalendarStore();
 
@@ -31,7 +35,14 @@ export default function AppointmentList({
         <span className="text-small font-medium uppercase">
           {format(date, 'E')}
         </span>
-        <DateChip date={date} size="lg" onClick={() => setView(View.Day)} />
+        <DateChip
+          date={date}
+          size="lg"
+          onClick={() => {
+            setCurrentDate(date);
+            setView(View.Day);
+          }}
+        />
       </CardHeader>
       <CardBody as={ScrollShadow} className="max-h-40 flex-col pt-2">
         {appointments && appointments.length > 0 ? (

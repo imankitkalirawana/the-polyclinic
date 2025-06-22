@@ -9,9 +9,3 @@ export enum View {
   Schedule = 'schedule',
   Year = 'year',
 }
-
-export interface MonthViewProps {
-  appointments: AppointmentType[];
-  currentDate: Date;
-  onTimeSlotClick: (date: Date) => void;
-}
