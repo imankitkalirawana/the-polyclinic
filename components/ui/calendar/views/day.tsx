@@ -6,7 +6,12 @@ import type { AppointmentType } from '@/types/appointment';
 import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import { TIMINGS } from '@/lib/config'; // Assuming this provides start/end hours
 import { Appointment, AppointmentList } from './month'; // Assuming Appointment component is in ./month.tsx
-import { Popover, PopoverContent, PopoverTrigger } from '@heroui/react';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  ScrollShadow,
+} from '@heroui/react';
 import { CurrentHourIndicator } from '../ui/current-hour-indicator';
 import DateChip from '../ui/date-chip';
 
@@ -73,7 +78,7 @@ export function DayView({
       </div>
 
       {/* Time slots using Grid */}
-      <div className="flex-1 overflow-auto">
+      <ScrollShadow className="flex-1 overflow-auto">
         <div
           className="grid h-full"
           style={{
@@ -169,8 +174,9 @@ export function DayView({
                   {appointmentsInHour.length >
                     MAX_APPOINTMENTS_PER_HOUR_DISPLAY && (
                     <Popover
+                      shouldCloseOnScroll={false}
+                      shouldBlockScroll
                       onOpenChange={(open) => {
-                        // instantly open the popover but delay by 100ms when closing
                         if (open) {
                           setIsPopoverOpen(true);
                         } else {
@@ -200,7 +206,7 @@ export function DayView({
             );
           })}
         </div>
-      </div>
+      </ScrollShadow>
     </div>
   );
 }

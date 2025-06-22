@@ -23,6 +23,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
+  ScrollShadow,
 } from '@heroui/react';
 import { AppointmentList } from './month';
 import { AppointmentType } from '@/types/appointment';
@@ -182,7 +183,7 @@ export function YearView({ appointments, currentDate }: YearViewProps) {
   }, [currentDate.getFullYear()]);
 
   return (
-    <div className="h-full overflow-auto p-4 pb-16">
+    <ScrollShadow className="h-full overflow-auto p-4">
       {/* Months grid */}
       <div className="mx-auto grid w-fit auto-rows-fr grid-cols-1 place-items-center gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
         {months.map((month) => (
@@ -194,6 +195,6 @@ export function YearView({ appointments, currentDate }: YearViewProps) {
           </div>
         ))}
       </div>
-    </div>
+    </ScrollShadow>
   );
 }

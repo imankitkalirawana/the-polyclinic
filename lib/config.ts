@@ -139,7 +139,7 @@ export const MOCK_DATA = {
   },
   appointments: {
     isMock: true,
-    count: 1000,
+    count: 10000,
   },
 };
 

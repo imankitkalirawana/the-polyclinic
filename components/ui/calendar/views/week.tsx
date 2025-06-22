@@ -13,7 +13,12 @@ import type { AppointmentType } from '@/types/appointment';
 // Assuming Appointment component is correctly imported from month.tsx or a shared components directory
 import { Appointment, AppointmentList } from './month'; // Or adjust path if it's shared
 import { TIMINGS } from '@/lib/config'; // Assuming this provides start/end hours
-import { Popover, PopoverContent, PopoverTrigger } from '@heroui/react';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  ScrollShadow,
+} from '@heroui/react';
 import { useEffect, useRef, useState } from 'react';
 import { CurrentHourIndicator } from '../ui/current-hour-indicator';
 
@@ -91,7 +96,7 @@ export function WeekView({
       </div>
 
       {/* Time grid using Grid */}
-      <div className="flex-1 overflow-auto">
+      <ScrollShadow className="flex-1 overflow-auto">
         <div
           className="grid h-full"
           style={{
@@ -219,7 +224,7 @@ export function WeekView({
             </>
           ))}
         </div>
-      </div>
+      </ScrollShadow>
     </div>
   );
 }
