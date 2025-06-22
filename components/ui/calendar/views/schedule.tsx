@@ -2,10 +2,11 @@
 
 import { format, isWithinInterval, startOfMonth, endOfMonth } from 'date-fns';
 import { AppointmentType } from '@/types/appointment';
-import { useCalendar } from '../store';
+import { View, views } from '../types';
 import DateChip from '../ui/date-chip';
 import { formatTime } from '../helper';
 import StatusRenderer from '../ui/status-renderer';
+import { parseAsStringEnum, useQueryState } from 'nuqs';
 
 interface ScheduleViewProps {
   appointments: AppointmentType[];
@@ -18,7 +19,7 @@ export function ScheduleView({
   currentDate,
   onTimeSlotClick,
 }: ScheduleViewProps) {
-  const { setView } = useCalendar();
+  const [_view, setView] = useQueryState('view', parseAsStringEnum(views));
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
 
@@ -54,7 +55,7 @@ export function ScheduleView({
                   <div className="flex w-28 items-center gap-2">
                     <DateChip
                       date={date}
-                      onClick={() => setView('day', { date: date })}
+                      onClick={() => setView(View.Day)}
                       size="md"
                     />
                     <p className="mt-1.5 text-tiny uppercase text-default-600">

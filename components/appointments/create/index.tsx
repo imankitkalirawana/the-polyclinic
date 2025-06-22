@@ -29,11 +29,9 @@ const KeyMap: Record<number, string> = {
 
 export default function CreateAppointment({
   selectedDate,
-  selectedTime,
   onClose,
 }: {
-  selectedDate: Date | null;
-  selectedTime: string | null;
+  selectedDate: Date;
   onClose?: () => void;
 }) {
   const { refetch } = useAppointmentData();
@@ -58,7 +56,7 @@ export default function CreateAppointment({
         phone: '',
         sitting: '',
       },
-      date: selectedDate || new Date(),
+      date: selectedDate,
       type: AType.consultation,
       additionalInfo: {
         notes: '',

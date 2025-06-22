@@ -12,20 +12,25 @@ import {
 } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { AppointmentType } from '@/types/appointment';
-import { useCalendar } from '../store';
+import { View, views } from '../types';
 import {
   Card,
   CardBody,
+  CardFooter,
   CardHeader,
   Popover,
   PopoverContent,
+  PopoverProps,
   PopoverTrigger,
+  ScrollShadow,
 } from '@heroui/react';
 import DateChip from '../ui/date-chip';
 import { formatTime } from '../helper';
 import StatusRenderer from '../ui/status-renderer';
 import AppointmentPopover from '../ui/appointment-popover';
 import { useState } from 'react';
+import { TIMINGS } from '@/lib/config';
+import { parseAsStringEnum, useQueryState } from 'nuqs';
 
 interface MonthViewProps {
   appointments: AppointmentType[];
@@ -35,13 +40,14 @@ interface MonthViewProps {
 
 const MAX_APPOINTMENTS_PER_DAY = 2;
 const POPOVER_DELAY = 200;
+const TIME_INTERVAL = 15;
 
 export function MonthView({
   appointments,
   currentDate,
   onTimeSlotClick,
 }: MonthViewProps) {
-  const { setView } = useCalendar();
+  const [_view, setView] = useQueryState('view', parseAsStringEnum(views));
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   const monthStart = startOfMonth(currentDate);
@@ -95,16 +101,34 @@ export function MonthView({
                 'flex select-none flex-col justify-start border-b border-r p-1 last:border-r-0',
                 !isCurrentMonth && 'bg-default-100 text-default-500'
               )}
-              onClick={() => {
+              onClick={(e) => {
                 if (!isPopoverOpen) {
-                  onTimeSlotClick(day);
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  const clickY = e.clientY - rect.top;
+                  const cellHeight = rect.height;
+
+                  const startHour = TIMINGS.appointment.start;
+                  const endHour = TIMINGS.appointment.end;
+                  const hourRange = endHour - startHour;
+
+                  const clickRatio = Math.max(
+                    0,
+                    Math.min(1, clickY / cellHeight)
+                  );
+                  const selectedHour = startHour + clickRatio * hourRange;
+
+                  const minutes =
+                    Math.round((selectedHour % 1) * 4) * TIME_INTERVAL;
+                  const hour = Math.floor(selectedHour);
+
+                  const selectedDateTime = new Date(day);
+                  selectedDateTime.setHours(hour, minutes, 0, 0);
+
+                  onTimeSlotClick(selectedDateTime);
                 }
               }}
             >
-              <DateChip
-                date={day}
-                onClick={() => setView('day', { date: day })}
-              />
+              <DateChip date={day} onClick={() => setView(View.Day)} />
 
               <div>
                 {dayAppointments
@@ -138,7 +162,7 @@ export function MonthView({
                     }}
                   >
                     <PopoverTrigger>
-                      <button className="w-full truncate rounded-lg p-1 px-2 text-start text-tiny hover:bg-default-100">
+                      <button className="truncate rounded-lg p-1 px-2 text-start text-tiny hover:bg-default-100">
                         {dayAppointments.length - maxAppointmentsToShow} more
                       </button>
                     </PopoverTrigger>
@@ -159,44 +183,58 @@ export function MonthView({
   );
 }
 
-function AppointmentList({
+export function AppointmentList({
   appointments,
   date,
 }: {
-  appointments: AppointmentType[];
+  appointments: AppointmentType[] | null;
   date: Date;
 }) {
-  const { setView } = useCalendar();
-
+  const [_view, setView] = useQueryState('view', parseAsStringEnum(views));
   return (
-    <Card className="flex max-w-xs flex-col gap-2 shadow-none">
+    <Card className="flex max-w-xs flex-col shadow-none">
       <CardHeader className="flex-col items-center gap-2 pb-0">
-        <span className="text-small font-medium">{format(date, 'E')}</span>
-        <DateChip
-          date={date}
-          size="lg"
-          onClick={() => setView('day', { date })}
-        />
+        <span className="text-small font-medium uppercase">
+          {format(date, 'E')}
+        </span>
+        <DateChip date={date} size="lg" onClick={() => setView(View.Day)} />
       </CardHeader>
-      <CardBody className="pt-2">
-        {appointments.map((appointment) => (
-          <Appointment appointment={appointment} key={appointment.aid} />
-        ))}
+      <CardBody as={ScrollShadow} className="max-h-40 flex-col pt-2">
+        {appointments && appointments.length > 0 ? (
+          appointments.map((appointment) => (
+            <Appointment appointment={appointment} key={appointment.aid} />
+          ))
+        ) : (
+          <p className="pb-4 text-center text-small text-default-500">
+            There are no appointments for this day
+          </p>
+        )}
       </CardBody>
+      <CardFooter className="pt-0">
+        {appointments && appointments.length > 0 && (
+          <p className="text-center text-tiny text-default-500">
+            Total appointments: {appointments.length}
+          </p>
+        )}
+      </CardFooter>
     </Card>
   );
 }
 
-function Appointment({
+export function Appointment({
   appointment,
   onOpenChange,
+  popoverPlacement = 'right',
+  fullWidth = true,
 }: {
   appointment: AppointmentType;
   onOpenChange?: (isOpen: boolean) => void;
+  popoverPlacement?: PopoverProps['placement'];
+  fullWidth?: boolean;
 }) {
   return (
     <Popover
-      placement="right"
+      placement={popoverPlacement}
       shouldCloseOnScroll={false}
       shouldBlockScroll
       onOpenChange={onOpenChange}
@@ -205,18 +243,19 @@ function Appointment({
         <div
           key={appointment.aid}
           className={cn(
-            'flex cursor-pointer items-center justify-start gap-1 truncate rounded-lg p-1 px-2 text-tiny hover:bg-default-100',
-            appointment.status === 'cancelled' && 'line-through'
+            'flex min-h-6 cursor-pointer items-center justify-start gap-1 truncate rounded-lg p-1 px-2 text-tiny hover:bg-default-100',
+            appointment.status === 'cancelled' && 'line-through',
+            !fullWidth && 'w-fit'
           )}
         >
           <StatusRenderer isDotOnly status={appointment.status} />
-          <span className="font-light">
+          <div className="font-light">
             {formatTime(new Date(appointment.date))}
-          </span>
-          <span className="font-medium">
+          </div>
+          <div className="font-medium">
             {appointment.patient.name}{' '}
             {appointment.doctor?.name ? `- ${appointment.doctor.name}` : ''}
-          </span>
+          </div>
         </div>
       </PopoverTrigger>
       <PopoverContent className="p-0">

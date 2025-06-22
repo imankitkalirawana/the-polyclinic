@@ -29,12 +29,12 @@ export const rowOptions = [
 export const TIMINGS = {
   appointment: {
     start: 9,
-    end: 17,
+    end: 23,
   },
   booking: {
     maximum: 30, // in days
   },
-  holidays: ['2025-01-17', '2025-01-26', '2024-03-30', '2024-04-15'],
+  holidays: ['weekend', '2025-01-17', '2025-01-26', '2024-03-30', '2024-04-15'],
 };
 
 export const CLINIC_INFO = {
@@ -138,8 +138,8 @@ export const MOCK_DATA = {
     count: 100,
   },
   appointments: {
-    isMock: false,
-    count: 100,
+    isMock: true,
+    count: 1000,
   },
 };
 

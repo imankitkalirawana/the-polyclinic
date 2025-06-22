@@ -9,9 +9,13 @@ import { generateAppointments } from '@/lib/appointments/mock';
 export const getAllAppointments = async (): Promise<AppointmentType[]> => {
   // If mock data is disabled, fetch data from the API
   if (MOCK_DATA.appointments.isMock) {
-    return generateAppointments({
+    const appointments = await generateAppointments({
       count: MOCK_DATA.appointments.count,
     });
+
+    return appointments.sort(
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+    );
   }
   const res = await axios.get(`${API_BASE_URL}/api/v1/appointments`, {
     headers: {

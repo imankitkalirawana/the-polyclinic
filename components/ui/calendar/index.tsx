@@ -9,7 +9,8 @@ import { ScheduleView } from './views/schedule';
 import { YearView } from './views/year';
 import NewAppointmentModal from './new/new';
 import { AppointmentType } from '@/types/appointment';
-import { useCalendar } from './store';
+import { View, views } from './types';
+import { parseAsStringEnum, useQueryState } from 'nuqs';
 
 interface CalendarProps {
   appointments: AppointmentType[];
@@ -22,15 +23,16 @@ export function Calendar({
   currentDate,
   onDateChange,
 }: CalendarProps) {
-  const { view, setView } = useCalendar();
+  const [view, setView] = useQueryState(
+    'view',
+    parseAsStringEnum(views).withDefault(View.Month)
+  );
 
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date>(currentDate);
   const [showDialog, setShowDialog] = useState(false);
 
   const handleTimeSlotClick = (date: Date, time?: string) => {
     setSelectedDate(date);
-    setSelectedTime(time || null);
     setShowDialog(true);
   };
 
@@ -70,12 +72,7 @@ export function Calendar({
         );
       case 'year':
         return (
-          <YearView
-            appointments={appointments}
-            currentDate={currentDate}
-            onDateChange={onDateChange}
-            onTimeSlotClick={handleTimeSlotClick}
-          />
+          <YearView appointments={appointments} currentDate={currentDate} />
         );
       default:
         return null;
@@ -107,12 +104,11 @@ export function Calendar({
   return (
     <div className="flex h-[calc(100vh_-_60px)] max-h-[calc(100vh_-_60px)] flex-col overflow-hidden">
       <CalendarHeader currentDate={currentDate} onDateChange={onDateChange} />
-      <div className="h-full flex-1">{renderView()}</div>
+      <div className="h-[calc(100vh_-_120px)] flex-1">{renderView()}</div>
       <NewAppointmentModal
         open={showDialog}
         onOpenChange={setShowDialog}
         selectedDate={selectedDate}
-        selectedTime={selectedTime}
       />
     </div>
   );
