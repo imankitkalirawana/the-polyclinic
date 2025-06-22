@@ -15,10 +15,12 @@ import {
 } from 'date-fns';
 import { View, views as Views } from './types';
 import { parseAsStringEnum, useQueryState } from 'nuqs';
+import { useKeyPress } from 'react-haiku';
 
 interface CalendarHeaderProps {
   currentDate: Date;
   onDateChange: (date: Date) => void;
+  onToday: () => void;
 }
 
 const views = [
@@ -31,12 +33,40 @@ const views = [
 
 export function CalendarHeader({
   currentDate,
+  onToday,
   onDateChange,
 }: CalendarHeaderProps) {
   const [view, setView] = useQueryState(
     'view',
     parseAsStringEnum(Views).withDefault(View.Month)
   );
+
+  useKeyPress(['m'], (e) => {
+    setView(View.Month);
+  });
+  useKeyPress(['y'], () => {
+    setView(View.Year);
+  });
+  useKeyPress(['w'], () => {
+    setView(View.Week);
+  });
+  useKeyPress(['d'], () => {
+    setView(View.Day);
+  });
+  useKeyPress(['s'], () => {
+    setView(View.Schedule);
+  });
+  useKeyPress(['t'], () => {
+    onToday();
+  });
+
+  useKeyPress(['ArrowRight'], () => {
+    navigateNext();
+  });
+  useKeyPress(['ArrowLeft'], () => {
+    navigatePrevious();
+  });
+
   const navigatePrevious = () => {
     switch (view) {
       case 'month':

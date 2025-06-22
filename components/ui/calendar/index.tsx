@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { CalendarHeader } from './header';
 import { MonthView } from './views/month';
 import { WeekView } from './views/week';
@@ -17,7 +17,7 @@ interface CalendarProps {
 }
 
 export function Calendar({ appointments }: CalendarProps) {
-  const [view, setView] = useQueryState(
+  const [view] = useQueryState(
     'view',
     parseAsStringEnum(views).withDefault(View.Month)
   );
@@ -75,31 +75,13 @@ export function Calendar({ appointments }: CalendarProps) {
     }
   };
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'm') {
-        setView('month');
-      } else if (event.key === 'y') {
-        setView('year');
-      } else if (event.key === 'w') {
-        setView('week');
-      } else if (event.key === 'd') {
-        setView('day');
-      } else if (event.key === 's') {
-        setView('schedule');
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [setView]);
-
   return (
     <div className="flex h-[calc(100vh_-_60px)] max-h-[calc(100vh_-_60px)] flex-col overflow-hidden">
-      <CalendarHeader currentDate={currentDate} onDateChange={setCurrentDate} />
+      <CalendarHeader
+        currentDate={currentDate}
+        onDateChange={setCurrentDate}
+        onToday={() => setCurrentDate(new Date())}
+      />
       <div className="h-[calc(100vh_-_120px)] flex-1">{renderView()}</div>
       <NewAppointmentModal
         open={showDialog}
