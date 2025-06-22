@@ -9,6 +9,7 @@ import {
 } from '@/types/appointment';
 import { faker } from '@faker-js/faker';
 import { addDays, subDays } from 'date-fns';
+import { TIMINGS } from '../config';
 
 export async function generateAppointments({
   count,
@@ -25,10 +26,22 @@ export async function generateAppointments({
 
     const appointment: AppointmentType = {
       aid: faker.number.int({ min: 1000, max: 9999 }),
-      date: faker.date.between({
-        from: subDays(new Date(), 365),
-        to: addDays(new Date(), 365),
-      }),
+      date: (() => {
+        const date = faker.date.between({
+          from: subDays(new Date(), 365),
+          to: addDays(new Date(), 365),
+        });
+        date.setHours(
+          faker.number.int({
+            min: TIMINGS.appointment.start,
+            max: TIMINGS.appointment.end,
+          })
+        );
+        date.setMinutes(faker.helpers.arrayElement([0, 15, 30, 45]));
+        date.setSeconds(0);
+        date.setMilliseconds(0);
+        return date;
+      })(),
       patient: {
         uid: faker.number.int({ min: 1000, max: 9999 }),
         name: faker.person.fullName({ sex }),

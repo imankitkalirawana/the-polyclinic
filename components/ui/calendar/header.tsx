@@ -33,7 +33,10 @@ export function CalendarHeader({
   currentDate,
   onDateChange,
 }: CalendarHeaderProps) {
-  const [view, setView] = useQueryState('view', parseAsStringEnum(Views));
+  const [view, setView] = useQueryState(
+    'view',
+    parseAsStringEnum(Views).withDefault(View.Month)
+  );
   const navigatePrevious = () => {
     switch (view) {
       case 'month':
