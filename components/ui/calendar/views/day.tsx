@@ -3,10 +3,11 @@
 import { format, isSameDay } from 'date-fns';
 import { cn } from '@/lib/utils';
 import type { AppointmentType } from '@/types/appointment';
-import { useState, type MouseEvent } from 'react';
+import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import { TIMINGS } from '@/lib/config'; // Assuming this provides start/end hours
 import { Appointment, AppointmentList } from './month'; // Assuming Appointment component is in ./month.tsx
 import { Popover, PopoverContent, PopoverTrigger } from '@heroui/react';
+import { CurrentHourIndicator } from '../ui/current-hour-indicator';
 
 interface DayViewProps {
   appointments: AppointmentType[];
@@ -22,6 +23,7 @@ export function DayView({
   currentDate,
   onTimeSlotClick,
 }: DayViewProps) {
+  const ref = useRef<HTMLDivElement>(null);
   // Display hours based on TIMINGS config
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
@@ -42,6 +44,15 @@ export function DayView({
       return aptDate.getHours() === hour;
     });
   };
+
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }, []);
 
   return (
     <div className="flex h-full flex-col">
@@ -125,6 +136,9 @@ export function DayView({
                     }
                   }}
                 >
+                  {new Date().getHours() === hour && (
+                    <CurrentHourIndicator ref={ref} />
+                  )}
                   {appointmentsInHour
                     .slice(0, MAX_APPOINTMENTS_PER_HOUR_DISPLAY)
                     .map((apt) => (

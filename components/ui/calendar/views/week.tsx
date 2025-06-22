@@ -14,7 +14,8 @@ import type { AppointmentType } from '@/types/appointment';
 import { Appointment, AppointmentList } from './month'; // Or adjust path if it's shared
 import { TIMINGS } from '@/lib/config'; // Assuming this provides start/end hours
 import { Popover, PopoverContent, PopoverTrigger } from '@heroui/react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { CurrentHourIndicator } from '../ui/current-hour-indicator';
 
 interface WeekViewProps {
   appointments: AppointmentType[];
@@ -24,13 +25,13 @@ interface WeekViewProps {
 
 const MAX_APPOINTMENTS_PER_HOUR_DISPLAY = 2;
 const POPOVER_DELAY = 200;
-const TIME_INTERVAL = 15;
 
 export function WeekView({
   appointments,
   currentDate,
   onTimeSlotClick,
 }: WeekViewProps) {
+  const ref = useRef<HTMLDivElement>(null);
   const weekStart = startOfWeek(currentDate);
   const weekEnd = endOfWeek(currentDate);
   const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd });
@@ -54,8 +55,17 @@ export function WeekView({
     });
   };
 
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }, []);
+
   return (
-    <div className="flex h-full flex-col pb-16">
+    <div className="flex h-full flex-col">
       {/* Week header using Grid */}
       <div className="grid grid-cols-[auto_repeat(7,1fr)] border-b">
         <div className="w-20 shrink-0 border-r"></div>
@@ -152,6 +162,9 @@ export function WeekView({
                       }
                     }}
                   >
+                    {new Date().getHours() === hour && isToday(day) && (
+                      <CurrentHourIndicator ref={ref} />
+                    )}
                     {dayAppointments
                       .slice(0, MAX_APPOINTMENTS_PER_HOUR_DISPLAY)
                       .map((apt) => (

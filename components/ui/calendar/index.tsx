@@ -104,7 +104,7 @@ export function Calendar({
   return (
     <div className="flex h-[calc(100vh_-_60px)] max-h-[calc(100vh_-_60px)] flex-col overflow-hidden">
       <CalendarHeader currentDate={currentDate} onDateChange={onDateChange} />
-      <div className="h-full flex-1">{renderView()}</div>
+      <div className="h-[calc(100vh_-_120px)] flex-1">{renderView()}</div>
       <NewAppointmentModal
         open={showDialog}
         onOpenChange={setShowDialog}
