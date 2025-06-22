@@ -11,8 +11,7 @@ export const useSelf = (): UseQueryResult<UserType> => {
 
 export const useLinkedUsers = (): UseQueryResult<Array<UserType>> => {
   return useQuery({
-    queryKey: ['linkedUsers'],
+    queryKey: ['linked-users'],
     queryFn: () => getLinkedUsers(),
-    staleTime: 1000 * 60 * 5,
   });
 };

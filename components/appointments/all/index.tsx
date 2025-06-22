@@ -1,14 +1,10 @@
 'use client';
 import { Calendar } from '@/components/ui/calendar';
-import { getAllAppointments } from '@/app/appointments/helper';
 import { AppointmentType } from '@/types/appointment';
-import { useQuery } from '@tanstack/react-query';
+import { useAllAppointments } from '@/services/appointment';
 
 export default function Appointments() {
-  const { data } = useQuery({
-    queryKey: ['appointments'],
-    queryFn: () => getAllAppointments(),
-  });
+  const { data } = useAllAppointments();
 
   const appointments: AppointmentType[] = data || [];
 
