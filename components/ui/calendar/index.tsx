@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { CalendarHeader } from './header';
 import { MonthView } from './views/month';
 import { WeekView } from './views/week';
@@ -10,29 +10,26 @@ import { YearView } from './views/year';
 import NewAppointmentModal from './new/new';
 import { AppointmentType } from '@/types/appointment';
 import { View, views } from './types';
-import { parseAsStringEnum, useQueryState } from 'nuqs';
+import { parseAsStringEnum, useQueryState, parseAsIsoDateTime } from 'nuqs';
 
 interface CalendarProps {
   appointments: AppointmentType[];
-  currentDate: Date;
-  onDateChange: (date: Date) => void;
 }
 
-export function Calendar({
-  appointments,
-  currentDate,
-  onDateChange,
-}: CalendarProps) {
-  const [view, setView] = useQueryState(
+export function Calendar({ appointments }: CalendarProps) {
+  const [view] = useQueryState(
     'view',
     parseAsStringEnum(views).withDefault(View.Month)
   );
+  const [currentDate, setCurrentDate] = useQueryState(
+    'date',
+    parseAsIsoDateTime.withDefault(new Date())
+  );
 
-  const [selectedDate, setSelectedDate] = useState<Date>(currentDate);
   const [showDialog, setShowDialog] = useState(false);
 
   const handleTimeSlotClick = (date: Date, time?: string) => {
-    setSelectedDate(date);
+    setCurrentDate(date);
     setShowDialog(true);
   };
 
@@ -42,7 +39,6 @@ export function Calendar({
         return (
           <MonthView
             appointments={appointments}
-            currentDate={currentDate}
             onTimeSlotClick={handleTimeSlotClick}
           />
         );
@@ -79,36 +75,18 @@ export function Calendar({
     }
   };
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'm') {
-        setView('month');
-      } else if (event.key === 'y') {
-        setView('year');
-      } else if (event.key === 'w') {
-        setView('week');
-      } else if (event.key === 'd') {
-        setView('day');
-      } else if (event.key === 's') {
-        setView('schedule');
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [setView]);
-
   return (
     <div className="flex h-[calc(100vh_-_60px)] max-h-[calc(100vh_-_60px)] flex-col overflow-hidden">
-      <CalendarHeader currentDate={currentDate} onDateChange={onDateChange} />
+      <CalendarHeader
+        currentDate={currentDate}
+        onDateChange={setCurrentDate}
+        onToday={() => setCurrentDate(new Date())}
+      />
       <div className="h-[calc(100vh_-_120px)] flex-1">{renderView()}</div>
       <NewAppointmentModal
         open={showDialog}
         onOpenChange={setShowDialog}
-        selectedDate={selectedDate}
+        selectedDate={currentDate}
       />
     </div>
   );

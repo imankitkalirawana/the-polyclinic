@@ -1,3 +1,5 @@
+import { AppointmentType } from '@/types/appointment';
+
 export const views = ['month', 'week', 'day', 'schedule', 'year'];
 
 export enum View {

@@ -11,22 +11,21 @@ import {
   endOfWeek,
   eachDayOfInterval,
   isSameMonth,
-  isSameDay,
   isToday,
-  isWeekend,
 } from 'date-fns';
 import { cn } from '@/lib/utils';
 import {
   Card,
   CardBody,
   CardHeader,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+  ScrollShadow,
+  Tooltip,
 } from '@heroui/react';
-import { AppointmentList } from './month';
+import AppointmentList from '../ui/appointment-list';
 import { AppointmentType } from '@/types/appointment';
-import { memo, useMemo, useCallback } from 'react';
+import { memo, useMemo } from 'react';
+import AppointmentDrawer from '../ui/appointment-drawer';
+import { useCalendarStore } from '../store';
 
 interface YearViewProps {
   appointments: AppointmentType[];
@@ -58,32 +57,32 @@ const DayCell = memo(
     hasAppointments: boolean;
     dayAppointments: AppointmentType[];
   }) => {
+    const { setIsTooltipOpen } = useCalendarStore();
     const isDayToday = isToday(day);
 
     return (
-      <Popover shouldCloseOnScroll={false} shouldBlockScroll>
-        <PopoverTrigger>
-          <div
-            key={day.toISOString()}
-            className={cn(
-              'relative flex aspect-square size-7 cursor-pointer items-center justify-center rounded text-xs transition-colors',
-              {
-                'text-default-400': !isCurrentMonth,
-                'hover:bg-default-100': !hasAppointments,
-                'text-white': hasAppointments,
-                [colorDensityMap[appointmentCount]]: hasAppointments,
-                'bg-secondary-500 text-secondary-foreground hover:bg-secondary-600':
-                  isDayToday,
-              }
-            )}
-          >
-            <span className="relative z-10">{format(day, 'd')}</span>
-          </div>
-        </PopoverTrigger>
-        <PopoverContent className="p-0">
-          <AppointmentList appointments={dayAppointments} date={day} />
-        </PopoverContent>
-      </Popover>
+      <Tooltip
+        content={<AppointmentList appointments={dayAppointments} date={day} />}
+        onOpenChange={setIsTooltipOpen}
+        delay={1000}
+      >
+        <div
+          key={day.toISOString()}
+          className={cn(
+            'relative flex aspect-square size-7 cursor-pointer items-center justify-center rounded text-xs transition-colors',
+            {
+              'text-default-400': !isCurrentMonth,
+              'hover:bg-default-100': !hasAppointments,
+              'text-white': hasAppointments,
+              [colorDensityMap[appointmentCount]]: hasAppointments,
+              'bg-secondary-500 text-secondary-foreground hover:bg-secondary-600':
+                isDayToday,
+            }
+          )}
+        >
+          <span className="relative z-10">{format(day, 'd')}</span>
+        </div>
+      </Tooltip>
     );
   }
 );
@@ -182,7 +181,7 @@ export function YearView({ appointments, currentDate }: YearViewProps) {
   }, [currentDate.getFullYear()]);
 
   return (
-    <div className="h-full overflow-auto p-4 pb-16">
+    <ScrollShadow className="h-full overflow-auto p-4">
       {/* Months grid */}
       <div className="mx-auto grid w-fit auto-rows-fr grid-cols-1 place-items-center gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
         {months.map((month) => (
@@ -194,6 +193,7 @@ export function YearView({ appointments, currentDate }: YearViewProps) {
           </div>
         ))}
       </div>
-    </div>
+      <AppointmentDrawer />
+    </ScrollShadow>
   );
 }
