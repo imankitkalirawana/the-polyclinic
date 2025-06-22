@@ -1,6 +1,6 @@
 'use client';
 
-import { format, isSameDay } from 'date-fns';
+import { format, isSameDay, isToday } from 'date-fns';
 import { cn } from '@/lib/utils';
 import type { AppointmentType } from '@/types/appointment';
 import { useEffect, useRef, useState, type MouseEvent } from 'react';
@@ -8,6 +8,7 @@ import { TIMINGS } from '@/lib/config'; // Assuming this provides start/end hour
 import { Appointment, AppointmentList } from './month'; // Assuming Appointment component is in ./month.tsx
 import { Popover, PopoverContent, PopoverTrigger } from '@heroui/react';
 import { CurrentHourIndicator } from '../ui/current-hour-indicator';
+import DateChip from '../ui/date-chip';
 
 interface DayViewProps {
   appointments: AppointmentType[];
@@ -57,11 +58,18 @@ export function DayView({
   return (
     <div className="flex h-full flex-col">
       {/* Day header */}
-      <div className="border-b p-4 text-center">
-        <div className="text-small uppercase tracking-wide text-default-500">
-          {format(currentDate, 'EEEE')}
+      <div className="flex border-b">
+        <div className="flex w-20 shrink-0 items-end border-r px-2 pb-1">
+          <div className="text-tiny uppercase tracking-wide text-default-500">
+            {format(currentDate, 'z')}
+          </div>
         </div>
-        <div className="text-2xl font-bold">{format(currentDate, 'd')}</div>
+        <div className="flex flex-1 flex-col p-2">
+          <div className="text-small uppercase tracking-wide text-default-500">
+            {format(currentDate, 'EEEE')}
+          </div>
+          <DateChip date={currentDate} size="lg" className="self-start" />
+        </div>
       </div>
 
       {/* Time slots using Grid */}
@@ -136,7 +144,7 @@ export function DayView({
                     }
                   }}
                 >
-                  {new Date().getHours() === hour && (
+                  {new Date().getHours() === hour && isToday(currentDate) && (
                     <CurrentHourIndicator ref={ref} />
                   )}
                   {appointmentsInHour
@@ -147,6 +155,15 @@ export function DayView({
                         key={apt.aid}
                         popoverPlacement="left"
                         fullWidth={false}
+                        onOpenChange={(open) => {
+                          if (open) {
+                            setIsPopoverOpen(true);
+                          } else {
+                            setTimeout(() => {
+                              setIsPopoverOpen(false);
+                            }, POPOVER_DELAY);
+                          }
+                        }}
                       />
                     ))}
                   {appointmentsInHour.length >
