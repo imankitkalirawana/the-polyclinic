@@ -15,15 +15,17 @@ export async function fetchData<T>(
   options: {
     method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
     data?: any;
+    params?: any;
   } = {}
 ): Promise<FetchResult<T>> {
   try {
-    const { method = 'GET', data } = options;
+    const { method = 'GET', data, params } = options;
 
     const res = await axios({
       url: `${BASE_URL}${endpoint}`,
       method,
       data,
+      params,
       headers: {
         Cookie: cookies().toString(),
       },
@@ -38,7 +40,7 @@ export async function fetchData<T>(
     return {
       success: false,
       message: error?.response?.data?.message || 'Request failed',
-      data: [] as unknown as T,
+      data: [] as T,
     };
   }
 }

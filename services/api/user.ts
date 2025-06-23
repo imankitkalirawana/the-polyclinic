@@ -15,6 +15,6 @@ export async function getLinkedUsers() {
   return await fetchData<UserType[]>('/users/linked');
 }
 
-export const getAllUsers = async () => {
+export async function getAllUsers() {
   return await fetchData<UserType[]>('/users');
-};
+}
