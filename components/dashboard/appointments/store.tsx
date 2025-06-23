@@ -1,9 +1,7 @@
 import { create } from 'zustand';
-import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { AppointmentType } from '@/types/appointment';
-import { getAllAppointments } from '@/app/dashboard/appointments/helper';
 import { Selection } from '@heroui/react';
 import { ActionType } from './types';
 
@@ -63,15 +61,4 @@ export const useAppointmentForm = () => {
   });
 
   return { formik, setSelected, setAction, resetState };
-};
-
-export const useAppointmentData = (): UseQueryResult<
-  Array<AppointmentType>
-> => {
-  return useQuery({
-    queryKey: ['appointments'],
-    queryFn: () => getAllAppointments(),
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
-  });
 };

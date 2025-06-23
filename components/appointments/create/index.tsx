@@ -15,10 +15,10 @@ import AdditionalDetailsSelection, {
 import { AppointmentFormType } from './types';
 import { Gender } from '@/lib/interface';
 import { AppointmentMode, AType } from '@/types/appointment';
-import { useAppointmentData } from '@/components/dashboard/appointments/store';
 import { useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/axios';
 import { format } from 'date-fns';
+import { useAllAppointments } from '@/services/appointment';
 
 const KeyMap: Record<number, string> = {
   1: 'patient',
@@ -34,7 +34,7 @@ export default function CreateAppointment({
   selectedDate: Date;
   onClose?: () => void;
 }) {
-  const { refetch } = useAppointmentData();
+  const { refetch } = useAllAppointments();
   const queryClient = useQueryClient();
   const [currentStep, setCurrentStep] = useState(1);
   const { data: linkedUsers, isLoading: isLinkedUsersLoading } =
