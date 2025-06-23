@@ -10,7 +10,13 @@ export default async function AppointmentsPage() {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ['appointments'],
-    queryFn: () => getAllAppointments(),
+    queryFn: async () => {
+      const res = await getAllAppointments();
+      if (res.success) {
+        return res.data;
+      }
+      throw new Error(res.message);
+    },
     initialData: [],
   });
 

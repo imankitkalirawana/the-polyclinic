@@ -12,5 +12,6 @@ export const useAllAppointments = (): UseQueryResult<AppointmentType[]> => {
       }
       throw new Error(res.message);
     },
+    initialData: [],
   });
 };
