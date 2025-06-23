@@ -20,13 +20,11 @@ import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 
 import { Table } from '@/components/ui/data-table';
 import { UserType } from '@/types/user';
-import { useQuery } from '@tanstack/react-query';
-import { getAllUsers } from '@/lib/users/helper';
 import { useRouter } from 'nextjs-toploader/app';
 import { toast } from 'sonner';
-import QuickLook from '@/components/ui/dashboard/quicklook';
 import { UserQuickLook } from './quicklook';
 import { useUserStore } from './store';
+import { useAllUsers } from '@/services/user';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'image',
@@ -43,14 +41,8 @@ export default function Users() {
   const { selected, setSelected } = useUserStore();
 
   const [selectedKeys, setSelectedKeys] = useState<Selection>();
-  const [quickLookItem, setQuickLookItem] = useState<UserType | null>(null);
 
-  const { data, isLoading, refetch } = useQuery({
-    queryKey: ['users'],
-    queryFn: () => getAllUsers(),
-  });
-
-  const users: UserType[] = data || [];
+  const { data, isLoading, refetch, isError, error } = useAllUsers();
 
   // Define columns with render functions
   const columns: ColumnDef<UserType>[] = useMemo(() => {
@@ -279,9 +271,16 @@ export default function Users() {
     );
   };
 
+  let users: UserType[] = [];
+  if (data) {
+    users = data;
+  }
+
   return (
     <>
       <Table
+        isError={isError}
+        errorMessage={error?.message}
         uniqueKey="users"
         isLoading={isLoading}
         data={users}

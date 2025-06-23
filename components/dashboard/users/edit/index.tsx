@@ -2,28 +2,17 @@
 import { useQueryState } from 'nuqs';
 import { Tab, Tabs } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useQuery } from '@tanstack/react-query';
-
 import AccountDetails from './account-details';
 import NotificationsSettings from './notifications-settings';
 import SecuritySettings from './security-settings';
-
-import { getUserWithUID } from '@/app/dashboard/users/[uid]/helper';
-import { UserType } from '@/types/user';
+import { useUserWithUID } from '@/services/user';
 
 export default function EditUser({ uid }: { uid: number }) {
   const [tab, setTab] = useQueryState('tab', {
     defaultValue: 'account',
   });
 
-  const {
-    data: user,
-    isError,
-    refetch,
-  } = useQuery<UserType>({
-    queryKey: ['user', uid],
-    queryFn: () => getUserWithUID(uid),
-  });
+  const { data: user, isError, refetch } = useUserWithUID(uid);
 
   if (isError) {
     return <p>Error fetching user data</p>;

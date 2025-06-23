@@ -7,7 +7,8 @@ import Appointment from '@/models/Appointment';
 import { NewAppointment } from '@/utils/email-template/doctor';
 import { AppointmentStatus } from '@/utils/email-template/patient';
 import { UserRole } from '@/types/user';
-import { API_ACTIONS } from '@/lib/config';
+import { API_ACTIONS, MOCK_DATA } from '@/lib/config';
+import { generateAppointments } from '@/lib/appointments/mock';
 
 export const GET = auth(async function GET(request: any) {
   try {
@@ -19,6 +20,18 @@ export const GET = auth(async function GET(request: any) {
 
     if (disallowedRoles.includes(request.auth?.user?.role)) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
+    if (MOCK_DATA.appointments.isMock) {
+      const appointments = await generateAppointments({
+        count: MOCK_DATA.appointments.count,
+      });
+
+      return NextResponse.json(
+        appointments.sort(
+          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+        )
+      );
     }
 
     const { searchParams } = new URL(request.url);

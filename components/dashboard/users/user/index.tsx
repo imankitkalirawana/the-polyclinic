@@ -11,19 +11,12 @@ import {
   CardHeader,
   ScrollShadow,
 } from '@heroui/react';
-import { useQuery } from '@tanstack/react-query';
-
-import CellValue from '../../../ui/cell-value';
-
-import { getUserWithUID } from '@/app/dashboard/users/[uid]/helper';
 import { humanReadableDate, humanReadableTime } from '@/lib/utility';
-import { UserType } from '@/types/user';
+import CellValue from '../../../ui/cell-value';
+import { useUserWithUID } from '@/services/user';
 
 export default function UserCard({ uid }: { uid: number }) {
-  const { data: user, isError } = useQuery<UserType>({
-    queryKey: ['user', uid],
-    queryFn: () => getUserWithUID(uid),
-  });
+  const { data: user, isError } = useUserWithUID(uid);
 
   if (isError) {
     return <p>Error fetching user data</p>;

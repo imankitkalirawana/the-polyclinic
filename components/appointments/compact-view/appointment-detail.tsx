@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { format } from 'date-fns';
 import {
   addToast,
@@ -17,13 +17,10 @@ import CellValue from '../../ui/cell-value';
 import AddtoCalendar from '../../ui/appointments/add-to-calendar';
 
 import { downloadAppointmentReceipt } from '@/functions/client/appointment/receipt';
-import {
-  changeAppointmentStatus,
-  getUserWithUID,
-} from '@/functions/server-actions';
+import { changeAppointmentStatus } from '@/functions/server-actions';
 import { buttonColorMap, genderMap } from '@/lib/maps';
 import { AppointmentType } from '@/types/appointment';
-import { UserType } from '@/types/user';
+import { useUserWithUID } from '@/services/user';
 
 export default function AppointmentDetail({
   appointment,
@@ -36,20 +33,10 @@ export default function AppointmentDetail({
 }) {
   const modal = useDisclosure();
 
-  const [user, setUser] = useState<UserType>();
   const [selectedModal, setSelectedModal] = useState<string>('');
   const [isConfirming, setIsConfirming] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (appointment?.patient?.uid) {
-        await getUserWithUID(appointment?.patient.uid).then((user) => {
-          setUser(user as UserType);
-        });
-      }
-    };
-    fetchData();
-  }, []);
+  const { data: user } = useUserWithUID(appointment.patient.uid);
 
   const modalMap: Record<string, JSX.Element> = {
     cancel: <AddtoCalendar appointment={appointment} onClose={modal.onClose} />,

@@ -50,6 +50,8 @@ export function Table<T extends TableItem>({
   initialSortDescriptor = { column: 'createdAt', direction: 'descending' },
   selectedKeys = new Set([]),
   onSelectionChange,
+  isError,
+  errorMessage,
 }: TableProps<T>) {
   const [searchValue, setSearchValue] = useState<string>('');
   const debouncedSearch = useDebounce(searchValue, 500);
@@ -574,7 +576,13 @@ export function Table<T extends TableItem>({
         </TableHeader>
         <TableBody
           isLoading={isLoading}
-          emptyContent={'No data found'}
+          emptyContent={
+            isError ? (
+              <div className="bg-red-200">Error: {errorMessage}</div>
+            ) : (
+              'No data found'
+            )
+          }
           items={items}
           loadingContent={<Spinner label="Fetching data..." />}
         >

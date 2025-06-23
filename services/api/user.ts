@@ -1,24 +1,20 @@
 'use server';
 
 import { UserType } from '@/types/user';
-import axios from 'axios';
-import { cookies } from 'next/headers';
-import { BASE_URL } from '.';
+import { fetchData } from '.';
 
-export async function getSelf(): Promise<UserType> {
-  const res = await axios.get(`${BASE_URL}/users/self`, {
-    headers: {
-      Cookie: cookies().toString(),
-    },
-  });
-  return res.data;
+export async function getSelf() {
+  return await fetchData<UserType>('/users/self');
 }
 
-export async function getLinkedUsers(): Promise<UserType[]> {
-  const res = await axios.get(`${BASE_URL}/users/linked`, {
-    headers: {
-      Cookie: cookies().toString(),
-    },
-  });
-  return res.data;
+export async function getUserWithUID(uid: number) {
+  return await fetchData<UserType>(`/users/uid/${uid}`);
 }
+
+export async function getLinkedUsers() {
+  return await fetchData<UserType[]>('/users/linked');
+}
+
+export const getAllUsers = async () => {
+  return await fetchData<UserType[]>('/users');
+};
