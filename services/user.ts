@@ -1,5 +1,3 @@
-'use client';
-
 import {
   getAllUsers,
   getLinkedUsers,
@@ -50,7 +48,7 @@ export const useUserWithUID = (uid: number): UseQueryResult<UserType> => {
 
 export const useAllUsers = (): UseQueryResult<UserType[]> => {
   return useQuery({
-    queryKey: ['all-users'],
+    queryKey: ['users'],
     queryFn: async () => {
       const res = await getAllUsers();
       if (res.success) {

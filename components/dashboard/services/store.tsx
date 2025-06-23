@@ -1,9 +1,7 @@
 import { create } from 'zustand';
-import { QueryClient, useQuery, UseQueryResult } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { ServiceType } from '@/types/service';
-import { getAllServices } from '@/app/dashboard/services/helper';
 import { Selection } from '@heroui/react';
 import { ActionType } from './types';
 
@@ -57,13 +55,4 @@ export const useServiceForm = () => {
   });
 
   return { formik, setSelected, setAction, resetState };
-};
-
-export const useServiceData = (): UseQueryResult<Array<ServiceType>> => {
-  return useQuery({
-    queryKey: ['users'],
-    queryFn: () => getAllServices(),
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
-  });
 };

@@ -17,18 +17,14 @@ import type { ColumnDef } from '@/components/ui/data-table/types';
 
 import { Table } from '@/components/ui/data-table';
 import { NewsletterType } from '@/types/newsletter';
-import { useQuery } from '@tanstack/react-query';
-import { getAllNewsletters } from '@/app/dashboard/newsletters/helper';
 import { useRouter } from 'nextjs-toploader/app';
+import { useAllNewsletters } from '@/services/newsletter';
 
 const INITIAL_VISIBLE_COLUMNS = ['email', 'updatedAt', 'createdAt'];
 
 export default function Newsletters() {
   const router = useRouter();
-  const { data, isLoading } = useQuery({
-    queryKey: ['newsletters'],
-    queryFn: () => getAllNewsletters(),
-  });
+  const { data, isLoading } = useAllNewsletters();
 
   const newsletters: NewsletterType[] = data || [];
 

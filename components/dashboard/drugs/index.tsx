@@ -1,13 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import {
-  addToast,
-  Button,
-  DropdownItem,
-  DropdownMenu,
-  Selection,
-} from '@heroui/react';
+import { Button, DropdownItem, DropdownMenu, Selection } from '@heroui/react';
 
 import {
   renderActions,
@@ -19,11 +13,10 @@ import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 
 import { Table } from '@/components/ui/data-table';
 import { DrugType } from '@/types/drug';
-import { useQuery } from '@tanstack/react-query';
-import { getAllDrugs } from '@/app/dashboard/drugs/helper';
 import { useRouter } from 'nextjs-toploader/app';
 import { useDrugStore } from './store';
 import { DrugQuickLook } from './quicklook';
+import { useAllDrugs } from '@/services/drug';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'did',
@@ -37,10 +30,7 @@ const INITIAL_VISIBLE_COLUMNS = [
 export default function Drugs() {
   const router = useRouter();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['drugs'],
-    queryFn: () => getAllDrugs(),
-  });
+  const { data, isLoading } = useAllDrugs();
 
   const drugs: DrugType[] = data || [];
   const { selected, setSelected } = useDrugStore();

@@ -1,9 +1,7 @@
 import { create } from 'zustand';
-import { QueryClient, useQuery, UseQueryResult } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { DrugType } from '@/types/drug';
-import { getAllDrugs } from '@/app/dashboard/drugs/helper';
 import { Selection } from '@heroui/react';
 import { ActionType } from './types';
 
@@ -57,13 +55,4 @@ export const useDrugForm = () => {
   });
 
   return { formik, setSelected, setAction, resetState };
-};
-
-export const useDrugData = (): UseQueryResult<Array<DrugType>> => {
-  return useQuery({
-    queryKey: ['Drugs'],
-    queryFn: () => getAllDrugs(),
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
-  });
 };

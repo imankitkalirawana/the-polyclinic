@@ -4,7 +4,7 @@ import { getAllAppointments } from './api/appointment';
 
 export const useAllAppointments = (): UseQueryResult<AppointmentType[]> => {
   return useQuery({
-    queryKey: ['all-appointments'],
+    queryKey: ['appointments'],
     queryFn: async () => {
       const res = await getAllAppointments();
       if (res.success) {

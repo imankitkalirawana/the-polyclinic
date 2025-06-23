@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 import { connectDB } from '../db';
 import { sendHTMLEmail } from './email';
 
-import { API_BASE_URL, APP_INFO } from '@/lib/config';
+import { APP_INFO } from '@/lib/config';
 import Otp from '@/models/Otp';
 import User from '@/models/User';
 import { OtpEmail, WelcomeUser } from '@/templates/email';
@@ -13,8 +13,6 @@ import { Gender } from '../interface';
 import { AuthError } from 'next-auth';
 import { signIn } from '@/auth';
 import { generateOtp } from '@/functions/server-actions';
-import axios from 'axios';
-import { cookies } from 'next/headers';
 
 export const sendOTP = async ({
   email,

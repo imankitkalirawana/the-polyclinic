@@ -9,7 +9,7 @@ import { getAllAppointments } from '@/services/api/appointment';
 export default async function AppointmentsPage() {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
-    queryKey: ['all-appointments'],
+    queryKey: ['appointments'],
     queryFn: () => getAllAppointments(),
     initialData: [],
   });

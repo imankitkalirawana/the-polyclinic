@@ -9,7 +9,7 @@ import {
 export default async function Page() {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
-    queryKey: ['all-users'],
+    queryKey: ['users'],
     queryFn: async () => {
       const res = await getAllUsers();
       if (res.success) {

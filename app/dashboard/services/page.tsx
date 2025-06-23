@@ -4,12 +4,19 @@ import {
   QueryClient,
 } from '@tanstack/react-query';
 import Services from '@/components/dashboard/services';
-import { getAllServices } from './helper';
+import { getAllServices } from '@/services/api/service';
+
 export default async function Page() {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ['services'],
-    queryFn: () => getAllServices(),
+    queryFn: async () => {
+      const res = await getAllServices();
+      if (res.success) {
+        return res.data;
+      }
+      throw new Error(res.message);
+    },
   });
 
   return (
