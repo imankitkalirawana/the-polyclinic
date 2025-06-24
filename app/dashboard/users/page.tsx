@@ -1,5 +1,5 @@
 import Users from '@/components/dashboard/users';
-import { getAllUsers } from '@/lib/users/helper';
+import { getAllUsers } from '@/services/api/user';
 import {
   dehydrate,
   HydrationBoundary,
@@ -10,7 +10,13 @@ export default async function Page() {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ['users'],
-    queryFn: () => getAllUsers(),
+    queryFn: async () => {
+      const res = await getAllUsers();
+      if (res.success) {
+        return res.data;
+      }
+      throw new Error(res.message);
+    },
   });
 
   return (

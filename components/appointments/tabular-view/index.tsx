@@ -90,7 +90,8 @@ export default function TabularView() {
     new Set(INITIAL_VISIBLE_STATUS)
   );
 
-  const { data, refetch, isRefetching, isLoading } = useQuery({
+  // TODO: use useAllAppointments hook
+  const { data, isLoading } = useQuery({
     queryKey: ['appointments', page, limit, sortDescriptor, query, status],
     queryFn: () =>
       getAllAppointments({

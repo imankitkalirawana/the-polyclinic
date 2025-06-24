@@ -1,9 +1,7 @@
 import { create } from 'zustand';
-import { QueryClient, useQuery, UseQueryResult } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { EmailType } from '@/types/email';
-import { getAllEmails } from '@/app/dashboard/emails/helper';
 import { Selection } from '@heroui/react';
 import { ActionType } from './types';
 
@@ -57,13 +55,4 @@ export const useEmailForm = () => {
   });
 
   return { formik, setSelected, setAction, resetState };
-};
-
-export const useEmailData = (): UseQueryResult<Array<EmailType>> => {
-  return useQuery({
-    queryKey: ['users'],
-    queryFn: () => getAllEmails(),
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
-  });
 };

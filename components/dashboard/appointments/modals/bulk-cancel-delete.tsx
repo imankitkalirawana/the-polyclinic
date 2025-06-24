@@ -1,9 +1,9 @@
 import Modal from '@/components/ui/modal';
-import { useAppointmentData, useAppointmentStore } from '../store';
+import { useAppointmentStore } from '../store';
 import { apiRequest } from '@/lib/axios';
 import { format } from 'date-fns';
 import { addToast, Card, CardBody, ScrollShadow, User } from '@heroui/react';
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { AppointmentType } from '@/types/appointment';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { useMutation, useQueryClient } from '@tanstack/react-query';

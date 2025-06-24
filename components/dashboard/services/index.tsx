@@ -1,13 +1,7 @@
 'use client';
 
-import { ReactNode, useEffect, useMemo, useState } from 'react';
-import {
-  addToast,
-  Button,
-  DropdownItem,
-  DropdownMenu,
-  Selection,
-} from '@heroui/react';
+import { useMemo } from 'react';
+import { Button, DropdownItem, DropdownMenu, Selection } from '@heroui/react';
 
 import {
   renderActions,
@@ -19,11 +13,11 @@ import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 import { useServiceStore } from './store';
 import { Table } from '@/components/ui/data-table';
 import { ServiceType } from '@/types/service';
-import { useQuery } from '@tanstack/react-query';
-import { getAllServices } from '@/app/dashboard/services/helper';
-import { APPOINTMENT, CLINIC_INFO } from '@/lib/config';
+import { CLINIC_INFO } from '@/lib/config';
 import { useRouter } from 'nextjs-toploader/app';
 import { ServiceQuickLook } from './quicklook';
+import { useAllServices } from '@/services/service';
+
 const INITIAL_VISIBLE_COLUMNS = [
   'uniqueId',
   'name',
@@ -36,10 +30,7 @@ const INITIAL_VISIBLE_COLUMNS = [
 
 export default function Services() {
   const router = useRouter();
-  const { data, isLoading } = useQuery({
-    queryKey: ['services'],
-    queryFn: () => getAllServices(),
-  });
+  const { data, isLoading } = useAllServices();
   const { selected, setSelected } = useServiceStore();
 
   const services: ServiceType[] = data || [];

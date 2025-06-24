@@ -41,6 +41,8 @@ export interface TableProps<T extends TableItem> {
   initialSortDescriptor?: SortDescriptor;
   selectedKeys?: Selection;
   onSelectionChange?: (keys: Selection) => void;
+  isError?: boolean;
+  errorMessage?: string;
 }
 
 export interface TableState {

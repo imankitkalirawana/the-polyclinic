@@ -111,21 +111,6 @@ export const changePassword = async (id: string, password: string) => {
   return true;
 };
 
-export const getAllUsers = async (id: string) => {
-  await connectDB();
-  const users = await User.find({
-    $or: [{ email: id }, { phone: id }],
-    status: 'active',
-  })
-    .select('_id name email phone role status image')
-    .lean();
-
-  return users.map((user) => ({
-    ...user,
-    _id: user._id.toString(),
-  }));
-};
-
 export const getAllPatients = async () => {
   await connectDB();
   const users = await User.find({ role: 'user' }).select('-password').lean();

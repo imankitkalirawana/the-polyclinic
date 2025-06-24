@@ -1,29 +1,20 @@
 'use client';
 
 import { useMemo } from 'react';
-import {
-  addToast,
-  Button,
-  DropdownItem,
-  DropdownMenu,
-  Selection,
-} from '@heroui/react';
+import { Button, DropdownItem, DropdownMenu, Selection } from '@heroui/react';
 
 import {
   renderActions,
-  renderChip,
-  renderCopyableText,
   renderDate,
 } from '@/components/ui/data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 
 import { Table } from '@/components/ui/data-table';
 import { EmailType } from '@/types/email';
-import { useQuery } from '@tanstack/react-query';
-import { getAllEmails } from '@/app/dashboard/emails/helper';
 import { useRouter } from 'nextjs-toploader/app';
 import { useEmailStore } from './store';
 import { EmailQuickLook } from './quicklook';
+import { useAllEmails } from '@/services/email';
 const INITIAL_VISIBLE_COLUMNS = [
   'id',
   'from',
@@ -36,10 +27,7 @@ const INITIAL_VISIBLE_COLUMNS = [
 export default function Emails() {
   const router = useRouter();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['emails'],
-    queryFn: () => getAllEmails(),
-  });
+  const { data, isLoading } = useAllEmails();
   const { selected, setSelected } = useEmailStore();
 
   const emails: EmailType[] = data || [];

@@ -3,14 +3,20 @@ import {
   HydrationBoundary,
   QueryClient,
 } from '@tanstack/react-query';
-import { getAllEmails } from './helper';
 import Emails from '@/components/dashboard/emails';
+import { getAllEmails } from '@/services/api/email';
 
 export default async function Page() {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ['emails'],
-    queryFn: () => getAllEmails(),
+    queryFn: async () => {
+      const res = await getAllEmails();
+      if (res.success) {
+        return res.data;
+      }
+      throw new Error(res.message);
+    },
     initialData: [],
   });
 

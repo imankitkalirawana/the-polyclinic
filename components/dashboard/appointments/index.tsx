@@ -15,12 +15,13 @@ import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 import { Table } from '@/components/ui/data-table';
 import { AppointmentType } from '@/types/appointment';
 import { useRouter } from 'nextjs-toploader/app';
-import { useAppointmentData, useAppointmentStore } from './store';
+import { useAppointmentStore } from './store';
 import { apiRequest } from '@/lib/axios';
 import { AppointmentQuickLook } from './quicklook';
 import CancelDeleteAppointments from './modals/bulk-cancel-delete';
 import { convertSelectionToKeys } from '@/components/ui/data-table/helper';
 import Link from 'next/link';
+import { useAllAppointments } from '@/services/appointment';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'aid',
@@ -35,7 +36,7 @@ export default function Appointments() {
 
   const { selected, setSelected, keys, setKeys, action, setAction } =
     useAppointmentStore();
-  const { data, isLoading } = useAppointmentData();
+  const { data, isLoading } = useAllAppointments();
 
   const appointments: AppointmentType[] = useMemo(() => {
     return data || [];

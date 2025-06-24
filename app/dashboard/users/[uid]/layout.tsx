@@ -1,6 +1,6 @@
 import { HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
-import { getUserWithUID } from './helper';
+import { getUserWithUID } from '@/services/api/user';
 
 export default async function Layout({
   params,

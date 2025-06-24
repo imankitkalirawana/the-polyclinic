@@ -1,15 +1,13 @@
 'use client';
 import React, { createContext, useContext } from 'react';
-import axios from 'axios';
 import { useFormik } from 'formik';
 import { useQueryState } from 'nuqs';
-import { useQuery } from '@tanstack/react-query';
 
 import { ActionType } from './appointment-details-modal';
 
 import { AppointmentType } from '@/types/appointment';
 import { AuthUser } from '@/types/user';
-import { getAllAppointments } from '@/app/dashboard/appointments/helper';
+import { useAllAppointments } from '@/services/appointment';
 
 interface FormType {
   selected: AppointmentType | null;
@@ -37,10 +35,7 @@ export const FormProvider = ({
     defaultValue: new Date().toISOString().split('T')[0],
   });
 
-  const { data, refetch, isLoading } = useQuery<AppointmentType[]>({
-    queryKey: ['appointments', date],
-    queryFn: () => getAllAppointments(),
-  });
+  const { data, refetch, isLoading } = useAllAppointments();
 
   const appointments = data || [];
 
