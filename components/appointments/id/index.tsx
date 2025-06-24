@@ -1,12 +1,10 @@
 'use client';
-
 import {
   Card,
   CardBody,
   CardHeader,
   Divider,
   Progress,
-  ProgressProps,
   Button,
   Image,
   Dropdown,
@@ -16,12 +14,9 @@ import {
   Chip,
   Tooltip,
 } from '@heroui/react';
-import { useState } from 'react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useQuery } from '@tanstack/react-query';
 import { useAppointmentStore } from '@/components/dashboard/appointments/store';
 import NoResults from '@/components/ui/no-results';
-import { getAppointmentWithAID } from '@/functions/server-actions/appointment';
 import { AppointmentType } from '@/types/appointment';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { CellRenderer } from '@/components/ui/cell-renderer';
@@ -30,38 +25,18 @@ import ActivityTimeline from '@/components/ui/activity/timeline';
 import CancelDeleteAppointment from '@/components/dashboard/appointments/modals/cancel-delete';
 import RescheduleAppointment from '@/components/dashboard/appointments/modals/reschedule'; // Ensure this path is correct
 import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
+import { useAppointmentWithAID } from '@/services/appointment';
+import Loading from '@/app/loading';
 
-const progress: Record<
-  string,
-  {
-    value: number;
-    color: ProgressProps['color'];
-  }
-> = {
-  booked: {
-    value: 10,
-    color: 'primary',
-  },
-  confirmed: {
-    value: 50,
-    color: 'success',
-  },
-};
-interface AppointmentProps {
-  aid: number;
-  session: any;
-}
-
-export default function Appointment({ aid, session }: AppointmentProps) {
+export default function Appointment({ aid }: { aid: number }) {
   const { action, setAction, setSelected } = useAppointmentStore();
-  const {
-    data: appointment,
-    isError,
-    error,
-  } = useQuery<AppointmentType>({
-    queryKey: ['appointment', aid],
-    queryFn: () => getAppointmentWithAID(aid),
-  });
+  const { data, isLoading, isError, error } = useAppointmentWithAID(aid);
+
+  const appointment: AppointmentType = data as AppointmentType;
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   if (isError) {
     return (
