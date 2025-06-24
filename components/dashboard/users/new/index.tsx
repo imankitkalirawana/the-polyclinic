@@ -29,12 +29,22 @@ import { I18nProvider } from '@react-aria/i18n';
 import { verifyEmail } from '@/functions/server-actions';
 import { calculateAge, calculateDOB } from '@/lib/client-functions';
 import { scrollToError } from '@/lib/formik';
-import { CityProps, CountryProps, StateProps } from '@/lib/interface';
+import { CityProps, CountryProps, StateProps } from '@/types';
 import { Genders } from '@/lib/options';
 import { userValidationSchema } from '@/lib/validation';
 import { UserType } from '@/types/user';
+import {
+  useAllCitiesByCountryAndState,
+  useAllCountries,
+  useAllStatesByCountry,
+} from '@/services/external';
 
-export default function NewUser({ countries }: { countries: CountryProps[] }) {
+export default function NewUser() {
+  const { data: countriesData, isLoading: isCountriesLoading } =
+    useAllCountries();
+
+  const countries: CountryProps[] = countriesData || [];
+
   const router = useRouter();
   const inputRefs = {
     name: useRef<HTMLInputElement>(null),
@@ -97,66 +107,17 @@ export default function NewUser({ countries }: { countries: CountryProps[] }) {
     },
   });
 
-  useEffect(() => {
-    const fetchStates = async () => {
-      try {
-        const response = await axios.get(
-          `https://api.countrystatecity.in/v1/countries/${formik.values.user.country}/states`,
-          {
-            headers: {
-              'X-CSCAPI-KEY': process.env.NEXT_PUBLIC_CSCAPI_KEY,
-            },
-          }
-        );
-        const res2 = await axios.get(
-          `https://api.countrystatecity.in/v1/countries/${formik.values.user.country}`,
-          {
-            headers: {
-              'X-CSCAPI-KEY': process.env.NEXT_PUBLIC_CSCAPI_KEY,
-            },
-          }
-        );
-        formik.setFieldValue(
-          'states',
-          response.data?.sort((a: StateProps, b: StateProps) =>
-            a.name.localeCompare(b.name)
-          )
-        );
-        formik.setFieldValue('phoneCode', res2.data.phonecode);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    if (formik.values.user.country) {
-      fetchStates();
-    }
-  }, [formik.values.user.country]);
+  const { data: statesData, isLoading: isStatesLoading } =
+    useAllStatesByCountry(formik.values.user.country);
 
-  useEffect(() => {
-    const fetchCities = async () => {
-      try {
-        const response = await axios.get(
-          `https://api.countrystatecity.in/v1/countries/${formik.values.user.country}/states/${formik.values.user.state}/cities`,
-          {
-            headers: {
-              'X-CSCAPI-KEY': process.env.NEXT_PUBLIC_CSCAPI_KEY,
-            },
-          }
-        );
-        formik.setFieldValue(
-          'cities',
-          response.data?.sort((a: CityProps, b: CityProps) =>
-            a.name.localeCompare(b.name)
-          )
-        );
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    if (formik.values.user.country && formik.values.user.state) {
-      fetchCities();
-    }
-  }, [formik.values.user.state, formik.values.user.country]);
+  const { data: citiesData, isLoading: isCitiesLoading } =
+    useAllCitiesByCountryAndState(
+      formik.values.user.country,
+      formik.values.user.state
+    );
+
+  const states: StateProps[] = statesData || [];
+  const cities: CityProps[] = citiesData || [];
 
   useEffect(() => {
     if (formik.errors?.user && Object.keys(formik.errors.user).length > 0) {
@@ -317,7 +278,8 @@ export default function NewUser({ countries }: { countries: CountryProps[] }) {
               />
             </I18nProvider>
             <Autocomplete
-              defaultItems={formik.values.countries}
+              isLoading={isCountriesLoading}
+              defaultItems={countries}
               label="Country"
               className="grid-cols-2 bg-gradient-to-b"
               placeholder="Select country"
@@ -337,11 +299,11 @@ export default function NewUser({ countries }: { countries: CountryProps[] }) {
               )}
             </Autocomplete>
             <Autocomplete
-              defaultItems={formik.values.states}
+              isLoading={isStatesLoading}
+              defaultItems={states}
               label="State"
               placeholder="Select state"
               showScrollIndicators={false}
-              isDisabled={formik.values?.states?.length < 1}
               onSelectionChange={(value) => {
                 formik.setFieldValue('user.state', value);
               }}
@@ -352,11 +314,11 @@ export default function NewUser({ countries }: { countries: CountryProps[] }) {
               )}
             </Autocomplete>
             <Autocomplete
-              defaultItems={formik.values.cities}
+              isLoading={isCitiesLoading}
+              defaultItems={cities}
               label="City"
               placeholder="Select city"
               showScrollIndicators={false}
-              isDisabled={formik.values?.states?.length < 1}
               onSelectionChange={(value) => {
                 formik.setFieldValue('user.city', value);
               }}

@@ -31,6 +31,7 @@ export const useAllStatesByCountry = (
       }
       throw new Error(res.message);
     },
+    enabled: !!country,
   });
 };
 
@@ -47,5 +48,6 @@ export const useAllCitiesByCountryAndState = (
       }
       throw new Error(res.message);
     },
+    enabled: !!country && !!state,
   });
 };

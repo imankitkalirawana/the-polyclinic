@@ -65,7 +65,7 @@ export default function DashboardLayout({
           </Link>
         </div>
 
-        <ScrollShadow className="h-full max-h-full pl-2">
+        <ScrollShadow hideScrollBar className="h-full max-h-full pl-2">
           <Sidebar
             defaultSelectedKey="dashboard"
             items={sectionItemsWithTeams}

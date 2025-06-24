@@ -43,6 +43,7 @@ export const useUserWithUID = (uid: number): UseQueryResult<UserType> => {
       }
       throw new Error(res.message);
     },
+    enabled: !!uid,
   });
 };
 
