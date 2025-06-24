@@ -16,17 +16,20 @@ export async function fetchData<T>(
     method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
     data?: any;
     params?: any;
+    baseUrl?: string;
+    headers?: any;
   } = {}
 ): Promise<FetchResult<T>> {
   try {
-    const { method = 'GET', data, params } = options;
+    const { method = 'GET', data, params, baseUrl, headers } = options;
 
     const res = await axios({
-      url: `${BASE_URL}${endpoint}`,
+      url: `${baseUrl || BASE_URL}${endpoint}`,
       method,
       data,
       params,
       headers: {
+        ...headers,
         Cookie: cookies().toString(),
       },
     });
