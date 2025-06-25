@@ -19,7 +19,7 @@ import { useCalendarStore } from '../store';
 import AppointmentTriggerItem from '../ui/appointment-trigger-item';
 import { MAX_APPOINTMENTS_IN_CELL } from '../data';
 import DateChip from '../ui/date-chip';
-import { View, views } from '../types';
+import { views } from '../types';
 import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs';
 
 interface WeekViewProps {
@@ -89,7 +89,7 @@ export function WeekView({
               date={day}
               size="md"
               onClick={() => {
-                setView(View.Day);
+                setView('day');
                 setCurrentDate(day);
               }}
             />

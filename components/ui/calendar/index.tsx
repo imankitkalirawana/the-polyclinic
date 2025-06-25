@@ -9,7 +9,7 @@ import { ScheduleView } from './views/schedule';
 import { YearView } from './views/year';
 import NewAppointmentModal from './new/new';
 import { AppointmentType } from '@/types/appointment';
-import { View, views } from './types';
+import { views } from './types';
 import { parseAsStringEnum, useQueryState, parseAsIsoDateTime } from 'nuqs';
 import AppointmentDrawer from './ui/appointment-drawer';
 
@@ -20,7 +20,7 @@ interface CalendarProps {
 export function Calendar({ appointments }: CalendarProps) {
   const [view] = useQueryState(
     'view',
-    parseAsStringEnum(views).withDefault(View.Month)
+    parseAsStringEnum(views).withDefault('month')
   );
   const [currentDate, setCurrentDate] = useQueryState(
     'date',

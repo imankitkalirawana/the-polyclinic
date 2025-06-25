@@ -118,7 +118,7 @@ export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
                 date={day}
                 onClick={() => {
                   setCurrentDate(day);
-                  setView(View.Day);
+                  setView('day');
                 }}
               />
 

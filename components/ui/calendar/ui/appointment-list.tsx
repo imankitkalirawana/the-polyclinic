@@ -40,7 +40,7 @@ export default function AppointmentList({
           size="lg"
           onClick={() => {
             setCurrentDate(date);
-            setView(View.Day);
+            setView('day');
           }}
         />
       </CardHeader>

@@ -39,23 +39,23 @@ export function CalendarHeader({
 }: CalendarHeaderProps) {
   const [view, setView] = useQueryState(
     'view',
-    parseAsStringEnum(Views).withDefault(View.Month)
+    parseAsStringEnum(Views).withDefault('month')
   );
 
   useKeyPress(['m'], (e) => {
-    setView(View.Month);
+    setView('month');
   });
   useKeyPress(['y'], () => {
-    setView(View.Year);
+    setView('year');
   });
   useKeyPress(['w'], () => {
-    setView(View.Week);
+    setView('week');
   });
   useKeyPress(['d'], () => {
-    setView(View.Day);
+    setView('day');
   });
   useKeyPress(['s'], () => {
-    setView(View.Schedule);
+    setView('schedule');
   });
   useKeyPress(['t'], () => {
     onToday();

@@ -1,7 +1,7 @@
 'use client';
 import { format, isWithinInterval, startOfMonth, endOfMonth } from 'date-fns';
 import { AppointmentType } from '@/types/appointment';
-import { View, views } from '../types';
+import { views } from '../types';
 import DateChip from '../ui/date-chip';
 import { parseAsStringEnum, useQueryState } from 'nuqs';
 import AppointmentTriggerItem from '../ui/appointment-trigger-item';
@@ -48,7 +48,7 @@ export function ScheduleView({ appointments, currentDate }: ScheduleViewProps) {
                   <div className="flex w-28 items-center gap-2">
                     <DateChip
                       date={date}
-                      onClick={() => setView(View.Day)}
+                      onClick={() => setView('day')}
                       size="md"
                     />
                     <p className="mt-1.5 text-tiny uppercase text-default-600">
