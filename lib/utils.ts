@@ -10,3 +10,7 @@ export const copyToClipboard = (text: string) => {
 };
 
 export type ValuesOf<T> = T extends readonly any[] ? T[number] : T[keyof T];
+
+export function castData<T>(data: unknown): T {
+  return data as T;
+}

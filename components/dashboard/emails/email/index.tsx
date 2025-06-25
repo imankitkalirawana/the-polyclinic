@@ -2,18 +2,28 @@
 
 import { format } from 'date-fns';
 import { Chip } from '@heroui/react';
-import { useQuery } from '@tanstack/react-query';
-
-import { getEmailWithID } from '@/functions/server-actions/emails';
 import { EmailType } from '@/types/email';
+import { useEmailWithID } from '@/services/email';
+import NoResults from '@/components/ui/no-results';
+import { castData } from '@/lib/utils';
+import Loading from '@/app/loading';
 
-export default function Email({ _id }: { _id: string }) {
-  const { data } = useQuery<EmailType>({
-    queryKey: ['email', _id],
-    queryFn: () => getEmailWithID(_id),
-  });
+export default function Email({ id }: { id: string }) {
+  const { data, isLoading, isError } = useEmailWithID(id);
 
-  const email = data || ({} as EmailType);
+  const email = castData<EmailType>(data);
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (isError) {
+    return <NoResults message="Error fetching email" />;
+  }
+
+  if (!email) {
+    return <NoResults message="Email not found" />;
+  }
 
   return (
     <div className="mx-auto w-full">

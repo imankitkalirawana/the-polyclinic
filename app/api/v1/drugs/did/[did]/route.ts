@@ -1,12 +1,16 @@
 import { NextResponse } from 'next/server';
-
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import Drug from '@/models/Drug';
 
 // get drug by id from param
-export async function GET(_request: any, context: any) {
+export const GET = auth(async function GET(request: any, context: any) {
   try {
+    const allowedRoles = ['admin', 'doctor', 'receptionist'];
+    if (!allowedRoles.includes(request.auth?.user?.role)) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
     await connectDB();
     const did = parseInt(context.params.did);
     const drug = await Drug.findOne({ did });
@@ -18,7 +22,7 @@ export async function GET(_request: any, context: any) {
     console.error(error);
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
-}
+});
 
 // update drug by id from param
 export const PUT = auth(async function PUT(request: any, context: any) {

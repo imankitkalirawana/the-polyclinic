@@ -5,7 +5,7 @@ import {
 } from '@tanstack/react-query';
 
 import EditDrug from '@/components/dashboard/drugs/drug/edit';
-import { getDrugWithDid } from '@/functions/server-actions/drugs';
+import { getDrugWithDid } from '@/services/api/drug';
 
 interface Props {
   params: {
@@ -16,8 +16,14 @@ interface Props {
 export default async function Page({ params }: Props) {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
-    queryKey: ['drug', params.did],
-    queryFn: () => getDrugWithDid(params.did),
+    queryKey: ['drugs', params.did],
+    queryFn: async () => {
+      const res = await getDrugWithDid(params.did);
+      if (res.success) {
+        return res.data;
+      }
+      throw new Error(res.message);
+    },
   });
 
   return (

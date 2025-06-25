@@ -16,19 +16,16 @@ import {
   Textarea,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useQuery } from '@tanstack/react-query';
-
-import { getDrugWithDid } from '@/functions/server-actions/drugs';
 import { drugValidationSchema } from '@/lib/validation';
 import { DrugType } from '@/types/drug';
+import { useDrugWithDid } from '@/services/drug';
+import Loading from '@/app/loading';
+import NoResults from '@/components/ui/no-results';
 
 export default function EditDrug({ did }: { did: number }) {
-  const { data } = useQuery<DrugType>({
-    queryKey: ['drug', did],
-    queryFn: () => getDrugWithDid(did),
-  });
+  const { data } = useDrugWithDid(did);
 
-  const drug = data || ({} as DrugType);
+  const drug: DrugType = data as DrugType;
 
   const router = useRouter();
   const formik = useFormik({
@@ -54,6 +51,10 @@ export default function EditDrug({ did }: { did: number }) {
       }
     },
   });
+
+  if (!drug) {
+    return <NoResults message="Drug not found" />;
+  }
 
   return (
     <Card

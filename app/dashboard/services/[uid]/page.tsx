@@ -6,7 +6,7 @@ import {
 
 import { auth } from '@/auth';
 import ServiceViewItem from '@/components/dashboard/services/service-item';
-import { getServiceWithUID } from '@/functions/server-actions';
+import { getServiceWithUID } from '@/services/api/service';
 import { AuthUser } from '@/types/user';
 
 interface Props {
@@ -25,7 +25,13 @@ export default async function Page({ params }: Props) {
 
   await queryClient.prefetchQuery({
     queryKey: ['service', params.uid],
-    queryFn: () => getServiceWithUID(params.uid),
+    queryFn: async () => {
+      const res = await getServiceWithUID(params.uid);
+      if (res.success) {
+        return res.data;
+      }
+      throw new Error(res.message);
+    },
   });
 
   return (
