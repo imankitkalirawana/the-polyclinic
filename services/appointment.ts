@@ -1,6 +1,6 @@
 import { UseQueryResult, useQuery } from '@tanstack/react-query';
 import { AppointmentType } from '@/types/appointment';
-import { getAllAppointments } from './api/appointment';
+import { getAllAppointments, getAppointmentWithAID } from './api/appointment';
 
 export const useAllAppointments = (): UseQueryResult<AppointmentType[]> => {
   return useQuery({
@@ -13,5 +13,21 @@ export const useAllAppointments = (): UseQueryResult<AppointmentType[]> => {
       throw new Error(res.message);
     },
     initialData: [],
+  });
+};
+
+export const useAppointmentWithAID = (
+  aid: number
+): UseQueryResult<AppointmentType> => {
+  return useQuery({
+    queryKey: ['appointments', aid],
+    queryFn: async () => {
+      const res = await getAppointmentWithAID(aid);
+      if (res.success) {
+        return res.data;
+      }
+      throw new Error(res.message);
+    },
+    enabled: !!aid,
   });
 };

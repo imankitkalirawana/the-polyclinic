@@ -14,9 +14,12 @@ import {
 import { humanReadableDate, humanReadableTime } from '@/lib/utility';
 import CellValue from '../../../ui/cell-value';
 import { useUserWithUID } from '@/services/user';
+import { UserType } from '@/types/user';
 
 export default function UserCard({ uid }: { uid: number }) {
-  const { data: user, isError } = useUserWithUID(uid);
+  const { data, isError } = useUserWithUID(uid);
+
+  const user: UserType = data as UserType;
 
   if (isError) {
     return <p>Error fetching user data</p>;
@@ -41,12 +44,9 @@ export default function UserCard({ uid }: { uid: number }) {
           </Button>
         </CardHeader>
         <CardBody className="space-y-2 px-0">
-          <ScrollShadow className="pr-4">
+          <ScrollShadow hideScrollBar className="pb-4 pr-4">
             <CellValue label="Full Name" value={user.name} />
-            {/* <CellValue
-              label="Date of Birth"
-              // value={user.dob ? humanReadableDate(user.dob) : "Have't born yet"}
-            /> */}
+            <CellValue label="Date of Birth" value={user.dob || '-'} />
             <CellValue
               label="Country"
               value={

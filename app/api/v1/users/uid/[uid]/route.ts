@@ -20,10 +20,7 @@ export const GET = auth(async function GET(request: any, context: any) {
     // @ts-ignore
     if (request.auth?.user?.uid !== context?.params?.uid) {
       if (!allowedRoles.includes(request.auth?.user?.role)) {
-        return NextResponse.json(
-          { success: false, message: 'Unauthorized' },
-          { status: 401 }
-        );
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
       }
     }
     await connectDB();
@@ -32,13 +29,10 @@ export const GET = auth(async function GET(request: any, context: any) {
     if (!user) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
     }
-    return NextResponse.json({ success: true, user });
+    return NextResponse.json(user);
   } catch (error) {
     console.error(error);
-    return NextResponse.json(
-      { success: false, message: 'An error occurred' },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
   }
 });
 

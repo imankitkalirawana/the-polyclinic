@@ -1,11 +1,29 @@
 import NewUser from '@/components/dashboard/users/new';
-import { getCountries } from '@/functions/get';
+import { getAllCountries } from '@/services/api/external';
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from '@tanstack/react-query';
 
 export default async function Page() {
-  const countries = await getCountries();
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ['countries'],
+    queryFn: async () => {
+      const res = await getAllCountries();
+      if (res.success) {
+        return res.data;
+      }
+      throw new Error(res.message);
+    },
+  });
+
   return (
     <>
-      <NewUser countries={countries} />
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <NewUser />
+      </HydrationBoundary>
     </>
   );
 }

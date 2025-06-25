@@ -7,28 +7,27 @@ import { API_ACTIONS } from '@/lib/config';
 
 export const GET = auth(async function GET(request: any) {
   try {
-    return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
-    // if (!request.auth?.user?.role) {
-    //   return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    // }
+    if (!request.auth?.user?.role) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
 
     await connectDB();
 
     let users = [];
     const role = request.auth?.user?.role;
 
-    // switch (role) {
-    //   case 'user':
-    //     users = await User.find({ role: 'user' }).select('-password');
-    //     break;
-    //   case 'admin':
-    //     users = await User.find().select('-password');
-    //     break;
-    //   default:
-    //     // get all users except admin
-    //     users = await User.find({ role: { $ne: 'admin' } }).select('-password');
-    //     break;
-    // }
+    switch (role) {
+      case 'user':
+        users = await User.find({ role: 'user' }).select('-password');
+        break;
+      case 'admin':
+        users = await User.find().select('-password');
+        break;
+      default:
+        // get all users except admin
+        users = await User.find({ role: { $ne: 'admin' } }).select('-password');
+        break;
+    }
 
     users = await User.find().select('-password');
 

@@ -114,7 +114,7 @@ export const renderChip = ({
       size={size}
       startContent={
         <span
-          className={cn('size-2 rounded-full', chipColorMap[item].text)}
+          className={cn('size-2 rounded-full', chipColorMap[item]?.text)}
         ></span>
       }
     >
