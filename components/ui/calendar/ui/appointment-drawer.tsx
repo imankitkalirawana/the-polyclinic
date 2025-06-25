@@ -29,6 +29,7 @@ import StatusRenderer from './status-renderer';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { memo, useMemo, useCallback } from 'react';
 import { useCalendarStore } from '../store';
+import Link from 'next/link';
 
 const DRAWER_DELAY = 200;
 
@@ -273,11 +274,6 @@ const AppointmentHeader = memo(function AppointmentHeader({
     [appointment.date]
   );
 
-  const handleOpenInNewTab = useCallback(() => {
-    // Implementation for opening in new tab
-    console.log('Open in new tab');
-  }, []);
-
   return (
     <div className="flex w-full flex-row items-start justify-between gap-8 rounded-none bg-primary-500 pr-2 text-primary-foreground">
       <div>
@@ -301,7 +297,9 @@ const AppointmentHeader = memo(function AppointmentHeader({
             variant="light"
             radius="full"
             className="text-primary-foreground"
-            onPress={handleOpenInNewTab}
+            as={Link}
+            href={`/appointments/${appointment.aid}`}
+            target="_blank"
           >
             <Icon icon="solar:arrow-right-up-line-duotone" width={18} />
           </Button>

@@ -12,6 +12,7 @@ import {
   subWeeks,
   addDays,
   subDays,
+  isToday,
 } from 'date-fns';
 import { View, views as Views } from './types';
 import { parseAsStringEnum, useQueryState } from 'nuqs';
@@ -38,23 +39,23 @@ export function CalendarHeader({
 }: CalendarHeaderProps) {
   const [view, setView] = useQueryState(
     'view',
-    parseAsStringEnum(Views).withDefault(View.Month)
+    parseAsStringEnum(Views).withDefault('month')
   );
 
   useKeyPress(['m'], (e) => {
-    setView(View.Month);
+    setView('month');
   });
   useKeyPress(['y'], () => {
-    setView(View.Year);
+    setView('year');
   });
   useKeyPress(['w'], () => {
-    setView(View.Week);
+    setView('week');
   });
   useKeyPress(['d'], () => {
-    setView(View.Day);
+    setView('day');
   });
   useKeyPress(['s'], () => {
-    setView(View.Schedule);
+    setView('schedule');
   });
   useKeyPress(['t'], () => {
     onToday();
@@ -128,7 +129,8 @@ export function CalendarHeader({
     <header className="flex items-center justify-between border-b px-2 py-2 sm:px-4">
       <div className="flex items-center sm:gap-4">
         <Button
-          variant="bordered"
+          variant="flat"
+          color={isToday(currentDate) ? 'default' : 'primary'}
           onPress={() => onDateChange(new Date())}
           className="px-2"
           size="sm"

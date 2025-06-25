@@ -118,11 +118,12 @@ export default function Services() {
         sortable: false,
         renderCell: (service) =>
           renderActions({
-            onView: () => router.push(`/dashboard/services/${service._id}`),
+            onView: () =>
+              router.push(`/dashboard/services/${service.uniqueId}`),
             onEdit: () =>
-              router.push(`/dashboard/services/${service._id}/edit`),
-            onDelete: () => console.log('Delete', service._id),
-            key: service._id,
+              router.push(`/dashboard/services/${service.uniqueId}/edit`),
+            onDelete: () => console.log('Delete', service.uniqueId),
+            key: service.uniqueId,
           }),
       },
     ],

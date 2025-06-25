@@ -1,5 +1,5 @@
 import { UseQueryResult, useQuery } from '@tanstack/react-query';
-import { getAllDrugs } from './api/drug';
+import { getAllDrugs, getDrugWithDid } from './api/drug';
 import { DrugType } from '@/types/drug';
 
 export const useAllDrugs = (): UseQueryResult<DrugType[]> => {
@@ -12,5 +12,19 @@ export const useAllDrugs = (): UseQueryResult<DrugType[]> => {
       }
       throw new Error(res.message);
     },
+  });
+};
+
+export const useDrugWithDid = (did: number): UseQueryResult<DrugType> => {
+  return useQuery({
+    queryKey: ['drugs', did],
+    queryFn: async () => {
+      const res = await getDrugWithDid(did);
+      if (res.success) {
+        return res.data;
+      }
+      throw new Error(res.message);
+    },
+    enabled: !!did,
   });
 };

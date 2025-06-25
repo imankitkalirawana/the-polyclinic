@@ -1,6 +1,16 @@
-import { UseQueryResult, useQuery } from '@tanstack/react-query';
-import { AppointmentType } from '@/types/appointment';
-import { getAllAppointments, getAppointmentWithAID } from './api/appointment';
+import {
+  UseMutationResult,
+  UseQueryResult,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
+import { AppointmentType, CreateAppointmentType } from '@/types/appointment';
+import {
+  createAppointment,
+  getAllAppointments,
+  getAppointmentWithAID,
+} from './api/appointment';
 
 export const useAllAppointments = (): UseQueryResult<AppointmentType[]> => {
   return useQuery({
@@ -29,5 +39,25 @@ export const useAppointmentWithAID = (
       throw new Error(res.message);
     },
     enabled: !!aid,
+  });
+};
+
+export const useCreateAppointment = (): UseMutationResult<
+  AppointmentType,
+  Error,
+  CreateAppointmentType
+> => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (appointment: CreateAppointmentType) => {
+      const res = await createAppointment(appointment);
+      if (res.success) {
+        return res.data;
+      }
+      throw new Error(res.message);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['appointments'] });
+    },
   });
 };

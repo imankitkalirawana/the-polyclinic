@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
 import Service from '@/models/Service';
 import { auth } from '@/auth';
-import { UserRole } from '@/types/user';
+import { UserType } from '@/types/user';
 
 export const GET = auth(async function GET(request: any, context: any) {
   try {
@@ -22,7 +22,7 @@ export const GET = auth(async function GET(request: any, context: any) {
 
 export const PATCH = auth(async function PATCH(request: any, context: any) {
   try {
-    const allowedRoles: UserRole[] = [UserRole.admin];
+    const allowedRoles: UserType['role'][] = ['admin'];
     if (!allowedRoles.includes(request.auth?.user?.role)) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
@@ -48,7 +48,7 @@ export const PATCH = auth(async function PATCH(request: any, context: any) {
 
 export const DELETE = auth(async function DELETE(request: any, context: any) {
   try {
-    const allowedRoles: UserRole[] = [UserRole.admin];
+    const allowedRoles: UserType['role'][] = ['admin'];
     if (!allowedRoles.includes(request.auth?.user?.role)) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }

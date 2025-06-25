@@ -20,7 +20,7 @@ import { useForm } from './context';
 import StatusReferences from './status-references';
 
 import CalendarWidget from '@/components/ui/calendar-widget';
-import { AppointmentType, AType } from '@/types/appointment';
+import { AppointmentType } from '@/types/appointment';
 
 // Get background and icon colors based on appointment type
 export const getAppointmentStyles = (status: AppointmentType['status']) => {
@@ -92,7 +92,7 @@ export const getAppointmentStyles = (status: AppointmentType['status']) => {
   }
 };
 
-const TypeIcon: Record<AType, string> = {
+const TypeIcon: Record<AppointmentType['type'], string> = {
   consultation: 'solar:stethoscope-bold',
   'follow-up': 'solar:clipboard-check-linear',
   emergency: 'solar:adhesive-plaster-linear',

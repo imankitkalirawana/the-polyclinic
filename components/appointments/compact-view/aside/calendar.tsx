@@ -15,13 +15,7 @@ import CalendarWidget from '@/components/ui/calendar-widget';
 import { cn } from '@/lib/utils';
 import { AppointmentType } from '@/types/appointment';
 
-export enum AType {
-  consultation = 'consultation',
-  'follow-up' = 'follow-up',
-  emergency = 'emergency',
-}
-
-const typeMap: Record<AType, string> = {
+const typeMap: Record<AppointmentType['type'], string> = {
   consultation: 'bg-sky-500',
   'follow-up': 'bg-amber-500',
   emergency: 'bg-rose-500',

@@ -1,26 +1,17 @@
 'use client';
-
 import { format, isWithinInterval, startOfMonth, endOfMonth } from 'date-fns';
 import { AppointmentType } from '@/types/appointment';
-import { View, views } from '../types';
+import { views } from '../types';
 import DateChip from '../ui/date-chip';
-import { formatTime } from '../helper';
-import StatusRenderer from '../ui/status-renderer';
 import { parseAsStringEnum, useQueryState } from 'nuqs';
 import AppointmentTriggerItem from '../ui/appointment-trigger-item';
-import AppointmentDrawer from '../ui/appointment-drawer';
 
 interface ScheduleViewProps {
   appointments: AppointmentType[];
   currentDate: Date;
-  onTimeSlotClick: (date: Date) => void;
 }
 
-export function ScheduleView({
-  appointments,
-  currentDate,
-  onTimeSlotClick,
-}: ScheduleViewProps) {
+export function ScheduleView({ appointments, currentDate }: ScheduleViewProps) {
   const [_view, setView] = useQueryState('view', parseAsStringEnum(views));
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
@@ -45,54 +36,48 @@ export function ScheduleView({
   );
 
   return (
-    <>
-      <div className="flex h-full flex-col">
-        <div className="flex-1 overflow-auto p-4">
-          <div className="divide-y divide-default-200">
-            {Object.entries(groupedAppointments).map(
-              ([dateKey, dayAppointments]) => {
-                const date = new Date(dateKey);
+    <div className="flex h-full flex-col">
+      <div className="flex-1 overflow-auto p-4">
+        <div className="divide-y divide-default-200">
+          {Object.entries(groupedAppointments).map(
+            ([dateKey, dayAppointments]) => {
+              const date = new Date(dateKey);
 
-                return (
-                  <div key={dateKey} className="flex w-full items-start py-1">
-                    <div className="flex w-28 items-center gap-2">
-                      <DateChip
-                        date={date}
-                        onClick={() => setView(View.Day)}
-                        size="md"
-                      />
-                      <p className="mt-1.5 text-tiny uppercase text-default-600">
-                        {format(date, 'MMM, EEE')}
-                      </p>
-                    </div>
-
-                    <div className="flex flex-1 flex-col gap-2">
-                      {dayAppointments.map((apt) => (
-                        <AppointmentTriggerItem
-                          key={apt.aid}
-                          appointment={apt}
-                        />
-                      ))}
-                    </div>
+              return (
+                <div key={dateKey} className="flex w-full items-start py-1">
+                  <div className="flex w-28 items-center gap-2">
+                    <DateChip
+                      date={date}
+                      onClick={() => setView('day')}
+                      size="md"
+                    />
+                    <p className="mt-1.5 text-tiny uppercase text-default-600">
+                      {format(date, 'MMM, EEE')}
+                    </p>
                   </div>
-                );
-              }
-            )}
 
-            {Object.keys(groupedAppointments).length === 0 && (
-              <div className="text-muted-foreground py-12 text-center">
-                <div className="mb-2 text-large font-medium">
-                  No appointments this month
+                  <div className="flex flex-1 flex-col gap-2">
+                    {dayAppointments.map((apt) => (
+                      <AppointmentTriggerItem key={apt.aid} appointment={apt} />
+                    ))}
+                  </div>
                 </div>
-                <div className="text-small">
-                  Click anywhere to create a new appointment
-                </div>
+              );
+            }
+          )}
+
+          {Object.keys(groupedAppointments).length === 0 && (
+            <div className="text-muted-foreground py-12 text-center">
+              <div className="mb-2 text-large font-medium">
+                No appointments this month
               </div>
-            )}
-          </div>
+              <div className="text-small">
+                Click anywhere to create a new appointment
+              </div>
+            </div>
+          )}
         </div>
       </div>
-      <AppointmentDrawer />
-    </>
+    </div>
   );
 }

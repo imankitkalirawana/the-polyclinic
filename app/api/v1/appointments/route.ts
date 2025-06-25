@@ -6,16 +6,16 @@ import { connectDB } from '@/lib/db';
 import Appointment from '@/models/Appointment';
 import { NewAppointment } from '@/utils/email-template/doctor';
 import { AppointmentStatus } from '@/utils/email-template/patient';
-import { UserRole } from '@/types/user';
+import { UserType } from '@/types/user';
 import { API_ACTIONS, MOCK_DATA } from '@/lib/config';
 import { generateAppointments } from '@/lib/appointments/mock';
 
 export const GET = auth(async function GET(request: any) {
   try {
-    const disallowedRoles: UserRole[] = [
-      UserRole.nurse,
-      UserRole.pharmacist,
-      UserRole.laboratorist,
+    const disallowedRoles: UserType['role'][] = [
+      'nurse',
+      'pharmacist',
+      'laboratorist',
     ];
 
     if (disallowedRoles.includes(request.auth?.user?.role)) {
@@ -69,12 +69,7 @@ export const GET = auth(async function GET(request: any) {
 
 export const POST = auth(async function POST(request: any) {
   try {
-    const allowedRoles = [
-      UserRole.admin,
-      UserRole.doctor,
-      UserRole.receptionist,
-      UserRole.user,
-    ];
+    const allowedRoles = ['admin', 'doctor', 'receptionist', 'user'];
     // @ts-ignore
     if (!allowedRoles.includes(request.auth?.user?.role)) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -120,7 +115,7 @@ export const POST = auth(async function POST(request: any) {
 
 export const PATCH = auth(async function PATCH(request: any) {
   try {
-    const allowedRoles = [UserRole.admin, UserRole.receptionist];
+    const allowedRoles = ['admin', 'receptionist'];
     if (!allowedRoles.includes(request.auth?.user?.role)) {
       return NextResponse.json(
         { success: false, message: 'Unauthorized' },
@@ -147,7 +142,7 @@ export const PATCH = auth(async function PATCH(request: any) {
 
 export const DELETE = auth(async function DELETE(request: any) {
   try {
-    const allowedRoles = [UserRole.admin, UserRole.receptionist];
+    const allowedRoles = ['admin', 'receptionist'];
     if (!allowedRoles.includes(request.auth?.user?.role)) {
       return NextResponse.json(
         { success: false, message: 'Unauthorized' },

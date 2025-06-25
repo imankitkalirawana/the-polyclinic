@@ -1,10 +1,5 @@
-import { Gender } from '@/lib/interface';
-import {
-  AppointmentMode,
-  AppointmentStatus,
-  AppointmentType,
-  AType,
-} from '@/types/appointment';
+import { genders } from '@/types/user';
+import { AppointmentType } from '@/types/appointment';
 import mongoose, { Model } from 'mongoose';
 import mongooseSequence from 'mongoose-sequence';
 
@@ -25,7 +20,7 @@ const appointmentSchema = new mongoose.Schema(
       email: String,
       gender: {
         type: String,
-        enum: Gender,
+        enum: genders,
       },
       age: Number,
       image: String,
@@ -40,8 +35,8 @@ const appointmentSchema = new mongoose.Schema(
     additionalInfo: {
       type: {
         type: String,
-        enum: AppointmentMode,
-        default: AppointmentMode.offline,
+        enum: ['online', 'offline'],
+        default: 'offline',
       },
       notes: String,
       symptoms: String,
@@ -51,8 +46,16 @@ const appointmentSchema = new mongoose.Schema(
     progress: Number,
     status: {
       type: String,
-      default: AppointmentStatus.booked,
-      enum: AppointmentStatus,
+      default: 'booked',
+      enum: [
+        'booked',
+        'confirmed',
+        'in-progress',
+        'completed',
+        'cancelled',
+        'overdue',
+        'on-hold',
+      ],
     },
     data: {
       type: Map,
@@ -60,8 +63,8 @@ const appointmentSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: AType,
-      default: AType.consultation,
+      enum: ['consultation', 'follow-up', 'emergency'],
+      default: 'consultation',
     },
     previousAppointments: {
       type: [Number],

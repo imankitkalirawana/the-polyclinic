@@ -9,13 +9,13 @@ import {
   ScrollShadow,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import NoResults from '../no-results';
+import NoResults from '../../ui/no-results';
 import { useState } from 'react';
 import { useDebounce } from 'react-haiku';
-import Skeleton from '../skeleton';
-import { AppointmentFormType } from '@/components/appointments/create/types';
+import Skeleton from '../../ui/skeleton';
 import { UserType } from '@/types/user';
 import { DoctorType } from '@/types/doctor';
+import { CreateAppointmentType } from '@/types/appointment';
 
 const SizeMap = {
   sm: {
@@ -35,7 +35,7 @@ const SizeMap = {
   },
 };
 
-export default function UsersList({
+export default function UserSelection({
   id,
   users,
   isLoading,
@@ -46,10 +46,12 @@ export default function UsersList({
   id: string;
   users: (UserType | DoctorType)[];
   isLoading?: boolean;
-  selectedUser: AppointmentFormType['patient'] | AppointmentFormType['doctor'];
+  selectedUser:
+    | CreateAppointmentType['patient']
+    | CreateAppointmentType['doctor'];
   size?: 'sm' | 'md' | 'lg';
   onSelectionChange: (
-    user: AppointmentFormType['patient'] | AppointmentFormType['doctor']
+    user: CreateAppointmentType['patient'] | CreateAppointmentType['doctor']
   ) => void;
 }) {
   const [query, setQuery] = useState('');

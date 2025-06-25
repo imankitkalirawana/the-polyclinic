@@ -20,23 +20,21 @@ import {
   Tooltip,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useQuery } from '@tanstack/react-query';
 
 import QuillInput from '@/components/ui/quill-input';
-import { getServiceWithUID, verifyUID } from '@/functions/server-actions';
+import { verifyUID } from '@/functions/server-actions';
 import { ServiceStatuses, ServiceTypes } from '@/lib/interface';
 import { serviceValidationSchema } from '@/lib/validation';
 import { ServiceType } from '@/types/service';
+import { useServiceWithUID } from '@/services/service';
+import { castData } from '@/lib/utils';
+import Loading from '@/app/loading';
+import NoResults from '@/components/ui/no-results';
 
 export default function EditService({ uid }: { uid: string }) {
-  const {
-    data: service,
-    isError,
-    refetch,
-  } = useQuery<ServiceType>({
-    queryKey: ['service', uid],
-    queryFn: () => getServiceWithUID(uid),
-  });
+  const { data, isError, isLoading, refetch } = useServiceWithUID(uid);
+
+  const service = castData<ServiceType>(data);
 
   const router = useRouter();
   const [hoveredColIndex, setHoveredColIndex] = useState<number | null>(null);
@@ -84,10 +82,6 @@ export default function EditService({ uid }: { uid: string }) {
       )
     ) + 1
   );
-
-  if (isError) {
-    return <div>Service not found</div>;
-  }
 
   const handleInputChange = (key: string, value: string) => {
     formik.setFieldValue(`service.data.${key}`, value);
@@ -158,6 +152,18 @@ export default function EditService({ uid }: { uid: string }) {
     setNumCols(numCols - 1);
     formik.setFieldValue('service.data', newValues);
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (isError) {
+    return <NoResults message="Service not found" />;
+  }
+
+  if (!service) {
+    return <NoResults message="Service not found" />;
+  }
 
   return (
     <>

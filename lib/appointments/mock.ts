@@ -1,11 +1,9 @@
 'use server';
 
-import { Gender } from '@/lib/interface';
 import {
-  AppointmentMode,
-  AppointmentStatus,
+  appointmentModes,
   AppointmentType,
-  AType,
+  appointmentTypes,
 } from '@/types/appointment';
 import { faker } from '@faker-js/faker';
 import { addDays, subDays } from 'date-fns';
@@ -16,7 +14,7 @@ export async function generateAppointments({
   status,
 }: {
   count: number;
-  status?: AppointmentStatus;
+  status?: AppointmentType['status'];
 }) {
   const generated: AppointmentType[] = [];
 
@@ -47,7 +45,7 @@ export async function generateAppointments({
         name: faker.person.fullName({ sex }),
         phone: faker.phone.number({ style: 'national' }),
         email: faker.internet.email(),
-        gender: sex as Gender,
+        gender: sex,
         age: faker.number.int({ min: 18, max: 80 }),
         image: faker.image.personPortrait({ size: 256, sex }),
       },
@@ -64,22 +62,22 @@ export async function generateAppointments({
       status: status
         ? status
         : faker.helpers.arrayElement([
-            AppointmentStatus.booked,
-            AppointmentStatus.confirmed,
-            AppointmentStatus['in-progress'],
-            AppointmentStatus.completed,
-            AppointmentStatus.cancelled,
-            AppointmentStatus.overdue,
-            AppointmentStatus['on-hold'],
+            'booked',
+            'confirmed',
+            'in-progress',
+            'completed',
+            'cancelled',
+            'overdue',
+            'on-hold',
           ]),
       additionalInfo: {
         notes: faker.lorem.paragraph(),
         symptoms: faker.lorem.sentence(),
-        type: faker.helpers.arrayElement(Object.values(AppointmentMode)),
+        type: faker.helpers.arrayElement(appointmentModes),
         description: faker.lorem.paragraph(),
         instructions: faker.lorem.lines(3),
       },
-      type: faker.helpers.arrayElement(Object.values(AType)),
+      type: faker.helpers.arrayElement(appointmentTypes),
       progress: faker.number.int({ min: 0, max: 100 }),
       data: Object.fromEntries(
         Array.from({ length: faker.number.int({ min: 2, max: 5 }) }).map(() => [

@@ -24,7 +24,6 @@ import {
 import AppointmentList from '../ui/appointment-list';
 import { AppointmentType } from '@/types/appointment';
 import { memo, useMemo } from 'react';
-import AppointmentDrawer from '../ui/appointment-drawer';
 import { useCalendarStore } from '../store';
 
 interface YearViewProps {
@@ -193,7 +192,6 @@ export function YearView({ appointments, currentDate }: YearViewProps) {
           </div>
         ))}
       </div>
-      <AppointmentDrawer />
     </ScrollShadow>
   );
 }

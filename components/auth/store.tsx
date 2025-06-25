@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { useQueryState } from 'nuqs';
 import { useRouter } from 'nextjs-toploader/app';
 import { addToast } from '@heroui/react';
-import { Gender } from '@/lib/interface';
+import { Gender } from '@/types/user';
 import { register, sendOTP, verifyOTP, login } from '@/lib/server-actions/auth';
 import { verifyEmail } from '@/functions/server-actions/auth/verification';
 import { AuthContextType, FlowType } from './types';
@@ -35,7 +35,7 @@ export const createAuthProvider = (flowType: FlowType) => {
             ...baseValues,
             name: '',
             dob: null as string | null,
-            gender: Gender.male,
+            gender: 'male',
             agreed: false,
             isValidation: false,
           };

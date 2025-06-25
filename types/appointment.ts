@@ -1,25 +1,24 @@
-import { Base, Gender } from '@/lib/interface';
+import { Base } from '@/lib/interface';
+import { Gender } from '@/types/user';
+import { ValuesOf } from '@/lib/utils';
 
-export enum AType {
-  consultation = 'consultation',
-  'follow-up' = 'follow-up',
-  emergency = 'emergency',
-}
+export const appointmentTypes = [
+  'consultation',
+  'follow-up',
+  'emergency',
+] as const;
 
-export enum AppointmentMode {
-  online = 'online',
-  offline = 'offline',
-}
+export const appointmentModes = ['online', 'offline'] as const;
 
-export enum AppointmentStatus {
-  booked = 'booked',
-  confirmed = 'confirmed',
-  'in-progress' = 'in-progress',
-  completed = 'completed',
-  cancelled = 'cancelled',
-  overdue = 'overdue',
-  'on-hold' = 'on-hold',
-}
+export const appointmentStatuses = [
+  'booked',
+  'confirmed',
+  'in-progress',
+  'completed',
+  'cancelled',
+  'overdue',
+  'on-hold',
+] as const;
 
 export interface PatientInfo {
   uid: number;
@@ -58,3 +57,21 @@ export interface AppointmentType extends Base {
   type: AType;
   previousAppointments?: Array<number>;
 }
+
+export type CreateAppointmentType = Omit<
+  AppointmentType,
+  | '_id'
+  | 'aid'
+  | 'status'
+  | 'progress'
+  | 'data'
+  | 'previousAppointments'
+  | 'createdAt'
+  | 'updatedAt'
+  | 'createdBy'
+  | 'updatedBy'
+>;
+
+export type AppointmentMode = ValuesOf<typeof appointmentModes>;
+export type AType = ValuesOf<typeof appointmentTypes>;
+export type AppointmentStatus = ValuesOf<typeof appointmentStatuses>;

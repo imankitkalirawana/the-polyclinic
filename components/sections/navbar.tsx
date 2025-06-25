@@ -117,7 +117,7 @@ export default function Navbar() {
           items: [
             {
               name: 'Create New',
-              href: '/appointments/new',
+              href: '/appointments/create',
               icon: 'solar:pen-new-round-linear',
             },
           ],

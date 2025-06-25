@@ -1,25 +1,22 @@
 import { connectDB } from '@/lib/db';
-
 import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
 import User from '@/models/User';
-import { UserRole } from '@/types/user';
+import { UserType } from '@/types/user';
 
 export const GET = auth(async function GET(request: any, context: any) {
   try {
-    const allowedRoles: UserRole[] = [
-      UserRole.admin,
-      UserRole.receptionist,
-      UserRole.doctor,
-      UserRole.nurse,
-      UserRole.pharmacist,
-    ];
-
-    if (!allowedRoles.includes(request.auth?.user?.role)) {
+    if (!request.auth?.user) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
     const { role } = context.params;
+
+    // user can only get doctors and nurses, admin can get all users, receptionist can get all users and doctors, doctors can get all patients
+
+    // const accessMap: Record<UserType['role'], UserType['role'][]> = {
+    //   admin: [],
+    // };
 
     await connectDB();
 

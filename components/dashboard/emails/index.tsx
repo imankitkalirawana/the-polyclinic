@@ -31,16 +31,9 @@ export default function Emails() {
   const { selected, setSelected } = useEmailStore();
 
   const emails: EmailType[] = data || [];
-  console.log('emails', emails);
   // Define columns with render functions
   const columns: ColumnDef<EmailType>[] = useMemo(
     () => [
-      // {
-      //   name: 'Id',
-      //   uid: 'id',
-      //   sortable: true,
-      //   renderCell: (email) => renderCopyableText(email._id.toString()),
-      // },
       {
         name: 'From',
         uid: 'from',
@@ -82,8 +75,7 @@ export default function Emails() {
         sortable: false,
         renderCell: (email) =>
           renderActions({
-            onView: () => router.push(`/dashboard/users/${email._id}`),
-            onEdit: () => router.push(`/dashboard/users/${email._id}/edit`),
+            onView: () => router.push(`/dashboard/emails/${email._id}`),
             onDelete: () => console.log('Delete', email._id),
             key: email._id,
           }),

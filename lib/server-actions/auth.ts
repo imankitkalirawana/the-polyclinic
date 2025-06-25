@@ -9,7 +9,7 @@ import { APP_INFO } from '@/lib/config';
 import Otp from '@/models/Otp';
 import User from '@/models/User';
 import { OtpEmail, WelcomeUser } from '@/templates/email';
-import { Gender } from '../interface';
+import { Gender } from '@/types/user';
 import { AuthError } from 'next-auth';
 import { signIn } from '@/auth';
 import { generateOtp } from '@/functions/server-actions';

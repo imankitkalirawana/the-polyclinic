@@ -9,24 +9,19 @@ import {
   CardHeader,
   ScrollShadow,
 } from '@heroui/react';
-import { useQuery } from '@tanstack/react-query';
-
 import CellValue from '@/components/ui/cell-value';
-import { getDrugWithDid } from '@/functions/server-actions/drugs';
-import { humanReadableDate, humanReadableTime } from '@/lib/utility';
 import { DrugType } from '@/types/drug';
-
-interface Props {
-  drug: DrugType;
-}
+import { useDrugWithDid } from '@/services/drug';
+import { format } from 'date-fns';
 
 export default function DrugCard({ did }: { did: number }) {
-  const { data } = useQuery<DrugType>({
-    queryKey: ['drug', did],
-    queryFn: () => getDrugWithDid(did),
-  });
+  const { data } = useDrugWithDid(did);
 
-  const drug = data || ({} as DrugType);
+  const drug: DrugType = data as DrugType;
+
+  if (!drug) {
+    return <div>Drug not found</div>;
+  }
 
   return (
     <Card className="bg-transparent shadow-none">
@@ -60,14 +55,13 @@ export default function DrugCard({ did }: { did: number }) {
             label="Frequency"
             value={<span className="capitalize">{drug.frequency}</span>}
           />
-
           <CellValue
             label="Created By"
-            value={`${drug.createdBy || 'Admin'} on ${humanReadableDate(drug.createdAt as Date)} at ${humanReadableTime(drug.createdAt as Date)}`}
+            value={`${drug.createdBy || 'Admin'} on ${format(new Date(drug.createdAt), 'PPPp')}`}
           />
           <CellValue
             label="Updated By"
-            value={`${drug.updatedBy || 'Admin'} on ${humanReadableDate(drug.updatedAt as Date)} at ${humanReadableTime(drug.updatedAt as Date)}`}
+            value={`${drug.updatedBy || 'Admin'} on ${format(new Date(drug.updatedAt), 'PPPp')}`}
           />
         </ScrollShadow>
       </CardBody>

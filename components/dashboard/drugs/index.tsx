@@ -96,8 +96,8 @@ export default function Drugs() {
         sortable: false,
         renderCell: (drug) =>
           renderActions({
-            onView: () => router.push(`/dashboard/users/${drug.did}`),
-            onEdit: () => router.push(`/dashboard/users/${drug.did}/edit`),
+            onView: () => router.push(`/dashboard/drugs/${drug.did}`),
+            onEdit: () => router.push(`/dashboard/drugs/${drug.did}/edit`),
             onDelete: () => console.log('Delete', drug.did),
             key: drug.did,
           }),

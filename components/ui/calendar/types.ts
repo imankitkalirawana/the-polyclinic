@@ -1,11 +1,5 @@
-import { AppointmentType } from '@/types/appointment';
+import { ValuesOf } from '@/lib/utils';
 
 export const views = ['month', 'week', 'day', 'schedule', 'year'];
 
-export enum View {
-  Month = 'month',
-  Week = 'week',
-  Day = 'day',
-  Schedule = 'schedule',
-  Year = 'year',
-}
+export type View = ValuesOf<typeof views>;

@@ -3,9 +3,8 @@ import {
   HydrationBoundary,
   QueryClient,
 } from '@tanstack/react-query';
-
 import EditService from '@/components/dashboard/services/service-item/edit';
-import { getServiceWithUID } from '@/functions/server-actions';
+import { getServiceWithUID } from '@/services/api/service';
 
 interface Props {
   params: {
@@ -17,7 +16,13 @@ export default async function Page({ params }: Props) {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ['service', params.uid],
-    queryFn: () => getServiceWithUID(params.uid),
+    queryFn: async () => {
+      const res = await getServiceWithUID(params.uid);
+      if (res.success) {
+        return res.data;
+      }
+      throw new Error(res.message);
+    },
   });
   return (
     <>
