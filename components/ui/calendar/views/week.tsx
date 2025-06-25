@@ -14,7 +14,6 @@ import { TIMINGS } from '@/lib/config';
 import { ScrollShadow, Tooltip } from '@heroui/react';
 import { useEffect, useRef } from 'react';
 import { CurrentHourIndicator } from '../ui/current-hour-indicator';
-import AppointmentDrawer from '../ui/appointment-drawer';
 import AppointmentList from '../ui/appointment-list';
 import { useCalendarStore } from '../store';
 import AppointmentTriggerItem from '../ui/appointment-trigger-item';
@@ -73,144 +72,138 @@ export function WeekView({
   }, []);
 
   return (
-    <>
-      <div className="flex h-full flex-col">
-        {/* Week header using Grid */}
-        <div className="grid grid-cols-[auto_repeat(7,1fr)] border-b">
-          <div className="w-20 shrink-0 border-r"></div>
-          {/* Empty top-left cell */}
-          {weekDays.map((day) => (
-            <div
-              key={`header-${day.toISOString()}`}
-              className="flex flex-col items-center border-r p-2 text-center last:border-r-0"
-            >
-              <div className="text-small text-default-500">
-                {format(day, 'EEE')}
-              </div>
-              <DateChip
-                date={day}
-                size="md"
-                onClick={() => {
-                  setView(View.Day);
-                  setCurrentDate(day);
-                }}
-              />
+    <div className="flex h-full flex-col">
+      {/* Week header using Grid */}
+      <div className="grid grid-cols-[auto_repeat(7,1fr)] border-b">
+        <div className="w-20 shrink-0 border-r"></div>
+        {/* Empty top-left cell */}
+        {weekDays.map((day) => (
+          <div
+            key={`header-${day.toISOString()}`}
+            className="flex flex-col items-center border-r p-2 text-center last:border-r-0"
+          >
+            <div className="text-small text-default-500">
+              {format(day, 'EEE')}
             </div>
+            <DateChip
+              date={day}
+              size="md"
+              onClick={() => {
+                setView(View.Day);
+                setCurrentDate(day);
+              }}
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* Time grid using Grid */}
+      <ScrollShadow hideScrollBar className="flex-1 overflow-auto">
+        <div
+          className="grid h-full"
+          style={{
+            gridTemplateColumns: '80px repeat(7, minmax(100px, 1fr))',
+            gridTemplateRows: `repeat(${displayHours.length}, minmax(80px, 1fr))`,
+          }}
+        >
+          {displayHours.map((hour, hourIndex) => (
+            <>
+              {/* Time Label Cell */}
+              <div
+                key={`time-${hour}`}
+                className="row-span-1 w-20 shrink-0 border-b border-r p-2 text-right text-small text-default-500"
+                style={{ gridRowStart: hourIndex + 1, gridColumnStart: 1 }}
+              >
+                {hour < 12
+                  ? `${hour} AM`
+                  : hour === 12
+                    ? '12 PM'
+                    : `${hour - 12} PM`}
+              </div>
+
+              {/* Day Cells for this Hour */}
+              {weekDays.map((day, dayIndex) => {
+                const dayAppointments = getAppointmentsForDayAndHour(day, hour);
+                return (
+                  <div
+                    key={`cell-${day.toISOString()}-${hour}`}
+                    className={cn(
+                      'relative min-h-[80px] cursor-pointer overflow-hidden border-b border-r p-1',
+                      dayIndex === weekDays.length - 1 && 'last:border-r-0' // Ensure last column has no right border
+                    )}
+                    style={{
+                      gridRowStart: hourIndex + 1,
+                      gridColumnStart: dayIndex + 2, // +2 because time label is column 1
+                    }}
+                    onClick={(e) => {
+                      if (!appointment) {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        const clickY = e.clientY - rect.top;
+                        const cellHeight = rect.height;
+
+                        const clickRatio =
+                          cellHeight > 0
+                            ? Math.max(0, Math.min(1, clickY / cellHeight))
+                            : 0;
+
+                        const minutesOffset =
+                          Math.round((clickRatio * 60) / 15) * 15;
+
+                        let targetHour = hour;
+                        let targetMinutes = minutesOffset;
+
+                        if (targetMinutes >= 60) {
+                          targetHour += 1;
+                          targetMinutes -= 60;
+                        }
+
+                        const clickedDateTime = new Date(day);
+                        clickedDateTime.setHours(
+                          targetHour,
+                          targetMinutes,
+                          0,
+                          0
+                        );
+
+                        onTimeSlotClick(clickedDateTime);
+                      }
+                    }}
+                  >
+                    {new Date().getHours() === hour && isToday(day) && (
+                      <CurrentHourIndicator ref={ref} />
+                    )}
+                    {dayAppointments
+                      .slice(0, MAX_APPOINTMENTS_IN_CELL)
+                      .map((appointment) => (
+                        <AppointmentTriggerItem
+                          key={appointment.aid}
+                          appointment={appointment}
+                        />
+                      ))}
+                    {/* Optionally, add a "X more" indicator if needed */}
+                    {dayAppointments.length > MAX_APPOINTMENTS_IN_CELL && (
+                      <Tooltip
+                        content={
+                          <AppointmentList
+                            appointments={dayAppointments}
+                            date={day}
+                          />
+                        }
+                        onOpenChange={setIsTooltipOpen}
+                      >
+                        <button className="truncate rounded-lg p-1 px-2 text-start text-tiny hover:bg-default-100">
+                          {dayAppointments.length - MAX_APPOINTMENTS_IN_CELL}{' '}
+                          more
+                        </button>
+                      </Tooltip>
+                    )}
+                  </div>
+                );
+              })}
+            </>
           ))}
         </div>
-
-        {/* Time grid using Grid */}
-        <ScrollShadow hideScrollBar className="flex-1 overflow-auto">
-          <div
-            className="grid h-full"
-            style={{
-              gridTemplateColumns: '80px repeat(7, minmax(100px, 1fr))',
-              gridTemplateRows: `repeat(${displayHours.length}, minmax(80px, 1fr))`,
-            }}
-          >
-            {displayHours.map((hour, hourIndex) => (
-              <>
-                {/* Time Label Cell */}
-                <div
-                  key={`time-${hour}`}
-                  className="row-span-1 w-20 shrink-0 border-b border-r p-2 text-right text-small text-default-500"
-                  style={{ gridRowStart: hourIndex + 1, gridColumnStart: 1 }}
-                >
-                  {hour < 12
-                    ? `${hour} AM`
-                    : hour === 12
-                      ? '12 PM'
-                      : `${hour - 12} PM`}
-                </div>
-
-                {/* Day Cells for this Hour */}
-                {weekDays.map((day, dayIndex) => {
-                  const dayAppointments = getAppointmentsForDayAndHour(
-                    day,
-                    hour
-                  );
-                  return (
-                    <div
-                      key={`cell-${day.toISOString()}-${hour}`}
-                      className={cn(
-                        'relative min-h-[80px] cursor-pointer overflow-hidden border-b border-r p-1',
-                        dayIndex === weekDays.length - 1 && 'last:border-r-0' // Ensure last column has no right border
-                      )}
-                      style={{
-                        gridRowStart: hourIndex + 1,
-                        gridColumnStart: dayIndex + 2, // +2 because time label is column 1
-                      }}
-                      onClick={(e) => {
-                        if (!appointment) {
-                          const rect = e.currentTarget.getBoundingClientRect();
-                          const clickY = e.clientY - rect.top;
-                          const cellHeight = rect.height;
-
-                          const clickRatio =
-                            cellHeight > 0
-                              ? Math.max(0, Math.min(1, clickY / cellHeight))
-                              : 0;
-
-                          const minutesOffset =
-                            Math.round((clickRatio * 60) / 15) * 15;
-
-                          let targetHour = hour;
-                          let targetMinutes = minutesOffset;
-
-                          if (targetMinutes >= 60) {
-                            targetHour += 1;
-                            targetMinutes -= 60;
-                          }
-
-                          const clickedDateTime = new Date(day);
-                          clickedDateTime.setHours(
-                            targetHour,
-                            targetMinutes,
-                            0,
-                            0
-                          );
-
-                          onTimeSlotClick(clickedDateTime);
-                        }
-                      }}
-                    >
-                      {new Date().getHours() === hour && isToday(day) && (
-                        <CurrentHourIndicator ref={ref} />
-                      )}
-                      {dayAppointments
-                        .slice(0, MAX_APPOINTMENTS_IN_CELL)
-                        .map((appointment) => (
-                          <AppointmentTriggerItem
-                            key={appointment.aid}
-                            appointment={appointment}
-                          />
-                        ))}
-                      {/* Optionally, add a "X more" indicator if needed */}
-                      {dayAppointments.length > MAX_APPOINTMENTS_IN_CELL && (
-                        <Tooltip
-                          content={
-                            <AppointmentList
-                              appointments={dayAppointments}
-                              date={day}
-                            />
-                          }
-                          onOpenChange={setIsTooltipOpen}
-                        >
-                          <button className="truncate rounded-lg p-1 px-2 text-start text-tiny hover:bg-default-100">
-                            {dayAppointments.length - MAX_APPOINTMENTS_IN_CELL}{' '}
-                            more
-                          </button>
-                        </Tooltip>
-                      )}
-                    </div>
-                  );
-                })}
-              </>
-            ))}
-          </div>
-        </ScrollShadow>
-      </div>
-      <AppointmentDrawer />
-    </>
+      </ScrollShadow>
+    </div>
   );
 }
