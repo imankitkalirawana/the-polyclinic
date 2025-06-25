@@ -4,7 +4,7 @@ import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import Service from '@/models/Service';
 import { ServiceType } from '@/types/service';
-import { UserRole } from '@/types/user';
+import { UserType } from '@/types/user';
 
 export const GET = auth(async function GET(request: any) {
   try {
@@ -24,7 +24,7 @@ export const GET = auth(async function GET(request: any) {
 });
 
 export const POST = auth(async function POST(request: any) {
-  const allowedRoles: UserRole[] = [UserRole.admin];
+  const allowedRoles: UserType['role'][] = ['admin'];
   if (!allowedRoles.includes(request.auth?.user?.role)) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
@@ -48,7 +48,7 @@ export const POST = auth(async function POST(request: any) {
 });
 
 export const DELETE = auth(async function DELETE(request: any) {
-  const allowedRoles: UserRole[] = [UserRole.admin];
+  const allowedRoles: UserType['role'][] = ['admin'];
   if (!allowedRoles.includes(request.auth?.user?.role)) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }

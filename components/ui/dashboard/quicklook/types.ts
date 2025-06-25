@@ -1,4 +1,4 @@
-import { UserRole } from '@/types/user';
+import { UserType } from '@/types/user';
 import {
   ButtonProps as HeroButtonProps,
   DropdownItemProps as HeroDropdownItemProps,
@@ -29,7 +29,7 @@ export type DropdownItemProps<T extends string> = Omit<
 
 export type PermissionProps<T extends string, D extends string> = Partial<
   Record<
-    UserRole,
+    UserType['role'],
     Array<ActionType<T> | DropdownKeyType<D>> | 'all' | 'none' | undefined
   >
 >;

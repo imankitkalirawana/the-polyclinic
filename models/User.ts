@@ -1,5 +1,5 @@
 import { Gender } from '@/lib/interface';
-import { UserRole, UserStatus, UserType } from '@/types/user';
+import { UserType } from '@/types/user';
 import mongoose, { Model } from 'mongoose';
 import mongooseSequence from 'mongoose-sequence';
 
@@ -31,23 +31,31 @@ const userSchema = new mongoose.Schema(
     dob: String,
     gender: {
       type: String,
-      enum: Gender,
+      enum: ['male', 'female', 'other'],
     },
     role: {
       type: String,
-      enum: UserRole,
-      default: UserRole.user,
+      enum: [
+        'admin',
+        'doctor',
+        'nurse',
+        'receptionist',
+        'pharmacist',
+        'laboratorist',
+        'user',
+      ],
+      default: 'user',
     },
     status: {
       type: String,
-      enum: UserStatus,
-      default: UserStatus.unverified,
+      enum: ['active', 'inactive', 'blocked', 'deleted', 'unverified'],
+      default: 'unverified',
     },
     additionalInfo: {
       type: {
         type: String,
-        enum: UserRole,
-        default: UserRole.user,
+        enum: ['consultation', 'test', 'medication', 'surgery'],
+        default: 'consultation',
       },
       notes: String,
       symptoms: String,

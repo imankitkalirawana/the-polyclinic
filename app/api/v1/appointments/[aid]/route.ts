@@ -13,10 +13,10 @@ import { AppointmentStatus } from '@/types/appointment';
 export const GET = auth(async function GET(request: any, context: any) {
   try {
     const allowedRoles: UserRole[] = [
-      UserRole.user,
-      UserRole.admin,
-      UserRole.doctor,
-      UserRole.receptionist,
+      'user',
+      'admin',
+      'doctor',
+      'receptionist',
     ];
 
     if (!allowedRoles.includes(request.auth?.user?.role)) {
@@ -68,10 +68,10 @@ export const GET = auth(async function GET(request: any, context: any) {
 export const PATCH = auth(async function PATCH(request: any, context: any) {
   try {
     const allowedRoles: UserRole[] = [
-      UserRole.user,
-      UserRole.admin,
-      UserRole.doctor,
-      UserRole.receptionist,
+      'user',
+      'admin',
+      'doctor',
+      'receptionist',
     ];
 
     const user = request.auth?.user;
@@ -94,7 +94,7 @@ export const PATCH = auth(async function PATCH(request: any, context: any) {
     }
 
     // if request role is use and doesn't match appointment patient email, return unauthorized
-    if (user?.role === UserRole.user) {
+    if (user?.role === 'user') {
       if (user?.email !== appointment?.patient?.email) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
       }
@@ -112,10 +112,7 @@ export const PATCH = auth(async function PATCH(request: any, context: any) {
     }
 
     // if request role is doctor and doesn't match appointment doctor email, return unauthorized
-    if (
-      user?.role === UserRole.doctor &&
-      user?.email !== appointment?.doctor?.email
-    ) {
+    if (user?.role === 'doctor' && user?.email !== appointment?.doctor?.email) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
@@ -155,7 +152,7 @@ export const PATCH = auth(async function PATCH(request: any, context: any) {
 export const DELETE = auth(async function DELETE(request: any, context: any) {
   try {
     const user = request.auth?.user;
-    const allowedRoles: UserRole[] = [UserRole.admin];
+    const allowedRoles: UserRole[] = ['admin'];
     if (!allowedRoles.includes(user?.role)) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }

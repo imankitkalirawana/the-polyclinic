@@ -1,22 +1,20 @@
 import { Base, Gender } from '@/lib/interface';
 
-export enum UserStatus {
-  active = 'active',
-  inactive = 'inactive',
-  blocked = 'blocked',
-  deleted = 'deleted',
-  unverified = 'unverified',
-}
+export type UserStatus =
+  | 'active'
+  | 'inactive'
+  | 'blocked'
+  | 'deleted'
+  | 'unverified';
 
-export enum UserRole {
-  admin = 'admin',
-  doctor = 'doctor',
-  nurse = 'nurse',
-  receptionist = 'receptionist',
-  pharmacist = 'pharmacist',
-  laboratorist = 'laboratorist',
-  user = 'user',
-}
+export type UserRole =
+  | 'admin'
+  | 'doctor'
+  | 'nurse'
+  | 'receptionist'
+  | 'pharmacist'
+  | 'laboratorist'
+  | 'user';
 
 export interface UserType extends Base {
   uid: number;
@@ -42,7 +40,7 @@ export interface AuthUser {
   user?: {
     name: string;
     email: string;
-    role: UserRole;
+    role: UserType['role'];
     date: string | Date;
     id: string;
     uid: number;

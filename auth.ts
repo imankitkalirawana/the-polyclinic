@@ -6,7 +6,6 @@ import bcrypt from 'bcryptjs';
 
 import client from '@/lib/db';
 import User from '@/models/User';
-import { UserStatus } from '@/types/user';
 
 class ErrorMessage extends AuthError {
   code = 'custom';
@@ -35,10 +34,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         // @ts-ignore
         user = await User.findOne({ email: credentials.email });
 
-        if (
-          user?.status === UserStatus.inactive ||
-          user?.status === UserStatus.blocked
-        ) {
+        if (user?.status === 'inactive' || user?.status === 'blocked') {
           throw new ErrorMessage(
             `Your account is ${user?.status}. Please contact support.`
           );

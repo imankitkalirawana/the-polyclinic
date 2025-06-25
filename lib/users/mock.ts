@@ -1,7 +1,7 @@
 'use server';
 
 import { Gender } from '@/lib/interface';
-import { UserRole, UserType, UserStatus } from '@/types/user';
+import { UserType } from '@/types/user';
 import { faker } from '@faker-js/faker';
 
 export async function generateUsers({
@@ -9,7 +9,7 @@ export async function generateUsers({
   role,
 }: {
   count: number;
-  role?: UserRole;
+  role?: UserType['role'];
 }): Promise<UserType[]> {
   const generated: UserType[] = [];
 
@@ -23,21 +23,15 @@ export async function generateUsers({
       role: role
         ? role
         : faker.helpers.arrayElement([
-            UserRole.user,
-            UserRole.admin,
-            UserRole.receptionist,
-            UserRole.nurse,
-            UserRole.doctor,
-            UserRole.pharmacist,
-            UserRole.laboratorist,
+            'user',
+            'admin',
+            'receptionist',
+            'nurse',
+            'doctor',
+            'pharmacist',
+            'laboratorist',
           ]),
-      status: faker.helpers.arrayElement([
-        UserStatus.active,
-        UserStatus.inactive,
-        UserStatus.blocked,
-        UserStatus.deleted,
-        UserStatus.unverified,
-      ]),
+      status: faker.helpers.arrayElement(['active', 'inactive', 'blocked']),
       country: faker.location.country(),
       state: faker.location.state(),
       city: faker.location.city(),
