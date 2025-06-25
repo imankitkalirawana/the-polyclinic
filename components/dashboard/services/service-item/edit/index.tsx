@@ -20,10 +20,9 @@ import {
   Tooltip,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useQuery } from '@tanstack/react-query';
 
 import QuillInput from '@/components/ui/quill-input';
-import { getServiceWithUID, verifyUID } from '@/functions/server-actions';
+import { verifyUID } from '@/functions/server-actions';
 import { ServiceStatuses, ServiceTypes } from '@/lib/interface';
 import { serviceValidationSchema } from '@/lib/validation';
 import { ServiceType } from '@/types/service';
