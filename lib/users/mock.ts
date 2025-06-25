@@ -1,6 +1,5 @@
 'use server';
 
-import { Gender } from '@/lib/interface';
 import { UserType } from '@/types/user';
 import { faker } from '@faker-js/faker';
 
@@ -41,7 +40,7 @@ export async function generateUsers({
       dob: faker.date
         .birthdate({ min: 18, max: 60, mode: 'age' })
         .toISOString(),
-      gender: faker.helpers.arrayElement([Gender.male, Gender.female]),
+      gender: faker.person.sexType(),
       image: faker.image.avatar(),
       createdAt: faker.date.recent(),
       _id: faker.string.uuid(),

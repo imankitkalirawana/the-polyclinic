@@ -17,11 +17,7 @@ import DateSelection, { DateSelectionTitle } from './date-selection';
 import AdditionalDetailsSelection, {
   AdditionalDetailsSelectionTitle,
 } from './additional-details-selection';
-import {
-  AppointmentMode,
-  AType,
-  CreateAppointmentType,
-} from '@/types/appointment';
+import { CreateAppointmentType } from '@/types/appointment';
 import { format } from 'date-fns';
 import { useCreateAppointment } from '@/services/appointment';
 import { castData } from '@/lib/utils';
@@ -53,10 +49,10 @@ export default function CreateAppointment({
       patient: castData<UserType>({}),
       doctor: castData<DoctorType>({}),
       date: selectedDate,
-      type: AType.consultation,
+      type: 'consultation',
       additionalInfo: {
         notes: '',
-        type: AppointmentMode.online,
+        type: 'online',
         symptoms: '',
       },
     },

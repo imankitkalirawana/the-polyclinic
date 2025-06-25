@@ -1,20 +1,25 @@
-import { Base, Gender } from '@/lib/interface';
+import { Base } from '@/lib/interface';
+import { ValuesOf } from '@/lib/utils';
 
-export type UserStatus =
-  | 'active'
-  | 'inactive'
-  | 'blocked'
-  | 'deleted'
-  | 'unverified';
+export const genders = ['male', 'female', 'other'] as const;
 
-export type UserRole =
-  | 'admin'
-  | 'doctor'
-  | 'nurse'
-  | 'receptionist'
-  | 'pharmacist'
-  | 'laboratorist'
-  | 'user';
+export const userStatuses = [
+  'active',
+  'inactive',
+  'blocked',
+  'deleted',
+  'unverified',
+] as const;
+
+export const userRoles = [
+  'admin',
+  'doctor',
+  'nurse',
+  'receptionist',
+  'pharmacist',
+  'laboratorist',
+  'user',
+] as const;
 
 export interface UserType extends Base {
   uid: number;
@@ -48,3 +53,7 @@ export interface AuthUser {
   };
   expires?: string;
 }
+
+export type Gender = ValuesOf<typeof genders>;
+export type UserStatus = ValuesOf<typeof userStatuses>;
+export type UserRole = ValuesOf<typeof userRoles>;

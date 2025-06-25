@@ -8,7 +8,7 @@ import { getAppointmentStyles } from '../appointments/compact-view/appointments'
 import { useForm } from '../appointments/compact-view/context';
 
 import { cn } from '@/lib/utils';
-import { AppointmentType, AType } from '@/types/appointment';
+import { AppointmentType } from '@/types/appointment';
 
 interface CalendarWidgetProps {
   className?: string;
@@ -16,7 +16,7 @@ interface CalendarWidgetProps {
   appointments?: AppointmentType[];
 }
 
-const TypeIcon: Record<AType, string> = {
+const TypeIcon: Record<AppointmentType['type'], string> = {
   consultation: 'solar:stethoscope-bold',
   'follow-up': 'solar:clipboard-check-linear',
   emergency: 'solar:adhesive-plaster-linear',

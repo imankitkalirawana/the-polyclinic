@@ -1,4 +1,3 @@
-import { Gender } from '@/lib/interface';
 import { UserType } from '@/types/user';
 import mongoose, { Model } from 'mongoose';
 import mongooseSequence from 'mongoose-sequence';

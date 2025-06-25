@@ -7,7 +7,6 @@ import { API_ACTIONS } from '@/lib/config';
 import { logActivity } from '@/lib/server-actions/activity-log';
 import { Schema, Status } from '@/types/activity';
 import { trackObjectChanges } from '@/lib/utility';
-import { AppointmentStatus } from '@/types/appointment';
 
 // get appointment by id from param
 export const GET = auth(async function GET(request: any, context: any) {
@@ -98,12 +97,7 @@ export const PATCH = auth(async function PATCH(request: any, context: any) {
       if (user?.email !== appointment?.patient?.email) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
       }
-      if (
-        data.status &&
-        ![AppointmentStatus.booked, AppointmentStatus.cancelled].includes(
-          data.status
-        )
-      ) {
+      if (data.status && !['booked', 'cancelled'].includes(data.status)) {
         return NextResponse.json(
           { message: 'You are not allowed to update this appointment' },
           { status: 400 }

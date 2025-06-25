@@ -1,4 +1,4 @@
-import { AppointmentStatus } from '@/types/appointment';
+import { AppointmentType } from '@/types/appointment';
 import { DrugStatus } from '@/types/drug';
 import { ServiceStatus, ServiceTypes } from '@/types/service';
 import { UserType } from '@/types/user';
@@ -9,7 +9,7 @@ export type ChipColorType =
   | ServiceStatus
   | ServiceTypes
   | DrugStatus
-  | AppointmentStatus;
+  | AppointmentType['status'];
 
 export const chipColorMap: Record<
   ChipColorType,

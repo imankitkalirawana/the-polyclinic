@@ -1,5 +1,5 @@
 import { chipColorMap } from '@/lib/chip';
-import { AppointmentStatus } from '@/types/appointment';
+import { AppointmentType } from '@/types/appointment';
 import { cn, Tooltip } from '@heroui/react';
 
 export default function StatusRenderer({
@@ -8,7 +8,7 @@ export default function StatusRenderer({
   isDotOnly = false,
   className,
 }: {
-  status: AppointmentStatus;
+  status: AppointmentType['status'];
   size?: 'sm' | 'md' | 'lg';
   isDotOnly?: boolean;
   className?: string;

@@ -12,7 +12,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { parseDate, getLocalTimeZone, today } from '@internationalized/date';
 import { I18nProvider } from '@react-aria/i18n';
 import { useQueryState } from 'nuqs';
-import { Gender } from '@/lib/interface';
+import { Gender, genders } from '@/types/user';
 import { APP_INFO } from '@/lib/config';
 
 import { RegisterProvider, useRegister } from '../store';
@@ -115,7 +115,7 @@ const RegisterComponent: React.FC = () => {
             }
             errorMessage={formik.errors.gender?.toString()}
           >
-            {Object.values(Gender).map((gender) => (
+            {genders.map((gender) => (
               <SelectItem key={gender}>
                 {gender.charAt(0).toUpperCase() + gender.slice(1)}
               </SelectItem>
