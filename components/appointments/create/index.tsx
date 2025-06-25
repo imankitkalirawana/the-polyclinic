@@ -1,5 +1,11 @@
 'use client';
-import { Accordion, AccordionItem, addToast, Link } from '@heroui/react';
+import {
+  Accordion,
+  AccordionItem,
+  addToast,
+  Button,
+  Link,
+} from '@heroui/react';
 import { AccordionTitle } from './accordion-title';
 import { useFormik } from 'formik';
 import { UserType } from '@/types/user';
@@ -18,6 +24,8 @@ import { apiRequest } from '@/lib/axios';
 import { format } from 'date-fns';
 import { useAllAppointments } from '@/services/appointment';
 import { castData } from '@/lib/utils';
+import { useRouter } from 'nextjs-toploader/app';
+import { useSession } from 'next-auth/react';
 
 const KeyMap: Record<number, string> = {
   1: 'patient',
@@ -33,11 +41,14 @@ export default function CreateAppointment({
   selectedDate: Date;
   onClose?: () => void;
 }) {
+  const router = useRouter();
   const { refetch } = useAllAppointments();
+  const { data: session } = useSession();
   const queryClient = useQueryClient();
-  const [currentStep, setCurrentStep] = useState(1);
+
   const { data: linkedUsers, isLoading: isLinkedUsersLoading } =
     useLinkedUsers();
+  const [currentStep, setCurrentStep] = useState(1);
 
   const formik = useFormik<AppointmentFormType>({
     initialValues: {
@@ -62,6 +73,20 @@ export default function CreateAppointment({
               title: 'Appointment Scheduled',
               description: `Your appointment with ${values.doctor?.name} has been scheduled for ${format(values.date, 'PPp')}.`,
               color: 'success',
+              endContent: (
+                <Button
+                  size="sm"
+                  variant="flat"
+                  color="primary"
+                  onPress={() => {
+                    router.push(
+                      `/appointments/all?view=day&date=${new Date(values.date).toISOString()}`
+                    );
+                  }}
+                >
+                  View
+                </Button>
+              ),
             });
             await Promise.all([
               queryClient.invalidateQueries({
@@ -70,7 +95,15 @@ export default function CreateAppointment({
               refetch(),
             ]);
             formik.resetForm();
-            onClose?.();
+            if (onClose) {
+              onClose();
+            } else {
+              if (session?.user?.role !== 'receptionist') {
+                router.push(
+                  `/appointments/all?view=day&date=${new Date(values.date).toISOString()}`
+                );
+              }
+            }
           },
         });
       } catch (error) {
