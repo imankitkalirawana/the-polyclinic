@@ -1,8 +1,8 @@
 'use client';
 
+import { CreateAppointmentType } from '@/types/appointment';
 import { Button, Input, Select, SelectItem, Textarea } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { AppointmentFormType } from './types';
 
 export default function AdditionalDetailsSelection({
   appointment,
@@ -10,7 +10,7 @@ export default function AdditionalDetailsSelection({
   onContinue,
   isSubmitting,
 }: {
-  appointment: AppointmentFormType;
+  appointment: CreateAppointmentType;
   handleAppointmentChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => void;

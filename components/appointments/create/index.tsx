@@ -17,15 +17,16 @@ import DateSelection, { DateSelectionTitle } from './date-selection';
 import AdditionalDetailsSelection, {
   AdditionalDetailsSelectionTitle,
 } from './additional-details-selection';
-import { AppointmentFormType } from './types';
-import { AppointmentMode, AType } from '@/types/appointment';
-import { useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/axios';
+import {
+  AppointmentMode,
+  AType,
+  CreateAppointmentType,
+} from '@/types/appointment';
 import { format } from 'date-fns';
-import { useAllAppointments } from '@/services/appointment';
+import { useCreateAppointment } from '@/services/appointment';
 import { castData } from '@/lib/utils';
-import { useRouter } from 'nextjs-toploader/app';
-import { useSession } from 'next-auth/react';
+import { $FixMe } from '@/types';
+import { useCalendarStore } from '@/components/ui/calendar/store';
 
 const KeyMap: Record<number, string> = {
   1: 'patient',
@@ -41,16 +42,13 @@ export default function CreateAppointment({
   selectedDate: Date;
   onClose?: () => void;
 }) {
-  const router = useRouter();
-  const { refetch } = useAllAppointments();
-  const { data: session } = useSession();
-  const queryClient = useQueryClient();
-
-  const { data: linkedUsers, isLoading: isLinkedUsersLoading } =
-    useLinkedUsers();
   const [currentStep, setCurrentStep] = useState(1);
 
-  const formik = useFormik<AppointmentFormType>({
+  const createAppointment = useCreateAppointment();
+  const { setAppointment: setCalendarAppointment } = useCalendarStore();
+  const { data: linkedUsers, isLoading: isLinkedUsersLoading } =
+    useLinkedUsers();
+  const formik = useFormik<CreateAppointmentType>({
     initialValues: {
       patient: castData<UserType>({}),
       doctor: castData<DoctorType>({}),
@@ -62,55 +60,37 @@ export default function CreateAppointment({
         symptoms: '',
       },
     },
-    onSubmit: async (values) => {
+    onSubmit: async (values, { resetForm }) => {
       try {
-        await apiRequest({
-          method: 'POST',
-          url: '/api/v1/appointments',
-          data: values,
-          onSuccess: async () => {
-            addToast({
-              title: 'Appointment Scheduled',
-              description: `Your appointment with ${values.doctor?.name} has been scheduled for ${format(values.date, 'PPp')}.`,
-              color: 'success',
-              endContent: (
-                <Button
-                  size="sm"
-                  variant="flat"
-                  color="primary"
-                  onPress={() => {
-                    router.push(
-                      `/appointments/all?view=day&date=${new Date(values.date).toISOString()}`
-                    );
-                  }}
-                >
-                  View
-                </Button>
-              ),
-            });
-            await Promise.all([
-              queryClient.invalidateQueries({
-                queryKey: ['appointments'],
-              }),
-              refetch(),
-            ]);
-            formik.resetForm();
-            setCurrentStep(1);
-            if (onClose) {
-              onClose();
-            } else {
-              if (session?.user?.role !== 'receptionist') {
-                router.push(
-                  `/appointments/all?view=day&date=${new Date(values.date).toISOString()}`
-                );
-              }
-            }
-          },
-        });
-      } catch (error) {
+        const data = await createAppointment.mutateAsync(values);
         addToast({
-          title: 'Appointment creation failed',
-          description: 'Appointment creation failed',
+          title: 'Appointment created',
+          description: `Your appointment is scheduled for ${format(
+            new Date(values.date),
+            'PPp'
+          )}`,
+          color: 'success',
+          endContent: (
+            <Button
+              size="sm"
+              variant="flat"
+              color="primary"
+              onPress={() => {
+                setCalendarAppointment(data);
+              }}
+            >
+              View
+            </Button>
+          ),
+        });
+        setCurrentStep(1);
+        resetForm();
+        onClose?.();
+      } catch (error: $FixMe) {
+        console.error(error);
+        addToast({
+          title: 'Failed to create appointment',
+          description: `${error.message}`,
           color: 'danger',
         });
       }

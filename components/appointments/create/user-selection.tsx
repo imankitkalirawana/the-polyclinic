@@ -13,9 +13,9 @@ import NoResults from '../../ui/no-results';
 import { useState } from 'react';
 import { useDebounce } from 'react-haiku';
 import Skeleton from '../../ui/skeleton';
-import { AppointmentFormType } from '@/components/appointments/create/types';
 import { UserType } from '@/types/user';
 import { DoctorType } from '@/types/doctor';
+import { CreateAppointmentType } from '@/types/appointment';
 
 const SizeMap = {
   sm: {
@@ -46,10 +46,12 @@ export default function UserSelection({
   id: string;
   users: (UserType | DoctorType)[];
   isLoading?: boolean;
-  selectedUser: AppointmentFormType['patient'] | AppointmentFormType['doctor'];
+  selectedUser:
+    | CreateAppointmentType['patient']
+    | CreateAppointmentType['doctor'];
   size?: 'sm' | 'md' | 'lg';
   onSelectionChange: (
-    user: AppointmentFormType['patient'] | AppointmentFormType['doctor']
+    user: CreateAppointmentType['patient'] | CreateAppointmentType['doctor']
   ) => void;
 }) {
   const [query, setQuery] = useState('');

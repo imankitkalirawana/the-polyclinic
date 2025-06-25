@@ -58,3 +58,17 @@ export interface AppointmentType extends Base {
   type: AType;
   previousAppointments?: Array<number>;
 }
+
+export type CreateAppointmentType = Omit<
+  AppointmentType,
+  | '_id'
+  | 'aid'
+  | 'status'
+  | 'progress'
+  | 'data'
+  | 'previousAppointments'
+  | 'createdAt'
+  | 'updatedAt'
+  | 'createdBy'
+  | 'updatedBy'
+>;
