@@ -1,24 +1,23 @@
 'use client';
 import { Accordion, AccordionItem, addToast, Link } from '@heroui/react';
-import { AccordionTitle } from './title';
+import { AccordionTitle } from './accordion-title';
 import { useFormik } from 'formik';
 import { UserType } from '@/types/user';
 import { DoctorType } from '@/types/doctor';
 import { useLinkedUsers } from '@/services/user';
-import UsersList from '@/components/ui/appointments/users-list';
+import UserSelection from '@/components/appointments/create/user-selection';
 import { useState } from 'react';
 import DateSelection, { DateSelectionTitle } from './date-selection';
-import { DoctorSelectionTitle } from '../new/session/doctor-selection';
 import AdditionalDetailsSelection, {
   AdditionalDetailsSelectionTitle,
-} from '../new/session/additional-details-selection';
+} from './additional-details-selection';
 import { AppointmentFormType } from './types';
-import { Gender } from '@/lib/interface';
 import { AppointmentMode, AType } from '@/types/appointment';
 import { useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/axios';
 import { format } from 'date-fns';
 import { useAllAppointments } from '@/services/appointment';
+import { castData } from '@/lib/utils';
 
 const KeyMap: Record<number, string> = {
   1: 'patient',
@@ -42,20 +41,8 @@ export default function CreateAppointment({
 
   const formik = useFormik<AppointmentFormType>({
     initialValues: {
-      patient: {
-        uid: 0,
-        name: '',
-        email: '',
-        phone: '',
-        gender: Gender.male,
-      },
-      doctor: {
-        uid: 0,
-        name: '',
-        email: '',
-        phone: '',
-        sitting: '',
-      },
+      patient: castData<UserType>({}),
+      doctor: castData<DoctorType>({}),
       date: selectedDate,
       type: AType.consultation,
       additionalInfo: {
@@ -103,7 +90,7 @@ export default function CreateAppointment({
   } = formik;
 
   return (
-    <div>
+    <div className="w-full">
       <Accordion
         defaultSelectedKeys={[KeyMap[currentStep]]}
         selectedKeys={[KeyMap[currentStep]]}
@@ -129,7 +116,7 @@ export default function CreateAppointment({
             />
           }
         >
-          <UsersList
+          <UserSelection
             id="patient"
             size="sm"
             isLoading={isLinkedUsersLoading}
@@ -184,7 +171,7 @@ export default function CreateAppointment({
             <DoctorSelectionTitle doctor={appointment.doctor as DoctorType} />
           }
         >
-          <UsersList
+          <UserSelection
             id="doctor"
             size="sm"
             isLoading={isLinkedUsersLoading}
@@ -210,6 +197,18 @@ export default function CreateAppointment({
           />
         </AccordionItem>
       </Accordion>
+    </div>
+  );
+}
+
+function DoctorSelectionTitle({ doctor }: { doctor: DoctorType }) {
+  return doctor.uid ? (
+    <h3 className="text-2xl font-semibold">
+      {doctor?.uid === 0 ? 'No Doctor Selected' : doctor?.name}
+    </h3>
+  ) : (
+    <div className="space-y-4">
+      <h3 className="text-2xl font-semibold">Choose a doctor (Optional)</h3>
     </div>
   );
 }

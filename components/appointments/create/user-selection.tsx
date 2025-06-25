@@ -9,10 +9,10 @@ import {
   ScrollShadow,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import NoResults from '../no-results';
+import NoResults from '../../ui/no-results';
 import { useState } from 'react';
 import { useDebounce } from 'react-haiku';
-import Skeleton from '../skeleton';
+import Skeleton from '../../ui/skeleton';
 import { AppointmentFormType } from '@/components/appointments/create/types';
 import { UserType } from '@/types/user';
 import { DoctorType } from '@/types/doctor';
@@ -35,7 +35,7 @@ const SizeMap = {
   },
 };
 
-export default function UsersList({
+export default function UserSelection({
   id,
   users,
   isLoading,
