@@ -95,6 +95,7 @@ export default function CreateAppointment({
               refetch(),
             ]);
             formik.resetForm();
+            setCurrentStep(1);
             if (onClose) {
               onClose();
             } else {
