@@ -54,6 +54,23 @@ export interface AuthUser {
   expires?: string;
 }
 
+export type CreateUserType = Pick<
+  UserType,
+  | 'email'
+  | 'phone'
+  | 'name'
+  | 'role'
+  | 'status'
+  | 'country'
+  | 'state'
+  | 'zipcode'
+  | 'gender'
+  | 'dob'
+  | 'address'
+  | 'city'
+  | 'image'
+>;
+
 export type Gender = ValuesOf<typeof genders>;
 export type UserStatus = ValuesOf<typeof userStatuses>;
 export type UserRole = ValuesOf<typeof userRoles>;

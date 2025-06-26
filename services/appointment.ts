@@ -42,6 +42,8 @@ export const useAppointmentWithAID = (
   });
 };
 
+// POST
+
 export const useCreateAppointment = (): UseMutationResult<
   AppointmentType,
   Error,

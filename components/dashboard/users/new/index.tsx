@@ -1,9 +1,7 @@
 'use client';
 import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
 import { useFormik } from 'formik';
-import slugify from 'slugify';
 import {
   addToast,
   Autocomplete,
@@ -25,27 +23,26 @@ import {
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { getLocalTimeZone, today } from '@internationalized/date';
 import { I18nProvider } from '@react-aria/i18n';
-
-import { verifyEmail } from '@/functions/server-actions';
 import { calculateAge, calculateDOB } from '@/lib/client-functions';
 import { scrollToError } from '@/lib/formik';
 import { CityProps, CountryProps, StateProps } from '@/types';
 import { Genders } from '@/lib/options';
 import { userValidationSchema } from '@/lib/validation';
-import { UserType } from '@/types/user';
+import { CreateUserType } from '@/types/user';
 import {
   useAllCitiesByCountryAndState,
   useAllCountries,
   useAllStatesByCountry,
 } from '@/services/external';
+import { useCreateUser } from '@/services/user';
 
 export default function NewUser() {
+  const router = useRouter();
+  const createUser = useCreateUser();
   const { data: countriesData, isLoading: isCountriesLoading } =
     useAllCountries();
-
   const countries: CountryProps[] = countriesData || [];
 
-  const router = useRouter();
   const inputRefs = {
     name: useRef<HTMLInputElement>(null),
     email: useRef<HTMLInputElement>(null),
@@ -58,18 +55,7 @@ export default function NewUser() {
 
   const formik = useFormik({
     initialValues: {
-      user: {
-        name: '',
-        email: '',
-        phone: '',
-        dob: '',
-        gender: 'male',
-        country: 'IN',
-        state: '',
-        city: '',
-        address: '',
-        zipcode: '',
-      } as UserType,
+      user: {} as CreateUserType,
       age: 0,
       countries:
         countries?.sort((a, b) => a.name.localeCompare(b.name)) ||
@@ -80,30 +66,22 @@ export default function NewUser() {
     },
     validationSchema: userValidationSchema,
     onSubmit: async (values) => {
-      if (!values.user.email) {
-        values.user.email = `${values.user.phone}-${slugify(values.user.name, { lower: true })}@devocode.in`;
-      }
-      if (await verifyEmail(values.user?.email, values.user?._id)) {
-        formik.setFieldError('user.email', 'Email already exists');
-        return;
-      }
-      await axios
-        .post('/api/v1/users', values.user)
-        .then(() => {
+      try {
+        const user = await createUser.mutateAsync(values.user);
+        if (user) {
           addToast({
-            title: 'UserType added successfully',
+            title: 'User added successfully',
             color: 'success',
           });
           router.push('/dashboard/users');
-        })
-        .catch((error: any) => {
-          console.log(error);
-          addToast({
-            title: 'Error',
-            description: error.response.data.message,
-            color: 'danger',
-          });
+        }
+      } catch (error: any) {
+        addToast({
+          title: 'Error creating user',
+          description: error.message,
+          color: 'danger',
         });
+      }
     },
   });
 

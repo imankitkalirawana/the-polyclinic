@@ -1,6 +1,6 @@
 'use server';
 
-import { UserType } from '@/types/user';
+import { CreateUserType, UserType } from '@/types/user';
 import { fetchData } from '.';
 
 export async function getAllUsers() {
@@ -21,4 +21,19 @@ export async function getLinkedUsers() {
 
 export async function getUsersByRole(role: UserType['role']) {
   return await fetchData<UserType[]>(`/users/role/${role}`);
+}
+
+// POST
+export async function createUser(user: CreateUserType) {
+  return await fetchData<UserType>('/users', {
+    method: 'POST',
+    data: user,
+  });
+}
+
+// DELETE
+export async function deleteUser(uid: number) {
+  return await fetchData<UserType>(`/users/${uid}`, {
+    method: 'DELETE',
+  });
 }

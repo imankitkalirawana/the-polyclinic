@@ -79,3 +79,8 @@ export interface SubItem {
   href: string;
   icon?: string;
 }
+
+export interface DefaultResponse<T> {
+  message?: string;
+  data?: T;
+}
