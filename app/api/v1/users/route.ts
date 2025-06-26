@@ -72,10 +72,9 @@ export const DELETE = auth(async function DELETE(request: any) {
 
     !!API_ACTIONS.isDelete && (await User.deleteMany({ uid: { $in: ids } }));
 
-    return NextResponse.json(
-      { success: true, message: `${ids.length} Users deleted` },
-      { status: 200 }
-    );
+    return NextResponse.json({
+      message: `${ids.length} Users deleted successfully`,
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json(

@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import User from '@/models/User';
+import { API_ACTIONS } from '@/lib/config';
 
 // get user by id from param
 export const GET = auth(async function GET(request: any, context: any) {
@@ -63,21 +64,30 @@ export const PUT = auth(async function PUT(request: any, context: any) {
 // delete user by id from param
 export const DELETE = auth(async function DELETE(request: any, context: any) {
   try {
+    const allowedRoles = ['admin', 'doctor', 'receptionist'];
     // @ts-ignore
     if (request.auth?.user?.uid !== context?.params?.uid) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+      if (!allowedRoles.includes(request.auth?.user?.role)) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+      }
     }
     await connectDB();
-    const uid = context.params.uid;
+    const uid = parseInt(context.params.uid);
 
     let user = await User.findOne({ uid });
     if (!user) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
     }
-    await User.findOneAndDelete({ uid });
-    return NextResponse.json({ message: 'User deleted' });
-  } catch (error) {
+
+    !!API_ACTIONS.isDelete && (await User.findOneAndDelete({ uid }));
+    return NextResponse.json({
+      message: `${user.name} was deleted successfully`,
+    });
+  } catch (error: any) {
     console.error(error);
-    return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
+    return NextResponse.json(
+      { message: error?.message || 'An error occurred' },
+      { status: 500 }
+    );
   }
 });

@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import {
   Button,
   DropdownItem,
@@ -17,14 +17,13 @@ import {
   renderUser,
 } from '@/components/ui/data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
-
 import { Table } from '@/components/ui/data-table';
 import { UserType } from '@/types/user';
 import { useRouter } from 'nextjs-toploader/app';
 import { toast } from 'sonner';
 import { UserQuickLook } from './quicklook';
 import { useUserStore } from './store';
-import { useAllUsers } from '@/services/user';
+import { useAllUsers, useDeleteUser } from '@/services/user';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'image',
@@ -37,12 +36,19 @@ const INITIAL_VISIBLE_COLUMNS = [
 
 export default function Users() {
   const router = useRouter();
+  const deleteUser = useDeleteUser();
   const deleteModal = useDisclosure();
-  const { selected, setSelected } = useUserStore();
+  const { setSelected } = useUserStore();
 
-  const [selectedKeys, setSelectedKeys] = useState<Selection>();
+  const { data, isLoading, isError, error } = useAllUsers();
 
-  const { data, isLoading, refetch, isError, error } = useAllUsers();
+  const handleDelete = async (uid: number) => {
+    toast.promise(deleteUser.mutateAsync(uid), {
+      loading: `Deleting user ${uid}`,
+      success: (data) => data.message,
+      error: (error) => error.message,
+    });
+  };
 
   // Define columns with render functions
   const columns: ColumnDef<UserType>[] = useMemo(() => {
@@ -120,21 +126,7 @@ export default function Users() {
             onView: () => router.push(`/dashboard/users/${user.uid}`),
             onEdit: () => router.push(`/dashboard/users/${user.uid}/edit`),
             key: user.uid,
-            onDelete: async () => {
-              const deletePromise = fetch(`/api/v1/users/uid/${user.uid}`, {
-                method: 'DELETE',
-              });
-              toast.promise(deletePromise, {
-                loading: `Deleting ${user.name}`,
-                success: `${user.name} was deleted successfully`,
-                error: (err: any) => {
-                  console.error(err);
-                  return err?.message || 'Failed to delete user';
-                },
-              });
-              // remove all selected keys
-              refetch();
-            },
+            onDelete: () => handleDelete(user.uid),
           }),
       },
     ];
@@ -261,7 +253,6 @@ export default function Users() {
           className="text-danger"
           color="danger"
           onPress={() => {
-            setSelectedKeys(selectedKeys);
             deleteModal.onOpen();
           }}
         >

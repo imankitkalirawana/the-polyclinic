@@ -14,6 +14,8 @@ import {
   useQueryClient,
   UseQueryResult,
 } from '@tanstack/react-query';
+import { ApiResponse } from './api';
+import { addToast } from '@heroui/react';
 
 export const useSelf = (): UseQueryResult<UserType> => {
   return useQuery({
@@ -91,13 +93,21 @@ export const useCreateUser = (): UseMutationResult<
 };
 
 // DELETE
-export const useDeleteUser = (): UseMutationResult<UserType, Error, number> => {
+export const useDeleteUser = (): UseMutationResult<
+  ApiResponse<UserType>,
+  Error,
+  number
+> => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (uid: number) => {
       const res = await deleteUser(uid);
       if (res.success) {
-        return res.data;
+        return {
+          success: true,
+          message: res.message,
+          data: res.data,
+        };
       }
       throw new Error(res.message);
     },

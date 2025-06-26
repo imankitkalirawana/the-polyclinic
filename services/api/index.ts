@@ -4,7 +4,7 @@ import axios from 'axios';
 import { cookies } from 'next/headers';
 import { BASE_URL } from './helper';
 
-export interface FetchResult<T> {
+export interface ApiResponse<T> {
   success: boolean;
   data: T;
   message: string;
@@ -19,7 +19,7 @@ export async function fetchData<T>(
     baseUrl?: string;
     headers?: any;
   } = {}
-): Promise<FetchResult<T>> {
+): Promise<ApiResponse<T>> {
   try {
     const { method = 'GET', data, params, baseUrl, headers } = options;
 
