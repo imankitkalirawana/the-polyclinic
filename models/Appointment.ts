@@ -2,6 +2,7 @@ import { genders } from '@/types/user';
 import { AppointmentType } from '@/types/appointment';
 import mongoose, { Model } from 'mongoose';
 import mongooseSequence from 'mongoose-sequence';
+import { auth } from '@/auth';
 
 // @ts-ignore
 const AutoIncrement = mongooseSequence(mongoose);
@@ -70,9 +71,36 @@ const appointmentSchema = new mongoose.Schema(
       type: [Number],
       default: [],
     },
+    createdBy: {
+      type: String,
+      default: 'system-admin@divinely.dev',
+    },
+    updatedBy: {
+      type: String,
+      default: 'system-admin@divinely.dev',
+    },
   },
   {
     timestamps: true,
+  }
+);
+
+appointmentSchema.pre('save', async function (next) {
+  const session = await auth();
+  this.createdBy = session?.user?.email || 'system-admin@divinely.dev';
+  next();
+});
+
+appointmentSchema.pre(
+  ['findOneAndUpdate', 'updateOne', 'updateMany'],
+  async function (next) {
+    const session = await auth();
+    this.setUpdate({
+      ...this.getUpdate(),
+      updatedBy: session?.user?.email || 'system-admin@divinely.dev',
+    });
+
+    next();
   }
 );
 

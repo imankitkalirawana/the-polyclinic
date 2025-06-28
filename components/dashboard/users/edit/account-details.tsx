@@ -3,10 +3,8 @@
 import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import axios from 'axios';
 import { useFormik } from 'formik';
 import {
-  addToast,
   Avatar,
   Badge,
   Button,
@@ -23,20 +21,15 @@ import { Icon } from '@iconify/react';
 import { getLocalTimeZone, today } from '@internationalized/date';
 import { I18nProvider } from '@react-aria/i18n';
 
-import { verifyEmail } from '@/functions/server-actions';
 import { calculateAge, calculateDOB } from '@/lib/client-functions';
 import { scrollToError } from '@/lib/formik';
 import { Genders } from '@/lib/options';
 import { userValidationSchema } from '@/lib/validation';
 import { UserType } from '@/types/user';
+import { useUpdateUser } from '@/services/user';
+import { verifyEmail } from '@/functions/server-actions';
 
-export default function AccountDetails({
-  user,
-  refetch,
-}: {
-  user: UserType;
-  refetch: () => void;
-}) {
+export default function AccountDetails({ user }: { user: UserType }) {
   const inputRefs = {
     name: useRef<HTMLInputElement>(null),
     email: useRef<HTMLInputElement>(null),
@@ -48,6 +41,7 @@ export default function AccountDetails({
   };
 
   const { data: session } = useSession();
+  const updateUser = useUpdateUser();
 
   const formik = useFormik({
     initialValues: {
@@ -57,26 +51,7 @@ export default function AccountDetails({
     },
     validationSchema: userValidationSchema,
     onSubmit: async (values) => {
-      try {
-        if (await verifyEmail(values.user?.email, values.user?._id)) {
-          formik.setFieldError('user.email', 'Email already exists');
-          return;
-        }
-        await axios.put(`/api/v1/users/uid/${user?.uid}`, values.user);
-        refetch();
-        // toast.success('User updated successfully');
-        addToast({
-          title: 'User updated successfully',
-          color: 'success',
-        });
-      } catch (error: any) {
-        console.log(error);
-        addToast({
-          title: 'Error',
-          description: error.response.data.message,
-          color: 'danger',
-        });
-      }
+      await updateUser.mutate(values.user);
     },
   });
 
@@ -149,6 +124,16 @@ export default function AccountDetails({
           placeholder="Enter email"
           name="user.email"
           value={formik.values.user?.email}
+          onBlur={async () => {
+            if (
+              await verifyEmail(
+                formik.values.user?.email,
+                formik.values.user?.uid
+              )
+            ) {
+              formik.setFieldError('user.email', 'Email already exists');
+            }
+          }}
           onChange={(e) => {
             // @ts-ignore
             if (allowedRoles.includes(session?.user?.role)) {

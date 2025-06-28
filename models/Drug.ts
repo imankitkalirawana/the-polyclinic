@@ -1,5 +1,6 @@
 import { DrugStatus, DrugType } from '@/types/drug';
 import mongoose, { Model } from 'mongoose';
+import { auth } from '@/auth';
 
 const drugSchema = new mongoose.Schema<DrugType>(
   {
@@ -23,8 +24,35 @@ const drugSchema = new mongoose.Schema<DrugType>(
       default: DrugStatus.available,
     },
     stock: Number,
+    createdBy: {
+      type: String,
+      default: 'system-admin@divinely.dev',
+    },
+    updatedBy: {
+      type: String,
+      default: 'system-admin@divinely.dev',
+    },
   },
   { timestamps: true }
+);
+
+drugSchema.pre('save', async function (next) {
+  const session = await auth();
+  this.createdBy = session?.user?.email || 'system-admin@divinely.dev';
+  next();
+});
+
+drugSchema.pre(
+  ['findOneAndUpdate', 'updateOne', 'updateMany'],
+  async function (next) {
+    const session = await auth();
+    this.setUpdate({
+      ...this.getUpdate(),
+      updatedBy: session?.user?.email || 'system-admin@divinely.dev',
+    });
+
+    next();
+  }
 );
 
 const Drug: Model<DrugType> =

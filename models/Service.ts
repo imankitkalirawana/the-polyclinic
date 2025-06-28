@@ -1,3 +1,4 @@
+import { auth } from '@/auth';
 import { ServiceStatus, ServiceType, ServiceTypes } from '@/types/service';
 import mongoose, { Model } from 'mongoose';
 
@@ -42,12 +43,33 @@ const serviceSchema = new mongoose.Schema(
     },
     createdBy: {
       type: String,
-      required: [true, 'Created by is required'],
+      default: 'system-admin@divinely.dev',
     },
-    updatedBy: String,
+    updatedBy: {
+      type: String,
+      default: 'system-admin@divinely.dev',
+    },
   },
   {
     timestamps: true,
+  }
+);
+
+serviceSchema.pre('save', async function (next) {
+  const session = await auth();
+  this.createdBy = session?.user?.email || 'system-admin@divinely.dev';
+  next();
+});
+
+serviceSchema.pre(
+  ['findOneAndUpdate', 'updateOne', 'updateMany'],
+  async function (next) {
+    const session = await auth();
+    this.setUpdate({
+      ...this.getUpdate(),
+      updatedBy: session?.user?.email || 'system-admin@divinely.dev',
+    });
+    next();
   }
 );
 

@@ -33,10 +33,14 @@ export const GET = auth(async function GET(request: any, context: any) {
 
 export const PUT = auth(async function PUT(request: any, context: any) {
   try {
+    const allowedRoles = ['admin', 'receptionist'];
     // @ts-ignore
     if (request.auth?.user?.uid !== context?.params?.uid) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+      if (!allowedRoles.includes(request.auth?.user?.role)) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+      }
     }
+
     const data = await request.json();
 
     await connectDB();
@@ -67,7 +71,7 @@ export const PUT = auth(async function PUT(request: any, context: any) {
 // delete user by id from param
 export const DELETE = auth(async function DELETE(request: any, context: any) {
   try {
-    const allowedRoles = ['admin', 'doctor', 'receptionist'];
+    const allowedRoles = ['admin', 'receptionist'];
     // @ts-ignore
     if (request.auth?.user?.uid !== context?.params?.uid) {
       if (!allowedRoles.includes(request.auth?.user?.role)) {

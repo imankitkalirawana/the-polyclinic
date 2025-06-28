@@ -5,6 +5,7 @@ import {
   getLinkedUsers,
   getSelf,
   getUserWithUID,
+  updateUser,
 } from '@/services/api/user';
 import { CreateUserType, UserType } from '@/types/user';
 import {
@@ -81,6 +82,36 @@ export const useCreateUser = (): UseMutationResult<
   return useMutation({
     mutationFn: async (user: CreateUserType) => {
       const res = await createUser(user);
+      if (res.success) {
+        return res;
+      }
+      throw new Error(res.message);
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      addToast({
+        title: data.message,
+        color: 'success',
+      });
+    },
+    onError: (error) => {
+      addToast({
+        title: error.message,
+        color: 'danger',
+      });
+    },
+  });
+};
+
+export const useUpdateUser = (): UseMutationResult<
+  ApiResponse<UserType>,
+  Error,
+  UserType
+> => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (user: UserType) => {
+      const res = await updateUser(user);
       if (res.success) {
         return res;
       }

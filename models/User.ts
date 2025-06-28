@@ -1,3 +1,4 @@
+import { auth } from '@/auth';
 import { UserType } from '@/types/user';
 import mongoose, { Model } from 'mongoose';
 import mongooseSequence from 'mongoose-sequence';
@@ -31,6 +32,10 @@ const userSchema = new mongoose.Schema(
     gender: {
       type: String,
       enum: ['male', 'female', 'other'],
+    },
+    image: {
+      type: String,
+      default: 'https://cdn.jsdelivr.net/gh/alohe/avatars/png/memo_1.png',
     },
     role: {
       type: String,
@@ -73,11 +78,13 @@ const userSchema = new mongoose.Schema(
     address: String,
     zipcode: String,
     passwordResetToken: String,
-    updatedBy: String,
-    createdBy: String,
-    image: {
+    updatedBy: {
       type: String,
-      default: 'https://cdn.jsdelivr.net/gh/alohe/avatars/png/memo_1.png',
+      default: 'system-admin@divinely.dev',
+    },
+    createdBy: {
+      type: String,
+      default: 'system-admin@divinely.dev',
     },
   },
   {
@@ -88,6 +95,24 @@ const userSchema = new mongoose.Schema(
 
 // @ts-ignore
 userSchema.plugin(AutoIncrement, { inc_field: 'uid', start_seq: 1000 });
+
+userSchema.pre('save', async function (next) {
+  const session = await auth();
+  this.createdBy = session?.user?.email || 'system-admin@divinely.dev';
+  next();
+});
+
+userSchema.pre(
+  ['findOneAndUpdate', 'updateOne', 'updateMany'],
+  async function (next) {
+    const session = await auth();
+    this.setUpdate({
+      ...this.getUpdate(),
+      updatedBy: session?.user?.email || 'system-admin@divinely.dev',
+    });
+    next();
+  }
+);
 
 const User: Model<UserType> =
   mongoose.models.User || mongoose.model<UserType>('User', userSchema);

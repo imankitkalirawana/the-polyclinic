@@ -16,7 +16,9 @@ export const GET = async function GET(_request: any, context: any) {
         { status: 404 }
       );
     }
-    return NextResponse.json(service);
+    return NextResponse.json({
+      data: service,
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: 'An error occurred' }, { status: 500 });

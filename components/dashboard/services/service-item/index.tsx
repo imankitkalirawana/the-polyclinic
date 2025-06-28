@@ -178,9 +178,7 @@ export default function ServiceViewItem({
           </div>
         </div>
       </div>
-      <div>
-        <DataTable data={service.data} />
-      </div>
+      <div>{!!service.data && <DataTable data={service.data} />}</div>
     </div>
   );
 }

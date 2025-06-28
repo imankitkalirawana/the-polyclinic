@@ -21,10 +21,6 @@ import { serviceValidationSchema } from '@/lib/validation';
 import { useCreateService } from '@/services/service';
 import { ServiceType } from '@/types/service';
 
-type ServiceData = {
-  [key: `cell-${number}-${number}`]: string;
-};
-
 export default function NewService() {
   const router = useRouter();
   const createService = useCreateService();
@@ -34,7 +30,7 @@ export default function NewService() {
       data: {
         'cell-0-0': '',
         'cell-0-1': '',
-      } as ServiceData,
+      } as ServiceType['data'],
     } as ServiceType,
 
     validationSchema: serviceValidationSchema,

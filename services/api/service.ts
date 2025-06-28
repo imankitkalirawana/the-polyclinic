@@ -7,7 +7,7 @@ export async function getAllServices() {
 }
 
 export async function getServiceWithUID(uid: string) {
-  return await fetchData<ServiceType>(`/services/uid/${uid}`);
+  return await fetchData<ServiceType>(`/services/${uid}`);
 }
 
 export async function createService(service: ServiceType) {

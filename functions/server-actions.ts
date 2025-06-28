@@ -31,13 +31,13 @@ export const verifyUID = async (uid: string, _id?: string) => {
   return true;
 };
 
-export const verifyEmail = async (email: string, _id?: string) => {
+export const verifyEmail = async (email: string, uid?: number) => {
   await connectDB();
   const user = await User.findOne({ email });
   if (!user) {
     return false;
   }
-  if (_id && user._id.toString() === _id) {
+  if (uid && user.uid === uid) {
     return false;
   }
   return true;

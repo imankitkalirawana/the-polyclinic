@@ -1,11 +1,9 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
 import { useFormik } from 'formik';
 import ReactQuill from 'react-quill';
 import {
-  addToast,
   Button,
   Card,
   CardBody,
@@ -26,13 +24,14 @@ import { verifyUID } from '@/functions/server-actions';
 import { ServiceStatuses, ServiceTypes } from '@/lib/interface';
 import { serviceValidationSchema } from '@/lib/validation';
 import { ServiceType } from '@/types/service';
-import { useServiceWithUID } from '@/services/service';
+import { useServiceWithUID, useUpdateService } from '@/services/service';
 import { castData } from '@/lib/utils';
 import Loading from '@/app/loading';
 import NoResults from '@/components/ui/no-results';
 
 export default function EditService({ uid }: { uid: string }) {
-  const { data, isError, isLoading, refetch } = useServiceWithUID(uid);
+  const updateService = useUpdateService();
+  const { data, isError, isLoading } = useServiceWithUID(uid);
 
   const service = castData<ServiceType>(data);
 
@@ -40,36 +39,18 @@ export default function EditService({ uid }: { uid: string }) {
   const [hoveredColIndex, setHoveredColIndex] = useState<number | null>(null);
 
   const formik = useFormik({
-    initialValues: {
-      service: service as ServiceType,
-    },
+    initialValues: service,
     validationSchema: serviceValidationSchema,
     onSubmit: async (values) => {
-      try {
-        await axios.put(
-          `/api/v1/services/${values.service._id}`,
-          values.service
-        );
-        addToast({
-          title: 'Updated Successfully',
-          color: 'success',
-        });
-        refetch();
-        router.push(`/dashboard/services/${values.service.uniqueId}`);
-      } catch (error) {
-        addToast({
-          title: 'Error',
-          description: 'Failed to update service',
-          color: 'danger',
-        });
-        console.error(error);
-      }
+      await updateService.mutateAsync(values).then((res) => {
+        router.push(`/dashboard/services/${values.uniqueId}`);
+      });
     },
   });
 
   const [numRows, setNumRows] = useState(
     Math.max(
-      ...Object.keys(formik.values.service.data).map((key) =>
+      ...Object?.keys(formik.values.data)?.map((key) =>
         parseInt(key.split('-')[1])
       )
     ) + 1
@@ -77,18 +58,18 @@ export default function EditService({ uid }: { uid: string }) {
 
   const [numCols, setNumCols] = useState(
     Math.max(
-      ...Object.keys(formik.values.service.data).map((key) =>
+      ...Object?.keys(formik.values.data)?.map((key) =>
         parseInt(key.split('-')[2])
       )
     ) + 1
   );
 
   const handleInputChange = (key: string, value: string) => {
-    formik.setFieldValue(`service.data.${key}`, value);
+    formik.setFieldValue(`data.${key}`, value);
   };
 
   const handleAddRow = (rowIndex: number) => {
-    const newValues = { ...formik.values.service.data };
+    const newValues = { ...formik.values.data };
     for (let row = numRows; row > rowIndex; row--) {
       for (let col = 0; col < numCols; col++) {
         newValues[`cell-${row}-${col}`] = newValues[`cell-${row - 1}-${col}`];
@@ -100,11 +81,11 @@ export default function EditService({ uid }: { uid: string }) {
     }
 
     setNumRows(numRows + 1);
-    formik.setFieldValue('service.data', newValues);
+    formik.setFieldValue('data', newValues);
   };
 
   const handleAddColumn = (colIndex: number) => {
-    const newValues = { ...formik.values.service.data };
+    const newValues = { ...formik.values.data };
     for (let row = 0; row < numRows; row++) {
       for (let col = numCols; col > colIndex; col--) {
         newValues[`cell-${row}-${col}`] = newValues[`cell-${row}-${col - 1}`];
@@ -116,11 +97,11 @@ export default function EditService({ uid }: { uid: string }) {
     }
 
     setNumCols(numCols + 1);
-    formik.setFieldValue('service.data', newValues);
+    formik.setFieldValue('data', newValues);
   };
 
   const handleDeleteRow = (rowIndex: number) => {
-    const newValues = { ...formik.values.service.data };
+    const newValues = { ...formik.values.data };
     for (let col = 0; col < numCols; col++) {
       delete newValues[`cell-${rowIndex}-${col}`];
     }
@@ -133,11 +114,11 @@ export default function EditService({ uid }: { uid: string }) {
     }
 
     setNumRows(numRows - 1);
-    formik.setFieldValue('service.data', newValues);
+    formik.setFieldValue('data', newValues);
   };
 
   const handleDeleteColumn = (colIndex: number) => {
-    const newValues = { ...formik.values.service.data };
+    const newValues = { ...formik.values.data };
     for (let row = 0; row < numRows; row++) {
       delete newValues[`cell-${row}-${colIndex}`];
     }
@@ -150,7 +131,7 @@ export default function EditService({ uid }: { uid: string }) {
     }
 
     setNumCols(numCols - 1);
-    formik.setFieldValue('service.data', newValues);
+    formik.setFieldValue('data', newValues);
   };
 
   if (isLoading) {
@@ -188,18 +169,16 @@ export default function EditService({ uid }: { uid: string }) {
             <div>
               <Input
                 label="Unique ID"
-                name="service.uniqueId"
-                value={formik.values.service.uniqueId}
+                name="uniqueId"
+                value={formik.values.uniqueId}
                 onChange={(e) => {
                   formik.handleChange(e);
                 }}
                 onBlur={async () => {
-                  const uid = formik.values.service.uniqueId;
+                  const uid = formik.values.uniqueId;
                   if (await verifyUID(uid, service?._id)) {
                     formik.setErrors({
-                      service: {
-                        uniqueId: 'This Unique ID is already taken',
-                      },
+                      uniqueId: 'This Unique ID is already taken',
                     });
                   }
                 }}
@@ -208,39 +187,35 @@ export default function EditService({ uid }: { uid: string }) {
                     <span className="text-small text-default-400">#</span>
                   </div>
                 }
-                isInvalid={formik.errors.service?.uniqueId ? true : false}
-                errorMessage={formik.errors.service?.uniqueId}
+                isInvalid={formik.errors?.uniqueId ? true : false}
+                errorMessage={formik.errors?.uniqueId}
               />
             </div>
             <div>
               <Input
                 label="Name"
-                name="service.name"
-                value={formik.values.service.name}
+                name="name"
+                value={formik.values.name}
                 onChange={formik.handleChange}
                 isInvalid={
-                  formik.touched.service?.name && formik.errors.service?.name
-                    ? true
-                    : false
+                  formik.touched?.name && formik.errors?.name ? true : false
                 }
-                errorMessage={
-                  formik.touched.service?.name && formik.errors.service?.name
-                }
+                errorMessage={formik.touched?.name && formik.errors?.name}
               />
             </div>
             <div>
               <Input
                 label="Price"
                 value={
-                  formik.values.service.price !== undefined
-                    ? String(formik.values.service.price)
+                  formik.values.price !== undefined
+                    ? String(formik.values.price)
                     : ''
                 }
                 onChange={(e) => {
                   const inputValue = e.target.value;
                   if (/^\d*$/.test(inputValue)) {
                     formik.setFieldValue(
-                      'service.price',
+                      'price',
                       inputValue ? Number(inputValue) : 0
                     );
                   }
@@ -251,13 +226,9 @@ export default function EditService({ uid }: { uid: string }) {
                   </div>
                 }
                 isInvalid={
-                  formik.touched.service?.price && formik.errors.service?.price
-                    ? true
-                    : false
+                  formik.touched?.price && formik.errors?.price ? true : false
                 }
-                errorMessage={
-                  formik.touched.service?.price && formik.errors.service?.price
-                }
+                errorMessage={formik.touched?.price && formik.errors?.price}
                 min={1}
                 type="number"
               />
@@ -266,15 +237,15 @@ export default function EditService({ uid }: { uid: string }) {
               <Input
                 label="Duration"
                 value={
-                  formik.values.service.duration !== undefined
-                    ? String(formik.values.service.duration)
+                  formik.values.duration !== undefined
+                    ? String(formik.values.duration)
                     : ''
                 }
                 onChange={(e) => {
                   const inputValue = e.target.value;
                   if (/^\d*$/.test(inputValue)) {
                     formik.setFieldValue(
-                      'service.duration',
+                      'duration',
                       inputValue ? Number(inputValue) : 0
                     );
                   }
@@ -286,14 +257,12 @@ export default function EditService({ uid }: { uid: string }) {
                   </div>
                 }
                 isInvalid={
-                  formik.touched.service?.duration &&
-                  formik.errors.service?.duration
+                  formik.touched?.duration && formik.errors?.duration
                     ? true
                     : false
                 }
                 errorMessage={
-                  formik.touched.service?.duration &&
-                  formik.errors.service?.duration
+                  formik.touched?.duration && formik.errors?.duration
                 }
                 type="number"
               />
@@ -302,10 +271,8 @@ export default function EditService({ uid }: { uid: string }) {
             <div className="col-span-full">
               <QuillInput
                 label="Description"
-                value={formik.values.service.description}
-                onChange={(value) =>
-                  formik.setFieldValue('service.description', value)
-                }
+                value={formik.values.description}
+                onChange={(value) => formik.setFieldValue('description', value)}
                 description="This information will be displayed on the report before the table."
               />
             </div>
@@ -313,27 +280,25 @@ export default function EditService({ uid }: { uid: string }) {
               {/* <Textarea
               label="Test Information"
               description="This information will be displayed on the report after the table."
-              value={formik.values.service.summary}
+              value={formik.values.summary}
               onChange={(e) =>
-                formik.setFieldValue('service.summary', e.target.value)
+                formik.setFieldValue('summary', e.target.value)
               }
               isInvalid={
-                formik.touched.service?.summary &&
-                formik.errors.service?.summary
+                formik.touched?.summary &&
+                formik.errors?.summary
                   ? true
                   : false
               }
               errorMessage={
-                formik.touched.service?.summary &&
-                formik.errors.service?.summary
+                formik.touched?.summary &&
+                formik.errors?.summary
               }
             /> */}
               <QuillInput
                 label="Test Information"
-                value={formik.values.service.summary}
-                onChange={(value) =>
-                  formik.setFieldValue('service.summary', value)
-                }
+                value={formik.values.summary}
+                onChange={(value) => formik.setFieldValue('summary', value)}
                 description="This information will be displayed on the report after the table."
               />
             </div>
@@ -342,13 +307,13 @@ export default function EditService({ uid }: { uid: string }) {
               <Select
                 aria-label="Type"
                 label="Type"
-                name="service.type"
-                selectedKeys={[formik.values.service.type]}
+                name="type"
+                selectedKeys={[formik.values.type]}
                 onChange={formik.handleChange}
               >
-                {ServiceTypes.map((service) => (
-                  <SelectItem color="primary" key={service.value}>
-                    {service.label}
+                {ServiceTypes.map((type) => (
+                  <SelectItem color="primary" key={type.value}>
+                    {type.value}
                   </SelectItem>
                 ))}
               </Select>
@@ -357,8 +322,8 @@ export default function EditService({ uid }: { uid: string }) {
               <Select
                 aria-label="Status"
                 label="Status"
-                name="service.status"
-                selectedKeys={[formik.values.service.status]}
+                name="status"
+                selectedKeys={[formik.values.status]}
                 onChange={formik.handleChange}
               >
                 {ServiceStatuses.map((status) => (
@@ -474,7 +439,7 @@ export default function EditService({ uid }: { uid: string }) {
                                 <ReactQuill
                                   theme="snow"
                                   value={
-                                    formik.values.service.data[
+                                    formik.values.data[
                                       `cell-${rowIndex}-${colIndex}`
                                     ] || ''
                                   }

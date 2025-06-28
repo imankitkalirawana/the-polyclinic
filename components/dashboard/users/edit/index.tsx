@@ -31,7 +31,7 @@ export default function EditUser({ uid }: { uid: number }) {
           <p>Account</p>
         </div>
       ),
-      content: <AccountDetails user={user} refetch={refetch} />,
+      content: <AccountDetails user={user} />,
     },
     {
       key: 'notifications-settings',
