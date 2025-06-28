@@ -107,7 +107,7 @@ export default function SecuritySettings({
           });
         return;
       } else {
-        if (await verifyEmail(values.email as string, user?._id)) {
+        if (await verifyEmail(values.email as string, user?.uid)) {
           emailFormik.setFieldError('email', 'Email already exists.');
           return;
         }
