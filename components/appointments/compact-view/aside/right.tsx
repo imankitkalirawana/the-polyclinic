@@ -1,23 +1,17 @@
 'use client';
-import axios from 'axios';
 import { Card, CardBody } from '@heroui/react';
-import { useQuery } from '@tanstack/react-query';
 
 import Calendar from './calendar';
 import PendingAppointments from './pending-appointments';
 
+import { useAllAppointments } from '@/services/appointment';
+import { castData } from '@/lib/utils';
 import { AppointmentType } from '@/types/appointment';
 
 export default function AsideRight() {
-  const { data } = useQuery<AppointmentType[]>({
-    queryKey: ['appointments'],
-    queryFn: async () => {
-      const response = await axios.get(`/api/v1/appointments`);
-      return response.data;
-    },
-  });
+  const { data } = useAllAppointments();
 
-  const appointments = data || [];
+  const appointments = castData<AppointmentType[]>(data);
 
   return (
     <>

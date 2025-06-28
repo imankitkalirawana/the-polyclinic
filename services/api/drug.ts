@@ -7,5 +7,12 @@ export async function getAllDrugs() {
 }
 
 export const getDrugWithDid = async (did: number) => {
-  return await fetchData<DrugType>(`/drugs/did/${did}`);
+  return await fetchData<DrugType>(`/drugs/${did}`);
+};
+
+export const updateDrug = async (did: number, drug: DrugType) => {
+  return await fetchData<DrugType>(`/drugs/${did}`, {
+    method: 'PUT',
+    data: drug,
+  });
 };

@@ -54,7 +54,10 @@ export const PUT = auth(async function PUT(request: any, context: any) {
     user = await User.findOneAndUpdate({ uid }, data, {
       new: true,
     });
-    return NextResponse.json(user);
+    return NextResponse.json({
+      message: 'User updated successfully',
+      data: user,
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: 'An error occurred' }, { status: 500 });

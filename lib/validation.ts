@@ -35,14 +35,13 @@ export const userValidationSchema = Yup.object().shape({
 });
 
 export const drugValidationSchema = Yup.object().shape({
-  drug: Yup.object().shape({
-    brandName: Yup.string()
-      .required('Brand Name is required')
-      .min(3, 'Brand Name is too short')
-      .max(50, 'Brand Name is too long'),
-    genericName: Yup.string()
-      .required('Generic Name is required')
-      .min(3, 'Generic Name is too short')
-      .max(50, 'Generic Name is too long'),
-  }),
+  did: Yup.number().required('Drug ID is required'),
+  brandName: Yup.string()
+    .required('Brand Name is required')
+    .min(3, 'Brand Name is too short')
+    .max(50, 'Brand Name is too long'),
+  genericName: Yup.string()
+    .required('Generic Name is required')
+    .min(3, 'Generic Name is too short')
+    .max(50, 'Generic Name is too long'),
 });

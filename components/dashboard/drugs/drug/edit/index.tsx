@@ -2,10 +2,8 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
 import { useFormik } from 'formik';
 import {
-  addToast,
   Button,
   Card,
   CardBody,
@@ -18,37 +16,22 @@ import {
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { drugValidationSchema } from '@/lib/validation';
 import { DrugType } from '@/types/drug';
-import { useDrugWithDid } from '@/services/drug';
-import Loading from '@/app/loading';
+import { useDrugWithDid, useUpdateDrug } from '@/services/drug';
 import NoResults from '@/components/ui/no-results';
 
 export default function EditDrug({ did }: { did: number }) {
-  const { data } = useDrugWithDid(did);
-
-  const drug: DrugType = data as DrugType;
-
   const router = useRouter();
+  const { data } = useDrugWithDid(did);
+  const drug: DrugType = data as DrugType;
+  const updateDrug = useUpdateDrug();
+
   const formik = useFormik({
-    initialValues: {
-      drug: drug,
-    },
+    initialValues: drug,
     validationSchema: drugValidationSchema,
     onSubmit: async (values) => {
-      try {
-        await axios.put(`/api/v1/drugs/did/${drug.did}`, values.drug);
-        addToast({
-          title: 'Drug updated successfully',
-          color: 'success',
-        });
-        router.push(`/dashboard/drugs/${values.drug.did}`);
-      } catch (error) {
-        addToast({
-          title: 'Error',
-          description: 'Failed to update drug',
-          color: 'danger',
-        });
-        console.error(error);
-      }
+      await updateDrug.mutateAsync({ did, drug: values }).then(() => {
+        router.push(`/dashboard/drugs/${did}`);
+      });
     },
   });
 
@@ -78,11 +61,9 @@ export default function EditDrug({ did }: { did: number }) {
           <div>
             <Input
               label="Drug ID"
-              name="drug.did"
+              name="did"
               value={
-                formik.values.drug.did !== undefined
-                  ? String(formik.values.drug.did)
-                  : ''
+                formik.values.did !== undefined ? String(formik.values.did) : ''
               }
               placeholder="e.g. 1, 2, etc."
               onChange={(e) => {
@@ -94,196 +75,164 @@ export default function EditDrug({ did }: { did: number }) {
                   <span className="text-small text-default-400">#</span>
                 </div>
               }
-              isInvalid={formik.errors.drug?.did ? true : false}
-              errorMessage={formik.errors.drug?.did}
+              isInvalid={formik.errors.did ? true : false}
+              errorMessage={formik.errors.did}
             />
           </div>
           <div>
             <Input
               label="Brand Name"
-              name="drug.brandName"
-              value={formik.values.drug.brandName}
+              name="brandName"
+              value={formik.values.brandName}
               placeholder="e.g. Panadol, Disprin, etc."
               onChange={formik.handleChange}
               isInvalid={
-                formik.touched.drug?.brandName && formik.errors.drug?.brandName
+                formik.touched.brandName && formik.errors.brandName
                   ? true
                   : false
               }
-              errorMessage={
-                formik.touched.drug?.brandName && formik.errors.drug?.brandName
-              }
+              errorMessage={formik.touched.brandName && formik.errors.brandName}
             />
           </div>
           <div>
             <Input
               label="Generic Name"
-              name="drug.genericName"
-              value={formik.values.drug.genericName}
+              name="genericName"
+              value={formik.values.genericName}
               placeholder="e.g. Paracetamol, Aspirin, etc."
               onChange={formik.handleChange}
               isInvalid={
-                formik.touched.drug?.genericName &&
-                formik.errors.drug?.genericName
+                formik.touched.genericName && formik.errors.genericName
                   ? true
                   : false
               }
               errorMessage={
-                formik.touched.drug?.genericName &&
-                formik.errors.drug?.genericName
+                formik.touched.genericName && formik.errors.genericName
               }
             />
           </div>
           <div>
             <Input
               label="Manufacturer"
-              name="drug.manufacturer"
-              value={formik.values.drug.manufacturer}
+              name="manufacturer"
+              value={formik.values.manufacturer}
               placeholder='e.g. "Pfizer", "Cipla", etc.'
               onChange={formik.handleChange}
               isInvalid={
-                formik.touched.drug?.manufacturer &&
-                formik.errors.drug?.manufacturer
+                formik.touched.manufacturer && formik.errors.manufacturer
                   ? true
                   : false
               }
-              errorMessage={
-                formik.touched.drug?.manufacturer &&
-                formik.errors.drug?.manufacturer
-              }
+              errorMessage={formik.touched.manufacturer}
             />
           </div>
           <div className="col-span-2">
             <Textarea
               label="Description"
-              name="drug.description"
-              value={formik.values.drug.description}
+              name="description"
+              value={formik.values.description}
               placeholder="e.g. Used to relieve pain and reduce fever, etc."
               onChange={formik.handleChange}
               isInvalid={
-                formik.touched.drug?.description &&
-                formik.errors.drug?.description
+                formik.touched.description && formik.errors.description
                   ? true
                   : false
               }
               errorMessage={
-                formik.touched.drug?.description &&
-                formik.errors.drug?.description
+                formik.touched.description && formik.errors.description
               }
             />
           </div>
           <div>
             <Input
               label="Price"
-              name="drug.price"
+              name="price"
               value={
-                formik.values.drug.price !== undefined
-                  ? String(formik.values.drug.price)
+                formik.values.price !== undefined
+                  ? String(formik.values.price)
                   : ''
               }
               placeholder="e.g. 500, 1000, etc."
               onChange={formik.handleChange}
               isInvalid={
-                formik.touched.drug?.price && formik.errors.drug?.price
-                  ? true
-                  : false
+                formik.touched.price && formik.errors.price ? true : false
               }
-              errorMessage={
-                formik.touched.drug?.price && formik.errors.drug?.price
-              }
+              errorMessage={formik.touched.price && formik.errors.price}
             />
           </div>
           <div>
             <Input
               label="Dosage"
-              name="drug.dosage"
-              value={formik.values.drug.dosage}
+              name="dosage"
+              value={formik.values.dosage}
               placeholder="e.g. 500mg, 1mg, etc."
               onChange={formik.handleChange}
               isInvalid={
-                formik.touched.drug?.dosage && formik.errors.drug?.dosage
-                  ? true
-                  : false
+                formik.touched.dosage && formik.errors.dosage ? true : false
               }
-              errorMessage={
-                formik.touched.drug?.dosage && formik.errors.drug?.dosage
-              }
+              errorMessage={formik.touched.dosage && formik.errors.dosage}
             />
           </div>
           <div>
             <Input
               label="Drug Form"
-              name="drug.form"
-              value={formik.values.drug.form}
+              name="form"
+              value={formik.values.form}
               placeholder="e.g. Tablet, Capsule, Syrup, etc."
               onChange={formik.handleChange}
               isInvalid={
-                formik.touched.drug?.form && formik.errors.drug?.form
-                  ? true
-                  : false
+                formik.touched.form && formik.errors.form ? true : false
               }
-              errorMessage={
-                formik.touched.drug?.form && formik.errors.drug?.form
-              }
+              errorMessage={formik.touched.form && formik.errors.form}
             />
           </div>
           <div>
             <Input
               label="Frequency"
-              name="drug.frequency"
-              value={formik.values.drug.frequency}
+              name="frequency"
+              value={formik.values.frequency}
               placeholder="e.g. 1-0-1, 1-1-1,Once daily, Twice daily etc."
               onChange={formik.handleChange}
               isInvalid={
-                formik.touched.drug?.frequency && formik.errors.drug?.frequency
+                formik.touched.frequency && formik.errors.frequency
                   ? true
                   : false
               }
-              errorMessage={
-                formik.touched.drug?.frequency && formik.errors.drug?.frequency
-              }
+              errorMessage={formik.touched.frequency && formik.errors.frequency}
             />
           </div>
           <div>
             <Input
               label="Strength"
-              name="drug.strength"
+              name="strength"
               value={
-                formik.values.drug.strength !== undefined
-                  ? String(formik.values.drug.strength)
+                formik.values.strength !== undefined
+                  ? String(formik.values.strength)
                   : ''
               }
               placeholder="e.g. 500, 1000, etc."
               onChange={formik.handleChange}
               isInvalid={
-                formik.touched.drug?.strength && formik.errors.drug?.strength
-                  ? true
-                  : false
+                formik.touched.strength && formik.errors.strength ? true : false
               }
-              errorMessage={
-                formik.touched.drug?.strength && formik.errors.drug?.strength
-              }
+              errorMessage={formik.touched.strength && formik.errors.strength}
             />
           </div>
           <div>
             <Input
               label="Quantity"
-              name="drug.quantity"
+              name="quantity"
               value={
-                formik.values.drug.quantity !== undefined
-                  ? String(formik.values.drug.quantity)
+                formik.values.quantity !== undefined
+                  ? String(formik.values.quantity)
                   : ''
               }
               placeholder="e.g. 500, 1000, etc."
               onChange={formik.handleChange}
               isInvalid={
-                formik.touched.drug?.quantity && formik.errors.drug?.quantity
-                  ? true
-                  : false
+                formik.touched.quantity && formik.errors.quantity ? true : false
               }
-              errorMessage={
-                formik.touched.drug?.quantity && formik.errors.drug?.quantity
-              }
+              errorMessage={formik.touched.quantity && formik.errors.quantity}
             />
           </div>
         </div>

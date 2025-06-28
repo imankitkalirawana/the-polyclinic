@@ -24,48 +24,46 @@ export const GET = auth(async function GET(request: any, context: any) {
   }
 });
 
-// update drug by id from param
+// update drug by did from param
 export const PUT = auth(async function PUT(request: any, context: any) {
   try {
-    const allowedRoles = ['admin', 'doctor', 'receptionist'];
-    // @ts-ignore
-    if (request.auth?.user?.uid !== context?.params?.uid) {
-      if (!allowedRoles.includes(request.auth?.user?.role)) {
-        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-      }
+    const allowedRoles = ['admin', 'laboratorist'];
+    if (!allowedRoles.includes(request.auth?.user?.role)) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
+
     const data = await request.json();
 
     await connectDB();
 
     const did = parseInt(context.params.did);
-    let drug = await Drug.findOne({ did });
-    if (!drug) {
-      return NextResponse.json({ message: 'Drug not found' }, { status: 404 });
-    }
 
-    drug.updatedBy = request.auth?.user?.email;
-
-    drug = await Drug.findOneAndUpdate({ did }, data, {
+    const drug = await Drug.findOneAndUpdate({ did }, data, {
       new: true,
     });
-    return NextResponse.json(drug);
+
+    if (drug) {
+      return NextResponse.json({
+        message: `${drug.brandName} updated successfully`,
+        data: drug,
+      });
+    }
+
+    return NextResponse.json({ message: 'Drug not found' }, { status: 404 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
   }
 });
 
-// delete drug by id from param
+// delete drug by did from param
 export const DELETE = auth(async function DELETE(request: any, context: any) {
   try {
-    const allowedRoles = ['admin', 'doctor', 'receptionist'];
-    // @ts-ignore
-    if (request.auth?.user?.uid !== context?.params?.uid) {
-      if (!allowedRoles.includes(request.auth?.user?.role)) {
-        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-      }
+    const allowedRoles = ['admin', 'laboratorist'];
+    if (!allowedRoles.includes(request.auth?.user?.role)) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
+
     await connectDB();
     const did = parseInt(context.params.did);
 
@@ -75,7 +73,9 @@ export const DELETE = auth(async function DELETE(request: any, context: any) {
     }
 
     await Drug.findOneAndDelete({ did });
-    return NextResponse.json({ message: 'Drug deleted' });
+    return NextResponse.json({
+      message: `${drug.brandName} deleted successfully`,
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: 'An error occurred' }, { status: 500 });

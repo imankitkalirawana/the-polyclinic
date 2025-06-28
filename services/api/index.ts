@@ -36,8 +36,8 @@ export async function fetchData<T>(
 
     return {
       success: true,
-      message: res.data.message || 'Request successful',
-      data: res.data,
+      message: res.data?.message || 'Request successful',
+      data: res.data?.data || res.data,
     };
   } catch (error: any) {
     return {

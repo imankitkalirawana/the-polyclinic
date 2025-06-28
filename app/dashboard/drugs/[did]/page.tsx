@@ -14,11 +14,12 @@ interface Props {
 }
 
 export default async function Page({ params }: Props) {
+  const did = Number(params.did);
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
-    queryKey: ['drugs', params.did],
+    queryKey: ['drug', did],
     queryFn: async () => {
-      const res = await getDrugWithDid(params.did);
+      const res = await getDrugWithDid(did);
       if (res.success) {
         return res.data;
       }
@@ -29,7 +30,7 @@ export default async function Page({ params }: Props) {
   return (
     <>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <DrugCard did={params.did} />
+        <DrugCard did={did} />
       </HydrationBoundary>
     </>
   );

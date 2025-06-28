@@ -28,9 +28,10 @@ export const GET = auth(async function GET(request: any) {
         break;
     }
 
-    users = await User.find().select('-password');
-
-    return NextResponse.json(users);
+    return NextResponse.json({
+      message: 'Users fetched successfully',
+      data: users,
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
@@ -49,7 +50,10 @@ export const POST = auth(async function POST(request: any) {
 
     const user = new User(data);
     await user.save();
-    return NextResponse.json(user);
+    return NextResponse.json({
+      message: 'User created successfully',
+      data: user,
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
@@ -61,25 +65,24 @@ export const DELETE = auth(async function DELETE(request: any) {
   try {
     const allowedRoles = ['admin', 'receptionist'];
     if (!allowedRoles.includes(request.auth?.user?.role)) {
-      return NextResponse.json(
-        { success: false, message: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
     await connectDB();
     const { ids } = await request.json();
 
-    !!API_ACTIONS.isDelete && (await User.deleteMany({ uid: { $in: ids } }));
+    if (API_ACTIONS.isDelete) {
+      const res = await User.deleteMany({ uid: { $in: ids } });
+      return NextResponse.json({
+        message: `${res.deletedCount} Users deleted successfully`,
+      });
+    }
 
     return NextResponse.json({
       message: `${ids.length} Users deleted successfully`,
     });
   } catch (error) {
     console.error(error);
-    return NextResponse.json(
-      { success: false, message: 'An error occurred' },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
   }
 });
