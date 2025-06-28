@@ -58,7 +58,7 @@ export default function CreateAppointment({
     },
     onSubmit: async (values, { resetForm }) => {
       try {
-        const data = await createAppointment.mutateAsync(values);
+        const { data } = await createAppointment.mutateAsync(values);
         addToast({
           title: 'Appointment created',
           description: `Your appointment is scheduled for ${format(
