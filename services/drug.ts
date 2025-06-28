@@ -41,27 +41,23 @@ export const useDrugWithDid = (did: number): UseQueryResult<DrugType> => {
 export const useUpdateDrug = (): UseMutationResult<
   ApiResponse<DrugType>,
   Error,
-  { did: number; drug: DrugType }
+  DrugType
 > => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ did, drug }: { did: number; drug: DrugType }) => {
-      const res = await updateDrug(did, drug);
+    mutationFn: async (data: DrugType) => {
+      const res = await updateDrug(data);
       if (res.success) {
-        return {
-          success: true,
-          message: res.message,
-          data: res.data,
-        };
+        return res;
       }
       throw new Error(res.message);
     },
     onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['drug', data.data.did] });
       addToast({
         title: data.message,
         color: 'success',
       });
-      queryClient.invalidateQueries({ queryKey: ['drug', data.data.did] });
     },
     onError: (error) => {
       addToast({

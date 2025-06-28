@@ -3,7 +3,6 @@ import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFormik } from 'formik';
 import {
-  addToast,
   Autocomplete,
   AutocompleteItem,
   Avatar,
@@ -18,7 +17,6 @@ import {
   ScrollShadow,
   Select,
   SelectItem,
-  user,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { getLocalTimeZone, today } from '@internationalized/date';
@@ -66,22 +64,9 @@ export default function NewUser() {
     },
     validationSchema: userValidationSchema,
     onSubmit: async (values) => {
-      try {
-        const user = await createUser.mutateAsync(values.user);
-        if (user) {
-          addToast({
-            title: 'User added successfully',
-            color: 'success',
-          });
-          router.push('/dashboard/users');
-        }
-      } catch (error: any) {
-        addToast({
-          title: 'Error creating user',
-          description: error.message,
-          color: 'danger',
-        });
-      }
+      await createUser.mutateAsync(values.user).then(() => {
+        router.push('/dashboard/users');
+      });
     },
   });
 
@@ -134,7 +119,7 @@ export default function NewUser() {
               />
             </Badge>
             <div className="flex flex-col items-start justify-center">
-              <p className="font-medium">{user.name}</p>
+              <p className="font-medium">{formik.values.user.name}</p>
               <span className="text-small text-default-500">
                 {formik.values.user.role}
               </span>
@@ -340,15 +325,6 @@ export default function NewUser() {
         </CardBody>
 
         <CardFooter className="mt-4 justify-end gap-2">
-          <Button
-            radius="full"
-            variant="bordered"
-            onPress={() => {
-              formik.setFieldValue('user', user);
-            }}
-          >
-            Cancel
-          </Button>
           <Button
             color="primary"
             radius="full"

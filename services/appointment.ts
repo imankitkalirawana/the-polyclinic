@@ -11,6 +11,8 @@ import {
   getAllAppointments,
   getAppointmentWithAID,
 } from './api/appointment';
+import { addToast } from '@heroui/react';
+import { ApiResponse } from './api';
 
 export const useAllAppointments = (): UseQueryResult<AppointmentType[]> => {
   return useQuery({
@@ -30,7 +32,7 @@ export const useAppointmentWithAID = (
   aid: number
 ): UseQueryResult<AppointmentType> => {
   return useQuery({
-    queryKey: ['appointments', aid],
+    queryKey: ['appointment', aid],
     queryFn: async () => {
       const res = await getAppointmentWithAID(aid);
       if (res.success) {
@@ -45,7 +47,7 @@ export const useAppointmentWithAID = (
 // POST
 
 export const useCreateAppointment = (): UseMutationResult<
-  AppointmentType,
+  ApiResponse<AppointmentType>,
   Error,
   CreateAppointmentType
 > => {
@@ -54,12 +56,22 @@ export const useCreateAppointment = (): UseMutationResult<
     mutationFn: async (appointment: CreateAppointmentType) => {
       const res = await createAppointment(appointment);
       if (res.success) {
-        return res.data;
+        return res;
       }
       throw new Error(res.message);
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      addToast({
+        title: data.message,
+        color: 'success',
+      });
+    },
+    onError: (error) => {
+      addToast({
+        title: error.message,
+        color: 'danger',
+      });
     },
   });
 };

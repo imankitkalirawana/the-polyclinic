@@ -73,7 +73,7 @@ export const useAllUsers = (): UseQueryResult<UserType[]> => {
 // POST
 
 export const useCreateUser = (): UseMutationResult<
-  UserType,
+  ApiResponse<UserType>,
   Error,
   CreateUserType
 > => {
@@ -82,12 +82,22 @@ export const useCreateUser = (): UseMutationResult<
     mutationFn: async (user: CreateUserType) => {
       const res = await createUser(user);
       if (res.success) {
-        return res.data;
+        return res;
       }
       throw new Error(res.message);
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
+      addToast({
+        title: data.message,
+        color: 'success',
+      });
+    },
+    onError: (error) => {
+      addToast({
+        title: error.message,
+        color: 'danger',
+      });
     },
   });
 };
@@ -103,11 +113,7 @@ export const useDeleteUser = (): UseMutationResult<
     mutationFn: async (uid: number) => {
       const res = await deleteUser(uid);
       if (res.success) {
-        return {
-          success: true,
-          message: res.message,
-          data: res.data,
-        };
+        return res;
       }
       throw new Error(res.message);
     },

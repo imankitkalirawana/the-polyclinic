@@ -16,7 +16,9 @@ import { ServiceType } from '@/types/service';
 import { CLINIC_INFO } from '@/lib/config';
 import { useRouter } from 'nextjs-toploader/app';
 import { ServiceQuickLook } from './quicklook';
-import { useAllServices } from '@/services/service';
+import { useAllServices, useDeleteService } from '@/services/service';
+import Link from 'next/link';
+import { toast } from 'sonner';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'uniqueId',
@@ -32,8 +34,17 @@ export default function Services() {
   const router = useRouter();
   const { data, isLoading } = useAllServices();
   const { selected, setSelected } = useServiceStore();
+  const deleteService = useDeleteService();
 
   const services: ServiceType[] = data || [];
+
+  const handleDelete = async (uid: string) => {
+    toast.promise(deleteService.mutateAsync(uid), {
+      loading: `Deleting service #${uid}`,
+      success: (data) => data.message,
+      error: (error) => error.message,
+    });
+  };
 
   // Define columns with render functions
   const columns: ColumnDef<ServiceType>[] = useMemo(
@@ -122,7 +133,7 @@ export default function Services() {
               router.push(`/dashboard/services/${service.uniqueId}`),
             onEdit: () =>
               router.push(`/dashboard/services/${service.uniqueId}/edit`),
-            onDelete: () => console.log('Delete', service.uniqueId),
+            onDelete: () => handleDelete(service.uniqueId),
             key: service.uniqueId,
           }),
       },
@@ -196,7 +207,7 @@ export default function Services() {
 
   // Render top bar
   const endContent = () => (
-    <Button color="primary" size="sm">
+    <Button color="primary" size="sm" as={Link} href="/dashboard/services/new">
       New Service
     </Button>
   );
@@ -244,8 +255,11 @@ export default function Services() {
         keyField="uniqueId"
         filters={filters}
         searchField={(service, searchValue) =>
-          service.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-          service.description.toLowerCase().includes(searchValue.toLowerCase())
+          service.name?.toLowerCase().includes(searchValue.toLowerCase()) ||
+          service.description
+            ?.toLowerCase()
+            .includes(searchValue.toLowerCase()) ||
+          service.uniqueId?.toString().includes(searchValue)
         }
         endContent={endContent}
         renderSelectedActions={renderSelectedActions}

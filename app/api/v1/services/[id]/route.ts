@@ -9,7 +9,13 @@ export const GET = async function GET(_request: any, context: any) {
   try {
     const id = context.params.id;
     await connectDB();
-    const service = await Service.findById(id);
+    const service = await Service.findOne({ uniqueId: id });
+    if (!service) {
+      return NextResponse.json(
+        { message: 'Service not found' },
+        { status: 404 }
+      );
+    }
     return NextResponse.json(service);
   } catch (error) {
     console.error(error);
@@ -26,12 +32,20 @@ export const PUT = auth(async function PUT(request: any, context: any) {
   try {
     const id = context.params.id;
     let data: ServiceType = await request.json();
-    data.updatedBy = request.auth.user.email;
     await connectDB();
-    const service = await Service.findByIdAndUpdate(id, data, {
+    const service = await Service.findOneAndUpdate({ uniqueId: id }, data, {
       new: true,
     });
-    return NextResponse.json(service);
+    if (!service) {
+      return NextResponse.json(
+        { message: 'Service not found' },
+        { status: 404 }
+      );
+    }
+    return NextResponse.json({
+      message: `${service.name} updated successfully`,
+      data: service,
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: error }, { status: 500 });
@@ -47,8 +61,17 @@ export const DELETE = auth(async function DELETE(request: any, context: any) {
   try {
     const id = context.params.id;
     await connectDB();
-    const service = await Service.findByIdAndDelete(id);
-    return NextResponse.json(service);
+    const service = await Service.findOneAndDelete({ uniqueId: id });
+    if (!service) {
+      return NextResponse.json(
+        { message: 'Service not found' },
+        { status: 404 }
+      );
+    }
+    return NextResponse.json({
+      message: `${service.name} deleted successfully`,
+      data: service,
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: 'An error occurred' }, { status: 500 });

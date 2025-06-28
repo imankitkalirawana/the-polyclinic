@@ -29,7 +29,7 @@ export default function EditDrug({ did }: { did: number }) {
     initialValues: drug,
     validationSchema: drugValidationSchema,
     onSubmit: async (values) => {
-      await updateDrug.mutateAsync({ did, drug: values }).then(() => {
+      await updateDrug.mutateAsync(values).then(() => {
         router.push(`/dashboard/drugs/${did}`);
       });
     },

@@ -1,11 +1,9 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
 import { useFormik } from 'formik';
 import ReactQuill from 'react-quill';
 import {
-  addToast,
   Button,
   cn,
   Input,
@@ -20,6 +18,8 @@ import QuillInput from '@/components/ui/quill-input';
 import { verifyUID } from '@/functions/server-actions';
 import { ServiceStatuses, ServiceTypes } from '@/lib/interface';
 import { serviceValidationSchema } from '@/lib/validation';
+import { useCreateService } from '@/services/service';
+import { ServiceType } from '@/types/service';
 
 type ServiceData = {
   [key: `cell-${number}-${number}`]: string;
@@ -27,46 +27,27 @@ type ServiceData = {
 
 export default function NewService() {
   const router = useRouter();
+  const createService = useCreateService();
+
   const formik = useFormik({
     initialValues: {
-      service: {
-        uniqueId: '',
-        name: '',
-        description: '',
-        summary: '',
-        price: 0,
-        duration: 0,
-        status: 'active',
-        type: 'medical',
-        data: {
-          'cell-0-0': '',
-          'cell-0-1': '',
-        } as ServiceData,
-      },
-    },
+      data: {
+        'cell-0-0': '',
+        'cell-0-1': '',
+      } as ServiceData,
+    } as ServiceType,
+
     validationSchema: serviceValidationSchema,
     onSubmit: async (values) => {
-      try {
-        await axios.post(`/api/v1/services/`, values.service);
-        addToast({
-          title: 'Service updated successfully',
-          color: 'success',
-        });
-        router.push(`/dashboard/services/${values.service.uniqueId}`);
-      } catch (error) {
-        addToast({
-          title: 'Error',
-          description: 'Failed to update service',
-          color: 'danger',
-        });
-        console.error(error);
-      }
+      await createService.mutateAsync(values).then(() => {
+        router.push(`/dashboard/services/${values.uniqueId}`);
+      });
     },
   });
 
   const [numRows, setNumRows] = useState(
     Math.max(
-      ...Object.keys(formik.values.service.data).map((key) =>
+      ...Object.keys(formik.values.data).map((key) =>
         parseInt(key.split('-')[1])
       )
     ) + 1
@@ -74,18 +55,18 @@ export default function NewService() {
 
   const [numCols, setNumCols] = useState(
     Math.max(
-      ...Object.keys(formik.values.service.data).map((key) =>
+      ...Object.keys(formik.values.data).map((key) =>
         parseInt(key.split('-')[2])
       )
     ) + 1
   );
 
   const handleInputChange = (key: string, value: string) => {
-    formik.setFieldValue(`service.data.${key}`, value);
+    formik.setFieldValue(`data.${key}`, value);
   };
 
   const handleAddRow = (rowIndex: number) => {
-    const newValues = { ...formik.values.service.data };
+    const newValues = { ...formik.values.data };
     for (let row = numRows; row > rowIndex; row--) {
       for (let col = 0; col < numCols; col++) {
         newValues[`cell-${row}-${col}`] = newValues[`cell-${row - 1}-${col}`];
@@ -97,12 +78,12 @@ export default function NewService() {
     }
 
     setNumRows(numRows + 1);
-    console.log('formik.values.service.data', formik.values.service.data);
-    formik.setFieldValue('service.data', newValues);
+    console.log('formik.values.data', formik.values.data);
+    formik.setFieldValue('data', newValues);
   };
 
   const handleAddColumn = (colIndex: number) => {
-    const newValues = { ...formik.values.service.data };
+    const newValues = { ...formik.values.data };
     for (let row = 0; row < numRows; row++) {
       for (let col = numCols; col > colIndex; col--) {
         newValues[`cell-${row}-${col}`] = newValues[`cell-${row}-${col - 1}`];
@@ -114,11 +95,11 @@ export default function NewService() {
     }
 
     setNumCols(numCols + 1);
-    formik.setFieldValue('service.data', newValues);
+    formik.setFieldValue('data', newValues);
   };
 
   const handleDeleteRow = (rowIndex: number) => {
-    const newValues = { ...formik.values.service.data };
+    const newValues = { ...formik.values.data };
     for (let col = 0; col < numCols; col++) {
       delete newValues[`cell-${rowIndex}-${col}`];
     }
@@ -131,11 +112,11 @@ export default function NewService() {
     }
 
     setNumRows(numRows - 1);
-    formik.setFieldValue('service.data', newValues);
+    formik.setFieldValue('data', newValues);
   };
 
   const handleDeleteColumn = (colIndex: number) => {
-    const newValues = { ...formik.values.service.data };
+    const newValues = { ...formik.values.data };
     for (let row = 0; row < numRows; row++) {
       delete newValues[`cell-${row}-${colIndex}`];
     }
@@ -148,7 +129,7 @@ export default function NewService() {
     }
 
     setNumCols(numCols - 1);
-    formik.setFieldValue('service.data', newValues);
+    formik.setFieldValue('data', newValues);
   };
 
   const [hoveredColIndex, setHoveredColIndex] = useState<number | null>(null);
@@ -169,16 +150,14 @@ export default function NewService() {
             <div>
               <Input
                 label="Unique ID"
-                name="service.uniqueId"
-                value={formik.values.service.uniqueId}
+                name="uniqueId"
+                value={formik.values.uniqueId}
                 onChange={formik.handleChange}
                 onBlur={async () => {
-                  const uid = formik.values.service.uniqueId;
+                  const uid = formik.values.uniqueId;
                   if (await verifyUID(uid)) {
                     formik.setErrors({
-                      service: {
-                        uniqueId: 'This Unique ID is already taken',
-                      },
+                      uniqueId: 'This Unique ID is already taken',
                     });
                   }
                 }}
@@ -187,33 +166,27 @@ export default function NewService() {
                     <span className="text-small text-default-400">#</span>
                   </div>
                 }
-                isInvalid={formik.errors.service?.uniqueId ? true : false}
-                errorMessage={formik.errors.service?.uniqueId}
+                isInvalid={formik.errors.uniqueId ? true : false}
+                errorMessage={formik.errors.uniqueId}
               />
             </div>
             <div>
               <Input
                 label="Name"
-                value={formik.values.service.name}
-                onChange={(e) =>
-                  formik.setFieldValue('service.name', e.target.value)
-                }
+                value={formik.values.name}
+                onChange={(e) => formik.setFieldValue('name', e.target.value)}
                 isInvalid={
-                  formik.touched.service?.name && formik.errors.service?.name
-                    ? true
-                    : false
+                  formik.touched.name && formik.errors.name ? true : false
                 }
-                errorMessage={
-                  formik.touched.service?.name && formik.errors.service?.name
-                }
+                errorMessage={formik.touched.name && formik.errors.name}
               />
             </div>
             <div>
               <Input
                 label="Price"
                 value={
-                  formik.values.service.price !== undefined
-                    ? String(formik.values.service.price)
+                  formik.values.price !== undefined
+                    ? String(formik.values.price)
                     : ''
                 }
                 min={1}
@@ -222,7 +195,7 @@ export default function NewService() {
                   const inputValue = e.target.value;
                   if (/^\d*$/.test(inputValue)) {
                     formik.setFieldValue(
-                      'service.price',
+                      'price',
                       inputValue ? Number(inputValue) : 0
                     );
                   }
@@ -233,13 +206,9 @@ export default function NewService() {
                   </div>
                 }
                 isInvalid={
-                  formik.touched.service?.price && formik.errors.service?.price
-                    ? true
-                    : false
+                  formik.touched.price && formik.errors.price ? true : false
                 }
-                errorMessage={
-                  formik.touched.service?.price && formik.errors.service?.price
-                }
+                errorMessage={formik.touched.price && formik.errors.price}
               />
             </div>
             <div>
@@ -247,15 +216,15 @@ export default function NewService() {
                 label="Duration"
                 type="number"
                 value={
-                  formik.values.service.duration !== undefined
-                    ? String(formik.values.service.duration)
+                  formik.values.duration !== undefined
+                    ? String(formik.values.duration)
                     : ''
                 }
                 onChange={(e) => {
                   const inputValue = e.target.value;
                   if (/^\d*$/.test(inputValue)) {
                     formik.setFieldValue(
-                      'service.duration',
+                      'duration',
                       inputValue ? Number(inputValue) : 0
                     );
                   }
@@ -267,35 +236,27 @@ export default function NewService() {
                   </div>
                 }
                 isInvalid={
-                  formik.touched.service?.duration &&
-                  formik.errors.service?.duration
+                  formik.touched.duration && formik.errors.duration
                     ? true
                     : false
                 }
-                errorMessage={
-                  formik.touched.service?.duration &&
-                  formik.errors.service?.duration
-                }
+                errorMessage={formik.touched.duration && formik.errors.duration}
               />
             </div>
 
             <div className="col-span-full">
               <QuillInput
                 label="Description"
-                value={formik.values.service.description}
-                onChange={(value) =>
-                  formik.setFieldValue('service.description', value)
-                }
+                value={formik.values.description}
+                onChange={(value) => formik.setFieldValue('description', value)}
                 description="This information will be displayed on the report before the table."
               />
             </div>
             <div className="col-span-full">
               <QuillInput
                 label="Test Information"
-                value={formik.values.service.summary}
-                onChange={(value) =>
-                  formik.setFieldValue('service.summary', value)
-                }
+                value={formik.values.summary}
+                onChange={(value) => formik.setFieldValue('summary', value)}
                 description="This information will be displayed on the report before the table."
               />
             </div>
@@ -304,8 +265,8 @@ export default function NewService() {
               <Select
                 aria-label="Type"
                 label="Type"
-                name="service.type"
-                selectedKeys={[formik.values.service.type]}
+                name="type"
+                selectedKeys={[formik.values.type]}
                 onChange={formik.handleChange}
               >
                 {ServiceTypes.map((service) => (
@@ -319,9 +280,13 @@ export default function NewService() {
               <Select
                 aria-label="Status"
                 label="Status"
-                name="service.status"
-                selectedKeys={[formik.values.service.status]}
+                name="status"
+                selectedKeys={[formik.values.status]}
                 onChange={formik.handleChange}
+                isInvalid={
+                  formik.touched.status && formik.errors.status ? true : false
+                }
+                errorMessage={formik.touched.status && formik.errors.status}
               >
                 {ServiceStatuses.map((status) => (
                   <SelectItem
@@ -437,7 +402,7 @@ export default function NewService() {
                                 <ReactQuill
                                   theme="snow"
                                   value={
-                                    formik.values.service.data[
+                                    formik.values.data[
                                       `cell-${rowIndex}-${colIndex}`
                                     ] || ''
                                   }
