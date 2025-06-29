@@ -1,14 +1,43 @@
 import { NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
-import { sendHTMLEmail } from '@/functions/server-actions/emails/send-email';
 import { connectDB } from '@/lib/db';
 import Appointment from '@/models/Appointment';
-import { NewAppointment } from '@/utils/email-template/doctor';
-import { AppointmentStatus } from '@/utils/email-template/patient';
 import { UserType } from '@/types/user';
 import { API_ACTIONS, MOCK_DATA } from '@/lib/config';
 import { generateAppointments } from '@/lib/appointments/mock';
+import axios from 'axios';
+
+let dataContent = JSON.stringify({
+  summary: 'The Polyclinic - Ankit/Dr. Kitti',
+  description: 'This is appointment Description',
+  date: '2025-07-29T20:11:27.906Z',
+  location: 'Online',
+  duration: '15',
+  guests: [
+    {
+      name: 'Ankit',
+      email: '009ankitkalirawana@gmail.com',
+      role: 'patient',
+    },
+    {
+      name: 'Dr. Kitti',
+      email: 'divinelydeveloper@gmail.com',
+      role: 'doctor',
+    },
+  ],
+});
+
+let config = {
+  method: 'post',
+  maxBodyLength: Infinity,
+  url: 'https://n8n.divinely.dev/webhook-test/appointment/create',
+  headers: {
+    Authorization: `Bearer ${process.env.JWT_TOKEN}`,
+    'Content-Type': 'application/json',
+  },
+  data: dataContent,
+};
 
 export const GET = auth(async function GET(request: any) {
   try {
@@ -81,27 +110,30 @@ export const POST = auth(async function POST(request: any) {
     const appointment = new Appointment(data);
     await appointment.save();
 
-    const emailTasks = [
-      sendHTMLEmail({
-        to: data.patient.email,
-        subject: 'Booked: Appointment Confirmation',
-        html: AppointmentStatus(appointment),
-      }).catch((error) => {
-        console.error('Failed to send patient email:', error);
-      }),
-      data.doctor?.email &&
-        sendHTMLEmail({
-          to: data.doctor.email,
-          subject: `New Appointment Requested by ${data.patient.name}`,
-          html: NewAppointment(appointment),
-        }).catch((error) => {
-          console.error('Failed to send doctor email:', error);
-        }),
-    ];
+    // const emailTasks = [
+    //   sendHTMLEmail({
+    //     to: data.patient.email,
+    //     subject: 'Booked: Appointment Confirmation',
+    //     html: AppointmentStatus(appointment),
+    //   }).catch((error) => {
+    //     console.error('Failed to send patient email:', error);
+    //   }),
+    //   data.doctor?.email &&
+    //     sendHTMLEmail({
+    //       to: data.doctor.email,
+    //       subject: `New Appointment Requested by ${data.patient.name}`,
+    //       html: NewAppointment(appointment),
+    //     }).catch((error) => {
+    //       console.error('Failed to send doctor email:', error);
+    //     }),
+    // ];
 
-    Promise.all(emailTasks).catch((error) => {
-      console.error('Error in email sending:', error);
-    });
+    // Promise.all(emailTasks).catch((error) => {
+    //   console.error('Error in email sending:', error);
+    // });
+
+    const res = await axios.request(config);
+    console.log('res', res.data);
 
     return NextResponse.json(appointment);
   } catch (error) {
