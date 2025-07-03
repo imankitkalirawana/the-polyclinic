@@ -19,6 +19,9 @@ import { useLocale } from '@react-aria/i18n';
 
 import { disabledDates } from '@/lib/appointments/new';
 import { TIMINGS } from '@/lib/config';
+import CalendarTimeSelect from '@/components/ui/calendar/booking/calendar-time-select';
+import { DurationEnum } from '@/components/ui/calendar/booking/util';
+import { format } from 'date-fns';
 
 export default function DateTimePicker({
   date = today(getLocalTimeZone()),
@@ -35,16 +38,13 @@ export default function DateTimePicker({
   dateProps?: CalendarProps;
   timeProps?: TimeInputProps;
 }) {
-  const { locale } = useLocale();
-
+  console.log(format(date.toDate(getLocalTimeZone()), 'HH:mm'));
   return (
     <>
-      <div className="flex flex-col items-center gap-4 xs:items-start">
+      <div className="flex justify-center">
         <Calendar
           {...dateProps}
-          aria-label="Date (Min Date Value)"
-          // @ts-ignore
-          defaultValue={today(getLocalTimeZone()) as unknown as DateValue}
+          aria-label="Appointment Date"
           minValue={today(getLocalTimeZone())}
           maxValue={today(getLocalTimeZone()).add({
             days: TIMINGS.booking.maximum,
@@ -55,13 +55,38 @@ export default function DateTimePicker({
             onDateChange?.(selectedDate as CalendarDate)
           }
           isInvalid={disabledDates[0].map((d) => d.compare(date!)).includes(0)}
-          showMonthAndYearPickers
           showHelper
           isDateUnavailable={(date) => {
             return disabledDates[0].map((d) => d.compare(date)).includes(0);
           }}
+          calendarWidth="372px"
+          className="rounded-r-none shadow-none"
+          classNames={{
+            headerWrapper: 'bg-transparent px-3 pt-1.5 pb-3',
+            title: 'text-default-700 text-small font-semibold',
+            gridHeader: 'bg-transparent shadow-none',
+            gridHeaderCell: 'font-medium text-default-400 text-xs p-0 w-full',
+            gridHeaderRow: 'px-3 pb-3',
+            gridBodyRow: 'gap-x-1 px-3 mb-1 first:mt-4 last:mb-0',
+            gridWrapper: 'pb-3',
+            cell: 'p-1.5 w-full',
+            cellButton:
+              'w-full h-9 rounded-medium data-[selected]:shadow-[0_2px_12px_0] data-[selected]:shadow-primary-300 text-small font-medium',
+          }}
         />
-        <Tooltip
+        <CalendarTimeSelect
+          day={format(date.toDate(getLocalTimeZone()), 'd')}
+          duration={DurationEnum.FifteenMinutes}
+          selectedTime={format(date.toDate(getLocalTimeZone()), 'HH:mm')}
+          weekday={format(date.toDate(getLocalTimeZone()), 'EEE')}
+          onConfirm={() => {
+            onDateChange?.(date);
+          }}
+          onTimeChange={() => {
+            onTimeChange?.(time);
+          }}
+        />
+        {/* <Tooltip
           content={
             <div className="px-1 py-2">
               <div className="text-tiny">
@@ -82,7 +107,7 @@ export default function DateTimePicker({
               onChange={onTimeChange as any}
             />
           </div>
-        </Tooltip>
+        </Tooltip> */}
       </div>
     </>
   );

@@ -5,6 +5,7 @@ import {
   addToast,
   Button,
   Link,
+  type DateValue,
 } from '@heroui/react';
 import { AccordionTitle } from './accordion-title';
 import { useFormik } from 'formik';
@@ -23,6 +24,8 @@ import { useCreateAppointment } from '@/services/appointment';
 import { castData } from '@/lib/utils';
 import { $FixMe } from '@/types';
 import { useCalendarStore } from '@/components/ui/calendar/store';
+import CalendarBooking from '@/components/ui/calendar/booking';
+import { CalendarDate } from '@internationalized/date';
 
 const KeyMap: Record<number, string> = {
   1: 'patient',
@@ -99,6 +102,8 @@ export default function CreateAppointment({
     handleChange: handleAppointmentChange,
   } = formik;
 
+  const date = new Date(appointment.date);
+
   return (
     <div className="w-full">
       <Accordion
@@ -153,13 +158,29 @@ export default function CreateAppointment({
             </Link>
           }
           hideIndicator={currentStep <= 2}
-          title={<DateSelectionTitle date={new Date(appointment.date)} />}
+          title={
+            <DateSelectionTitle
+              date={new Date(appointment.date)}
+              isSelected={currentStep === 2}
+            />
+          }
         >
           <DateSelection
             date={new Date(appointment.date)}
             setDate={(date) => setAppointment('date', date)}
             onSubmit={() => setCurrentStep(3)}
           />
+          {/* <CalendarBooking
+            date={
+              new CalendarDate(
+                date.getFullYear(),
+                date.getMonth(),
+                date.getDate()
+              )
+            }
+            onDateChange={(date) => setAppointment('date', date)}
+            onSubmit={() => setCurrentStep(3)}
+          /> */}
         </AccordionItem>
         <AccordionItem
           textValue="Doctor Selection"
