@@ -8,6 +8,7 @@ import {
   eachDayOfInterval,
   isSameMonth,
   isSameDay,
+  isPast,
 } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { View, views } from '../types';
@@ -80,15 +81,25 @@ export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
               ? MAX_APPOINTMENTS_IN_CELL
               : MAX_APPOINTMENTS_IN_CELL + 1;
 
+          const isDateDisabled = isPast(day);
+
           return (
             <div
               key={day.toISOString()}
+              title={isDateDisabled ? 'This date is in the past' : ''}
               className={cn(
                 'flex select-none flex-col justify-start overflow-hidden border-b border-r p-1 last:border-r-0',
-                !isCurrentMonth && 'bg-default-100 text-default-500'
+                {
+                  'bg-default-100 text-default-500': !isCurrentMonth,
+                  'cursor-not-allowed': isDateDisabled,
+                }
               )}
               onClick={(e) => {
                 if (!appointment) {
+                  if (isDateDisabled) {
+                    return;
+                  }
+
                   const rect = e.currentTarget.getBoundingClientRect();
                   const clickY = e.clientY - rect.top;
                   const cellHeight = rect.height;

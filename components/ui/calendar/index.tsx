@@ -11,7 +11,7 @@ import { AppointmentType } from '@/types/appointment';
 import { views } from './types';
 import { parseAsStringEnum, useQueryState, parseAsIsoDateTime } from 'nuqs';
 import AppointmentDrawer from './ui/appointment-drawer';
-import CreateAppointmentModal from './ui/create';
+import CreateAppointment from '@/components/appointments/create';
 
 interface CalendarProps {
   appointments: AppointmentType[];
@@ -104,10 +104,11 @@ export function Calendar({ appointments }: CalendarProps) {
         <div className="h-[calc(100vh_-_120px)] flex-1">{renderView()}</div>
       </div>
       <AppointmentDrawer />
-      <CreateAppointmentModal
+      <CreateAppointment
         open={showDialog}
         onOpenChange={setShowDialog}
         selectedDate={currentDate}
+        onClose={() => setShowDialog(false)}
       />
     </>
   );

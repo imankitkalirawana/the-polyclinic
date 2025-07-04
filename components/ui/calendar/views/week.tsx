@@ -7,6 +7,7 @@ import {
   eachDayOfInterval,
   isSameDay,
   isToday,
+  isPast,
 } from 'date-fns';
 import { cn } from '@/lib/utils';
 import type { AppointmentType } from '@/types/appointment';
@@ -121,21 +122,33 @@ export function WeekView({
                     : `${hour - 12} PM`}
               </div>
 
-              {/* Day Cells for this Hour */}
               {weekDays.map((day, dayIndex) => {
                 const dayAppointments = getAppointmentsForDayAndHour(day, hour);
+                const isHourDisabled = isPast(day);
                 return (
                   <div
+                    title={
+                      isHourDisabled
+                        ? 'Cannot create appointments in the past'
+                        : ''
+                    }
                     key={`cell-${day.toISOString()}-${hour}`}
                     className={cn(
                       'relative min-h-[80px] cursor-pointer overflow-hidden border-b border-r p-1',
-                      dayIndex === weekDays.length - 1 && 'last:border-r-0' // Ensure last column has no right border
+                      {
+                        'cursor-not-allowed': isHourDisabled,
+                        'last:border-r-0': dayIndex === weekDays.length - 1,
+                      }
                     )}
                     style={{
                       gridRowStart: hourIndex + 1,
-                      gridColumnStart: dayIndex + 2, // +2 because time label is column 1
+                      gridColumnStart: dayIndex + 2,
                     }}
                     onClick={(e) => {
+                      if (isHourDisabled) {
+                        return;
+                      }
+
                       if (!appointment) {
                         const rect = e.currentTarget.getBoundingClientRect();
                         const clickY = e.clientY - rect.top;
