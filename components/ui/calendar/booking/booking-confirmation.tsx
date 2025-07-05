@@ -26,7 +26,7 @@ export default function CalendarBookingConfirmation({
           width={56}
         />
         <p className="mb-2 text-base font-medium text-default-foreground">
-          This meeting is scheduled
+          This appointment is scheduled
         </p>
         <p className="text-center text-tiny text-default-500">
           We sent an email with a calendar invitation with the details to

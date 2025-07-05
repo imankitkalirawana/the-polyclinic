@@ -1,12 +1,11 @@
 'use client';
-import { useAllUsers } from '@/services/user';
+
+import CalendarBookingConfirmation from '@/components/ui/calendar/booking/booking-confirmation';
 
 export default function Home() {
-  const users = useAllUsers();
-
   return (
     <>
-      <pre>{JSON.stringify(users, null, 2)}</pre>
+      <CalendarBookingConfirmation />
     </>
   );
 }

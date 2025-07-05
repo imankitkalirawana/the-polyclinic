@@ -13,86 +13,73 @@ import {
   CardFooter,
   CardHeader,
   DatePicker,
+  Form,
   Input,
   ScrollShadow,
   Select,
   SelectItem,
+  Tooltip,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { getLocalTimeZone, today } from '@internationalized/date';
+import { getLocalTimeZone, parseDate, today } from '@internationalized/date';
 import { I18nProvider } from '@react-aria/i18n';
 import { calculateAge, calculateDOB } from '@/lib/client-functions';
 import { scrollToError } from '@/lib/formik';
 import { CityProps, CountryProps, StateProps } from '@/types';
 import { Genders } from '@/lib/options';
 import { userValidationSchema } from '@/lib/validation';
-import { CreateUserType } from '@/types/user';
+import { CreateUserType, userRoles } from '@/types/user';
 import {
   useAllCitiesByCountryAndState,
   useAllCountries,
   useAllStatesByCountry,
 } from '@/services/external';
 import { useCreateUser } from '@/services/user';
+import { useSession } from 'next-auth/react';
+import { generateEmail, generatePhoneNumber, toCapitalCase } from '@/lib/utils';
 
 export default function NewUser() {
   const router = useRouter();
+  const { data: session } = useSession();
   const createUser = useCreateUser();
+
   const { data: countriesData, isLoading: isCountriesLoading } =
     useAllCountries();
   const countries: CountryProps[] = countriesData || [];
 
-  const inputRefs = {
-    name: useRef<HTMLInputElement>(null),
-    email: useRef<HTMLInputElement>(null),
-    phone: useRef<HTMLInputElement>(null),
-    gender: useRef<HTMLSelectElement>(null),
-    age: useRef<HTMLInputElement>(null),
-    address: useRef<HTMLInputElement>(null),
-    zipcode: useRef<HTMLInputElement>(null),
-  };
-
   const formik = useFormik({
     initialValues: {
-      user: {} as CreateUserType,
-      age: 0,
-      countries:
-        countries?.sort((a, b) => a.name.localeCompare(b.name)) ||
-        ([] as CountryProps[]),
-      states: [] as StateProps[],
-      cities: [] as CityProps[],
-      phoneCode: '91',
-    },
+      role: 'user',
+    } as CreateUserType,
     validationSchema: userValidationSchema,
     onSubmit: async (values) => {
-      await createUser.mutateAsync(values.user).then(() => {
+      await createUser.mutateAsync(values).then(() => {
         router.push('/dashboard/users');
       });
     },
   });
 
   const { data: statesData, isLoading: isStatesLoading } =
-    useAllStatesByCountry(formik.values.user.country);
+    useAllStatesByCountry(formik.values.country);
 
   const { data: citiesData, isLoading: isCitiesLoading } =
-    useAllCitiesByCountryAndState(
-      formik.values.user.country,
-      formik.values.user.state
-    );
+    useAllCitiesByCountryAndState(formik.values.country, formik.values.state);
 
   const states: StateProps[] = statesData || [];
   const cities: CityProps[] = citiesData || [];
 
-  useEffect(() => {
-    if (formik.errors?.user && Object.keys(formik.errors.user).length > 0) {
-      scrollToError(formik.errors.user, inputRefs);
-    }
-  }, [formik.errors]);
-
   return (
     <>
-      <Card className="bg-transparent p-2 shadow-none">
+      <Card
+        className="bg-transparent p-2 shadow-none"
+        as={Form}
+        onSubmit={(e) => {
+          e.preventDefault();
+          formik.handleSubmit();
+        }}
+      >
         <CardHeader className="flex flex-col items-start px-4 pb-0 pt-4">
-          <p className="text-large">Add New UserType</p>
+          <p className="text-large">Add New User</p>
           <div className="sr-only flex gap-4 py-4">
             <Badge
               classNames={{
@@ -119,9 +106,9 @@ export default function NewUser() {
               />
             </Badge>
             <div className="flex flex-col items-start justify-center">
-              <p className="font-medium">{formik.values.user.name}</p>
+              <p className="font-medium">{formik.values.name}</p>
               <span className="text-small text-default-500">
-                {formik.values.user.role}
+                {formik.values.role}
               </span>
             </div>
           </div>
@@ -133,108 +120,129 @@ export default function NewUser() {
         <CardBody>
           <ScrollShadow className="grid grid-cols-1 gap-4 p-1 md:grid-cols-2">
             <Input
-              ref={inputRefs.name}
+              isRequired
               label="Name"
               placeholder="Enter Name"
-              name="user.name"
-              value={formik.values.user.name}
+              name="name"
+              value={formik.values.name}
               onChange={formik.handleChange}
               isInvalid={
-                formik.touched.user?.name && formik.errors.user?.name
-                  ? true
-                  : false
+                formik.touched.name && formik.errors.name ? true : false
               }
-              errorMessage={
-                formik.touched.user?.name && formik.errors.user?.name
-              }
+              errorMessage={formik.touched.name && formik.errors.name}
             />
             <Input
+              isRequired
               label="Email"
-              ref={inputRefs.email}
               placeholder="Enter email"
-              name="user.email"
-              value={formik.values.user.email}
+              name="email"
+              value={formik.values.email}
               onChange={formik.handleChange}
               isInvalid={
-                formik.touched.user?.email && formik.errors.user?.email
-                  ? true
-                  : false
+                formik.touched.email && formik.errors.email ? true : false
               }
-              errorMessage={
-                formik.touched.user?.email && formik.errors.user?.email
+              errorMessage={formik.touched.email && formik.errors.email}
+              endContent={
+                session?.user?.role === 'admin' && (
+                  <Tooltip content="Generate a random email">
+                    <Button
+                      isIconOnly
+                      radius="full"
+                      size="sm"
+                      isDisabled={!formik.values.name}
+                      onPress={() => {
+                        const email = generateEmail(formik.values.name);
+                        formik.setFieldValue('email', email);
+                      }}
+                    >
+                      <Icon icon="solar:refresh-bold" />
+                    </Button>
+                  </Tooltip>
+                )
               }
             />
             <Input
               label="Phone Number"
-              ref={inputRefs.phone}
               placeholder="Enter phone number"
-              name="user.phone"
+              name="phone"
               onChange={formik.handleChange}
               isInvalid={
-                formik.touched.user?.phone && formik.errors.user?.phone
-                  ? true
-                  : false
+                formik.touched.phone && formik.errors.phone ? true : false
               }
-              errorMessage={
-                formik.touched.user?.phone && formik.errors.user?.phone
+              endContent={
+                session?.user?.role === 'admin' && (
+                  <Tooltip content="Generate a random phone number">
+                    <Button
+                      isIconOnly
+                      radius="full"
+                      size="sm"
+                      onPress={() => {
+                        const phone = generatePhoneNumber();
+                        formik.setFieldValue('phone', phone);
+                      }}
+                    >
+                      <Icon icon="solar:refresh-bold" />
+                    </Button>
+                  </Tooltip>
+                )
               }
-              value={formik.values.user.phone}
+              errorMessage={formik.touched.phone && formik.errors.phone}
+              value={formik.values.phone}
               startContent={
                 <div className="pointer-events-none flex items-center">
-                  <span className="text-small text-default-400">
-                    +{formik.values.phoneCode}
-                  </span>
+                  <span className="text-small text-default-400">+91</span>
                 </div>
               }
             />
             <Select
+              isRequired
               label="Gender"
-              ref={inputRefs.gender}
               placeholder="Select Gender"
-              selectedKeys={[formik.values.user.gender]}
-              name="user.gender"
+              selectedKeys={[formik.values.gender]}
+              name="gender"
               onChange={formik.handleChange}
               isInvalid={
-                formik.touched.user?.gender && formik.errors.user?.gender
-                  ? true
-                  : false
+                formik.touched.gender && formik.errors.gender ? true : false
               }
-              errorMessage={
-                formik.touched.user?.gender && formik.errors.user?.gender
-              }
+              errorMessage={formik.touched.gender && formik.errors.gender}
               items={Genders}
             >
               {(item) => <SelectItem key={item.value}>{item.label}</SelectItem>}
             </Select>
-            <Input
-              ref={inputRefs.age}
-              label="Age"
-              placeholder="Enter Age"
-              name="age"
-              type="number"
-              value={formik.values.age as any}
-              onChange={(e) => {
-                const age = e.target.value;
-                formik.setFieldValue('age', age);
-                if (age) {
-                  formik.setFieldValue('user.dob', calculateDOB(age as any));
+            {session?.user?.role === 'admin' && (
+              <Select
+                disallowEmptySelection
+                label="Role"
+                placeholder="Select Role"
+                selectedKeys={[formik.values.role]}
+                name="role"
+                onChange={formik.handleChange}
+                isInvalid={
+                  formik.touched.role && formik.errors.role ? true : false
                 }
-              }}
-              isInvalid={formik.touched.age && formik.errors.age ? true : false}
-              errorMessage={formik.touched.age && formik.errors.age}
-            />
+                errorMessage={formik.touched.role && formik.errors.role}
+                items={userRoles.map((role) => ({
+                  label: toCapitalCase(role),
+                  value: role,
+                }))}
+              >
+                {(item) => (
+                  <SelectItem key={item.value}>{item.label}</SelectItem>
+                )}
+              </Select>
+            )}
+
             <I18nProvider locale="en-IN">
               <DatePicker
-                label="DOB (DD-MM-YYYY)"
-                onChange={(date) => {
-                  const dob =
-                    // @ts-ignore
-                    date instanceof Date
-                      ? // @ts-ignore
-                        date.toISOString().split('T')[0]
-                      : new Date(date as any).toISOString().split('T')[0];
-                  formik.setFieldValue('user.dob', dob);
-                  formik.setFieldValue('age', calculateAge(dob));
+                name="dob"
+                label="Date of Birth (Optional)"
+                // @ts-expect-error
+                value={formik.values.dob ? parseDate(formik.values.dob) : null}
+                onChange={(value) => {
+                  const dob = new Date(value as any)
+                    .toISOString()
+                    .split('T')[0];
+                  formik.setFieldValue('dob', dob);
                 }}
                 maxValue={today(getLocalTimeZone())}
                 showMonthAndYearPickers
@@ -248,9 +256,9 @@ export default function NewUser() {
               placeholder="Select country"
               showScrollIndicators={false}
               onSelectionChange={(value) => {
-                formik.setFieldValue('user.country', value);
+                formik.setFieldValue('country', value);
               }}
-              selectedKey={formik.values.user.country}
+              selectedKey={formik.values.country}
             >
               {(item) => (
                 <AutocompleteItem
@@ -268,9 +276,9 @@ export default function NewUser() {
               placeholder="Select state"
               showScrollIndicators={false}
               onSelectionChange={(value) => {
-                formik.setFieldValue('user.state', value);
+                formik.setFieldValue('state', value);
               }}
-              selectedKey={formik.values.user.state}
+              selectedKey={formik.values.state}
             >
               {(item) => (
                 <AutocompleteItem key={item.iso2}>{item.name}</AutocompleteItem>
@@ -283,9 +291,9 @@ export default function NewUser() {
               placeholder="Select city"
               showScrollIndicators={false}
               onSelectionChange={(value) => {
-                formik.setFieldValue('user.city', value);
+                formik.setFieldValue('city', value);
               }}
-              selectedKey={formik.values.user.city}
+              selectedKey={formik.values.city}
             >
               {(item) => (
                 <AutocompleteItem key={item.name}>{item.name}</AutocompleteItem>
@@ -294,32 +302,24 @@ export default function NewUser() {
             <Input
               label="Address"
               placeholder="Enter address"
-              value={formik.values.user.address}
+              value={formik.values.address}
               onChange={formik.handleChange}
-              name="user.address"
+              name="address"
               isInvalid={
-                formik.touched.user?.address && formik.errors.user?.address
-                  ? true
-                  : false
+                formik.touched.address && formik.errors.address ? true : false
               }
-              errorMessage={
-                formik.touched.user?.address && formik.errors.user?.address
-              }
+              errorMessage={formik.touched.address && formik.errors.address}
             />
             <Input
               label="Zip Code"
               placeholder="Enter zip code"
-              value={formik.values.user.zipcode}
+              value={formik.values.zipcode}
               onChange={formik.handleChange}
-              name="user.zipcode"
+              name="zipcode"
               isInvalid={
-                formik.touched.user?.zipcode && formik.errors.user?.zipcode
-                  ? true
-                  : false
+                formik.touched.zipcode && formik.errors.zipcode ? true : false
               }
-              errorMessage={
-                formik.touched.user?.zipcode && formik.errors.user?.zipcode
-              }
+              errorMessage={formik.touched.zipcode && formik.errors.zipcode}
             />
           </ScrollShadow>
         </CardBody>
@@ -328,10 +328,10 @@ export default function NewUser() {
           <Button
             color="primary"
             radius="full"
-            onPress={() => formik.handleSubmit()}
-            isLoading={formik.isSubmitting}
+            isLoading={createUser.isPending}
+            type="submit"
           >
-            Save Changes
+            Create User
           </Button>
         </CardFooter>
       </Card>

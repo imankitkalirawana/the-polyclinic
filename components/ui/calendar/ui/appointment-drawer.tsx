@@ -304,7 +304,7 @@ const AppointmentHeader = memo(function AppointmentHeader({
             <Icon icon="solar:arrow-right-up-line-duotone" width={18} />
           </Button>
         </Tooltip>
-        <Dropdown>
+        <Dropdown placement="bottom-end">
           <DropdownTrigger>
             <Button
               isIconOnly

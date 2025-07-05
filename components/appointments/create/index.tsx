@@ -141,7 +141,7 @@ export default function CreateAppointment({
       hideCloseButton={size === 'full'}
     >
       <ModalContent>
-        <ModalBody as={ScrollShadow} className="w-full">
+        <ModalBody as={ScrollShadow} hideScrollBar className="w-full">
           <Accordion
             defaultSelectedKeys={[KeyMap[currentStep]]}
             selectedKeys={[KeyMap[currentStep]]}

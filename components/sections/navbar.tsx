@@ -171,7 +171,7 @@ export default function Navbar() {
         isMenuOpen={isMenuOpen || activeMenu ? true : false}
         // isMenuOpen={true}
         onMenuOpenChange={setIsMenuOpen}
-        maxWidth="xl"
+        maxWidth="2xl"
       >
         <NavbarMenuToggle className="text-default-400 md:hidden" />
 
