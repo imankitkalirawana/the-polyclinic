@@ -1,3 +1,4 @@
+'use client';
 import CreateAppointment from '@/components/appointments/create';
 
 export default function CreateAppointmentPage() {
@@ -7,6 +8,7 @@ export default function CreateAppointmentPage() {
         open={true}
         onOpenChange={() => {}}
         selectedDate={new Date()}
+        size="full"
       />
     </div>
   );

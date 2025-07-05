@@ -8,6 +8,7 @@ import {
   Modal,
   ModalBody,
   ModalContent,
+  ModalProps,
   ScrollShadow,
 } from '@heroui/react';
 import { AccordionTitle } from './accordion-title';
@@ -28,6 +29,7 @@ import { castData } from '@/lib/utils';
 import { $FixMe } from '@/types';
 import { useCalendarStore } from '@/components/ui/calendar/store';
 import { getNextAvailableTimeSlot } from './helper';
+import { useRouter } from 'nextjs-toploader/app';
 
 const KeyMap: Record<number, string> = {
   1: 'patient',
@@ -49,13 +51,16 @@ export default function CreateAppointment({
   onOpenChange,
   selectedDate,
   onClose,
+  size = '5xl',
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   selectedDate: Date;
   onClose?: () => void;
+  size?: ModalProps['size'];
 }) {
   const [currentStep, setCurrentStep] = useState(1);
+  const router = useRouter();
 
   const createAppointment = useCreateAppointment();
   const { setAppointment: setCalendarAppointment } = useCalendarStore();
@@ -90,6 +95,10 @@ export default function CreateAppointment({
               variant="flat"
               color="primary"
               onPress={() => {
+                if (size === 'full') {
+                  router.push(`/appointments/${data.aid}`);
+                  return;
+                }
                 setCalendarAppointment(data);
               }}
             >
@@ -124,11 +133,12 @@ export default function CreateAppointment({
 
   return (
     <Modal
-      size="5xl"
+      size={size}
       isOpen={open}
       onOpenChange={onOpenChange}
       scrollBehavior="inside"
       backdrop="blur"
+      hideCloseButton={size === 'full'}
     >
       <ModalContent>
         <ModalBody as={ScrollShadow} className="w-full">

@@ -4,10 +4,15 @@ import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import Appointment from '@/models/Appointment';
 import { UserType } from '@/types/user';
-import { API_ACTIONS, CLINIC_INFO, MOCK_DATA, TIMINGS } from '@/lib/config';
+import {
+  API_ACTIONS,
+  APPOINTMENT,
+  CLINIC_INFO,
+  MOCK_DATA,
+  TIMINGS,
+} from '@/lib/config';
 import { generateAppointments } from '@/lib/appointments/mock';
 import axios from 'axios';
-import { format } from 'date-fns';
 
 let defaultConfig = {
   method: 'post',
@@ -117,7 +122,9 @@ export const POST = auth(async function POST(request: any) {
     };
 
     try {
-      Promise.all([axios.request(config)]);
+      if (APPOINTMENT.isGoogleCalendar) {
+        Promise.all([axios.request(config)]);
+      }
     } catch (error) {
       console.error('Error in sending appointment to n8n:', error);
     }

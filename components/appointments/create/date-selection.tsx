@@ -1,12 +1,7 @@
 'use client';
-import { format, isWeekend } from 'date-fns';
+import { format } from 'date-fns';
 import { Calendar, cn } from '@heroui/react';
-import {
-  CalendarDate,
-  DateValue,
-  getLocalTimeZone,
-  today,
-} from '@internationalized/date';
+import { CalendarDate, getLocalTimeZone, today } from '@internationalized/date';
 
 import { TIMINGS } from '@/lib/config';
 import CalendarTimeSelect from '@/components/ui/calendar/booking/calendar-time-select';
