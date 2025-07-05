@@ -74,8 +74,8 @@ export const CLINIC_INFO = {
 };
 
 export const APPOINTMENT = {
+  isGoogleCalendar: false,
   fees: 500,
-  duration: 30,
   cancellation: {
     allowed: true,
     time: 24,
