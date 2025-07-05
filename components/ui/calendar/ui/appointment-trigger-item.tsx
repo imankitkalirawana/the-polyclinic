@@ -13,6 +13,7 @@ export default function AppointmentTriggerItem({
 
   return (
     <button
+      title={`${appointment.patient.name} - ${appointment.doctor?.name}`}
       key={appointment.aid}
       className={cn(
         'flex min-h-6 cursor-pointer items-center justify-start gap-1 truncate rounded-lg p-1 text-tiny hover:bg-default-100 md:px-2',

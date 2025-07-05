@@ -5,6 +5,10 @@ import {
   addToast,
   Button,
   Link,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ScrollShadow,
 } from '@heroui/react';
 import { AccordionTitle } from './accordion-title';
 import { useFormik } from 'formik';
@@ -12,7 +16,7 @@ import { UserType } from '@/types/user';
 import { DoctorType } from '@/types/doctor';
 import { useLinkedUsers } from '@/services/user';
 import UserSelection from '@/components/appointments/create/user-selection';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DateSelection, { DateSelectionTitle } from './date-selection';
 import AdditionalDetailsSelection, {
   AdditionalDetailsSelectionTitle,
@@ -23,6 +27,7 @@ import { useCreateAppointment } from '@/services/appointment';
 import { castData } from '@/lib/utils';
 import { $FixMe } from '@/types';
 import { useCalendarStore } from '@/components/ui/calendar/store';
+import { getNextAvailableTimeSlot } from './helper';
 
 const KeyMap: Record<number, string> = {
   1: 'patient',
@@ -31,10 +36,22 @@ const KeyMap: Record<number, string> = {
   4: 'additional-details',
 };
 
+const getDate = (date: Date, time: string) => {
+  const [hours, minutes] = time.split(':').map(Number);
+  const newDate = new Date(date);
+  newDate.setHours(hours);
+  newDate.setMinutes(minutes);
+  return newDate;
+};
+
 export default function CreateAppointment({
+  open,
+  onOpenChange,
   selectedDate,
   onClose,
 }: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   selectedDate: Date;
   onClose?: () => void;
 }) {
@@ -44,6 +61,7 @@ export default function CreateAppointment({
   const { setAppointment: setCalendarAppointment } = useCalendarStore();
   const { data: linkedUsers, isLoading: isLinkedUsersLoading } =
     useLinkedUsers();
+
   const formik = useFormik<CreateAppointmentType>({
     initialValues: {
       patient: castData<UserType>({}),
@@ -99,115 +117,139 @@ export default function CreateAppointment({
     handleChange: handleAppointmentChange,
   } = formik;
 
+  useEffect(() => {
+    setAppointment('date', selectedDate);
+    setAppointment('time', getNextAvailableTimeSlot(selectedDate));
+  }, [selectedDate]);
+
   return (
-    <div className="w-full">
-      <Accordion
-        defaultSelectedKeys={[KeyMap[currentStep]]}
-        selectedKeys={[KeyMap[currentStep]]}
-      >
-        <AccordionItem
-          hideIndicator
-          key="patient"
-          textValue="patient"
-          title={
-            <AccordionTitle
-              isActive={currentStep === 1}
-              image={appointment.patient?.image}
+    <Modal
+      size="5xl"
+      isOpen={open}
+      onOpenChange={onOpenChange}
+      scrollBehavior="inside"
+      backdrop="blur"
+    >
+      <ModalContent>
+        <ModalBody as={ScrollShadow} className="w-full">
+          <Accordion
+            defaultSelectedKeys={[KeyMap[currentStep]]}
+            selectedKeys={[KeyMap[currentStep]]}
+          >
+            <AccordionItem
+              hideIndicator
+              key="patient"
+              textValue="patient"
               title={
-                currentStep === 1
-                  ? 'Please select for whom you want to book an appointment?'
-                  : appointment.patient?.name
+                <AccordionTitle
+                  isActive={currentStep === 1}
+                  image={appointment.patient?.image}
+                  title={
+                    currentStep === 1
+                      ? 'Please select for whom you want to book an appointment?'
+                      : appointment.patient?.name
+                  }
+                  subtitle={
+                    currentStep === 1 ? null : appointment.patient?.email
+                  }
+                  onPress={() => {
+                    setCurrentStep(1);
+                    setAppointment('patient', {} as UserType);
+                  }}
+                />
               }
-              subtitle={currentStep === 1 ? null : appointment.patient?.email}
-              onPress={() => {
-                setCurrentStep(1);
-                setAppointment('patient', {} as UserType);
-              }}
-            />
-          }
-        >
-          <UserSelection
-            id="patient"
-            size="sm"
-            isLoading={isLinkedUsersLoading}
-            users={linkedUsers || []}
-            selectedUser={appointment.patient}
-            onSelectionChange={(user) => {
-              setAppointment('patient', user);
-              setCurrentStep(2);
-            }}
-          />
-        </AccordionItem>
-        <AccordionItem
-          textValue="Time Selection"
-          isDisabled={currentStep < 2}
-          key="time"
-          indicator={
-            <Link
-              href="#"
-              onPress={() => {
-                setCurrentStep(2);
-              }}
             >
-              Change
-            </Link>
-          }
-          hideIndicator={currentStep <= 2}
-          title={<DateSelectionTitle date={new Date(appointment.date)} />}
-        >
-          <DateSelection
-            date={new Date(appointment.date)}
-            setDate={(date) => setAppointment('date', date)}
-            onSubmit={() => setCurrentStep(3)}
-          />
-        </AccordionItem>
-        <AccordionItem
-          textValue="Doctor Selection"
-          isDisabled={currentStep < 3}
-          key="doctor"
-          indicator={
-            <Link
-              href="#"
-              onPress={() => {
-                setCurrentStep(3);
-                setAppointment('doctor', {} as DoctorType);
-              }}
+              <UserSelection
+                id="patient"
+                size="sm"
+                isLoading={isLinkedUsersLoading}
+                users={linkedUsers || []}
+                selectedUser={appointment.patient}
+                onSelectionChange={(user) => {
+                  setAppointment('patient', user);
+                  setCurrentStep(2);
+                }}
+              />
+            </AccordionItem>
+            <AccordionItem
+              textValue="Time Selection"
+              isDisabled={currentStep < 2}
+              key="time"
+              indicator={
+                <Link
+                  href="#"
+                  onPress={() => {
+                    setCurrentStep(2);
+                  }}
+                >
+                  Change
+                </Link>
+              }
+              hideIndicator={currentStep <= 2}
+              title={
+                <DateSelectionTitle
+                  date={new Date(appointment.date)}
+                  isSelected={currentStep === 2}
+                />
+              }
             >
-              Change
-            </Link>
-          }
-          hideIndicator={currentStep <= 3}
-          title={
-            <DoctorSelectionTitle doctor={appointment.doctor as DoctorType} />
-          }
-        >
-          <UserSelection
-            id="doctor"
-            size="sm"
-            isLoading={isLinkedUsersLoading}
-            users={linkedUsers || []}
-            selectedUser={appointment.doctor as unknown as UserType}
-            onSelectionChange={(user) => {
-              setAppointment('doctor', user);
-              setCurrentStep(4);
-            }}
-          />
-        </AccordionItem>
-        <AccordionItem
-          textValue="Additional Details"
-          isDisabled={currentStep < 4}
-          key="additional-details"
-          title={<AdditionalDetailsSelectionTitle />}
-        >
-          <AdditionalDetailsSelection
-            appointment={appointment}
-            handleAppointmentChange={handleAppointmentChange}
-            onContinue={formik.handleSubmit}
-            isSubmitting={formik.isSubmitting}
-          />
-        </AccordionItem>
-      </Accordion>
-    </div>
+              <DateSelection
+                onSubmit={() => setCurrentStep(3)}
+                date={new Date(appointment.date)}
+                setDate={(date) => setAppointment('date', date)}
+              />
+            </AccordionItem>
+            <AccordionItem
+              textValue="Doctor Selection"
+              isDisabled={currentStep < 3}
+              key="doctor"
+              indicator={
+                <Link
+                  href="#"
+                  onPress={() => {
+                    setCurrentStep(3);
+                    setAppointment('doctor', {} as DoctorType);
+                  }}
+                >
+                  Change
+                </Link>
+              }
+              hideIndicator={currentStep <= 3}
+              title={
+                <DoctorSelectionTitle
+                  doctor={appointment.doctor as DoctorType}
+                />
+              }
+            >
+              <UserSelection
+                id="doctor"
+                size="sm"
+                isLoading={isLinkedUsersLoading}
+                users={linkedUsers || []}
+                selectedUser={appointment.doctor as unknown as UserType}
+                onSelectionChange={(user) => {
+                  setAppointment('doctor', user);
+                  setCurrentStep(4);
+                }}
+              />
+            </AccordionItem>
+            <AccordionItem
+              textValue="Additional Details"
+              isDisabled={currentStep < 4}
+              key="additional-details"
+              title={<AdditionalDetailsSelectionTitle />}
+            >
+              <AdditionalDetailsSelection
+                appointment={appointment}
+                handleAppointmentChange={handleAppointmentChange}
+                onContinue={formik.handleSubmit}
+                isSubmitting={formik.isSubmitting}
+              />
+            </AccordionItem>
+          </Accordion>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
   );
 }
 

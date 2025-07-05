@@ -22,6 +22,7 @@ interface CalendarHeaderProps {
   currentDate: Date;
   onDateChange: (date: Date) => void;
   onToday: () => void;
+  onCreateAppointment: () => void;
 }
 
 const views = [
@@ -36,6 +37,7 @@ export function CalendarHeader({
   currentDate,
   onToday,
   onDateChange,
+  onCreateAppointment,
 }: CalendarHeaderProps) {
   const [view, setView] = useQueryState(
     'view',
@@ -203,6 +205,7 @@ export function CalendarHeader({
           startContent={
             <Icon icon="solar:add-circle-bold-duotone" className="h-4 w-4" />
           }
+          onPress={onCreateAppointment}
         >
           Create
         </Button>

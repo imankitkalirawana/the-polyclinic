@@ -86,6 +86,11 @@ export default function Navbar() {
             {
               name: 'Users',
               href: '/dashboard/users',
+              icon: 'solar:users-group-rounded-linear',
+            },
+            {
+              name: 'Drugs',
+              href: '/dashboard/drugs',
               icon: 'solar:pills-linear',
             },
           ],
@@ -127,22 +132,12 @@ export default function Navbar() {
           items: [
             {
               name: 'My Schedules',
-              href: '/appointments/schedules',
+              href: '/appointments?view=schedule',
               icon: 'solar:calendar-linear',
             },
             {
-              name: 'Overdue',
-              href: '/appointments?status=overdue',
-              icon: 'solar:bill-list-linear',
-            },
-            {
-              name: 'Past',
-              href: '/appointments?status=past',
-              icon: 'solar:bill-list-linear',
-            },
-            {
               name: 'All Appointments',
-              href: '/appointments/all',
+              href: '/appointments',
               icon: 'solar:clipboard-list-linear',
             },
           ],

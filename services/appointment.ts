@@ -11,7 +11,6 @@ import {
   getAllAppointments,
   getAppointmentWithAID,
 } from './api/appointment';
-import { addToast } from '@heroui/react';
 import { ApiResponse } from './api';
 
 export const useAllAppointments = (): UseQueryResult<AppointmentType[]> => {
@@ -60,18 +59,8 @@ export const useCreateAppointment = (): UseMutationResult<
       }
       throw new Error(res.message);
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['appointments'] });
-      addToast({
-        title: data.message,
-        color: 'success',
-      });
-    },
-    onError: (error) => {
-      addToast({
-        title: error.message,
-        color: 'danger',
-      });
     },
   });
 };

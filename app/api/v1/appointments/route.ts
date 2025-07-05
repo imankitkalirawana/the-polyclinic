@@ -1,14 +1,24 @@
 import { NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
-import { sendHTMLEmail } from '@/functions/server-actions/emails/send-email';
 import { connectDB } from '@/lib/db';
 import Appointment from '@/models/Appointment';
-import { NewAppointment } from '@/utils/email-template/doctor';
-import { AppointmentStatus } from '@/utils/email-template/patient';
 import { UserType } from '@/types/user';
-import { API_ACTIONS, MOCK_DATA } from '@/lib/config';
+import { API_ACTIONS, CLINIC_INFO, MOCK_DATA, TIMINGS } from '@/lib/config';
 import { generateAppointments } from '@/lib/appointments/mock';
+import axios from 'axios';
+import { format } from 'date-fns';
+
+let defaultConfig = {
+  method: 'post',
+  maxBodyLength: Infinity,
+  url: 'https://n8n.divinely.dev/webhook/appointment/create',
+  headers: {
+    Authorization: `Bearer ${process.env.JWT_TOKEN}`,
+    'Content-Type': 'application/json',
+  },
+  data: {},
+};
 
 export const GET = auth(async function GET(request: any) {
   try {
@@ -81,27 +91,36 @@ export const POST = auth(async function POST(request: any) {
     const appointment = new Appointment(data);
     await appointment.save();
 
-    const emailTasks = [
-      sendHTMLEmail({
-        to: data.patient.email,
-        subject: 'Booked: Appointment Confirmation',
-        html: AppointmentStatus(appointment),
-      }).catch((error) => {
-        console.error('Failed to send patient email:', error);
-      }),
-      data.doctor?.email &&
-        sendHTMLEmail({
-          to: data.doctor.email,
-          subject: `New Appointment Requested by ${data.patient.name}`,
-          html: NewAppointment(appointment),
-        }).catch((error) => {
-          console.error('Failed to send doctor email:', error);
-        }),
-    ];
-
-    Promise.all(emailTasks).catch((error) => {
-      console.error('Error in email sending:', error);
+    let dataContent = JSON.stringify({
+      summary: `${CLINIC_INFO.name} - ${data.patient.name}/${data.doctor.name}`,
+      description: data.additionalInfo.description,
+      date: appointment.date,
+      location: appointment.additionalInfo.type,
+      duration: TIMINGS.appointment.interval,
+      guests: [
+        {
+          name: data.patient.name,
+          email: data.patient.email,
+          role: 'patient',
+        },
+        {
+          name: data.doctor.name,
+          email: data.doctor.email,
+          role: 'doctor',
+        },
+      ],
     });
+
+    const config = {
+      ...defaultConfig,
+      data: dataContent,
+    };
+
+    try {
+      Promise.all([axios.request(config)]);
+    } catch (error) {
+      console.error('Error in sending appointment to n8n:', error);
+    }
 
     return NextResponse.json(appointment);
   } catch (error) {

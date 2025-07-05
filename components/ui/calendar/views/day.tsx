@@ -1,6 +1,6 @@
 'use client';
 
-import { format, isSameDay, isToday } from 'date-fns';
+import { format, isPast, isSameDay, isToday } from 'date-fns';
 import { cn } from '@/lib/utils';
 import type { AppointmentType } from '@/types/appointment';
 import { useEffect, useRef, useState, type MouseEvent } from 'react';
@@ -80,6 +80,12 @@ export function DayView({
         >
           {displayHours.map((hour, hourIndex) => {
             const appointmentsInHour = getAppointmentsForHour(hour);
+            const hourDateTime = new Date(currentDate);
+            hourDateTime.setHours(hour, 0, 0, 0);
+            const slotEndTime = new Date(currentDate);
+            slotEndTime.setHours(hour + 1, 0, 0, 0);
+            const isHourDisabled = isPast(slotEndTime);
+
             return (
               <>
                 {/* Time Label Cell */}
@@ -98,14 +104,26 @@ export function DayView({
                 {/* Day Content Cell for this Hour */}
                 <div
                   key={`cell-${hour}`}
+                  title={
+                    isHourDisabled
+                      ? 'Cannot create appointments in the past'
+                      : ''
+                  }
                   className={cn(
-                    'relative min-h-[80px] cursor-pointer border-b p-1'
+                    'relative min-h-[80px] cursor-pointer border-b p-1',
+                    {
+                      'cursor-not-allowed': isHourDisabled,
+                    }
                   )}
                   style={{
                     gridRowStart: hourIndex + 1,
                     gridColumnStart: 2,
                   }}
                   onClick={(e: MouseEvent<HTMLDivElement>) => {
+                    if (isHourDisabled) {
+                      return;
+                    }
+
                     if (!appointment) {
                       const rect = e.currentTarget.getBoundingClientRect();
                       const clickY = e.clientY - rect.top;

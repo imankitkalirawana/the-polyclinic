@@ -1,157 +1,100 @@
 'use client';
-import { useState } from 'react';
-import { format } from 'date-fns';
-import { Button } from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
+import { format, isWeekend } from 'date-fns';
+import { Calendar, cn } from '@heroui/react';
 import {
   CalendarDate,
+  DateValue,
   getLocalTimeZone,
-  isWeekend,
-  Time,
+  today,
 } from '@internationalized/date';
+
+import { TIMINGS } from '@/lib/config';
+import CalendarTimeSelect from '@/components/ui/calendar/booking/calendar-time-select';
+import { isDateUnavailable } from './helper';
 import { useLocale } from '@react-aria/i18n';
 
-import { disabledDates } from '@/lib/appointments/new';
-import { TIMINGS } from '@/lib/config';
-import DateTimePicker from './date-time-picker';
-
 export default function DateSelection({
+  onSubmit,
   date,
   setDate,
-  onSubmit,
 }: {
+  onSubmit: () => void;
   date: Date;
   setDate: (date: Date) => void;
-  onSubmit: () => void;
 }) {
   const { locale } = useLocale();
-
-  const [timing, setTiming] = useState<Date>(() => {
-    if (date) {
-      return date;
-    }
-    const currentDate = new Date(
-      new Date().toLocaleString('en-US', { timeZone: getLocalTimeZone() })
-    );
-    if (currentDate.getHours() >= 17) {
-      if (
-        isWeekend(
-          new CalendarDate(
-            currentDate.getFullYear(),
-            currentDate.getMonth() + 1,
-            currentDate.getDate()
-          ),
-          locale
-        )
-      ) {
-        // If next day is weekend, set to next Monday
-        while (
-          isWeekend(
-            new CalendarDate(
-              currentDate.getFullYear(),
-              currentDate.getMonth() + 1,
-              currentDate.getDate()
-            ),
-            locale
-          )
-        ) {
-          currentDate.setDate(currentDate.getDate() + 1);
-        }
-      } else {
-        currentDate.setDate(currentDate.getDate() + 1);
-      }
-      currentDate.setHours(9);
-      currentDate.setMinutes(0);
-    } else {
-      currentDate.setMinutes(currentDate.getMinutes() + 5);
-    }
-    return currentDate;
-  });
+  const handleTimeConfirm = () => {
+    onSubmit();
+  };
 
   return (
-    <>
-      <DateTimePicker
-        date={
+    <div className="flex justify-center">
+      <Calendar
+        aria-label="Appointment Date"
+        minValue={today(getLocalTimeZone())}
+        maxValue={today(getLocalTimeZone()).add({
+          days: TIMINGS.booking.maximum,
+        })}
+        // @ts-ignore
+        value={
           new CalendarDate(
-            timing.getFullYear(),
-            timing.getMonth() + 1,
-            timing.getDate()
+            date.getFullYear(),
+            date.getMonth() + 1,
+            date.getDate()
           )
         }
-        time={new Time(timing.getHours(), timing.getMinutes())}
-        onDateChange={(date) => {
-          // set the date to the selected date
-          setTiming(
-            new Date(
-              date.year,
-              date.month - 1,
-              date.day,
-              timing.getHours(),
-              timing.getMinutes()
-            )
+        onChange={(selectedDate: CalendarDate) => {
+          // Preserve the current time when changing the date
+          const newDate = new Date(
+            selectedDate.year,
+            selectedDate.month - 1,
+            selectedDate.day,
+            date.getHours(),
+            date.getMinutes()
           );
+          setDate(newDate);
         }}
-        onTimeChange={(time) => {
-          // set the time to the selected time
-          setTiming(
-            new Date(
-              timing.getFullYear(),
-              timing.getMonth(),
-              timing.getDate(),
-              time.hour,
-              time.minute
-            )
-          );
-        }}
-        timeProps={{
-          minValue: new Time(TIMINGS.appointment.start),
-          maxValue: new Time(TIMINGS.appointment.end),
+        showHelper
+        isDateUnavailable={(date) => isDateUnavailable(date, locale)}
+        calendarWidth="372px"
+        className="rounded-r-none shadow-none"
+        classNames={{
+          headerWrapper: 'bg-transparent px-3 pt-1.5 pb-3',
+          title: 'text-default-700 text-small font-semibold',
+          gridHeader: 'bg-transparent shadow-none',
+          gridHeaderCell: 'font-medium text-default-400 text-xs p-0 w-full',
+          gridHeaderRow: 'px-3 pb-3',
+          gridBodyRow: 'gap-x-1 px-3 mb-1 first:mt-4 last:mb-0',
+          gridWrapper: 'pb-3',
+          cell: 'p-1.5 w-full',
+          cellButton:
+            'w-full h-9 rounded-medium data-[selected]:shadow-[0_2px_12px_0] data-[selected]:shadow-primary-300 text-small font-medium',
         }}
       />
-      <div className="mt-4 flex justify-center xs:justify-start">
-        <Button
-          color="primary"
-          radius="lg"
-          className="w-full max-w-64 xs:w-fit"
-          endContent={<Icon icon="tabler:chevron-right" />}
-          onPress={() => {
-            setDate(timing);
-            onSubmit();
-          }}
-          isDisabled={
-            isWeekend(
-              new CalendarDate(
-                timing.getFullYear(),
-                timing.getMonth() + 1,
-                timing.getDate()
-              ),
-              locale
-            ) ||
-            disabledDates[0]
-              .map((d: any) =>
-                d.compare(
-                  new CalendarDate(
-                    timing.getFullYear(),
-                    timing.getMonth() + 1,
-                    timing.getDate()
-                  )
-                )
-              )
-              .includes(0) ||
-            timing.getHours() < TIMINGS.appointment.start ||
-            timing.getHours() >= TIMINGS.appointment.end
-          }
-        >
-          Continue
-        </Button>
-      </div>
-    </>
+      <CalendarTimeSelect
+        date={date}
+        onConfirm={handleTimeConfirm}
+        setDate={setDate}
+      />
+    </div>
   );
 }
 
-export function DateSelectionTitle({ date }: { date: Date }) {
+export function DateSelectionTitle({
+  date,
+  isSelected,
+}: {
+  date: Date;
+  isSelected: boolean;
+}) {
   return date ? (
-    <h3 className="text-2xl font-semibold">{format(date, 'PPPp')}</h3>
+    <h3
+      className={cn('text-2xl font-semibold transition-all', {
+        'text-center': isSelected,
+      })}
+    >
+      {format(date, 'PPPp')}
+    </h3>
   ) : (
     <div className="space-y-4">
       <h3 className="text-2xl font-semibold">Choose Date & Time</h3>

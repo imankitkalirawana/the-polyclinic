@@ -7,11 +7,11 @@ import { WeekView } from './views/week';
 import { DayView } from './views/day';
 import { ScheduleView } from './views/schedule';
 import { YearView } from './views/year';
-import NewAppointmentModal from './new/new';
 import { AppointmentType } from '@/types/appointment';
 import { views } from './types';
 import { parseAsStringEnum, useQueryState, parseAsIsoDateTime } from 'nuqs';
 import AppointmentDrawer from './ui/appointment-drawer';
+import CreateAppointment from '@/components/appointments/create';
 
 interface CalendarProps {
   appointments: AppointmentType[];
@@ -72,6 +72,26 @@ export function Calendar({ appointments }: CalendarProps) {
     }
   };
 
+  const handleCreateAppointment = () => {
+    const now = new Date();
+    const minutes = now.getMinutes();
+
+    const nextQuarter = Math.ceil(minutes / 15) * 15;
+
+    if (nextQuarter >= 60) {
+      now.setHours(now.getHours() + 1);
+      now.setMinutes(0);
+    } else {
+      now.setMinutes(nextQuarter);
+    }
+
+    now.setSeconds(0);
+    now.setMilliseconds(0);
+
+    setCurrentDate(now);
+    setShowDialog(true);
+  };
+
   return (
     <>
       <div className="flex h-[calc(100vh_-_60px)] max-h-[calc(100vh_-_60px)] flex-col overflow-hidden">
@@ -79,15 +99,17 @@ export function Calendar({ appointments }: CalendarProps) {
           currentDate={currentDate}
           onDateChange={setCurrentDate}
           onToday={() => setCurrentDate(new Date())}
+          onCreateAppointment={handleCreateAppointment}
         />
         <div className="h-[calc(100vh_-_120px)] flex-1">{renderView()}</div>
-        <NewAppointmentModal
-          open={showDialog}
-          onOpenChange={setShowDialog}
-          selectedDate={currentDate}
-        />
       </div>
       <AppointmentDrawer />
+      <CreateAppointment
+        open={showDialog}
+        onOpenChange={setShowDialog}
+        selectedDate={currentDate}
+        onClose={() => setShowDialog(false)}
+      />
     </>
   );
 }
