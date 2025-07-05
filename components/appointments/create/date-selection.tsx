@@ -5,35 +5,30 @@ import {
   CalendarDate,
   DateValue,
   getLocalTimeZone,
-  Time,
   today,
 } from '@internationalized/date';
 
 import { TIMINGS } from '@/lib/config';
-import DateTimePicker from './date-time-picker';
-import { disabledDates } from '@/lib/appointments/new';
-import { useLocale } from '@react-aria/i18n';
 import CalendarTimeSelect from '@/components/ui/calendar/booking/calendar-time-select';
-import { DurationEnum } from '@/components/ui/calendar/booking/util';
+import { isDateUnavailable } from './helper';
+import { useLocale } from '@react-aria/i18n';
 
 export default function DateSelection({
+  onSubmit,
   date,
   setDate,
-  onSubmit,
 }: {
+  onSubmit: () => void;
   date: Date;
   setDate: (date: Date) => void;
-  onSubmit: () => void;
 }) {
-  const isDateUnavailable = (date: DateValue) => {
-    return (
-      isWeekend(new Date(date.year, date.month - 1, date.day)) ||
-      disabledDates[0].map((d) => d.compare(date)).includes(0)
-    );
+  const { locale } = useLocale();
+  const handleTimeConfirm = () => {
+    onSubmit();
   };
 
   return (
-    <div className="flex">
+    <div className="flex justify-center">
       <Calendar
         aria-label="Appointment Date"
         minValue={today(getLocalTimeZone())}
@@ -49,16 +44,18 @@ export default function DateSelection({
           )
         }
         onChange={(selectedDate: CalendarDate) => {
-          setDate(
-            new Date(
-              selectedDate.year,
-              selectedDate.month - 1,
-              selectedDate.day
-            )
+          // Preserve the current time when changing the date
+          const newDate = new Date(
+            selectedDate.year,
+            selectedDate.month - 1,
+            selectedDate.day,
+            date.getHours(),
+            date.getMinutes()
           );
+          setDate(newDate);
         }}
         showHelper
-        isDateUnavailable={isDateUnavailable}
+        isDateUnavailable={(date) => isDateUnavailable(date, locale)}
         calendarWidth="372px"
         className="rounded-r-none shadow-none"
         classNames={{
@@ -75,27 +72,10 @@ export default function DateSelection({
         }}
       />
       <CalendarTimeSelect
-        day={format(date, 'd')}
-        duration={DurationEnum.FifteenMinutes}
-        selectedTime="10:00"
-        weekday={format(date, 'EEE')}
-        onConfirm={() => {}}
-        onTimeChange={() => {}}
+        date={date}
+        onConfirm={handleTimeConfirm}
+        setDate={setDate}
       />
-      {/* <div className="mt-4 flex justify-center xs:justify-start">
-        <Button
-          color="primary"
-          radius="lg"
-          className="w-full max-w-64 xs:w-fit"
-          endContent={<Icon icon="tabler:chevron-right" />}
-          onPress={() => {
-            setDate(date);
-            onSubmit();
-          }}
-        >
-          Continue
-        </Button>
-      </div> */}
     </div>
   );
 }

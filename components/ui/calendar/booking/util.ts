@@ -26,8 +26,3 @@ export const timeFormats = [
   { key: TimeFormatEnum.TwelveHour, label: '12h' },
   { key: TimeFormatEnum.TwentyFourHour, label: '24h' },
 ];
-
-export interface TimeSlot {
-  value: string;
-  label: string;
-}

@@ -16,7 +16,7 @@ import { UserType } from '@/types/user';
 import { DoctorType } from '@/types/doctor';
 import { useLinkedUsers } from '@/services/user';
 import UserSelection from '@/components/appointments/create/user-selection';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DateSelection, { DateSelectionTitle } from './date-selection';
 import AdditionalDetailsSelection, {
   AdditionalDetailsSelectionTitle,
@@ -27,12 +27,21 @@ import { useCreateAppointment } from '@/services/appointment';
 import { castData } from '@/lib/utils';
 import { $FixMe } from '@/types';
 import { useCalendarStore } from '@/components/ui/calendar/store';
+import { getNextAvailableTimeSlot } from './helper';
 
 const KeyMap: Record<number, string> = {
   1: 'patient',
   2: 'time',
   3: 'doctor',
   4: 'additional-details',
+};
+
+const getDate = (date: Date, time: string) => {
+  const [hours, minutes] = time.split(':').map(Number);
+  const newDate = new Date(date);
+  newDate.setHours(hours);
+  newDate.setMinutes(minutes);
+  return newDate;
 };
 
 export default function CreateAppointment({
@@ -108,6 +117,11 @@ export default function CreateAppointment({
     handleChange: handleAppointmentChange,
   } = formik;
 
+  useEffect(() => {
+    setAppointment('date', selectedDate);
+    setAppointment('time', getNextAvailableTimeSlot(selectedDate));
+  }, [selectedDate]);
+
   return (
     <Modal
       size="5xl"
@@ -180,9 +194,9 @@ export default function CreateAppointment({
               }
             >
               <DateSelection
+                onSubmit={() => setCurrentStep(3)}
                 date={new Date(appointment.date)}
                 setDate={(date) => setAppointment('date', date)}
-                onSubmit={() => setCurrentStep(3)}
               />
             </AccordionItem>
             <AccordionItem

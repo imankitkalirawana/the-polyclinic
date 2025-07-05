@@ -80,7 +80,11 @@ export function DayView({
         >
           {displayHours.map((hour, hourIndex) => {
             const appointmentsInHour = getAppointmentsForHour(hour);
-            const isHourDisabled = isPast(new Date(currentDate));
+            const hourDateTime = new Date(currentDate);
+            hourDateTime.setHours(hour, 0, 0, 0);
+            const slotEndTime = new Date(currentDate);
+            slotEndTime.setHours(hour + 1, 0, 0, 0);
+            const isHourDisabled = isPast(slotEndTime);
 
             return (
               <>

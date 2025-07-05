@@ -19,7 +19,7 @@ import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs';
 import { useCalendarStore } from '../store';
 import AppointmentTriggerItem from '../ui/appointment-trigger-item';
 import AppointmentList from '../ui/appointment-list';
-import { MAX_APPOINTMENTS_IN_CELL, TIME_INTERVAL } from '../data';
+import { MAX_APPOINTMENTS_IN_CELL } from '../data';
 import { AppointmentType } from '@/types/appointment';
 
 interface MonthViewProps {
@@ -81,7 +81,7 @@ export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
               ? MAX_APPOINTMENTS_IN_CELL
               : MAX_APPOINTMENTS_IN_CELL + 1;
 
-          const isDateDisabled = isPast(day);
+          const isDateDisabled = !isSameDay(day, currentDate) && isPast(day);
 
           return (
             <div
@@ -115,7 +115,8 @@ export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
                   const selectedHour = startHour + clickRatio * hourRange;
 
                   const minutes =
-                    Math.round((selectedHour % 1) * 4) * TIME_INTERVAL;
+                    Math.round((selectedHour % 1) * 4) *
+                    TIMINGS.appointment.interval;
                   const hour = Math.floor(selectedHour);
 
                   const selectedDateTime = new Date(day);

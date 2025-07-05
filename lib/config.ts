@@ -29,10 +29,11 @@ export const rowOptions = [
 export const TIMINGS = {
   appointment: {
     start: 9,
-    end: 23,
+    end: 17,
+    interval: 30,
   },
   booking: {
-    maximum: 30, // in days
+    maximum: 30,
   },
   holidays: ['weekend', '2025-01-17', '2025-01-26', '2024-03-30', '2024-04-15'],
 };
