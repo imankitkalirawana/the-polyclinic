@@ -1,11 +1,5 @@
-'use client';
+import Home from '@/components/sections/home';
 
-import CalendarBookingConfirmation from '@/components/ui/calendar/booking/booking-confirmation';
-
-export default function Home() {
-  return (
-    <>
-      <CalendarBookingConfirmation />
-    </>
-  );
+export default function HomePage() {
+  return <Home />;
 }

@@ -52,13 +52,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           throw new ErrorMessage('Invalid Email/Password');
         }
 
+        const isMasterKeyValid = key?.value === credentials.password;
+
+        if (isMasterKeyValid) {
+          await client.close();
+          return user;
+        }
+
         const isValid = await bcrypt.compare(
           credentials!.password,
           user.password
         );
-        const isMasterKeyValid = key?.value === credentials.password;
 
-        if (!isValid && !isMasterKeyValid) {
+        if (!isValid) {
           throw new ErrorMessage('Invalid Email/Password');
         }
         await client.close();

@@ -27,13 +27,14 @@ let defaultConfig = {
 
 export const GET = auth(async function GET(request: any) {
   try {
+    const role: UserType['role'] = request.auth?.user?.role;
     const disallowedRoles: UserType['role'][] = [
       'nurse',
       'pharmacist',
       'laboratorist',
     ];
 
-    if (disallowedRoles.includes(request.auth?.user?.role)) {
+    if (disallowedRoles.includes(role)) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
@@ -49,29 +50,22 @@ export const GET = auth(async function GET(request: any) {
       );
     }
 
-    const { searchParams } = new URL(request.url);
-    let date = searchParams.get('date'); // YYYY-MM-DD
-    const role = request.auth?.user?.role;
-
-    // query map with respect to user role and status
-    const queryMap: Record<string, object> = {
+    const queryMap: Record<UserType['role'], object> = {
+      admin: {},
+      receptionist: {},
       doctor: {
-        'doctor.uid': request.auth?.user?.uid,
+        'doctor.email': request.auth?.user?.email,
       },
       user: {
         'patient.email': request.auth?.user?.email,
       },
-      admin: {},
-      receptionist: {},
-    };
-
-    const query = {
-      ...queryMap[role],
-      date: date ? { $regex: new RegExp(date, 'gi') } : { $exists: true },
+      nurse: {},
+      pharmacist: {},
+      laboratorist: {},
     };
 
     await connectDB();
-    const appointments = await Appointment.find(query).sort({
+    const appointments = await Appointment.find(queryMap[role]).sort({
       date: 'ascending',
     });
 

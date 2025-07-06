@@ -1,5 +1,4 @@
 'use client';
-import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFormik } from 'formik';
 import {
@@ -23,8 +22,6 @@ import {
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { getLocalTimeZone, parseDate, today } from '@internationalized/date';
 import { I18nProvider } from '@react-aria/i18n';
-import { calculateAge, calculateDOB } from '@/lib/client-functions';
-import { scrollToError } from '@/lib/formik';
 import { CityProps, CountryProps, StateProps } from '@/types';
 import { Genders } from '@/lib/options';
 import { userValidationSchema } from '@/lib/validation';
@@ -249,9 +246,9 @@ export default function NewUser() {
               />
             </I18nProvider>
             <Autocomplete
+              label="Country (Optional)"
               isLoading={isCountriesLoading}
               defaultItems={countries}
-              label="Country"
               className="grid-cols-2 bg-gradient-to-b"
               placeholder="Select country"
               showScrollIndicators={false}
@@ -272,7 +269,7 @@ export default function NewUser() {
             <Autocomplete
               isLoading={isStatesLoading}
               defaultItems={states}
-              label="State"
+              label="State (Optional)"
               placeholder="Select state"
               showScrollIndicators={false}
               onSelectionChange={(value) => {
@@ -287,7 +284,7 @@ export default function NewUser() {
             <Autocomplete
               isLoading={isCitiesLoading}
               defaultItems={cities}
-              label="City"
+              label="City (Optional)"
               placeholder="Select city"
               showScrollIndicators={false}
               onSelectionChange={(value) => {
@@ -300,7 +297,7 @@ export default function NewUser() {
               )}
             </Autocomplete>
             <Input
-              label="Address"
+              label="Address (Optional)"
               placeholder="Enter address"
               value={formik.values.address}
               onChange={formik.handleChange}
@@ -311,7 +308,7 @@ export default function NewUser() {
               errorMessage={formik.touched.address && formik.errors.address}
             />
             <Input
-              label="Zip Code"
+              label="Zip Code (Optional)"
               placeholder="Enter zip code"
               value={formik.values.zipcode}
               onChange={formik.handleChange}
@@ -328,7 +325,7 @@ export default function NewUser() {
           <Button
             color="primary"
             radius="full"
-            isLoading={createUser.isPending}
+            isLoading={formik.isSubmitting}
             type="submit"
           >
             Create User

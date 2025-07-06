@@ -1,3 +1,4 @@
+import { auth } from '@/auth';
 import NewUser from '@/components/dashboard/users/new';
 import { getAllCountries } from '@/services/api/external';
 import {
@@ -5,8 +6,20 @@ import {
   HydrationBoundary,
   QueryClient,
 } from '@tanstack/react-query';
+import { redirect } from 'next/navigation';
+
+const allowedRoles = [
+  'admin',
+  'doctor',
+  'nurse',
+  'receptionist',
+  'pharmacist',
+  'laboratorist',
+];
 
 export default async function Page() {
+  const session = await auth();
+
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ['countries'],
@@ -18,6 +31,10 @@ export default async function Page() {
       throw new Error(res.message);
     },
   });
+
+  if (!allowedRoles.includes(session?.user?.role)) {
+    return redirect('/dashboard');
+  }
 
   return (
     <>
