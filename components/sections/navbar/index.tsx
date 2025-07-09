@@ -26,10 +26,11 @@ import {
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import ModeToggle from '../mode-toggle';
+import ModeToggle from '../../mode-toggle';
 
-import { NavItem } from '@/lib/interface';
 import { avatars } from '@/lib/avatar';
+import { UserType } from '@/types/user';
+import { defaultItems, itemsMap } from './data';
 
 export default function Navbar() {
   const router = useRouter();
@@ -60,99 +61,9 @@ export default function Navbar() {
     }, 500);
   };
 
-  const menuItems: NavItem[] = [
-    {
-      name: 'Home',
-      href: '/home',
-    },
-    {
-      name: 'Dashboard',
-      href: '/dashboard',
-      thumbnail: '/assets/navbar/dashboard.webp',
-      subItems: [
-        {
-          title: 'My Dashboard',
-          items: [
-            {
-              name: 'Overview',
-              href: '/dashboard',
-              icon: 'solar:window-frame-linear',
-            },
-            {
-              name: 'Appointments',
-              href: '/dashboard/appointments',
-              icon: 'solar:calendar-linear',
-            },
-            {
-              name: 'Users',
-              href: '/dashboard/users',
-              icon: 'solar:users-group-rounded-linear',
-            },
-            {
-              name: 'Drugs',
-              href: '/dashboard/drugs',
-              icon: 'solar:pills-linear',
-            },
-          ],
-        },
-        {
-          title: 'Admin Dashboard',
-          items: [
-            {
-              name: 'Stats',
-              href: '/dashboard/admin/stats',
-              icon: 'solar:graph-linear',
-            },
-            {
-              name: 'Settings',
-              href: '/dashboard/admin/settings',
-              icon: 'solar:settings-linear',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      name: 'Appointments',
-      href: '/appointments',
-      thumbnail: '/assets/navbar/appointments.png',
-      subItems: [
-        {
-          title: 'Appointments',
-          items: [
-            {
-              name: 'Create New',
-              href: '/appointments/create',
-              icon: 'solar:pen-new-round-linear',
-            },
-          ],
-        },
-        {
-          title: 'My Appointments',
-          items: [
-            {
-              name: 'My Schedules',
-              href: '/appointments?view=schedule',
-              icon: 'solar:calendar-linear',
-            },
-            {
-              name: 'All Appointments',
-              href: '/appointments',
-              icon: 'solar:clipboard-list-linear',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      name: 'About Us',
-      href: '/about',
-    },
-    {
-      name: 'Integrations',
-      href: '/integrations',
-    },
-  ];
+  const menuItems = session?.user?.role
+    ? itemsMap[session?.user?.role as UserType['role']]
+    : defaultItems;
 
   if (isDisabled) return null;
 
@@ -318,8 +229,8 @@ export default function Navbar() {
           }}
         >
           {activeMenu && activeMenu.subItems && (
-            <div className="flex w-full justify-between gap-8 lg:gap-16">
-              <div className="flex gap-8">
+            <div className="grid h-full w-full grid-cols-10 justify-between gap-2">
+              <div className="col-span-6 grid grid-cols-2">
                 {activeMenu.subItems.map((subItem, idx) => (
                   <div key={`${subItem.title}-${idx}`}>
                     <motion.h3
@@ -336,15 +247,28 @@ export default function Navbar() {
                           key={`${subMenuItem.name}-${index}`}
                           startContent={
                             subMenuItem?.icon && (
-                              <Icon icon={subMenuItem?.icon} width={18} />
+                              <Icon
+                                icon={subMenuItem?.icon}
+                                width={24}
+                                className="text-primary-500"
+                              />
                             )
                           }
-                          // href={subMenuItem.href}
+                          description={
+                            <span className="line-clamp-1 max-w-[50ch]">
+                              {subMenuItem.description}
+                            </span>
+                          }
                           onPress={() => {
                             router.push(subMenuItem.href);
                             setTimeout(() => {
                               setActiveMenu(null);
                             }, 200);
+                          }}
+                          classNames={{
+                            title: subMenuItem.description
+                              ? 'text-foreground'
+                              : 'text-default-500',
                           }}
                         >
                           {subMenuItem.name}
@@ -358,7 +282,7 @@ export default function Navbar() {
                 style={{
                   backgroundImage: `url(${activeMenu.thumbnail})`,
                 }}
-                className="aspect-[2.1] h-full min-h-48 max-w-sm place-self-end self-end justify-self-end rounded-medium bg-gradient-to-r from-[#F2F0FF] to-[#F0F6FF] bg-cover p-4 text-default-500"
+                className="col-span-4 h-full w-full max-w-sm rounded-medium bg-gradient-to-r from-[#F2F0FF] to-[#F0F6FF] bg-cover p-4 text-default-500"
               ></div>
             </div>
           )}

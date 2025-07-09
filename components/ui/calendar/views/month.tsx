@@ -91,7 +91,7 @@ export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
                 'flex select-none flex-col justify-start overflow-hidden border-b border-r p-1 last:border-r-0',
                 {
                   'bg-default-100 text-default-500': !isCurrentMonth,
-                  'cursor-not-allowed': isDateDisabled,
+                  'cursor-not-allowed bg-default-50': isDateDisabled,
                 }
               )}
               onClick={(e) => {

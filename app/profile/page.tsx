@@ -5,7 +5,7 @@ import {
   QueryClient,
 } from '@tanstack/react-query';
 
-import Profile from '@/components/dashboard/profile';
+import Profile from '@/components/profile';
 import { useSelf } from '@/services/user';
 
 export const metadata: Metadata = {
