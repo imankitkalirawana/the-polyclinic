@@ -1,7 +1,13 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Button, DropdownItem, DropdownMenu, Selection } from '@heroui/react';
+import {
+  Button,
+  DropdownItem,
+  DropdownMenu,
+  Selection,
+  Tooltip,
+} from '@heroui/react';
 
 import {
   renderActions,
@@ -22,6 +28,7 @@ import CancelDeleteAppointments from './modals/bulk-cancel-delete';
 import { convertSelectionToKeys } from '@/components/ui/data-table/helper';
 import Link from 'next/link';
 import { useAllAppointments } from '@/services/appointment';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'aid',
@@ -184,9 +191,22 @@ export default function Appointments() {
 
   // Render top bar
   const endContent = () => (
-    <Button color="primary" size="sm" as={Link} href="/appointments/new">
-      New Appointment
-    </Button>
+    <div className="flex gap-2">
+      <Tooltip content="Calendar View" delay={1000} placement="top">
+        <Button
+          isIconOnly
+          size="sm"
+          variant="bordered"
+          as={Link}
+          href="/appointments"
+        >
+          <Icon icon="solar:calendar-linear" width={16} />
+        </Button>
+      </Tooltip>
+      <Button color="primary" size="sm" as={Link} href="/appointments/create">
+        New Appointment
+      </Button>
+    </div>
   );
 
   const renderSelectedActions = (selectedKeys: Selection) => {

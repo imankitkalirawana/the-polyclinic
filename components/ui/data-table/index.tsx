@@ -275,7 +275,7 @@ export function Table<T extends TableItem>({
 
   const topContent = useMemo(() => {
     return (
-      <div className="flex items-center justify-between gap-4 overflow-auto px-[6px] py-[4px]">
+      <div className="flex items-center justify-between gap-4 px-[6px] py-[4px]">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-4">
             {searchField && (
@@ -514,7 +514,7 @@ export function Table<T extends TableItem>({
         onRowAction={(row) => {
           onRowAction?.(row);
         }}
-        className="max-h-full overflow-y-auto px-px"
+        className="max-h-full px-px"
       >
         <TableHeader columns={headerColumns}>
           {(column) => (

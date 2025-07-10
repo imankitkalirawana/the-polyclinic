@@ -179,7 +179,7 @@ export default function DashboardLayout({
       <div className="w-[80vw] flex-1 flex-col md:p-2">
         {header}
         <main className="h-full w-full overflow-visible">
-          <div className="flex h-[93vh] flex-col gap-4 overflow-scroll p-2">
+          <div className="flex h-[93vh] flex-col gap-4 overflow-hidden p-2">
             {children}
           </div>
         </main>
