@@ -1,3 +1,4 @@
+'use client';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { Button, Image } from '@heroui/react';
 

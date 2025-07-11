@@ -35,7 +35,7 @@ export default function QuickLook<
   dropdown,
   sidebarContent,
   content,
-}: QuickLookProps<T, A, D>): React.ReactElement {
+}: QuickLookProps<T, A, D>): React.ReactElement<any> {
   const { data: session } = useSession();
   // const role = useMemo(
   //   () => session?.user?.role ?? 'user',

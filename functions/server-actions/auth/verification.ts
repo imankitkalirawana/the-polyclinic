@@ -8,7 +8,7 @@ import { connectDB } from '@/lib/db';
 import { transporter } from '@/lib/nodemailer';
 import Otp from '@/models/Otp';
 import User from '@/models/User';
-import { generateOtp } from '@/functions/server-actions';
+import { generateOtp } from '@/functions/utils';
 
 export const sendMail = async (mailOptions: MailOptions) => {
   return await transporter.sendMail(mailOptions);

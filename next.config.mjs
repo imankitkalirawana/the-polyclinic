@@ -5,6 +5,9 @@ const nextConfig = {
   images: {
     domains: ['lh3.googleusercontent.com'],
   },
+  experimental: {
+    authInterrupts: true,
+  },
 };
 
 export default withSentryConfig(nextConfig, {

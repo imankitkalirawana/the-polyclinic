@@ -14,7 +14,7 @@ export function useMemoizedCallback<T extends noop>(fn: T) {
   // https://github.com/alibaba/hooks/issues/728
   fnRef.current = useMemo<T>(() => fn, [fn]);
 
-  const memoizedFn = useRef<PickFunction<T>>();
+  const memoizedFn = useRef<PickFunction<T>>(undefined);
 
   if (!memoizedFn.current) {
     memoizedFn.current = function (this, ...args) {

@@ -7,7 +7,7 @@ import { ServiceType } from '@/types/service';
 
 export const GET = async function GET(_request: any, context: any) {
   try {
-    const id = context.params.id;
+    const id = (await context.params).id;
     await connectDB();
     const service = await Service.findOne({ uniqueId: id });
     if (!service) {

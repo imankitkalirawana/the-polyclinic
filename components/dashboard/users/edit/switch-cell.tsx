@@ -27,7 +27,7 @@ export type SwitchCellProps = Omit<SwitchProps, 'color'> & {
   };
 };
 
-const SwitchCell = React.forwardRef<ReactElement, SwitchCellProps>(
+const SwitchCell = React.forwardRef<ReactElement<any>, SwitchCellProps>(
   ({ label, description, classNames, ...props }, ref) => (
     <CustomSwitch
       ref={ref}
