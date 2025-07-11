@@ -2,6 +2,7 @@ import {
   createUser,
   deleteUser,
   getAllUsers,
+  getDoctors,
   getLinkedUsers,
   getSelf,
   getUserWithUID,
@@ -17,6 +18,18 @@ import {
 } from '@tanstack/react-query';
 import { ApiResponse } from './api';
 import { addToast } from '@heroui/react';
+import { DoctorType } from '@/types/doctor';
+
+/**
+ * GET request hooks
+ *
+ * The following hooks handle fetching user data from the API:
+ * - useSelf: Fetches the current authenticated user
+ * - useLinkedUsers: Fetches users linked to the current user
+ * - useUserWithUID: Fetches a specific user by UID
+ * - useAllUsers: Fetches all users
+ * - useAllDoctors: Fetches all doctors
+ */
 
 export const useSelf = (): UseQueryResult<UserType> => {
   return useQuery({
@@ -71,7 +84,29 @@ export const useAllUsers = (): UseQueryResult<UserType[]> => {
   });
 };
 
-// POST
+export const useAllDoctors = (): UseQueryResult<
+  DoctorType & {
+    userDetails: UserType;
+  }
+> => {
+  return useQuery({
+    queryKey: ['doctors'],
+    queryFn: async () => {
+      const res = await getDoctors();
+      if (res.success) {
+        return res.data;
+      }
+      throw new Error(res.message);
+    },
+  });
+};
+
+/**
+ * POST request hooks
+ *
+ * The following hooks handle creating user data from the API:
+ * - useCreateUser: Creates a new user
+ */
 
 export const useCreateUser = (): UseMutationResult<
   ApiResponse<UserType>,

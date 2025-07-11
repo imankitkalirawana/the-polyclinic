@@ -2,6 +2,11 @@
 
 import { CreateUserType, UserType } from '@/types/user';
 import { fetchData } from '.';
+import { DoctorType } from '@/types/doctor';
+
+/**
+ * GET APIs
+ */
 
 export async function getAllUsers() {
   return await fetchData<UserType[]>('/users');
@@ -23,7 +28,18 @@ export async function getUsersByRole(role: UserType['role']) {
   return await fetchData<UserType[]>(`/users/role/${role}`);
 }
 
-// POST
+export async function getDoctors() {
+  return await fetchData<
+    DoctorType & {
+      userDetails: UserType;
+    }
+  >(`/users/role/doctor`);
+}
+
+/**
+ * GET APIs
+ */
+
 export async function createUser(user: CreateUserType) {
   return await fetchData<UserType>('/users', {
     method: 'POST',

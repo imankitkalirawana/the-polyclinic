@@ -1,3 +1,27 @@
-export default function DoctorsPage() {
-  return <div>DoctorsPage</div>;
+import Doctors from '@/components/dashboard/doctors';
+import { getDoctors } from '@/services/api/user';
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from '@tanstack/react-query';
+
+export default async function DoctorsPage() {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ['doctors'],
+    queryFn: async () => {
+      const res = await getDoctors();
+      if (res.success) {
+        return res.data;
+      }
+      throw new Error(res.message);
+    },
+  });
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <Doctors />
+    </HydrationBoundary>
+  );
 }

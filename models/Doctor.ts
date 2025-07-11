@@ -50,7 +50,7 @@ doctorSchema.pre(
 );
 
 const Doctor: Model<DoctorType> =
-  mongoose.models.doctors ||
+  mongoose.models.Doctors ||
   mongoose.model<DoctorType>('doctors', doctorSchema);
 
 export default Doctor;
