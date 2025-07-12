@@ -3,7 +3,7 @@
 import { format, isPast, isSameDay, isToday } from 'date-fns';
 import { cn } from '@/lib/utils';
 import type { AppointmentType } from '@/types/appointment';
-import { useEffect, useRef, useState, type MouseEvent } from 'react';
+import React, { useEffect, useRef, useState, type MouseEvent } from 'react';
 import { TIMINGS } from '@/lib/config'; // Assuming this provides start/end hours
 import { ScrollShadow, Tooltip } from '@heroui/react';
 import { CurrentHourIndicator } from '../ui/current-hour-indicator';
@@ -87,10 +87,9 @@ export function DayView({
             const isHourDisabled = isPast(slotEndTime);
 
             return (
-              <>
+              <React.Fragment key={`hour-${hour}`}>
                 {/* Time Label Cell */}
                 <div
-                  key={`time-${hour}`}
                   className="row-span-1 w-20 shrink-0 border-b border-r p-2 text-right text-small text-default-500"
                   style={{ gridRowStart: hourIndex + 1, gridColumnStart: 1 }}
                 >
@@ -103,7 +102,6 @@ export function DayView({
 
                 {/* Day Content Cell for this Hour */}
                 <div
-                  key={`cell-${hour}`}
                   title={
                     isHourDisabled
                       ? 'Cannot create appointments in the past'
@@ -186,7 +184,7 @@ export function DayView({
                     </Tooltip>
                   )}
                 </div>
-              </>
+              </React.Fragment>
             );
           })}
         </div>

@@ -25,6 +25,7 @@ import AppointmentList from '../ui/appointment-list';
 import { AppointmentType } from '@/types/appointment';
 import { memo, useMemo } from 'react';
 import { useCalendarStore } from '../store';
+import { weekdays } from '../data';
 
 interface YearViewProps {
   appointments: AppointmentType[];
@@ -74,7 +75,7 @@ const DayCell = memo(
               'hover:bg-default-100': !hasAppointments,
               'text-white': hasAppointments,
               [colorDensityMap[appointmentCount]]: hasAppointments,
-              'bg-secondary-500 text-secondary-foreground hover:bg-secondary-600':
+              'bg-secondary text-secondary-foreground hover:bg-secondary-300':
                 isDayToday,
             }
           )}
@@ -114,12 +115,12 @@ const MonthCalendar = memo(
         <CardHeader className="p-2">{format(month, 'MMMM')}</CardHeader>
         <CardBody className="aspect-square gap-2 overflow-visible p-2">
           <div className="grid grid-cols-7 gap-1">
-            {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day) => (
+            {weekdays.map((day) => (
               <div
-                key={day}
+                key={day.value}
                 className="flex h-6 items-center justify-center text-xs font-medium text-default-500"
               >
-                {day}
+                {day.label}
               </div>
             ))}
           </div>

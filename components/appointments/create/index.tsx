@@ -30,20 +30,13 @@ import { $FixMe } from '@/types';
 import { useCalendarStore } from '@/components/ui/calendar/store';
 import { getNextAvailableTimeSlot } from './helper';
 import { useRouter } from 'nextjs-toploader/app';
+import { useAllDoctors } from '@/services/doctor';
 
 const KeyMap: Record<number, string> = {
   1: 'patient',
   2: 'time',
   3: 'doctor',
   4: 'additional-details',
-};
-
-const getDate = (date: Date, time: string) => {
-  const [hours, minutes] = time.split(':').map(Number);
-  const newDate = new Date(date);
-  newDate.setHours(hours);
-  newDate.setMinutes(minutes);
-  return newDate;
 };
 
 export default function CreateAppointment({
@@ -66,6 +59,8 @@ export default function CreateAppointment({
   const { setAppointment: setCalendarAppointment } = useCalendarStore();
   const { data: linkedUsers, isLoading: isLinkedUsersLoading } =
     useLinkedUsers();
+
+  const { data: doctors, isLoading: isDoctorsLoading } = useAllDoctors();
 
   const formik = useFormik<CreateAppointmentType>({
     initialValues: {
@@ -234,9 +229,9 @@ export default function CreateAppointment({
               <UserSelection
                 id="doctor"
                 size="sm"
-                isLoading={isLinkedUsersLoading}
-                users={linkedUsers || []}
-                selectedUser={appointment.doctor as unknown as UserType}
+                isLoading={isDoctorsLoading}
+                users={doctors || []}
+                selectedUser={appointment.doctor}
                 onSelectionChange={(user) => {
                   setAppointment('doctor', user);
                   setCurrentStep(4);
