@@ -1,21 +1,20 @@
 import { auth } from '@/auth';
-import { DoctorType } from '@/types/doctor';
 import mongoose, { Model } from 'mongoose';
 
 const doctorSchema = new mongoose.Schema(
   {
-    name: String,
-    email: String,
-    phone: String,
+    uid: {
+      type: Number,
+      required: true,
+      unique: true,
+    },
     designation: String,
     department: String,
     experience: String,
     education: String,
     patients: Number,
     biography: String,
-    image: String,
     shortbio: String,
-    uid: Number,
     seating: String,
     createdBy: {
       type: String,
@@ -49,8 +48,6 @@ doctorSchema.pre(
   }
 );
 
-const Doctor: Model<DoctorType> =
-  mongoose.models.Doctors ||
-  mongoose.model<DoctorType>('doctors', doctorSchema);
+const Doctor = mongoose.models.Doctor || mongoose.model('Doctor', doctorSchema);
 
 export default Doctor;

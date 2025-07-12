@@ -2,7 +2,6 @@ import {
   createUser,
   deleteUser,
   getAllUsers,
-  getDoctors,
   getLinkedUsers,
   getSelf,
   getUserWithUID,
@@ -18,7 +17,7 @@ import {
 } from '@tanstack/react-query';
 import { ApiResponse } from './api';
 import { addToast } from '@heroui/react';
-import { DoctorType } from '@/types/doctor';
+import { $FixMe } from '@/types';
 
 /**
  * GET request hooks
@@ -84,23 +83,6 @@ export const useAllUsers = (): UseQueryResult<UserType[]> => {
   });
 };
 
-export const useAllDoctors = (): UseQueryResult<
-  DoctorType & {
-    userDetails: UserType;
-  }
-> => {
-  return useQuery({
-    queryKey: ['doctors'],
-    queryFn: async () => {
-      const res = await getDoctors();
-      if (res.success) {
-        return res.data;
-      }
-      throw new Error(res.message);
-    },
-  });
-};
-
 /**
  * POST request hooks
  *
@@ -122,14 +104,14 @@ export const useCreateUser = (): UseMutationResult<
       }
       throw new Error(res.message);
     },
-    onSuccess: (data) => {
+    onSuccess: (data: ApiResponse<UserType>) => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
       addToast({
         title: data.message,
         color: 'success',
       });
     },
-    onError: (error) => {
+    onError: (error: Error) => {
       addToast({
         title: error.message,
         color: 'danger',
@@ -152,14 +134,14 @@ export const useUpdateUser = (): UseMutationResult<
       }
       throw new Error(res.message);
     },
-    onSuccess: (data) => {
+    onSuccess: (data: $FixMe) => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
       addToast({
         title: data.message,
         color: 'success',
       });
     },
-    onError: (error) => {
+    onError: (error: $FixMe) => {
       addToast({
         title: error.message,
         color: 'danger',

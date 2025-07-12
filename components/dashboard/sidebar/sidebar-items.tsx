@@ -20,6 +20,12 @@ export const sectionItems: SidebarItem[] = [
         title: 'Users',
       },
       {
+        key: 'doctors',
+        href: '/dashboard/doctors',
+        icon: 'solar:stethoscope-bold-duotone',
+        title: 'Doctors',
+      },
+      {
         key: 'appointments',
         href: '/dashboard/appointments',
         icon: 'solar:calendar-bold-duotone',

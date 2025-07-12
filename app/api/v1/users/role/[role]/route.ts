@@ -10,7 +10,7 @@ export const GET = auth(async function GET(request: any, context: any) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    const { role } = context.params;
+    const { role } = await context.params;
 
     // user can only get doctors and nurses, admin can get all users, receptionist can get all users and doctors, doctors can get all patients
 

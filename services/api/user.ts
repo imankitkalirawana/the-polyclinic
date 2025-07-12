@@ -28,14 +28,6 @@ export async function getUsersByRole(role: UserType['role']) {
   return await fetchData<UserType[]>(`/users/role/${role}`);
 }
 
-export async function getDoctors() {
-  return await fetchData<
-    DoctorType & {
-      userDetails: UserType;
-    }
-  >(`/users/role/doctor`);
-}
-
 /**
  * GET APIs
  */

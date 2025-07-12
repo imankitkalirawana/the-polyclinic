@@ -1,5 +1,5 @@
 import Doctors from '@/components/dashboard/doctors';
-import { getDoctors } from '@/services/api/user';
+import { getDoctors } from '@/services/api/doctor';
 import {
   dehydrate,
   HydrationBoundary,

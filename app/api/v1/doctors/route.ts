@@ -12,9 +12,33 @@ export const GET = auth(async function GET(request: any) {
 
     await connectDB();
 
-    const doctors = await Doctor.find();
-
-    console.log(doctors);
+    const doctors = await Doctor.aggregate([
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'uid',
+          foreignField: 'uid',
+          as: 'user',
+        },
+      },
+      {
+        $unwind: '$user',
+      },
+      {
+        $addFields: {
+          name: '$user.name',
+          email: '$user.email',
+          phone: '$user.phone',
+          gender: '$user.gender',
+          image: '$user.image',
+        },
+      },
+      {
+        $project: {
+          user: 0,
+        },
+      },
+    ]);
 
     return NextResponse.json({
       message: 'Doctors fetched successfully',
@@ -23,5 +47,54 @@ export const GET = auth(async function GET(request: any) {
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
+  }
+});
+
+export const POST = auth(async function POST(request: any) {
+  try {
+    if (!request.auth?.user) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
+    let data = await request.json();
+
+    const { uid, creation_type } = data;
+
+    if (creation_type === 'existing' && !uid) {
+      return NextResponse.json({ message: 'UID is required' }, { status: 400 });
+    }
+
+    await connectDB();
+
+    if (creation_type === 'existing') {
+      const user = await User.findOneAndUpdate({ uid }, { role: 'doctor' });
+
+      if (!user) {
+        return NextResponse.json(
+          { message: 'User not found' },
+          { status: 404 }
+        );
+      }
+    } else {
+      // if creation_type is new then create a new user then create a new doctor
+      const user = await User.create({
+        ...data,
+        role: 'doctor',
+      });
+      data.uid = user.uid;
+    }
+
+    const doctor = await Doctor.create(data);
+
+    return NextResponse.json({
+      message: 'Doctor created successfully',
+      data: doctor,
+    });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { message: (error as Error).message || 'An error occurred' },
+      { status: 500 }
+    );
   }
 });

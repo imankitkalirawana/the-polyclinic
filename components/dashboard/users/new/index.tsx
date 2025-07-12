@@ -203,6 +203,7 @@ export default function NewUser() {
               }
               errorMessage={formik.touched.gender && formik.errors.gender}
               items={Genders}
+              disallowEmptySelection
             >
               {(item) => <SelectItem key={item.value}>{item.label}</SelectItem>}
             </Select>
