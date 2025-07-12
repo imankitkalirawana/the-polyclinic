@@ -17,6 +17,8 @@ import {
 import { View, views as Views } from './types';
 import { parseAsStringEnum, useQueryState } from 'nuqs';
 import { useKeyPress } from 'react-haiku';
+import { useSession } from 'next-auth/react';
+import { allowedRolesToCreateAppointment } from './data';
 
 interface CalendarHeaderProps {
   currentDate: Date;
@@ -39,6 +41,7 @@ export function CalendarHeader({
   onDateChange,
   onCreateAppointment,
 }: CalendarHeaderProps) {
+  const { data: session } = useSession();
   const [view, setView] = useQueryState(
     'view',
     parseAsStringEnum(Views).withDefault('month')
@@ -132,7 +135,7 @@ export function CalendarHeader({
       <div className="flex items-center sm:gap-4">
         <Button
           variant="flat"
-          color={isToday(currentDate) ? 'default' : 'primary'}
+          color={isToday(currentDate) ? 'primary' : 'default'}
           onPress={() => onDateChange(new Date())}
           className="px-2"
           size="sm"
@@ -199,16 +202,18 @@ export function CalendarHeader({
             </SelectItem>
           )}
         </Select>
-        <Button
-          size="sm"
-          color="primary"
-          startContent={
-            <Icon icon="solar:add-circle-bold-duotone" className="h-4 w-4" />
-          }
-          onPress={onCreateAppointment}
-        >
-          Create
-        </Button>
+        {allowedRolesToCreateAppointment.includes(session?.user?.role) && (
+          <Button
+            size="sm"
+            color="primary"
+            startContent={
+              <Icon icon="solar:add-circle-bold-duotone" className="h-4 w-4" />
+            }
+            onPress={onCreateAppointment}
+          >
+            Create
+          </Button>
+        )}
       </div>
     </header>
   );

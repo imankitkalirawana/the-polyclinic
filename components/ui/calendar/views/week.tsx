@@ -22,6 +22,7 @@ import { MAX_APPOINTMENTS_IN_CELL } from '../data';
 import DateChip from '../ui/date-chip';
 import { views } from '../types';
 import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs';
+import React from 'react';
 
 interface WeekViewProps {
   appointments: AppointmentType[];
@@ -108,10 +109,9 @@ export function WeekView({
           }}
         >
           {displayHours.map((hour, hourIndex) => (
-            <>
+            <React.Fragment key={`hour-${hour}`}>
               {/* Time Label Cell */}
               <div
-                key={`time-${hour}`}
                 className="row-span-1 w-20 shrink-0 border-b border-r p-2 text-right text-small text-default-500"
                 style={{ gridRowStart: hourIndex + 1, gridColumnStart: 1 }}
               >
@@ -127,12 +127,12 @@ export function WeekView({
                 const isHourDisabled = isPast(day);
                 return (
                   <div
+                    key={`cell-${day.toISOString()}-${hour}`}
                     title={
                       isHourDisabled
                         ? 'Cannot create appointments in the past'
                         : ''
                     }
-                    key={`cell-${day.toISOString()}-${hour}`}
                     className={cn(
                       'relative min-h-[80px] cursor-pointer overflow-hidden border-b border-r p-1',
                       {
@@ -213,7 +213,7 @@ export function WeekView({
                   </div>
                 );
               })}
-            </>
+            </React.Fragment>
           ))}
         </div>
       </ScrollShadow>

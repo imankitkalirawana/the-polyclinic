@@ -19,8 +19,12 @@ import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs';
 import { useCalendarStore } from '../store';
 import AppointmentTriggerItem from '../ui/appointment-trigger-item';
 import AppointmentList from '../ui/appointment-list';
-import { MAX_APPOINTMENTS_IN_CELL } from '../data';
+import {
+  allowedRolesToCreateAppointment,
+  MAX_APPOINTMENTS_IN_CELL,
+} from '../data';
 import { AppointmentType } from '@/types/appointment';
+import { useSession } from 'next-auth/react';
 
 interface MonthViewProps {
   appointments: AppointmentType[];
@@ -28,6 +32,7 @@ interface MonthViewProps {
 }
 
 export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
+  const { data: session } = useSession();
   const [currentDate, setCurrentDate] = useQueryState(
     'date',
     parseAsIsoDateTime.withDefault(new Date())
@@ -49,6 +54,10 @@ export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
   const getAppointmentsForDay = (date: Date) => {
     return appointments.filter((apt) => isSameDay(new Date(apt.date), date));
   };
+
+  const isAllowedToCreateAppointment = allowedRolesToCreateAppointment.includes(
+    session?.user?.role
+  );
 
   return (
     <div className="flex h-full flex-col">
@@ -92,11 +101,12 @@ export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
                 {
                   'bg-default-100 text-default-500': !isCurrentMonth,
                   'cursor-not-allowed bg-default-50': isDateDisabled,
+                  'cursor-auto': !isAllowedToCreateAppointment,
                 }
               )}
               onClick={(e) => {
                 if (!appointment) {
-                  if (isDateDisabled) {
+                  if (isDateDisabled || !isAllowedToCreateAppointment) {
                     return;
                   }
 

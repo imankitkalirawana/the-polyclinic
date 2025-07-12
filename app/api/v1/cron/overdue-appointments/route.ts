@@ -1,40 +1,35 @@
 import { NextResponse } from 'next/server';
 
-import { sendHTMLEmail } from '@/functions/server-actions/emails/send-email';
 import { connectDB } from '@/lib/db';
 import Appointment from '@/models/Appointment';
-import { AppointmentStatus } from '@/utils/email-template/patient';
 
-export const POST = async function POST(request: any) {
+export const POST = async function POST() {
   try {
     await connectDB();
-    const appointments = await Appointment.find({
-      date: { $lt: new Date().toISOString() },
-      status: {
-        $nin: ['overdue', 'cancelled', 'completed', 'on-hold', 'in-progress'],
+
+    const now = new Date();
+
+    const result = await Appointment.updateMany(
+      {
+        status: { $in: ['booked', 'confirmed', 'in-progress'] },
+        date: { $lt: now },
       },
-    }).lean();
+      {
+        $set: { status: 'overdue' },
+      }
+    );
 
-    for (const appointment of appointments) {
-      await Appointment.findOneAndUpdate(
-        { aid: appointment.aid },
-        { status: 'overdue' },
-        { new: true }
-      ).then(async () => {
-        await sendHTMLEmail({
-          to: appointment.patient.email,
-          subject: 'Action Needed: Reschedule Your Missed Appointment',
-          html: AppointmentStatus(appointment),
-        });
-      });
-    }
-
-    return NextResponse.json({
-      message: `Affected ${appointments.length} items`,
-      appointments,
-    });
+    return NextResponse.json(
+      {
+        message: 'Appointments updated successfully',
+        matchedCount: result.matchedCount,
+        modifiedCount: result.modifiedCount,
+        data: result,
+      },
+      { status: 200 }
+    );
   } catch (error: any) {
-    console.error(error);
+    console.error('Error updating appointments:', error);
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 };

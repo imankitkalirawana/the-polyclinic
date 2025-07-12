@@ -11,7 +11,11 @@ import DateChip from '../ui/date-chip';
 import { useCalendarStore } from '../store';
 import AppointmentTriggerItem from '../ui/appointment-trigger-item';
 import AppointmentList from '../ui/appointment-list';
-import { MAX_APPOINTMENTS_IN_CELL } from '../data';
+import {
+  allowedRolesToCreateAppointment,
+  MAX_APPOINTMENTS_IN_CELL,
+} from '../data';
+import { useSession } from 'next-auth/react';
 
 interface DayViewProps {
   appointments: AppointmentType[];
@@ -24,8 +28,13 @@ export function DayView({
   currentDate,
   onTimeSlotClick,
 }: DayViewProps) {
+  const { data: session } = useSession();
   const ref = useRef<HTMLDivElement>(null);
   const { appointment, setIsTooltipOpen } = useCalendarStore();
+
+  const isAllowedToCreateAppointment = allowedRolesToCreateAppointment.includes(
+    session?.user?.role
+  );
 
   const displayHours = Array.from(
     { length: TIMINGS.appointment.end - TIMINGS.appointment.start },
@@ -111,6 +120,7 @@ export function DayView({
                     'relative min-h-[80px] cursor-pointer border-b p-1',
                     {
                       'cursor-not-allowed': isHourDisabled,
+                      'cursor-auto': !isAllowedToCreateAppointment,
                     }
                   )}
                   style={{
@@ -118,7 +128,7 @@ export function DayView({
                     gridColumnStart: 2,
                   }}
                   onClick={(e: MouseEvent<HTMLDivElement>) => {
-                    if (isHourDisabled) {
+                    if (isHourDisabled || !isAllowedToCreateAppointment) {
                       return;
                     }
 
