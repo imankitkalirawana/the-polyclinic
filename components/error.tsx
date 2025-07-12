@@ -2,7 +2,15 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Button, Card, CardBody, Chip } from '@heroui/react';
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Chip,
+  ScrollShadow,
+} from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 // Premium Chat Message Component
@@ -62,7 +70,7 @@ const ChatMessage = ({
             </div>
           </div>
         ) : (
-          <p className="whitespace-pre-wrap text-sm leading-relaxed">
+          <p className="whitespace-pre-wrap text-start text-sm leading-relaxed">
             {message}
           </p>
         )}
@@ -259,7 +267,6 @@ Did this resolve your issue?`;
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
       onClick={onClose}
     >
       <motion.div
@@ -267,34 +274,15 @@ Did this resolve your issue?`;
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
         transition={{ duration: 0.2 }}
-        className="flex h-[600px] w-full max-w-md flex-col overflow-hidden rounded-2xl bg-white shadow-2xl"
+        className="flex w-full flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-gray-100 p-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black">
-              <Icon icon="solar:bot-linear" className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-900">Support Assistant</h3>
-              <p className="text-sm text-gray-500">
-                {isTyping ? 'Typing...' : 'Online'}
-              </p>
-            </div>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClose}
-            className="h-8 w-8 p-0 hover:bg-gray-100"
-          >
-            <Icon icon="solar:x-circle-linear" className="h-4 w-4" />
-          </Button>
-        </div>
-
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4">
+        <ScrollShadow
+          hideScrollBar
+          className="max-h-[256px] flex-1 overflow-y-auto p-4"
+          orientation="vertical"
+        >
           {messages.map((message) => (
             <ChatMessage
               key={message.id}
@@ -309,7 +297,7 @@ Did this resolve your issue?`;
           )}
 
           <div ref={messagesEndRef} />
-        </div>
+        </ScrollShadow>
 
         {/* Action Buttons */}
         {renderActionButtons()}
@@ -365,70 +353,79 @@ export default function CustomError({
   return (
     <>
       <main className="flex min-h-[calc(100vh-var(--navbar-height))] items-center justify-center p-6">
-        <div className="w-full max-w-lg text-center">
+        <div className="flex w-full max-w-lg flex-col gap-4 text-center">
           {/* Error Code */}
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="mb-8"
           >
-            <Chip
-              variant="bordered"
-              className="border-gray-200 bg-gray-50 px-3 py-1 text-sm text-gray-600"
-            >
-              Error {errorConfig.code}
-            </Chip>
+            <Chip variant="bordered">Error {errorConfig.code}</Chip>
           </motion.div>
-
           {/* Main Content */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="mb-12"
+            className="flex flex-col gap-2"
           >
-            <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-900 md:text-5xl">
+            <h1 className="text-4xl font-bold tracking-tight text-gray-900 md:text-5xl">
               {errorConfig.title}
             </h1>
-            <p className="mb-8 text-lg leading-relaxed text-gray-600">
+            <p className="text-lg leading-relaxed text-gray-600">
               {errorConfig.description}
             </p>
           </motion.div>
 
-          {/* AI Assistant Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="mb-12"
           >
-            <Card className="border border-gray-200 shadow-sm">
-              <CardBody className="p-8">
-                <div className="mb-6">
-                  <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-black">
-                    <Icon
-                      icon="solar:bot-linear"
-                      className="h-6 w-6 text-white"
-                    />
-                  </div>
-                  <h3 className="mb-2 text-xl font-semibold text-gray-900">
-                    Get instant help
-                  </h3>
-                  <p className="text-sm leading-relaxed text-gray-600">
-                    Our AI assistant can provide step-by-step guidance to
-                    resolve this issue quickly.
-                  </p>
-                </div>
-
-                <Button onPress={() => setShowChat(true)} color="secondary">
+            <Card>
+              <CardHeader className="justify-center">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-secondary-foreground">
                   <Icon
-                    icon="solar:message-circle-linear"
-                    className="mr-2 h-4 w-4"
+                    icon="solar:chat-dots-bold-duotone"
+                    className="h-6 w-6"
                   />
-                  Start conversation
-                </Button>
-              </CardBody>
+                </div>
+              </CardHeader>
+              <AnimatePresence>
+                {showChat ? (
+                  <PremiumAIChatInterface
+                    errorType={type}
+                    onClose={() => setShowChat(false)}
+                  />
+                ) : (
+                  <CardBody className="justify-center px-8 text-center">
+                    <h3 className="mb-2 text-xl font-semibold text-gray-900">
+                      Get instant help
+                    </h3>
+                    <p className="text-sm leading-relaxed text-gray-600">
+                      Our AI assistant can provide step-by-step guidance to
+                      resolve this issue quickly.
+                    </p>
+                  </CardBody>
+                )}
+              </AnimatePresence>
+              <CardFooter>
+                <AnimatePresence>
+                  {showChat ? null : (
+                    <Button
+                      fullWidth
+                      onPress={() => setShowChat(true)}
+                      color="secondary"
+                    >
+                      <Icon
+                        icon="solar:message-circle-linear"
+                        className="mr-2 h-4 w-4"
+                      />
+                      Start conversation
+                    </Button>
+                  )}
+                </AnimatePresence>
+              </CardFooter>
             </Card>
           </motion.div>
 
@@ -440,36 +437,25 @@ export default function CustomError({
             className="flex flex-col justify-center gap-3 sm:flex-row"
           >
             <Button
+              color="secondary"
               size="lg"
-              className="h-11 bg-black px-6 text-white hover:bg-gray-800"
-              onClick={() => (window.location.href = '/')}
+              onPress={() => (window.location.href = '/')}
+              startContent={<Icon icon="solar:home-2-linear" width={20} />}
             >
-              <Icon icon="solar:home-linear" className="mr-2 h-4 w-4" />
               Go home
             </Button>
 
             <Button
               variant="bordered"
               size="lg"
-              className="h-11 border-gray-200 bg-transparent px-6 hover:bg-gray-50"
-              onClick={() => (window.location.href = '/support')}
+              onPress={() => (window.location.href = '/support')}
+              endContent={<Icon icon="solar:arrow-right-linear" width={18} />}
             >
               Contact support
-              <Icon icon="solar:arrow-right-linear" className="ml-2 h-4 w-4" />
             </Button>
           </motion.div>
         </div>
       </main>
-
-      {/* AI Chat Modal */}
-      <AnimatePresence>
-        {showChat && (
-          <PremiumAIChatInterface
-            errorType={type}
-            onClose={() => setShowChat(false)}
-          />
-        )}
-      </AnimatePresence>
     </>
   );
 }
