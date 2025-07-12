@@ -3,12 +3,13 @@ import { getUserWithUID } from '@/services/api/user';
 import { QueryClient } from '@tanstack/react-query';
 
 interface Props {
-  params: {
+  params: Promise<{
     uid: number;
-  };
+  }>;
 }
 
-export default async function Page({ params }: Props) {
+export default async function Page(props: Props) {
+  const params = await props.params;
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ['user', params.uid],

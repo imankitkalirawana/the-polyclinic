@@ -30,7 +30,7 @@ export async function fetchData<T>(
       params,
       headers: {
         ...headers,
-        Cookie: cookies().toString(),
+        Cookie: (await cookies()).toString(),
       },
     });
 

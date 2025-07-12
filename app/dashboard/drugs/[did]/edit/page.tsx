@@ -8,12 +8,13 @@ import EditDrug from '@/components/dashboard/drugs/drug/edit';
 import { getDrugWithDid } from '@/services/api/drug';
 
 interface Props {
-  params: {
+  params: Promise<{
     did: number;
-  };
+  }>;
 }
 
-export default async function Page({ params }: Props) {
+export default async function Page(props: Props) {
+  const params = await props.params;
   const did = Number(params.did);
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({

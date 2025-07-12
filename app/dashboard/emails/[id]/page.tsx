@@ -8,12 +8,13 @@ import Email from '@/components/dashboard/emails/email';
 import { getEmailWithID } from '@/services/api/email';
 
 interface Props {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default async function Page({ params }: Props) {
+export default async function Page(props: Props) {
+  const params = await props.params;
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ['email', params.id],

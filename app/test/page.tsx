@@ -1,15 +1,13 @@
-'use client';
-import { useLocalStorage } from '@/hooks/use-local-storage';
-import { Button } from '@heroui/react';
+import { auth } from '@/auth';
+import TanStackTable from '@/components/test/tanstack-table';
+import { unauthorized } from 'next/navigation';
 
-export default function TestPage() {
-  const [value, setValue] = useLocalStorage<string>('my-key', 'initial value');
+export default async function TestPage() {
+  const session = await auth();
 
-  return (
-    <div>
-      <p>Value: {value}</p>
-      <Button onPress={() => setValue('new value')}>Update Value</Button>
-      <Button onPress={() => setValue((prev) => `${prev}!`)}>Append !</Button>
-    </div>
-  );
+  if (!session) {
+    unauthorized();
+  }
+
+  return <TanStackTable />;
 }

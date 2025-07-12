@@ -12,7 +12,7 @@ import { OtpEmail, WelcomeUser } from '@/templates/email';
 import { Gender } from '@/types/user';
 import { AuthError } from 'next-auth';
 import { signIn } from '@/auth';
-import { generateOtp } from '@/functions/server-actions';
+import { generateOtp } from '@/functions/utils';
 
 export const sendOTP = async ({
   email,

@@ -7,12 +7,13 @@ import EditService from '@/components/dashboard/services/service-item/edit';
 import { getServiceWithUID } from '@/services/api/service';
 
 interface Props {
-  params: {
+  params: Promise<{
     uid: string;
-  };
+  }>;
 }
 
-export default async function Page({ params }: Props) {
+export default async function Page(props: Props) {
+  const params = await props.params;
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ['service', params.uid],

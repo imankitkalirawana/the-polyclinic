@@ -8,11 +8,7 @@ import { connectDB } from '@/lib/db';
 import Otp from '@/models/Otp';
 import Service from '@/models/Service';
 import User from '@/models/User';
-
-export const generateOtp = (): number => {
-  const otp = Math.floor(1000 + Math.random() * 9000);
-  return otp;
-};
+import { generateOtp } from './utils';
 
 export const sendSMS = async (phone: string, message: string) => {
   console.log(`Your otp for ${phone} is ${message}`);
