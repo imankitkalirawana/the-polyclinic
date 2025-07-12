@@ -18,6 +18,7 @@ import {
   ModalFooter,
   ModalHeader,
   Progress,
+  ProgressProps,
   Tooltip,
   User,
 } from '@heroui/react';
@@ -208,7 +209,7 @@ const AppointmentContent = memo(function AppointmentContent({
         />
       </div>
 
-      {hasAdditionalInfo && (
+      {hasAdditionalInfo ? (
         <>
           <Divider className="my-2" />
           <div className="flex flex-col items-start gap-1">
@@ -255,8 +256,14 @@ const AppointmentContent = memo(function AppointmentContent({
             )}
           </div>
         </>
+      ) : (
+        <div className="flex flex-col items-start gap-1">
+          <AppointmentHeading title="No Additional Information" />
+          <span className="text-tiny text-default-400">
+            There are no additional details for this appointment.
+          </span>
+        </div>
       )}
-      <Divider className="my-2" />
     </>
   );
 });
@@ -346,16 +353,61 @@ const AppointmentHeader = memo(function AppointmentHeader({
 });
 
 // Shared footer component
-const AppointmentFooter = memo(function AppointmentFooter() {
+const AppointmentFooter = memo(function AppointmentFooter({
+  appointmentStatus,
+}: {
+  appointmentStatus: AppointmentType['status'];
+}) {
+  const progressMap: Record<
+    AppointmentType['status'],
+    {
+      value: number;
+      color: ProgressProps['color'];
+    }
+  > = {
+    booked: {
+      value: 25,
+      color: 'default',
+    },
+    confirmed: {
+      value: 50,
+      color: 'primary',
+    },
+    'in-progress': {
+      value: 75,
+      color: 'success',
+    },
+    completed: {
+      value: 100,
+      color: 'success',
+    },
+    cancelled: {
+      value: 0,
+      color: 'default',
+    },
+    overdue: {
+      value: 0,
+      color: 'danger',
+    },
+    'on-hold': {
+      value: 50,
+      color: 'warning',
+    },
+  };
+
   return (
     <Progress
       showValueLabel
-      value={50}
-      color="primary"
+      value={progressMap[appointmentStatus].value}
+      color={progressMap[appointmentStatus].color}
       size="sm"
       className="mt-2"
-      label={<AppointmentHeading title="Progress" />}
-      valueLabel={<AppointmentHeading title="50%" />}
+      label={<AppointmentHeading title={appointmentStatus} />}
+      valueLabel={
+        <AppointmentHeading
+          title={`${progressMap[appointmentStatus].value}%`}
+        />
+      }
     />
   );
 });
@@ -390,7 +442,7 @@ const AppointmentDrawerDesktop = memo(function AppointmentDrawerDesktop() {
               <AppointmentContent appointment={appointment} />
             </DrawerBody>
             <DrawerFooter>
-              <AppointmentFooter />
+              <AppointmentFooter appointmentStatus={appointment.status} />
             </DrawerFooter>
           </>
         )}
@@ -430,7 +482,7 @@ const AppointmentDrawerMobile = memo(function AppointmentDrawerMobile() {
               <AppointmentContent appointment={appointment} />
             </ModalBody>
             <ModalFooter>
-              <AppointmentFooter />
+              <AppointmentFooter appointmentStatus={appointment.status} />
             </ModalFooter>
           </>
         )}

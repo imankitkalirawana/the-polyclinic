@@ -44,7 +44,7 @@ export function CalendarHeader({
   const { data: session } = useSession();
   const [view, setView] = useQueryState(
     'view',
-    parseAsStringEnum(Views).withDefault('month')
+    parseAsStringEnum(Views).withDefault('schedule')
   );
 
   useKeyPress(['m'], (e) => {

@@ -20,7 +20,7 @@ interface CalendarProps {
 export function Calendar({ appointments }: CalendarProps) {
   const [view] = useQueryState(
     'view',
-    parseAsStringEnum(views).withDefault('month')
+    parseAsStringEnum(views).withDefault('schedule')
   );
   const [currentDate, setCurrentDate] = useQueryState(
     'date',
