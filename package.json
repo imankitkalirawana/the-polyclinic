@@ -19,6 +19,7 @@
     "@aws-sdk/client-s3": "^3.679.0",
     "@commitlint/types": "^19.8.0",
     "@faker-js/faker": "^9.7.0",
+    "@google/generative-ai": "^0.24.1",
     "@heroui/react": "^2.7.6",
     "@iconify/react": "^5.0.2",
     "@internationalized/date": "^3.8.1",

@@ -43,3 +43,11 @@ export function generateEmail(name: string) {
     })
     .toLowerCase();
 }
+
+export function toSnakeCase(str: string) {
+  return str.replace(/([A-Z])/g, '_$1').toLowerCase();
+}
+
+export function toTitleCase(str: string) {
+  return str.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
+}

@@ -24,6 +24,9 @@ importers:
       '@faker-js/faker':
         specifier: ^9.7.0
         version: 9.8.0
+      '@google/generative-ai':
+        specifier: ^0.24.1
+        version: 0.24.1
       '@heroui/react':
         specifier: ^2.7.6
         version: 2.7.8(@types/react@19.1.8)(framer-motion@11.18.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(tailwindcss@3.4.17)
@@ -576,6 +579,10 @@ packages:
 
   '@formatjs/intl-localematcher@0.6.1':
     resolution: {integrity: sha512-ePEgLgVCqi2BBFnTMWPfIghu6FkbZnnBVhO2sSxvLfrdFw7wCHAHiDoM2h4NRgjbaY7+B7HgOLZGkK187pZTZg==}
+
+  '@google/generative-ai@0.24.1':
+    resolution: {integrity: sha512-MqO+MLfM6kjxcKoy0p1wRzG3b4ZZXtPI+z2IE26UogS2Cm/XHO+7gGRBh6gcJsOiIVoH93UwKvW4HdgiOZCy9Q==}
+    engines: {node: '>=18.0.0'}
 
   '@heroui/accordion@2.2.16':
     resolution: {integrity: sha512-YjWTUx4hSRD6cV9hZxF9bEn/MStgPV2v4CCz66DdtGrxE527PANjk2oq4rkCS0ZnqfCw4ruFUuRS0HpnY5k/5w==}
@@ -6664,6 +6671,8 @@ snapshots:
   '@formatjs/intl-localematcher@0.6.1':
     dependencies:
       tslib: 2.8.1
+
+  '@google/generative-ai@0.24.1': {}
 
   '@heroui/accordion@2.2.16(@heroui/system@2.4.15(@heroui/theme@2.4.15(tailwindcss@3.4.17))(framer-motion@11.18.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@heroui/theme@2.4.15(tailwindcss@3.4.17))(framer-motion@11.18.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
