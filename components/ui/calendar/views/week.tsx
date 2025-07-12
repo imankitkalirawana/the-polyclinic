@@ -18,11 +18,15 @@ import { CurrentHourIndicator } from '../ui/current-hour-indicator';
 import AppointmentList from '../ui/appointment-list';
 import { useCalendarStore } from '../store';
 import AppointmentTriggerItem from '../ui/appointment-trigger-item';
-import { MAX_APPOINTMENTS_IN_CELL } from '../data';
+import {
+  allowedRolesToCreateAppointment,
+  MAX_APPOINTMENTS_IN_CELL,
+} from '../data';
 import DateChip from '../ui/date-chip';
 import { views } from '../types';
 import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs';
 import React from 'react';
+import { useSession } from 'next-auth/react';
 
 interface WeekViewProps {
   appointments: AppointmentType[];
@@ -35,6 +39,7 @@ export function WeekView({
   currentDate,
   onTimeSlotClick,
 }: WeekViewProps) {
+  const { data: session } = useSession();
   const ref = useRef<HTMLDivElement>(null);
   const [_currentDate, setCurrentDate] = useQueryState(
     'date',
@@ -45,6 +50,9 @@ export function WeekView({
   const weekStart = startOfWeek(currentDate);
   const weekEnd = endOfWeek(currentDate);
   const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd });
+  const isAllowedToCreateAppointment = allowedRolesToCreateAppointment.includes(
+    session?.user?.role
+  );
 
   const { appointment, setIsTooltipOpen, setAppointment } = useCalendarStore();
   const displayHours = Array.from(
@@ -136,8 +144,9 @@ export function WeekView({
                     className={cn(
                       'relative min-h-[80px] cursor-pointer overflow-hidden border-b border-r p-1',
                       {
-                        'cursor-not-allowed': isHourDisabled,
                         'last:border-r-0': dayIndex === weekDays.length - 1,
+                        'cursor-not-allowed': isHourDisabled,
+                        'cursor-auto': !isAllowedToCreateAppointment,
                       }
                     )}
                     style={{
@@ -145,7 +154,7 @@ export function WeekView({
                       gridColumnStart: dayIndex + 2,
                     }}
                     onClick={(e) => {
-                      if (isHourDisabled) {
+                      if (isHourDisabled || !isAllowedToCreateAppointment) {
                         return;
                       }
 

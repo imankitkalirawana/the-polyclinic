@@ -108,16 +108,6 @@ export const itemsMap: Record<UserType['role'], NavItem[]> = {
       thumbnail: '/assets/navbar/appointments.png',
       subItems: [
         {
-          title: 'Appointments',
-          items: [
-            {
-              name: 'Create New',
-              href: '/appointments/create',
-              icon: 'solar:pen-new-round-bold-duotone',
-            },
-          ],
-        },
-        {
           title: 'My Appointments',
           items: [
             {
