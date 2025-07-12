@@ -1,5 +1,4 @@
 import { redirect } from 'next/navigation';
-
 import { auth } from '@/auth';
 import DashboardLayout from '@/components/dashboard/layout';
 

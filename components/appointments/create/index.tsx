@@ -39,7 +39,7 @@ const KeyMap: Record<number, string> = {
   4: 'additional-details',
 };
 
-export default function CreateAppointment({
+export function CreateAppointment({
   open,
   onOpenChange,
   selectedDate,
@@ -266,6 +266,19 @@ function DoctorSelectionTitle({ doctor }: { doctor: DoctorType }) {
   ) : (
     <div className="space-y-4">
       <h3 className="text-2xl font-semibold">Choose a doctor (Optional)</h3>
+    </div>
+  );
+}
+
+export default function CreateAppointmentWrapper() {
+  return (
+    <div className="flex h-full w-full items-center justify-center p-4 md:p-8">
+      <CreateAppointment
+        open={true}
+        onOpenChange={() => {}}
+        selectedDate={new Date()}
+        size="full"
+      />
     </div>
   );
 }

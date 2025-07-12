@@ -11,7 +11,7 @@ import { AppointmentType } from '@/types/appointment';
 import { views } from './types';
 import { parseAsStringEnum, useQueryState, parseAsIsoDateTime } from 'nuqs';
 import AppointmentDrawer from './ui/appointment-drawer';
-import CreateAppointment from '@/components/appointments/create';
+import { CreateAppointment } from '@/components/appointments/create';
 
 interface CalendarProps {
   appointments: AppointmentType[];

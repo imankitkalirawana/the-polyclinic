@@ -1,15 +1,17 @@
-'use client';
+import { auth } from '@/auth';
 import CreateAppointment from '@/components/appointments/create';
+import { allowedRolesToCreateAppointment } from '@/components/ui/calendar/data';
+import { unauthorized } from 'next/navigation';
 
-export default function CreateAppointmentPage() {
-  return (
-    <div className="flex h-full w-full items-center justify-center p-4 md:p-8">
-      <CreateAppointment
-        open={true}
-        onOpenChange={() => {}}
-        selectedDate={new Date()}
-        size="full"
-      />
-    </div>
+export default async function CreateAppointmentPage() {
+  const session = await auth();
+  const isAllowedToCreateAppointment = allowedRolesToCreateAppointment.includes(
+    session?.user?.role
   );
+
+  if (!isAllowedToCreateAppointment) {
+    return unauthorized();
+  }
+
+  return <CreateAppointment />;
 }

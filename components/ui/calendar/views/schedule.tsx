@@ -65,17 +65,6 @@ export function ScheduleView({ appointments, currentDate }: ScheduleViewProps) {
               );
             }
           )}
-
-          {Object.keys(groupedAppointments).length === 0 && (
-            <div className="text-muted-foreground py-12 text-center">
-              <div className="mb-2 text-large font-medium">
-                No appointments this month
-              </div>
-              <div className="text-small">
-                Click anywhere to create a new appointment
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>
