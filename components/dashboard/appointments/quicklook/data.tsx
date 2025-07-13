@@ -1,8 +1,12 @@
-import { PermissionProps } from '@/components/ui/dashboard/quicklook/types';
+import {
+  ButtonProps,
+  PermissionProps,
+} from '@/components/ui/dashboard/quicklook/types';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { avatars } from '@/lib/avatar';
 import { AppointmentType } from '@/types/appointment';
 import {
+  addToast,
   Avatar,
   Button,
   Dropdown,
@@ -16,6 +20,11 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { format } from 'date-fns';
 import { ActionType, DropdownKeyType } from '../types';
 import ActivityTimeline from '../../../ui/activity/timeline';
+import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
+import { useAppointmentStore } from '../store';
+import { UserType } from '@/types/user';
+import CancelDeleteAppointment from '../modals/cancel-delete';
+import RescheduleAppointment from '../modals/reschedule';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
   doctor: [
@@ -220,3 +229,104 @@ export const sidebarContent = (appointment: AppointmentType) => (
     </Tabs>
   </>
 );
+
+export const useAppointmentButtons = ({
+  selected,
+  role,
+}: {
+  selected: AppointmentType | null;
+  role: UserType['role'];
+}) => {
+  const { setAction } = useAppointmentStore();
+
+  return [
+    {
+      key: 'new-tab',
+      children: 'Open in new tab',
+      startContent: (
+        <Icon icon="solar:arrow-right-up-line-duotone" width="20" />
+      ),
+      color: 'default',
+      variant: 'flat',
+      position: 'left',
+      isIconOnly: true,
+      onPress: () => {
+        const url = `/dashboard/appointments/${selected?.aid}`;
+        window.open(url, '_blank');
+      },
+    },
+    {
+      key: 'add-to-calendar',
+      children: 'Add to Calendar',
+      startContent: <Icon icon="solar:calendar-add-bold-duotone" width="20" />,
+      isHidden:
+        selected?.status === 'cancelled' ||
+        selected?.status === 'completed' ||
+        selected?.status === 'overdue' ||
+        !['user', 'doctor'].includes(role),
+      color: 'default',
+      variant: 'flat',
+      position: 'left',
+      onPress: () => {
+        if (selected) {
+          setAction('add-to-calendar');
+        }
+      },
+      content: selected && (
+        <AddToCalendar appointment={selected} onClose={() => setAction(null)} />
+      ),
+    },
+    {
+      key: 'cancel',
+      children: 'Cancel Appointment',
+      startContent: <Icon icon="solar:close-circle-bold-duotone" width="20" />,
+      isIconOnly: true,
+      color: 'danger',
+      variant: 'flat',
+      position: 'right',
+      isHidden:
+        selected?.status === 'cancelled' || selected?.status === 'completed',
+      onPress: () => {
+        if (selected) {
+          setAction('cancel');
+        }
+      },
+      content: <CancelDeleteAppointment type="cancel" />,
+    },
+    {
+      key: 'reminder',
+      children: 'Send a Reminder',
+      startContent: <Icon icon="solar:bell-bold-duotone" width="20" />,
+      isIconOnly: true,
+      variant: 'flat',
+      position: 'right',
+      isHidden:
+        selected?.status === 'completed' ||
+        selected?.status === 'cancelled' ||
+        selected?.status === 'overdue',
+      onPress: async () => {
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        addToast({
+          title: 'Reminder Sent',
+          description: 'Reminder sent to the patient',
+          color: 'success',
+        });
+      },
+    },
+    {
+      key: 'reschedule',
+      children: 'Reschedule',
+      startContent: <Icon icon="solar:calendar-bold-duotone" width="20" />,
+      color: 'warning',
+      variant: 'flat',
+      position: 'right',
+      isHidden: selected?.status === 'completed',
+      onPress: () => {
+        if (selected) {
+          setAction('reschedule');
+        }
+      },
+      content: <RescheduleAppointment />,
+    },
+  ] as Array<Partial<ButtonProps<ActionType>>>;
+};

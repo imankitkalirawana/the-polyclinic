@@ -19,7 +19,7 @@ export default function AppointmentTriggerItem({
         'flex min-h-6 cursor-pointer items-center justify-start gap-1 truncate rounded-lg p-1 text-tiny hover:bg-default-100 md:px-2',
         {
           'line-through': appointment.status === 'cancelled',
-          'bg-danger-100/70 hover:bg-danger-100':
+          'bg-warning-100/70 hover:bg-warning-100':
             appointment.type === 'emergency',
         }
       )}

@@ -7,117 +7,20 @@ import {
   ButtonProps,
   DropdownItemProps,
 } from '@/components/ui/dashboard/quicklook/types';
-import { useMemo } from 'react';
-import { permissions, sidebarContent } from './data';
+import { useCallback, useMemo } from 'react';
+import { permissions, sidebarContent, useAppointmentButtons } from './data';
 import { ActionType, DropdownKeyType } from '../types';
 import { addToast, Select, SelectItem } from '@heroui/react';
 import CancelDeleteAppointment from '../modals/cancel-delete';
 import RescheduleAppointment from '../modals/reschedule';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { format } from 'date-fns';
+import { UserType } from '@/types/user';
+import { useSession } from 'next-auth/react';
 
 export const AppointmentQuickLook = () => {
+  const { data: session } = useSession();
   const { selected, setSelected, setAction, action } = useAppointmentStore();
-
-  const buttons: Array<Partial<ButtonProps<ActionType>>> = useMemo(
-    () => [
-      {
-        key: 'new-tab',
-        children: 'Open in new tab',
-        startContent: (
-          <Icon icon="solar:arrow-right-up-line-duotone" width="20" />
-        ),
-        color: 'default',
-        variant: 'flat',
-        position: 'left',
-        isIconOnly: true,
-        onPress: () => {
-          const url = `/dashboard/appointments/${selected?.aid}`;
-          window.open(url, '_blank');
-        },
-      },
-      {
-        key: 'add-to-calendar',
-        children: 'Add to Calendar',
-        startContent: (
-          <Icon icon="solar:calendar-add-bold-duotone" width="20" />
-        ),
-        isHidden:
-          selected?.status === 'cancelled' ||
-          selected?.status === 'completed' ||
-          selected?.status === 'overdue',
-        color: 'default',
-        variant: 'flat',
-        position: 'left',
-        onPress: () => {
-          if (selected) {
-            setAction('add-to-calendar');
-          }
-        },
-        content: (
-          <AddToCalendar
-            appointment={selected as AppointmentType}
-            onClose={() => setAction(null)}
-          />
-        ),
-      },
-      {
-        key: 'cancel',
-        children: 'Cancel Appointment',
-        startContent: (
-          <Icon icon="solar:close-circle-bold-duotone" width="20" />
-        ),
-        isIconOnly: true,
-        color: 'danger',
-        variant: 'flat',
-        position: 'right',
-        isHidden:
-          selected?.status === 'cancelled' || selected?.status === 'completed',
-        onPress: () => {
-          if (selected) {
-            setAction('cancel');
-          }
-        },
-        content: <CancelDeleteAppointment type="cancel" />,
-      },
-      {
-        key: 'reminder',
-        children: 'Send a Reminder',
-        startContent: <Icon icon="solar:bell-bold-duotone" width="20" />,
-        isIconOnly: true,
-        variant: 'flat',
-        position: 'right',
-        isHidden:
-          selected?.status === 'completed' ||
-          selected?.status === 'cancelled' ||
-          selected?.status === 'overdue',
-        onPress: async () => {
-          await new Promise((resolve) => setTimeout(resolve, 2000));
-          addToast({
-            title: 'Reminder Sent',
-            description: 'Reminder sent to the patient',
-            color: 'success',
-          });
-        },
-      },
-      {
-        key: 'reschedule',
-        children: 'Reschedule',
-        startContent: <Icon icon="solar:calendar-bold-duotone" width="20" />,
-        color: 'warning',
-        variant: 'flat',
-        position: 'right',
-        isHidden: selected?.status === 'completed',
-        onPress: () => {
-          if (selected) {
-            setAction('reschedule');
-          }
-        },
-        content: <RescheduleAppointment />,
-      },
-    ],
-    [selected]
-  );
 
   const dropdown = useMemo<Array<Partial<DropdownItemProps<DropdownKeyType>>>>(
     () => [
@@ -137,7 +40,6 @@ export const AppointmentQuickLook = () => {
       {
         key: 'reports',
         children: 'Download Reports',
-        // hide if there are no previous appointments or if the appointment is not completed
         isHidden:
           !selected?.previousAppointment || selected?.status !== 'completed',
         startContent: (
@@ -281,7 +183,7 @@ export const AppointmentQuickLook = () => {
       isOpen={!!selected}
       onClose={() => setSelected(null)}
       selectedKey={action}
-      buttons={buttons}
+      buttons={useAppointmentButtons({ selected, role: session?.user?.role })}
       permissions={permissions}
       dropdown={dropdown}
       sidebarContent={sidebarContent(selected)}

@@ -2,8 +2,6 @@ import { AppointmentType } from '@/types/appointment';
 import {
   Button,
   ButtonGroup,
-  Card,
-  CardBody,
   cn,
   Divider,
   Drawer,
@@ -337,11 +335,17 @@ const AppointmentHeader = memo(function AppointmentHeader({
   );
 
   return (
-    <div className="flex w-full flex-row items-start justify-between gap-8 rounded-none bg-primary-500 pr-2 text-primary-foreground">
+    <div className="flex w-full flex-row items-start justify-between gap-8 rounded-none pr-2">
       <div>
-        <h2 className="text-large font-medium capitalize text-primary-foreground">
-          #{appointment.aid} - {appointment.type}
-        </h2>
+        <div className="flex items-center gap-1">
+          <h2 className="text-large font-medium capitalize text-primary-foreground">
+            #{appointment.aid} - {appointment.type}
+          </h2>
+          <Icon
+            icon="solar:danger-triangle-bold"
+            className="animate-pulse text-warning-500"
+          />
+        </div>
         <div className="flex items-center gap-1">
           <StatusRenderer status={appointment.status} />
           &middot;
@@ -409,62 +413,11 @@ const AppointmentHeader = memo(function AppointmentHeader({
 
 // Shared footer component
 const AppointmentFooter = memo(function AppointmentFooter({
-  appointmentStatus,
+  appointment,
 }: {
-  appointmentStatus: AppointmentType['status'];
+  appointment: AppointmentType;
 }) {
-  const progressMap: Record<
-    AppointmentType['status'],
-    {
-      value: number;
-      color: ProgressProps['color'];
-    }
-  > = {
-    booked: {
-      value: 25,
-      color: 'default',
-    },
-    confirmed: {
-      value: 50,
-      color: 'primary',
-    },
-    'in-progress': {
-      value: 75,
-      color: 'success',
-    },
-    completed: {
-      value: 100,
-      color: 'success',
-    },
-    cancelled: {
-      value: 0,
-      color: 'default',
-    },
-    overdue: {
-      value: 0,
-      color: 'danger',
-    },
-    'on-hold': {
-      value: 50,
-      color: 'warning',
-    },
-  };
-
-  return (
-    <Progress
-      showValueLabel
-      value={progressMap[appointmentStatus].value}
-      color={progressMap[appointmentStatus].color}
-      size="sm"
-      className="mt-2"
-      label={<AppointmentHeading title={appointmentStatus} />}
-      valueLabel={
-        <AppointmentHeading
-          title={`${progressMap[appointmentStatus].value}%`}
-        />
-      }
-    />
-  );
+  return <>{/* footer here with buttons */}</>;
 });
 
 const AppointmentDrawerDesktop = memo(function AppointmentDrawerDesktop() {
@@ -497,7 +450,7 @@ const AppointmentDrawerDesktop = memo(function AppointmentDrawerDesktop() {
               <AppointmentContent appointment={appointment} />
             </DrawerBody>
             <DrawerFooter>
-              <AppointmentFooter appointmentStatus={appointment.status} />
+              <AppointmentFooter appointment={appointment} />
             </DrawerFooter>
           </>
         )}
@@ -537,7 +490,7 @@ const AppointmentDrawerMobile = memo(function AppointmentDrawerMobile() {
               <AppointmentContent appointment={appointment} />
             </ModalBody>
             <ModalFooter>
-              <AppointmentFooter appointmentStatus={appointment.status} />
+              <AppointmentFooter appointment={appointment} />
             </ModalFooter>
           </>
         )}
