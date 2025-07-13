@@ -70,12 +70,17 @@ export interface AppointmentType extends Base {
   progress?: number;
   data?: Record<string, string>;
   type: AType['value'];
-  previousAppointments?: Array<number>;
+  previousAppointment?: number;
 }
 
 export type CreateAppointmentType = Pick<
   AppointmentType,
-  'date' | 'type' | 'additionalInfo' | 'patient' | 'doctor'
+  | 'date'
+  | 'type'
+  | 'additionalInfo'
+  | 'patient'
+  | 'doctor'
+  | 'previousAppointment'
 >;
 
 export type AppointmentMode = ValuesOf<typeof appointmentModes>;
