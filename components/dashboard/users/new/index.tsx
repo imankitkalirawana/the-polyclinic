@@ -34,6 +34,7 @@ import {
 import { useCreateUser } from '@/services/user';
 import { useSession } from 'next-auth/react';
 import { generateEmail, generatePhoneNumber, toCapitalCase } from '@/lib/utils';
+import { faker } from '@faker-js/faker';
 
 export default function NewUser() {
   const router = useRouter();
@@ -65,6 +66,18 @@ export default function NewUser() {
   const states: StateProps[] = statesData || [];
   const cities: CityProps[] = citiesData || [];
 
+  const handleAutofill = () => {
+    const name = faker.person.fullName();
+    formik.setFieldValue('name', name);
+    formik.setFieldValue('email', generateEmail(name));
+    formik.setFieldValue('phone', generatePhoneNumber());
+    formik.setFieldValue('gender', faker.helpers.arrayElement(Genders).value);
+    formik.setFieldValue(
+      'dob',
+      faker.date.birthdate().toISOString().split('T')[0]
+    );
+  };
+
   return (
     <>
       <Card
@@ -75,44 +88,19 @@ export default function NewUser() {
           formik.handleSubmit();
         }}
       >
-        <CardHeader className="flex flex-col items-start px-4 pb-0 pt-4">
-          <p className="text-large">Add New User</p>
-          <div className="sr-only flex gap-4 py-4">
-            <Badge
-              classNames={{
-                badge: 'w-5 h-5',
-              }}
-              color="primary"
-              content={
-                <Button
-                  isIconOnly
-                  className="p-0 text-primary-foreground"
-                  radius="full"
-                  size="sm"
-                  variant="light"
-                >
-                  <Icon icon="solar:pen-2-linear" />
-                </Button>
+        <CardHeader className="items-center justify-between px-4 pb-0 pt-4">
+          <h1 className="text-large">Add New User</h1>
+          {session?.user?.role === 'admin' && (
+            <Button
+              startContent={
+                <Icon icon="solar:magic-stick-3-bold-duotone" width={16} />
               }
-              placement="bottom-right"
-              shape="circle"
+              variant="flat"
+              onPress={handleAutofill}
             >
-              <Avatar
-                className="h-14 w-14"
-                src="https://i.pravatar.cc/150?u=a04258114e29026708c"
-              />
-            </Badge>
-            <div className="flex flex-col items-start justify-center">
-              <p className="font-medium">{formik.values.name}</p>
-              <span className="text-small text-default-500">
-                {formik.values.role}
-              </span>
-            </div>
-          </div>
-          <p className="sr-only text-small text-default-400">
-            The photo will be used for your profile, and will be visible to
-            other users of the platform.
-          </p>
+              Autofill
+            </Button>
+          )}
         </CardHeader>
         <CardBody>
           <ScrollShadow className="grid grid-cols-1 gap-4 p-1 md:grid-cols-2">

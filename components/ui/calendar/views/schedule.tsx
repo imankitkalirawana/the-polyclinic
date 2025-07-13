@@ -65,6 +65,12 @@ export function ScheduleView({ appointments, currentDate }: ScheduleViewProps) {
               );
             }
           )}
+          {/* if not appointments, show a message */}
+          {Object.keys(groupedAppointments).length === 0 && (
+            <div className="flex h-full flex-col items-center justify-center">
+              <p className="text-default-500">No appointments scheduled</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

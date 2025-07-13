@@ -77,7 +77,7 @@ export async function generateAppointments({
         description: faker.lorem.paragraph(),
         instructions: faker.lorem.lines(3),
       },
-      type: faker.helpers.arrayElement(appointmentTypes),
+      type: faker.helpers.arrayElement(appointmentTypes).value,
       progress: faker.number.int({ min: 0, max: 100 }),
       data: Object.fromEntries(
         Array.from({ length: faker.number.int({ min: 2, max: 5 }) }).map(() => [

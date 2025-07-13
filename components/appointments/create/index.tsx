@@ -9,6 +9,7 @@ import {
   ModalBody,
   ModalContent,
   ModalProps,
+  RadioGroup,
   ScrollShadow,
 } from '@heroui/react';
 import { AccordionTitle } from './accordion-title';
@@ -22,7 +23,7 @@ import DateSelection, { DateSelectionTitle } from './date-selection';
 import AdditionalDetailsSelection, {
   AdditionalDetailsSelectionTitle,
 } from './additional-details-selection';
-import { CreateAppointmentType } from '@/types/appointment';
+import { appointmentTypes, CreateAppointmentType } from '@/types/appointment';
 import { format } from 'date-fns';
 import { useCreateAppointment } from '@/services/appointment';
 import { castData } from '@/lib/utils';
@@ -31,12 +32,15 @@ import { useCalendarStore } from '@/components/ui/calendar/store';
 import { getNextAvailableTimeSlot } from './helper';
 import { useRouter } from 'nextjs-toploader/app';
 import { useAllDoctors } from '@/services/doctor';
+import CustomRadio from '@/components/ui/custom-radio';
+import AppointmentTypeSelection from './appointment-type-selection';
 
 const KeyMap: Record<number, string> = {
   1: 'patient',
   2: 'time',
-  3: 'doctor',
-  4: 'additional-details',
+  3: 'appointment-type',
+  4: 'doctor',
+  5: 'additional-details',
 };
 
 export function CreateAppointment({
@@ -205,21 +209,48 @@ export function CreateAppointment({
               />
             </AccordionItem>
             <AccordionItem
-              textValue="Doctor Selection"
+              textValue="Appointment Type"
               isDisabled={currentStep < 3}
-              key="doctor"
+              key="appointment-type"
               indicator={
                 <Link
                   href="#"
                   onPress={() => {
                     setCurrentStep(3);
-                    setAppointment('doctor', {} as DoctorType);
                   }}
                 >
                   Change
                 </Link>
               }
               hideIndicator={currentStep <= 3}
+              title={
+                <h3 className="text-2xl font-semibold">
+                  Choose an appointment type
+                </h3>
+              }
+            >
+              <AppointmentTypeSelection
+                appointmentType={appointment.type}
+                setAppointmentType={(type) => setAppointment('type', type)}
+                onContinue={() => setCurrentStep(4)}
+              />
+            </AccordionItem>
+            <AccordionItem
+              textValue="Doctor Selection"
+              isDisabled={currentStep < 4}
+              key="doctor"
+              indicator={
+                <Link
+                  href="#"
+                  onPress={() => {
+                    setCurrentStep(4);
+                    setAppointment('doctor', {} as DoctorType);
+                  }}
+                >
+                  Change
+                </Link>
+              }
+              hideIndicator={currentStep <= 4}
               title={
                 <DoctorSelectionTitle
                   doctor={appointment.doctor as DoctorType}
@@ -234,13 +265,13 @@ export function CreateAppointment({
                 selectedUser={appointment.doctor}
                 onSelectionChange={(user) => {
                   setAppointment('doctor', user);
-                  setCurrentStep(4);
+                  setCurrentStep(5);
                 }}
               />
             </AccordionItem>
             <AccordionItem
               textValue="Additional Details"
-              isDisabled={currentStep < 4}
+              isDisabled={currentStep < 5}
               key="additional-details"
               title={<AdditionalDetailsSelectionTitle />}
             >
