@@ -3,7 +3,10 @@ import { useAppointmentStore } from '@/store/appointment';
 import { UserType } from '@/types/user';
 import { useMemo } from 'react';
 import { useRouter } from 'nextjs-toploader/app';
-import { APPOINTMENT_BUTTON_CONFIGS, isButtonVisible } from './config';
+import {
+  APPOINTMENT_BUTTON_CONFIGS,
+  isButtonVisible,
+} from '../config/appointments';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 const useAppointmentButtonsInDrawer = ({

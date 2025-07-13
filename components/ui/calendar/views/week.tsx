@@ -16,7 +16,6 @@ import { ScrollShadow, Tooltip } from '@heroui/react';
 import { useEffect, useRef } from 'react';
 import { CurrentHourIndicator } from '../ui/current-hour-indicator';
 import AppointmentList from '../ui/appointment-list';
-import { useCalendarStore } from '../store';
 import AppointmentTriggerItem from '../ui/appointment-trigger-item';
 import {
   allowedRolesToCreateAppointment,
@@ -27,6 +26,7 @@ import { views } from '../types';
 import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs';
 import React from 'react';
 import { useSession } from 'next-auth/react';
+import { useAppointmentStore } from '@/store/appointment';
 
 interface WeekViewProps {
   appointments: AppointmentType[];
@@ -54,7 +54,8 @@ export function WeekView({
     session?.user?.role
   );
 
-  const { appointment, setIsTooltipOpen, setAppointment } = useCalendarStore();
+  const { appointment, setIsTooltipOpen, setAppointment } =
+    useAppointmentStore();
   const displayHours = Array.from(
     { length: TIMINGS.appointment.end - TIMINGS.appointment.start },
     (_, i) => i + TIMINGS.appointment.start

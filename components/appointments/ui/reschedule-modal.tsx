@@ -14,11 +14,7 @@ export default function RescheduleAppointment() {
   const { data: session } = useSession();
   const queryClient = useQueryClient();
 
-  const {
-    setAction,
-    selected: appointment,
-    setSelected,
-  } = useAppointmentStore();
+  const { setAction, appointment, setAppointment } = useAppointmentStore();
 
   const [timing, setTiming] = useState<Date>(() => {
     if (appointment?.date) {
@@ -60,7 +56,7 @@ export default function RescheduleAppointment() {
         }),
       ]);
       setAction(null);
-      setSelected(res);
+      setAppointment(res);
     },
     onError: (error) => {
       addToast({

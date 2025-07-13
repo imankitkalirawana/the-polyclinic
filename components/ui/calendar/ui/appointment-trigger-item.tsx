@@ -1,15 +1,15 @@
 import { AppointmentType } from '@/types/appointment';
-import { useCalendarStore } from '../store';
 import { cn } from '@heroui/react';
 import StatusRenderer from './status-renderer';
 import { formatTime } from '../helper';
+import { useAppointmentStore } from '@/store/appointment';
 
 export default function AppointmentTriggerItem({
   appointment,
 }: {
   appointment: AppointmentType;
 }) {
-  const { setAppointment } = useCalendarStore();
+  const { setAppointment } = useAppointmentStore();
 
   return (
     <button

@@ -30,13 +30,13 @@ import {
 } from '@/services/appointment';
 import { castData } from '@/lib/utils';
 import { $FixMe } from '@/types';
-import { useCalendarStore } from '@/components/ui/calendar/store';
 import { getNextAvailableTimeSlot } from './helper';
 import { useRouter } from 'nextjs-toploader/app';
 import { useAllDoctors } from '@/services/doctor';
 import AppointmentTypeSelection, {
   AppointmentTypeSelectionTitle,
 } from './appointment-type-selection';
+import { useAppointmentStore } from '@/store/appointment';
 
 const KeyMap: Record<number, string> = {
   1: 'patient',
@@ -68,7 +68,7 @@ export function CreateAppointment({
 
   const createAppointment = useCreateAppointment();
 
-  const { setAppointment: setCalendarAppointment } = useCalendarStore();
+  const { setAppointment: setCalendarAppointment } = useAppointmentStore();
   const { data: linkedUsers, isLoading: isLinkedUsersLoading } =
     useLinkedUsers();
 

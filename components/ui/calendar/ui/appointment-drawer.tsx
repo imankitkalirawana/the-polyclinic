@@ -31,11 +31,10 @@ import { memo, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import { useAppointmentWithAID } from '@/services/appointment';
 import { useSession } from 'next-auth/react';
-import useAppointmentButtonsInDrawer from '@/components/appointments/use-appointment-button';
+import useAppointmentButtonsInDrawer from '@/hooks/use-appointment-button';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
-import StatusRenderer from '../status-renderer';
+import StatusRenderer from './status-renderer';
 import AsyncButton from '@/components/ui/buttons/async-button';
-import { useCalendarStore } from '../../store';
 import { useAppointmentStore } from '@/store/appointment';
 
 const DRAWER_DELAY = 200;
@@ -419,7 +418,7 @@ const AppointmentFooter = memo(function AppointmentFooter({
 }: {
   appointment: AppointmentType;
 }) {
-  const { action, selected, setAction } = useAppointmentStore();
+  const { action, setAction } = useAppointmentStore();
   const { data: session } = useSession();
   const buttons = useAppointmentButtonsInDrawer({
     selected: appointment,
@@ -465,7 +464,7 @@ const AppointmentFooter = memo(function AppointmentFooter({
 });
 
 const AppointmentDrawerDesktop = memo(function AppointmentDrawerDesktop() {
-  const { appointment, setAppointment, isTooltipOpen } = useCalendarStore();
+  const { appointment, setAppointment, isTooltipOpen } = useAppointmentStore();
 
   if (!appointment) return null;
 
@@ -504,7 +503,7 @@ const AppointmentDrawerDesktop = memo(function AppointmentDrawerDesktop() {
 });
 
 const AppointmentDrawerMobile = memo(function AppointmentDrawerMobile() {
-  const { appointment, setAppointment, isTooltipOpen } = useCalendarStore();
+  const { appointment, setAppointment, isTooltipOpen } = useAppointmentStore();
 
   if (!appointment) return null;
 

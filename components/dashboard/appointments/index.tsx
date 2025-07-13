@@ -41,7 +41,7 @@ const INITIAL_VISIBLE_COLUMNS = [
 export default function Appointments() {
   const router = useRouter();
 
-  const { selected, setSelected, keys, setKeys, action, setAction } =
+  const { appointment, setAppointment, keys, setKeys, action, setAction } =
     useAppointmentStore();
   const { data, isLoading } = useAllAppointments();
 
@@ -304,11 +304,11 @@ export default function Appointments() {
             (appointment) => appointment.aid == row
           );
           if (appointment) {
-            setSelected(appointment);
+            setAppointment(appointment);
           }
         }}
       />
-      {selected && <AppointmentQuickLook />}
+      {appointment && <AppointmentQuickLook />}
       {(action === 'bulk-delete' || action === 'bulk-cancel') && (
         <CancelDeleteAppointments
           appointments={appointments.filter((appointment) => {

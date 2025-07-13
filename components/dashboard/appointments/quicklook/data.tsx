@@ -231,10 +231,10 @@ export const sidebarContent = (appointment: AppointmentType) => (
 );
 
 export const useAppointmentButtons = ({
-  selected,
+  appointment,
   role,
 }: {
-  selected: AppointmentType | null;
+  appointment: AppointmentType | null;
   role: UserType['role'];
 }) => {
   const { setAction } = useAppointmentStore();
@@ -251,7 +251,7 @@ export const useAppointmentButtons = ({
       position: 'left',
       isIconOnly: true,
       onPress: () => {
-        const url = `/dashboard/appointments/${selected?.aid}`;
+        const url = `/dashboard/appointments/${appointment?.aid}`;
         window.open(url, '_blank');
       },
     },
@@ -260,20 +260,23 @@ export const useAppointmentButtons = ({
       children: 'Add to Calendar',
       startContent: <Icon icon="solar:calendar-add-bold-duotone" width="20" />,
       isHidden:
-        selected?.status === 'cancelled' ||
-        selected?.status === 'completed' ||
-        selected?.status === 'overdue' ||
+        appointment?.status === 'cancelled' ||
+        appointment?.status === 'completed' ||
+        appointment?.status === 'overdue' ||
         !['user', 'doctor'].includes(role),
       color: 'default',
       variant: 'flat',
       position: 'left',
       onPress: () => {
-        if (selected) {
+        if (appointment) {
           setAction('add-to-calendar');
         }
       },
-      content: selected && (
-        <AddToCalendar appointment={selected} onClose={() => setAction(null)} />
+      content: appointment && (
+        <AddToCalendar
+          appointment={appointment}
+          onClose={() => setAction(null)}
+        />
       ),
     },
     {
@@ -285,11 +288,11 @@ export const useAppointmentButtons = ({
       variant: 'flat',
       position: 'right',
       isHidden:
-        selected?.status === 'cancelled' ||
-        selected?.status === 'completed' ||
+        appointment?.status === 'cancelled' ||
+        appointment?.status === 'completed' ||
         !['user', 'doctor', 'receptionist', 'admin'].includes(role),
       onPress: () => {
-        if (selected) {
+        if (appointment) {
           setAction('cancel');
         }
       },
@@ -303,9 +306,9 @@ export const useAppointmentButtons = ({
       variant: 'flat',
       position: 'right',
       isHidden:
-        selected?.status === 'completed' ||
-        selected?.status === 'cancelled' ||
-        selected?.status === 'overdue' ||
+        appointment?.status === 'completed' ||
+        appointment?.status === 'cancelled' ||
+        appointment?.status === 'overdue' ||
         !['doctor', 'receptionist', 'admin'].includes(role),
       onPress: async () => {
         await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -324,10 +327,10 @@ export const useAppointmentButtons = ({
       variant: 'flat',
       position: 'right',
       isHidden:
-        selected?.status === 'completed' ||
+        appointment?.status === 'completed' ||
         !['user', 'doctor', 'receptionist', 'admin'].includes(role),
       onPress: () => {
-        if (selected) {
+        if (appointment) {
           setAction('reschedule');
         }
       },

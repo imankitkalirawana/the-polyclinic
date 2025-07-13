@@ -29,7 +29,7 @@ import { useAppointmentWithAID } from '@/services/appointment';
 import Loading from '@/app/loading';
 
 export default function Appointment({ aid }: { aid: number }) {
-  const { action, setAction, setSelected } = useAppointmentStore();
+  const { action, setAction, setAppointment } = useAppointmentStore();
   const { data, isLoading, isError, error } = useAppointmentWithAID(aid);
 
   const appointment: AppointmentType = data as AppointmentType;
@@ -454,7 +454,7 @@ export default function Appointment({ aid }: { aid: number }) {
                   isIconOnly
                   className="mr-2"
                   onPress={() => {
-                    setSelected(appointment);
+                    setAppointment(appointment);
                     setAction('cancel');
                   }}
                 >

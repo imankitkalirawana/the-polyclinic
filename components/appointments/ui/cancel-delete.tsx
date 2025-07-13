@@ -12,11 +12,7 @@ export default function CancelDeleteAppointment({
 }: {
   type?: 'cancel' | 'delete';
 }) {
-  const {
-    setAction,
-    selected: appointment,
-    setSelected,
-  } = useAppointmentStore();
+  const { setAction, appointment, setAppointment } = useAppointmentStore();
   const queryClient = useQueryClient();
 
   const body = React.useMemo(
@@ -87,7 +83,7 @@ export default function CancelDeleteAppointment({
         }),
       ]);
       setAction(null);
-      setSelected(type === 'cancel' ? res : null);
+      setAppointment(type === 'cancel' ? res : null);
     },
     onError: (error) => {
       addToast({

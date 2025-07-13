@@ -14,7 +14,8 @@ import { useSession } from 'next-auth/react';
 
 export const AppointmentQuickLook = () => {
   const { data: session } = useSession();
-  const { selected, setSelected, setAction, action } = useAppointmentStore();
+  const { appointment, setAppointment, setAction, action } =
+    useAppointmentStore();
 
   const dropdown = useMemo<Array<Partial<DropdownItemProps<DropdownKeyType>>>>(
     () => [
@@ -35,7 +36,8 @@ export const AppointmentQuickLook = () => {
         key: 'reports',
         children: 'Download Reports',
         isHidden:
-          !selected?.previousAppointment || selected?.status !== 'completed',
+          !appointment?.previousAppointment ||
+          appointment?.status !== 'completed',
         startContent: (
           <Icon icon="solar:download-twice-square-bold-duotone" width="20" />
         ),
@@ -65,14 +67,14 @@ export const AppointmentQuickLook = () => {
         color: 'danger',
         startContent: <Icon icon="solar:trash-bin-2-bold-duotone" width="20" />,
         onPress: () => {
-          if (selected) {
+          if (appointment) {
             setAction('delete');
           }
         },
         content: <CancelDeleteAppointment type="delete" />,
       },
     ],
-    [selected]
+    [appointment]
   );
 
   const content = (appointment: AppointmentType) => [
@@ -169,19 +171,22 @@ export const AppointmentQuickLook = () => {
       : []),
   ];
 
-  if (!selected) return null;
+  if (!appointment) return null;
 
   return (
     <QuickLook
-      selectedItem={selected}
-      isOpen={!!selected}
-      onClose={() => setSelected(null)}
+      selectedItem={appointment}
+      isOpen={!!appointment}
+      onClose={() => setAppointment(null)}
       selectedKey={action}
-      buttons={useAppointmentButtons({ selected, role: session?.user?.role })}
+      buttons={useAppointmentButtons({
+        appointment,
+        role: session?.user?.role,
+      })}
       permissions={permissions}
       dropdown={dropdown}
-      sidebarContent={sidebarContent(selected)}
-      content={content(selected)}
+      sidebarContent={sidebarContent(appointment)}
+      content={content(appointment)}
     />
   );
 };

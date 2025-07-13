@@ -8,12 +8,12 @@ import {
   ScrollShadow,
 } from '@heroui/react';
 import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs';
-import { useCalendarStore } from '../store';
 import { format } from 'date-fns';
 import DateChip from './date-chip';
 import StatusRenderer from './status-renderer';
 import { formatTime } from '../helper';
-import { View, views } from '../types';
+import { views } from '../types';
+import { useAppointmentStore } from '@/store/appointment';
 
 export default function AppointmentList({
   appointments,
@@ -27,7 +27,7 @@ export default function AppointmentList({
     parseAsIsoDateTime.withDefault(new Date())
   );
   const [_view, setView] = useQueryState('view', parseAsStringEnum(views));
-  const { setAppointment } = useCalendarStore();
+  const { setAppointment } = useAppointmentStore();
 
   return (
     <Card className="flex max-w-xs flex-col shadow-none">
