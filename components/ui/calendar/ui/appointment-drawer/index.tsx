@@ -18,23 +18,25 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  Progress,
-  ProgressProps,
+  Skeleton,
   Tooltip,
   User,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { CellRenderer } from '../../cell-renderer';
+import { CellRenderer } from '@/components/ui/cell-renderer';
 import { CLINIC_INFO } from '@/lib/config';
 import { format } from 'date-fns';
-import StatusRenderer from './status-renderer';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { memo, useMemo, useCallback } from 'react';
-import { useCalendarStore } from '../store';
 import Link from 'next/link';
 import { useAppointmentWithAID } from '@/services/appointment';
-import { renderChip } from '../../data-table/cell-renderers';
-import Skeleton from '../../skeleton';
+import { useSession } from 'next-auth/react';
+import useAppointmentButtonsInDrawer from '@/components/appointments/use-appointment-button';
+import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import StatusRenderer from '../status-renderer';
+import AsyncButton from '@/components/ui/buttons/async-button';
+import { useCalendarStore } from '../../store';
+import { useAppointmentStore } from '@/store/appointment';
 
 const DRAWER_DELAY = 200;
 
@@ -417,7 +419,49 @@ const AppointmentFooter = memo(function AppointmentFooter({
 }: {
   appointment: AppointmentType;
 }) {
-  return <>{/* footer here with buttons */}</>;
+  const { action, selected, setAction } = useAppointmentStore();
+  const { data: session } = useSession();
+  const buttons = useAppointmentButtonsInDrawer({
+    selected: appointment,
+    role: session?.user?.role,
+  });
+
+  return (
+    <>
+      <div className="flex w-full flex-row items-center justify-center gap-2">
+        {buttons.map((button) => {
+          const isButtonIconOnly = button.isIconOnly || buttons.length > 3;
+
+          return (
+            <Tooltip
+              key={button.key}
+              delay={500}
+              content={button.children}
+              isDisabled={!isButtonIconOnly}
+              color={button.color}
+            >
+              <AsyncButton
+                color={button.color}
+                variant={button.variant}
+                isIconOnly={isButtonIconOnly}
+                fullWidth
+                whileSubmitting={button.whileLoading}
+                fn={async () => {
+                  if (button.onPress) {
+                    await button.onPress();
+                  }
+                }}
+                startContent={button.startContent}
+              >
+                {isButtonIconOnly ? null : button.children}
+              </AsyncButton>
+            </Tooltip>
+          );
+        })}
+        {buttons.find((btn) => btn.key === action)?.content}
+      </div>
+    </>
+  );
 });
 
 const AppointmentDrawerDesktop = memo(function AppointmentDrawerDesktop() {

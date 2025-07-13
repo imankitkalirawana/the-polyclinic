@@ -1,21 +1,15 @@
-import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
 import QuickLook from '@/components/ui/dashboard/quicklook';
 import { AppointmentType } from '@/types/appointment';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useAppointmentStore } from '../store';
-import {
-  ButtonProps,
-  DropdownItemProps,
-} from '@/components/ui/dashboard/quicklook/types';
-import { useCallback, useMemo } from 'react';
+import { useAppointmentStore } from '@/store/appointment';
+import { DropdownItemProps } from '@/components/ui/dashboard/quicklook/types';
+import { useMemo } from 'react';
 import { permissions, sidebarContent, useAppointmentButtons } from './data';
-import { ActionType, DropdownKeyType } from '../types';
+import { DropdownKeyType } from '@/types/appointment';
 import { addToast, Select, SelectItem } from '@heroui/react';
-import CancelDeleteAppointment from '../modals/cancel-delete';
-import RescheduleAppointment from '../modals/reschedule';
+import CancelDeleteAppointment from '@/components/appointments/ui/cancel-delete';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { format } from 'date-fns';
-import { UserType } from '@/types/user';
 import { useSession } from 'next-auth/react';
 
 export const AppointmentQuickLook = () => {

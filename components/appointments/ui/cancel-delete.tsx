@@ -1,5 +1,5 @@
 import Modal from '@/components/ui/modal';
-import { useAppointmentStore } from '../store';
+import { useAppointmentStore } from '@/store/appointment';
 import { apiRequest } from '@/lib/axios';
 import { format } from 'date-fns';
 import { addToast, Card, CardBody } from '@heroui/react';

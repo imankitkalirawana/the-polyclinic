@@ -18,13 +18,13 @@ import {
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { format } from 'date-fns';
-import { ActionType, DropdownKeyType } from '../types';
-import ActivityTimeline from '../../../ui/activity/timeline';
+import { ActionType, DropdownKeyType } from '@/types/appointment';
+import ActivityTimeline from '@/components/ui/activity/timeline';
 import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
-import { useAppointmentStore } from '../store';
+import { useAppointmentStore } from '@/store/appointment';
 import { UserType } from '@/types/user';
-import CancelDeleteAppointment from '../modals/cancel-delete';
-import RescheduleAppointment from '../modals/reschedule';
+import CancelDeleteAppointment from '@/components/appointments/ui/cancel-delete';
+import RescheduleAppointment from '@/components/appointments/ui/reschedule-modal';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
   doctor: [
@@ -285,7 +285,9 @@ export const useAppointmentButtons = ({
       variant: 'flat',
       position: 'right',
       isHidden:
-        selected?.status === 'cancelled' || selected?.status === 'completed',
+        selected?.status === 'cancelled' ||
+        selected?.status === 'completed' ||
+        !['user', 'doctor', 'receptionist', 'admin'].includes(role),
       onPress: () => {
         if (selected) {
           setAction('cancel');
@@ -303,7 +305,8 @@ export const useAppointmentButtons = ({
       isHidden:
         selected?.status === 'completed' ||
         selected?.status === 'cancelled' ||
-        selected?.status === 'overdue',
+        selected?.status === 'overdue' ||
+        !['doctor', 'receptionist', 'admin'].includes(role),
       onPress: async () => {
         await new Promise((resolve) => setTimeout(resolve, 2000));
         addToast({
@@ -320,7 +323,9 @@ export const useAppointmentButtons = ({
       color: 'warning',
       variant: 'flat',
       position: 'right',
-      isHidden: selected?.status === 'completed',
+      isHidden:
+        selected?.status === 'completed' ||
+        !['user', 'doctor', 'receptionist', 'admin'].includes(role),
       onPress: () => {
         if (selected) {
           setAction('reschedule');

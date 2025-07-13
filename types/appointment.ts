@@ -1,6 +1,8 @@
 import { Base } from '@/lib/interface';
 import { Gender } from '@/types/user';
 import { ValuesOf } from '@/lib/utils';
+import { UserType } from '@/types/user';
+import { ButtonProps } from '@heroui/react';
 
 export const appointmentTypes = [
   {
@@ -86,3 +88,55 @@ export type CreateAppointmentType = Pick<
 export type AppointmentMode = ValuesOf<typeof appointmentModes>;
 export type AType = ValuesOf<typeof appointmentTypes>;
 export type AppointmentStatus = ValuesOf<typeof appointmentStatuses>;
+
+export type ActionType =
+  | 'reschedule'
+  | 'cancel'
+  | 'delete'
+  | 'reminder'
+  | 'add-to-calendar'
+  | 'bulk-cancel'
+  | 'bulk-delete'
+  | 'new-tab';
+
+export type DropdownKeyType = 'invoice' | 'reports' | 'edit' | 'delete';
+
+export interface ButtonConfig {
+  key: string;
+  label: string;
+  icon: string;
+  color: ButtonProps['color'];
+  variant: ButtonProps['variant'];
+  position: 'left' | 'right';
+  isIconOnly?: boolean;
+  whileLoading?: string;
+  visibilityRules: {
+    statuses?: AppointmentType['status'][];
+    roles?: UserType['role'][];
+    custom?: (appointment: AppointmentType, role: UserType['role']) => boolean;
+  };
+  action: {
+    type: 'store-action' | 'async-function' | 'navigation';
+    payload?: any;
+    handler?: (appointment: AppointmentType) => Promise<void> | void;
+    url?: (appointment: AppointmentType) => string;
+  };
+  content?: React.ComponentType<{
+    appointment: AppointmentType;
+    onClose: () => void;
+  }>;
+}
+
+export interface ProcessedButton {
+  key: string;
+  children: string;
+  startContent: React.ReactNode;
+  color: ButtonProps['color'];
+  variant: ButtonProps['variant'];
+  position: 'left' | 'right';
+  isIconOnly?: boolean;
+  whileLoading?: string;
+  isHidden: boolean;
+  onPress: () => Promise<void> | void;
+  content?: React.ReactNode;
+}
