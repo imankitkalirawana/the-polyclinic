@@ -67,10 +67,7 @@ const appointmentSchema = new mongoose.Schema(
       enum: ['consultation', 'follow-up', 'emergency'],
       default: 'consultation',
     },
-    previousAppointments: {
-      type: [Number],
-      default: [],
-    },
+    previousAppointment: Number,
     createdBy: {
       type: String,
       default: 'system-admin@divinely.dev',

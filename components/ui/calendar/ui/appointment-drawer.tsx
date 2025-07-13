@@ -2,6 +2,9 @@ import { AppointmentType } from '@/types/appointment';
 import {
   Button,
   ButtonGroup,
+  Card,
+  CardBody,
+  cn,
   Divider,
   Drawer,
   DrawerBody,
@@ -31,6 +34,9 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { memo, useMemo, useCallback } from 'react';
 import { useCalendarStore } from '../store';
 import Link from 'next/link';
+import { useAppointmentWithAID } from '@/services/appointment';
+import { renderChip } from '../../data-table/cell-renderers';
+import Skeleton from '../../skeleton';
 
 const DRAWER_DELAY = 200;
 
@@ -38,12 +44,19 @@ const DRAWER_DELAY = 200;
 const AppointmentHeading = memo(function AppointmentHeading({
   title,
   description,
+  className,
 }: {
   title: string;
   description?: string | React.ReactNode;
+  className?: string;
 }) {
   return (
-    <div className="flex w-full items-center justify-between gap-2 text-tiny font-medium uppercase tracking-wide text-default-500">
+    <div
+      className={cn(
+        'flex w-full items-center justify-between gap-2 text-tiny font-medium uppercase tracking-wide text-default-500',
+        className
+      )}
+    >
       <h2>{title}</h2>
       {description}
     </div>
@@ -91,6 +104,10 @@ const AppointmentContent = memo(function AppointmentContent({
 }: {
   appointment: AppointmentType;
 }) {
+  const { data: previousAppointment, isLoading } = useAppointmentWithAID(
+    appointment?.previousAppointment || 0
+  );
+
   const patientDescription = useMemo(() => {
     const parts = [`Patient • #${appointment.patient.uid}`];
 
@@ -181,6 +198,44 @@ const AppointmentContent = memo(function AppointmentContent({
             }}
             description={doctorDescription}
           />
+        )}
+        {appointment.previousAppointment && (
+          <>
+            <AppointmentHeading
+              className="mt-2"
+              title="LINKED APPOINTMENT"
+              description={
+                <Link
+                  className="flex items-center gap-0.5 underline hover:text-primary"
+                  href={`/appointments/${appointment.previousAppointment}`}
+                  target="_blank"
+                >
+                  #{appointment.previousAppointment}
+                  <Icon icon="solar:round-arrow-right-up-linear" width={13} />
+                </Link>
+              }
+            />
+            {isLoading ? (
+              <div className="flex w-full items-center gap-2">
+                <Skeleton className="h-8 w-32" />
+                <Skeleton className="h-4 w-3/4" />
+              </div>
+            ) : (
+              !!previousAppointment && (
+                <div className="flex items-center gap-2">
+                  {renderChip({
+                    item: previousAppointment?.status,
+                  })}
+                  <span className="text-tiny text-default-500">
+                    {format(
+                      new Date(previousAppointment?.date || ''),
+                      'EEEE, MMMM d · hh:mm a'
+                    )}
+                  </span>
+                </div>
+              )
+            )}
+          </>
         )}
       </div>
 
