@@ -139,8 +139,7 @@ export const AppointmentQuickLook = () => {
         children: 'Download Reports',
         // hide if there are no previous appointments or if the appointment is not completed
         isHidden:
-          selected?.previousAppointments?.length === 0 ||
-          selected?.status !== 'completed',
+          !selected?.previousAppointment || selected?.status !== 'completed',
         startContent: (
           <Icon icon="solar:download-twice-square-bold-duotone" width="20" />
         ),
