@@ -1,10 +1,18 @@
-import Banner from '@/components/sections/home/banner';
+'use client';
+import { useModal } from '@/components/ui/global-modal';
+import { Button } from '@heroui/react';
 
-export default function Home() {
+export default function HomePage() {
+  const modal = useModal();
   return (
-    <>
-      {/* <Homepage /> */}
-      <Banner />
-    </>
+    <Button
+      onPress={() =>
+        modal.show({
+          body: <div>Hello Home Page</div>,
+        })
+      }
+    >
+      Open Modal
+    </Button>
   );
 }
