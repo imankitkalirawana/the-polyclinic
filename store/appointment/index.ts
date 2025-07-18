@@ -1,32 +1,28 @@
-import { AppointmentType } from '@/types/appointment';
-import { DoctorType } from '@/types/doctor';
-import { UserType } from '@/types/user';
-import { useFormik } from 'formik';
+import { create } from 'zustand';
+import { AppointmentType, ActionType } from '@/types/appointment';
+import { Selection } from '@heroui/react';
 
-export const useNewAppointmentForm = (session: any) => {
-  const appointmentForm = useFormik({
-    initialValues: {
-      patient: {
-        uid: session?.user?.uid,
-        name: session?.user?.name,
-        email: session?.user?.email,
-        image: session?.user?.picture || session?.user?.image,
-      } as UserType,
-      doctor: {} as DoctorType,
-      appointment: {} as AppointmentType,
-      date: new Date(),
-      additionalInfo: {
-        notes: '',
-        type: 'online',
-        symptoms: '',
-      },
-      step: 1,
-    },
+interface AppointmentStoreState {
+  appointment: AppointmentType | null;
+  action: ActionType | null;
+  keys: Selection | undefined;
+  setAppointment: (appointment: AppointmentType | null) => void;
+  setAction: (action: ActionType | null) => void;
+  setKeys: (keys: Selection) => void;
+  resetState: () => void;
+  isTooltipOpen: boolean;
+  setIsTooltipOpen: (isTooltipOpen: boolean) => void;
+}
 
-    onSubmit: async (values) => {
-      console.log(values);
-    },
-  });
-
-  return { appointmentForm };
-};
+// Zustand store for appointment state
+export const useAppointmentStore = create<AppointmentStoreState>((set) => ({
+  appointment: null,
+  action: null,
+  keys: undefined,
+  isTooltipOpen: false,
+  setAppointment: (appointment) => set({ appointment }),
+  setAction: (action) => set({ action }),
+  setKeys: (keys) => set({ keys }),
+  resetState: () => set({ appointment: null, action: null, keys: undefined }),
+  setIsTooltipOpen: (isTooltipOpen) => set({ isTooltipOpen }),
+}));

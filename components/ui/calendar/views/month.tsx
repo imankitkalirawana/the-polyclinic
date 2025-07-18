@@ -11,12 +11,11 @@ import {
   isPast,
 } from 'date-fns';
 import { cn } from '@/lib/utils';
-import { View, views } from '../types';
+import { views } from '../types';
 import { Tooltip } from '@heroui/react';
 import DateChip from '../ui/date-chip';
 import { TIMINGS } from '@/lib/config';
 import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs';
-import { useCalendarStore } from '../store';
 import AppointmentTriggerItem from '../ui/appointment-trigger-item';
 import AppointmentList from '../ui/appointment-list';
 import {
@@ -25,6 +24,7 @@ import {
 } from '../data';
 import { AppointmentType } from '@/types/appointment';
 import { useSession } from 'next-auth/react';
+import { useAppointmentStore } from '@/store/appointment';
 
 interface MonthViewProps {
   appointments: AppointmentType[];
@@ -38,7 +38,7 @@ export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
     parseAsIsoDateTime.withDefault(new Date())
   );
 
-  const { appointment, setIsTooltipOpen } = useCalendarStore();
+  const { appointment, setIsTooltipOpen } = useAppointmentStore();
 
   const [_view, setView] = useQueryState('view', parseAsStringEnum(views));
 

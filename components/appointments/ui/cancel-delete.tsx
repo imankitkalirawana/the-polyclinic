@@ -1,5 +1,5 @@
 import Modal from '@/components/ui/modal';
-import { useAppointmentStore } from '../store';
+import { useAppointmentStore } from '@/store/appointment';
 import { apiRequest } from '@/lib/axios';
 import { format } from 'date-fns';
 import { addToast, Card, CardBody } from '@heroui/react';
@@ -12,11 +12,7 @@ export default function CancelDeleteAppointment({
 }: {
   type?: 'cancel' | 'delete';
 }) {
-  const {
-    setAction,
-    selected: appointment,
-    setSelected,
-  } = useAppointmentStore();
+  const { setAction, appointment, setAppointment } = useAppointmentStore();
   const queryClient = useQueryClient();
 
   const body = React.useMemo(
@@ -87,7 +83,7 @@ export default function CancelDeleteAppointment({
         }),
       ]);
       setAction(null);
-      setSelected(type === 'cancel' ? res : null);
+      setAppointment(type === 'cancel' ? res : null);
     },
     onError: (error) => {
       addToast({

@@ -22,21 +22,28 @@ import DateSelection, { DateSelectionTitle } from './date-selection';
 import AdditionalDetailsSelection, {
   AdditionalDetailsSelectionTitle,
 } from './additional-details-selection';
-import { CreateAppointmentType } from '@/types/appointment';
+import { AppointmentType, CreateAppointmentType } from '@/types/appointment';
 import { format } from 'date-fns';
-import { useCreateAppointment } from '@/services/appointment';
+import {
+  useAllAppointments,
+  useCreateAppointment,
+} from '@/services/appointment';
 import { castData } from '@/lib/utils';
 import { $FixMe } from '@/types';
-import { useCalendarStore } from '@/components/ui/calendar/store';
 import { getNextAvailableTimeSlot } from './helper';
 import { useRouter } from 'nextjs-toploader/app';
 import { useAllDoctors } from '@/services/doctor';
+import AppointmentTypeSelection, {
+  AppointmentTypeSelectionTitle,
+} from './appointment-type-selection';
+import { useAppointmentStore } from '@/store/appointment';
 
 const KeyMap: Record<number, string> = {
   1: 'patient',
   2: 'time',
-  3: 'doctor',
-  4: 'additional-details',
+  3: 'appointment-type',
+  4: 'doctor',
+  5: 'additional-details',
 };
 
 export function CreateAppointment({
@@ -55,8 +62,13 @@ export function CreateAppointment({
   const [currentStep, setCurrentStep] = useState(1);
   const router = useRouter();
 
+  const { data: allAppointments } = useAllAppointments();
+
+  const appointments = castData<AppointmentType[]>(allAppointments);
+
   const createAppointment = useCreateAppointment();
-  const { setAppointment: setCalendarAppointment } = useCalendarStore();
+
+  const { setAppointment: setCalendarAppointment } = useAppointmentStore();
   const { data: linkedUsers, isLoading: isLinkedUsersLoading } =
     useLinkedUsers();
 
@@ -73,6 +85,7 @@ export function CreateAppointment({
         type: 'online',
         symptoms: '',
       },
+      previousAppointment: undefined,
     },
     onSubmit: async (values, { resetForm }) => {
       try {
@@ -205,21 +218,68 @@ export function CreateAppointment({
               />
             </AccordionItem>
             <AccordionItem
-              textValue="Doctor Selection"
+              textValue="Appointment Type"
               isDisabled={currentStep < 3}
-              key="doctor"
+              key="appointment-type"
               indicator={
                 <Link
                   href="#"
                   onPress={() => {
                     setCurrentStep(3);
-                    setAppointment('doctor', {} as DoctorType);
                   }}
                 >
                   Change
                 </Link>
               }
               hideIndicator={currentStep <= 3}
+              title={
+                <AppointmentTypeSelectionTitle
+                  appointmentType={appointment.type}
+                  previousAppointment={appointment.previousAppointment}
+                />
+              }
+            >
+              <AppointmentTypeSelection
+                appointmentType={appointment.type}
+                previousAppointment={appointment.previousAppointment}
+                setAppointmentType={(type) => setAppointment('type', type)}
+                setPreviousAppointment={(aid) =>
+                  setAppointment('previousAppointment', aid)
+                }
+                onContinue={() => {
+                  if (
+                    appointment.type === 'follow-up' &&
+                    appointment.previousAppointment
+                  ) {
+                    const previousAppointment = appointments?.find(
+                      (apt) => apt.aid === appointment.previousAppointment
+                    );
+                    if (previousAppointment) {
+                      setAppointment('doctor', previousAppointment.doctor);
+                      setCurrentStep(5);
+                      return;
+                    }
+                  }
+                  setCurrentStep(4);
+                }}
+              />
+            </AccordionItem>
+            <AccordionItem
+              textValue="Doctor Selection"
+              isDisabled={currentStep < 4 || appointment.type === 'follow-up'}
+              key="doctor"
+              indicator={
+                <Link
+                  href="#"
+                  onPress={() => {
+                    setCurrentStep(4);
+                    setAppointment('doctor', {} as DoctorType);
+                  }}
+                >
+                  Change
+                </Link>
+              }
+              hideIndicator={currentStep <= 4}
               title={
                 <DoctorSelectionTitle
                   doctor={appointment.doctor as DoctorType}
@@ -234,13 +294,13 @@ export function CreateAppointment({
                 selectedUser={appointment.doctor}
                 onSelectionChange={(user) => {
                   setAppointment('doctor', user);
-                  setCurrentStep(4);
+                  setCurrentStep(5);
                 }}
               />
             </AccordionItem>
             <AccordionItem
               textValue="Additional Details"
-              isDisabled={currentStep < 4}
+              isDisabled={currentStep < 5}
               key="additional-details"
               title={<AdditionalDetailsSelectionTitle />}
             >

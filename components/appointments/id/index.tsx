@@ -15,21 +15,21 @@ import {
   Tooltip,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useAppointmentStore } from '@/components/dashboard/appointments/store';
+import { useAppointmentStore } from '@/store/appointment';
 import NoResults from '@/components/ui/no-results';
 import { AppointmentType } from '@/types/appointment';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { format } from 'date-fns';
 import ActivityTimeline from '@/components/ui/activity/timeline';
-import CancelDeleteAppointment from '@/components/dashboard/appointments/modals/cancel-delete';
-import RescheduleAppointment from '@/components/dashboard/appointments/modals/reschedule'; // Ensure this path is correct
+import CancelDeleteAppointment from '@/components/appointments/ui/cancel-delete';
+import RescheduleAppointment from '@/components/appointments/ui/reschedule-modal'; // Ensure this path is correct
 import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
 import { useAppointmentWithAID } from '@/services/appointment';
 import Loading from '@/app/loading';
 
 export default function Appointment({ aid }: { aid: number }) {
-  const { action, setAction, setSelected } = useAppointmentStore();
+  const { action, setAction, setAppointment } = useAppointmentStore();
   const { data, isLoading, isError, error } = useAppointmentWithAID(aid);
 
   const appointment: AppointmentType = data as AppointmentType;
@@ -454,7 +454,7 @@ export default function Appointment({ aid }: { aid: number }) {
                   isIconOnly
                   className="mr-2"
                   onPress={() => {
-                    setSelected(appointment);
+                    setAppointment(appointment);
                     setAction('cancel');
                   }}
                 >

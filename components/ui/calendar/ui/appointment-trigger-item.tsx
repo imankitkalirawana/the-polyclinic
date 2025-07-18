@@ -1,15 +1,15 @@
 import { AppointmentType } from '@/types/appointment';
-import { useCalendarStore } from '../store';
 import { cn } from '@heroui/react';
 import StatusRenderer from './status-renderer';
 import { formatTime } from '../helper';
+import { useAppointmentStore } from '@/store/appointment';
 
 export default function AppointmentTriggerItem({
   appointment,
 }: {
   appointment: AppointmentType;
 }) {
-  const { setAppointment } = useCalendarStore();
+  const { setAppointment } = useAppointmentStore();
 
   return (
     <button
@@ -19,6 +19,8 @@ export default function AppointmentTriggerItem({
         'flex min-h-6 cursor-pointer items-center justify-start gap-1 truncate rounded-lg p-1 text-tiny hover:bg-default-100 md:px-2',
         {
           'line-through': appointment.status === 'cancelled',
+          'bg-warning-100/70 hover:bg-warning-100':
+            appointment.type === 'emergency',
         }
       )}
       onClick={(e) => {

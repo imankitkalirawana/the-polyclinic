@@ -24,8 +24,8 @@ import {
 import AppointmentList from '../ui/appointment-list';
 import { AppointmentType } from '@/types/appointment';
 import { memo, useMemo } from 'react';
-import { useCalendarStore } from '../store';
 import { weekdays } from '../data';
+import { useAppointmentStore } from '@/store/appointment';
 
 interface YearViewProps {
   appointments: AppointmentType[];
@@ -57,7 +57,7 @@ const DayCell = memo(
     hasAppointments: boolean;
     dayAppointments: AppointmentType[];
   }) => {
-    const { setIsTooltipOpen } = useCalendarStore();
+    const { setIsTooltipOpen } = useAppointmentStore();
     const isDayToday = isToday(day);
 
     return (

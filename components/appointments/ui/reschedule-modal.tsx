@@ -1,5 +1,4 @@
 import Modal from '@/components/ui/modal';
-import { useAppointmentStore } from '../store';
 import DateTimePicker from '@/components/appointments/new/session/date-time-picker';
 import { CalendarDate, getLocalTimeZone, Time } from '@internationalized/date';
 import { useState } from 'react';
@@ -9,16 +8,13 @@ import { useSession } from 'next-auth/react';
 import { format } from 'date-fns';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { addToast } from '@heroui/react';
+import { useAppointmentStore } from '@/store/appointment';
 
 export default function RescheduleAppointment() {
   const { data: session } = useSession();
   const queryClient = useQueryClient();
 
-  const {
-    setAction,
-    selected: appointment,
-    setSelected,
-  } = useAppointmentStore();
+  const { setAction, appointment, setAppointment } = useAppointmentStore();
 
   const [timing, setTiming] = useState<Date>(() => {
     if (appointment?.date) {
@@ -60,7 +56,7 @@ export default function RescheduleAppointment() {
         }),
       ]);
       setAction(null);
-      setSelected(res);
+      setAppointment(res);
     },
     onError: (error) => {
       addToast({

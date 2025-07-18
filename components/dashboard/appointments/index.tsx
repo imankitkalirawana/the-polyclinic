@@ -21,10 +21,10 @@ import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 import { Table } from '@/components/ui/data-table';
 import { AppointmentType } from '@/types/appointment';
 import { useRouter } from 'nextjs-toploader/app';
-import { useAppointmentStore } from './store';
+import { useAppointmentStore } from '@/store/appointment';
 import { apiRequest } from '@/lib/axios';
 import { AppointmentQuickLook } from './quicklook';
-import CancelDeleteAppointments from './modals/bulk-cancel-delete';
+import CancelDeleteAppointments from '../../appointments/ui/bulk-cancel-delete';
 import { convertSelectionToKeys } from '@/components/ui/data-table/helper';
 import Link from 'next/link';
 import { useAllAppointments } from '@/services/appointment';
@@ -41,7 +41,7 @@ const INITIAL_VISIBLE_COLUMNS = [
 export default function Appointments() {
   const router = useRouter();
 
-  const { selected, setSelected, keys, setKeys, action, setAction } =
+  const { appointment, setAppointment, keys, setKeys, action, setAction } =
     useAppointmentStore();
   const { data, isLoading } = useAllAppointments();
 
@@ -304,11 +304,11 @@ export default function Appointments() {
             (appointment) => appointment.aid == row
           );
           if (appointment) {
-            setSelected(appointment);
+            setAppointment(appointment);
           }
         }}
       />
-      {selected && <AppointmentQuickLook />}
+      {appointment && <AppointmentQuickLook />}
       {(action === 'bulk-delete' || action === 'bulk-cancel') && (
         <CancelDeleteAppointments
           appointments={appointments.filter((appointment) => {

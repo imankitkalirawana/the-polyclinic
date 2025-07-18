@@ -1,8 +1,12 @@
-import { PermissionProps } from '@/components/ui/dashboard/quicklook/types';
+import {
+  ButtonProps,
+  PermissionProps,
+} from '@/components/ui/dashboard/quicklook/types';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { avatars } from '@/lib/avatar';
 import { AppointmentType } from '@/types/appointment';
 import {
+  addToast,
   Avatar,
   Button,
   Dropdown,
@@ -14,8 +18,13 @@ import {
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { format } from 'date-fns';
-import { ActionType, DropdownKeyType } from '../types';
-import ActivityTimeline from '../../../ui/activity/timeline';
+import { ActionType, DropdownKeyType } from '@/types/appointment';
+import ActivityTimeline from '@/components/ui/activity/timeline';
+import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
+import { useAppointmentStore } from '@/store/appointment';
+import { UserType } from '@/types/user';
+import CancelDeleteAppointment from '@/components/appointments/ui/cancel-delete';
+import RescheduleAppointment from '@/components/appointments/ui/reschedule-modal';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
   doctor: [
@@ -220,3 +229,112 @@ export const sidebarContent = (appointment: AppointmentType) => (
     </Tabs>
   </>
 );
+
+export const useAppointmentButtons = ({
+  appointment,
+  role,
+}: {
+  appointment: AppointmentType | null;
+  role: UserType['role'];
+}) => {
+  const { setAction } = useAppointmentStore();
+
+  return [
+    {
+      key: 'new-tab',
+      children: 'Open in new tab',
+      startContent: (
+        <Icon icon="solar:arrow-right-up-line-duotone" width="20" />
+      ),
+      color: 'default',
+      variant: 'flat',
+      position: 'left',
+      isIconOnly: true,
+      onPress: () => {
+        const url = `/dashboard/appointments/${appointment?.aid}`;
+        window.open(url, '_blank');
+      },
+    },
+    {
+      key: 'add-to-calendar',
+      children: 'Add to Calendar',
+      startContent: <Icon icon="solar:calendar-add-bold-duotone" width="20" />,
+      isHidden:
+        appointment?.status === 'cancelled' ||
+        appointment?.status === 'completed' ||
+        appointment?.status === 'overdue' ||
+        !['user', 'doctor'].includes(role),
+      color: 'default',
+      variant: 'flat',
+      position: 'left',
+      onPress: () => {
+        if (appointment) {
+          setAction('add-to-calendar');
+        }
+      },
+      content: appointment && (
+        <AddToCalendar
+          appointment={appointment}
+          onClose={() => setAction(null)}
+        />
+      ),
+    },
+    {
+      key: 'cancel',
+      children: 'Cancel Appointment',
+      startContent: <Icon icon="solar:close-circle-bold-duotone" width="20" />,
+      isIconOnly: true,
+      color: 'danger',
+      variant: 'flat',
+      position: 'right',
+      isHidden:
+        appointment?.status === 'cancelled' ||
+        appointment?.status === 'completed' ||
+        !['user', 'doctor', 'receptionist', 'admin'].includes(role),
+      onPress: () => {
+        if (appointment) {
+          setAction('cancel');
+        }
+      },
+      content: <CancelDeleteAppointment type="cancel" />,
+    },
+    {
+      key: 'reminder',
+      children: 'Send a Reminder',
+      startContent: <Icon icon="solar:bell-bold-duotone" width="20" />,
+      isIconOnly: true,
+      variant: 'flat',
+      position: 'right',
+      isHidden:
+        appointment?.status === 'completed' ||
+        appointment?.status === 'cancelled' ||
+        appointment?.status === 'overdue' ||
+        !['doctor', 'receptionist', 'admin'].includes(role),
+      onPress: async () => {
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        addToast({
+          title: 'Reminder Sent',
+          description: 'Reminder sent to the patient',
+          color: 'success',
+        });
+      },
+    },
+    {
+      key: 'reschedule',
+      children: 'Reschedule',
+      startContent: <Icon icon="solar:calendar-bold-duotone" width="20" />,
+      color: 'warning',
+      variant: 'flat',
+      position: 'right',
+      isHidden:
+        appointment?.status === 'completed' ||
+        !['user', 'doctor', 'receptionist', 'admin'].includes(role),
+      onPress: () => {
+        if (appointment) {
+          setAction('reschedule');
+        }
+      },
+      content: <RescheduleAppointment />,
+    },
+  ] as Array<Partial<ButtonProps<ActionType>>>;
+};

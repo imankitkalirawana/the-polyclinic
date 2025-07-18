@@ -2,6 +2,7 @@ import { AppointmentType } from '@/types/appointment';
 import {
   Button,
   ButtonGroup,
+  cn,
   Divider,
   Drawer,
   DrawerBody,
@@ -17,19 +18,24 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  Progress,
+  Skeleton,
   Tooltip,
   User,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { CellRenderer } from '../../cell-renderer';
+import { CellRenderer } from '@/components/ui/cell-renderer';
 import { CLINIC_INFO } from '@/lib/config';
 import { format } from 'date-fns';
-import StatusRenderer from './status-renderer';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { memo, useMemo, useCallback } from 'react';
-import { useCalendarStore } from '../store';
 import Link from 'next/link';
+import { useAppointmentWithAID } from '@/services/appointment';
+import { useSession } from 'next-auth/react';
+import useAppointmentButtonsInDrawer from '@/hooks/use-appointment-button';
+import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import StatusRenderer from './status-renderer';
+import AsyncButton from '@/components/ui/buttons/async-button';
+import { useAppointmentStore } from '@/store/appointment';
 
 const DRAWER_DELAY = 200;
 
@@ -37,12 +43,19 @@ const DRAWER_DELAY = 200;
 const AppointmentHeading = memo(function AppointmentHeading({
   title,
   description,
+  className,
 }: {
   title: string;
   description?: string | React.ReactNode;
+  className?: string;
 }) {
   return (
-    <div className="flex w-full items-center justify-between gap-2 text-tiny font-medium uppercase tracking-wide text-default-500">
+    <div
+      className={cn(
+        'flex w-full items-center justify-between gap-2 text-tiny font-medium uppercase tracking-wide text-default-500',
+        className
+      )}
+    >
       <h2>{title}</h2>
       {description}
     </div>
@@ -90,6 +103,10 @@ const AppointmentContent = memo(function AppointmentContent({
 }: {
   appointment: AppointmentType;
 }) {
+  const { data: previousAppointment, isLoading } = useAppointmentWithAID(
+    appointment?.previousAppointment || 0
+  );
+
   const patientDescription = useMemo(() => {
     const parts = [`Patient • #${appointment.patient.uid}`];
 
@@ -181,6 +198,44 @@ const AppointmentContent = memo(function AppointmentContent({
             description={doctorDescription}
           />
         )}
+        {appointment.previousAppointment && (
+          <>
+            <AppointmentHeading
+              className="mt-2"
+              title="LINKED APPOINTMENT"
+              description={
+                <Link
+                  className="flex items-center gap-0.5 underline hover:text-primary"
+                  href={`/appointments/${appointment.previousAppointment}`}
+                  target="_blank"
+                >
+                  #{appointment.previousAppointment}
+                  <Icon icon="solar:round-arrow-right-up-linear" width={13} />
+                </Link>
+              }
+            />
+            {isLoading ? (
+              <div className="flex w-full items-center gap-2">
+                <Skeleton className="h-8 w-32" />
+                <Skeleton className="h-4 w-3/4" />
+              </div>
+            ) : (
+              !!previousAppointment && (
+                <div className="flex items-center gap-2">
+                  {renderChip({
+                    item: previousAppointment?.status,
+                  })}
+                  <span className="text-tiny text-default-500">
+                    {format(
+                      new Date(previousAppointment?.date || ''),
+                      'EEEE, MMMM d · hh:mm a'
+                    )}
+                  </span>
+                </div>
+              )
+            )}
+          </>
+        )}
       </div>
 
       <Divider className="my-2" />
@@ -208,7 +263,7 @@ const AppointmentContent = memo(function AppointmentContent({
         />
       </div>
 
-      {hasAdditionalInfo && (
+      {hasAdditionalInfo ? (
         <>
           <Divider className="my-2" />
           <div className="flex flex-col items-start gap-1">
@@ -255,8 +310,14 @@ const AppointmentContent = memo(function AppointmentContent({
             )}
           </div>
         </>
+      ) : (
+        <div className="flex flex-col items-start gap-1">
+          <AppointmentHeading title="No Additional Information" />
+          <span className="text-tiny text-default-400">
+            There are no additional details for this appointment.
+          </span>
+        </div>
       )}
-      <Divider className="my-2" />
     </>
   );
 });
@@ -275,11 +336,17 @@ const AppointmentHeader = memo(function AppointmentHeader({
   );
 
   return (
-    <div className="flex w-full flex-row items-start justify-between gap-8 rounded-none bg-primary-500 pr-2 text-primary-foreground">
+    <div className="flex w-full flex-row items-start justify-between gap-8 rounded-none pr-2">
       <div>
-        <h2 className="text-large font-medium capitalize text-primary-foreground">
-          #{appointment.aid} - {appointment.type}
-        </h2>
+        <div className="flex items-center gap-1">
+          <h2 className="text-large font-medium capitalize text-primary-foreground">
+            #{appointment.aid} - {appointment.type}
+          </h2>
+          <Icon
+            icon="solar:danger-triangle-bold"
+            className="animate-pulse text-warning-500"
+          />
+        </div>
         <div className="flex items-center gap-1">
           <StatusRenderer status={appointment.status} />
           &middot;
@@ -346,22 +413,58 @@ const AppointmentHeader = memo(function AppointmentHeader({
 });
 
 // Shared footer component
-const AppointmentFooter = memo(function AppointmentFooter() {
+const AppointmentFooter = memo(function AppointmentFooter({
+  appointment,
+}: {
+  appointment: AppointmentType;
+}) {
+  const { action, setAction } = useAppointmentStore();
+  const { data: session } = useSession();
+  const buttons = useAppointmentButtonsInDrawer({
+    selected: appointment,
+    role: session?.user?.role,
+  });
+
   return (
-    <Progress
-      showValueLabel
-      value={50}
-      color="primary"
-      size="sm"
-      className="mt-2"
-      label={<AppointmentHeading title="Progress" />}
-      valueLabel={<AppointmentHeading title="50%" />}
-    />
+    <>
+      <div className="flex w-full flex-row items-center justify-center gap-2">
+        {buttons.map((button) => {
+          const isButtonIconOnly = button.isIconOnly || buttons.length > 3;
+
+          return (
+            <Tooltip
+              key={button.key}
+              delay={500}
+              content={button.children}
+              isDisabled={!isButtonIconOnly}
+              color={button.color}
+            >
+              <AsyncButton
+                color={button.color}
+                variant={button.variant}
+                isIconOnly={isButtonIconOnly}
+                fullWidth
+                whileSubmitting={button.whileLoading}
+                fn={async () => {
+                  if (button.onPress) {
+                    await button.onPress();
+                  }
+                }}
+                startContent={button.startContent}
+              >
+                {isButtonIconOnly ? null : button.children}
+              </AsyncButton>
+            </Tooltip>
+          );
+        })}
+        {buttons.find((btn) => btn.key === action)?.content}
+      </div>
+    </>
   );
 });
 
 const AppointmentDrawerDesktop = memo(function AppointmentDrawerDesktop() {
-  const { appointment, setAppointment, isTooltipOpen } = useCalendarStore();
+  const { appointment, setAppointment, isTooltipOpen } = useAppointmentStore();
 
   if (!appointment) return null;
 
@@ -390,7 +493,7 @@ const AppointmentDrawerDesktop = memo(function AppointmentDrawerDesktop() {
               <AppointmentContent appointment={appointment} />
             </DrawerBody>
             <DrawerFooter>
-              <AppointmentFooter />
+              <AppointmentFooter appointment={appointment} />
             </DrawerFooter>
           </>
         )}
@@ -400,7 +503,7 @@ const AppointmentDrawerDesktop = memo(function AppointmentDrawerDesktop() {
 });
 
 const AppointmentDrawerMobile = memo(function AppointmentDrawerMobile() {
-  const { appointment, setAppointment, isTooltipOpen } = useCalendarStore();
+  const { appointment, setAppointment, isTooltipOpen } = useAppointmentStore();
 
   if (!appointment) return null;
 
@@ -430,7 +533,7 @@ const AppointmentDrawerMobile = memo(function AppointmentDrawerMobile() {
               <AppointmentContent appointment={appointment} />
             </ModalBody>
             <ModalFooter>
-              <AppointmentFooter />
+              <AppointmentFooter appointment={appointment} />
             </ModalFooter>
           </>
         )}

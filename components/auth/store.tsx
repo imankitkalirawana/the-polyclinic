@@ -214,7 +214,7 @@ export const createAuthProvider = (flowType: FlowType) => {
             email: values.email,
             password: values.password,
           });
-          router.push('/');
+          window.location.href = '/';
         } else {
           addToast({
             title: res.message,
@@ -246,7 +246,7 @@ export const createAuthProvider = (flowType: FlowType) => {
         if (res?.error) {
           setFieldError('password', res.message);
         } else {
-          router.push('/dashboard');
+          window.location.href = '/dashboard';
         }
       }
     };

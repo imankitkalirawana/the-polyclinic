@@ -8,7 +8,6 @@ import { TIMINGS } from '@/lib/config'; // Assuming this provides start/end hour
 import { ScrollShadow, Tooltip } from '@heroui/react';
 import { CurrentHourIndicator } from '../ui/current-hour-indicator';
 import DateChip from '../ui/date-chip';
-import { useCalendarStore } from '../store';
 import AppointmentTriggerItem from '../ui/appointment-trigger-item';
 import AppointmentList from '../ui/appointment-list';
 import {
@@ -16,6 +15,7 @@ import {
   MAX_APPOINTMENTS_IN_CELL,
 } from '../data';
 import { useSession } from 'next-auth/react';
+import { useAppointmentStore } from '@/store/appointment';
 
 interface DayViewProps {
   appointments: AppointmentType[];
@@ -30,7 +30,7 @@ export function DayView({
 }: DayViewProps) {
   const { data: session } = useSession();
   const ref = useRef<HTMLDivElement>(null);
-  const { appointment, setIsTooltipOpen } = useCalendarStore();
+  const { appointment, setIsTooltipOpen } = useAppointmentStore();
 
   const isAllowedToCreateAppointment = allowedRolesToCreateAppointment.includes(
     session?.user?.role

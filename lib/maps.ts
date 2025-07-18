@@ -1,3 +1,4 @@
+import { AppointmentType } from '@/types/appointment';
 import { ButtonProps, ChipProps } from '@heroui/react';
 
 export const genderMap: Record<string, string> = {
