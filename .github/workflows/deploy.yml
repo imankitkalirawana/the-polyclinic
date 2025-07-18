@@ -50,7 +50,7 @@ jobs:
           # Deploy to VPS
           ssh -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST << 'EOF'
             cd $VPS_DEPLOY_PATH
-            git pull origin main
+            git pull origin master
             pnpm install
             pnpm build
             pm2 restart the-polyclinic
