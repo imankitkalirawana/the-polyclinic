@@ -18,12 +18,16 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'pnpm'
 
       # Install pnpm
       - name: Install pnpm
-        run: npm install -g pnpm
+        run: |
+          curl -fsSL https://get.pnpm.io/install.sh | bash -
+          export PNPM_HOME="/home/runner/.local/share/pnpm"
+          export PATH="$PNPM_HOME:$PATH"
+          pnpm --version
 
       # Install dependencies
       - name: Install dependencies
