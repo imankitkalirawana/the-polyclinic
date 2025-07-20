@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFormik } from 'formik';
-import ReactQuill from 'react-quill';
+
 import {
   Button,
   cn,
@@ -20,6 +20,7 @@ import { ServiceStatuses, ServiceTypes } from '@/lib/interface';
 import { serviceValidationSchema } from '@/lib/validation';
 import { useCreateService } from '@/services/service';
 import { ServiceType } from '@/types/service';
+import ReactQuill from '@/components/ui/react-quill';
 
 export default function NewService() {
   const router = useRouter();
