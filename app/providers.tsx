@@ -83,7 +83,7 @@ export function Providers({
             easing="ease"
             color="hsl(var(--heroui-primary))"
           />
-          {children}
+          <ModalProvider>{children}</ModalProvider>
           {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         </SessionProvider>
       </QueryClientProvider>

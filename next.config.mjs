@@ -9,6 +9,7 @@ const baseConfig = {
   },
   experimental: {
     authInterrupts: true,
+    webpackMemoryOptimizations: true,
   },
 };
 
