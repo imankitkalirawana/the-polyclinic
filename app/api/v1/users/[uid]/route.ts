@@ -85,7 +85,7 @@ export const DELETE = auth(async function DELETE(request: any, context: any) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
     }
 
-    !!API_ACTIONS.isDelete && (await User.findOneAndDelete({ uid }));
+    API_ACTIONS.isDelete && (await User.findOneAndDelete({ uid }));
     return NextResponse.json({
       message: `${user.name} was deleted successfully`,
     });
