@@ -8,9 +8,7 @@ export default function HomePage() {
     <Button
       onPress={() =>
         modal.show({
-          body: <div>
-            Hello
-          </div>,
+          body: <div>Hello</div>,
         })
       }
     >
