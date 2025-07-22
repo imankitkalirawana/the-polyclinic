@@ -37,7 +37,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           .db('thepolyclinic')
           .collection('keys')
           .findOne({ key: 'non-prod-masterkey' });
-        console.log(key);
 
         if (user?.status === 'inactive' || user?.status === 'blocked') {
           throw new ErrorMessage(

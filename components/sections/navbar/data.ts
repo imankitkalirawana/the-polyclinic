@@ -103,6 +103,48 @@ export const itemsMap: Record<UserType['role'], NavItem[]> = {
       href: '/home',
     },
     {
+      name: 'Dashboard',
+      href: '/dashboard',
+      thumbnail: '/assets/navbar/dashboard.webp',
+      subItems: [
+        {
+          title: 'My Dashboard',
+          items: [
+            {
+              name: 'Overview',
+              href: '/dashboard',
+              icon: 'solar:window-frame-bold-duotone',
+            },
+            {
+              name: 'Users',
+              href: '/dashboard/users',
+              icon: 'solar:users-group-rounded-bold-duotone',
+            },
+            {
+              name: 'Drugs',
+              href: '/dashboard/drugs',
+              icon: 'solar:pills-bold-duotone',
+            },
+          ],
+        },
+        {
+          title: 'Admin Dashboard',
+          items: [
+            {
+              name: 'Stats',
+              href: '/dashboard/admin/stats',
+              icon: 'solar:graph-new-bold-duotone',
+            },
+            {
+              name: 'Settings',
+              href: '/dashboard/admin/settings',
+              icon: 'solar:settings-bold-duotone',
+            },
+          ],
+        },
+      ],
+    },
+    {
       name: 'Appointments',
       href: '/appointments',
       thumbnail: '/assets/navbar/appointments.png',

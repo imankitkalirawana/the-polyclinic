@@ -51,7 +51,6 @@ export const DELETE = auth(async function DELETE(request: any) {
 
     const { searchParams } = request.nextUrl;
     const email = searchParams.get('email');
-    console.log('email', email);
     await connectDB();
     const newsletter = await Newsletter.findOneAndDelete({ email: email });
     if (!newsletter) {
