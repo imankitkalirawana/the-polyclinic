@@ -7,7 +7,12 @@ import {
 } from '@tanstack/react-query';
 import { ApiResponse } from './api';
 import { CreateDoctorType, DoctorType } from '@/types/doctor';
-import { createDoctor, deleteDoctor, getDoctors } from './api/doctor';
+import {
+  createDoctor,
+  deleteDoctor,
+  getDoctor,
+  getDoctors,
+} from './api/doctor';
 import { addToast } from '@heroui/react';
 
 export const useAllDoctors = (): UseQueryResult<DoctorType[]> => {
@@ -15,6 +20,19 @@ export const useAllDoctors = (): UseQueryResult<DoctorType[]> => {
     queryKey: ['doctors'],
     queryFn: async () => {
       const res = await getDoctors();
+      if (res.success) {
+        return res.data;
+      }
+      throw new Error(res.message);
+    },
+  });
+};
+
+export const useDoctor = (uid: number): UseQueryResult<DoctorType> => {
+  return useQuery({
+    queryKey: ['doctor', uid],
+    queryFn: async () => {
+      const res = await getDoctor(uid);
       if (res.success) {
         return res.data;
       }

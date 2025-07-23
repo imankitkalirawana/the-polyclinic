@@ -4,7 +4,13 @@ import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import Appointment from '@/models/Appointment';
 import { UserType } from '@/types/user';
-import { API_ACTIONS, APPOINTMENT, CLINIC_INFO, MOCK_DATA, TIMINGS } from '@/lib/config';
+import {
+  API_ACTIONS,
+  APPOINTMENT,
+  CLINIC_INFO,
+  MOCK_DATA,
+  TIMINGS,
+} from '@/lib/config';
 import { generateAppointments } from '@/lib/appointments/mock';
 import axios from 'axios';
 

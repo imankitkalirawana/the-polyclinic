@@ -37,7 +37,6 @@ export const sectionItems: SidebarItem[] = [
         icon: 'solar:test-tube-minimalistic-bold-duotone',
         title: 'Services',
       },
-
       {
         key: 'drugs',
         href: '/dashboard/drugs',

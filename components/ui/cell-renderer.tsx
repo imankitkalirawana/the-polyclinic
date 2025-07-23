@@ -13,6 +13,7 @@ export interface CellRendererProps {
   className?: string;
   cols?: number;
   iconSize?: number;
+  direction?: 'horizontal' | 'vertical';
 }
 
 export const CellRenderer = ({
@@ -23,6 +24,7 @@ export const CellRenderer = ({
   className,
   iconSize = 24,
   cols = 1,
+  direction = 'vertical',
 }: CellRendererProps) => (
   <div
     className={cn(
@@ -36,12 +38,17 @@ export const CellRenderer = ({
     <div
       className={cn('flex items-center gap-2 text-small', {
         'items-start': label,
+        'items-center': direction === 'horizontal',
       })}
     >
       <div className={cn('rounded-small p-[5px]', classNames?.icon)}>
         <Icon icon={icon} width={iconSize} />
       </div>
-      <div className="flex flex-col gap-1">
+      <div
+        className={cn('flex w-full flex-col gap-1', {
+          'flex-row items-center justify-between': direction === 'horizontal',
+        })}
+      >
         {!!label && (
           <span
             className={cn('capitalize text-default-400', classNames?.label)}
@@ -52,6 +59,9 @@ export const CellRenderer = ({
         <span
           className={cn(
             'capitalize text-default-foreground',
+            {
+              lowercase: typeof value === 'string' && value.includes('@'),
+            },
             classNames?.value
           )}
         >

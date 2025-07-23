@@ -2,32 +2,56 @@ import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
 import Doctor from '@/models/Doctor';
-import User from '@/models/User';
 
-export const DELETE = auth(async function DELETE(request: any, context: any) {
+export const GET = auth(async function GET(request: any, context: any) {
   try {
-    const allowedRoles = ['admin'];
+    const allowedRoles = ['admin', 'doctor'];
 
     if (!allowedRoles.includes(request.auth?.user?.role)) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    const uid = await context.params.uid;
+    const { uid } = await context.params;
 
     await connectDB();
 
-    const doctor = await Doctor.findOneAndDelete({ uid: parseInt(uid) });
+    const doctors = await Doctor.aggregate([
+      {
+        $match: {
+          uid: parseInt(uid),
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'uid',
+          foreignField: 'uid',
+          as: 'user',
+        },
+      },
+      {
+        $unwind: '$user',
+      },
+      {
+        $addFields: {
+          name: '$user.name',
+          email: '$user.email',
+          phone: '$user.phone',
+          gender: '$user.gender',
+          image: '$user.image',
+        },
+      },
+      {
+        $project: {
+          user: 0,
+        },
+      },
+    ]);
 
-    if (!doctor) {
-      return NextResponse.json(
-        { message: 'Doctor not found' },
-        { status: 404 }
-      );
-    }
-
-    await User.findOneAndDelete({ uid: parseInt(uid) });
-
-    return NextResponse.json({ message: 'Doctor deleted successfully' });
+    return NextResponse.json({
+      message: 'Doctor fetched successfully',
+      data: doctors[0],
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: 'An error occurred' }, { status: 500 });

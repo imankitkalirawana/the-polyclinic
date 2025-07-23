@@ -7,6 +7,10 @@ export async function getDoctors() {
   return await fetchData<DoctorType[]>(`/doctors`);
 }
 
+export async function getDoctor(uid: number) {
+  return await fetchData<DoctorType>(`/doctors/${uid}`);
+}
+
 export async function createDoctor(doctor: CreateDoctorType) {
   return await fetchData<DoctorType>('/doctors', {
     method: 'POST',

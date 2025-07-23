@@ -116,9 +116,9 @@ export const itemsMap: Record<UserType['role'], NavItem[]> = {
               icon: 'solar:window-frame-bold-duotone',
             },
             {
-              name: 'Users',
-              href: '/dashboard/users',
-              icon: 'solar:users-group-rounded-bold-duotone',
+              name: 'Available Slots',
+              href: '/dashboard/doctors/slots',
+              icon: 'solar:calendar-bold-duotone',
             },
             {
               name: 'Drugs',
