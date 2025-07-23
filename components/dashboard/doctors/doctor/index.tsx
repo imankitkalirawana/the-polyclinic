@@ -2,18 +2,13 @@
 
 import Loading from '@/app/loading';
 import { CellRenderer } from '@/components/ui/cell-renderer';
-import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { castData } from '@/lib/utils';
-import { useAllAppointments } from '@/services/appointment';
 import { useDoctor } from '@/services/doctor';
-import { AppointmentType } from '@/types/appointment';
 import { DoctorType } from '@/types/doctor';
 import {
   Button,
-  ButtonGroup,
   Card,
   CardBody,
-  CardFooter,
   CardHeader,
   Chip,
   Image,
@@ -21,7 +16,8 @@ import {
   ScrollShadow,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { format } from 'date-fns';
+import Appointments from './appointments';
+import AppointmentSlots from './appointment-slots';
 
 type ListItem = {
   label: string;
@@ -122,11 +118,7 @@ const listItems: ListItem[] = [
 export default function DashboardDoctor({ uid }: { uid: number }) {
   const { data, isError, isLoading } = useDoctor(uid);
 
-  const { data: appointmentsData, isLoading: isAppointmentsLoading } =
-    useAllAppointments();
-
   const doctor = castData<DoctorType>(data);
-  const appointments = castData<AppointmentType[]>(appointmentsData);
 
   if (isError) {
     return <p>Error fetching doctor data</p>;
@@ -140,8 +132,6 @@ export default function DashboardDoctor({ uid }: { uid: number }) {
     return <p>Doctor not found</p>;
   }
 
-  console.log('appointments', appointments);
-
   return (
     <div className="flex h-full gap-4">
       <Card className="flex-1 gap-4 p-4">
@@ -153,7 +143,7 @@ export default function DashboardDoctor({ uid }: { uid: number }) {
               width={200}
               height={200}
               alt="doctor"
-              src="/assets/placeholders/doctor.png"
+              src="/assets/placeholders/doctor-male.png"
               sizes="100vw"
               className="object-cover object-top"
             />
@@ -241,7 +231,7 @@ export default function DashboardDoctor({ uid }: { uid: number }) {
               <p className="text-2xl font-medium text-default-500">100</p>
             </div>
             <p className="text-tiny text-default-500">
-              <span className="text-success">3.5%</span> Have increased from
+              <span className="text-success">1.5%</span> Have increased from
               yesterday
             </p>
           </div>
@@ -262,52 +252,8 @@ export default function DashboardDoctor({ uid }: { uid: number }) {
             </p>
           </div>
         </Card>
-        <Card className="col-span-full row-span-2">
-          <CardHeader className="justify-between">
-            <h3 className="text-lg font-medium">Today&apos;s Appointments</h3>
-            <div className="flex items-center gap-2">
-              <p>
-                6<span className="text-tiny text-default-500">/12</span>
-              </p>
-              <ButtonGroup isIconOnly size="sm" variant="flat">
-                <Button isDisabled>
-                  <Icon icon="solar:alt-arrow-left-line-duotone" width={18} />
-                </Button>
-                <Button>
-                  <Icon icon="solar:alt-arrow-right-line-duotone" width={18} />
-                </Button>
-              </ButtonGroup>
-            </div>
-          </CardHeader>
-          <CardBody className="grid grid-cols-3 grid-rows-2 gap-2">
-            {appointments?.slice(0, 6).map((appointment) => (
-              <Card key={appointment.aid} className="flex flex-col gap-2 p-4">
-                <CardHeader className="justify-between p-0">
-                  <p className="font-medium">
-                    {format(appointment.date, 'hh:mm a')}
-                  </p>
-                  {renderChip({
-                    item: appointment.status,
-                    size: 'sm',
-                  })}
-                </CardHeader>
-                <CardBody className="overflow-hidden p-0">
-                  <p>{appointment.type}</p>
-                </CardBody>
-                <CardFooter className="overflow-visible p-0">
-                  <p className="text-tiny text-default-500">
-                    {appointment.patient.name}
-                  </p>
-                </CardFooter>
-              </Card>
-            ))}
-          </CardBody>
-        </Card>
-        <Card className="col-span-full">
-          <CardHeader>
-            <h3 className="text-lg font-medium">Available Slots</h3>
-          </CardHeader>
-        </Card>
+        <Appointments />
+        <AppointmentSlots />
       </div>
     </div>
   );

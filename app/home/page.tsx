@@ -1,5 +1,9 @@
-'use client';
+import Banner from '@/components/sections/home/banner';
 
 export default function HomePage() {
-  return <>Hello</>;
+  return (
+    <>
+      <Banner />
+    </>
+  );
 }
