@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build --max-old-space-size=2048",
+    "build": "next build",
     "start": "next start",
     "clean": "rm -rf node_modules && rm -rf .next && rm -rf && pnpm install",
     "prepare": "husky",
