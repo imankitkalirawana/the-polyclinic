@@ -2,6 +2,7 @@
 import { TIMINGS } from '@/lib/config';
 import { faker } from '@faker-js/faker';
 import {
+  Button,
   Card,
   CardBody,
   CardHeader,
@@ -9,6 +10,8 @@ import {
   ScrollShadow,
   Tooltip,
 } from '@heroui/react';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import Link from 'next/link';
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -49,7 +52,7 @@ function generateSlots(start: number, end: number, interval: number): Slot[] {
   return slots;
 }
 
-export default function AppointmentSlots() {
+export default function AppointmentSlots({ uid }: { uid: number }) {
   const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
 
   const slots = generateSlots(
@@ -60,8 +63,19 @@ export default function AppointmentSlots() {
 
   return (
     <Card className="col-span-full">
-      <CardHeader>
+      <CardHeader className="justify-between">
         <h3 className="text-lg font-medium">Today&apos;s Slots</h3>
+        <Tooltip content="Configure slots" placement="left">
+          <Button
+            isIconOnly
+            variant="light"
+            size="sm"
+            as={Link}
+            href={`/dashboard/doctors/${uid}/slots`}
+          >
+            <Icon icon="solar:settings-minimalistic-linear" width={20} />
+          </Button>
+        </Tooltip>
       </CardHeader>
       <CardBody
         className="flex-row items-center gap-2 overflow-x-auto"

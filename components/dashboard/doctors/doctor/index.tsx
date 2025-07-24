@@ -253,7 +253,7 @@ export default function DashboardDoctor({ uid }: { uid: number }) {
           </div>
         </Card>
         <Appointments />
-        <AppointmentSlots />
+        <AppointmentSlots uid={uid} />
       </div>
     </div>
   );
