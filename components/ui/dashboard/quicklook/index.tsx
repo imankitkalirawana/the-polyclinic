@@ -1,5 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
+
+import React, { useCallback, useMemo } from 'react';
+import { useSession } from 'next-auth/react';
 import {
   Button,
   cn,
@@ -15,21 +17,15 @@ import {
   Tooltip,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useSession } from 'next-auth/react';
-import React, { useCallback, useMemo } from 'react';
+
+import { QuickLookProps } from './types';
 
 import AsyncButton from '@/components/ui/buttons/async-button';
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { Title } from '@/components/ui/typography/modal';
 import { $FixMe } from '@/types';
 
-import { QuickLookProps } from './types';
-
-export default function QuickLook<
-  T,
-  A extends string = string,
-  D extends string = string,
->({
+export default function QuickLook<T, A extends string = string, D extends string = string>({
   selectedItem,
   isOpen,
   onClose,
@@ -41,10 +37,7 @@ export default function QuickLook<
   content,
 }: QuickLookProps<T, A, D>): React.ReactElement<$FixMe> {
   const { data: session } = useSession();
-  const role = useMemo(
-    () => session?.user?.role ?? 'user',
-    [session?.user?.role]
-  );
+  const role = useMemo(() => session?.user?.role ?? 'user', [session?.user?.role]);
 
   const item = useMemo(() => selectedItem || ({} as T), [selectedItem]);
   const availablePermissions = useMemo(() => {
@@ -55,28 +48,27 @@ export default function QuickLook<
   }, [role, permissions]);
 
   const filteredButtons = useCallback(
-    (position: 'left' | 'right') => {
-      return !buttons
+    (position: 'left' | 'right') =>
+      !buttons
         ? []
         : buttons.filter((btn) => {
             const isLeftPosition = btn.position === position;
             const isPermission =
-              availablePermissions === 'all' ||
-              availablePermissions.includes(btn.key as A);
+              availablePermissions === 'all' || availablePermissions.includes(btn.key as A);
             return isLeftPosition && isPermission && !btn.isHidden;
-          });
-    },
+          }),
     [buttons, availablePermissions]
   );
 
-  const filteredDropdown = useMemo(() => {
-    return dropdown?.filter((item) => {
-      const isPermission =
-        availablePermissions === 'all' ||
-        availablePermissions.includes(item.key as unknown as A);
-      return isPermission && !item.isHidden;
-    });
-  }, [dropdown, availablePermissions]);
+  const filteredDropdown = useMemo(
+    () =>
+      dropdown?.filter((item) => {
+        const isPermission =
+          availablePermissions === 'all' || availablePermissions.includes(item.key as unknown as A);
+        return isPermission && !item.isHidden;
+      }),
+    [dropdown, availablePermissions]
+  );
 
   const detailsSection = useMemo(
     () => (
@@ -119,8 +111,7 @@ export default function QuickLook<
             >
               <AsyncButton
                 key={btn.key}
-                {...(({ key, content, ref, onPress, children, ...rest }) =>
-                  rest)(btn)}
+                {...(({ key, content, ref, onPress, children, ...rest }) => rest)(btn)}
                 fn={async () => {
                   if (btn.onPress) {
                     await btn.onPress({} as $FixMe);
@@ -150,15 +141,9 @@ export default function QuickLook<
             >
               <AsyncButton
                 key={btn.key}
-                {...(({
-                  key,
-                  content,
-                  ref,
-                  onPress,
-                  children,
-                  whileLoading,
-                  ...rest
-                }) => rest)(btn)}
+                {...(({ key, content, ref, onPress, children, whileLoading, ...rest }) => rest)(
+                  btn
+                )}
                 whileSubmitting={btn.whileLoading}
                 fn={async () => {
                   if (btn.onPress) {
@@ -177,13 +162,7 @@ export default function QuickLook<
 
   return (
     <>
-      <Modal
-        size="5xl"
-        isOpen={isOpen}
-        backdrop="blur"
-        scrollBehavior="inside"
-        onClose={onClose}
-      >
+      <Modal size="5xl" isOpen={isOpen} backdrop="blur" scrollBehavior="inside" onClose={onClose}>
         <ModalContent className="h-[80vh] overflow-hidden">
           <ModalBody
             as={ScrollShadow}
@@ -203,11 +182,7 @@ export default function QuickLook<
                 <Dropdown placement="top-end">
                   <DropdownTrigger>
                     <Button size="sm" variant="light" isIconOnly>
-                      <Icon
-                        icon="solar:menu-dots-bold"
-                        width="20"
-                        className="rotate-90"
-                      />
+                      <Icon icon="solar:menu-dots-bold" width="20" className="rotate-90" />
                     </Button>
                   </DropdownTrigger>
                   <DropdownMenu
@@ -231,8 +206,7 @@ export default function QuickLook<
       </Modal>
       {selectedKey &&
         (buttons?.find((btn) => btn.key === selectedKey)?.content ||
-          dropdown?.find((item) => item.key === (selectedKey as unknown as D))
-            ?.content ||
+          dropdown?.find((item) => item.key === (selectedKey as unknown as D))?.content ||
           null)}
     </>
   );

@@ -1,8 +1,8 @@
+import React from 'react';
 import { addToast, Card, CardBody } from '@heroui/react';
+import { format } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { format } from 'date-fns';
-import React from 'react';
 
 import Modal from '@/components/ui/modal';
 import { apiRequest } from '@/lib/axios';
@@ -28,31 +28,25 @@ export default function CancelDeleteAppointment({
               <span className="capitalize">{appointment?.aid}</span>
             </div>
           </div>
-          <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20"></div>
+          <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20" />
           <div className="flex items-center gap-4">
             <div className="rounded-medium bg-blue-100 p-2 text-blue-500">
               <Icon icon="solar:user-bold" width="24" />
             </div>
             <div className="flex gap-2 text-[15px] text-default-400">
               <span className="capitalize">{appointment?.patient?.name}</span>
-              {appointment?.doctor && (
-                <span>with {appointment?.doctor?.name}</span>
-              )}
+              {appointment?.doctor && <span>with {appointment?.doctor?.name}</span>}
             </div>
           </div>
-          <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20"></div>
+          <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20" />
           <div className="flex items-center gap-4">
             <div className="rounded-medium bg-primary-100 p-2 text-primary">
               <Icon icon="solar:clock-circle-bold" width={24} />
             </div>
             <div className="flex text-[15px] text-default-400">
-              <span>
-                {format(new Date(appointment?.date || new Date()), 'hh:mm a')}
-              </span>
+              <span>{format(new Date(appointment?.date || new Date()), 'hh:mm a')}</span>
               <Icon icon="mdi:dot" width="24" height="24" />
-              <span>
-                {format(new Date(appointment?.date || new Date()), 'PP')}
-              </span>
+              <span>{format(new Date(appointment?.date || new Date()), 'PP')}</span>
             </div>
           </div>
         </CardBody>
@@ -62,15 +56,14 @@ export default function CancelDeleteAppointment({
   );
 
   const cancelDeleteMutation = useMutation({
-    mutationFn: async () => {
-      return apiRequest({
+    mutationFn: async () =>
+      apiRequest({
         url: `/api/v1/appointments/${appointment?.aid}`,
         method: type === 'cancel' ? 'PATCH' : 'DELETE',
         data: {
           status: 'cancelled',
         },
-      });
-    },
+      }),
     onSuccess: async (res) => {
       addToast({
         title: `Appointment ${type === 'cancel' ? 'cancelled' : 'deleted'}`,
@@ -111,8 +104,7 @@ export default function CancelDeleteAppointment({
       body={body}
       onClose={() => setAction(null)}
       primaryButton={{
-        children:
-          type === 'cancel' ? 'Confirm Cancellation' : 'Confirm Deletion',
+        children: type === 'cancel' ? 'Confirm Cancellation' : 'Confirm Deletion',
         whileSubmitting: type === 'cancel' ? 'Cancelling...' : 'Deleting...',
         color: 'danger',
         onPress: async () => {

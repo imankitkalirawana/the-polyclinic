@@ -70,7 +70,7 @@ export const chipColorMap: Record<
     bg: 'bg-purple-100',
   },
 
-  //for appointment status
+  // for appointment status
   overdue: {
     text: 'bg-red-500',
     bg: 'bg-red-100',

@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import {
   addToast,
   Button,
@@ -18,12 +19,14 @@ import {
   Spacer,
   useDisclosure,
 } from '@heroui/react';
-import { Icon } from '@iconify/react';
 import axios from 'axios';
 import { useFormik } from 'formik';
 import { MailOptions } from 'nodemailer/lib/sendmail-transport';
-import React from 'react';
 import * as Yup from 'yup';
+import { Icon } from '@iconify/react';
+
+import CellWrapper from './cell-wrapper';
+import SwitchCell from './switch-cell';
 
 import {
   changePassword,
@@ -33,9 +36,6 @@ import {
 } from '@/functions/server-actions';
 import { UserRoles } from '@/lib/options';
 import { UserType } from '@/types/user';
-
-import CellWrapper from './cell-wrapper';
-import SwitchCell from './switch-cell';
 
 export default function SecuritySettings({
   user,
@@ -61,7 +61,7 @@ export default function SecuritySettings({
 
   const emailFormik = useFormik({
     initialValues: {
-      user: user,
+      user,
       email: user?.email,
       isSent: false,
       otp: '',
@@ -69,9 +69,7 @@ export default function SecuritySettings({
       isUpdatingRole: false,
     },
     validationSchema: Yup.object().shape({
-      email: Yup.string()
-        .email('Please enter a valid Email.')
-        .required('Please enter your Email.'),
+      email: Yup.string().email('Please enter a valid Email.').required('Please enter your Email.'),
     }),
     onSubmit: async (values) => {
       mailOptions.to = values.email;
@@ -105,7 +103,6 @@ export default function SecuritySettings({
           .catch((err) => {
             emailFormik.setFieldError('otp', err.message);
           });
-        return;
       } else {
         if (await verifyEmail(values.email as string, user?.uid)) {
           emailFormik.setFieldError('email', 'Email already exists.');
@@ -171,23 +168,15 @@ export default function SecuritySettings({
       email: '',
     },
     validationSchema: Yup.object().shape({
-      email: Yup.string()
-        .email('Please enter a valid Email.')
-        .required('Please enter your Email.'),
+      email: Yup.string().email('Please enter a valid Email.').required('Please enter your Email.'),
     }),
     onSubmit: async (values) => {
       if (user?.email === 'contact@divinely.dev') {
-        deactivateFormik.setFieldError(
-          'email',
-          'You cannot deactivate this account.'
-        );
+        deactivateFormik.setFieldError('email', 'You cannot deactivate this account.');
         return;
       }
       if (values.email !== user?.email) {
-        deactivateFormik.setFieldError(
-          'email',
-          'The email addresses do not match.'
-        );
+        deactivateFormik.setFieldError('email', 'The email addresses do not match.');
         return;
       }
       await axios
@@ -220,16 +209,11 @@ export default function SecuritySettings({
       email: '',
     },
     validationSchema: Yup.object().shape({
-      email: Yup.string()
-        .email('Please enter a valid Email.')
-        .required('Please enter your Email.'),
+      email: Yup.string().email('Please enter a valid Email.').required('Please enter your Email.'),
     }),
     onSubmit: async (values) => {
       if (values.email !== user?.email) {
-        deleteFormik.setFieldError(
-          'email',
-          'The email addresses do not match.'
-        );
+        deleteFormik.setFieldError('email', 'The email addresses do not match.');
         return;
       }
       await axios
@@ -239,9 +223,7 @@ export default function SecuritySettings({
         .then(() => {
           refetch();
           addToast({
-            title: `Account ${
-              user.status === 'deleted' ? 'recovered' : 'deleted'
-            } successfully.`,
+            title: `Account ${user.status === 'deleted' ? 'recovered' : 'deleted'} successfully.`,
             color: 'success',
           });
           deleteModal.onClose();
@@ -261,9 +243,7 @@ export default function SecuritySettings({
       <Card className="bg-transparent p-2 shadow-none">
         <CardHeader className="flex flex-col items-start px-4 pb-0 pt-4">
           <p className="text-large">Security Settings</p>
-          <p className="text-small text-default-500">
-            Manage your security preferences
-          </p>
+          <p className="text-small text-default-500">Manage your security preferences</p>
         </CardHeader>
         <CardBody className="space-y-2">
           {/* Email */}
@@ -277,9 +257,7 @@ export default function SecuritySettings({
             <div className="flex w-full flex-wrap items-center justify-end gap-6 sm:w-auto sm:flex-nowrap">
               <div className="flex flex-col items-end">
                 <p>{user.email || '-'}</p>
-                {user.email && (
-                  <p className="text-small text-success">Verified</p>
-                )}
+                {user.email && <p className="text-small text-success">Verified</p>}
               </div>
               <Button
                 endContent={<Icon icon="solar:pen-2-linear" />}
@@ -301,9 +279,7 @@ export default function SecuritySettings({
             <div className="flex w-full flex-wrap items-center justify-end gap-6 sm:w-auto sm:flex-nowrap">
               <div className="flex flex-col items-end">
                 <p>{user.phone || '-'}</p>
-                {user.phone && (
-                  <p className="text-small text-success">Verified</p>
-                )}
+                {user.phone && <p className="text-small text-success">Verified</p>}
               </div>
               <Button
                 endContent={<Icon icon="solar:pen-2-linear" />}
@@ -327,11 +303,7 @@ export default function SecuritySettings({
                 Set a unique password to protect this account.
               </p>
             </div>
-            <Button
-              radius="full"
-              variant="bordered"
-              onPress={editPasswordModal.onOpen}
-            >
+            <Button radius="full" variant="bordered" onPress={editPasswordModal.onOpen}>
               Change
             </Button>
           </CellWrapper>
@@ -399,15 +371,11 @@ export default function SecuritySettings({
             <div>
               <p>{user.status === 'active' ? 'Deactivate' : 'Activate'}</p>
               <p className="text-small text-default-500">
-                {user.status === 'active' ? 'Deactivate' : 'Activate'} your
-                account and delete all your data.
+                {user.status === 'active' ? 'Deactivate' : 'Activate'} your account and delete all
+                your data.
               </p>
             </div>
-            <Button
-              radius="full"
-              variant="bordered"
-              onPress={deactivateModal.onOpen}
-            >
+            <Button radius="full" variant="bordered" onPress={deactivateModal.onOpen}>
               {user.status === 'active' ? 'Deactivate' : 'Activate'}
             </Button>
           </CellWrapper>
@@ -416,8 +384,7 @@ export default function SecuritySettings({
             <div>
               <p>{user.status === 'deleted' ? 'Recover' : 'Delete'} Account</p>
               <p className="text-small text-default-500">
-                {user.status === 'deleted' ? 'Recover' : 'Delete'} your account
-                and all your data.
+                {user.status === 'deleted' ? 'Recover' : 'Delete'} your account and all your data.
               </p>
             </div>
             <Button
@@ -457,10 +424,7 @@ export default function SecuritySettings({
               isLoading={emailFormik.values.isResending}
               onPress={async () => {
                 emailFormik.setFieldValue('isResending', true);
-                await sendMailWithOTP(
-                  emailFormik.values.email as string,
-                  mailOptions
-                )
+                await sendMailWithOTP(emailFormik.values.email as string, mailOptions)
                   .then(() => {
                     addToast({
                       title: 'OTP sent successfully',
@@ -491,9 +455,7 @@ export default function SecuritySettings({
               name="otp"
               value={emailFormik.values.otp}
               onChange={emailFormik.handleChange}
-              isInvalid={
-                emailFormik.touched.otp && emailFormik.errors.otp ? true : false
-              }
+              isInvalid={!!(emailFormik.touched.otp && emailFormik.errors.otp)}
               errorMessage={emailFormik.touched.otp && emailFormik.errors.otp}
             />
           ) : (
@@ -506,14 +468,8 @@ export default function SecuritySettings({
               onChange={(e) => {
                 emailFormik.setFieldValue('email', e.target.value);
               }}
-              isInvalid={
-                emailFormik.touched.email && emailFormik.errors.email
-                  ? true
-                  : false
-              }
-              errorMessage={
-                emailFormik.touched.email && emailFormik.errors.email
-              }
+              isInvalid={!!(emailFormik.touched.email && emailFormik.errors.email)}
+              errorMessage={emailFormik.touched.email && emailFormik.errors.email}
             />
           )
         }
@@ -552,16 +508,8 @@ export default function SecuritySettings({
               name="password"
               value={passwordFormik.values.password}
               onChange={passwordFormik.handleChange}
-              isInvalid={
-                passwordFormik.touched.password &&
-                passwordFormik.errors.password
-                  ? true
-                  : false
-              }
-              errorMessage={
-                passwordFormik.touched.password &&
-                passwordFormik.errors.password
-              }
+              isInvalid={!!(passwordFormik.touched.password && passwordFormik.errors.password)}
+              errorMessage={passwordFormik.touched.password && passwordFormik.errors.password}
             />
             <Input
               type="password"
@@ -570,14 +518,10 @@ export default function SecuritySettings({
               value={passwordFormik.values.confirmPassword}
               onChange={passwordFormik.handleChange}
               isInvalid={
-                passwordFormik.touched.confirmPassword &&
-                passwordFormik.errors.confirmPassword
-                  ? true
-                  : false
+                !!(passwordFormik.touched.confirmPassword && passwordFormik.errors.confirmPassword)
               }
               errorMessage={
-                passwordFormik.touched.confirmPassword &&
-                passwordFormik.errors.confirmPassword
+                passwordFormik.touched.confirmPassword && passwordFormik.errors.confirmPassword
               }
             />
           </>
@@ -600,13 +544,9 @@ export default function SecuritySettings({
             fullWidth
             onPress={() => deactivateFormik.handleSubmit()}
             isLoading={deactivateFormik.isSubmitting}
-            isDisabled={
-              deactivateFormik.values.email !== user.email ? true : false
-            }
+            isDisabled={deactivateFormik.values.email !== user.email}
           >
-            {user.status === 'active'
-              ? 'Deactivate Account'
-              : 'Activate Account'}
+            {user.status === 'active' ? 'Deactivate Account' : 'Activate Account'}
           </Button>
         }
         content={
@@ -618,14 +558,8 @@ export default function SecuritySettings({
             name="email"
             value={deactivateFormik.values.email}
             onChange={deactivateFormik.handleChange}
-            isInvalid={
-              deactivateFormik.touched.email && deactivateFormik.errors.email
-                ? true
-                : false
-            }
-            errorMessage={
-              deactivateFormik.touched.email && deactivateFormik.errors.email
-            }
+            isInvalid={!!(deactivateFormik.touched.email && deactivateFormik.errors.email)}
+            errorMessage={deactivateFormik.touched.email && deactivateFormik.errors.email}
           />
         }
       />
@@ -646,7 +580,7 @@ export default function SecuritySettings({
             fullWidth
             onPress={() => deleteFormik.handleSubmit()}
             isLoading={deleteFormik.isSubmitting}
-            isDisabled={deleteFormik.values.email !== user.email ? true : false}
+            isDisabled={deleteFormik.values.email !== user.email}
           >
             {user.status === 'deleted' ? 'Recover Account' : 'Delete Account'}
           </Button>
@@ -660,14 +594,8 @@ export default function SecuritySettings({
             name="email"
             value={deleteFormik.values.email}
             onChange={deleteFormik.handleChange}
-            isInvalid={
-              deleteFormik.touched.email && deleteFormik.errors.email
-                ? true
-                : false
-            }
-            errorMessage={
-              deleteFormik.touched.email && deleteFormik.errors.email
-            }
+            isInvalid={!!(deleteFormik.touched.email && deleteFormik.errors.email)}
+            errorMessage={deleteFormik.touched.email && deleteFormik.errors.email}
           />
         }
       />
@@ -691,55 +619,51 @@ interface EditModalProps {
   secondaryButton?: React.ReactNode;
 }
 
-const EditModal = ({
+function EditModal({
   editEmailModal,
   onSubmit,
   content,
   button,
   secondaryButton,
   header,
-}: EditModalProps) => {
+}: EditModalProps) {
   return (
-    <>
-      <Modal
-        isOpen={editEmailModal.isOpen}
-        onClose={editEmailModal.onClose}
-        backdrop="blur"
-        className="w-[420px]"
-      >
-        <ModalContent>
-          {() => (
-            <>
-              <ModalHeader className="px-6 pb-0 pt-6">
-                <div className="flex flex-col items-start">
-                  <h4 className="text-large">{header?.title}</h4>
-                  <p className="text-small font-normal text-default-400">
-                    {header?.subtitle}
-                  </p>
-                </div>
-              </ModalHeader>
-              <Spacer y={2} />
-              <ModalBody className="px-3 pb-1">{content}</ModalBody>
-              <Spacer y={2} />
-              <Divider />
-              <ModalFooter>
-                {secondaryButton}
-                {button || (
-                  <Button
-                    color="primary"
-                    fullWidth
-                    onPress={() => {
-                      onSubmit?.();
-                    }}
-                  >
-                    Send OTP
-                  </Button>
-                )}
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
-    </>
+    <Modal
+      isOpen={editEmailModal.isOpen}
+      onClose={editEmailModal.onClose}
+      backdrop="blur"
+      className="w-[420px]"
+    >
+      <ModalContent>
+        {() => (
+          <>
+            <ModalHeader className="px-6 pb-0 pt-6">
+              <div className="flex flex-col items-start">
+                <h4 className="text-large">{header?.title}</h4>
+                <p className="text-small font-normal text-default-400">{header?.subtitle}</p>
+              </div>
+            </ModalHeader>
+            <Spacer y={2} />
+            <ModalBody className="px-3 pb-1">{content}</ModalBody>
+            <Spacer y={2} />
+            <Divider />
+            <ModalFooter>
+              {secondaryButton}
+              {button || (
+                <Button
+                  color="primary"
+                  fullWidth
+                  onPress={() => {
+                    onSubmit?.();
+                  }}
+                >
+                  Send OTP
+                </Button>
+              )}
+            </ModalFooter>
+          </>
+        )}
+      </ModalContent>
+    </Modal>
   );
-};
+}

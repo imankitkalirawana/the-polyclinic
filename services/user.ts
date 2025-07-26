@@ -7,6 +7,8 @@ import {
   UseQueryResult,
 } from '@tanstack/react-query';
 
+import { ApiResponse } from './api';
+
 import {
   createUser,
   deleteUser,
@@ -19,8 +21,6 @@ import {
 import { $FixMe } from '@/types';
 import { CreateUserType, UserType } from '@/types/user';
 
-import { ApiResponse } from './api';
-
 /**
  * GET request hooks
  *
@@ -32,8 +32,8 @@ import { ApiResponse } from './api';
  * - useAllDoctors: Fetches all doctors
  */
 
-export const useSelf = (): UseQueryResult<UserType> => {
-  return useQuery({
+export const useSelf = (): UseQueryResult<UserType> =>
+  useQuery({
     queryKey: ['self'],
     queryFn: async () => {
       const res = await getSelf();
@@ -43,10 +43,9 @@ export const useSelf = (): UseQueryResult<UserType> => {
       throw new Error(res.message);
     },
   });
-};
 
-export const useLinkedUsers = (): UseQueryResult<UserType[]> => {
-  return useQuery({
+export const useLinkedUsers = (): UseQueryResult<UserType[]> =>
+  useQuery({
     queryKey: ['linked-users'],
     queryFn: async () => {
       const res = await getLinkedUsers();
@@ -56,10 +55,9 @@ export const useLinkedUsers = (): UseQueryResult<UserType[]> => {
       throw new Error(res.message);
     },
   });
-};
 
-export const useUserWithUID = (uid: number): UseQueryResult<UserType> => {
-  return useQuery({
+export const useUserWithUID = (uid: number): UseQueryResult<UserType> =>
+  useQuery({
     queryKey: ['user', uid],
     queryFn: async () => {
       const res = await getUserWithUID(uid);
@@ -70,10 +68,9 @@ export const useUserWithUID = (uid: number): UseQueryResult<UserType> => {
     },
     enabled: !!uid,
   });
-};
 
-export const useAllUsers = (): UseQueryResult<UserType[]> => {
-  return useQuery({
+export const useAllUsers = (): UseQueryResult<UserType[]> =>
+  useQuery({
     queryKey: ['users'],
     queryFn: async () => {
       const res = await getAllUsers();
@@ -83,7 +80,6 @@ export const useAllUsers = (): UseQueryResult<UserType[]> => {
       throw new Error(res.message);
     },
   });
-};
 
 /**
  * POST request hooks
@@ -122,11 +118,7 @@ export const useCreateUser = (): UseMutationResult<
   });
 };
 
-export const useUpdateUser = (): UseMutationResult<
-  ApiResponse<UserType>,
-  Error,
-  UserType
-> => {
+export const useUpdateUser = (): UseMutationResult<ApiResponse<UserType>, Error, UserType> => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (user: UserType) => {
@@ -153,11 +145,7 @@ export const useUpdateUser = (): UseMutationResult<
 };
 
 // DELETE
-export const useDeleteUser = (): UseMutationResult<
-  ApiResponse<UserType>,
-  Error,
-  number
-> => {
+export const useDeleteUser = (): UseMutationResult<ApiResponse<UserType>, Error, number> => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (uid: number) => {

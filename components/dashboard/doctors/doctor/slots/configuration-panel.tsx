@@ -12,14 +12,14 @@ import {
   SelectItem,
   Tooltip,
 } from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
 import type { FormikProps } from 'formik';
 import type React from 'react';
-
-import type { SlotConfig, TimeSlot } from '@/types/slots';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 import { SpecificDateManager } from './specific-date-manager';
 import { getValidEndTimes, getValidStartTimes, timeToMinutes } from './util';
+
+import type { SlotConfig, TimeSlot } from '@/types/slots';
 
 interface ConfigurationPanelProps {
   formik: FormikProps<SlotConfig>;
@@ -38,10 +38,7 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
 
     const currentSlot = daySchedule.slots[slotIndex];
     // Update start time
-    formik.setFieldValue(
-      `availability.schedule.${day}.slots.${slotIndex}.start`,
-      value
-    );
+    formik.setFieldValue(`availability.schedule.${day}.slots.${slotIndex}.start`, value);
 
     // Auto-adjust end time if it's now invalid
     const startMinutes = timeToMinutes(value);
@@ -50,11 +47,7 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
 
     if (endMinutes < minEndMinutes) {
       // Find the next valid end time
-      const validEndTimes = getValidEndTimes(
-        value,
-        getDurationIncrement(),
-        formik.values.duration
-      );
+      const validEndTimes = getValidEndTimes(value, getDurationIncrement(), formik.values.duration);
       if (validEndTimes.length > 0) {
         formik.setFieldValue(
           `availability.schedule.${day}.slots.${slotIndex}.end`,
@@ -69,24 +62,18 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
     const slotIndex = daySchedule.slots.findIndex((slot) => slot.id === slotId);
 
     if (slotIndex === -1) return;
-    formik.setFieldValue(
-      `availability.schedule.${day}.slots.${slotIndex}.end`,
-      value
-    );
+    formik.setFieldValue(`availability.schedule.${day}.slots.${slotIndex}.end`, value);
   };
 
   const getDurationIncrement = (): number => {
     // Use the smallest increment that divides evenly into the appointment duration
-    const duration = formik.values.duration;
+    const { duration } = formik.values;
     if (duration >= 60) return 30;
     if (duration >= 30) return 15;
     return 15; // Default to 15-minute increments
   };
 
-  const getPreviousSlotEndTime = (
-    day: string,
-    currentSlotIndex: number
-  ): string | undefined => {
+  const getPreviousSlotEndTime = (day: string, currentSlotIndex: number): string | undefined => {
     const daySchedule = formik.values.availability.schedule[day];
     if (currentSlotIndex === 0) return undefined;
     return daySchedule.slots[currentSlotIndex - 1]?.end;
@@ -105,13 +92,8 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
     if (validStartTimes.length === 0) return; // No valid start times available
 
     const newStartTime = validStartTimes[0];
-    const validEndTimes = getValidEndTimes(
-      newStartTime,
-      durationIncrement,
-      formik.values.duration
-    );
-    const newEndTime =
-      validEndTimes.length > 0 ? validEndTimes[0] : newStartTime;
+    const validEndTimes = getValidEndTimes(newStartTime, durationIncrement, formik.values.duration);
+    const newEndTime = validEndTimes.length > 0 ? validEndTimes[0] : newStartTime;
 
     const newSlot: TimeSlot = {
       id: Date.now().toString(),
@@ -129,9 +111,7 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
 
     // Ensure at least one slot remains
     const finalSlots =
-      updatedSlots.length > 0
-        ? updatedSlots
-        : [{ id: '1', start: '09:00', end: '17:00' }];
+      updatedSlots.length > 0 ? updatedSlots : [{ id: '1', start: '09:00', end: '17:00' }];
     formik.setFieldValue(`availability.schedule.${day}.slots`, finalSlots);
   };
 
@@ -225,10 +205,7 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
                   <div className="w-8 text-sm">{label}</div>
                   <div className="flex w-full flex-1 flex-col gap-2">
                     {dayConfig.slots.map((slot, slotIndex) => {
-                      const previousSlotEndTime = getPreviousSlotEndTime(
-                        key,
-                        slotIndex
-                      );
+                      const previousSlotEndTime = getPreviousSlotEndTime(key, slotIndex);
                       const validStartTimes = getValidStartTimes(
                         durationIncrement,
                         previousSlotEndTime,
@@ -241,10 +218,7 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
                       );
 
                       return (
-                        <div
-                          key={slot.id}
-                          className="grid w-full grid-cols-9 gap-2"
-                        >
+                        <div key={slot.id} className="grid w-full grid-cols-9 gap-2">
                           {dayConfig.enabled ? (
                             <>
                               <Select
@@ -253,11 +227,7 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
                                 value={slot.start}
                                 defaultSelectedKeys={[slot.start]}
                                 onSelectionChange={(value) =>
-                                  updateSlotStartTime(
-                                    key,
-                                    slot.id,
-                                    value.currentKey || ''
-                                  )
+                                  updateSlotStartTime(key, slot.id, value.currentKey || '')
                                 }
                               >
                                 {validStartTimes.map((time) => (
@@ -273,11 +243,7 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
                                 value={slot.end}
                                 defaultSelectedKeys={[slot.end]}
                                 onSelectionChange={(value) =>
-                                  updateSlotEndTime(
-                                    key,
-                                    slot.id,
-                                    value.currentKey || ''
-                                  )
+                                  updateSlotEndTime(key, slot.id, value.currentKey || '')
                                 }
                               >
                                 {validEndTimes.map((time) => (
@@ -286,16 +252,11 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
                               </Select>
                             </>
                           ) : (
-                            <div className="col-span-7 text-default-500">
-                              Unavailable
-                            </div>
+                            <div className="col-span-7 text-default-500">Unavailable</div>
                           )}
                           <div className="col-span-2 flex items-center gap-2">
                             {dayConfig.enabled ? (
-                              <Tooltip
-                                delay={1000}
-                                content="Unavailable all day"
-                              >
+                              <Tooltip delay={1000} content="Unavailable all day">
                                 <Button
                                   isIconOnly
                                   type="button"
@@ -310,22 +271,14 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
                                   }}
                                   radius="full"
                                 >
-                                  <Icon
-                                    icon="solar:forbidden-circle-outline"
-                                    width={20}
-                                  />
+                                  <Icon icon="solar:forbidden-circle-outline" width={20} />
                                 </Button>
                               </Tooltip>
                             ) : (
-                              <div className="col-span-1 aspect-square h-full">
-                                &nbsp;
-                              </div>
+                              <div className="col-span-1 aspect-square h-full">&nbsp;</div>
                             )}
                             {slotIndex === 0 && (
-                              <Tooltip
-                                delay={1000}
-                                content="Add another period for this day"
-                              >
+                              <Tooltip delay={1000} content="Add another period for this day">
                                 <Button
                                   type="button"
                                   variant="light"
@@ -340,19 +293,14 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
                                   isDisabled={
                                     getValidStartTimes(
                                       durationIncrement,
-                                      dayConfig.slots[
-                                        dayConfig.slots.length - 1
-                                      ]?.end,
+                                      dayConfig.slots[dayConfig.slots.length - 1]?.end,
                                       formik.values.duration
                                     ).length === 0
                                   }
                                   isIconOnly
                                   radius="full"
                                 >
-                                  <Icon
-                                    icon="solar:add-circle-linear"
-                                    width={20}
-                                  />
+                                  <Icon icon="solar:add-circle-linear" width={20} />
                                 </Button>
                               </Tooltip>
                             )}
@@ -396,9 +344,7 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
                 ? `${formik.values.maxBookingsPerDay} max bookings`
                 : 'No maximum bookings'
             } per day · Guest permissions`}
-            startContent={
-              <ItemIcon icon="solar:settings-minimalistic-bold-duotone" />
-            }
+            startContent={<ItemIcon icon="solar:settings-minimalistic-bold-duotone" />}
             classNames={{
               subtitle: 'text-default-500 text-tiny',
               trigger: 'gap-1 items-start',
@@ -408,9 +354,7 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
               <div className="flex flex-col gap-2">
                 <div className="flex flex-col">
                   <h3 className="text-small font-medium">Buffer time</h3>
-                  <p className="text-tiny text-default-500">
-                    Add time between appointment slots
-                  </p>
+                  <p className="text-tiny text-default-500">Add time between appointment slots</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <Checkbox
@@ -424,25 +368,19 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
                     size="sm"
                     className="max-w-36"
                     value={formik.values.bufferTime}
-                    onValueChange={(value) =>
-                      formik.setFieldValue('bufferTime', Number(value))
-                    }
+                    onValueChange={(value) => formik.setFieldValue('bufferTime', Number(value))}
                     defaultValue={30}
                     minValue={1}
                     maxValue={60}
                     isDisabled={formik.values.bufferTime === 0}
-                    endContent={
-                      <span className="text-default-500">Minutes</span>
-                    }
+                    endContent={<span className="text-default-500">Minutes</span>}
                   />
                 </div>
               </div>
 
               <div className="flex flex-col gap-2">
                 <div className="flex flex-col">
-                  <h3 className="text-small font-medium">
-                    Maximum bookings per day
-                  </h3>
+                  <h3 className="text-small font-medium">Maximum bookings per day</h3>
                   <p className="text-tiny text-default-500">
                     Limit how many booked appointments to accept in a single day
                   </p>
@@ -477,12 +415,10 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
                     onChange={formik.handleChange}
                   />
                   <div>
-                    <div className="text-small font-medium">
-                      Guests can invite others
-                    </div>
+                    <div className="text-small font-medium">Guests can invite others</div>
                     <div className="text-tiny text-default-500">
-                      After booking an appointment guests can modify the
-                      calendar event to invite others
+                      After booking an appointment guests can modify the calendar event to invite
+                      others
                     </div>
                   </div>
                 </div>
@@ -511,12 +447,7 @@ function Subtitle({ subtitle }: { subtitle: string }) {
 
 function ItemIcon({ icon, className }: { icon: string; className?: string }) {
   return (
-    <div
-      className={cn(
-        'flex items-center gap-2 rounded-small p-1 text-default-500',
-        className
-      )}
-    >
+    <div className={cn('flex items-center gap-2 rounded-small p-1 text-default-500', className)}>
       <Icon icon={icon} width={20} />
     </div>
   );

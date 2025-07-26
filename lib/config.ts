@@ -1,8 +1,7 @@
 // export const isCaching = process.env.NODE_ENV === 'production' ? true : false;
 export const isCaching = false;
 export const API_BASE_URL = process.env.NEXTAUTH_URL;
-export const DEFAULT_AVATAR =
-  'https://cdn.jsdelivr.net/gh/alohe/avatars/png/memo_2.png';
+export const DEFAULT_AVATAR = 'https://cdn.jsdelivr.net/gh/alohe/avatars/png/memo_2.png';
 
 export const APP_INFO = {
   name: 'The Polyclinic',
@@ -119,7 +118,7 @@ export const APPOINTMENT = {
 export const WEBSITE_SETTING = {
   status: {
     maintainance: false,
-    registration: process.env.NODE_ENV === 'production' ? false : true,
+    registration: process.env.NODE_ENV !== 'production',
     login: true,
     email: false,
   },

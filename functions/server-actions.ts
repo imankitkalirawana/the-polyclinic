@@ -1,14 +1,15 @@
 'use server';
+
 import bcrypt from 'bcryptjs';
 import { MailOptions } from 'nodemailer/lib/json-transport';
+
+import { sendHTMLEmail } from './server-actions/emails/send-email';
+import { generateOtp } from './utils';
 
 import { connectDB } from '@/lib/db';
 import Otp from '@/models/Otp';
 import Service from '@/models/Service';
 import User from '@/models/User';
-
-import { sendHTMLEmail } from './server-actions/emails/send-email';
-import { generateOtp } from './utils';
 
 export const sendSMS = async (phone: string, message: string) => {
   console.log(`Your otp for ${phone} is ${message}`);
@@ -55,9 +56,8 @@ export const sendMailWithOTP = async (id: string, mailOptions: MailOptions) => {
     mailOptions.to = id;
     mailOptions.text = `Your OTP is: ${otp}`;
     return await sendHTMLEmail(mailOptions);
-  } else {
-    return await sendSMS(id, `Your OTP is: ${otp}`);
   }
+  return await sendSMS(id, `Your OTP is: ${otp}`);
 };
 
 export const verifyOTP = async (id: string, otp: number) => {

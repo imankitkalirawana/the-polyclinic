@@ -1,12 +1,5 @@
-import {
-  Button,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-} from '@heroui/react';
 import React from 'react';
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@heroui/react';
 
 export default function FixMeModal() {
   return (
@@ -14,9 +7,7 @@ export default function FixMeModal() {
       <ModalContent>
         {(onClose) => (
           <>
-            <ModalHeader className="flex flex-col gap-1">
-              Fix Me Modal
-            </ModalHeader>
+            <ModalHeader className="flex flex-col gap-1">Fix Me Modal</ModalHeader>
             <ModalBody>
               <p>This is placeholder for the fix me modal.</p>
             </ModalBody>

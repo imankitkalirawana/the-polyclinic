@@ -1,6 +1,6 @@
+import React from 'react';
 import { Tooltip } from '@heroui/react';
 import { format } from 'date-fns';
-import React from 'react';
 
 const getCurrentTimePosition = () => {
   const currentTime = new Date();
@@ -11,11 +11,8 @@ const getCurrentTimePosition = () => {
   return minutePercentage;
 };
 
-export const CurrentHourIndicator = React.forwardRef<
-  HTMLDivElement,
-  { disableTime?: boolean }
->(({ disableTime = false }, ref) => {
-  return (
+export const CurrentHourIndicator = React.forwardRef<HTMLDivElement, { disableTime?: boolean }>(
+  ({ disableTime = false }, ref) => (
     <Tooltip
       isDisabled={disableTime}
       content={format(new Date(), 'HH:mm')}
@@ -40,7 +37,7 @@ export const CurrentHourIndicator = React.forwardRef<
         <div className="h-[2px] w-full bg-red-500" />
       </div>
     </Tooltip>
-  );
-});
+  )
+);
 
 CurrentHourIndicator.displayName = 'CurrentHourIndicator'; // Avoid anonymous component warning

@@ -1,13 +1,7 @@
 'use client';
 
-import {
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-} from '@heroui/modal';
 import React, { createContext, ReactNode, useContext, useState } from 'react';
+import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@heroui/modal';
 
 type ModalOptions = {
   body: ReactNode;
@@ -36,12 +30,7 @@ export function ModalProvider({ children }: { children: ReactNode }) {
   return (
     <ModalContext.Provider value={{ show, hide }}>
       {children}
-      <Modal
-        isOpen={open}
-        backdrop="blur"
-        onOpenChange={(o) => !o && hide()}
-        {...opts.props}
-      >
+      <Modal isOpen={open} backdrop="blur" onOpenChange={(o) => !o && hide()} {...opts.props}>
         <ModalContent>
           {() => (
             <>

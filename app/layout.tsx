@@ -1,15 +1,15 @@
-import './globals.css';
-
 import type { Metadata } from 'next';
 import { Outfit } from 'next/font/google';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
+
+import { Providers } from './providers';
+
+import './globals.css';
 
 import { auth } from '@/auth';
 import Navbar from '@/components/sections/navbar';
 import { ThemeProvider } from '@/components/theme-provider';
 import { APP_INFO } from '@/lib/config';
-
-import { Providers } from './providers';
 
 const outfit = Outfit({
   subsets: ['latin'],

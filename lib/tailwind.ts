@@ -24,17 +24,7 @@ type Color =
   | 'neutral'
   | 'stone';
 
-export type Weight =
-  | '50'
-  | '100'
-  | '200'
-  | '300'
-  | '400'
-  | '500'
-  | '600'
-  | '700'
-  | '800'
-  | '900';
+export type Weight = '50' | '100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900';
 
 export type Type = 'bg' | 'text' | 'border';
 const colors: Color[] = [
@@ -62,18 +52,7 @@ const colors: Color[] = [
   'stone',
 ];
 
-const weights: Weight[] = [
-  '50',
-  '100',
-  '200',
-  '300',
-  '400',
-  '500',
-  '600',
-  '700',
-  '800',
-  '900',
-];
+const weights: Weight[] = ['50', '100', '200', '300', '400', '500', '600', '700', '800', '900'];
 
 const types: Type[] = ['bg', 'text', 'border'];
 

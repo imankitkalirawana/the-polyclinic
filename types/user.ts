@@ -3,13 +3,7 @@ import { ValuesOf } from '@/lib/utils';
 
 export const genders = ['male', 'female', 'other'] as const;
 
-export const userStatuses = [
-  'active',
-  'inactive',
-  'blocked',
-  'deleted',
-  'unverified',
-] as const;
+export const userStatuses = ['active', 'inactive', 'blocked', 'deleted', 'unverified'] as const;
 
 export const userRoles = [
   'admin',

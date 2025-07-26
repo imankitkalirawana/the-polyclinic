@@ -1,7 +1,8 @@
 'use client';
-import { Switch } from '@heroui/react';
-import { useTheme } from 'next-themes';
+
 import * as React from 'react';
+import { useTheme } from 'next-themes';
+import { Switch } from '@heroui/react';
 
 export default function ModeToggle() {
   const { setTheme, theme } = useTheme();

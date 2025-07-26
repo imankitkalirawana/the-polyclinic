@@ -1,8 +1,8 @@
 'use client';
 
+import React, { ReactElement } from 'react';
 import type { SwitchProps } from '@heroui/react';
 import { cn, extendVariants, Switch } from '@heroui/react';
-import React, { ReactElement } from 'react';
 
 import { $FixMe } from '@/types';
 
@@ -44,11 +44,7 @@ const SwitchCell = React.forwardRef<ReactElement<$FixMe>, SwitchCellProps>(
     >
       <div className="flex flex-col">
         <p className={cn('text-medium', classNames?.label)}>{label}</p>
-        <p
-          className={cn('text-small text-default-500', classNames?.description)}
-        >
-          {description}
-        </p>
+        <p className={cn('text-small text-default-500', classNames?.description)}>{description}</p>
       </div>
     </CustomSwitch>
   )

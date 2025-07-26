@@ -1,22 +1,11 @@
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from '@tanstack/react-query';
 import { redirect } from 'next/navigation';
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 import { auth } from '@/auth';
 import NewUser from '@/components/dashboard/users/new';
 import { getAllCountries } from '@/services/api/external';
 
-const allowedRoles = [
-  'admin',
-  'doctor',
-  'nurse',
-  'receptionist',
-  'pharmacist',
-  'laboratorist',
-];
+const allowedRoles = ['admin', 'doctor', 'nurse', 'receptionist', 'pharmacist', 'laboratorist'];
 
 export default async function Page() {
   const session = await auth();
@@ -38,10 +27,8 @@ export default async function Page() {
   }
 
   return (
-    <>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <NewUser />
-      </HydrationBoundary>
-    </>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <NewUser />
+    </HydrationBoundary>
   );
 }

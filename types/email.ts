@@ -1,4 +1,5 @@
 import { Base } from '@/lib/interface';
+
 export enum EmailStatus {
   active = 'active',
   inactive = 'inactive',

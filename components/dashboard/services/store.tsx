@@ -3,9 +3,9 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { create } from 'zustand';
 
-import { ServiceType } from '@/types/service';
-
 import { ActionType } from './types';
+
+import { ServiceType } from '@/types/service';
 
 interface ServiceStoreState {
   selected: ServiceType | null;
@@ -26,8 +26,7 @@ export const useServiceStore = create<ServiceStoreState>((set) => ({
   resetState: () => set({ selected: null, action: null, keys: undefined }),
 }));
 export const useServiceForm = () => {
-  const { selected, action, setSelected, setAction, resetState } =
-    useServiceStore();
+  const { selected, action, setSelected, setAction, resetState } = useServiceStore();
 
   const formik = useFormik({
     initialValues: {

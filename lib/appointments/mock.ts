@@ -1,15 +1,11 @@
 'use server';
 
-import { faker } from '@faker-js/faker';
 import { addDays, subDays } from 'date-fns';
-
-import {
-  appointmentModes,
-  AppointmentType,
-  appointmentTypes,
-} from '@/types/appointment';
+import { faker } from '@faker-js/faker';
 
 import { TIMINGS } from '../config';
+
+import { appointmentModes, AppointmentType, appointmentTypes } from '@/types/appointment';
 
 export async function generateAppointments({
   count,
@@ -61,17 +57,17 @@ export async function generateAppointments({
           image: faker.image.personPortrait({ size: 256, sex: 'male' }),
         },
       }),
-      status: status
-        ? status
-        : faker.helpers.arrayElement([
-            'booked',
-            'confirmed',
-            'in-progress',
-            'completed',
-            'cancelled',
-            'overdue',
-            'on-hold',
-          ]),
+      status:
+        status ||
+        faker.helpers.arrayElement([
+          'booked',
+          'confirmed',
+          'in-progress',
+          'completed',
+          'cancelled',
+          'overdue',
+          'on-hold',
+        ]),
       additionalInfo: {
         notes: faker.lorem.paragraph(),
         symptoms: faker.lorem.sentence(),

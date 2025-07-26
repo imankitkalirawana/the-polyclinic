@@ -1,6 +1,6 @@
 // app/api/gemini/route.ts
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NextRequest, NextResponse } from 'next/server';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
@@ -26,20 +26,14 @@ export async function POST(request: NextRequest) {
   try {
     // Check if API key is configured
     if (!process.env.GEMINI_API_KEY) {
-      return NextResponse.json(
-        { error: 'Gemini API key not configured' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'Gemini API key not configured' }, { status: 500 });
     }
 
     const { prompt, context } = await request.json();
 
     // Validate input
     if (!prompt || typeof prompt !== 'string') {
-      return NextResponse.json(
-        { error: 'Invalid prompt provided' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid prompt provided' }, { status: 400 });
     }
 
     // Get the generative model
@@ -81,24 +75,15 @@ export async function POST(request: NextRequest) {
       }
 
       if (error.message.includes('RATE_LIMIT_EXCEEDED')) {
-        return NextResponse.json(
-          { error: 'Rate limit exceeded' },
-          { status: 429 }
-        );
+        return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 });
       }
     }
 
-    return NextResponse.json(
-      { error: 'Failed to generate AI response' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to generate AI response' }, { status: 500 });
   }
 }
 
 // Optional: Add rate limiting and caching
 export async function GET() {
-  return NextResponse.json(
-    { message: 'Gemini AI endpoint is running' },
-    { status: 200 }
-  );
+  return NextResponse.json({ message: 'Gemini AI endpoint is running' }, { status: 200 });
 }

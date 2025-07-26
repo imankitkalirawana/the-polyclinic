@@ -1,23 +1,20 @@
 'use client';
 
+import React, { type MouseEvent, useEffect, useRef } from 'react';
+import { useSession } from 'next-auth/react';
 import { ScrollShadow, Tooltip } from '@heroui/react';
 import { format, isPast, isSameDay, isToday } from 'date-fns';
-import { useSession } from 'next-auth/react';
-import React, { type MouseEvent, useEffect, useRef } from 'react';
+
+import { allowedRolesToCreateAppointment, MAX_APPOINTMENTS_IN_CELL } from '../data';
+import AppointmentList from '../ui/appointment-list';
+import AppointmentTriggerItem from '../ui/appointment-trigger-item';
+import { CurrentHourIndicator } from '../ui/current-hour-indicator';
+import DateChip from '../ui/date-chip';
 
 import { TIMINGS } from '@/lib/config'; // Assuming this provides start/end hours
 import { cn } from '@/lib/utils';
 import { useAppointmentStore } from '@/store/appointment';
 import type { AppointmentType } from '@/types/appointment';
-
-import {
-  allowedRolesToCreateAppointment,
-  MAX_APPOINTMENTS_IN_CELL,
-} from '../data';
-import AppointmentList from '../ui/appointment-list';
-import AppointmentTriggerItem from '../ui/appointment-trigger-item';
-import { CurrentHourIndicator } from '../ui/current-hour-indicator';
-import DateChip from '../ui/date-chip';
 
 interface DayViewProps {
   appointments: AppointmentType[];
@@ -25,11 +22,7 @@ interface DayViewProps {
   onTimeSlotClick: (date: Date) => void;
 }
 
-export function DayView({
-  appointments,
-  currentDate,
-  onTimeSlotClick,
-}: DayViewProps) {
+export function DayView({ appointments, currentDate, onTimeSlotClick }: DayViewProps) {
   const { data: session } = useSession();
   const ref = useRef<HTMLDivElement>(null);
   const { appointment, setIsTooltipOpen } = useAppointmentStore();
@@ -43,16 +36,13 @@ export function DayView({
     (_, i) => i + TIMINGS.appointment.start
   );
 
-  const dayAppointments = appointments.filter((apt) =>
-    isSameDay(new Date(apt.date), currentDate)
-  );
+  const dayAppointments = appointments.filter((apt) => isSameDay(new Date(apt.date), currentDate));
 
-  const getAppointmentsForHour = (hour: number) => {
-    return dayAppointments.filter((apt) => {
+  const getAppointmentsForHour = (hour: number) =>
+    dayAppointments.filter((apt) => {
       const aptDate = new Date(apt.date);
       return aptDate.getHours() === hour;
     });
-  };
 
   useEffect(() => {
     if (ref.current) {
@@ -104,27 +94,16 @@ export function DayView({
                   className="row-span-1 w-20 shrink-0 border-b border-r p-2 text-right text-small text-default-500"
                   style={{ gridRowStart: hourIndex + 1, gridColumnStart: 1 }}
                 >
-                  {hour < 12
-                    ? `${hour} AM`
-                    : hour === 12
-                      ? '12 PM'
-                      : `${hour - 12} PM`}
+                  {hour < 12 ? `${hour} AM` : hour === 12 ? '12 PM' : `${hour - 12} PM`}
                 </div>
 
                 {/* Day Content Cell for this Hour */}
                 <div
-                  title={
-                    isHourDisabled
-                      ? 'Cannot create appointments in the past'
-                      : ''
-                  }
-                  className={cn(
-                    'relative min-h-[80px] cursor-pointer border-b p-1',
-                    {
-                      'cursor-not-allowed': isHourDisabled,
-                      'cursor-auto': !isAllowedToCreateAppointment,
-                    }
-                  )}
+                  title={isHourDisabled ? 'Cannot create appointments in the past' : ''}
+                  className={cn('relative min-h-[80px] cursor-pointer border-b p-1', {
+                    'cursor-not-allowed': isHourDisabled,
+                    'cursor-auto': !isAllowedToCreateAppointment,
+                  })}
                   style={{
                     gridRowStart: hourIndex + 1,
                     gridColumnStart: 2,
@@ -140,13 +119,10 @@ export function DayView({
                       const cellHeight = rect.height;
 
                       const clickRatio =
-                        cellHeight > 0
-                          ? Math.max(0, Math.min(1, clickY / cellHeight))
-                          : 0;
+                        cellHeight > 0 ? Math.max(0, Math.min(1, clickY / cellHeight)) : 0;
 
                       // Calculate minutes offset from the start of the hour, rounded to nearest 15 minutes
-                      const minutesOffset =
-                        Math.round((clickRatio * 60) / 15) * 15;
+                      const minutesOffset = Math.round((clickRatio * 60) / 15) * 15;
 
                       let targetHour = hour;
                       let targetMinutes = minutesOffset;
@@ -172,21 +148,13 @@ export function DayView({
                   {new Date().getHours() === hour && isToday(currentDate) && (
                     <CurrentHourIndicator ref={ref} />
                   )}
-                  {appointmentsInHour
-                    .slice(0, MAX_APPOINTMENTS_IN_CELL)
-                    .map((appointment) => (
-                      <AppointmentTriggerItem
-                        key={appointment.aid}
-                        appointment={appointment}
-                      />
-                    ))}
+                  {appointmentsInHour.slice(0, MAX_APPOINTMENTS_IN_CELL).map((appointment) => (
+                    <AppointmentTriggerItem key={appointment.aid} appointment={appointment} />
+                  ))}
                   {appointmentsInHour.length > MAX_APPOINTMENTS_IN_CELL && (
                     <Tooltip
                       content={
-                        <AppointmentList
-                          appointments={appointmentsInHour}
-                          date={currentDate}
-                        />
+                        <AppointmentList appointments={appointmentsInHour} date={currentDate} />
                       }
                       onOpenChange={setIsTooltipOpen}
                     >

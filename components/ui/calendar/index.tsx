@@ -1,28 +1,26 @@
 'use client';
-import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs';
+
 import React, { useState } from 'react';
+import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs';
 
-import { CreateAppointment } from '@/components/appointments/create';
-import { AppointmentType } from '@/types/appointment';
-
-import { CalendarHeader } from './header';
-import { views } from './types';
 import AppointmentDrawer from './ui/appointment-drawer';
 import { DayView } from './views/day';
 import { MonthView } from './views/month';
 import { ScheduleView } from './views/schedule';
 import { WeekView } from './views/week';
 import { YearView } from './views/year';
+import { CalendarHeader } from './header';
+import { views } from './types';
+
+import { CreateAppointment } from '@/components/appointments/create';
+import { AppointmentType } from '@/types/appointment';
 
 interface CalendarProps {
   appointments: AppointmentType[];
 }
 
 export function Calendar({ appointments }: CalendarProps) {
-  const [view] = useQueryState(
-    'view',
-    parseAsStringEnum(views).withDefault('schedule')
-  );
+  const [view] = useQueryState('view', parseAsStringEnum(views).withDefault('schedule'));
   const [currentDate, setCurrentDate] = useQueryState(
     'date',
     parseAsIsoDateTime.withDefault(new Date())
@@ -38,12 +36,7 @@ export function Calendar({ appointments }: CalendarProps) {
   const renderView = () => {
     switch (view) {
       case 'month':
-        return (
-          <MonthView
-            appointments={appointments}
-            onTimeSlotClick={handleTimeSlotClick}
-          />
-        );
+        return <MonthView appointments={appointments} onTimeSlotClick={handleTimeSlotClick} />;
       case 'week':
         return (
           <WeekView
@@ -61,13 +54,9 @@ export function Calendar({ appointments }: CalendarProps) {
           />
         );
       case 'schedule':
-        return (
-          <ScheduleView appointments={appointments} currentDate={currentDate} />
-        );
+        return <ScheduleView appointments={appointments} currentDate={currentDate} />;
       case 'year':
-        return (
-          <YearView appointments={appointments} currentDate={currentDate} />
-        );
+        return <YearView appointments={appointments} currentDate={currentDate} />;
       default:
         return null;
     }

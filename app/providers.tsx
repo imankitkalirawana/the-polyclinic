@@ -1,21 +1,20 @@
 'use client';
-import { HeroUIProvider, Spinner, ToastProvider } from '@heroui/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
+import React from 'react';
 import { Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import NextTopLoader from 'nextjs-toploader';
 import { useRouter } from 'nextjs-toploader/app';
-import React from 'react';
+import { HeroUIProvider, Spinner, ToastProvider } from '@heroui/react';
 import { Toaster } from 'sonner';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import { ModalProvider } from '@/components/ui/global-modal';
 
 declare module '@react-types/shared' {
   interface RouterConfig {
-    routerOptions: NonNullable<
-      Parameters<ReturnType<typeof useRouter>['push']>[1]
-    >;
+    routerOptions: NonNullable<Parameters<ReturnType<typeof useRouter>['push']>[1]>;
   }
 }
 
@@ -68,12 +67,11 @@ export function Providers({
               success: '!text-success-500 !bg-success-50 !border-success-100',
               warning: '!text-warning-500 !bg-warning-50 !border-warning-100',
               info: '!text-info-500 !bg-info-50 !border-info-100',
-              closeButton:
-                '!-right-4 !-left-[inherit] group-hover:opacity-100 opacity-0',
+              closeButton: '!-right-4 !-left-[inherit] group-hover:opacity-100 opacity-0',
             },
           }}
           expand
-          theme={'light'}
+          theme="light"
           duration={5000}
           closeButton
         />

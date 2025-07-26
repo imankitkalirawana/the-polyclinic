@@ -6,7 +6,7 @@ import Service from '@/models/Service';
 import { ServiceType } from '@/types/service';
 import { UserType } from '@/types/user';
 
-export const GET = auth(async function GET(request: any) {
+export const GET = auth(async (request: any) => {
   try {
     if (!request.auth?.user) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -23,7 +23,7 @@ export const GET = auth(async function GET(request: any) {
   }
 });
 
-export const POST = auth(async function POST(request: any) {
+export const POST = auth(async (request: any) => {
   const allowedRoles: UserType['role'][] = ['admin'];
   if (!allowedRoles.includes(request.auth?.user?.role)) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -34,10 +34,7 @@ export const POST = auth(async function POST(request: any) {
     data.createdBy = request.auth.user.email;
     await connectDB();
     if (await Service.exists({ uniqueId: data.uniqueId })) {
-      return NextResponse.json(
-        { message: 'Unique ID already exists' },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: 'Unique ID already exists' }, { status: 400 });
     }
     const service = await Service.create(data);
     return NextResponse.json(service);
@@ -47,7 +44,7 @@ export const POST = auth(async function POST(request: any) {
   }
 });
 
-export const DELETE = auth(async function DELETE(request: any) {
+export const DELETE = auth(async (request: any) => {
   const allowedRoles: UserType['role'][] = ['admin'];
   if (!allowedRoles.includes(request.auth?.user?.role)) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });

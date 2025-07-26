@@ -1,13 +1,14 @@
 'use client';
-import { Tab, Tabs } from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import { useQueryState } from 'nuqs';
 
-import { useUserWithUID } from '@/services/user';
+import { Tab, Tabs } from '@heroui/react';
+import { useQueryState } from 'nuqs';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 import AccountDetails from './account-details';
 import NotificationsSettings from './notifications-settings';
 import SecuritySettings from './security-settings';
+
+import { useUserWithUID } from '@/services/user';
 
 export default function EditUser({ uid }: { uid: number }) {
   const [tab, setTab] = useQueryState('tab', {
@@ -57,29 +58,23 @@ export default function EditUser({ uid }: { uid: number }) {
     },
   ];
   return (
-    <>
-      <Tabs
-        classNames={{
-          tabList: 'mx-4 text-medium',
-          tabContent: 'text-small',
-          tab: 'w-fit',
-        }}
-        color="primary"
-        items={tabs}
-        aria-label="Options"
-        selectedKey={tab}
-        onSelectionChange={(key) => setTab(String(key))}
-      >
-        {(tab) => (
-          <Tab
-            key={tab.key}
-            title={tab.title}
-            className="no-scrollbar overflow-y-scroll"
-          >
-            {tab.content}
-          </Tab>
-        )}
-      </Tabs>
-    </>
+    <Tabs
+      classNames={{
+        tabList: 'mx-4 text-medium',
+        tabContent: 'text-small',
+        tab: 'w-fit',
+      }}
+      color="primary"
+      items={tabs}
+      aria-label="Options"
+      selectedKey={tab}
+      onSelectionChange={(key) => setTab(String(key))}
+    >
+      {(tab) => (
+        <Tab key={tab.key} title={tab.title} className="no-scrollbar overflow-y-scroll">
+          {tab.content}
+        </Tab>
+      )}
+    </Tabs>
   );
 }

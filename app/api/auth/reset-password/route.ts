@@ -1,5 +1,5 @@
-import bcrypt from 'bcryptjs';
 import { NextResponse } from 'next/server';
+import bcrypt from 'bcryptjs';
 
 import { connectDB } from '@/lib/db';
 import Otp from '@/models/Otp';
@@ -33,10 +33,7 @@ export const PATCH = async (request: any) => {
     await user.save();
     await Otp.deleteOne({ id: email });
 
-    return NextResponse.json(
-      { message: 'Password reset successfully' },
-      { status: 200 }
-    );
+    return NextResponse.json({ message: 'Password reset successfully' }, { status: 200 });
   } catch (error: any) {
     console.error(error);
     return NextResponse.json(

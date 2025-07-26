@@ -1,14 +1,15 @@
-import { MongoDBAdapter } from '@auth/mongodb-adapter';
-import bcrypt from 'bcryptjs';
 import NextAuth, { AuthError } from 'next-auth';
 import credentials from 'next-auth/providers/credentials';
 import Google from 'next-auth/providers/google';
+import bcrypt from 'bcryptjs';
+import { MongoDBAdapter } from '@auth/mongodb-adapter';
 
 import client from '@/lib/db';
 import User from '@/models/User';
 
 class ErrorMessage extends AuthError {
   code = 'custom';
+
   constructor(message = 'Invalid email or password') {
     super(message);
     this.message = message;
@@ -38,9 +39,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           .findOne({ key: 'non-prod-masterkey' });
 
         if (user?.status === 'inactive' || user?.status === 'blocked') {
-          throw new ErrorMessage(
-            `Your account is ${user?.status}. Please contact support.`
-          );
+          throw new ErrorMessage(`Your account is ${user?.status}. Please contact support.`);
         }
 
         if (!user) {
@@ -57,10 +56,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return user;
         }
 
-        const isValid = await bcrypt.compare(
-          credentials!.password,
-          user.password
-        );
+        const isValid = await bcrypt.compare(credentials!.password, user.password);
 
         if (!isValid) {
           throw new ErrorMessage('Invalid Email/Password');

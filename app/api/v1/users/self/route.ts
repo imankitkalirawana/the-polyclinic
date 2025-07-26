@@ -5,7 +5,7 @@ import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import User from '@/models/User';
 
-export const GET = auth(async function GET(request: NextAuthRequest) {
+export const GET = auth(async (request: NextAuthRequest) => {
   try {
     await connectDB();
     const user = await User.findOne({
@@ -15,9 +15,6 @@ export const GET = auth(async function GET(request: NextAuthRequest) {
     return NextResponse.json(user);
   } catch (error) {
     console.error(error);
-    return NextResponse.json(
-      { message: 'Internal Server Error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
   }
 });

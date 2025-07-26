@@ -1,8 +1,11 @@
 'use client';
 
-import { Button, DropdownItem, DropdownMenu, Selection } from '@heroui/react';
-import { useRouter } from 'nextjs-toploader/app';
 import { useMemo } from 'react';
+import { useRouter } from 'nextjs-toploader/app';
+import { Button, DropdownItem, DropdownMenu, Selection } from '@heroui/react';
+
+import { DrugQuickLook } from './quicklook';
+import { useDrugStore } from './store';
 
 import { Table } from '@/components/ui/data-table';
 import {
@@ -14,9 +17,6 @@ import {
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 import { useAllDrugs } from '@/services/drug';
 import { DrugType } from '@/types/drug';
-
-import { DrugQuickLook } from './quicklook';
-import { useDrugStore } from './store';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'did',
@@ -49,9 +49,7 @@ export default function Drugs() {
         uid: 'brandName',
         sortable: true,
         renderCell: (drug) => (
-          <div className="font-medium text-default-foreground">
-            {drug.brandName}
-          </div>
+          <div className="font-medium text-default-foreground">{drug.brandName}</div>
         ),
       },
       {
@@ -59,9 +57,7 @@ export default function Drugs() {
         uid: 'genericName',
         sortable: true,
         renderCell: (drug) => (
-          <div className="truncate capitalize text-default-foreground">
-            {drug.genericName}
-          </div>
+          <div className="truncate capitalize text-default-foreground">{drug.genericName}</div>
         ),
       },
       {
@@ -69,9 +65,7 @@ export default function Drugs() {
         uid: 'manufacturer',
         sortable: true,
         renderCell: (drug) => (
-          <div className="truncate capitalize text-default-foreground">
-            {drug.manufacturer}
-          </div>
+          <div className="truncate capitalize text-default-foreground">{drug.manufacturer}</div>
         ),
       },
       {
@@ -87,8 +81,7 @@ export default function Drugs() {
         name: 'Created At',
         uid: 'createdAt',
         sortable: true,
-        renderCell: (drug) =>
-          renderDate({ date: drug.createdAt, isTime: true }),
+        renderCell: (drug) => renderDate({ date: drug.createdAt, isTime: true }),
       },
       {
         name: 'Actions',
@@ -164,37 +157,35 @@ export default function Drugs() {
     </Button>
   );
 
-  const renderSelectedActions = (selectedKeys: Selection) => {
-    return (
-      <DropdownMenu aria-label="Selected Actions">
-        <DropdownItem
-          key="bulk-edit"
-          onPress={() => {
-            console.log('Bulk edit', selectedKeys);
-          }}
-        >
-          Bulk edit
-        </DropdownItem>
-        <DropdownItem
-          key="export"
-          onPress={() => {
-            console.log('Export', selectedKeys);
-          }}
-        >
-          Export
-        </DropdownItem>
-        <DropdownItem
-          key="delete"
-          className="text-danger"
-          onPress={() => {
-            console.log('Delete', selectedKeys);
-          }}
-        >
-          Delete
-        </DropdownItem>
-      </DropdownMenu>
-    );
-  };
+  const renderSelectedActions = (selectedKeys: Selection) => (
+    <DropdownMenu aria-label="Selected Actions">
+      <DropdownItem
+        key="bulk-edit"
+        onPress={() => {
+          console.log('Bulk edit', selectedKeys);
+        }}
+      >
+        Bulk edit
+      </DropdownItem>
+      <DropdownItem
+        key="export"
+        onPress={() => {
+          console.log('Export', selectedKeys);
+        }}
+      >
+        Export
+      </DropdownItem>
+      <DropdownItem
+        key="delete"
+        className="text-danger"
+        onPress={() => {
+          console.log('Delete', selectedKeys);
+        }}
+      >
+        Delete
+      </DropdownItem>
+    </DropdownMenu>
+  );
 
   return (
     <>
@@ -210,9 +201,7 @@ export default function Drugs() {
           drug.brandName.toLowerCase().includes(searchValue.toLowerCase()) ||
           drug.genericName.toLowerCase().includes(searchValue.toLowerCase()) ||
           (drug.manufacturer
-            ? drug.manufacturer
-                .toLowerCase()
-                .includes(searchValue.toLowerCase())
+            ? drug.manufacturer.toLowerCase().includes(searchValue.toLowerCase())
             : false)
         }
         endContent={endContent}

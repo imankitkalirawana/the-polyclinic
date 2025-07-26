@@ -4,7 +4,7 @@ import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import Drug from '@/models/Drug';
 
-export const GET = auth(async function GET(request: any) {
+export const GET = auth(async (request: any) => {
   try {
     const allowedRoles = ['admin', 'receptionist', 'doctor', 'user'];
 
@@ -23,7 +23,7 @@ export const GET = auth(async function GET(request: any) {
   }
 });
 
-export const POST = auth(async function POST(request: any) {
+export const POST = auth(async (request: any) => {
   try {
     if (request.auth?.user?.role !== 'admin') {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -40,7 +40,7 @@ export const POST = auth(async function POST(request: any) {
   }
 });
 
-export const PUT = auth(async function PUT(request: any) {
+export const PUT = auth(async (request: any) => {
   try {
     if (request.auth?.user?.role !== 'admin') {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -50,10 +50,7 @@ export const PUT = auth(async function PUT(request: any) {
 
     const data = await request.json();
     if (!Array.isArray(data)) {
-      return NextResponse.json(
-        { message: 'Data must be an array of drugs' },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: 'Data must be an array of drugs' }, { status: 400 });
     }
 
     const drugs = await Drug.insertMany(data);

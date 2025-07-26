@@ -1,11 +1,12 @@
 'use client';
+
 import { Formik, FormikProps } from 'formik';
 import { useClipboard } from 'react-haiku';
 
-import type { SlotConfig } from '@/types/slots';
-
 import { CalendarPreview } from './calendar-preview';
 import { ConfigurationPanel } from './configuration-panel';
+
+import type { SlotConfig } from '@/types/slots';
 
 const initialValues: SlotConfig = {
   title: '',

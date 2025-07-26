@@ -4,7 +4,7 @@ import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import Newsletter from '@/models/Newsletter';
 
-export const GET = auth(async function GET(request: any) {
+export const GET = auth(async (request: any) => {
   try {
     if (request.auth?.user?.role !== 'admin') {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -26,10 +26,7 @@ export const POST = async function POST(request: any) {
     await connectDB();
     const res = await Newsletter.findOne({ email });
     if (res) {
-      return NextResponse.json(
-        { message: 'Already Subscribed' },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: 'Already Subscribed' }, { status: 400 });
     }
     const newsletter = new Newsletter(data);
     await newsletter.save();
@@ -43,7 +40,7 @@ export const POST = async function POST(request: any) {
   }
 };
 
-export const DELETE = auth(async function DELETE(request: any) {
+export const DELETE = auth(async (request: any) => {
   try {
     if (request.auth?.user?.role !== 'admin') {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -52,12 +49,9 @@ export const DELETE = auth(async function DELETE(request: any) {
     const { searchParams } = request.nextUrl;
     const email = searchParams.get('email');
     await connectDB();
-    const newsletter = await Newsletter.findOneAndDelete({ email: email });
+    const newsletter = await Newsletter.findOneAndDelete({ email });
     if (!newsletter) {
-      return NextResponse.json(
-        { message: 'Newsletter not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: 'Newsletter not found' }, { status: 404 });
     }
     return NextResponse.json({ message: 'Newsletter deleted successfully' });
   } catch (error: any) {

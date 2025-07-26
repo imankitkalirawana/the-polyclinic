@@ -1,9 +1,5 @@
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from '@tanstack/react-query';
 import { unauthorized } from 'next/navigation';
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 import { auth } from '@/auth';
 import NewDoctor from '@/components/dashboard/doctors/new';
@@ -43,10 +39,8 @@ export default async function Page() {
   }
 
   return (
-    <>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <NewDoctor />
-      </HydrationBoundary>
-    </>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <NewDoctor />
+    </HydrationBoundary>
   );
 }

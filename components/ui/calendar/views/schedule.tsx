@@ -1,13 +1,14 @@
 'use client';
+
+import React from 'react';
 import { endOfMonth, format, isWithinInterval, startOfMonth } from 'date-fns';
 import { parseAsStringEnum, useQueryState } from 'nuqs';
-import React from 'react';
-
-import { AppointmentType } from '@/types/appointment';
 
 import { views } from '../types';
 import AppointmentTriggerItem from '../ui/appointment-trigger-item';
 import DateChip from '../ui/date-chip';
+
+import { AppointmentType } from '@/types/appointment';
 
 interface ScheduleViewProps {
   appointments: AppointmentType[];
@@ -43,32 +44,26 @@ export function ScheduleView({ appointments, currentDate }: ScheduleViewProps) {
     <div className="flex h-full flex-col">
       <div className="flex-1 overflow-auto p-4">
         <div className="divide-y divide-default-200">
-          {Object.entries(groupedAppointments).map(
-            ([dateKey, dayAppointments]) => {
-              const date = new Date(dateKey);
+          {Object.entries(groupedAppointments).map(([dateKey, dayAppointments]) => {
+            const date = new Date(dateKey);
 
-              return (
-                <div key={dateKey} className="flex w-full items-start py-1">
-                  <div className="flex w-28 items-center gap-2">
-                    <DateChip
-                      date={date}
-                      onClick={() => setView('day')}
-                      size="md"
-                    />
-                    <p className="mt-1.5 text-tiny uppercase text-default-600">
-                      {format(date, 'MMM, EEE')}
-                    </p>
-                  </div>
-
-                  <div className="flex flex-1 flex-col gap-2">
-                    {dayAppointments.map((apt) => (
-                      <AppointmentTriggerItem key={apt.aid} appointment={apt} />
-                    ))}
-                  </div>
+            return (
+              <div key={dateKey} className="flex w-full items-start py-1">
+                <div className="flex w-28 items-center gap-2">
+                  <DateChip date={date} onClick={() => setView('day')} size="md" />
+                  <p className="mt-1.5 text-tiny uppercase text-default-600">
+                    {format(date, 'MMM, EEE')}
+                  </p>
                 </div>
-              );
-            }
-          )}
+
+                <div className="flex flex-1 flex-col gap-2">
+                  {dayAppointments.map((apt) => (
+                    <AppointmentTriggerItem key={apt.aid} appointment={apt} />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
           {/* if not appointments, show a message */}
           {Object.keys(groupedAppointments).length === 0 && (
             <div className="flex h-full flex-col items-center justify-center">

@@ -1,15 +1,12 @@
 'use client';
 
-import {
-  Button,
-  DropdownItem,
-  DropdownMenu,
-  Selection,
-  useDisclosure,
-} from '@heroui/react';
-import { useRouter } from 'nextjs-toploader/app';
 import React, { useMemo } from 'react';
+import { useRouter } from 'nextjs-toploader/app';
+import { Button, DropdownItem, DropdownMenu, Selection, useDisclosure } from '@heroui/react';
 import { toast } from 'sonner';
+
+import { UserQuickLook } from './quicklook';
+import { useUserStore } from './store';
 
 import { Table } from '@/components/ui/data-table';
 import {
@@ -23,17 +20,7 @@ import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 import { useAllUsers, useDeleteUser } from '@/services/user';
 import { UserType } from '@/types/user';
 
-import { UserQuickLook } from './quicklook';
-import { useUserStore } from './store';
-
-const INITIAL_VISIBLE_COLUMNS = [
-  'image',
-  'uid',
-  'name',
-  'email',
-  'role',
-  'createdAt',
-];
+const INITIAL_VISIBLE_COLUMNS = ['image', 'uid', 'name', 'email', 'role', 'createdAt'];
 
 export default function Users() {
   const router = useRouter();
@@ -52,8 +39,8 @@ export default function Users() {
   };
 
   // Define columns with render functions
-  const columns: ColumnDef<UserType>[] = useMemo(() => {
-    return [
+  const columns: ColumnDef<UserType>[] = useMemo(
+    () => [
       {
         name: 'User ID',
         uid: 'uid',
@@ -76,9 +63,7 @@ export default function Users() {
         uid: 'email',
         sortable: true,
         renderCell: (user) => (
-          <div className="truncate lowercase text-default-foreground">
-            {user.email}
-          </div>
+          <div className="truncate lowercase text-default-foreground">{user.email}</div>
         ),
       },
       {
@@ -86,9 +71,7 @@ export default function Users() {
         uid: 'phone',
         sortable: true,
         renderCell: (user) => (
-          <div className="truncate text-default-foreground">
-            {user.phone || 'N/A'}
-          </div>
+          <div className="truncate text-default-foreground">{user.phone || 'N/A'}</div>
         ),
       },
       {
@@ -113,8 +96,7 @@ export default function Users() {
         name: 'Created At',
         uid: 'createdAt',
         sortable: true,
-        renderCell: (user) =>
-          renderDate({ date: user.createdAt, isTime: true }),
+        renderCell: (user) => renderDate({ date: user.createdAt, isTime: true }),
       },
 
       {
@@ -129,8 +111,9 @@ export default function Users() {
             onDelete: () => handleDelete(user.uid),
           }),
       },
-    ];
-  }, []);
+    ],
+    []
+  );
 
   // Define filters
   const filters: FilterDef<UserType>[] = useMemo(
@@ -201,66 +184,60 @@ export default function Users() {
 
   // Render top bar
   const endContent = () => (
-    <Button
-      color="primary"
-      size="sm"
-      onPress={() => router.push('/dashboard/users/new')}
-    >
+    <Button color="primary" size="sm" onPress={() => router.push('/dashboard/users/new')}>
       New User
     </Button>
   );
 
-  const renderSelectedActions = (selectedKeys: Selection) => {
-    return (
-      <DropdownMenu aria-label="Selected Actions">
-        <DropdownItem
-          key="export"
-          onPress={async () => {
-            const ids = Array.from(selectedKeys);
+  const renderSelectedActions = (selectedKeys: Selection) => (
+    <DropdownMenu aria-label="Selected Actions">
+      <DropdownItem
+        key="export"
+        onPress={async () => {
+          const ids = Array.from(selectedKeys);
 
-            const exportPromise = fetch('/api/v1/users/export', {
-              method: 'POST',
-              body: JSON.stringify({ ids: selectedKeys === 'all' ? [] : ids }),
+          const exportPromise = fetch('/api/v1/users/export', {
+            method: 'POST',
+            body: JSON.stringify({ ids: selectedKeys === 'all' ? [] : ids }),
+          })
+            .then(async (res) => {
+              const blob = await res.blob();
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `users-${new Date().toISOString().split('T')[0]}.xlsx`;
+              document.body.appendChild(a);
+              a.click();
+              window.URL.revokeObjectURL(url);
+              document.body.removeChild(a);
+              return 'Users exported successfully';
             })
-              .then(async (res) => {
-                const blob = await res.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `users-${new Date().toISOString().split('T')[0]}.xlsx`;
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
-                return 'Users exported successfully';
-              })
-              .catch((err) => {
-                console.error(err);
-                return 'Failed to export users';
-              });
-
-            toast.promise(exportPromise, {
-              loading: 'Exporting users',
-              success: 'Users exported successfully',
-              error: 'Failed to export users',
+            .catch((err) => {
+              console.error(err);
+              return 'Failed to export users';
             });
-          }}
-        >
-          Export
-        </DropdownItem>
-        <DropdownItem
-          key="delete"
-          className="text-danger"
-          color="danger"
-          onPress={() => {
-            deleteModal.onOpen();
-          }}
-        >
-          Delete
-        </DropdownItem>
-      </DropdownMenu>
-    );
-  };
+
+          toast.promise(exportPromise, {
+            loading: 'Exporting users',
+            success: 'Users exported successfully',
+            error: 'Failed to export users',
+          });
+        }}
+      >
+        Export
+      </DropdownItem>
+      <DropdownItem
+        key="delete"
+        className="text-danger"
+        color="danger"
+        onPress={() => {
+          deleteModal.onOpen();
+        }}
+      >
+        Delete
+      </DropdownItem>
+    </DropdownMenu>
+  );
 
   let users: UserType[] = [];
   if (data) {
@@ -283,9 +260,7 @@ export default function Users() {
           user.name.toLowerCase().includes(searchValue.toLowerCase()) ||
           user.email.toLowerCase().includes(searchValue.toLowerCase()) ||
           user.uid.toString().includes(searchValue) ||
-          (user.phone
-            ? user.phone.toLowerCase().includes(searchValue.toLowerCase())
-            : false)
+          (user.phone ? user.phone.toLowerCase().includes(searchValue.toLowerCase()) : false)
         }
         endContent={endContent}
         renderSelectedActions={renderSelectedActions}

@@ -1,20 +1,11 @@
 'use client';
 
-import {
-  addToast,
-  Button,
-  DropdownItem,
-  DropdownMenu,
-  Selection,
-} from '@heroui/react';
-import { useRouter } from 'nextjs-toploader/app';
 import { useMemo } from 'react';
+import { useRouter } from 'nextjs-toploader/app';
+import { addToast, Button, DropdownItem, DropdownMenu, Selection } from '@heroui/react';
 
 import { Table } from '@/components/ui/data-table';
-import {
-  renderActions,
-  renderDate,
-} from '@/components/ui/data-table/cell-renderers';
+import { renderActions, renderDate } from '@/components/ui/data-table/cell-renderers';
 import type { ColumnDef } from '@/components/ui/data-table/types';
 import { useAllNewsletters } from '@/services/newsletter';
 import { NewsletterType } from '@/types/newsletter';
@@ -35,9 +26,7 @@ export default function Newsletters() {
         uid: 'email',
         sortable: true,
         renderCell: (newsletter) => (
-          <div className="truncate lowercase text-default-foreground">
-            {newsletter.email}
-          </div>
+          <div className="truncate lowercase text-default-foreground">{newsletter.email}</div>
         ),
       },
 
@@ -45,15 +34,13 @@ export default function Newsletters() {
         name: 'Created At',
         uid: 'createdAt',
         sortable: true,
-        renderCell: (newsletter) =>
-          renderDate({ date: newsletter.createdAt, isTime: true }),
+        renderCell: (newsletter) => renderDate({ date: newsletter.createdAt, isTime: true }),
       },
       {
         name: 'Updated At',
         uid: 'updatedAt',
         sortable: true,
-        renderCell: (newsletter) =>
-          renderDate({ date: newsletter.updatedAt, isTime: true }),
+        renderCell: (newsletter) => renderDate({ date: newsletter.updatedAt, isTime: true }),
       },
       {
         name: 'Actions',
@@ -62,8 +49,7 @@ export default function Newsletters() {
         renderCell: (newsletter) =>
           renderActions({
             onView: () => router.push(`/dashboard/users/${newsletter._id}`),
-            onEdit: () =>
-              router.push(`/dashboard/users/${newsletter._id}/edit`),
+            onEdit: () => router.push(`/dashboard/users/${newsletter._id}/edit`),
             onDelete: () => console.log('Delete', newsletter._id),
             key: newsletter._id,
           }),
@@ -79,37 +65,35 @@ export default function Newsletters() {
     </Button>
   );
 
-  const renderSelectedActions = (selectedKeys: Selection) => {
-    return (
-      <DropdownMenu aria-label="Selected Actions">
-        <DropdownItem
-          key="bulk-edit"
-          onPress={() => {
-            console.log('Bulk edit', selectedKeys);
-          }}
-        >
-          Bulk edit
-        </DropdownItem>
-        <DropdownItem
-          key="export"
-          onPress={() => {
-            console.log('Export', selectedKeys);
-          }}
-        >
-          Export
-        </DropdownItem>
-        <DropdownItem
-          key="delete"
-          className="text-danger"
-          onPress={() => {
-            console.log('Delete', selectedKeys);
-          }}
-        >
-          Delete
-        </DropdownItem>
-      </DropdownMenu>
-    );
-  };
+  const renderSelectedActions = (selectedKeys: Selection) => (
+    <DropdownMenu aria-label="Selected Actions">
+      <DropdownItem
+        key="bulk-edit"
+        onPress={() => {
+          console.log('Bulk edit', selectedKeys);
+        }}
+      >
+        Bulk edit
+      </DropdownItem>
+      <DropdownItem
+        key="export"
+        onPress={() => {
+          console.log('Export', selectedKeys);
+        }}
+      >
+        Export
+      </DropdownItem>
+      <DropdownItem
+        key="delete"
+        className="text-danger"
+        onPress={() => {
+          console.log('Delete', selectedKeys);
+        }}
+      >
+        Delete
+      </DropdownItem>
+    </DropdownMenu>
+  );
 
   return (
     <Table

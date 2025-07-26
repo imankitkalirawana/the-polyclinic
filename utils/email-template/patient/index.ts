@@ -41,7 +41,7 @@ export function AppointmentStatus(appointment: AppointmentType) {
       <div style="max-width: 800px; margin: 0 auto; text-align: center;">
           <h1 style="color: ${statusColorMap[appointment.status]}; font-size: 42px; margin-bottom: 40px; font-weight: 700;">Your Appointment is <span style="text-transform: capitalize;">${appointment.status}</span></h1>
           
-          <div style="background-color: ${statusColorMap[appointment.status] + '10'}; border-radius: 12px; padding: 16px; margin-bottom: 32px; text-align: left;">
+          <div style="background-color: ${`${statusColorMap[appointment.status]}10`}; border-radius: 12px; padding: 16px; margin-bottom: 32px; text-align: left;">
               <p style="font-size: 18px; color: #333; margin-bottom: 16px; line-height: 1.6;">
                   <strong style="color: #1d1b48; display: inline-block; width: 180px;">Appointment ID:</strong> 
                   #${appointment.aid}
@@ -82,10 +82,7 @@ export function AppointmentStatus(appointment: AppointmentType) {
   </body>`;
 }
 
-export function RescheduledAppointment(
-  appointment: AppointmentType,
-  previousDate: Date | string
-) {
+export function RescheduledAppointment(appointment: AppointmentType, previousDate: Date | string) {
   return `<body style="margin: 0; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; background-color: #ffffff; color: #1a1a1a; line-height: 1.5;">
     <div style="max-width: 800px; margin: 0 auto; text-align: center;">
         <h1 style="color: #73CD7D; font-size: 32px; margin-bottom: 40px; font-weight: 700;">Your Appointment Has Been Rescheduled</h1>

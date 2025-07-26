@@ -1,5 +1,7 @@
 'use client';
 
+import React from 'react';
+import { useSession } from 'next-auth/react';
 import { Tooltip } from '@heroui/react';
 import {
   eachDayOfInterval,
@@ -11,23 +13,18 @@ import {
   startOfMonth,
   startOfWeek,
 } from 'date-fns';
-import { useSession } from 'next-auth/react';
 import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs';
-import React from 'react';
+
+import { allowedRolesToCreateAppointment, MAX_APPOINTMENTS_IN_CELL } from '../data';
+import { views } from '../types';
+import AppointmentList from '../ui/appointment-list';
+import AppointmentTriggerItem from '../ui/appointment-trigger-item';
+import DateChip from '../ui/date-chip';
 
 import { TIMINGS } from '@/lib/config';
 import { cn } from '@/lib/utils';
 import { useAppointmentStore } from '@/store/appointment';
 import { AppointmentType } from '@/types/appointment';
-
-import {
-  allowedRolesToCreateAppointment,
-  MAX_APPOINTMENTS_IN_CELL,
-} from '../data';
-import { views } from '../types';
-import AppointmentList from '../ui/appointment-list';
-import AppointmentTriggerItem from '../ui/appointment-trigger-item';
-import DateChip from '../ui/date-chip';
 
 interface MonthViewProps {
   appointments: AppointmentType[];
@@ -55,9 +52,8 @@ export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
   const weekDays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
   const numberOfWeeks = Math.ceil(days.length / 7);
 
-  const getAppointmentsForDay = (date: Date) => {
-    return appointments.filter((apt) => isSameDay(new Date(apt.date), date));
-  };
+  const getAppointmentsForDay = (date: Date) =>
+    appointments.filter((apt) => isSameDay(new Date(apt.date), date));
 
   const isAllowedToCreateAppointment = allowedRolesToCreateAppointment.includes(
     session?.user?.role
@@ -122,15 +118,10 @@ export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
                   const endHour = TIMINGS.appointment.end;
                   const hourRange = endHour - startHour;
 
-                  const clickRatio = Math.max(
-                    0,
-                    Math.min(1, clickY / cellHeight)
-                  );
+                  const clickRatio = Math.max(0, Math.min(1, clickY / cellHeight));
                   const selectedHour = startHour + clickRatio * hourRange;
 
-                  const minutes =
-                    Math.round((selectedHour % 1) * 4) *
-                    TIMINGS.appointment.interval;
+                  const minutes = Math.round((selectedHour % 1) * 4) * TIMINGS.appointment.interval;
                   const hour = Math.floor(selectedHour);
 
                   const selectedDateTime = new Date(day);
@@ -149,22 +140,12 @@ export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
               />
 
               <div className="flex flex-col">
-                {dayAppointments
-                  .slice(0, maxAppointmentsToShow)
-                  .map((appointment) => (
-                    <AppointmentTriggerItem
-                      key={appointment.aid}
-                      appointment={appointment}
-                    />
-                  ))}
+                {dayAppointments.slice(0, maxAppointmentsToShow).map((appointment) => (
+                  <AppointmentTriggerItem key={appointment.aid} appointment={appointment} />
+                ))}
                 {dayAppointments.length > maxAppointmentsToShow && (
                   <Tooltip
-                    content={
-                      <AppointmentList
-                        appointments={dayAppointments}
-                        date={day}
-                      />
-                    }
+                    content={<AppointmentList appointments={dayAppointments} date={day} />}
                     onOpenChange={setIsTooltipOpen}
                   >
                     <button className="truncate rounded-lg p-1 px-2 text-start text-tiny hover:bg-default-100">

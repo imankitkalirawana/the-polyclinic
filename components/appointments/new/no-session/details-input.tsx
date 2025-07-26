@@ -1,4 +1,6 @@
 'use client';
+
+import { signIn } from 'next-auth/react';
 import {
   Button,
   Card,
@@ -14,10 +16,9 @@ import {
   Tooltip,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { signIn } from 'next-auth/react';
 
-import { useForm } from './context';
 import VerifyId from './modals/verify-id';
+import { useForm } from './context';
 
 export default function DetailsInput() {
   const { formik } = useForm();
@@ -59,11 +60,7 @@ export default function DetailsInput() {
               name="firstName"
               onChange={formik.handleChange}
               className="col-span-3"
-              isInvalid={
-                formik.touched.firstName && formik.errors.firstName
-                  ? true
-                  : false
-              }
+              isInvalid={!!(formik.touched.firstName && formik.errors.firstName)}
               errorMessage={
                 <div className="flex items-center gap-1">
                   <Icon icon="solar:info-circle-bold" width="14" />
@@ -85,11 +82,7 @@ export default function DetailsInput() {
                 showArrow
                 content="This informtion is used by the doctors to prescribe the right medicine."
               >
-                <Icon
-                  icon="solar:question-circle-bold"
-                  width="24"
-                  height="24"
-                />
+                <Icon icon="solar:question-circle-bold" width="24" height="24" />
               </Tooltip>
             </div>
             <Select
@@ -99,9 +92,7 @@ export default function DetailsInput() {
               selectedKeys={[formik.values.dob.day]}
               name="dob.day"
               onChange={formik.handleChange}
-              isInvalid={
-                formik.touched.dob?.day && formik.errors.dob?.day ? true : false
-              }
+              isInvalid={!!(formik.touched.dob?.day && formik.errors.dob?.day)}
               errorMessage={
                 <div className="flex items-center gap-1">
                   <Icon icon="solar:info-circle-bold" width="14" />
@@ -122,11 +113,7 @@ export default function DetailsInput() {
               selectedKeys={[formik.values.dob.month]}
               name="dob.month"
               onChange={formik.handleChange}
-              isInvalid={
-                formik.touched.dob?.month && formik.errors.dob?.month
-                  ? true
-                  : false
-              }
+              isInvalid={!!(formik.touched.dob?.month && formik.errors.dob?.month)}
               errorMessage={
                 <div className="flex items-center gap-1">
                   <Icon icon="solar:info-circle-bold" width="14" />
@@ -152,11 +139,7 @@ export default function DetailsInput() {
               selectedKeys={[formik.values.dob.year]}
               name="dob.year"
               onChange={formik.handleChange}
-              isInvalid={
-                formik.touched.dob?.year && formik.errors.dob?.year
-                  ? true
-                  : false
-              }
+              isInvalid={!!(formik.touched.dob?.year && formik.errors.dob?.year)}
               errorMessage={
                 <div className="flex items-center gap-1">
                   <Icon icon="solar:info-circle-bold" width="14" />
@@ -164,17 +147,14 @@ export default function DetailsInput() {
                 </div>
               }
             >
-              {Array.from(
-                { length: new Date().getFullYear() - 1875 + 1 },
-                (_, i) => (
-                  <SelectItem
-                    key={new Date().getFullYear() - i}
-                    textValue={`${new Date().getFullYear() - i}`}
-                  >
-                    {new Date().getFullYear() - i}
-                  </SelectItem>
-                )
-              )}
+              {Array.from({ length: new Date().getFullYear() - 1875 + 1 }, (_, i) => (
+                <SelectItem
+                  key={new Date().getFullYear() - i}
+                  textValue={`${new Date().getFullYear() - i}`}
+                >
+                  {new Date().getFullYear() - i}
+                </SelectItem>
+              ))}
             </Select>
             <hr className="col-span-full my-2 border-t border-divider" />
             <Input
@@ -186,19 +166,18 @@ export default function DetailsInput() {
               className="col-span-full"
               startContent={
                 // automaitcally detect if email or phone number after 3 characters are entered and show +91 for phone number and empty for email also check if the entered character is a number or not before showing +91
-                formik.values.id.length > 3 &&
-                !isNaN(Number(formik.values.id)) ? (
+                formik.values.id.length > 3 && !isNaN(Number(formik.values.id)) ? (
                   <select
                     className="border-0 bg-transparent text-small text-default-400 outline-none"
                     id="countryCode"
                     name="countryCode"
-                    value={'+91'}
+                    value="+91"
                   >
                     <option value="+91">+91</option>
                   </select>
                 ) : null
               }
-              isInvalid={formik.touched.id && formik.errors.id ? true : false}
+              isInvalid={!!(formik.touched.id && formik.errors.id)}
               errorMessage={
                 <div className="flex items-center gap-1">
                   <Icon icon="solar:info-circle-bold" width="14" />
@@ -207,21 +186,19 @@ export default function DetailsInput() {
               }
               description={
                 formik.values.step > 2 && (
-                  <>
-                    <Link
-                      href="#"
-                      onPress={() => {
-                        formik.setValues({
-                          ...formik.values,
-                          step: 1,
-                          otp: '',
-                        });
-                      }}
-                      className="text-tiny"
-                    >
-                      Change
-                    </Link>
-                  </>
+                  <Link
+                    href="#"
+                    onPress={() => {
+                      formik.setValues({
+                        ...formik.values,
+                        step: 1,
+                        otp: '',
+                      });
+                    }}
+                    className="text-tiny"
+                  >
+                    Change
+                  </Link>
                 )
               }
             />
@@ -233,9 +210,7 @@ export default function DetailsInput() {
               value={formik.values.password}
               onChange={formik.handleChange}
               className="col-span-full"
-              isInvalid={
-                formik.touched.password && formik.errors.password ? true : false
-              }
+              isInvalid={!!(formik.touched.password && formik.errors.password)}
               errorMessage={
                 <div className="flex items-center gap-1">
                   <Icon icon="solar:info-circle-bold" width="14" />
@@ -250,11 +225,7 @@ export default function DetailsInput() {
               value={formik.values.confirmPassword}
               onChange={formik.handleChange}
               className="col-span-full"
-              isInvalid={
-                formik.touched.confirmPassword && formik.errors.confirmPassword
-                  ? true
-                  : false
-              }
+              isInvalid={!!(formik.touched.confirmPassword && formik.errors.confirmPassword)}
               errorMessage={
                 <div className="flex items-center gap-1">
                   <Icon icon="solar:info-circle-bold" width="14" />

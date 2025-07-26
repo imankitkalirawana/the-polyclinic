@@ -1,16 +1,8 @@
-export function generateTimeOptions(
-  duration: number,
-  startHour = 0,
-  endHour = 24
-): string[] {
+export function generateTimeOptions(duration: number, startHour = 0, endHour = 24): string[] {
   const options: string[] = [];
   const totalMinutes = endHour * 60;
 
-  for (
-    let minutes = startHour * 60;
-    minutes < totalMinutes;
-    minutes += duration
-  ) {
+  for (let minutes = startHour * 60; minutes < totalMinutes; minutes += duration) {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
     const timeString = `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
@@ -47,10 +39,7 @@ export function getValidEndTimes(
   });
 }
 
-export function getValidStartTimes(
-  duration: number,
-  previousSlotEndTime?: string
-): string[] {
+export function getValidStartTimes(duration: number, previousSlotEndTime?: string): string[] {
   const allTimes = generateTimeOptions(duration, 6, 22);
 
   if (!previousSlotEndTime) return allTimes;

@@ -1,15 +1,16 @@
 'use client';
+
+import React from 'react';
 import { Card, Chip, ScrollShadow } from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
 import { format } from 'date-fns';
 import { motion, useAnimation } from 'framer-motion';
-import React from 'react';
-
-import { cn } from '@/lib/utils';
-import { AppointmentType } from '@/types/appointment';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 import { getAppointmentStyles } from '../appointments/compact-view/appointments';
 import { useForm } from '../appointments/compact-view/context';
+
+import { cn } from '@/lib/utils';
+import { AppointmentType } from '@/types/appointment';
 
 interface CalendarWidgetProps {
   className?: string;
@@ -29,32 +30,20 @@ export default function CalendarWidget({
   appointments = [],
 }: CalendarWidgetProps) {
   return (
-    <>
-      <ScrollShadow
-        className={cn(
-          'flex max-h-48 flex-col items-end gap-1 bg-transparent scrollbar-hide',
-          className
-        )}
-      >
-        {appointments.map((appointment) => (
-          <Appointment
-            key={appointment.aid}
-            appointment={appointment}
-            isIcon={isIcon}
-          />
-        ))}
-      </ScrollShadow>
-    </>
+    <ScrollShadow
+      className={cn(
+        'flex max-h-48 flex-col items-end gap-1 bg-transparent scrollbar-hide',
+        className
+      )}
+    >
+      {appointments.map((appointment) => (
+        <Appointment key={appointment.aid} appointment={appointment} isIcon={isIcon} />
+      ))}
+    </ScrollShadow>
   );
 }
 
-function Appointment({
-  appointment,
-  isIcon,
-}: {
-  appointment: AppointmentType;
-  isIcon?: boolean;
-}) {
+function Appointment({ appointment, isIcon }: { appointment: AppointmentType; isIcon?: boolean }) {
   const styles = getAppointmentStyles(appointment.status);
   const chipControls = useAnimation();
   const { formik } = useForm();
@@ -94,10 +83,7 @@ function Appointment({
       <div className="flex items-center justify-start gap-4">
         {isIcon ? (
           <div className={`rounded-medium p-2 ${styles.iconBg}`}>
-            <Icon
-              icon={TypeIcon[appointment.type]}
-              className={`h-5 w-5 ${styles.icon}`}
-            />
+            <Icon icon={TypeIcon[appointment.type]} className={`h-5 w-5 ${styles.icon}`} />
           </div>
         ) : (
           <Chip size="sm" className={`rounded-medium p-2 ${styles.iconBg}`}>
@@ -121,9 +107,7 @@ function Appointment({
               {appointment.patient.name}
             </h3>
             <p className="flex gap-1 text-default-500">
-              <span className="line-clamp-1 capitalize">
-                #{appointment.aid}
-              </span>
+              <span className="line-clamp-1 capitalize">#{appointment.aid}</span>
               <span>•</span>
               <span>{format(new Date(appointment.date), 'HH:mm')}</span>
             </p>

@@ -1,9 +1,9 @@
 'use client';
 
+import { getAppointmentStyles } from './appointments';
+
 import { cn } from '@/lib/utils';
 import { $FixMe } from '@/types';
-
-import { getAppointmentStyles } from './appointments';
 
 export default function StatusReferences() {
   const statuses = [

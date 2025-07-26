@@ -1,12 +1,13 @@
 'use server';
+
 import bcrypt from 'bcryptjs';
+
+import { sendHTMLEmail } from '../emails/send-email';
 
 import { CLINIC_INFO } from '@/lib/config';
 import { connectDB } from '@/lib/db';
 import User from '@/models/User';
 import { WelcomeUser } from '@/utils/email-template/patient/new-user';
-
-import { sendHTMLEmail } from '../emails/send-email';
 
 export default async function registerUser(data: {
   name: string;
@@ -77,11 +78,7 @@ export const generatePassword = (length: number) => {
 
 // helper functions
 
-export const dobFormat = (date: {
-  day: string;
-  month: string;
-  year: string;
-}) => {
+export const dobFormat = (date: { day: string; month: string; year: string }) => {
   if (date.day.length === 1) {
     date.day = `0${date.day}`;
   }

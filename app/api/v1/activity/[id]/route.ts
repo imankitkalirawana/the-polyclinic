@@ -4,7 +4,7 @@ import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import ActivityLog from '@/models/Activity';
 
-export const GET = auth(async function GET(request: any, context: any) {
+export const GET = auth(async (request: any, context: any) => {
   try {
     if (!request.auth?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -21,9 +21,6 @@ export const GET = auth(async function GET(request: any, context: any) {
     return NextResponse.json(activity);
   } catch (error) {
     console.error(error);
-    return NextResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 });

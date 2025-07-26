@@ -1,7 +1,7 @@
 import { Button } from '@heroui/react';
 import { m } from 'framer-motion';
 
-export const Header = ({
+export function Header({
   title,
   description,
   isBack,
@@ -11,7 +11,7 @@ export const Header = ({
   description?: string;
   isBack?: boolean;
   onBack?: () => void;
-}) => {
+}) {
   return (
     <m.div layout className="flex flex-col gap-2">
       <div className="flex items-center gap-2">
@@ -40,23 +40,15 @@ export const Header = ({
             </svg>
           </Button>
         )}
-        <m.h1
-          layout
-          className="text-xl font-medium"
-          transition={{ duration: 0.25 }}
-        >
+        <m.h1 layout className="text-xl font-medium" transition={{ duration: 0.25 }}>
           {title}
         </m.h1>
       </div>
       {description && (
-        <m.p
-          layout
-          className="text-small text-default-500"
-          transition={{ duration: 0.25 }}
-        >
+        <m.p layout className="text-small text-default-500" transition={{ duration: 0.25 }}>
           {description}
         </m.p>
       )}
     </m.div>
   );
-};
+}

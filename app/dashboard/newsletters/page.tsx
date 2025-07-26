@@ -1,8 +1,4 @@
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from '@tanstack/react-query';
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 import Newsletters from '@/components/dashboard/newsletters/newsletters';
 import { getAllNewsletters } from '@/services/api/newsletter';
@@ -22,10 +18,8 @@ export default async function Page() {
   });
 
   return (
-    <>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <Newsletters />
-      </HydrationBoundary>
-    </>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <Newsletters />
+    </HydrationBoundary>
   );
 }

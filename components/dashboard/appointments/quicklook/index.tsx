@@ -1,8 +1,10 @@
-import { addToast, Select, SelectItem } from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import { format } from 'date-fns';
-import { useSession } from 'next-auth/react';
 import { useMemo } from 'react';
+import { useSession } from 'next-auth/react';
+import { addToast, Select, SelectItem } from '@heroui/react';
+import { format } from 'date-fns';
+import { Icon } from '@iconify/react/dist/iconify.js';
+
+import { permissions, sidebarContent, useAppointmentButtons } from './data';
 
 import CancelDeleteAppointment from '@/components/appointments/ui/cancel-delete';
 import QuickLook from '@/components/ui/dashboard/quicklook';
@@ -11,21 +13,21 @@ import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { useAppointmentStore } from '@/store/appointment';
 import { AppointmentType, DropdownKeyType } from '@/types/appointment';
 
-import { permissions, sidebarContent, useAppointmentButtons } from './data';
-
-export const AppointmentQuickLook = () => {
+export function AppointmentQuickLook() {
   const { data: session } = useSession();
-  const { appointment, setAppointment, setAction, action } =
-    useAppointmentStore();
+  const { appointment, setAppointment, setAction, action } = useAppointmentStore();
+
+  const buttons = useAppointmentButtons({
+    appointment,
+    role: session?.user?.role,
+  });
 
   const dropdown = useMemo<Array<Partial<DropdownItemProps<DropdownKeyType>>>>(
     () => [
       {
         key: 'invoice',
         children: 'Download Invoice',
-        startContent: (
-          <Icon icon="solar:file-download-bold-duotone" width="20" />
-        ),
+        startContent: <Icon icon="solar:file-download-bold-duotone" width="20" />,
         onPress: () =>
           addToast({
             title: 'Invoice Downloaded',
@@ -36,12 +38,8 @@ export const AppointmentQuickLook = () => {
       {
         key: 'reports',
         children: 'Download Reports',
-        isHidden:
-          !appointment?.previousAppointment ||
-          appointment?.status !== 'completed',
-        startContent: (
-          <Icon icon="solar:download-twice-square-bold-duotone" width="20" />
-        ),
+        isHidden: !appointment?.previousAppointment || appointment?.status !== 'completed',
+        startContent: <Icon icon="solar:download-twice-square-bold-duotone" width="20" />,
         onPress: () =>
           addToast({
             title: 'Reports Downloaded',
@@ -52,9 +50,7 @@ export const AppointmentQuickLook = () => {
       {
         key: 'edit',
         children: 'Edit Appointment',
-        startContent: (
-          <Icon icon="solar:pen-new-square-bold-duotone" width="20" />
-        ),
+        startContent: <Icon icon="solar:pen-new-square-bold-duotone" width="20" />,
         onPress: () =>
           addToast({
             title: 'Appointment Edited',
@@ -111,8 +107,7 @@ export const AppointmentQuickLook = () => {
     },
     {
       label: 'Mode',
-      value: () =>
-        appointment.additionalInfo.type === 'online' ? 'Online' : 'In Clinic',
+      value: () => (appointment.additionalInfo.type === 'online' ? 'Online' : 'In Clinic'),
       icon: 'solar:map-point-bold-duotone',
       classNames: { icon: 'text-teal-500 bg-teal-50' },
     },
@@ -124,11 +119,7 @@ export const AppointmentQuickLook = () => {
             <span>{appointment.doctor?.name}</span>
           </div>
         ) : (
-          <Select
-            label="Select Doctor"
-            className="w-full max-w-sm"
-            aria-label="Select Doctor"
-          >
+          <Select label="Select Doctor" className="w-full max-w-sm" aria-label="Select Doctor">
             <SelectItem key="not-assigned">Not Assigned</SelectItem>
           </Select>
         ),
@@ -180,14 +171,11 @@ export const AppointmentQuickLook = () => {
       isOpen={!!appointment}
       onClose={() => setAppointment(null)}
       selectedKey={action}
-      buttons={useAppointmentButtons({
-        appointment,
-        role: session?.user?.role,
-      })}
+      buttons={buttons}
       permissions={permissions}
       dropdown={dropdown}
       sidebarContent={sidebarContent(appointment)}
       content={content(appointment)}
     />
   );
-};
+}

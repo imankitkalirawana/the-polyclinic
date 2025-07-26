@@ -1,3 +1,6 @@
+import React, { memo, useCallback, useMemo } from 'react';
+import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 import {
   Button,
   ButtonGroup,
@@ -21,11 +24,10 @@ import {
   Tooltip,
   User,
 } from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
 import { format } from 'date-fns';
-import Link from 'next/link';
-import { useSession } from 'next-auth/react';
-import React, { memo, useCallback, useMemo } from 'react';
+import { Icon } from '@iconify/react/dist/iconify.js';
+
+import StatusRenderer from './status-renderer';
 
 import AsyncButton from '@/components/ui/buttons/async-button';
 import { CellRenderer } from '@/components/ui/cell-renderer';
@@ -37,21 +39,19 @@ import { useAppointmentWithAID } from '@/services/appointment';
 import { useAppointmentStore } from '@/store/appointment';
 import { AppointmentType } from '@/types/appointment';
 
-import StatusRenderer from './status-renderer';
-
 const DRAWER_DELAY = 200;
 
 // Memoized subcomponents
-const AppointmentHeading = memo(function AppointmentHeading({
-  title,
-  description,
-  className,
-}: {
-  title: string;
-  description?: string | React.ReactNode;
-  className?: string;
-}) {
-  return (
+const AppointmentHeading = memo(
+  ({
+    title,
+    description,
+    className,
+  }: {
+    title: string;
+    description?: string | React.ReactNode;
+    className?: string;
+  }) => (
     <div
       className={cn(
         'flex w-full items-center justify-between gap-2 text-tiny font-medium uppercase tracking-wide text-default-500',
@@ -61,23 +61,25 @@ const AppointmentHeading = memo(function AppointmentHeading({
       <h2>{title}</h2>
       {description}
     </div>
-  );
-});
+  )
+);
 
-const MeetDirections = memo(function MeetDirections({
-  icon,
-  label,
-  description,
-  onGetDirections,
-  onCopy,
-}: {
-  icon: string;
-  label: string;
-  description: string;
-  onGetDirections?: () => void;
-  onCopy?: () => void;
-}) {
-  return (
+AppointmentHeading.displayName = 'AppointmentHeading';
+
+const MeetDirections = memo(
+  ({
+    icon,
+    label,
+    description,
+    onGetDirections,
+    onCopy,
+  }: {
+    icon: string;
+    label: string;
+    description: string;
+    onGetDirections?: () => void;
+    onCopy?: () => void;
+  }) => (
     <div className="mb-2 flex w-full items-start gap-4">
       <div className="flex w-full flex-col gap-1">
         <ButtonGroup className="justify-start">
@@ -96,15 +98,13 @@ const MeetDirections = memo(function MeetDirections({
         <span className="text-tiny text-default-500">{description}</span>
       </div>
     </div>
-  );
-});
+  )
+);
+
+MeetDirections.displayName = 'MeetDirections';
 
 // Extracted shared content component
-const AppointmentContent = memo(function AppointmentContent({
-  appointment,
-}: {
-  appointment: AppointmentType;
-}) {
+const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType }) => {
   const { data: previousAppointment, isLoading } = useAppointmentWithAID(
     appointment?.previousAppointment || 0
   );
@@ -120,11 +120,7 @@ const AppointmentContent = memo(function AppointmentContent({
     }
 
     return parts.join(' • ');
-  }, [
-    appointment.patient.uid,
-    appointment.patient.gender,
-    appointment.patient.age,
-  ]);
+  }, [appointment.patient.uid, appointment.patient.gender, appointment.patient.age]);
 
   const doctorDescription = useMemo(() => {
     if (!appointment.doctor?.uid) return '';
@@ -138,24 +134,17 @@ const AppointmentContent = memo(function AppointmentContent({
     const isOnline = appointment.additionalInfo.type === 'online';
 
     return {
-      icon: isOnline
-        ? 'solar:videocamera-bold-duotone'
-        : 'solar:map-bold-duotone',
+      icon: isOnline ? 'solar:videocamera-bold-duotone' : 'solar:map-bold-duotone',
       label: isOnline ? 'Online' : 'In-Person',
       meetIcon: isOnline ? 'logos:google-meet' : 'logos:google-maps',
-      meetLabel: isOnline
-        ? 'Join with Google Meet'
-        : 'Get Directions to Clinic',
-      meetDescription: isOnline
-        ? 'meet.google.com/yzg-fdrq-sga'
-        : CLINIC_INFO.location.address,
+      meetLabel: isOnline ? 'Join with Google Meet' : 'Get Directions to Clinic',
+      meetDescription: isOnline ? 'meet.google.com/yzg-fdrq-sga' : CLINIC_INFO.location.address,
       iconColor: isOnline ? 'text-primary-500' : '',
     };
   }, [appointment.additionalInfo.type]);
 
   const hasAdditionalInfo = useMemo(() => {
-    const { symptoms, notes, description, instructions } =
-      appointment.additionalInfo;
+    const { symptoms, notes, description, instructions } = appointment.additionalInfo;
     return !!(symptoms || notes || description || instructions);
   }, [appointment.additionalInfo]);
 
@@ -228,10 +217,7 @@ const AppointmentContent = memo(function AppointmentContent({
                     item: previousAppointment?.status,
                   })}
                   <span className="text-tiny text-default-500">
-                    {format(
-                      new Date(previousAppointment?.date || ''),
-                      'EEEE, MMMM d · hh:mm a'
-                    )}
+                    {format(new Date(previousAppointment?.date || ''), 'EEEE, MMMM d · hh:mm a')}
                   </span>
                 </div>
               )
@@ -324,102 +310,85 @@ const AppointmentContent = memo(function AppointmentContent({
   );
 });
 
+AppointmentContent.displayName = 'AppointmentContent';
+
 // Shared header component
-const AppointmentHeader = memo(function AppointmentHeader({
-  appointment,
-  onClose,
-}: {
-  appointment: AppointmentType;
-  onClose: () => void;
-}) {
-  const formattedDate = useMemo(
-    () => format(new Date(appointment.date), 'EEEE, MMMM d · hh:mm a'),
-    [appointment.date]
-  );
+const AppointmentHeader = memo(
+  ({ appointment, onClose }: { appointment: AppointmentType; onClose: () => void }) => {
+    const formattedDate = useMemo(
+      () => format(new Date(appointment.date), 'EEEE, MMMM d · hh:mm a'),
+      [appointment.date]
+    );
 
-  return (
-    <div className="flex w-full flex-row items-start justify-between gap-8 rounded-none pr-2">
-      <div>
-        <div className="flex items-center gap-1">
-          <h2 className="text-large font-medium capitalize text-primary-foreground">
-            #{appointment.aid} - {appointment.type}
-          </h2>
-          <Icon
-            icon="solar:danger-triangle-bold"
-            className="animate-pulse text-warning-500"
-          />
+    return (
+      <div className="flex w-full flex-row items-start justify-between gap-8 rounded-none pr-2">
+        <div>
+          <div className="flex items-center gap-1">
+            <h2 className="text-large font-medium capitalize text-primary-foreground">
+              #{appointment.aid} - {appointment.type}
+            </h2>
+            <Icon icon="solar:danger-triangle-bold" className="animate-pulse text-warning-500" />
+          </div>
+          <div className="flex items-center gap-1">
+            <StatusRenderer status={appointment.status} />
+            &middot;
+            <span className="text-tiny text-primary-foreground/90">{formattedDate}</span>
+          </div>
         </div>
-        <div className="flex items-center gap-1">
-          <StatusRenderer status={appointment.status} />
-          &middot;
-          <span className="text-tiny text-primary-foreground/90">
-            {formattedDate}
-          </span>
-        </div>
-      </div>
 
-      <div>
-        <Tooltip content="Open in new Tab">
-          <Button
-            isIconOnly
-            size="sm"
-            variant="light"
-            radius="full"
-            className="text-primary-foreground"
-            as={Link}
-            href={`/appointments/${appointment.aid}`}
-            target="_blank"
-          >
-            <Icon icon="solar:arrow-right-up-line-duotone" width={18} />
-          </Button>
-        </Tooltip>
-        <Dropdown placement="bottom-end">
-          <DropdownTrigger>
+        <div>
+          <Tooltip content="Open in new Tab">
             <Button
               isIconOnly
               size="sm"
               variant="light"
               radius="full"
               className="text-primary-foreground"
+              as={Link}
+              href={`/appointments/${appointment.aid}`}
+              target="_blank"
             >
-              <Icon
-                icon="solar:menu-dots-bold"
-                className="rotate-90"
-                width={18}
-              />
+              <Icon icon="solar:arrow-right-up-line-duotone" width={18} />
             </Button>
-          </DropdownTrigger>
-          <DropdownMenu>
-            <DropdownItem key="duplicate">Duplicate</DropdownItem>
-            <DropdownItem key="share">Share</DropdownItem>
-            <DropdownItem key="export">Export</DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-        <Button
-          isIconOnly
-          size="sm"
-          variant="light"
-          radius="full"
-          className="text-primary-foreground"
-          onPress={onClose}
-        >
-          <Icon
-            icon="solar:close-circle-bold-duotone"
-            className="rotate-90"
-            width={18}
-          />
-        </Button>
+          </Tooltip>
+          <Dropdown placement="bottom-end">
+            <DropdownTrigger>
+              <Button
+                isIconOnly
+                size="sm"
+                variant="light"
+                radius="full"
+                className="text-primary-foreground"
+              >
+                <Icon icon="solar:menu-dots-bold" className="rotate-90" width={18} />
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu>
+              <DropdownItem key="duplicate">Duplicate</DropdownItem>
+              <DropdownItem key="share">Share</DropdownItem>
+              <DropdownItem key="export">Export</DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+          <Button
+            isIconOnly
+            size="sm"
+            variant="light"
+            radius="full"
+            className="text-primary-foreground"
+            onPress={onClose}
+          >
+            <Icon icon="solar:close-circle-bold-duotone" className="rotate-90" width={18} />
+          </Button>
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  }
+);
+
+AppointmentHeader.displayName = 'AppointmentHeader';
 
 // Shared footer component
-const AppointmentFooter = memo(function AppointmentFooter({
-  appointment,
-}: {
-  appointment: AppointmentType;
-}) {
+const AppointmentFooter = memo(({ appointment }: { appointment: AppointmentType }) => {
   const { action } = useAppointmentStore();
   const { data: session } = useSession();
   const buttons = useAppointmentButtonsInDrawer({
@@ -428,44 +397,44 @@ const AppointmentFooter = memo(function AppointmentFooter({
   });
 
   return (
-    <>
-      <div className="flex w-full flex-row items-center justify-center gap-2">
-        {buttons.map((button) => {
-          const isButtonIconOnly = button.isIconOnly || buttons.length > 3;
+    <div className="flex w-full flex-row items-center justify-center gap-2">
+      {buttons.map((button) => {
+        const isButtonIconOnly = button.isIconOnly || buttons.length > 3;
 
-          return (
-            <Tooltip
-              key={button.key}
-              delay={500}
-              content={button.children}
-              isDisabled={!isButtonIconOnly}
+        return (
+          <Tooltip
+            key={button.key}
+            delay={500}
+            content={button.children}
+            isDisabled={!isButtonIconOnly}
+            color={button.color}
+          >
+            <AsyncButton
               color={button.color}
+              variant={button.variant}
+              isIconOnly={isButtonIconOnly}
+              fullWidth
+              whileSubmitting={button.whileLoading}
+              fn={async () => {
+                if (button.onPress) {
+                  await button.onPress();
+                }
+              }}
+              startContent={button.startContent}
             >
-              <AsyncButton
-                color={button.color}
-                variant={button.variant}
-                isIconOnly={isButtonIconOnly}
-                fullWidth
-                whileSubmitting={button.whileLoading}
-                fn={async () => {
-                  if (button.onPress) {
-                    await button.onPress();
-                  }
-                }}
-                startContent={button.startContent}
-              >
-                {isButtonIconOnly ? null : button.children}
-              </AsyncButton>
-            </Tooltip>
-          );
-        })}
-        {buttons.find((btn) => btn.key === action)?.content}
-      </div>
-    </>
+              {isButtonIconOnly ? null : button.children}
+            </AsyncButton>
+          </Tooltip>
+        );
+      })}
+      {buttons.find((btn) => btn.key === action)?.content}
+    </div>
   );
 });
 
-const AppointmentDrawerDesktop = memo(function AppointmentDrawerDesktop() {
+AppointmentFooter.displayName = 'AppointmentFooter';
+
+const AppointmentDrawerDesktop = memo(() => {
   const { appointment, setAppointment, isTooltipOpen } = useAppointmentStore();
 
   if (!appointment) return null;
@@ -482,7 +451,7 @@ const AppointmentDrawerDesktop = memo(function AppointmentDrawerDesktop() {
           }, DRAWER_DELAY);
         }
       }}
-      hideCloseButton={true}
+      hideCloseButton
       scrollBehavior="inside"
     >
       <DrawerContent className="p-0">
@@ -504,7 +473,9 @@ const AppointmentDrawerDesktop = memo(function AppointmentDrawerDesktop() {
   );
 });
 
-const AppointmentDrawerMobile = memo(function AppointmentDrawerMobile() {
+AppointmentDrawerDesktop.displayName = 'AppointmentDrawerDesktop';
+
+const AppointmentDrawerMobile = memo(() => {
   const { appointment, setAppointment, isTooltipOpen } = useAppointmentStore();
 
   if (!appointment) return null;
@@ -522,7 +493,7 @@ const AppointmentDrawerMobile = memo(function AppointmentDrawerMobile() {
           }, DRAWER_DELAY);
         }
       }}
-      hideCloseButton={true}
+      hideCloseButton
       scrollBehavior="inside"
     >
       <ModalContent className="rounded-b-none p-0 sm:rounded-b-large">
@@ -543,6 +514,8 @@ const AppointmentDrawerMobile = memo(function AppointmentDrawerMobile() {
     </Modal>
   );
 });
+
+AppointmentDrawerMobile.displayName = 'AppointmentDrawerMobile';
 
 export default function AppointmentDrawer() {
   const isMobile = useIsMobile();

@@ -12,10 +12,7 @@ export async function GET(request: Request) {
     );
   }
 
-  const startDate = new Date(date)
-    .toISOString()
-    .replace(/[-:]/g, '')
-    .split('.')[0];
+  const startDate = new Date(date).toISOString().replace(/[-:]/g, '').split('.')[0];
   const endDate = new Date(new Date(date).getTime() + 60 * 60 * 1000)
     .toISOString()
     .replace(/[-:]/g, '')

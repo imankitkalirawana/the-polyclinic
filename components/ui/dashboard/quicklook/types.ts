@@ -29,10 +29,7 @@ export type DropdownItemProps<T extends string> = Omit<
 };
 
 export type PermissionProps<T extends string, D extends string> = Partial<
-  Record<
-    UserType['role'],
-    Array<ActionType<T> | DropdownKeyType<D>> | 'all' | 'none' | undefined
-  >
+  Record<UserType['role'], Array<ActionType<T> | DropdownKeyType<D>> | 'all' | 'none' | undefined>
 >;
 export interface QuickLookProps<T, A extends string, D extends string> {
   /**

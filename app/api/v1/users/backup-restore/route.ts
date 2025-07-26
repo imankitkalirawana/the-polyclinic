@@ -4,7 +4,7 @@ import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import User from '@/models/User';
 
-export const GET = auth(async function GET(request: any) {
+export const GET = auth(async (request: any) => {
   try {
     if (request.auth?.user?.role !== 'admin') {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -29,7 +29,7 @@ export const GET = auth(async function GET(request: any) {
 
 // restore users from a JSON file
 
-export const POST = auth(async function POST(request: any) {
+export const POST = auth(async (request: any) => {
   try {
     if (request.auth?.user?.role !== 'admin') {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -40,10 +40,7 @@ export const POST = auth(async function POST(request: any) {
     const fresh = formData.get('fresh');
 
     if (!file) {
-      return NextResponse.json(
-        { message: 'No file uploaded' },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: 'No file uploaded' }, { status: 400 });
     }
 
     const text = await file.text();
@@ -57,10 +54,7 @@ export const POST = auth(async function POST(request: any) {
       if (err.code !== 11000) throw err;
     });
 
-    return NextResponse.json(
-      { message: 'Database restored successfully' },
-      { status: 200 }
-    );
+    return NextResponse.json({ message: 'Database restored successfully' }, { status: 200 });
   } catch (error: any) {
     console.error(error);
     return NextResponse.json({ message: error.message }, { status: 500 });

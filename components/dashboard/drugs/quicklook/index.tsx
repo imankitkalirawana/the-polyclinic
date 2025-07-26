@@ -1,21 +1,18 @@
-import { addToast } from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import { format } from 'date-fns';
 import { useMemo } from 'react';
-
-import QuickLook from '@/components/ui/dashboard/quicklook';
-import {
-  ButtonProps,
-  DropdownItemProps,
-} from '@/components/ui/dashboard/quicklook/types';
-import { renderChip } from '@/components/ui/data-table/cell-renderers';
-import { DrugType } from '@/types/drug';
+import { addToast } from '@heroui/react';
+import { format } from 'date-fns';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 import { useDrugStore } from '../store';
 import { ActionType, DropdownKeyType } from '../types';
 import { permissions, sidebarContent } from './data';
 
-export const DrugQuickLook = () => {
+import QuickLook from '@/components/ui/dashboard/quicklook';
+import { ButtonProps, DropdownItemProps } from '@/components/ui/dashboard/quicklook/types';
+import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import { DrugType } from '@/types/drug';
+
+export function DrugQuickLook() {
   const { selected, setSelected, setAction, action } = useDrugStore();
 
   const buttons: Array<Partial<ButtonProps<ActionType>>> = useMemo(
@@ -23,9 +20,7 @@ export const DrugQuickLook = () => {
       {
         key: 'new-tab',
         children: 'Open in new tab',
-        startContent: (
-          <Icon icon="solar:arrow-right-up-line-duotone" width="20" />
-        ),
+        startContent: <Icon icon="solar:arrow-right-up-line-duotone" width="20" />,
         color: 'default',
         variant: 'flat',
         position: 'left',
@@ -66,9 +61,7 @@ export const DrugQuickLook = () => {
       {
         key: 'invoice',
         children: 'Download Invoice',
-        startContent: (
-          <Icon icon="solar:file-download-bold-duotone" width="20" />
-        ),
+        startContent: <Icon icon="solar:file-download-bold-duotone" width="20" />,
         onPress: () =>
           addToast({
             title: 'Invoice Downloaded',
@@ -80,9 +73,7 @@ export const DrugQuickLook = () => {
       {
         key: 'edit',
         children: 'Edit Drug',
-        startContent: (
-          <Icon icon="solar:pen-new-square-bold-duotone" width="20" />
-        ),
+        startContent: <Icon icon="solar:pen-new-square-bold-duotone" width="20" />,
         onPress: () =>
           addToast({
             title: 'Drug Edited',
@@ -184,4 +175,4 @@ export const DrugQuickLook = () => {
       content={content(selected)}
     />
   );
-};
+}

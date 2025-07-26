@@ -1,4 +1,10 @@
 'use client';
+
+import React, { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Session } from 'next-auth';
+import { signOut } from 'next-auth/react';
 import {
   Avatar,
   BreadcrumbItem,
@@ -10,16 +16,11 @@ import {
   Tooltip,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Session } from 'next-auth';
-import { signOut } from 'next-auth/react';
-import React, { useEffect, useMemo, useState } from 'react';
+
+import Logo from '../ui/logo';
 
 import Sidebar from '@/components/dashboard/sidebar/sidebar';
 import { sectionItemsWithTeams } from '@/components/dashboard/sidebar/sidebar-items';
-
-import Logo from '../ui/logo';
 
 export default function DashboardLayout({
   children,
@@ -45,8 +46,8 @@ export default function DashboardLayout({
     return { label: segment, link: path };
   });
 
-  const sidebar = useMemo(() => {
-    return (
+  const sidebar = useMemo(
+    () => (
       <div
         className={cn(
           'relative flex h-full w-72 max-w-[288px] flex-1 flex-col !border-r-small border-divider transition-all duration-250 ease-in-out',
@@ -87,11 +88,7 @@ export default function DashboardLayout({
                 'justify-start text-foreground': !isHidden,
               })}
               startContent={
-                <Avatar
-                  src={session.user?.image}
-                  name={session.user?.name || ''}
-                  size="sm"
-                />
+                <Avatar src={session.user?.image} name={session.user?.name || ''} size="sm" />
               }
               variant="light"
               as={Link}
@@ -101,22 +98,13 @@ export default function DashboardLayout({
               {!isHidden && 'Profile'}
             </Button>
           </Tooltip>
-          <Tooltip
-            isDisabled={!isHidden}
-            color="danger"
-            content="Log Out"
-            placement="right"
-          >
+          <Tooltip isDisabled={!isHidden} color="danger" content="Log Out" placement="right">
             <Button
               aria-label="Log Out"
               fullWidth
               className="justify-start text-default-500 data-[hover=true]:text-danger"
               startContent={
-                <Icon
-                  className="w-full rotate-180"
-                  icon="solar:logout-bold-duotone"
-                  width={24}
-                />
+                <Icon className="w-full rotate-180" icon="solar:logout-bold-duotone" width={24} />
               }
               variant="light"
               color="danger"
@@ -131,11 +119,12 @@ export default function DashboardLayout({
           </Tooltip>
         </div>
       </div>
-    );
-  }, [isHidden, currentPath]);
+    ),
+    [isHidden, currentPath]
+  );
 
-  const header = useMemo(() => {
-    return (
+  const header = useMemo(
+    () => (
       <header className="flex items-center gap-3 rounded-medium border-small border-divider p-4 py-1">
         <Button
           aria-label="Toggle Sidebar"
@@ -170,8 +159,9 @@ export default function DashboardLayout({
           ))}
         </NextUIBreadcrumbs>
       </header>
-    );
-  }, [breadcrumbItems, isHidden]);
+    ),
+    [breadcrumbItems, isHidden]
+  );
 
   return (
     <div className="flex h-dvh w-full overflow-hidden">
@@ -179,9 +169,7 @@ export default function DashboardLayout({
       <div className="w-[80vw] flex-1 flex-col md:p-2">
         {header}
         <main className="h-full w-full overflow-visible">
-          <div className="flex h-[93vh] flex-col gap-4 overflow-hidden p-2">
-            {children}
-          </div>
+          <div className="flex h-[93vh] flex-col gap-4 overflow-hidden p-2">{children}</div>
         </main>
       </div>
     </div>

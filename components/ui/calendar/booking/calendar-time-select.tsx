@@ -1,8 +1,10 @@
+import React, { useMemo } from 'react';
 import { ScrollShadow } from '@heroui/react';
+import { format } from 'date-fns';
 import { parseDate } from '@internationalized/date';
 import { useLocale } from '@react-aria/i18n';
-import { format } from 'date-fns';
-import React, { useMemo } from 'react';
+
+import CalendarTime from './calendar-time';
 
 import {
   generateTimeSlots,
@@ -10,8 +12,6 @@ import {
   getTimeSlot,
   isDateUnavailable,
 } from '@/components/appointments/create/helper';
-
-import CalendarTime from './calendar-time';
 
 const timeSlots = generateTimeSlots();
 
@@ -47,10 +47,7 @@ export default function CalendarTimeSelect({
               setTime={(time) => {
                 setDate(getDateTime(date, time));
               }}
-              isDisabled={isDateUnavailable(
-                parseDate(format(date, 'yyyy-MM-dd')),
-                locale
-              )}
+              isDisabled={isDateUnavailable(parseDate(format(date, 'yyyy-MM-dd')), locale)}
             />
           ))}
         </ScrollShadow>

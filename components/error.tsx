@@ -1,20 +1,12 @@
 'use client';
 
-import {
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Chip,
-  ScrollShadow,
-} from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect, useRef, useState } from 'react';
+import { Button, Card, CardBody, CardFooter, CardHeader, Chip, ScrollShadow } from '@heroui/react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 // Premium Chat Message Component
-const ChatMessage = ({
+function ChatMessage({
   message,
   isUser,
   isTyping,
@@ -24,73 +16,67 @@ const ChatMessage = ({
   isUser: boolean;
   isTyping?: boolean;
   timestamp?: string;
-}) => (
-  <motion.div
-    initial={{ opacity: 0, y: 15 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.3, ease: 'easeOut' }}
-    className={`mb-4 flex gap-3 ${isUser ? 'flex-row-reverse' : ''}`}
-  >
-    {!isUser && (
-      <div className="mt-1 flex-shrink-0">
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-foreground">
-          <Icon icon="solar:bot-linear" className="h-4 w-4 text-background" />
-        </div>
-      </div>
-    )}
-
-    <div
-      className={`flex flex-col ${isUser ? 'items-end' : 'items-start'} max-w-[75%]`}
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
+      className={`mb-4 flex gap-3 ${isUser ? 'flex-row-reverse' : ''}`}
     >
-      <div
-        className={`rounded-2xl px-4 py-3 ${
-          isUser
-            ? 'bg-black text-white'
-            : 'border border-gray-100 bg-gray-50 text-gray-900'
-        }`}
-      >
-        {isTyping ? (
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">Thinking</span>
-            <div className="flex gap-1">
-              {[0, 1, 2].map((i) => (
-                <motion.div
-                  key={i}
-                  animate={{
-                    opacity: [0.4, 1, 0.4],
-                  }}
-                  transition={{
-                    duration: 1.2,
-                    repeat: Number.POSITIVE_INFINITY,
-                    delay: i * 0.2,
-                  }}
-                  className="h-1 w-1 rounded-full bg-gray-400"
-                />
-              ))}
-            </div>
+      {!isUser && (
+        <div className="mt-1 flex-shrink-0">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-foreground">
+            <Icon icon="solar:bot-linear" className="h-4 w-4 text-background" />
           </div>
-        ) : (
-          <p className="whitespace-pre-wrap text-start text-sm leading-relaxed">
-            {message}
-          </p>
-        )}
-      </div>
-
-      {timestamp && (
-        <span className="mt-1 text-xs text-gray-400">{timestamp}</span>
+        </div>
       )}
-    </div>
-  </motion.div>
-);
+
+      <div className={`flex flex-col ${isUser ? 'items-end' : 'items-start'} max-w-[75%]`}>
+        <div
+          className={`rounded-2xl px-4 py-3 ${
+            isUser ? 'bg-black text-white' : 'border border-gray-100 bg-gray-50 text-gray-900'
+          }`}
+        >
+          {isTyping ? (
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-600">Thinking</span>
+              <div className="flex gap-1">
+                {[0, 1, 2].map((i) => (
+                  <motion.div
+                    key={i}
+                    animate={{
+                      opacity: [0.4, 1, 0.4],
+                    }}
+                    transition={{
+                      duration: 1.2,
+                      repeat: Number.POSITIVE_INFINITY,
+                      delay: i * 0.2,
+                    }}
+                    className="h-1 w-1 rounded-full bg-gray-400"
+                  />
+                ))}
+              </div>
+            </div>
+          ) : (
+            <p className="whitespace-pre-wrap text-start text-sm leading-relaxed">{message}</p>
+          )}
+        </div>
+
+        {timestamp && <span className="mt-1 text-xs text-gray-400">{timestamp}</span>}
+      </div>
+    </motion.div>
+  );
+}
 
 // Premium AI Chat Interface
-const PremiumAIChatInterface = ({
+function PremiumAIChatInterface({
   errorType,
   onClose,
 }: {
   errorType: string;
   onClose: () => void;
-}) => {
+}) {
   const [messages, setMessages] = useState<
     Array<{
       text: string;
@@ -99,9 +85,9 @@ const PremiumAIChatInterface = ({
       id: string;
     }>
   >([]);
-  const [currentStep, setCurrentStep] = useState<
-    'initial' | 'feedback' | 'resolved' | 'escalate'
-  >('initial');
+  const [currentStep, setCurrentStep] = useState<'initial' | 'feedback' | 'resolved' | 'escalate'>(
+    'initial'
+  );
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -172,9 +158,7 @@ Did this resolve your issue?`;
     }
   };
 
-  const handleEscalation = async (
-    option: 'contact' | 'retry' | 'documentation'
-  ) => {
+  const handleEscalation = async (option: 'contact' | 'retry' | 'documentation') => {
     if (option === 'contact') {
       addMessage('Contact support team', true);
       await simulateTyping(
@@ -247,10 +231,7 @@ Did this resolve your issue?`;
                 variant="bordered"
                 className="h-10 flex-1 border-gray-200 hover:bg-gray-50"
               >
-                <Icon
-                  icon="solar:external-link-linear"
-                  className="mr-2 h-4 w-4"
-                />
+                <Icon icon="solar:external-link-linear" className="mr-2 h-4 w-4" />
                 Documentation
               </Button>
             </div>
@@ -292,9 +273,7 @@ Did this resolve your issue?`;
             />
           ))}
 
-          {isTyping && (
-            <ChatMessage message="" isUser={false} isTyping={true} />
-          )}
+          {isTyping && <ChatMessage message="" isUser={false} isTyping />}
 
           <div ref={messagesEndRef} />
         </ScrollShadow>
@@ -304,7 +283,7 @@ Did this resolve your issue?`;
       </motion.div>
     </motion.div>
   );
-};
+}
 
 export default function CustomError({
   title,
@@ -323,8 +302,7 @@ export default function CustomError({
         return {
           code: '404',
           title: title || 'Page not found',
-          description:
-            description || "The page you're looking for doesn't exist.",
+          description: description || "The page you're looking for doesn't exist.",
         };
       case 'unauthorized':
         return {
@@ -336,8 +314,7 @@ export default function CustomError({
         return {
           code: '403',
           title: title || 'Access denied',
-          description:
-            description || "You don't have permission to access this resource.",
+          description: description || "You don't have permission to access this resource.",
         };
       default:
         return {
@@ -351,111 +328,92 @@ export default function CustomError({
   const errorConfig = getErrorConfig();
 
   return (
-    <>
-      <main className="flex min-h-[calc(100vh-var(--navbar-height))] items-center justify-center p-6">
-        <div className="flex w-full max-w-lg flex-col gap-4 text-center">
-          {/* Error Code */}
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-          >
-            <Chip variant="bordered">Error {errorConfig.code}</Chip>
-          </motion.div>
-          {/* Main Content */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="flex flex-col gap-2"
-          >
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900 md:text-5xl">
-              {errorConfig.title}
-            </h1>
-            <p className="text-lg leading-relaxed text-gray-600">
-              {errorConfig.description}
-            </p>
-          </motion.div>
+    <main className="flex min-h-[calc(100vh-var(--navbar-height))] items-center justify-center p-6">
+      <div className="flex w-full max-w-lg flex-col gap-4 text-center">
+        {/* Error Code */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          <Chip variant="bordered">Error {errorConfig.code}</Chip>
+        </motion.div>
+        {/* Main Content */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="flex flex-col gap-2"
+        >
+          <h1 className="text-4xl font-bold tracking-tight text-gray-900 md:text-5xl">
+            {errorConfig.title}
+          </h1>
+          <p className="text-lg leading-relaxed text-gray-600">{errorConfig.description}</p>
+        </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <Card>
-              <CardHeader className="justify-center">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-secondary-foreground">
-                  <Icon
-                    icon="solar:chat-dots-bold-duotone"
-                    className="h-6 w-6"
-                  />
-                </div>
-              </CardHeader>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <Card>
+            <CardHeader className="justify-center">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-secondary-foreground">
+                <Icon icon="solar:chat-dots-bold-duotone" className="h-6 w-6" />
+              </div>
+            </CardHeader>
+            <AnimatePresence>
+              {showChat ? (
+                <PremiumAIChatInterface errorType={type} onClose={() => setShowChat(false)} />
+              ) : (
+                <CardBody className="justify-center px-8 text-center">
+                  <h3 className="mb-2 text-xl font-semibold text-gray-900">Get instant help</h3>
+                  <p className="text-sm leading-relaxed text-gray-600">
+                    Our AI assistant can provide step-by-step guidance to resolve this issue
+                    quickly.
+                  </p>
+                </CardBody>
+              )}
+            </AnimatePresence>
+            <CardFooter>
               <AnimatePresence>
-                {showChat ? (
-                  <PremiumAIChatInterface
-                    errorType={type}
-                    onClose={() => setShowChat(false)}
-                  />
-                ) : (
-                  <CardBody className="justify-center px-8 text-center">
-                    <h3 className="mb-2 text-xl font-semibold text-gray-900">
-                      Get instant help
-                    </h3>
-                    <p className="text-sm leading-relaxed text-gray-600">
-                      Our AI assistant can provide step-by-step guidance to
-                      resolve this issue quickly.
-                    </p>
-                  </CardBody>
+                {showChat ? null : (
+                  <Button fullWidth onPress={() => setShowChat(true)} color="secondary">
+                    <Icon icon="solar:message-circle-linear" className="mr-2 h-4 w-4" />
+                    Start conversation
+                  </Button>
                 )}
               </AnimatePresence>
-              <CardFooter>
-                <AnimatePresence>
-                  {showChat ? null : (
-                    <Button
-                      fullWidth
-                      onPress={() => setShowChat(true)}
-                      color="secondary"
-                    >
-                      <Icon
-                        icon="solar:message-circle-linear"
-                        className="mr-2 h-4 w-4"
-                      />
-                      Start conversation
-                    </Button>
-                  )}
-                </AnimatePresence>
-              </CardFooter>
-            </Card>
-          </motion.div>
+            </CardFooter>
+          </Card>
+        </motion.div>
 
-          {/* Action Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex flex-col justify-center gap-3 sm:flex-row"
+        {/* Action Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="flex flex-col justify-center gap-3 sm:flex-row"
+        >
+          <Button
+            color="secondary"
+            size="lg"
+            onPress={() => (window.location.href = '/')}
+            startContent={<Icon icon="solar:home-2-linear" width={20} />}
           >
-            <Button
-              color="secondary"
-              size="lg"
-              onPress={() => (window.location.href = '/')}
-              startContent={<Icon icon="solar:home-2-linear" width={20} />}
-            >
-              Go home
-            </Button>
+            Go home
+          </Button>
 
-            <Button
-              variant="bordered"
-              size="lg"
-              onPress={() => (window.location.href = '/support')}
-              endContent={<Icon icon="solar:arrow-right-linear" width={18} />}
-            >
-              Contact support
-            </Button>
-          </motion.div>
-        </div>
-      </main>
-    </>
+          <Button
+            variant="bordered"
+            size="lg"
+            onPress={() => (window.location.href = '/support')}
+            endContent={<Icon icon="solar:arrow-right-linear" width={18} />}
+          >
+            Contact support
+          </Button>
+        </motion.div>
+      </div>
+    </main>
   );
 }

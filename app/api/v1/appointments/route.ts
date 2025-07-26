@@ -1,15 +1,9 @@
-import axios from 'axios';
 import { NextResponse } from 'next/server';
+import axios from 'axios';
 
 import { auth } from '@/auth';
 import { generateAppointments } from '@/lib/appointments/mock';
-import {
-  API_ACTIONS,
-  APPOINTMENT,
-  CLINIC_INFO,
-  MOCK_DATA,
-  TIMINGS,
-} from '@/lib/config';
+import { API_ACTIONS, APPOINTMENT, CLINIC_INFO, MOCK_DATA, TIMINGS } from '@/lib/config';
 import { connectDB } from '@/lib/db';
 import Appointment from '@/models/Appointment';
 import { UserType } from '@/types/user';
@@ -25,14 +19,10 @@ const defaultConfig = {
   data: {},
 };
 
-export const GET = auth(async function GET(request: any) {
+export const GET = auth(async (request: any) => {
   try {
     const role: UserType['role'] = request.auth?.user?.role;
-    const disallowedRoles: UserType['role'][] = [
-      'nurse',
-      'pharmacist',
-      'laboratorist',
-    ];
+    const disallowedRoles: UserType['role'][] = ['nurse', 'pharmacist', 'laboratorist'];
 
     if (disallowedRoles.includes(role)) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -44,9 +34,7 @@ export const GET = auth(async function GET(request: any) {
       });
 
       return NextResponse.json(
-        appointments.sort(
-          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-        )
+        appointments.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
       );
     }
 
@@ -76,7 +64,7 @@ export const GET = auth(async function GET(request: any) {
   }
 });
 
-export const POST = auth(async function POST(request: any) {
+export const POST = auth(async (request: any) => {
   try {
     const allowedRoles = ['admin', 'doctor', 'receptionist', 'user'];
     // @ts-ignore
@@ -133,14 +121,11 @@ export const POST = auth(async function POST(request: any) {
   }
 });
 
-export const PATCH = auth(async function PATCH(request: any) {
+export const PATCH = auth(async (request: any) => {
   try {
     const allowedRoles = ['admin', 'receptionist'];
     if (!allowedRoles.includes(request.auth?.user?.role)) {
-      return NextResponse.json(
-        { success: false, message: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
 
     await connectDB();
@@ -150,24 +135,18 @@ export const PATCH = auth(async function PATCH(request: any) {
       $set: { status: 'cancelled' },
     });
 
-    return NextResponse.json(
-      { message: 'Appointments cancelled' },
-      { status: 200 }
-    );
+    return NextResponse.json({ message: 'Appointments cancelled' }, { status: 200 });
   } catch (error: any) {
     console.error(error);
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 });
 
-export const DELETE = auth(async function DELETE(request: any) {
+export const DELETE = auth(async (request: any) => {
   try {
     const allowedRoles = ['admin', 'receptionist'];
     if (!allowedRoles.includes(request.auth?.user?.role)) {
-      return NextResponse.json(
-        { success: false, message: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
 
     await connectDB();
@@ -181,9 +160,7 @@ export const DELETE = auth(async function DELETE(request: any) {
     }
 
     API_ACTIONS.isDelete &&
-      (await Appointment.deleteMany(
-        ids[0] === -1 ? {} : { aid: { $in: ids } }
-      ));
+      (await Appointment.deleteMany(ids[0] === -1 ? {} : { aid: { $in: ids } }));
 
     return NextResponse.json(
       {

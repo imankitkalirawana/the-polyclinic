@@ -1,6 +1,7 @@
 'use client';
-import { Card } from '@heroui/react';
+
 import React from 'react';
+import { Card } from '@heroui/react';
 
 import Skeleton from '@/components/ui/skeleton';
 
@@ -52,10 +53,7 @@ export default function DashboardTableSkeleton() {
 
         {/* Table Rows */}
         {[...Array(9)].map((_, index) => (
-          <div
-            key={index}
-            className="grid grid-cols-12 border-gray-100 p-2 hover:bg-gray-50"
-          >
+          <div key={index} className="grid grid-cols-12 border-gray-100 p-2 hover:bg-gray-50">
             {/* Checkbox */}
             <div className="col-span-1 flex items-center pl-4">
               <Skeleton className="h-4 w-4 rounded" />

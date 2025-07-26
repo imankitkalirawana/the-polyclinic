@@ -1,4 +1,5 @@
 'use client';
+
 import { addToast } from '@heroui/react';
 import { saveAs } from 'file-saver';
 
@@ -10,12 +11,7 @@ export const calculateAge = (dob: string) => {
   const age =
     currentDate.getFullYear() -
     birthDate.getFullYear() -
-    (currentDate <
-    new Date(
-      currentDate.getFullYear(),
-      birthDate.getMonth(),
-      birthDate.getDate()
-    )
+    (currentDate < new Date(currentDate.getFullYear(), birthDate.getMonth(), birthDate.getDate())
       ? 1
       : 0);
   return age;
@@ -32,14 +28,8 @@ export const calculateDOB = (age: number) => {
 export const handleAddToCalendar = (event: EventType) => {
   const { title, description, location, start, end } = event;
 
-  const startDate = new Date(start)
-    .toISOString()
-    .replace(/[-:]/g, '')
-    .split('.')[0]; // Format: YYYYMMDDTHHmmss
-  const endDate = new Date(end)
-    .toISOString()
-    .replace(/[-:]/g, '')
-    .split('.')[0]; // Format: YYYYMMDDTHHmmss
+  const startDate = new Date(start).toISOString().replace(/[-:]/g, '').split('.')[0]; // Format: YYYYMMDDTHHmmss
+  const endDate = new Date(end).toISOString().replace(/[-:]/g, '').split('.')[0]; // Format: YYYYMMDDTHHmmss
 
   const icsContent = `
 BEGIN:VCALENDAR
@@ -72,13 +62,10 @@ END:VCALENDAR
 export const addToGoogleCalendar = (event: EventType) => {
   const { title, description, location, start, end } = event;
 
-  const startDate =
-    start.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-  const endDate = end.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+  const startDate = `${start.toISOString().replace(/[-:]/g, '').split('.')[0]}Z`;
+  const endDate = `${end.toISOString().replace(/[-:]/g, '').split('.')[0]}Z`;
 
-  const googleCalendarUrl = new URL(
-    'https://calendar.google.com/calendar/render'
-  );
+  const googleCalendarUrl = new URL('https://calendar.google.com/calendar/render');
   googleCalendarUrl.searchParams.append('action', 'TEMPLATE');
   googleCalendarUrl.searchParams.append('text', title);
   googleCalendarUrl.searchParams.append('details', description);
@@ -95,9 +82,7 @@ export const addToOutlookCalendar = (event: EventType) => {
   const startDate = start.toISOString();
   const endDate = end.toISOString();
 
-  const outlookCalendarUrl = new URL(
-    'https://outlook.live.com/calendar/0/deeplink/compose'
-  );
+  const outlookCalendarUrl = new URL('https://outlook.live.com/calendar/0/deeplink/compose');
   outlookCalendarUrl.searchParams.append('path', '/calendar/action/compose');
   outlookCalendarUrl.searchParams.append('subject', title);
   outlookCalendarUrl.searchParams.append('body', description);

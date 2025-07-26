@@ -1,10 +1,10 @@
 import { ButtonProps } from '@heroui/react';
 
+import type { $FixMe } from '.';
+
 import { Base } from '@/lib/interface';
 import { ValuesOf } from '@/lib/utils';
 import { Gender, UserType } from '@/types/user';
-
-import type { $FixMe } from '.';
 
 export const appointmentTypes = [
   {
@@ -22,8 +22,7 @@ export const appointmentTypes = [
   {
     label: 'Emergency',
     value: 'emergency',
-    description:
-      'An emergency is a visit to a doctor for a sudden and urgent health concern.',
+    description: 'An emergency is a visit to a doctor for a sudden and urgent health concern.',
   },
 ] as const;
 
@@ -79,12 +78,7 @@ export interface AppointmentType extends Base {
 
 export type CreateAppointmentType = Pick<
   AppointmentType,
-  | 'date'
-  | 'type'
-  | 'additionalInfo'
-  | 'patient'
-  | 'doctor'
-  | 'previousAppointment'
+  'date' | 'type' | 'additionalInfo' | 'patient' | 'doctor' | 'previousAppointment'
 >;
 
 export type AppointmentMode = ValuesOf<typeof appointmentModes>;

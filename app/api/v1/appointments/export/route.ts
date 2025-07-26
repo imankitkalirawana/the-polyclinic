@@ -1,13 +1,13 @@
+import { NextResponse } from 'next/server';
 import { format } from 'date-fns';
 import ExcelJS from 'exceljs';
-import { NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import Appointment from '@/models/Appointment';
 import { UserType } from '@/types/user';
 
-export const POST = auth(async function POST(request: any) {
+export const POST = auth(async (request: any) => {
   try {
     const allowedRoles: UserType['role'][] = ['admin'];
     if (!allowedRoles.includes(request.auth?.user?.role)) {
@@ -70,8 +70,7 @@ export const POST = auth(async function POST(request: any) {
 
     return new NextResponse(buffer, {
       headers: {
-        'Content-Type':
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'Content-Disposition': 'attachment; filename="appointments.xlsx"',
       },
     });

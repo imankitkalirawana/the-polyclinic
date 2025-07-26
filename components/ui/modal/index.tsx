@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+import React from 'react';
 import {
   Alert,
   AlertProps,
@@ -12,11 +12,10 @@ import {
   ModalProps as HeroModalProps,
   ScrollShadow,
 } from '@heroui/react';
-import React from 'react';
-
-import { $FixMe } from '@/types';
 
 import AsyncButton from '../buttons/async-button';
+
+import { $FixMe } from '@/types';
 
 interface ModalProps {
   header?: React.ReactNode;
@@ -58,62 +57,50 @@ function Modal({
   };
 
   return (
-    <>
-      <HeroModal
-        isOpen
-        backdrop="blur"
-        scrollBehavior="inside"
-        onClose={onClose}
-        hideCloseButton
-        {...modalProps}
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">
-                {header}
-              </ModalHeader>
-              <ModalBody as={ScrollShadow} className="items-center gap-2">
-                {alert && <Alert {...alert} />}
-                {body}
-              </ModalBody>
-              <ModalFooter>
-                {secondaryButton && (
-                  <Button
-                    {...(({ ref, children, ...rest }) => rest)(
-                      defaultSecondaryButton
-                    )}
-                    {...(({ ref, children, ...rest }) => rest)(secondaryButton)}
-                  >
-                    {secondaryButton.isIconOnly
-                      ? null
-                      : secondaryButton.children}
-                  </Button>
-                )}
-                {primaryButton && (
-                  <AsyncButton
-                    {...(({ ref, children, onPress, ...rest }) => rest)(
-                      defaultPrimaryButton
-                    )}
-                    {...(({ ref, children, onPress, ...rest }) => rest)(
-                      primaryButton
-                    )}
-                    fn={async () => {
-                      if (primaryButton.onPress) {
-                        await primaryButton.onPress({} as $FixMe);
-                      }
-                    }}
-                    whileSubmitting={primaryButton.whileSubmitting}
-                  >
-                    {primaryButton.isIconOnly ? null : primaryButton.children}
-                  </AsyncButton>
-                )}
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </HeroModal>
-    </>
+    <HeroModal
+      isOpen
+      backdrop="blur"
+      scrollBehavior="inside"
+      onClose={onClose}
+      hideCloseButton
+      {...modalProps}
+    >
+      <ModalContent>
+        {() => (
+          <>
+            <ModalHeader className="flex flex-col gap-1">{header}</ModalHeader>
+            <ModalBody as={ScrollShadow} className="items-center gap-2">
+              {alert && <Alert {...alert} />}
+              {body}
+            </ModalBody>
+            <ModalFooter>
+              {secondaryButton && (
+                <Button
+                  {...(({ ref, children, ...rest }) => rest)(defaultSecondaryButton)}
+                  {...(({ ref, children, ...rest }) => rest)(secondaryButton)}
+                >
+                  {secondaryButton.isIconOnly ? null : secondaryButton.children}
+                </Button>
+              )}
+              {primaryButton && (
+                <AsyncButton
+                  {...(({ ref, children, onPress, ...rest }) => rest)(defaultPrimaryButton)}
+                  {...(({ ref, children, onPress, ...rest }) => rest)(primaryButton)}
+                  fn={async () => {
+                    if (primaryButton.onPress) {
+                      await primaryButton.onPress({} as $FixMe);
+                    }
+                  }}
+                  whileSubmitting={primaryButton.whileSubmitting}
+                >
+                  {primaryButton.isIconOnly ? null : primaryButton.children}
+                </AsyncButton>
+              )}
+            </ModalFooter>
+          </>
+        )}
+      </ModalContent>
+    </HeroModal>
   );
 }
 

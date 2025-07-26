@@ -8,9 +8,5 @@ interface Props {
 
 export default async function Page(props: Props) {
   const params = await props.params;
-  return (
-    <>
-      <EditUser uid={params.uid} />
-    </>
-  );
+  return <EditUser uid={params.uid} />;
 }

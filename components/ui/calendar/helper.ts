@@ -1,9 +1,5 @@
 import { format } from 'date-fns';
 
-export const formatTime = (date: Date) => {
-  return format(date, 'p');
-};
+export const formatTime = (date: Date) => format(date, 'p');
 
-export const formatDate = (date: Date) => {
-  return format(date, 'dd/MM/yyyy');
-};
+export const formatDate = (date: Date) => format(date, 'dd/MM/yyyy');

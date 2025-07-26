@@ -1,8 +1,8 @@
 'use server';
 
-import { CreateDoctorType, DoctorType } from '@/types/doctor';
-
 import { fetchData } from '.';
+
+import { CreateDoctorType, DoctorType } from '@/types/doctor';
 
 export async function getDoctors() {
   return await fetchData<DoctorType[]>(`/doctors`);

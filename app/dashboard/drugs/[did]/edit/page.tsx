@@ -1,8 +1,4 @@
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from '@tanstack/react-query';
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 import EditDrug from '@/components/dashboard/drugs/drug/edit';
 import { getDrugWithDid } from '@/services/api/drug';
@@ -29,10 +25,8 @@ export default async function Page(props: Props) {
   });
 
   return (
-    <>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <EditDrug did={did} />
-      </HydrationBoundary>
-    </>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <EditDrug did={did} />
+    </HydrationBoundary>
   );
 }

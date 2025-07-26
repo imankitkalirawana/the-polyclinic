@@ -1,6 +1,6 @@
+import React from 'react';
 import { cn } from '@heroui/react';
 import { format, isToday } from 'date-fns';
-import React from 'react';
 
 export default function DateChip({
   date,
@@ -25,8 +25,7 @@ export default function DateChip({
         'mb-1 flex items-center justify-center self-center rounded-full font-medium transition-colors hover:bg-default-100',
         sizeClass[size],
         {
-          'bg-primary-500 text-primary-foreground hover:bg-primary-400':
-            isToday(date),
+          'bg-primary-500 text-primary-foreground hover:bg-primary-400': isToday(date),
         },
         className
       )}

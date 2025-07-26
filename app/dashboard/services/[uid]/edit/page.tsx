@@ -1,8 +1,4 @@
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from '@tanstack/react-query';
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 import EditService from '@/components/dashboard/services/service-item/edit';
 import { getServiceWithUID } from '@/services/api/service';
@@ -27,12 +23,10 @@ export default async function Page(props: Props) {
     },
   });
   return (
-    <>
-      <div className="h-full w-full px-2">
-        <HydrationBoundary state={dehydrate(queryClient)}>
-          <EditService uid={params.uid} />
-        </HydrationBoundary>
-      </div>
-    </>
+    <div className="h-full w-full px-2">
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <EditService uid={params.uid} />
+      </HydrationBoundary>
+    </div>
   );
 }

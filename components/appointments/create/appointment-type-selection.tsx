@@ -1,5 +1,5 @@
-import { Button, Input, RadioGroup, ScrollShadow } from '@heroui/react';
 import { useMemo, useState } from 'react';
+import { Button, Input, RadioGroup, ScrollShadow } from '@heroui/react';
 
 import CustomRadio from '@/components/ui/custom-radio';
 import { castData } from '@/lib/utils';
@@ -24,17 +24,18 @@ export default function AppointmentTypeSelection({
 
   const appointments = castData<AppointmentType[]>(data) || [];
 
-  const filteredAppointments = useMemo(() => {
-    return appointments.filter(
-      (appointment) =>
-        appointment.patient.name.toLowerCase().includes(search.toLowerCase()) ||
-        appointment.aid.toString().includes(search)
-    );
-  }, [appointments, search]);
+  const filteredAppointments = useMemo(
+    () =>
+      appointments.filter(
+        (appointment) =>
+          appointment.patient.name.toLowerCase().includes(search.toLowerCase()) ||
+          appointment.aid.toString().includes(search)
+      ),
+    [appointments, search]
+  );
 
   const isContinueDisabled =
-    (appointmentType === 'follow-up' && !previousAppointment) ||
-    !appointmentType;
+    (appointmentType === 'follow-up' && !previousAppointment) || !appointmentType;
 
   return (
     <div>
@@ -47,11 +48,7 @@ export default function AppointmentTypeSelection({
         }}
       >
         {appointmentTypes.map((type) => (
-          <CustomRadio
-            key={type.value}
-            value={type.value}
-            description={type.description}
-          >
+          <CustomRadio key={type.value} value={type.value} description={type.description}>
             {type.label}
           </CustomRadio>
         ))}
@@ -73,9 +70,7 @@ export default function AppointmentTypeSelection({
                   as={ScrollShadow}
                   orientation="horizontal"
                   value={previousAppointment?.toString()}
-                  onValueChange={(value) =>
-                    setPreviousAppointment?.(parseInt(value))
-                  }
+                  onValueChange={(value) => setPreviousAppointment?.(parseInt(value))}
                 >
                   {filteredAppointments.map((appointment) => (
                     <CustomRadio
@@ -89,15 +84,11 @@ export default function AppointmentTypeSelection({
                   ))}
                 </RadioGroup>
               ) : (
-                <p className="text-sm text-default-500">
-                  No appointments found for {search}
-                </p>
+                <p className="text-sm text-default-500">No appointments found for {search}</p>
               )}
             </>
           ) : (
-            <p className="text-sm text-default-500">
-              No previous appointments found
-            </p>
+            <p className="text-sm text-default-500">No previous appointments found</p>
           )}
         </div>
       )}
@@ -118,13 +109,13 @@ export default function AppointmentTypeSelection({
   );
 }
 
-export const AppointmentTypeSelectionTitle = ({
+export function AppointmentTypeSelectionTitle({
   appointmentType,
   previousAppointment,
 }: {
   appointmentType: AppointmentType['type'];
   previousAppointment?: AppointmentType['aid'];
-}) => {
+}) {
   return (
     <h3 className="text-2xl font-semibold">
       {appointmentType
@@ -133,4 +124,4 @@ export const AppointmentTypeSelectionTitle = ({
       {previousAppointment && <span> for #{previousAppointment}</span>}
     </h3>
   );
-};
+}

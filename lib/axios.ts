@@ -62,8 +62,7 @@ export const apiRequest = async ({
     if (showToast) {
       addToast({
         title: successMessage?.title || null,
-        description:
-          successMessage?.description || response.data.message || null,
+        description: successMessage?.description || response.data.message || null,
         color: 'success',
       });
     }

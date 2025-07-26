@@ -1,5 +1,5 @@
-import { Card } from '@heroui/react';
 import React from 'react';
+import { Card } from '@heroui/react';
 
 import Skeleton from '../ui/skeleton';
 

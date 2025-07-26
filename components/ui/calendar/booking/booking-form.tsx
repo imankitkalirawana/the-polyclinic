@@ -1,25 +1,14 @@
-import { Button, Form, Input, Link, Textarea } from '@heroui/react';
 import React, { useCallback } from 'react';
+import { Button, Form, Input, Link, Textarea } from '@heroui/react';
 
 import { CalendarBookingStepType } from './types';
 
 interface BookingFormProps {
-  onConfirm: ({
-    name,
-    email,
-    notes,
-  }: {
-    name: string;
-    email: string;
-    notes: string;
-  }) => void;
+  onConfirm: ({ name, email, notes }: { name: string; email: string; notes: string }) => void;
   setCalendarBookingStep?: (step: CalendarBookingStepType) => void;
 }
 
-export default function BookingForm({
-  onConfirm,
-  setCalendarBookingStep,
-}: BookingFormProps) {
+export default function BookingForm({ onConfirm, setCalendarBookingStep }: BookingFormProps) {
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);

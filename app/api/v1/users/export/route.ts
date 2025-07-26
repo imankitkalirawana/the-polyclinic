@@ -1,12 +1,12 @@
+import { NextResponse } from 'next/server';
 import { format } from 'date-fns';
 import ExcelJS from 'exceljs';
-import { NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import User from '@/models/User';
 
-export const POST = auth(async function POST(request: any) {
+export const POST = auth(async (request: any) => {
   try {
     if (request.auth?.user?.role !== 'admin') {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -64,8 +64,7 @@ export const POST = auth(async function POST(request: any) {
 
     return new NextResponse(buffer, {
       headers: {
-        'Content-Type':
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'Content-Disposition': 'attachment; filename="users.xlsx"',
       },
     });

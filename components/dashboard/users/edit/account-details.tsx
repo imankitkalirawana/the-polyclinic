@@ -1,5 +1,8 @@
 'use client';
 
+import React from 'react';
+import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 import {
   Avatar,
   Badge,
@@ -14,13 +17,10 @@ import {
   Select,
   SelectItem,
 } from '@heroui/react';
+import { useFormik } from 'formik';
 import { Icon } from '@iconify/react';
 import { getLocalTimeZone, today } from '@internationalized/date';
 import { I18nProvider } from '@react-aria/i18n';
-import { useFormik } from 'formik';
-import Link from 'next/link';
-import { useSession } from 'next-auth/react';
-import React from 'react';
 
 import { verifyEmail } from '@/functions/server-actions';
 import { Genders } from '@/lib/options';
@@ -76,10 +76,7 @@ export default function AccountDetails({ user }: { user: UserType }) {
             placement="bottom-right"
             shape="circle"
           >
-            <Avatar
-              className="h-14 w-14"
-              src="https://i.pravatar.cc/150?u=a04258114e29026708c"
-            />
+            <Avatar className="h-14 w-14" src="https://i.pravatar.cc/150?u=a04258114e29026708c" />
           </Badge>
           <div className="flex flex-col items-start justify-center">
             <p className="font-medium">{user.name}</p>
@@ -87,8 +84,8 @@ export default function AccountDetails({ user }: { user: UserType }) {
           </div>
         </div>
         <p className="sr-only text-small text-default-400">
-          The photo will be used for your profile, and will be visible to other
-          users of the platform.
+          The photo will be used for your profile, and will be visible to other users of the
+          platform.
         </p>
       </CardHeader>
       <CardBody className="grid grid-cols-1 gap-4 p-1 md:grid-cols-2">
@@ -98,7 +95,7 @@ export default function AccountDetails({ user }: { user: UserType }) {
           name="name"
           value={formik.values.name}
           onChange={formik.handleChange}
-          isInvalid={formik.touched.name && formik.errors.name ? true : false}
+          isInvalid={!!(formik.touched.name && formik.errors.name)}
           errorMessage={formik.touched.name && formik.errors.name}
         />
 
@@ -117,7 +114,7 @@ export default function AccountDetails({ user }: { user: UserType }) {
               formik.setFieldValue('email', e.target.value);
             }
           }}
-          isInvalid={formik.touched.email && formik.errors.email ? true : false}
+          isInvalid={!!(formik.touched.email && formik.errors.email)}
           errorMessage={formik.touched.email && formik.errors.email}
           isDisabled={!allowedRoles.includes(session?.user?.role)}
           description={
@@ -165,7 +162,7 @@ export default function AccountDetails({ user }: { user: UserType }) {
               </>
             )
           }
-          isInvalid={formik.touched.phone && formik.errors.phone ? true : false}
+          isInvalid={!!(formik.touched.phone && formik.errors.phone)}
           errorMessage={formik.touched.phone && formik.errors.phone}
         />
         <Select
@@ -174,9 +171,7 @@ export default function AccountDetails({ user }: { user: UserType }) {
           selectedKeys={[formik.values.gender]}
           name="gender"
           onChange={formik.handleChange}
-          isInvalid={
-            formik.touched.gender && formik.errors.gender ? true : false
-          }
+          isInvalid={!!(formik.touched.gender && formik.errors.gender)}
           errorMessage={formik.touched.gender && formik.errors.gender}
           items={Genders}
         >
@@ -208,9 +203,7 @@ export default function AccountDetails({ user }: { user: UserType }) {
           value={formik.values.address}
           onChange={formik.handleChange}
           name="address"
-          isInvalid={
-            formik.touched.address && formik.errors.address ? true : false
-          }
+          isInvalid={!!(formik.touched.address && formik.errors.address)}
           errorMessage={formik.touched.address && formik.errors.address}
         />
         {/* Zip Code */}
@@ -220,9 +213,7 @@ export default function AccountDetails({ user }: { user: UserType }) {
           value={formik.values.zipcode}
           onChange={formik.handleChange}
           name="zipcode"
-          isInvalid={
-            formik.touched.zipcode && formik.errors.zipcode ? true : false
-          }
+          isInvalid={!!(formik.touched.zipcode && formik.errors.zipcode)}
           errorMessage={formik.touched.zipcode && formik.errors.zipcode}
         />
       </CardBody>
@@ -237,12 +228,7 @@ export default function AccountDetails({ user }: { user: UserType }) {
         >
           Cancel
         </Button>
-        <Button
-          color="primary"
-          radius="full"
-          isLoading={formik.isSubmitting}
-          type="submit"
-        >
+        <Button color="primary" radius="full" isLoading={formik.isSubmitting} type="submit">
           Save Changes
         </Button>
       </CardFooter>

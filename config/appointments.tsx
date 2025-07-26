@@ -1,5 +1,5 @@
-import { addToast } from '@heroui/react';
 import React from 'react';
+import { addToast } from '@heroui/react';
 
 import CancelDeleteAppointment from '@/components/appointments/ui/cancel-delete';
 import RescheduleAppointment from '@/components/appointments/ui/reschedule-modal';
@@ -128,8 +128,7 @@ export const isButtonVisible = (
   const roleAllowed = roles ? roles.includes(role) : true;
 
   // Check the custom rule
-  const customAllowed =
-    typeof custom === 'function' ? custom(appointment, role) : true;
+  const customAllowed = typeof custom === 'function' ? custom(appointment, role) : true;
 
   return statusAllowed && roleAllowed && customAllowed;
 };

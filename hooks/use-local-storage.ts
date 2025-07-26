@@ -32,8 +32,7 @@ export function useLocalStorage<T>(
 
   const setValueWrap = (valueOrFn: T | ((prevValue: T) => T)) => {
     try {
-      const newValue =
-        valueOrFn instanceof Function ? valueOrFn(value) : valueOrFn;
+      const newValue = valueOrFn instanceof Function ? valueOrFn(value) : valueOrFn;
 
       setValue(newValue);
       localStorage.setItem(key, JSON.stringify(newValue));

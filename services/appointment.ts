@@ -6,17 +6,13 @@ import {
   UseQueryResult,
 } from '@tanstack/react-query';
 
+import { createAppointment, getAllAppointments, getAppointmentWithAID } from './api/appointment';
+import { ApiResponse } from './api';
+
 import { AppointmentType, CreateAppointmentType } from '@/types/appointment';
 
-import { ApiResponse } from './api';
-import {
-  createAppointment,
-  getAllAppointments,
-  getAppointmentWithAID,
-} from './api/appointment';
-
-export const useAllAppointments = (): UseQueryResult<AppointmentType[]> => {
-  return useQuery({
+export const useAllAppointments = (): UseQueryResult<AppointmentType[]> =>
+  useQuery({
     queryKey: ['appointments'],
     queryFn: async () => {
       const res = await getAllAppointments();
@@ -26,12 +22,9 @@ export const useAllAppointments = (): UseQueryResult<AppointmentType[]> => {
       throw new Error(res.message);
     },
   });
-};
 
-export const useAppointmentWithAID = (
-  aid: number
-): UseQueryResult<AppointmentType> => {
-  return useQuery({
+export const useAppointmentWithAID = (aid: number): UseQueryResult<AppointmentType> =>
+  useQuery({
     queryKey: ['appointment', aid],
     queryFn: async () => {
       const res = await getAppointmentWithAID(aid);
@@ -42,7 +35,6 @@ export const useAppointmentWithAID = (
     },
     enabled: !!aid,
   });
-};
 
 // POST
 

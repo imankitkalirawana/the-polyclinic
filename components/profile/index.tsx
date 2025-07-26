@@ -1,4 +1,7 @@
 'use client';
+
+import React from 'react';
+import { signOut } from 'next-auth/react';
 import {
   addToast,
   Alert,
@@ -14,8 +17,6 @@ import {
 } from '@heroui/react';
 import axios from 'axios';
 import { useFormik } from 'formik';
-import { signOut } from 'next-auth/react';
-import React from 'react';
 import * as Yup from 'yup';
 
 import { useSelf } from '@/services/user';
@@ -57,10 +58,7 @@ export default function Profile() {
   return (
     <div>
       <div className="space-y-12">
-        <form
-          className="border-b border-default-900/10 pb-12"
-          onSubmit={formik.handleSubmit}
-        >
+        <form className="border-b border-default-900/10 pb-12" onSubmit={formik.handleSubmit}>
           <h2 className="font-semibold">Personal Information</h2>
           <p className="mt-1 text-small/6 text-default-600">
             This information can be used to identify you in the system.
@@ -109,12 +107,7 @@ export default function Profile() {
             </div>
           </div>
           <div className="mt-6 flex items-center justify-end gap-x-4">
-            <Button
-              type="submit"
-              variant="shadow"
-              color="primary"
-              isLoading={formik.isSubmitting}
-            >
+            <Button type="submit" variant="shadow" color="primary" isLoading={formik.isSubmitting}>
               Update
             </Button>
           </div>
@@ -130,7 +123,7 @@ export default function Profile() {
 function PasswordForm({ email }: { email: string }) {
   const formik = useFormik({
     initialValues: {
-      email: email,
+      email,
       currentPassword: '',
       password: '',
       confirmPassword: '',
@@ -168,76 +161,54 @@ function PasswordForm({ email }: { email: string }) {
   });
 
   return (
-    <>
-      <form
-        className="border-b border-default-900/10 pb-12"
-        onSubmit={formik.handleSubmit}
-      >
-        <h2 className="font-semibold">Security</h2>
-        <p className="mt-1 text-small/6 text-default-600">
-          Manage your account security settings.
-        </p>
+    <form className="border-b border-default-900/10 pb-12" onSubmit={formik.handleSubmit}>
+      <h2 className="font-semibold">Security</h2>
+      <p className="mt-1 text-small/6 text-default-600">Manage your account security settings.</p>
 
-        <div className="mt-10 flex flex-col gap-4">
-          <div className="max-w-sm">
-            <Input
-              label="Current Password"
-              id="currentPassword"
-              name="currentPassword"
-              type="password"
-              value={formik.values.currentPassword}
-              onChange={formik.handleChange}
-              isInvalid={
-                formik.touched.currentPassword && formik.errors.currentPassword
-                  ? true
-                  : false
-              }
-              errorMessage={formik.errors.currentPassword}
-            />
-          </div>
-          <div className="max-w-sm">
-            <Input
-              label="New Password"
-              id="password"
-              name="password"
-              type="password"
-              value={formik.values.password}
-              onChange={formik.handleChange}
-              isInvalid={
-                formik.touched.password && formik.errors.password ? true : false
-              }
-              errorMessage={formik.errors.password}
-            />
-          </div>
-          <div className="max-w-sm">
-            <Input
-              label="Confirm Password"
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              value={formik.values.confirmPassword}
-              onChange={formik.handleChange}
-              isInvalid={
-                formik.touched.confirmPassword && formik.errors.confirmPassword
-                  ? true
-                  : false
-              }
-              errorMessage={formik.errors.confirmPassword}
-            />
-          </div>
+      <div className="mt-10 flex flex-col gap-4">
+        <div className="max-w-sm">
+          <Input
+            label="Current Password"
+            id="currentPassword"
+            name="currentPassword"
+            type="password"
+            value={formik.values.currentPassword}
+            onChange={formik.handleChange}
+            isInvalid={!!(formik.touched.currentPassword && formik.errors.currentPassword)}
+            errorMessage={formik.errors.currentPassword}
+          />
         </div>
-        <div className="mt-6 flex items-center justify-end gap-x-4">
-          <Button
-            type="submit"
-            variant="shadow"
-            color="primary"
-            isLoading={formik.isSubmitting}
-          >
-            Update
-          </Button>
+        <div className="max-w-sm">
+          <Input
+            label="New Password"
+            id="password"
+            name="password"
+            type="password"
+            value={formik.values.password}
+            onChange={formik.handleChange}
+            isInvalid={!!(formik.touched.password && formik.errors.password)}
+            errorMessage={formik.errors.password}
+          />
         </div>
-      </form>
-    </>
+        <div className="max-w-sm">
+          <Input
+            label="Confirm Password"
+            id="confirmPassword"
+            name="confirmPassword"
+            type="password"
+            value={formik.values.confirmPassword}
+            onChange={formik.handleChange}
+            isInvalid={!!(formik.touched.confirmPassword && formik.errors.confirmPassword)}
+            errorMessage={formik.errors.confirmPassword}
+          />
+        </div>
+      </div>
+      <div className="mt-6 flex items-center justify-end gap-x-4">
+        <Button type="submit" variant="shadow" color="primary" isLoading={formik.isSubmitting}>
+          Update
+        </Button>
+      </div>
+    </form>
   );
 }
 
@@ -246,7 +217,7 @@ function DeleteAccountForm({ email }: { email: string }) {
 
   const formik = useFormik({
     initialValues: {
-      email: email,
+      email,
       password: '',
     },
     validationSchema: Yup.object({
@@ -291,10 +262,7 @@ function DeleteAccountForm({ email }: { email: string }) {
           </Button>
         </div>
       </div>
-      <Modal
-        isOpen={deleteModal.isOpen}
-        onOpenChange={deleteModal.onOpenChange}
-      >
+      <Modal isOpen={deleteModal.isOpen} onOpenChange={deleteModal.onOpenChange}>
         <ModalContent
           as="form"
           onSubmit={(e) => {
@@ -334,11 +302,7 @@ function DeleteAccountForm({ email }: { email: string }) {
                   autoFocus
                   value={formik.values.password}
                   onChange={formik.handleChange}
-                  isInvalid={
-                    formik.touched.password && formik.errors.password
-                      ? true
-                      : false
-                  }
+                  isInvalid={!!(formik.touched.password && formik.errors.password)}
                   description="Please enter your password to confirm the deletion of your account."
                   errorMessage={formik.errors.password}
                 />

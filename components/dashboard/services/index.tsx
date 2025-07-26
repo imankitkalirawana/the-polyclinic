@@ -1,10 +1,13 @@
 'use client';
 
-import { Button, DropdownItem, DropdownMenu, Selection } from '@heroui/react';
+import { useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'nextjs-toploader/app';
-import { useMemo } from 'react';
+import { Button, DropdownItem, DropdownMenu, Selection } from '@heroui/react';
 import { toast } from 'sonner';
+
+import { ServiceQuickLook } from './quicklook';
+import { useServiceStore } from './store';
 
 import { Table } from '@/components/ui/data-table';
 import {
@@ -17,9 +20,6 @@ import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 import { CLINIC_INFO } from '@/lib/config';
 import { useAllServices, useDeleteService } from '@/services/service';
 import { ServiceType } from '@/types/service';
-
-import { ServiceQuickLook } from './quicklook';
-import { useServiceStore } from './store';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'uniqueId',
@@ -54,17 +54,14 @@ export default function Services() {
         name: 'ID',
         uid: 'uniqueId',
         sortable: true,
-        renderCell: (service) =>
-          renderCopyableText(service.uniqueId.toString()),
+        renderCell: (service) => renderCopyableText(service.uniqueId.toString()),
       },
       {
         name: 'Name',
         uid: 'name',
         sortable: true,
         renderCell: (service) => (
-          <div className="truncate font-medium text-default-foreground">
-            {service.name}
-          </div>
+          <div className="truncate font-medium text-default-foreground">{service.name}</div>
         ),
       },
       {
@@ -72,9 +69,7 @@ export default function Services() {
         uid: 'description',
         sortable: true,
         renderCell: (service) => (
-          <div className="truncate lowercase text-default-foreground">
-            {service.description}
-          </div>
+          <div className="truncate lowercase text-default-foreground">{service.description}</div>
         ),
       },
       {
@@ -93,8 +88,7 @@ export default function Services() {
         sortable: true,
         renderCell: (service) => (
           <div className="truncate lowercase text-default-foreground">
-            {CLINIC_INFO.preferences.currency.symbol}{' '}
-            {service.price.toLocaleString('en-IN')}
+            {CLINIC_INFO.preferences.currency.symbol} {service.price.toLocaleString('en-IN')}
           </div>
         ),
       },
@@ -120,8 +114,7 @@ export default function Services() {
         name: 'Created At',
         uid: 'createdAt',
         sortable: true,
-        renderCell: (service) =>
-          renderDate({ date: service.createdAt, isTime: true }),
+        renderCell: (service) => renderDate({ date: service.createdAt, isTime: true }),
       },
 
       {
@@ -130,10 +123,8 @@ export default function Services() {
         sortable: false,
         renderCell: (service) =>
           renderActions({
-            onView: () =>
-              router.push(`/dashboard/services/${service.uniqueId}`),
-            onEdit: () =>
-              router.push(`/dashboard/services/${service.uniqueId}/edit`),
+            onView: () => router.push(`/dashboard/services/${service.uniqueId}`),
+            onEdit: () => router.push(`/dashboard/services/${service.uniqueId}/edit`),
             onDelete: () => handleDelete(service.uniqueId),
             key: service.uniqueId,
           }),
@@ -213,37 +204,35 @@ export default function Services() {
     </Button>
   );
 
-  const renderSelectedActions = (selectedKeys: Selection) => {
-    return (
-      <DropdownMenu aria-label="Selected Actions">
-        <DropdownItem
-          key="bulk-edit"
-          onPress={() => {
-            console.log('Bulk edit', selectedKeys);
-          }}
-        >
-          Bulk edit
-        </DropdownItem>
-        <DropdownItem
-          key="export"
-          onPress={() => {
-            console.log('Export', selectedKeys);
-          }}
-        >
-          Export
-        </DropdownItem>
-        <DropdownItem
-          key="delete"
-          className="text-danger"
-          onPress={() => {
-            console.log('Delete', selectedKeys);
-          }}
-        >
-          Delete
-        </DropdownItem>
-      </DropdownMenu>
-    );
-  };
+  const renderSelectedActions = (selectedKeys: Selection) => (
+    <DropdownMenu aria-label="Selected Actions">
+      <DropdownItem
+        key="bulk-edit"
+        onPress={() => {
+          console.log('Bulk edit', selectedKeys);
+        }}
+      >
+        Bulk edit
+      </DropdownItem>
+      <DropdownItem
+        key="export"
+        onPress={() => {
+          console.log('Export', selectedKeys);
+        }}
+      >
+        Export
+      </DropdownItem>
+      <DropdownItem
+        key="delete"
+        className="text-danger"
+        onPress={() => {
+          console.log('Delete', selectedKeys);
+        }}
+      >
+        Delete
+      </DropdownItem>
+    </DropdownMenu>
+  );
 
   return (
     <>
@@ -257,9 +246,7 @@ export default function Services() {
         filters={filters}
         searchField={(service, searchValue) =>
           service.name?.toLowerCase().includes(searchValue.toLowerCase()) ||
-          service.description
-            ?.toLowerCase()
-            .includes(searchValue.toLowerCase()) ||
+          service.description?.toLowerCase().includes(searchValue.toLowerCase()) ||
           service.uniqueId?.toString().includes(searchValue)
         }
         endContent={endContent}

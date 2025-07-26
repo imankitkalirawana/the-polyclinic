@@ -7,14 +7,11 @@ import { ServiceType } from '@/types/service';
 
 export const GET = async function GET(_request: any, context: any) {
   try {
-    const id = (await context.params).id;
+    const { id } = await context.params;
     await connectDB();
     const service = await Service.findOne({ uniqueId: id });
     if (!service) {
-      return NextResponse.json(
-        { message: 'Service not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: 'Service not found' }, { status: 404 });
     }
     return NextResponse.json({
       data: service,
@@ -25,24 +22,21 @@ export const GET = async function GET(_request: any, context: any) {
   }
 };
 
-export const PUT = auth(async function PUT(request: any, context: any) {
+export const PUT = auth(async (request: any, context: any) => {
   const allowedRoles = ['admin'];
   if (!allowedRoles.includes(request.auth?.user?.role)) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
   try {
-    const id = context.params.id;
+    const { id } = context.params;
     const data: ServiceType = await request.json();
     await connectDB();
     const service = await Service.findOneAndUpdate({ uniqueId: id }, data, {
       new: true,
     });
     if (!service) {
-      return NextResponse.json(
-        { message: 'Service not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: 'Service not found' }, { status: 404 });
     }
     return NextResponse.json({
       message: `${service.name} updated successfully`,
@@ -54,21 +48,18 @@ export const PUT = auth(async function PUT(request: any, context: any) {
   }
 });
 
-export const DELETE = auth(async function DELETE(request: any, context: any) {
+export const DELETE = auth(async (request: any, context: any) => {
   const allowedRoles = ['admin'];
   if (!allowedRoles.includes(request.auth?.user?.role)) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
   try {
-    const id = context.params.id;
+    const { id } = context.params;
     await connectDB();
     const service = await Service.findOneAndDelete({ uniqueId: id });
     if (!service) {
-      return NextResponse.json(
-        { message: 'Service not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: 'Service not found' }, { status: 404 });
     }
     return NextResponse.json({
       message: `${service.name} deleted successfully`,

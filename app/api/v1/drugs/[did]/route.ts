@@ -5,7 +5,7 @@ import { connectDB } from '@/lib/db';
 import Drug from '@/models/Drug';
 
 // get drug by id from param
-export const GET = auth(async function GET(request: any, context: any) {
+export const GET = auth(async (request: any, context: any) => {
   try {
     const allowedRoles = ['admin', 'doctor', 'receptionist'];
     if (!allowedRoles.includes(request.auth?.user?.role)) {
@@ -26,7 +26,7 @@ export const GET = auth(async function GET(request: any, context: any) {
 });
 
 // update drug by did from param
-export const PUT = auth(async function PUT(request: any, context: any) {
+export const PUT = auth(async (request: any, context: any) => {
   try {
     const allowedRoles = ['admin', 'laboratorist'];
     if (!allowedRoles.includes(request.auth?.user?.role)) {
@@ -58,7 +58,7 @@ export const PUT = auth(async function PUT(request: any, context: any) {
 });
 
 // delete drug by did from param
-export const DELETE = auth(async function DELETE(request: any, context: any) {
+export const DELETE = auth(async (request: any, context: any) => {
   try {
     const allowedRoles = ['admin', 'laboratorist'];
     if (!allowedRoles.includes(request.auth?.user?.role)) {

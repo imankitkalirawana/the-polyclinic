@@ -7,9 +7,6 @@ import {
   UseQueryResult,
 } from '@tanstack/react-query';
 
-import { ServiceType } from '@/types/service';
-
-import { ApiResponse } from './api';
 import {
   createService,
   deleteService,
@@ -17,9 +14,12 @@ import {
   getServiceWithUID,
   updateService,
 } from './api/service';
+import { ApiResponse } from './api';
 
-export const useAllServices = (): UseQueryResult<ServiceType[]> => {
-  return useQuery({
+import { ServiceType } from '@/types/service';
+
+export const useAllServices = (): UseQueryResult<ServiceType[]> =>
+  useQuery({
     queryKey: ['services'],
     queryFn: async () => {
       const res = await getAllServices();
@@ -29,10 +29,9 @@ export const useAllServices = (): UseQueryResult<ServiceType[]> => {
       throw new Error(res.message);
     },
   });
-};
 
-export const useServiceWithUID = (uid: string): UseQueryResult<ServiceType> => {
-  return useQuery({
+export const useServiceWithUID = (uid: string): UseQueryResult<ServiceType> =>
+  useQuery({
     queryKey: ['service', uid],
     queryFn: async () => {
       const res = await getServiceWithUID(uid);
@@ -43,7 +42,6 @@ export const useServiceWithUID = (uid: string): UseQueryResult<ServiceType> => {
     },
     enabled: !!uid,
   });
-};
 
 export const useCreateService = (): UseMutationResult<
   ApiResponse<ServiceType>,
@@ -107,11 +105,7 @@ export const useUpdateService = (): UseMutationResult<
   });
 };
 
-export const useDeleteService = (): UseMutationResult<
-  ApiResponse<ServiceType>,
-  Error,
-  string
-> => {
+export const useDeleteService = (): UseMutationResult<ApiResponse<ServiceType>, Error, string> => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (uid: string) => {

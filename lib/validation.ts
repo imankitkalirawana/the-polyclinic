@@ -8,9 +8,7 @@ export const serviceValidationSchema = Yup.object().shape({
     .max(50, 'Name is too long'),
   description: Yup.string().required('Description is required'),
   price: Yup.number().required('Price is required').min(1, 'Price is too low'),
-  duration: Yup.number()
-    .required('Duration is required')
-    .min(1, 'Duration is too low'),
+  duration: Yup.number().required('Duration is required').min(1, 'Duration is too low'),
   status: Yup.string().required('Status is required'),
 });
 

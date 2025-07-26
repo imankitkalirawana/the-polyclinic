@@ -1,20 +1,14 @@
 'use client';
 
-import { addToast, Button, Tooltip } from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
 import { useState } from 'react';
+import { addToast, Button, Tooltip } from '@heroui/react';
 import slugify from 'slugify';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 export default function HandleExport({
   collection,
 }: {
-  collection:
-    | 'users'
-    | 'services'
-    | 'drugs'
-    | 'newsletter'
-    | 'appointments'
-    | 'emails';
+  collection: 'users' | 'services' | 'drugs' | 'newsletter' | 'appointments' | 'emails';
 }) {
   const [isExporting, setIsExporting] = useState(false);
 
@@ -50,19 +44,15 @@ export default function HandleExport({
   };
 
   return (
-    <>
-      <Tooltip content="Export to Excel">
-        <Button
-          endContent={
-            isExporting ? '' : <Icon icon="solar:export-linear" width={18} />
-          }
-          onPress={handleExport}
-          radius="full"
-          variant="flat"
-          isIconOnly
-          isLoading={isExporting}
-        />
-      </Tooltip>
-    </>
+    <Tooltip content="Export to Excel">
+      <Button
+        endContent={isExporting ? '' : <Icon icon="solar:export-linear" width={18} />}
+        onPress={handleExport}
+        radius="full"
+        variant="flat"
+        isIconOnly
+        isLoading={isExporting}
+      />
+    </Tooltip>
   );
 }

@@ -1,8 +1,4 @@
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from '@tanstack/react-query';
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 import { auth } from '@/auth';
 import ServiceViewItem from '@/components/dashboard/services/service-item';
@@ -36,12 +32,10 @@ export default async function Page(props: Props) {
   });
 
   return (
-    <>
-      <div className="h-full w-full px-2">
-        <HydrationBoundary state={dehydrate(queryClient)}>
-          <ServiceViewItem uid={params.uid} session={session as AuthUser} />
-        </HydrationBoundary>
-      </div>
-    </>
+    <div className="h-full w-full px-2">
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <ServiceViewItem uid={params.uid} session={session as AuthUser} />
+      </HydrationBoundary>
+    </div>
   );
 }

@@ -1,16 +1,13 @@
 'use client';
 
-import {
-  Button,
-  DropdownItem,
-  DropdownMenu,
-  Selection,
-  Tooltip,
-} from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
+import { useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'nextjs-toploader/app';
-import { useMemo } from 'react';
+import { Button, DropdownItem, DropdownMenu, Selection, Tooltip } from '@heroui/react';
+import { Icon } from '@iconify/react/dist/iconify.js';
+
+import CancelDeleteAppointments from '../../appointments/ui/bulk-cancel-delete';
+import { AppointmentQuickLook } from './quicklook';
 
 import { Table } from '@/components/ui/data-table';
 import {
@@ -27,27 +24,15 @@ import { useAllAppointments } from '@/services/appointment';
 import { useAppointmentStore } from '@/store/appointment';
 import { AppointmentType } from '@/types/appointment';
 
-import CancelDeleteAppointments from '../../appointments/ui/bulk-cancel-delete';
-import { AppointmentQuickLook } from './quicklook';
-
-const INITIAL_VISIBLE_COLUMNS = [
-  'aid',
-  'date',
-  'patient.name',
-  'doctor.name',
-  'status',
-];
+const INITIAL_VISIBLE_COLUMNS = ['aid', 'date', 'patient.name', 'doctor.name', 'status'];
 
 export default function Appointments() {
   const router = useRouter();
 
-  const { appointment, setAppointment, keys, setKeys, action, setAction } =
-    useAppointmentStore();
+  const { appointment, setAppointment, keys, setKeys, action, setAction } = useAppointmentStore();
   const { data, isLoading } = useAllAppointments();
 
-  const appointments: AppointmentType[] = useMemo(() => {
-    return data || [];
-  }, [data]);
+  const appointments: AppointmentType[] = useMemo(() => data || [], [data]);
 
   // Define columns with render functions
   const columns: ColumnDef<AppointmentType>[] = useMemo(
@@ -56,8 +41,7 @@ export default function Appointments() {
         name: 'Appointment ID',
         uid: 'aid',
         sortable: true,
-        renderCell: (appointment) =>
-          renderCopyableText(appointment.aid.toString()),
+        renderCell: (appointment) => renderCopyableText(appointment.aid.toString()),
       },
 
       {
@@ -108,15 +92,13 @@ export default function Appointments() {
         name: 'Appointment Date',
         uid: 'date',
         sortable: true,
-        renderCell: (appointment) =>
-          renderDate({ date: appointment.date, isTime: true }),
+        renderCell: (appointment) => renderDate({ date: appointment.date, isTime: true }),
       },
       {
         name: 'Created At',
         uid: 'createdAt',
         sortable: true,
-        renderCell: (appointment) =>
-          renderDate({ date: appointment.createdAt, isTime: true }),
+        renderCell: (appointment) => renderDate({ date: appointment.createdAt, isTime: true }),
       },
       {
         name: 'Actions',
@@ -124,10 +106,8 @@ export default function Appointments() {
         sortable: false,
         renderCell: (appointment) =>
           renderActions({
-            onView: () =>
-              router.push(`/dashboard/appointments/${appointment.aid}`),
-            onEdit: () =>
-              router.push(`/dashboard/appointments/${appointment.aid}/edit`),
+            onView: () => router.push(`/dashboard/appointments/${appointment.aid}`),
+            onEdit: () => router.push(`/dashboard/appointments/${appointment.aid}/edit`),
             key: appointment.aid,
           }),
       },
@@ -146,8 +126,7 @@ export default function Appointments() {
           { label: 'Available', value: 'available' },
           { label: 'Unavailable', value: 'unavailable' },
         ],
-        filterFn: (appointment, value) =>
-          appointment.status.toLowerCase() === value,
+        filterFn: (appointment, value) => appointment.status.toLowerCase() === value,
       },
       {
         name: 'Created At',
@@ -191,13 +170,7 @@ export default function Appointments() {
   const endContent = () => (
     <div className="flex gap-2">
       <Tooltip content="Calendar View" delay={1000} placement="top">
-        <Button
-          isIconOnly
-          size="sm"
-          variant="bordered"
-          as={Link}
-          href="/appointments"
-        >
+        <Button isIconOnly size="sm" variant="bordered" as={Link} href="/appointments">
           <Icon icon="solar:calendar-linear" width={16} />
         </Button>
       </Tooltip>
@@ -207,66 +180,64 @@ export default function Appointments() {
     </div>
   );
 
-  const renderSelectedActions = (selectedKeys: Selection) => {
-    return (
-      <DropdownMenu aria-label="Selected Actions">
-        <DropdownItem
-          key="export"
-          onPress={async () => {
-            // convert selectedKeys to array of numbers
-            const keys = convertSelectionToKeys(selectedKeys);
+  const renderSelectedActions = (selectedKeys: Selection) => (
+    <DropdownMenu aria-label="Selected Actions">
+      <DropdownItem
+        key="export"
+        onPress={async () => {
+          // convert selectedKeys to array of numbers
+          const keys = convertSelectionToKeys(selectedKeys);
 
-            await apiRequest({
-              method: 'POST',
-              url: '/api/v1/appointments/export',
-              data: { keys },
-              responseType: 'blob',
-              successMessage: {
-                title: 'Appointments exported successfully',
-              },
-              onSuccess: (data) => {
-                setAction(null);
-                // Create a blob URL and trigger download
-                const blob = new Blob([data], {
-                  type: 'application/vnd.ms-excel',
-                });
-                const url = window.URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.setAttribute(
-                  'download',
-                  `appointments-export-${new Date().toISOString().split('T')[0]}.xlsx`
-                );
-                document.body.appendChild(link);
-                link.click();
-                link.remove();
-                window.URL.revokeObjectURL(url);
-              },
-            });
-          }}
-        >
-          Export
-        </DropdownItem>
-        <DropdownItem
-          key="cancel"
-          onPress={() => {
-            setAction('bulk-cancel');
-          }}
-        >
-          Cancel
-        </DropdownItem>
-        <DropdownItem
-          key="delete"
-          className="text-danger"
-          onPress={() => {
-            setAction('bulk-delete');
-          }}
-        >
-          Delete
-        </DropdownItem>
-      </DropdownMenu>
-    );
-  };
+          await apiRequest({
+            method: 'POST',
+            url: '/api/v1/appointments/export',
+            data: { keys },
+            responseType: 'blob',
+            successMessage: {
+              title: 'Appointments exported successfully',
+            },
+            onSuccess: (data) => {
+              setAction(null);
+              // Create a blob URL and trigger download
+              const blob = new Blob([data], {
+                type: 'application/vnd.ms-excel',
+              });
+              const url = window.URL.createObjectURL(blob);
+              const link = document.createElement('a');
+              link.href = url;
+              link.setAttribute(
+                'download',
+                `appointments-export-${new Date().toISOString().split('T')[0]}.xlsx`
+              );
+              document.body.appendChild(link);
+              link.click();
+              link.remove();
+              window.URL.revokeObjectURL(url);
+            },
+          });
+        }}
+      >
+        Export
+      </DropdownItem>
+      <DropdownItem
+        key="cancel"
+        onPress={() => {
+          setAction('bulk-cancel');
+        }}
+      >
+        Cancel
+      </DropdownItem>
+      <DropdownItem
+        key="delete"
+        className="text-danger"
+        onPress={() => {
+          setAction('bulk-delete');
+        }}
+      >
+        Delete
+      </DropdownItem>
+    </DropdownMenu>
+  );
 
   return (
     <>
@@ -285,12 +256,8 @@ export default function Appointments() {
           direction: 'descending',
         }}
         searchField={(appointment, searchValue) =>
-          appointment.patient.name
-            .toLowerCase()
-            .includes(searchValue.toLowerCase()) ||
-          appointment.patient?.phone
-            ?.toLowerCase()
-            .includes(searchValue.toLowerCase()) ||
+          appointment.patient.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+          appointment.patient?.phone?.toLowerCase().includes(searchValue.toLowerCase()) ||
           appointment.aid.toString().includes(searchValue)
         }
         selectedKeys={keys}
@@ -298,9 +265,7 @@ export default function Appointments() {
           setKeys(selectedKeys);
         }}
         onRowAction={(row) => {
-          const appointment = appointments.find(
-            (appointment) => appointment.aid == row
-          );
+          const appointment = appointments.find((appointment) => appointment.aid == row);
           if (appointment) {
             setAppointment(appointment);
           }

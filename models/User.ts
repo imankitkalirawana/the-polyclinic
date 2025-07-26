@@ -40,15 +40,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: [
-        'admin',
-        'doctor',
-        'nurse',
-        'receptionist',
-        'pharmacist',
-        'laboratorist',
-        'user',
-      ],
+      enum: ['admin', 'doctor', 'nurse', 'receptionist', 'pharmacist', 'laboratorist', 'user'],
       default: 'user',
     },
     status: {
@@ -103,18 +95,14 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-userSchema.pre(
-  ['findOneAndUpdate', 'updateOne', 'updateMany'],
-  async function (next) {
-    const session = await auth();
-    this.setUpdate({
-      ...this.getUpdate(),
-      updatedBy: session?.user?.email || 'system-admin@divinely.dev',
-    });
-    next();
-  }
-);
+userSchema.pre(['findOneAndUpdate', 'updateOne', 'updateMany'], async function (next) {
+  const session = await auth();
+  this.setUpdate({
+    ...this.getUpdate(),
+    updatedBy: session?.user?.email || 'system-admin@divinely.dev',
+  });
+  next();
+});
 
-const User: Model<UserType> =
-  mongoose.models.User || mongoose.model<UserType>('User', userSchema);
+const User: Model<UserType> = mongoose.models.User || mongoose.model<UserType>('User', userSchema);
 export default User;

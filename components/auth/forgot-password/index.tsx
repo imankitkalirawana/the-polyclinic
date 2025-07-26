@@ -1,13 +1,14 @@
 'use client';
-import { Link } from '@heroui/react';
+
 import React from 'react';
+import { Link } from '@heroui/react';
 
-import { APP_INFO } from '@/lib/config';
-
-import Auth from '..';
 import { Input, OtpInput, PasswordInput } from '../form';
 import { ForgotPasswordProvider, useForgetPassword } from '../store';
 import { AuthStep } from '../types';
+import Auth from '..';
+
+import { APP_INFO } from '@/lib/config';
 
 const ForgotPasswordComponent: React.FC = () => {
   const { formik, paginate } = useForgetPassword();
@@ -25,7 +26,7 @@ const ForgotPasswordComponent: React.FC = () => {
           placeholder="john.doe@example.com"
           autoComplete="email"
           autoFocus
-          isInvalid={formik.touched.email && formik.errors.email ? true : false}
+          isInvalid={!!(formik.touched.email && formik.errors.email)}
           errorMessage={formik.errors.email?.toString()}
           value={formik.values.email}
           onChange={formik.handleChange}
@@ -44,7 +45,7 @@ const ForgotPasswordComponent: React.FC = () => {
           placeholder="Enter code"
           value={formik.values.otp}
           onValueChange={(value) => formik.setFieldValue('otp', value)}
-          isInvalid={formik.touched.otp && formik.errors.otp ? true : false}
+          isInvalid={!!(formik.touched.otp && formik.errors.otp)}
           errorMessage={formik.errors.otp?.toString()}
           autoFocus
           onComplete={() => formik.handleSubmit()}
@@ -61,27 +62,15 @@ const ForgotPasswordComponent: React.FC = () => {
             autoFocus
             isValidation
             label="New password"
-            onValueChange={(value) =>
-              formik.setFieldValue('newPassword', value)
-            }
-            isInvalid={
-              formik.touched.newPassword && formik.errors.newPassword
-                ? true
-                : false
-            }
+            onValueChange={(value) => formik.setFieldValue('newPassword', value)}
+            isInvalid={!!(formik.touched.newPassword && formik.errors.newPassword)}
             errorMessage={formik.errors.newPassword?.toString()}
           />
 
           <PasswordInput
             label="Confirm password"
-            onValueChange={(value) =>
-              formik.setFieldValue('confirmPassword', value)
-            }
-            isInvalid={
-              formik.touched.confirmPassword && formik.errors.confirmPassword
-                ? true
-                : false
-            }
+            onValueChange={(value) => formik.setFieldValue('confirmPassword', value)}
+            isInvalid={!!(formik.touched.confirmPassword && formik.errors.confirmPassword)}
             errorMessage={formik.errors.confirmPassword?.toString()}
           />
         </>

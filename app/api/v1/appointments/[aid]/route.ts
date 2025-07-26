@@ -10,21 +10,16 @@ import { Schema, Status } from '@/types/activity';
 import { UserRole } from '@/types/user';
 
 // get appointment by id from param
-export const GET = auth(async function GET(request: any, context: any) {
+export const GET = auth(async (request: any, context: any) => {
   try {
-    const allowedRoles: UserRole[] = [
-      'user',
-      'admin',
-      'doctor',
-      'receptionist',
-    ];
+    const allowedRoles: UserRole[] = ['user', 'admin', 'doctor', 'receptionist'];
 
     if (!allowedRoles.includes(request.auth?.user?.role)) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
     await connectDB();
-    const aid = context.params.aid;
+    const { aid } = context.params;
 
     const appointment = await Appointment.findOne({ aid });
 
@@ -65,14 +60,9 @@ export const GET = auth(async function GET(request: any, context: any) {
   }
 });
 
-export const PATCH = auth(async function PATCH(request: any, context: any) {
+export const PATCH = auth(async (request: any, context: any) => {
   try {
-    const allowedRoles: UserRole[] = [
-      'user',
-      'admin',
-      'doctor',
-      'receptionist',
-    ];
+    const allowedRoles: UserRole[] = ['user', 'admin', 'doctor', 'receptionist'];
 
     const user = request.auth?.user;
 
@@ -80,17 +70,14 @@ export const PATCH = auth(async function PATCH(request: any, context: any) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    const aid = context.params.aid;
+    const { aid } = context.params;
     const data = await request.json();
     await connectDB();
 
     const appointment = await Appointment.findOne({ aid });
 
     if (!appointment) {
-      return NextResponse.json(
-        { message: 'Appointment not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: 'Appointment not found' }, { status: 404 });
     }
 
     // if request role is use and doesn't match appointment patient email, return unauthorized
@@ -118,16 +105,11 @@ export const PATCH = auth(async function PATCH(request: any, context: any) {
       { new: true }
     );
 
-    const { changedFields, fieldDiffs } = trackObjectChanges(
-      appointment,
-      updatedAppointment
-    );
+    const { changedFields, fieldDiffs } = trackObjectChanges(appointment, updatedAppointment);
 
     await logActivity({
       id: aid,
-      title: `Appointment ${
-        changedFields.includes('status') ? `status` : 'updated'
-      }`,
+      title: `Appointment ${changedFields.includes('status') ? `status` : 'updated'}`,
       schema: 'appointment' as Schema,
       by: request.auth?.user,
       status: Status.SUCCESS,
@@ -144,7 +126,7 @@ export const PATCH = auth(async function PATCH(request: any, context: any) {
   }
 });
 
-export const DELETE = auth(async function DELETE(request: any, context: any) {
+export const DELETE = auth(async (request: any, context: any) => {
   try {
     const user = request.auth?.user;
     const allowedRoles: UserRole[] = ['admin'];
@@ -152,7 +134,7 @@ export const DELETE = auth(async function DELETE(request: any, context: any) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    const aid = context.params.aid;
+    const { aid } = context.params;
     await connectDB();
 
     // delete appointment

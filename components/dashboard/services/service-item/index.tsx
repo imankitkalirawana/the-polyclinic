@@ -1,16 +1,11 @@
 'use client';
 
-import {
-  Accordion,
-  AccordionItem,
-  Button,
-  Chip,
-  ChipProps,
-  Link,
-  Tooltip,
-} from '@heroui/react';
-import { Icon } from '@iconify/react';
 import React from 'react';
+import { Accordion, AccordionItem, Button, Chip, ChipProps, Link, Tooltip } from '@heroui/react';
+import { Icon } from '@iconify/react';
+
+import DataTable from './data-table';
+import { CircleChartCard } from './graph';
 
 import Loading from '@/app/loading';
 import PriceDisplay from '@/components/helper/display-price';
@@ -24,9 +19,6 @@ import { castData } from '@/lib/utils';
 import { useServiceWithUID } from '@/services/service';
 import { ServiceType } from '@/types/service';
 import { AuthUser } from '@/types/user';
-
-import DataTable from './data-table';
-import { CircleChartCard } from './graph';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   active: 'success',
@@ -43,13 +35,7 @@ const dummyData = {
   ],
 };
 
-export default function ServiceViewItem({
-  uid,
-  session,
-}: {
-  uid: string;
-  session: AuthUser;
-}) {
+export default function ServiceViewItem({ uid, session }: { uid: string; session: AuthUser }) {
   const { data, isError, isLoading } = useServiceWithUID(uid);
 
   const service = castData<ServiceType>(data);
@@ -78,13 +64,9 @@ export default function ServiceViewItem({
 
         <div className="flex flex-col">
           <div className="my-2 flex items-center gap-2">
-            <p className="text-small italic text-default-400">
-              #{service.uniqueId}
-            </p>
+            <p className="text-small italic text-default-400">#{service.uniqueId}</p>
           </div>
-          <h1 className="text-2xl font-semibold tracking-tight">
-            {service.name}
-          </h1>
+          <h1 className="text-2xl font-semibold tracking-tight">{service.name}</h1>
           <h2 className="sr-only">Service information</h2>
 
           <div className="text-xl font-medium tracking-tight">
@@ -96,17 +78,12 @@ export default function ServiceViewItem({
               <div className="mb-4 flex items-center gap-2 text-default-700">
                 <Icon icon="solar:clock-circle-broken" width={20} />
                 <p className="text-small font-medium">
-                  Done in approx.{' '}
-                  {convertMinutesToHoursAndMinutes(service.duration)}
+                  Done in approx. {convertMinutesToHoursAndMinutes(service.duration)}
                 </p>
               </div>
             )}
             <div className="flex items-center gap-2">
-              <Chip
-                color={statusColorMap[service.status]}
-                variant="flat"
-                className="capitalize"
-              >
+              <Chip color={statusColorMap[service.status]} variant="flat" className="capitalize">
                 {service.status}
               </Chip>
               {service.type && (
@@ -141,15 +118,13 @@ export default function ServiceViewItem({
             </AccordionItem>
             <AccordionItem title="Created By">
               <p className="text-default-500">
-                {service.createdBy || 'Admin'} on{' '}
-                {humanReadableDate(service.createdAt)} at{' '}
+                {service.createdBy || 'Admin'} on {humanReadableDate(service.createdAt)} at{' '}
                 {humanReadableTime(service.createdAt)}
               </p>
             </AccordionItem>
             <AccordionItem title="Updated By">
               <p className="text-default-500">
-                {service.updatedBy || 'Admin'} on{' '}
-                {humanReadableDate(service.updatedAt)} at{' '}
+                {service.updatedBy || 'Admin'} on {humanReadableDate(service.updatedAt)} at{' '}
                 {humanReadableTime(service.updatedAt)}
               </p>
             </AccordionItem>

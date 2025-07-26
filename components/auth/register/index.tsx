@@ -1,26 +1,20 @@
 'use client';
-import {
-  addToast,
-  Button,
-  DatePicker,
-  Link,
-  Select,
-  SelectItem,
-} from '@heroui/react';
+
+import React from 'react';
+import { addToast, Button, DatePicker, Link, Select, SelectItem } from '@heroui/react';
+import { useQueryState } from 'nuqs';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { getLocalTimeZone, parseDate, today } from '@internationalized/date';
 import { I18nProvider } from '@react-aria/i18n';
-import { useQueryState } from 'nuqs';
-import React from 'react';
+
+import { Input, OtpInput, PasswordInput } from '../form';
+import { RegisterProvider, useRegister } from '../store';
+import { AuthStep } from '../types';
+import Auth from '..';
 
 import { APP_INFO } from '@/lib/config';
 import { $FixMe } from '@/types';
 import { Gender, genders } from '@/types/user';
-
-import Auth from '..';
-import { Input, OtpInput, PasswordInput } from '../form';
-import { RegisterProvider, useRegister } from '../store';
-import { AuthStep } from '../types';
 
 const RegisterComponent: React.FC = () => {
   const { formik, paginate } = useRegister();
@@ -68,8 +62,7 @@ const RegisterComponent: React.FC = () => {
     },
     1: {
       title: 'Continue with email',
-      description:
-        "We'll check if you have an account, and help create one if you don't.",
+      description: "We'll check if you have an account, and help create one if you don't.",
       button: 'Continue',
       content: (
         <Input
@@ -79,7 +72,7 @@ const RegisterComponent: React.FC = () => {
           placeholder="john.doe@example.com"
           autoComplete="email"
           autoFocus
-          isInvalid={formik.touched.email && formik.errors.email ? true : false}
+          isInvalid={!!(formik.touched.email && formik.errors.email)}
           errorMessage={formik.errors.email?.toString()}
           value={formik.values.email}
           onChange={(e) => {
@@ -100,7 +93,7 @@ const RegisterComponent: React.FC = () => {
             placeholder="John Doe"
             value={formik.values.name}
             onValueChange={(value) => formik.setFieldValue('name', value)}
-            isInvalid={formik.touched.name && formik.errors.name ? true : false}
+            isInvalid={!!(formik.touched.name && formik.errors.name)}
             errorMessage={formik.errors.name?.toString()}
             autoFocus
           />
@@ -113,9 +106,7 @@ const RegisterComponent: React.FC = () => {
               formik.setFieldValue('gender', gender);
             }}
             disallowEmptySelection
-            isInvalid={
-              formik.touched.gender && formik.errors.gender ? true : false
-            }
+            isInvalid={!!(formik.touched.gender && formik.errors.gender)}
             errorMessage={formik.errors.gender?.toString()}
           >
             {genders.map((gender) => (
@@ -130,9 +121,7 @@ const RegisterComponent: React.FC = () => {
               // @ts-expect-error - TODO: fix this
               value={formik.values.dob ? parseDate(formik.values.dob) : null}
               onChange={(value) => {
-                const dob = new Date(value as $FixMe)
-                  .toISOString()
-                  .split('T')[0];
+                const dob = new Date(value as $FixMe).toISOString().split('T')[0];
                 formik.setFieldValue('dob', dob);
               }}
               maxValue={today(getLocalTimeZone())}
@@ -153,7 +142,7 @@ const RegisterComponent: React.FC = () => {
           placeholder="Enter OTP"
           value={formik.values.otp}
           onValueChange={(value) => formik.setFieldValue('otp', value)}
-          isInvalid={formik.touched.otp && formik.errors.otp ? true : false}
+          isInvalid={!!(formik.touched.otp && formik.errors.otp)}
           errorMessage={formik.errors.otp?.toString()}
           autoFocus
           onComplete={() => formik.handleSubmit()}
@@ -179,9 +168,7 @@ const RegisterComponent: React.FC = () => {
             autoFocus
             isValidation
             onValueChange={(value) => formik.setFieldValue('password', value)}
-            isInvalid={
-              formik.touched.password && formik.errors.password ? true : false
-            }
+            isInvalid={!!(formik.touched.password && formik.errors.password)}
           />
         </>
       ),
@@ -193,11 +180,11 @@ const RegisterComponent: React.FC = () => {
       <>
         <div className="text-center text-small">
           By continuing, you agree to {APP_INFO.name}&apos;s{' '}
-          <Link className="underline" href={`/terms-of-use`} size="sm">
+          <Link className="underline" href="/terms-of-use" size="sm">
             Terms of Use
           </Link>
           . Read our{' '}
-          <Link className="underline" href={`/privacy-policy`} size="sm">
+          <Link className="underline" href="/privacy-policy" size="sm">
             Privacy Policy
           </Link>
           .
@@ -209,7 +196,7 @@ const RegisterComponent: React.FC = () => {
         </div>
         <div className="text-center text-small">
           Already have an account?&nbsp;
-          <Link href={`/auth/login`} size="sm">
+          <Link href="/auth/login" size="sm">
             Log In
           </Link>
         </div>

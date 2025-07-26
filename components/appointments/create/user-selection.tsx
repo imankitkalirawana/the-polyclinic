@@ -1,23 +1,14 @@
-import {
-  Button,
-  Card,
-  CardBody,
-  cn,
-  Image,
-  Input,
-  Link,
-  ScrollShadow,
-} from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
 import { useState } from 'react';
+import { Button, Card, CardBody, cn, Image, Input, Link, ScrollShadow } from '@heroui/react';
 import { useDebounce } from 'react-haiku';
+import { Icon } from '@iconify/react/dist/iconify.js';
+
+import NoResults from '../../ui/no-results';
+import Skeleton from '../../ui/skeleton';
 
 import { CreateAppointmentType } from '@/types/appointment';
 import { DoctorType } from '@/types/doctor';
 import { UserType } from '@/types/user';
-
-import NoResults from '../../ui/no-results';
-import Skeleton from '../../ui/skeleton';
 
 const SizeMap = {
   sm: {
@@ -48,9 +39,7 @@ export default function UserSelection({
   id: string;
   users: (UserType | DoctorType)[];
   isLoading?: boolean;
-  selectedUser:
-    | CreateAppointmentType['patient']
-    | CreateAppointmentType['doctor'];
+  selectedUser: CreateAppointmentType['patient'] | CreateAppointmentType['doctor'];
   size?: 'sm' | 'md' | 'lg';
   onSelectionChange: (
     user: CreateAppointmentType['patient'] | CreateAppointmentType['doctor']
@@ -94,16 +83,13 @@ export default function UserSelection({
                 />
               </div>
               <div>
-                <h2 className="text-center text-large font-semibold text-primary">
-                  New Patient
-                </h2>
+                <h2 className="text-center text-large font-semibold text-primary">New Patient</h2>
               </div>
             </CardBody>
           </Card>
           <ScrollShadow orientation="horizontal" className="flex gap-4">
-            {users.filter((user) =>
-              user.name.toLowerCase().includes(debounce.toLowerCase())
-            ).length < 1 ? (
+            {users.filter((user) => user.name.toLowerCase().includes(debounce.toLowerCase()))
+              .length < 1 ? (
               <div className="flex justify-center">
                 {/* TODO: This needs to be a changed */}
                 <NoResults message="No User Found" />
@@ -119,8 +105,7 @@ export default function UserSelection({
                       'no-scrollbar rounded-medium border-small border-divider shadow-none',
                       SizeMap[size].card,
                       {
-                        'border-medium border-primary-400':
-                          user.uid === selectedUser?.uid,
+                        'border-medium border-primary-400': user.uid === selectedUser?.uid,
                       }
                     )}
                     onPress={() => onSelectionChange(user)}
@@ -136,10 +121,7 @@ export default function UserSelection({
                           as={Link}
                           href={`/users/${user.uid}`}
                         >
-                          <Icon
-                            icon="solar:pen-new-round-line-duotone"
-                            width={18}
-                          />
+                          <Icon icon="solar:pen-new-round-line-duotone" width={18} />
                         </Button>
                       </div>
                       <div>
@@ -152,9 +134,7 @@ export default function UserSelection({
                         />
                       </div>
                       <div className="flex flex-col items-center">
-                        <h2 className={cn('text-center', SizeMap[size].name)}>
-                          {user?.name}
-                        </h2>
+                        <h2 className={cn('text-center', SizeMap[size].name)}>{user?.name}</h2>
                         <p className="block text-center text-small font-light text-default-500">
                           #{user?.uid}
                         </p>
@@ -170,7 +150,7 @@ export default function UserSelection({
   );
 }
 
-const LoadingUsers = ({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) => {
+function LoadingUsers({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
   return (
     <div className="flex gap-4 overflow-hidden">
       {Array.from({ length: 5 }).map((_, index) => (
@@ -194,4 +174,4 @@ const LoadingUsers = ({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) => {
       ))}
     </div>
   );
-};
+}

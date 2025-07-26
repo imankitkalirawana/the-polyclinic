@@ -1,8 +1,8 @@
 import { MailOptions } from 'nodemailer/lib/json-transport';
 
-import { checkDomainMx, transporter } from '@/lib/nodemailer';
-
 import { APP_INFO } from '../config';
+
+import { checkDomainMx, transporter } from '@/lib/nodemailer';
 
 export const defaultMailOptions: MailOptions = {
   from: {

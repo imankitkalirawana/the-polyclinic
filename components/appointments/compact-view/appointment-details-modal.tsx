@@ -1,4 +1,7 @@
 'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'nextjs-toploader/app';
 import {
   addToast,
   Avatar,
@@ -19,18 +22,16 @@ import {
   ModalHeader,
   ScrollShadow,
 } from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
 import { format } from 'date-fns';
-import { useRouter } from 'nextjs-toploader/app';
-import { useState } from 'react';
+import { Icon } from '@iconify/react/dist/iconify.js';
+
+import { getAppointmentStyles } from './appointments';
+import { useForm } from './context';
 
 import FixMeModal from '@/components/ui/fix-me/modal';
 import { downloadAppointmentReceipt } from '@/functions/client/appointment/receipt';
 import { cn } from '@/lib/utils';
 import { $FixMe } from '@/types';
-
-import { getAppointmentStyles } from './appointments';
-import { useForm } from './context';
 
 interface DropdownItemProps {
   key: string;
@@ -41,12 +42,7 @@ interface DropdownItemProps {
   action?: () => void;
 }
 
-export type ActionType =
-  | 'reschedule'
-  | 'cancel'
-  | 'download'
-  | 'receipt'
-  | 'proceed';
+export type ActionType = 'reschedule' | 'cancel' | 'download' | 'receipt' | 'proceed';
 
 export default function AppointmentDetailsModal() {
   const { formik, session } = useForm();
@@ -115,9 +111,7 @@ export default function AppointmentDetailsModal() {
     {
       label: session?.user?.role === 'user' ? 'Cancel' : 'Decline',
       description:
-        session?.user?.role === 'user'
-          ? 'Cancel the appointment'
-          : 'Decline the appointment',
+        session?.user?.role === 'user' ? 'Cancel the appointment' : 'Decline the appointment',
       icon: 'solar:close-circle-bold-duotone',
       key: 'cancel',
       color: 'danger',
@@ -134,24 +128,21 @@ export default function AppointmentDetailsModal() {
     },
   ];
 
-  const [selectedOption, setSelectedOption] = useState(() => {
-    return new Set(
-      dropdownItems
-        .filter(
-          (item) =>
-            roleButton[session?.user?.role || '']?.includes(item.key) &&
-            statusButton[formik.values.selected?.status || '']?.includes(
-              item.key
-            )
-        )
-        .map((item) => item.key)
-    );
-  });
+  const [selectedOption, setSelectedOption] = useState(
+    () =>
+      new Set(
+        dropdownItems
+          .filter(
+            (item) =>
+              roleButton[session?.user?.role || '']?.includes(item.key) &&
+              statusButton[formik.values.selected?.status || '']?.includes(item.key)
+          )
+          .map((item) => item.key)
+      )
+  );
   const selectedOptionValue = Array.from(selectedOption)[0] as ActionType;
 
-  const selectedItem = dropdownItems.find(
-    (item) => item.key === selectedOptionValue
-  );
+  const selectedItem = dropdownItems.find((item) => item.key === selectedOptionValue);
 
   const modalMap: Record<string, React.ReactNode> = {
     reschedule: <FixMeModal />,
@@ -183,13 +174,9 @@ export default function AppointmentDetailsModal() {
                   <DropdownMenu>
                     <DropdownItem
                       key="view"
-                      endContent={
-                        <Icon icon="solar:arrow-right-up-linear" width={18} />
-                      }
+                      endContent={<Icon icon="solar:arrow-right-up-linear" width={18} />}
                       onPress={() => {
-                        router.push(
-                          `/appointments/${formik.values.selected?.aid}`
-                        );
+                        router.push(`/appointments/${formik.values.selected?.aid}`);
                       }}
                     >
                       View in detail
@@ -202,11 +189,7 @@ export default function AppointmentDetailsModal() {
                 <ScrollShadow className="no-scrollbar py-4 pb-12">
                   <Card className="mt-4 w-full border-small border-divider bg-default-50 shadow-none">
                     <CardBody className="flex-row items-center gap-6 p-4">
-                      <Avatar
-                        radius="md"
-                        src="/assets/placeholder-avatar.jpeg"
-                        name="John Doe"
-                      />
+                      <Avatar radius="md" src="/assets/placeholder-avatar.jpeg" name="John Doe" />
                       <div className="flex flex-col gap-1">
                         <h3 className="font-semibold text-default-700">
                           {formik.values.selected?.patient?.name}
@@ -215,15 +198,12 @@ export default function AppointmentDetailsModal() {
                           <span
                             className={cn(
                               'block size-4 rounded-md bg-default-500',
-                              getAppointmentStyles(
-                                formik.values.selected?.status as $FixMe
-                              ).avatarBg
+                              getAppointmentStyles(formik.values.selected?.status as $FixMe)
+                                .avatarBg
                             )}
                           />
                           <span className="text-small capitalize text-default-700">
-                            {formik.values.selected?.status
-                              .split('-')
-                              .join(' ')}
+                            {formik.values.selected?.status.split('-').join(' ')}
                           </span>
                         </div>
                       </div>
@@ -236,12 +216,10 @@ export default function AppointmentDetailsModal() {
                           <Icon icon="solar:hashtag-circle-bold" width="24" />
                         </div>
                         <div className="flex text-[15px] text-default-400">
-                          <span className="capitalize">
-                            #{formik.values.selected?.aid}
-                          </span>
+                          <span className="capitalize">#{formik.values.selected?.aid}</span>
                         </div>
                       </div>
-                      <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20"></div>
+                      <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20" />
                       <div className="flex items-center gap-4">
                         <div className="rounded-medium bg-blue-100 p-2 text-blue-500">
                           <Icon icon="solar:phone-rounded-bold" width="24" />
@@ -256,7 +234,7 @@ export default function AppointmentDetailsModal() {
                           </Link>
                           {formik.values.selected?.patient?.phone && (
                             <>
-                              <div className="h-[1px] w-full bg-gradient-to-r from-divider via-divider to-divider/20"></div>
+                              <div className="h-[1px] w-full bg-gradient-to-r from-divider via-divider to-divider/20" />
                               <Link
                                 href={`tel:${formik.values.selected?.patient.phone}`}
                                 target="_blank"
@@ -268,24 +246,18 @@ export default function AppointmentDetailsModal() {
                           )}
                         </div>
                       </div>
-                      <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20"></div>
+                      <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20" />
                       <div className="flex items-center gap-4">
                         <div className="rounded-medium bg-primary-100 p-2 text-primary">
                           <Icon icon="solar:clock-circle-bold" width={24} />
                         </div>
                         <div className="flex text-[15px] text-default-400">
                           <span>
-                            {format(
-                              new Date(formik.values.selected?.date as string),
-                              'hh:mm a'
-                            )}
+                            {format(new Date(formik.values.selected?.date as string), 'hh:mm a')}
                           </span>
                           <Icon icon="mdi:dot" width="24" height="24" />
                           <span>
-                            {format(
-                              new Date(formik.values.selected?.date as string),
-                              'PP'
-                            )}
+                            {format(new Date(formik.values.selected?.date as string), 'PP')}
                           </span>
                         </div>
                       </div>
@@ -301,8 +273,7 @@ export default function AppointmentDetailsModal() {
                           </div>
                           <div className="flex text-[15px] text-default-400">
                             <span>
-                              {formik.values.selected?.additionalInfo.type ===
-                              'online'
+                              {formik.values.selected?.additionalInfo.type === 'online'
                                 ? 'Online'
                                 : 'In-Person'}
                             </span>
@@ -310,22 +281,20 @@ export default function AppointmentDetailsModal() {
                         </div>
                         {formik.values.selected?.additionalInfo.notes && (
                           <>
-                            <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20"></div>
+                            <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20" />
                             <div className="flex items-start gap-4">
                               <div className="rounded-medium bg-amber-100 p-2 text-amber-500">
                                 <Icon icon="solar:notes-bold" width="24" />
                               </div>
                               <div className="flex text-[15px] text-default-400">
-                                <span>
-                                  {formik.values.selected?.additionalInfo.notes}
-                                </span>
+                                <span>{formik.values.selected?.additionalInfo.notes}</span>
                               </div>
                             </div>
                           </>
                         )}
                         {formik.values.selected?.additionalInfo.symptoms && (
                           <>
-                            <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20"></div>
+                            <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20" />
                             <div className="flex items-start gap-4">
                               <div className="rounded-medium bg-red-100 p-2 text-red-500">
                                 <Icon icon="solar:health-bold" width="24" />
@@ -405,12 +374,10 @@ export default function AppointmentDetailsModal() {
                       {dropdownItems
                         .filter(
                           (item) =>
-                            roleButton[session?.user?.role || 'user']?.includes(
+                            roleButton[session?.user?.role || 'user']?.includes(item.key) &&
+                            statusButton[formik.values.selected?.status || 'booked']?.includes(
                               item.key
-                            ) &&
-                            statusButton[
-                              formik.values.selected?.status || 'booked'
-                            ]?.includes(item.key)
+                            )
                         )
                         .map((item) => (
                           <DropdownItem
@@ -435,32 +402,10 @@ export default function AppointmentDetailsModal() {
   );
 }
 
-export function Title({
-  title,
-  className,
-}: {
-  title: string;
-  className?: string;
-}) {
-  return (
-    <>
-      <h2 className={cn('text-large font-semibold', className)}>{title}</h2>
-    </>
-  );
+export function Title({ title, className }: { title: string; className?: string }) {
+  return <h2 className={cn('text-large font-semibold', className)}>{title}</h2>;
 }
 
-export function Subtitle({
-  title,
-  className,
-}: {
-  title: string;
-  className?: string;
-}) {
-  return (
-    <>
-      <h2 className={cn('font-semibold text-default-700', className)}>
-        {title}
-      </h2>
-    </>
-  );
+export function Subtitle({ title, className }: { title: string; className?: string }) {
+  return <h2 className={cn('font-semibold text-default-700', className)}>{title}</h2>;
 }

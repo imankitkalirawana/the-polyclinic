@@ -1,4 +1,5 @@
 'use client';
+
 import { Metadata } from 'next';
 
 import CustomError from '@/components/error';

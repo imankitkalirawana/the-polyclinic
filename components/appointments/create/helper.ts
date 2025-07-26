@@ -10,9 +10,7 @@ export const generateTimeSlots = () => {
   while (totalMinutes < TIMINGS.appointment.end * 60) {
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
-    slots.push(
-      `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`
-    );
+    slots.push(`${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`);
     totalMinutes += TIMINGS.appointment.interval;
   }
 
@@ -51,9 +49,5 @@ export const getDateTime = (date: Date, time: string) => {
   return newDate;
 };
 
-export const isDateUnavailable = (date: DateValue, timeZone: string) => {
-  return (
-    isWeekend(date, timeZone) ||
-    disabledDates[0].map((d) => d.compare(date)).includes(0)
-  );
-};
+export const isDateUnavailable = (date: DateValue, timeZone: string) =>
+  isWeekend(date, timeZone) || disabledDates[0].map((d) => d.compare(date)).includes(0);

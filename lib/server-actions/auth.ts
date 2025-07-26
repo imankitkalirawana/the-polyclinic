@@ -1,7 +1,10 @@
 'use server';
 
-import bcrypt from 'bcryptjs';
 import { AuthError } from 'next-auth';
+import bcrypt from 'bcryptjs';
+
+import { connectDB } from '../db';
+import { sendHTMLEmail } from './email';
 
 import { signIn } from '@/auth';
 import { generateOtp } from '@/functions/utils';
@@ -10,9 +13,6 @@ import Otp from '@/models/Otp';
 import User from '@/models/User';
 import { OtpEmail, WelcomeUser } from '@/templates/email';
 import { Gender } from '@/types/user';
-
-import { connectDB } from '../db';
-import { sendHTMLEmail } from './email';
 
 export const sendOTP = async ({
   email,
@@ -152,13 +152,7 @@ export const register = async ({
   };
 };
 
-export const login = async ({
-  email,
-  password,
-}: {
-  email: string;
-  password: string;
-}) => {
+export const login = async ({ email, password }: { email: string; password: string }) => {
   try {
     await signIn('credentials', {
       email,

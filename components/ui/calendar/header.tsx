@@ -1,6 +1,8 @@
 'use client';
+
+import React from 'react';
+import { useSession } from 'next-auth/react';
 import { Button, Kbd, Select, SelectItem } from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
 import {
   addDays,
   addMonths,
@@ -13,10 +15,9 @@ import {
   subWeeks,
   subYears,
 } from 'date-fns';
-import { useSession } from 'next-auth/react';
 import { parseAsStringEnum, useQueryState } from 'nuqs';
-import React from 'react';
 import { useKeyPress } from 'react-haiku';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 import { allowedRolesToCreateAppointment } from './data';
 import { View, views as Views } from './types';
@@ -43,10 +44,7 @@ export function CalendarHeader({
   onCreateAppointment,
 }: CalendarHeaderProps) {
   const { data: session } = useSession();
-  const [view, setView] = useQueryState(
-    'view',
-    parseAsStringEnum(Views).withDefault('schedule')
-  );
+  const [view, setView] = useQueryState('view', parseAsStringEnum(Views).withDefault('schedule'));
 
   useKeyPress(['m'], () => {
     setView('month');
@@ -145,29 +143,11 @@ export function CalendarHeader({
         </Button>
 
         <div className="flex items-center gap-1">
-          <Button
-            variant="light"
-            size="sm"
-            isIconOnly
-            radius="full"
-            onPress={navigatePrevious}
-          >
-            <Icon
-              icon="solar:alt-arrow-left-line-duotone"
-              className="h-4 w-4"
-            />
+          <Button variant="light" size="sm" isIconOnly radius="full" onPress={navigatePrevious}>
+            <Icon icon="solar:alt-arrow-left-line-duotone" className="h-4 w-4" />
           </Button>
-          <Button
-            variant="light"
-            size="sm"
-            isIconOnly
-            radius="full"
-            onPress={navigateNext}
-          >
-            <Icon
-              icon="solar:alt-arrow-right-line-duotone"
-              className="h-4 w-4"
-            />
+          <Button variant="light" size="sm" isIconOnly radius="full" onPress={navigateNext}>
+            <Icon icon="solar:alt-arrow-right-line-duotone" className="h-4 w-4" />
           </Button>
         </div>
 
@@ -194,9 +174,7 @@ export function CalendarHeader({
           {(item) => (
             <SelectItem
               key={item.value}
-              textValue={
-                item.value.charAt(0).toUpperCase() + item.value.slice(1)
-              }
+              textValue={item.value.charAt(0).toUpperCase() + item.value.slice(1)}
               endContent={<Kbd className="capitalize">{item.shortcut}</Kbd>}
             >
               {item.label}
@@ -207,9 +185,7 @@ export function CalendarHeader({
           <Button
             size="sm"
             color="primary"
-            startContent={
-              <Icon icon="solar:add-circle-bold-duotone" className="h-4 w-4" />
-            }
+            startContent={<Icon icon="solar:add-circle-bold-duotone" className="h-4 w-4" />}
             onPress={onCreateAppointment}
           >
             Create

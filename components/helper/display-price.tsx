@@ -1,4 +1,5 @@
 'use client';
+
 import React, { useEffect, useState } from 'react';
 
 import { formatPrice } from '@/lib/utility';
@@ -12,9 +13,5 @@ export default function PriceDisplay({ price }: { price: number | undefined }) {
     }
   }, [price]);
 
-  return (
-    <p className="text-xl font-medium tracking-tight">
-      {formattedPrice || 'Loading...'}
-    </p>
-  );
+  return <p className="text-xl font-medium tracking-tight">{formattedPrice || 'Loading...'}</p>;
 }

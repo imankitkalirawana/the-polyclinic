@@ -10,30 +10,15 @@ import {
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
+import { ActionType, DropdownKeyType } from '../types';
+
 import { PermissionProps } from '@/components/ui/dashboard/quicklook/types';
 import { avatars } from '@/lib/avatar';
 import { DoctorType } from '@/types/doctor';
 
-import { ActionType, DropdownKeyType } from '../types';
-
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
-  doctor: [
-    'cancel',
-    'reschedule',
-    'reminder',
-    'new-tab',
-    'add-to-calendar',
-    'invoice',
-    'reports',
-  ],
-  user: [
-    'cancel',
-    'reschedule',
-    'new-tab',
-    'add-to-calendar',
-    'invoice',
-    'reports',
-  ],
+  doctor: ['cancel', 'reschedule', 'reminder', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
+  user: ['cancel', 'reschedule', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
   admin: 'all',
   nurse: ['cancel', 'reschedule'],
   receptionist: ['cancel', 'reschedule', 'reminder'],
@@ -42,10 +27,7 @@ export const sidebarContent = (doctor: DoctorType) => (
   <>
     <div className="flex flex-col items-center gap-2 p-4">
       <Avatar
-        src={
-          doctor.image ||
-          avatars.memoji[Math.floor(Math.random() * avatars.memoji.length)]
-        }
+        src={doctor.image || avatars.memoji[Math.floor(Math.random() * avatars.memoji.length)]}
         size="lg"
       />
       <div className="flex flex-col items-center">
@@ -66,29 +48,19 @@ export const sidebarContent = (doctor: DoctorType) => (
         <Button
           size="sm"
           variant="bordered"
-          startContent={
-            <Icon icon="solar:chat-round-line-bold-duotone" width="20" />
-          }
+          startContent={<Icon icon="solar:chat-round-line-bold-duotone" width="20" />}
         >
           Message
         </Button>
         <Dropdown placement="bottom-end" aria-label="Patient actions">
           <DropdownTrigger>
             <Button size="sm" variant="bordered" isIconOnly>
-              <Icon
-                icon="solar:menu-dots-bold"
-                width="20"
-                className="rotate-90"
-              />
+              <Icon icon="solar:menu-dots-bold" width="20" className="rotate-90" />
             </Button>
           </DropdownTrigger>
           <DropdownMenu>
             <DropdownItem key="edit">Edit</DropdownItem>
-            <DropdownItem
-              color="danger"
-              className="text-danger-500"
-              key="delete"
-            >
+            <DropdownItem color="danger" className="text-danger-500" key="delete">
               Delete
             </DropdownItem>
           </DropdownMenu>
@@ -105,11 +77,9 @@ export const sidebarContent = (doctor: DoctorType) => (
               </div>
               <span className="capitalize text-default-400">UID</span>
             </div>
-            <span className="capitalize text-default-foreground">
-              {doctor.uid}
-            </span>
+            <span className="capitalize text-default-foreground">{doctor.uid}</span>
           </div>
-          <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20"></div>
+          <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20" />
           <div className="flex items-center justify-between gap-4 text-small">
             <div className="flex items-center gap-2">
               <div className="rounded-medium bg-pink-200 p-[5px] text-pink-400">
@@ -117,11 +87,9 @@ export const sidebarContent = (doctor: DoctorType) => (
               </div>
               <span className="capitalize text-default-400">Name</span>
             </div>
-            <span className="capitalize text-default-foreground">
-              {doctor.name}
-            </span>
+            <span className="capitalize text-default-foreground">{doctor.name}</span>
           </div>
-          <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20"></div>
+          <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20" />
           <div className="flex items-center justify-between gap-4 text-small">
             <div className="flex items-center gap-2">
               <div className="rounded-medium bg-blue-200 p-[5px] text-blue-400">
@@ -129,9 +97,7 @@ export const sidebarContent = (doctor: DoctorType) => (
               </div>
               <span className="capitalize text-default-400">Designation</span>
             </div>
-            <span className="text-default-foreground">
-              {doctor.designation}
-            </span>
+            <span className="text-default-foreground">{doctor.designation}</span>
           </div>
         </div>
       </Tab>

@@ -1,4 +1,5 @@
 'use client';
+
 import type { $FixMe } from '@/types';
 
 export const scrollToError = (formik: $FixMe, inputRefs: $FixMe) => {
@@ -9,6 +10,5 @@ export const scrollToError = (formik: $FixMe, inputRefs: $FixMe) => {
       behavior: 'smooth',
       block: 'center',
     });
-    return;
   }
 };

@@ -1,15 +1,10 @@
 'use client';
+
 import { useMutation } from '@tanstack/react-query';
 
 export const useGemini = () => {
   const mutation = useMutation({
-    mutationFn: async ({
-      prompt,
-      context,
-    }: {
-      prompt: string;
-      context: string;
-    }) => {
+    mutationFn: async ({ prompt, context }: { prompt: string; context: string }) => {
       const response = await fetch('/api/ai/gemini', {
         method: 'POST',
         headers: {

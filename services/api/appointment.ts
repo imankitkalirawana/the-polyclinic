@@ -1,20 +1,16 @@
 'use server';
 
-import { AppointmentType, CreateAppointmentType } from '@/types/appointment';
-
 import { fetchData } from '.';
 
-export const getAllAppointments = async () => {
-  return await fetchData<AppointmentType[]>('/appointments');
-};
+import { AppointmentType, CreateAppointmentType } from '@/types/appointment';
 
-export const getAppointmentWithAID = async (aid: number) => {
-  return await fetchData<AppointmentType>(`/appointments/${aid}`);
-};
+export const getAllAppointments = async () => await fetchData<AppointmentType[]>('/appointments');
 
-export const createAppointment = async (appointment: CreateAppointmentType) => {
-  return await fetchData<AppointmentType>('/appointments', {
+export const getAppointmentWithAID = async (aid: number) =>
+  await fetchData<AppointmentType>(`/appointments/${aid}`);
+
+export const createAppointment = async (appointment: CreateAppointmentType) =>
+  await fetchData<AppointmentType>('/appointments', {
     method: 'POST',
     data: appointment,
   });
-};

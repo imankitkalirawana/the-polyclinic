@@ -1,26 +1,17 @@
 'use client';
 
-import {
-  Avatar,
-  Button,
-  Card,
-  cn,
-  Link,
-  ScrollShadow,
-  Spinner,
-  Tooltip,
-} from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
+import { useEffect, useRef } from 'react';
+import { Avatar, Button, Card, cn, Link, ScrollShadow, Spinner, Tooltip } from '@heroui/react';
 import { format, subMinutes } from 'date-fns';
 import { useQueryState } from 'nuqs';
-import { useEffect, useRef } from 'react';
-
-import CalendarWidget from '@/components/ui/calendar-widget';
-import { AppointmentType } from '@/types/appointment';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 import AppointmentDetailsModal from './appointment-details-modal';
 import { useForm } from './context';
 import StatusReferences from './status-references';
+
+import CalendarWidget from '@/components/ui/calendar-widget';
+import { AppointmentType } from '@/types/appointment';
 
 // Get background and icon colors based on appointment type
 export const getAppointmentStyles = (status: AppointmentType['status']) => {
@@ -118,10 +109,7 @@ export default function AppointmentsTimeline() {
     const timelineHeight = 18 * 70;
     return Math.max(
       0,
-      Math.min(
-        ((totalMinutes - startMinutes) / (9 * 60)) * timelineHeight,
-        timelineHeight
-      )
+      Math.min(((totalMinutes - startMinutes) / (9 * 60)) * timelineHeight, timelineHeight)
     );
   };
 
@@ -139,14 +127,10 @@ export default function AppointmentsTimeline() {
   // Automatically scroll to the first appointment after appointments load
   useEffect(() => {
     // Only scroll if there is at least one appointment and the ref exists.
-    if (
-      appointments?.length &&
-      scrollRef.current &&
-      firstAppointmentRef.current
-    ) {
+    if (appointments?.length && scrollRef.current && firstAppointmentRef.current) {
       const container = scrollRef.current;
       const firstEl = firstAppointmentRef.current;
-      const offsetTop = firstEl.offsetTop;
+      const { offsetTop } = firstEl;
 
       container.scrollTo({
         top: offsetTop - 20, // Adjust the offset as needed
@@ -177,10 +161,7 @@ export default function AppointmentsTimeline() {
             </Link>
           </div>
 
-          <ScrollShadow
-            className="relative max-h-[50vh] py-4 scrollbar-hide"
-            ref={scrollRef}
-          >
+          <ScrollShadow className="relative max-h-[50vh] py-4 scrollbar-hide" ref={scrollRef}>
             <div className="absolute left-0 top-4 flex w-16 flex-col gap-[53.6px]">
               {timeSlots.map((time) => (
                 <div key={time} className="text-tiny text-default-500">
@@ -190,19 +171,16 @@ export default function AppointmentsTimeline() {
             </div>
 
             <div className="relative ml-16 border-l border-default-200">
-              {timeSlots.map((time, index) => {
-                return (
-                  <div
-                    key={`${time}-divider`}
-                    className={`h-[70px] border-t border-default-200 ${
-                      index % 2 === 0 ? 'border-solid' : 'border-dashed'
-                    } `}
-                  />
-                );
-              })}
+              {timeSlots.map((time, index) => (
+                <div
+                  key={`${time}-divider`}
+                  className={`h-[70px] border-t border-default-200 ${
+                    index % 2 === 0 ? 'border-solid' : 'border-dashed'
+                  } `}
+                />
+              ))}
 
-              {format(new Date(date), 'yyyy-MM-dd') ===
-                format(new Date(), 'yyyy-MM-dd') && (
+              {format(new Date(date), 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd') && (
                 <Tooltip
                   content={format(new Date(), 'hh:mm a')}
                   showArrow
@@ -220,18 +198,12 @@ export default function AppointmentsTimeline() {
 
               {/* Appointments */}
               {appointments
-                ?.sort((a, b) =>
-                  a.date.toString().localeCompare(b.date.toString())
-                )
+                ?.sort((a, b) => a.date.toString().localeCompare(b.date.toString()))
                 .map((appointment, index, sortedAppointments) => {
                   const styles = getAppointmentStyles(appointment.status);
 
-                  const startTime = convertISOTimetoTime(
-                    appointment.date.toString()
-                  );
-                  const [startHour, startMinute] = startTime
-                    .split(':')
-                    .map(Number);
+                  const startTime = convertISOTimetoTime(appointment.date.toString());
+                  const [startHour, startMinute] = startTime.split(':').map(Number);
                   const startTimeInMinutes = startHour * 60 + startMinute;
                   // Timeline starts at 8:00 AM (480 minutes)
                   const startY = startTimeInMinutes - 480;
@@ -246,20 +218,14 @@ export default function AppointmentsTimeline() {
                   sortedAppointments.forEach((other, i) => {
                     if (i >= index) return;
 
-                    const otherTime = convertISOTimetoTime(
-                      other.date.toString()
-                    );
-                    const [otherHour, otherMinute] = otherTime
-                      .split(':')
-                      .map(Number);
+                    const otherTime = convertISOTimetoTime(other.date.toString());
+                    const [otherHour, otherMinute] = otherTime.split(':').map(Number);
                     const otherStart = otherHour * 60 + otherMinute;
                     const otherEnd = otherStart + 30;
 
                     if (
-                      (startTimeInMinutes >= otherStart &&
-                        startTimeInMinutes < otherEnd) ||
-                      (otherStart >= startTimeInMinutes &&
-                        otherStart < startTimeInMinutes + 50)
+                      (startTimeInMinutes >= otherStart && startTimeInMinutes < otherEnd) ||
+                      (otherStart >= startTimeInMinutes && otherStart < startTimeInMinutes + 50)
                     ) {
                       overlappingCount++;
                       overlappingAppointments.push(other);
@@ -269,19 +235,13 @@ export default function AppointmentsTimeline() {
                   // Skip rendering if this is the 3rd or later overlapping appointment
                   if (
                     overlappingCount >= 2 &&
-                    overlappingAppointments.includes(
-                      sortedAppointments[index - 1]
-                    )
+                    overlappingAppointments.includes(sortedAppointments[index - 1])
                   ) {
                     if (overlappingAppointments.length === 2) {
                       const remainingCount =
                         sortedAppointments.filter((apt) => {
-                          const aptTime = convertISOTimetoTime(
-                            apt.date.toString()
-                          );
-                          const [aptHour, aptMinute] = aptTime
-                            .split(':')
-                            .map(Number);
+                          const aptTime = convertISOTimetoTime(apt.date.toString());
+                          const [aptHour, aptMinute] = aptTime.split(':').map(Number);
                           const aptStart = aptHour * 60 + aptMinute;
                           return Math.abs(aptStart - startTimeInMinutes) <= 30;
                         }).length - 2;
@@ -335,8 +295,7 @@ export default function AppointmentsTimeline() {
                   }
 
                   // Mark appointment as past if it is less than current date minus 30 minutes
-                  const isInPast =
-                    new Date(appointment.date) < subMinutes(new Date(), 30);
+                  const isInPast = new Date(appointment.date) < subMinutes(new Date(), 30);
 
                   return (
                     <Card
@@ -358,10 +317,7 @@ export default function AppointmentsTimeline() {
                       ref={index === 0 ? firstAppointmentRef : undefined}
                       onContextMenu={(e) => {
                         e.preventDefault();
-                        window.open(
-                          `/appointments/${appointment.aid}`,
-                          '_blank'
-                        );
+                        window.open(`/appointments/${appointment.aid}`, '_blank');
                       }}
                     >
                       {isInPast && (
@@ -380,13 +336,9 @@ export default function AppointmentsTimeline() {
                               {appointment.patient.name}
                             </h3>
                             <p className="flex gap-1 text-default-500">
-                              <span className="line-clamp-1 capitalize">
-                                #{appointment.aid}
-                              </span>
+                              <span className="line-clamp-1 capitalize">#{appointment.aid}</span>
                               <span>•</span>
-                              <span>
-                                {format(new Date(appointment.date), 'HH:mm')}
-                              </span>
+                              <span>{format(new Date(appointment.date), 'HH:mm')}</span>
                             </p>
                           </div>
                           <Avatar

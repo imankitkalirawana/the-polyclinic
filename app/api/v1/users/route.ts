@@ -5,7 +5,7 @@ import { API_ACTIONS } from '@/lib/config';
 import { connectDB } from '@/lib/db';
 import User from '@/models/User';
 
-export const GET = auth(async function GET(request: any) {
+export const GET = auth(async (request: any) => {
   try {
     if (!request.auth?.user?.role) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -39,7 +39,7 @@ export const GET = auth(async function GET(request: any) {
   }
 });
 
-export const POST = auth(async function POST(request: any) {
+export const POST = auth(async (request: any) => {
   try {
     const allowedRoles = ['admin', 'receptionist'];
     if (!allowedRoles.includes(request.auth?.user?.role)) {
@@ -62,7 +62,7 @@ export const POST = auth(async function POST(request: any) {
 });
 
 // Delete Users
-export const DELETE = auth(async function DELETE(request: any) {
+export const DELETE = auth(async (request: any) => {
   try {
     const allowedRoles = ['admin', 'receptionist'];
     if (!allowedRoles.includes(request.auth?.user?.role)) {

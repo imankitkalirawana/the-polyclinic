@@ -1,5 +1,5 @@
+import React, { useState } from 'react';
 import { Button, Tooltip } from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
 import {
   addMonths,
   eachDayOfInterval,
@@ -9,7 +9,7 @@ import {
   startOfMonth,
   subMonths,
 } from 'date-fns';
-import React, { useState } from 'react';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 import CalendarWidget from '@/components/ui/calendar-widget';
 import { cn } from '@/lib/utils';
@@ -21,11 +21,7 @@ const typeMap: Record<AppointmentType['type'], string> = {
   emergency: 'bg-rose-500',
 };
 
-export default function Calendar({
-  appointments,
-}: {
-  appointments: AppointmentType[];
-}) {
+export default function Calendar({ appointments }: { appointments: AppointmentType[] }) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const daysInMonth = eachDayOfInterval({
@@ -55,15 +51,9 @@ export default function Calendar({
             variant="light"
             radius="lg"
           >
-            <Icon
-              className="text-default-500"
-              icon="solar:alt-arrow-left-linear"
-              width={18}
-            />
+            <Icon className="text-default-500" icon="solar:alt-arrow-left-linear" width={18} />
           </Button>
-          <h2 className="text-small font-semibold">
-            {format(currentMonth, 'MMMM yyyy')}
-          </h2>
+          <h2 className="text-small font-semibold">{format(currentMonth, 'MMMM yyyy')}</h2>
           <Button
             onPress={() => setCurrentMonth(addMonths(currentMonth, 1))}
             isIconOnly
@@ -71,11 +61,7 @@ export default function Calendar({
             variant="light"
             radius="lg"
           >
-            <Icon
-              className="text-default-500"
-              icon="solar:alt-arrow-right-linear"
-              width={18}
-            />
+            <Icon className="text-default-500" icon="solar:alt-arrow-right-linear" width={18} />
           </Button>
         </div>
         <div className="grid grid-cols-7 gap-2">
@@ -118,8 +104,7 @@ export default function Calendar({
                   'relative flex h-10 w-10 cursor-default items-center justify-center rounded-medium backdrop-blur-sm',
                   {
                     'bg-primary-500/20 font-medium text-primary':
-                      format(day, 'yyyy-MM-dd') ===
-                      format(new Date(), 'yyyy-MM-dd'),
+                      format(day, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd'),
                   }
                 )}
               >

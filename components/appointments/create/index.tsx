@@ -1,4 +1,7 @@
 'use client';
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'nextjs-toploader/app';
 import {
   Accordion,
   AccordionItem,
@@ -13,23 +16,6 @@ import {
 } from '@heroui/react';
 import { format } from 'date-fns';
 import { useFormik } from 'formik';
-import { useRouter } from 'nextjs-toploader/app';
-import { useEffect, useState } from 'react';
-
-import UserSelection from '@/components/appointments/create/user-selection';
-import { castData } from '@/lib/utils';
-import {
-  useAllAppointments,
-  useCreateAppointment,
-} from '@/services/appointment';
-import { useAllDoctors } from '@/services/doctor';
-import { useLinkedUsers } from '@/services/user';
-import { useAppointmentStore } from '@/store/appointment';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { $FixMe } from '@/types';
-import { AppointmentType, CreateAppointmentType } from '@/types/appointment';
-import { DoctorType } from '@/types/doctor';
-import { UserType } from '@/types/user';
 
 import { AccordionTitle } from './accordion-title';
 import AdditionalDetailsSelection, {
@@ -40,6 +26,17 @@ import AppointmentTypeSelection, {
 } from './appointment-type-selection';
 import DateSelection, { DateSelectionTitle } from './date-selection';
 import { getNextAvailableTimeSlot } from './helper';
+
+import UserSelection from '@/components/appointments/create/user-selection';
+import { castData } from '@/lib/utils';
+import { useAllAppointments, useCreateAppointment } from '@/services/appointment';
+import { useAllDoctors } from '@/services/doctor';
+import { useLinkedUsers } from '@/services/user';
+import { useAppointmentStore } from '@/store/appointment';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { AppointmentType, CreateAppointmentType } from '@/types/appointment';
+import { DoctorType } from '@/types/doctor';
+import { UserType } from '@/types/user';
 
 const KeyMap: Record<number, string> = {
   1: 'patient',
@@ -72,8 +69,7 @@ export function CreateAppointment({
   const createAppointment = useCreateAppointment();
 
   const { setAppointment: setCalendarAppointment } = useAppointmentStore();
-  const { data: linkedUsers, isLoading: isLinkedUsersLoading } =
-    useLinkedUsers();
+  const { data: linkedUsers, isLoading: isLinkedUsersLoading } = useLinkedUsers();
 
   const { data: doctors, isLoading: isDoctorsLoading } = useAllDoctors();
 
@@ -95,10 +91,7 @@ export function CreateAppointment({
         const { data } = await createAppointment.mutateAsync(values);
         addToast({
           title: 'Appointment created',
-          description: `Your appointment is scheduled for ${format(
-            new Date(values.date),
-            'PPp'
-          )}`,
+          description: `Your appointment is scheduled for ${format(new Date(values.date), 'PPp')}`,
           color: 'success',
           endContent: (
             <Button
@@ -170,9 +163,7 @@ export function CreateAppointment({
                       ? 'Please select for whom you want to book an appointment?'
                       : appointment.patient?.name
                   }
-                  subtitle={
-                    currentStep === 1 ? null : appointment.patient?.email
-                  }
+                  subtitle={currentStep === 1 ? null : appointment.patient?.email}
                   onPress={() => {
                     setCurrentStep(1);
                     setAppointment('patient', {} as UserType);
@@ -246,14 +237,9 @@ export function CreateAppointment({
                 appointmentType={appointment.type}
                 previousAppointment={appointment.previousAppointment}
                 setAppointmentType={(type) => setAppointment('type', type)}
-                setPreviousAppointment={(aid) =>
-                  setAppointment('previousAppointment', aid)
-                }
+                setPreviousAppointment={(aid) => setAppointment('previousAppointment', aid)}
                 onContinue={() => {
-                  if (
-                    appointment.type === 'follow-up' &&
-                    appointment.previousAppointment
-                  ) {
+                  if (appointment.type === 'follow-up' && appointment.previousAppointment) {
                     const previousAppointment = appointments?.find(
                       (apt) => apt.aid === appointment.previousAppointment
                     );
@@ -283,11 +269,7 @@ export function CreateAppointment({
                 </Link>
               }
               hideIndicator={currentStep <= 4}
-              title={
-                <DoctorSelectionTitle
-                  doctor={appointment.doctor as DoctorType}
-                />
-              }
+              title={<DoctorSelectionTitle doctor={appointment.doctor as DoctorType} />}
             >
               <UserSelection
                 id="doctor"
@@ -336,12 +318,7 @@ function DoctorSelectionTitle({ doctor }: { doctor: DoctorType }) {
 export default function CreateAppointmentWrapper() {
   return (
     <div className="flex h-full w-full items-center justify-center p-4 md:p-8">
-      <CreateAppointment
-        open={true}
-        onOpenChange={() => {}}
-        selectedDate={new Date()}
-        size="full"
-      />
+      <CreateAppointment open onOpenChange={() => {}} selectedDate={new Date()} size="full" />
     </div>
   );
 }

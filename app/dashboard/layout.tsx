@@ -14,11 +14,5 @@ export default async function Layout({
     redirect('/auth/login');
   }
 
-  return (
-    <>
-      {session && (
-        <DashboardLayout session={session}>{children}</DashboardLayout>
-      )}
-    </>
-  );
+  return <>{session && <DashboardLayout session={session}>{children}</DashboardLayout>}</>;
 }

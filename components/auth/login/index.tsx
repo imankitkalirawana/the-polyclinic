@@ -1,15 +1,16 @@
 'use client';
+
+import React from 'react';
 import { addToast, Button, Link } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import React from 'react';
 
-import { APP_INFO } from '@/lib/config';
-import { googleLogin } from '@/lib/server-actions/auth';
-
-import Auth from '..';
 import { Input, PasswordInput } from '../form';
 import { LoginProvider, useLogin } from '../store';
 import { AuthStep } from '../types';
+import Auth from '..';
+
+import { APP_INFO } from '@/lib/config';
+import { googleLogin } from '@/lib/server-actions/auth';
 
 const LoginComponent: React.FC = () => {
   const { formik, paginate } = useLogin();
@@ -70,22 +71,18 @@ const LoginComponent: React.FC = () => {
       description: `Welcome back to ${APP_INFO.name}! Please enter your email to continue.`,
       button: 'Continue',
       content: (
-        <>
-          <Input
-            name="email"
-            type="email"
-            label="Email"
-            placeholder="john.doe@example.com"
-            autoComplete="email"
-            autoFocus
-            isInvalid={
-              formik.touched.email && formik.errors.email ? true : false
-            }
-            errorMessage={formik.errors.email?.toString()}
-            value={formik.values.email}
-            onChange={formik.handleChange}
-          />
-        </>
+        <Input
+          name="email"
+          type="email"
+          label="Email"
+          placeholder="john.doe@example.com"
+          autoComplete="email"
+          autoFocus
+          isInvalid={!!(formik.touched.email && formik.errors.email)}
+          errorMessage={formik.errors.email?.toString()}
+          value={formik.values.email}
+          onChange={formik.handleChange}
+        />
       ),
     },
     2: {
@@ -107,9 +104,7 @@ const LoginComponent: React.FC = () => {
             autoFocus
             label="Password"
             onValueChange={(value) => formik.setFieldValue('password', value)}
-            isInvalid={
-              formik.touched.password && formik.errors.password ? true : false
-            }
+            isInvalid={!!(formik.touched.password && formik.errors.password)}
             errorMessage={formik.errors.password?.toString()}
           />
         </>

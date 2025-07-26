@@ -4,5 +4,12 @@
   "singleQuote": true,
   "tabWidth": 2,
   "useTabs": false,
-  "plugins": ["prettier-plugin-tailwindcss"]
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "arrowParens": "always",
+  "printWidth": 100,
+  "jsxSingleQuote": false,
+  "bracketSameLine": false,
+  "bracketSpacing": true,
+  "endOfLine": "lf",
+  "proseWrap": "preserve"
 }

@@ -1,4 +1,5 @@
 'use client';
+
 import { Button } from '@heroui/react';
 
 import { useModal } from '@/components/ui/global-modal';

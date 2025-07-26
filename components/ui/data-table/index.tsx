@@ -1,4 +1,6 @@
 'use client';
+
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Button,
   cn,
@@ -25,15 +27,14 @@ import {
   Tooltip,
 } from '@heroui/react';
 import { SearchIcon } from '@heroui/shared-icons';
-import { Icon } from '@iconify/react';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDebounce } from 'react-haiku';
-
-import type { $FixMe } from '@/types';
+import { Icon } from '@iconify/react';
 
 import { isAll } from './helper';
 import type { TableItem, TableProps, TableState } from './types';
 import { useMemoizedCallback } from './use-memoized-callback';
+
+import type { $FixMe } from '@/types';
 
 export function Table<T extends TableItem>({
   uniqueKey,
@@ -68,9 +69,7 @@ export function Table<T extends TableItem>({
     page: 1,
     sortDescriptor: initialSortDescriptor,
     rowsPerPage,
-    filterValues: Object.fromEntries(
-      filters.map((filter) => [filter.key, 'all'])
-    ),
+    filterValues: Object.fromEntries(filters.map((filter) => [filter.key, 'all'])),
   });
 
   const updateState = (newState: Partial<TableState>) => {
@@ -92,20 +91,18 @@ export function Table<T extends TableItem>({
       })
       .filter(
         (column) =>
-          state.visibleColumns === 'all' ||
-          Array.from(state.visibleColumns).includes(column.uid)
+          state.visibleColumns === 'all' || Array.from(state.visibleColumns).includes(column.uid)
       );
   }, [state.visibleColumns, state.sortDescriptor, columns]);
 
   const itemFilter = useCallback(
-    (item: T) => {
+    (item: T) =>
       // Apply all active filters
-      return filters.every((filter) => {
+      filters.every((filter) => {
         const filterValue = state.filterValues[filter.key];
         if (filterValue === 'all') return true;
         return filter.filterFn(item, filterValue);
-      });
-    },
+      }),
     [filters, state.filterValues]
   );
 
@@ -117,17 +114,13 @@ export function Table<T extends TableItem>({
       filteredData = filteredData.filter((item) => {
         if (typeof searchField === 'function') {
           return searchField(item, state.filterValue);
-        } else if (searchField) {
+        }
+        if (searchField) {
           const fieldValue = item[searchField];
           if (typeof fieldValue === 'string') {
-            return fieldValue
-              .toLowerCase()
-              .includes(state.filterValue.toLowerCase());
-          } else if (
-            typeof fieldValue === 'object' &&
-            fieldValue !== null &&
-            'name' in fieldValue
-          ) {
+            return fieldValue.toLowerCase().includes(state.filterValue.toLowerCase());
+          }
+          if (typeof fieldValue === 'object' && fieldValue !== null && 'name' in fieldValue) {
             return (fieldValue.name as string)
               .toLowerCase()
               .includes(state.filterValue.toLowerCase());
@@ -188,7 +181,7 @@ export function Table<T extends TableItem>({
     if (!state.sortDescriptor.column) return filteredItems;
 
     return [...filteredItems].sort((a: T, b: T) => {
-      const column = state.sortDescriptor.column;
+      const { column } = state.sortDescriptor;
 
       // Handle nested object paths with dot notation (e.g., "patient.name")
       let first = getNestedValue(a, column.toString());
@@ -255,17 +248,15 @@ export function Table<T extends TableItem>({
     setSearchValue(value || '');
   });
 
-  const onFilterChange = useMemoizedCallback(
-    (filterKey: string, value: string) => {
-      updateState({
-        filterValues: {
-          ...state.filterValues,
-          [filterKey]: value,
-        },
-        page: 1,
-      });
-    }
-  );
+  const onFilterChange = useMemoizedCallback((filterKey: string, value: string) => {
+    updateState({
+      filterValues: {
+        ...state.filterValues,
+        [filterKey]: value,
+      },
+      page: 1,
+    });
+  });
 
   useEffect(() => {
     updateState({
@@ -274,17 +265,15 @@ export function Table<T extends TableItem>({
     });
   }, [debouncedSearch]);
 
-  const topContent = useMemo(() => {
-    return (
+  const topContent = useMemo(
+    () => (
       <div className="flex items-center justify-between gap-4 px-[6px] py-[4px]">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-4">
             {searchField && (
               <Input
                 className="min-w-[200px]"
-                endContent={
-                  <SearchIcon className="text-default-400" width={16} />
-                }
+                endContent={<SearchIcon className="text-default-400" width={16} />}
                 placeholder="Search"
                 size="sm"
                 value={searchValue}
@@ -317,9 +306,7 @@ export function Table<T extends TableItem>({
                           key={filter.key}
                           label={filter.name}
                           value={state.filterValues[filter.key]}
-                          onValueChange={(value) =>
-                            onFilterChange(filter.key, value)
-                          }
+                          onValueChange={(value) => onFilterChange(filter.key, value)}
                         >
                           {filter.options.map((option) => (
                             <Radio key={option.value} value={option.value}>
@@ -341,11 +328,7 @@ export function Table<T extends TableItem>({
                     className="bg-default-100 text-default-800"
                     size="sm"
                     startContent={
-                      <Icon
-                        className="text-default-400"
-                        icon="solar:sort-linear"
-                        width={16}
-                      />
+                      <Icon className="text-default-400" icon="solar:sort-linear" width={16} />
                     }
                   >
                     Sort
@@ -412,13 +395,9 @@ export function Table<T extends TableItem>({
                   items={columns.filter((c) => c.uid !== 'actions')}
                   selectedKeys={state.visibleColumns}
                   selectionMode="multiple"
-                  onSelectionChange={(keys) =>
-                    updateState({ visibleColumns: keys })
-                  }
+                  onSelectionChange={(keys) => updateState({ visibleColumns: keys })}
                 >
-                  {(item) => (
-                    <DropdownItem key={item.uid}>{item.name}</DropdownItem>
-                  )}
+                  {(item) => <DropdownItem key={item.uid}>{item.name}</DropdownItem>}
                 </DropdownMenu>
               </Dropdown>
             </div>
@@ -432,45 +411,42 @@ export function Table<T extends TableItem>({
               : `${selectedKeys.size > 0 ? `${selectedKeys.size} Selected` : ''}`}
           </div>
 
-          {renderSelectedActions &&
-            (isAll(selectedKeys) || selectedKeys.size > 0) && (
-              <Dropdown>
-                <DropdownTrigger>
-                  <Button
-                    endContent={
-                      <Icon
-                        className="text-default-400"
-                        icon="solar:alt-arrow-down-linear"
-                      />
-                    }
-                    size="sm"
-                    variant="flat"
-                  >
-                    Selected Actions
-                  </Button>
-                </DropdownTrigger>
-                {renderSelectedActions(selectedKeys)}
-              </Dropdown>
-            )}
+          {renderSelectedActions && (isAll(selectedKeys) || selectedKeys.size > 0) && (
+            <Dropdown>
+              <DropdownTrigger>
+                <Button
+                  endContent={
+                    <Icon className="text-default-400" icon="solar:alt-arrow-down-linear" />
+                  }
+                  size="sm"
+                  variant="flat"
+                >
+                  Selected Actions
+                </Button>
+              </DropdownTrigger>
+              {renderSelectedActions(selectedKeys)}
+            </Dropdown>
+          )}
         </div>
         {endContent && endContent()}
       </div>
-    );
-  }, [
-    searchValue,
-    state.visibleColumns,
-    selectedKeys,
-    headerColumns,
-    state.sortDescriptor,
-    state.filterValues,
-    filters,
-    searchField,
-    onSearchChange,
-    onFilterChange,
-  ]);
+    ),
+    [
+      searchValue,
+      state.visibleColumns,
+      selectedKeys,
+      headerColumns,
+      state.sortDescriptor,
+      state.filterValues,
+      filters,
+      searchField,
+      onSearchChange,
+      onFilterChange,
+    ]
+  );
 
-  const bottomContent = useMemo(() => {
-    return (
+  const bottomContent = useMemo(
+    () => (
       <div className="flex flex-col items-center justify-between gap-2 sm:flex-row">
         <Pagination
           isCompact
@@ -490,8 +466,9 @@ export function Table<T extends TableItem>({
           </span>
         </div>
       </div>
-    );
-  }, [selectedKeys, state.page, pages, sortedItems.length]);
+    ),
+    [selectedKeys, state.page, pages, sortedItems.length]
+  );
 
   return (
     <div className="h-full w-full">
@@ -509,9 +486,7 @@ export function Table<T extends TableItem>({
         topContent={topContent}
         topContentPlacement="outside"
         onSelectionChange={onSelectionChange}
-        onSortChange={(descriptor) =>
-          updateState({ sortDescriptor: descriptor })
-        }
+        onSortChange={(descriptor) => updateState({ sortDescriptor: descriptor })}
         onRowAction={(row) => {
           onRowAction?.(row);
         }}
@@ -523,9 +498,7 @@ export function Table<T extends TableItem>({
               key={column.uid}
               align={column.uid === 'actions' ? 'end' : 'start'}
               className={cn([
-                column.uid === 'actions'
-                  ? 'flex items-center justify-end px-[20px]'
-                  : '',
+                column.uid === 'actions' ? 'flex items-center justify-end px-[20px]' : '',
               ])}
             >
               {column.sortable !== false ? (
@@ -546,15 +519,9 @@ export function Table<T extends TableItem>({
                   {column.name}
                   {state.sortDescriptor.column === column.uid &&
                     (state.sortDescriptor.direction === 'ascending' ? (
-                      <Icon
-                        icon="solar:alt-arrow-up-linear"
-                        className="text-default-400"
-                      />
+                      <Icon icon="solar:alt-arrow-up-linear" className="text-default-400" />
                     ) : (
-                      <Icon
-                        icon="solar:alt-arrow-down-linear"
-                        className="text-default-400"
-                      />
+                      <Icon icon="solar:alt-arrow-down-linear" className="text-default-400" />
                     ))}
                 </div>
               ) : column.info ? (
@@ -578,20 +545,14 @@ export function Table<T extends TableItem>({
         <TableBody
           isLoading={isLoading}
           emptyContent={
-            isError ? (
-              <div className="bg-red-200">Error: {errorMessage}</div>
-            ) : (
-              'No data found'
-            )
+            isError ? <div className="bg-red-200">Error: {errorMessage}</div> : 'No data found'
           }
           items={items}
           loadingContent={<Spinner label="Fetching data..." />}
         >
           {(item) => (
             <TableRow key={String(item[keyField])}>
-              {(columnKey) => (
-                <TableCell>{renderCell(item, columnKey.toString())}</TableCell>
-              )}
+              {(columnKey) => <TableCell>{renderCell(item, columnKey.toString())}</TableCell>}
             </TableRow>
           )}
         </TableBody>

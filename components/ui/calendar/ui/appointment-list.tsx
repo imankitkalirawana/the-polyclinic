@@ -1,22 +1,15 @@
-import {
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  cn,
-  ScrollShadow,
-} from '@heroui/react';
+import React from 'react';
+import { Card, CardBody, CardFooter, CardHeader, cn, ScrollShadow } from '@heroui/react';
 import { format } from 'date-fns';
 import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs';
-import React from 'react';
-
-import { useAppointmentStore } from '@/store/appointment';
-import { AppointmentType } from '@/types/appointment';
 
 import { formatTime } from '../helper';
 import { views } from '../types';
 import DateChip from './date-chip';
 import StatusRenderer from './status-renderer';
+
+import { useAppointmentStore } from '@/store/appointment';
+import { AppointmentType } from '@/types/appointment';
 
 export default function AppointmentList({
   appointments,
@@ -37,9 +30,7 @@ export default function AppointmentList({
   return (
     <Card className="flex max-w-xs flex-col shadow-none">
       <CardHeader className="flex-col items-center gap-2 pb-0">
-        <span className="text-small font-medium uppercase">
-          {format(date, 'E')}
-        </span>
+        <span className="text-small font-medium uppercase">{format(date, 'E')}</span>
         <DateChip
           date={date}
           size="lg"

@@ -1,5 +1,7 @@
 'use client';
 
+import React, { useEffect, useRef } from 'react';
+import { useSession } from 'next-auth/react';
 import { ScrollShadow, Tooltip } from '@heroui/react';
 import {
   eachDayOfInterval,
@@ -10,24 +12,19 @@ import {
   isToday,
   startOfWeek,
 } from 'date-fns';
-import { useSession } from 'next-auth/react';
 import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs';
-import React, { useEffect, useRef } from 'react';
 
-import { TIMINGS } from '@/lib/config';
-import { cn } from '@/lib/utils';
-import { useAppointmentStore } from '@/store/appointment';
-import type { AppointmentType } from '@/types/appointment';
-
-import {
-  allowedRolesToCreateAppointment,
-  MAX_APPOINTMENTS_IN_CELL,
-} from '../data';
+import { allowedRolesToCreateAppointment, MAX_APPOINTMENTS_IN_CELL } from '../data';
 import { views } from '../types';
 import AppointmentList from '../ui/appointment-list';
 import AppointmentTriggerItem from '../ui/appointment-trigger-item';
 import { CurrentHourIndicator } from '../ui/current-hour-indicator';
 import DateChip from '../ui/date-chip';
+
+import { TIMINGS } from '@/lib/config';
+import { cn } from '@/lib/utils';
+import { useAppointmentStore } from '@/store/appointment';
+import type { AppointmentType } from '@/types/appointment';
 
 interface WeekViewProps {
   appointments: AppointmentType[];
@@ -35,11 +32,7 @@ interface WeekViewProps {
   onTimeSlotClick: (date: Date) => void;
 }
 
-export function WeekView({
-  appointments,
-  currentDate,
-  onTimeSlotClick,
-}: WeekViewProps) {
+export function WeekView({ appointments, currentDate, onTimeSlotClick }: WeekViewProps) {
   const { data: session } = useSession();
   const ref = useRef<HTMLDivElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -63,17 +56,11 @@ export function WeekView({
     (_, i) => i + TIMINGS.appointment.start
   ); // e.g., 9, 10, ..., 16 (for 9 AM to 5 PM view)
 
-  const getAppointmentsForDayAndHour = (
-    targetDate: Date,
-    targetHour: number
-  ) => {
-    return appointments.filter((apt) => {
+  const getAppointmentsForDayAndHour = (targetDate: Date, targetHour: number) =>
+    appointments.filter((apt) => {
       const aptDate = new Date(apt.date);
-      return (
-        isSameDay(aptDate, targetDate) && aptDate.getHours() === targetHour
-      );
+      return isSameDay(aptDate, targetDate) && aptDate.getHours() === targetHour;
     });
-  };
 
   useEffect(() => {
     if (ref.current) {
@@ -88,16 +75,14 @@ export function WeekView({
     <div className="flex h-full flex-col">
       {/* Week header using Grid */}
       <div className="grid grid-cols-[auto_repeat(7,1fr)] border-b">
-        <div className="w-20 shrink-0 border-r"></div>
+        <div className="w-20 shrink-0 border-r" />
         {/* Empty top-left cell */}
         {weekDays.map((day) => (
           <div
             key={`header-${day.toISOString()}`}
             className="flex flex-col items-center border-r p-2 text-center last:border-r-0"
           >
-            <div className="text-small text-default-500">
-              {format(day, 'EEE')}
-            </div>
+            <div className="text-small text-default-500">{format(day, 'EEE')}</div>
             <DateChip
               date={day}
               size="md"
@@ -126,11 +111,7 @@ export function WeekView({
                 className="row-span-1 w-20 shrink-0 border-b border-r p-2 text-right text-small text-default-500"
                 style={{ gridRowStart: hourIndex + 1, gridColumnStart: 1 }}
               >
-                {hour < 12
-                  ? `${hour} AM`
-                  : hour === 12
-                    ? '12 PM'
-                    : `${hour - 12} PM`}
+                {hour < 12 ? `${hour} AM` : hour === 12 ? '12 PM' : `${hour - 12} PM`}
               </div>
 
               {weekDays.map((day, dayIndex) => {
@@ -139,11 +120,7 @@ export function WeekView({
                 return (
                   <div
                     key={`cell-${day.toISOString()}-${hour}`}
-                    title={
-                      isHourDisabled
-                        ? 'Cannot create appointments in the past'
-                        : ''
-                    }
+                    title={isHourDisabled ? 'Cannot create appointments in the past' : ''}
                     className={cn(
                       'relative min-h-[80px] cursor-pointer overflow-hidden border-b border-r p-1',
                       {
@@ -167,12 +144,9 @@ export function WeekView({
                         const cellHeight = rect.height;
 
                         const clickRatio =
-                          cellHeight > 0
-                            ? Math.max(0, Math.min(1, clickY / cellHeight))
-                            : 0;
+                          cellHeight > 0 ? Math.max(0, Math.min(1, clickY / cellHeight)) : 0;
 
-                        const minutesOffset =
-                          Math.round((clickRatio * 60) / 15) * 15;
+                        const minutesOffset = Math.round((clickRatio * 60) / 15) * 15;
 
                         let targetHour = hour;
                         let targetMinutes = minutesOffset;
@@ -183,12 +157,7 @@ export function WeekView({
                         }
 
                         const clickedDateTime = new Date(day);
-                        clickedDateTime.setHours(
-                          targetHour,
-                          targetMinutes,
-                          0,
-                          0
-                        );
+                        clickedDateTime.setHours(targetHour, targetMinutes, 0, 0);
 
                         onTimeSlotClick(clickedDateTime);
                       }
@@ -197,28 +166,17 @@ export function WeekView({
                     {new Date().getHours() === hour && isToday(day) && (
                       <CurrentHourIndicator ref={ref} />
                     )}
-                    {dayAppointments
-                      .slice(0, MAX_APPOINTMENTS_IN_CELL)
-                      .map((appointment) => (
-                        <AppointmentTriggerItem
-                          key={appointment.aid}
-                          appointment={appointment}
-                        />
-                      ))}
+                    {dayAppointments.slice(0, MAX_APPOINTMENTS_IN_CELL).map((appointment) => (
+                      <AppointmentTriggerItem key={appointment.aid} appointment={appointment} />
+                    ))}
                     {/* Optionally, add a "X more" indicator if needed */}
                     {dayAppointments.length > MAX_APPOINTMENTS_IN_CELL && (
                       <Tooltip
-                        content={
-                          <AppointmentList
-                            appointments={dayAppointments}
-                            date={day}
-                          />
-                        }
+                        content={<AppointmentList appointments={dayAppointments} date={day} />}
                         onOpenChange={setIsTooltipOpen}
                       >
                         <button className="truncate rounded-lg p-1 px-2 text-start text-tiny hover:bg-default-100">
-                          {dayAppointments.length - MAX_APPOINTMENTS_IN_CELL}{' '}
-                          more
+                          {dayAppointments.length - MAX_APPOINTMENTS_IN_CELL} more
                         </button>
                       </Tooltip>
                     )}

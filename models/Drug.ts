@@ -43,20 +43,16 @@ drugSchema.pre('save', async function (next) {
   next();
 });
 
-drugSchema.pre(
-  ['findOneAndUpdate', 'updateOne', 'updateMany'],
-  async function (next) {
-    const session = await auth();
-    this.setUpdate({
-      ...this.getUpdate(),
-      updatedBy: session?.user?.email || 'system-admin@divinely.dev',
-    });
+drugSchema.pre(['findOneAndUpdate', 'updateOne', 'updateMany'], async function (next) {
+  const session = await auth();
+  this.setUpdate({
+    ...this.getUpdate(),
+    updatedBy: session?.user?.email || 'system-admin@divinely.dev',
+  });
 
-    next();
-  }
-);
+  next();
+});
 
-const Drug: Model<DrugType> =
-  mongoose.models.Drug || mongoose.model('Drug', drugSchema);
+const Drug: Model<DrugType> = mongoose.models.Drug || mongoose.model('Drug', drugSchema);
 
 export default Drug;

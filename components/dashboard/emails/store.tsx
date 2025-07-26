@@ -3,9 +3,9 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { create } from 'zustand';
 
-import { EmailType } from '@/types/email';
-
 import { ActionType } from './types';
+
+import { EmailType } from '@/types/email';
 
 interface EmailStoreState {
   selected: EmailType | null;
@@ -26,8 +26,7 @@ export const useEmailStore = create<EmailStoreState>((set) => ({
   resetState: () => set({ selected: null, action: null, keys: undefined }),
 }));
 export const useEmailForm = () => {
-  const { selected, action, setSelected, setAction, resetState } =
-    useEmailStore();
+  const { selected, action, setSelected, setAction, resetState } = useEmailStore();
 
   const formik = useFormik({
     initialValues: {

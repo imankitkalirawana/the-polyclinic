@@ -1,15 +1,12 @@
 'use client';
 
-import {
-  Button,
-  DropdownItem,
-  DropdownMenu,
-  Selection,
-  useDisclosure,
-} from '@heroui/react';
-import { useRouter } from 'nextjs-toploader/app';
 import { useMemo } from 'react';
+import { useRouter } from 'nextjs-toploader/app';
+import { Button, DropdownItem, DropdownMenu, Selection, useDisclosure } from '@heroui/react';
 import { toast } from 'sonner';
+
+import { UserQuickLook } from './quicklook';
+import { useDoctorStore } from './store';
 
 import Loading from '@/app/loading';
 import { Table } from '@/components/ui/data-table';
@@ -23,9 +20,6 @@ import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 import { castData } from '@/lib/utils';
 import { useAllDoctors, useDeleteDoctor } from '@/services/doctor';
 import { DoctorType } from '@/types/doctor';
-
-import { UserQuickLook } from './quicklook';
-import { useDoctorStore } from './store';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'image',
@@ -54,8 +48,8 @@ export default function Doctors() {
   };
 
   // Define columns with render functions
-  const columns: ColumnDef<DoctorType>[] = useMemo(() => {
-    return [
+  const columns: ColumnDef<DoctorType>[] = useMemo(
+    () => [
       {
         name: 'User ID',
         uid: 'uid',
@@ -78,9 +72,7 @@ export default function Doctors() {
         uid: 'email',
         sortable: true,
         renderCell: (doctor) => (
-          <div className="truncate lowercase text-default-foreground">
-            {doctor.email}
-          </div>
+          <div className="truncate lowercase text-default-foreground">{doctor.email}</div>
         ),
       },
       {
@@ -88,9 +80,7 @@ export default function Doctors() {
         uid: 'phone',
         sortable: true,
         renderCell: (doctor) => (
-          <div className="truncate text-default-foreground">
-            {doctor.phone || 'N/A'}
-          </div>
+          <div className="truncate text-default-foreground">{doctor.phone || 'N/A'}</div>
         ),
       },
       {
@@ -98,9 +88,7 @@ export default function Doctors() {
         uid: 'designation',
         sortable: true,
         renderCell: (doctor) => (
-          <div className="truncate text-default-foreground">
-            {doctor.designation || 'N/A'}
-          </div>
+          <div className="truncate text-default-foreground">{doctor.designation || 'N/A'}</div>
         ),
       },
       {
@@ -108,17 +96,14 @@ export default function Doctors() {
         uid: 'seating',
         sortable: true,
         renderCell: (doctor) => (
-          <div className="truncate text-default-foreground">
-            {doctor.seating || 'N/A'}
-          </div>
+          <div className="truncate text-default-foreground">{doctor.seating || 'N/A'}</div>
         ),
       },
       {
         name: 'Created At',
         uid: 'createdAt',
         sortable: true,
-        renderCell: (doctor) =>
-          renderDate({ date: doctor.createdAt, isTime: true }),
+        renderCell: (doctor) => renderDate({ date: doctor.createdAt, isTime: true }),
       },
 
       {
@@ -133,8 +118,9 @@ export default function Doctors() {
             onDelete: () => handleDelete(doctor.uid),
           }),
       },
-    ];
-  }, []);
+    ],
+    []
+  );
 
   // Define filters
   const filters: FilterDef<DoctorType>[] = useMemo(
@@ -179,66 +165,60 @@ export default function Doctors() {
 
   // Render top bar
   const endContent = () => (
-    <Button
-      color="primary"
-      size="sm"
-      onPress={() => router.push('/dashboard/doctors/new')}
-    >
+    <Button color="primary" size="sm" onPress={() => router.push('/dashboard/doctors/new')}>
       New Doctor
     </Button>
   );
 
-  const renderSelectedActions = (selectedKeys: Selection) => {
-    return (
-      <DropdownMenu aria-label="Selected Actions">
-        <DropdownItem
-          key="export"
-          onPress={async () => {
-            const ids = Array.from(selectedKeys);
+  const renderSelectedActions = (selectedKeys: Selection) => (
+    <DropdownMenu aria-label="Selected Actions">
+      <DropdownItem
+        key="export"
+        onPress={async () => {
+          const ids = Array.from(selectedKeys);
 
-            const exportPromise = fetch('/api/v1/doctors/export', {
-              method: 'POST',
-              body: JSON.stringify({ ids: selectedKeys === 'all' ? [] : ids }),
+          const exportPromise = fetch('/api/v1/doctors/export', {
+            method: 'POST',
+            body: JSON.stringify({ ids: selectedKeys === 'all' ? [] : ids }),
+          })
+            .then(async (res) => {
+              const blob = await res.blob();
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `doctors-${new Date().toISOString().split('T')[0]}.xlsx`;
+              document.body.appendChild(a);
+              a.click();
+              window.URL.revokeObjectURL(url);
+              document.body.removeChild(a);
+              return 'Users exported successfully';
             })
-              .then(async (res) => {
-                const blob = await res.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `doctors-${new Date().toISOString().split('T')[0]}.xlsx`;
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
-                return 'Users exported successfully';
-              })
-              .catch((err) => {
-                console.error(err);
-                return 'Failed to export doctors';
-              });
-
-            toast.promise(exportPromise, {
-              loading: 'Exporting doctors',
-              success: 'Users exported successfully',
-              error: 'Failed to export doctors',
+            .catch((err) => {
+              console.error(err);
+              return 'Failed to export doctors';
             });
-          }}
-        >
-          Export
-        </DropdownItem>
-        <DropdownItem
-          key="delete"
-          className="text-danger"
-          color="danger"
-          onPress={() => {
-            deleteModal.onOpen();
-          }}
-        >
-          Delete
-        </DropdownItem>
-      </DropdownMenu>
-    );
-  };
+
+          toast.promise(exportPromise, {
+            loading: 'Exporting doctors',
+            success: 'Users exported successfully',
+            error: 'Failed to export doctors',
+          });
+        }}
+      >
+        Export
+      </DropdownItem>
+      <DropdownItem
+        key="delete"
+        className="text-danger"
+        color="danger"
+        onPress={() => {
+          deleteModal.onOpen();
+        }}
+      >
+        Delete
+      </DropdownItem>
+    </DropdownMenu>
+  );
 
   const doctors = castData<DoctorType[]>(data);
 
@@ -262,9 +242,7 @@ export default function Doctors() {
           doctor.name.toLowerCase().includes(searchValue.toLowerCase()) ||
           doctor.email.toLowerCase().includes(searchValue.toLowerCase()) ||
           doctor.uid.toString().includes(searchValue) ||
-          (doctor.phone
-            ? doctor.phone.toLowerCase().includes(searchValue.toLowerCase())
-            : false)
+          (doctor.phone ? doctor.phone.toLowerCase().includes(searchValue.toLowerCase()) : false)
         }
         endContent={endContent}
         renderSelectedActions={renderSelectedActions}

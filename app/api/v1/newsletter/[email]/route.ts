@@ -5,14 +5,11 @@ import Newsletter from '@/models/Newsletter';
 
 export const DELETE = async function DELETE(_request: any, context: any) {
   try {
-    const email = (await context.params).email;
+    const { email } = await context.params;
     await connectDB();
     const newsletter = await Newsletter.findOneAndDelete({ email });
     if (!newsletter) {
-      return NextResponse.json(
-        { message: 'Newsletter not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: 'Newsletter not found' }, { status: 404 });
     }
     return NextResponse.json({ message: 'Newsletter deleted successfully' });
   } catch (error: any) {

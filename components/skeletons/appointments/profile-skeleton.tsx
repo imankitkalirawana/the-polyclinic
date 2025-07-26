@@ -1,5 +1,5 @@
-import { Card, cn } from '@heroui/react';
 import React from 'react';
+import { Card, cn } from '@heroui/react';
 
 import Skeleton from '@/components/ui/skeleton';
 
@@ -24,10 +24,8 @@ export default function ProfileSkeleton({ step = 0 }: { step?: number }) {
           <div className="flex flex-col items-start space-y-2">
             <Skeleton className="h-6 w-28" /> {/* User name */}
             <div className="flex items-start gap-2">
-              <Skeleton className="h-4 w-12 rounded-full" />{' '}
-              {/* User role badge */}
-              <Skeleton className="h-4 w-12 rounded-full" />{' '}
-              {/* Active status badge */}
+              <Skeleton className="h-4 w-12 rounded-full" /> {/* User role badge */}
+              <Skeleton className="h-4 w-12 rounded-full" /> {/* Active status badge */}
             </div>
           </div>
         </div>

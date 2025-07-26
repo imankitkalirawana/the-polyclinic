@@ -5,7 +5,7 @@ import { connectDB } from '@/lib/db';
 import Doctor from '@/models/Doctor';
 import User from '@/models/User';
 
-export const GET = auth(async function GET(request: any) {
+export const GET = auth(async (request: any) => {
   try {
     if (!request.auth?.user) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -51,7 +51,7 @@ export const GET = auth(async function GET(request: any) {
   }
 });
 
-export const POST = auth(async function POST(request: any) {
+export const POST = auth(async (request: any) => {
   try {
     if (!request.auth?.user) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -71,10 +71,7 @@ export const POST = auth(async function POST(request: any) {
       const user = await User.findOneAndUpdate({ uid }, { role: 'doctor' });
 
       if (!user) {
-        return NextResponse.json(
-          { message: 'User not found' },
-          { status: 404 }
-        );
+        return NextResponse.json({ message: 'User not found' }, { status: 404 });
       }
     } else {
       // if creation_type is new then create a new user then create a new doctor

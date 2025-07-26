@@ -4,12 +4,12 @@ import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import Email from '@/models/Email';
 
-export const GET = auth(async function GET(request: any, context: any) {
+export const GET = auth(async (request: any, context: any) => {
   try {
     if (request.auth?.user?.role !== 'admin') {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
-    const id = context.params.id;
+    const { id } = context.params;
     await connectDB();
     const email = await Email.findById(id);
     if (!email) {
@@ -22,13 +22,13 @@ export const GET = auth(async function GET(request: any, context: any) {
   }
 });
 
-export const DELETE = auth(async function DELETE(request: any, context: any) {
+export const DELETE = auth(async (request: any, context: any) => {
   try {
     if (request.auth?.user?.role !== 'admin') {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    const id = context.params.id;
+    const { id } = context.params;
     await connectDB();
     const email = await Email.findByIdAndDelete(id);
     if (!email) {

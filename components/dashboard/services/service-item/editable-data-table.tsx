@@ -1,12 +1,12 @@
 'use client';
 
-import 'react-quill/dist/quill.snow.css';
-
-import { Button, Tooltip } from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import { useFormik } from 'formik';
 import { useState } from 'react';
+import { Button, Tooltip } from '@heroui/react';
+import { useFormik } from 'formik';
 import ReactQuill from 'react-quill';
+import { Icon } from '@iconify/react/dist/iconify.js';
+
+import 'react-quill/dist/quill.snow.css';
 
 import { cn } from '@/lib/utils';
 
@@ -15,13 +15,10 @@ interface EditableDataTableProps {
   onChange?: (data: Record<string, string>) => void;
 }
 
-export default function EditableDataTable({
-  data,
-  onChange,
-}: EditableDataTableProps) {
+export default function EditableDataTable({ data, onChange }: EditableDataTableProps) {
   const formik = useFormik({
     initialValues: {
-      data: data,
+      data,
     },
     onSubmit: async (values) => {
       console.log('Updated Table Data:', values.data);
@@ -29,19 +26,11 @@ export default function EditableDataTable({
   });
 
   const [numRows, setNumRows] = useState(
-    Math.max(
-      ...Object.keys(formik.values.data).map((key) =>
-        parseInt(key.split('-')[1])
-      )
-    ) + 1
+    Math.max(...Object.keys(formik.values.data).map((key) => parseInt(key.split('-')[1]))) + 1
   );
 
   const [numCols, setNumCols] = useState(
-    Math.max(
-      ...Object.keys(formik.values.data).map((key) =>
-        parseInt(key.split('-')[2])
-      )
-    ) + 1
+    Math.max(...Object.keys(formik.values.data).map((key) => parseInt(key.split('-')[2]))) + 1
   );
 
   const handleInputChange = (key: string, value: string) => {
@@ -154,12 +143,7 @@ export default function EditableDataTable({
                       </Button>
                     </Tooltip>
                   )}
-                  <Tooltip
-                    content="Add Column (After)"
-                    size="sm"
-                    color="primary"
-                    showArrow
-                  >
+                  <Tooltip content="Add Column (After)" size="sm" color="primary" showArrow>
                     <Button
                       isIconOnly
                       radius="full"

@@ -1,3 +1,4 @@
+import { forwardRef, useState } from 'react';
 import {
   addToast,
   Button,
@@ -8,26 +9,23 @@ import {
   InputProps,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { forwardRef, useState } from 'react';
 
 import { sendOTP } from '@/lib/server-actions/auth';
 import { cn } from '@/lib/utils';
 import { $FixMe } from '@/types';
 
 // Input component with consistent styling for auth forms
-export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
-  return (
-    <HeroInput
-      ref={ref}
-      radius="lg"
-      {...props}
-      classNames={{
-        input: 'placeholder:text-default-400',
-        ...props.classNames,
-      }}
-    />
-  );
-});
+export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => (
+  <HeroInput
+    ref={ref}
+    radius="lg"
+    {...props}
+    classNames={{
+      input: 'placeholder:text-default-400',
+      ...props.classNames,
+    }}
+  />
+));
 
 // Password input with validation
 export const PasswordInput = forwardRef<
@@ -53,7 +51,7 @@ export const PasswordInput = forwardRef<
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    const { value } = e.target;
     setPassword(value);
     if (isValidation) {
       handleValidation(e);
@@ -65,7 +63,7 @@ export const PasswordInput = forwardRef<
   };
 
   const handleValidation = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    const { value } = e.target;
     const isNumber = /\d/.test(value);
     const isSymbol = /[!@#$%^&*]/.test(value);
     const isUppercase = /[A-Z]/.test(value);
@@ -99,10 +97,7 @@ export const PasswordInput = forwardRef<
               icon="solar:eye-closed-linear"
             />
           ) : (
-            <Icon
-              className="pointer-events-none text-2xl text-default-400"
-              icon="solar:eye-bold"
-            />
+            <Icon className="pointer-events-none text-2xl text-default-400" icon="solar:eye-bold" />
           )}
         </button>
       }
@@ -187,7 +182,7 @@ export const OtpInput = forwardRef<
     <div className="mb-2 flex flex-col items-center justify-center">
       <InputOtp ref={ref} radius="lg" length={4} name="otp" {...props} />
       <div className="flex flex-col items-center justify-between px-1 py-2 text-small text-default-500">
-        <p>Didn't receive the code?</p>
+        <p>Didn&apos;t receive the code?</p>
         <Button
           variant="light"
           size="sm"
@@ -212,13 +207,7 @@ export function PasswordGroupInput({
 }) {
   return (
     <div className="flex flex-col gap-2">
-      <Input
-        radius="lg"
-        label="Password"
-        name="password"
-        type="password"
-        {...passwordProps}
-      />
+      <Input radius="lg" label="Password" name="password" type="password" {...passwordProps} />
       <Input
         radius="lg"
         label="Confirm Password"
@@ -236,21 +225,11 @@ export const SubmitButton = forwardRef<
   ButtonProps & {
     children?: React.ReactNode;
   }
->(({ children, ...props }, ref) => {
-  return (
-    <Button
-      ref={ref}
-      color="primary"
-      type="submit"
-      fullWidth
-      radius="lg"
-      variant="shadow"
-      {...props}
-    >
-      {children}
-    </Button>
-  );
-});
+>(({ children, ...props }, ref) => (
+  <Button ref={ref} color="primary" type="submit" fullWidth radius="lg" variant="shadow" {...props}>
+    {children}
+  </Button>
+));
 
 Input.displayName = 'Input';
 PasswordInput.displayName = 'PasswordInput';

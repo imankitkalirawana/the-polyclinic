@@ -1,16 +1,9 @@
 'use client';
-import {
-  Button,
-  ButtonGroup,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  cn,
-} from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import { format } from 'date-fns';
+
 import { useState } from 'react';
+import { Button, ButtonGroup, Card, CardBody, CardFooter, CardHeader, cn } from '@heroui/react';
+import { format } from 'date-fns';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import Skeleton from '@/components/ui/skeleton';
@@ -21,8 +14,7 @@ import { AppointmentType } from '@/types/appointment';
 const APPOINTMENTS_PER_PAGE = 6;
 
 export default function Appointments() {
-  const { data: appointmentsData, isLoading: isAppointmentsLoading } =
-    useAllAppointments();
+  const { data: appointmentsData, isLoading: isAppointmentsLoading } = useAllAppointments();
 
   const appointments = castData<AppointmentType[]>(appointmentsData) || [];
 
@@ -50,18 +42,14 @@ export default function Appointments() {
             {APPOINTMENTS_PER_PAGE > appointments.length
               ? appointments.length
               : APPOINTMENTS_PER_PAGE}
-            <span className="text-tiny text-default-500">
-              /{appointments.length}
-            </span>
+            <span className="text-tiny text-default-500">/{appointments.length}</span>
           </p>
           <ButtonGroup isIconOnly size="sm" variant="flat">
             <Button isDisabled={page === 1} onPress={() => setPage(page - 1)}>
               <Icon icon="solar:alt-arrow-left-line-duotone" width={18} />
             </Button>
             <Button
-              isDisabled={
-                page === Math.ceil(appointments.length / APPOINTMENTS_PER_PAGE)
-              }
+              isDisabled={page === Math.ceil(appointments.length / APPOINTMENTS_PER_PAGE)}
               onPress={() => setPage(page + 1)}
             >
               <Icon icon="solar:alt-arrow-right-line-duotone" width={18} />
@@ -74,19 +62,14 @@ export default function Appointments() {
       ) : appointments.length > 0 ? (
         <CardBody className="grid grid-cols-3 grid-rows-2 gap-2">
           {appointments
-            ?.slice(
-              (page - 1) * APPOINTMENTS_PER_PAGE,
-              page * APPOINTMENTS_PER_PAGE
-            )
+            ?.slice((page - 1) * APPOINTMENTS_PER_PAGE, page * APPOINTMENTS_PER_PAGE)
             .map((appointment) => (
               <Card
                 isPressable
                 key={appointment.aid}
                 className={cn('flex flex-col gap-2 p-4', {
-                  'border border-danger-100 bg-danger-50':
-                    appointment.type === 'emergency',
-                  'border border-blue-100 bg-blue-50':
-                    appointment.type === 'follow-up',
+                  'border border-danger-100 bg-danger-50': appointment.type === 'emergency',
+                  'border border-blue-100 bg-blue-50': appointment.type === 'follow-up',
                 })}
               >
                 <CardHeader className="justify-between p-0">
@@ -99,14 +82,10 @@ export default function Appointments() {
                   })}
                 </CardHeader>
                 <CardBody className="overflow-hidden p-0">
-                  <p className="capitalize">
-                    {appointment.additionalInfo.type}
-                  </p>
+                  <p className="capitalize">{appointment.additionalInfo.type}</p>
                 </CardBody>
                 <CardFooter className="overflow-visible p-0">
-                  <p className="text-tiny text-default-500">
-                    {appointment.patient.name}
-                  </p>
+                  <p className="text-tiny text-default-500">{appointment.patient.name}</p>
                 </CardFooter>
               </Card>
             ))}

@@ -1,12 +1,12 @@
+import { NextResponse } from 'next/server';
 import { format } from 'date-fns';
 import ExcelJS from 'exceljs';
-import { NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import Drug from '@/models/Drug';
 
-export const GET = auth(async function GET(request: any) {
+export const GET = auth(async (request: any) => {
   try {
     if (request.auth?.user?.role !== 'admin') {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -54,8 +54,7 @@ export const GET = auth(async function GET(request: any) {
 
     return new NextResponse(buffer, {
       headers: {
-        'Content-Type':
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'Content-Disposition': 'attachment; filename="drugs.xlsx"',
       },
     });

@@ -16,10 +16,7 @@ export async function generateServices(count: number) {
       summary: faker.lorem.sentence(),
       price: faker.number.int({ min: 100, max: 9999 }),
       duration: faker.number.int({ min: 1, max: 72 }),
-      status: faker.helpers.arrayElement([
-        ServiceStatus.active,
-        ServiceStatus.inactive,
-      ]),
+      status: faker.helpers.arrayElement([ServiceStatus.active, ServiceStatus.inactive]),
       type: faker.helpers.arrayElement([
         ServiceTypes.medical,
         ServiceTypes.surgical,

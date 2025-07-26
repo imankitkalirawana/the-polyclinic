@@ -1,5 +1,5 @@
-import bcrypt from 'bcryptjs';
 import { NextResponse } from 'next/server';
+import bcrypt from 'bcryptjs';
 
 import { auth } from '@/auth';
 import { API_ACTIONS } from '@/lib/config';
@@ -7,14 +7,11 @@ import { connectDB } from '@/lib/db';
 import User from '@/models/User';
 
 // get user by id from param
-export const GET = auth(async function GET(request: any, context: any) {
+export const GET = auth(async (request: any, context: any) => {
   try {
     const uid = parseInt(context.params.uid);
 
-    if (
-      request.auth?.user?.role === 'user' &&
-      request.auth?.user?.uid !== uid
-    ) {
+    if (request.auth?.user?.role === 'user' && request.auth?.user?.uid !== uid) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
@@ -31,7 +28,7 @@ export const GET = auth(async function GET(request: any, context: any) {
   }
 });
 
-export const PUT = auth(async function PUT(request: any, context: any) {
+export const PUT = auth(async (request: any, context: any) => {
   try {
     const allowedRoles = ['admin', 'receptionist'];
     // @ts-ignore
@@ -44,7 +41,7 @@ export const PUT = auth(async function PUT(request: any, context: any) {
     const data = await request.json();
 
     await connectDB();
-    const uid = context.params.uid;
+    const { uid } = context.params;
 
     let user = await User.findOne({ uid });
     if (!user) {
@@ -69,7 +66,7 @@ export const PUT = auth(async function PUT(request: any, context: any) {
 });
 
 // delete user by id from param
-export const DELETE = auth(async function DELETE(request: any, context: any) {
+export const DELETE = auth(async (request: any, context: any) => {
   try {
     const allowedRoles = ['admin', 'receptionist'];
     // @ts-ignore
@@ -92,9 +89,6 @@ export const DELETE = auth(async function DELETE(request: any, context: any) {
     });
   } catch (error: any) {
     console.error(error);
-    return NextResponse.json(
-      { message: error?.message || 'An error occurred' },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: error?.message || 'An error occurred' }, { status: 500 });
   }
 });

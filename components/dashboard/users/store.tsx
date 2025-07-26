@@ -3,9 +3,9 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { create } from 'zustand';
 
-import { UserType } from '@/types/user';
-
 import { ActionType } from './types';
+
+import { UserType } from '@/types/user';
 
 interface UserStoreState {
   selected: UserType | null;
@@ -26,8 +26,7 @@ export const useUserStore = create<UserStoreState>((set) => ({
   resetState: () => set({ selected: null, action: null, keys: undefined }),
 }));
 export const useUserForm = () => {
-  const { selected, action, setSelected, setAction, resetState } =
-    useUserStore();
+  const { selected, action, setSelected, setAction, resetState } = useUserStore();
 
   const formik = useFormik({
     initialValues: {

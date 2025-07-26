@@ -9,45 +9,23 @@ import {
   Tab,
   Tabs,
 } from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
 import { format } from 'date-fns';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 import CancelDeleteAppointment from '@/components/appointments/ui/cancel-delete';
 import RescheduleAppointment from '@/components/appointments/ui/reschedule-modal';
 import ActivityTimeline from '@/components/ui/activity/timeline';
 import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
-import {
-  ButtonProps,
-  PermissionProps,
-} from '@/components/ui/dashboard/quicklook/types';
+import { ButtonProps, PermissionProps } from '@/components/ui/dashboard/quicklook/types';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { avatars } from '@/lib/avatar';
 import { useAppointmentStore } from '@/store/appointment';
-import {
-  ActionType,
-  AppointmentType,
-  DropdownKeyType,
-} from '@/types/appointment';
+import { ActionType, AppointmentType, DropdownKeyType } from '@/types/appointment';
 import { UserType } from '@/types/user';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
-  doctor: [
-    'cancel',
-    'reschedule',
-    'reminder',
-    'new-tab',
-    'add-to-calendar',
-    'invoice',
-    'reports',
-  ],
-  user: [
-    'cancel',
-    'reschedule',
-    'new-tab',
-    'add-to-calendar',
-    'invoice',
-    'reports',
-  ],
+  doctor: ['cancel', 'reschedule', 'reminder', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
+  user: ['cancel', 'reschedule', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
   admin: 'all',
   nurse: ['cancel', 'reschedule'],
   receptionist: ['cancel', 'reschedule', 'reminder'],
@@ -86,8 +64,7 @@ export const content = (appointment: AppointmentType) => [
   },
   {
     label: 'Mode',
-    value: () =>
-      appointment.additionalInfo.type === 'online' ? 'Online' : 'In Clinic',
+    value: () => (appointment.additionalInfo.type === 'online' ? 'Online' : 'In Clinic'),
     icon: 'solar:map-point-bold-duotone',
     classNames: { icon: 'text-teal-500 bg-teal-50' },
   },
@@ -170,29 +147,19 @@ export const sidebarContent = (appointment: AppointmentType) => (
         <Button
           size="sm"
           variant="bordered"
-          startContent={
-            <Icon icon="solar:chat-round-line-bold-duotone" width="20" />
-          }
+          startContent={<Icon icon="solar:chat-round-line-bold-duotone" width="20" />}
         >
           Message
         </Button>
         <Dropdown placement="bottom-end" aria-label="Patient actions">
           <DropdownTrigger>
             <Button size="sm" variant="bordered" isIconOnly>
-              <Icon
-                icon="solar:menu-dots-bold"
-                width="20"
-                className="rotate-90"
-              />
+              <Icon icon="solar:menu-dots-bold" width="20" className="rotate-90" />
             </Button>
           </DropdownTrigger>
           <DropdownMenu>
             <DropdownItem key="edit">Edit</DropdownItem>
-            <DropdownItem
-              color="danger"
-              className="text-danger-500"
-              key="delete"
-            >
+            <DropdownItem color="danger" className="text-danger-500" key="delete">
               Delete
             </DropdownItem>
           </DropdownMenu>
@@ -209,11 +176,9 @@ export const sidebarContent = (appointment: AppointmentType) => (
               </div>
               <span className="capitalize text-default-400">UID</span>
             </div>
-            <span className="capitalize text-default-foreground">
-              {appointment.patient.uid}
-            </span>
+            <span className="capitalize text-default-foreground">{appointment.patient.uid}</span>
           </div>
-          <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20"></div>
+          <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20" />
           <div className="flex items-center justify-between gap-4 text-small">
             <div className="flex items-center gap-2">
               <div className="rounded-medium bg-pink-200 p-[5px] text-pink-400">
@@ -221,9 +186,7 @@ export const sidebarContent = (appointment: AppointmentType) => (
               </div>
               <span className="capitalize text-default-400">Name</span>
             </div>
-            <span className="capitalize text-default-foreground">
-              {appointment.patient.name}
-            </span>
+            <span className="capitalize text-default-foreground">{appointment.patient.name}</span>
           </div>
         </div>
       </Tab>
@@ -247,9 +210,7 @@ export const useAppointmentButtons = ({
     {
       key: 'new-tab',
       children: 'Open in new tab',
-      startContent: (
-        <Icon icon="solar:arrow-right-up-line-duotone" width="20" />
-      ),
+      startContent: <Icon icon="solar:arrow-right-up-line-duotone" width="20" />,
       color: 'default',
       variant: 'flat',
       position: 'left',
@@ -277,10 +238,7 @@ export const useAppointmentButtons = ({
         }
       },
       content: appointment && (
-        <AddToCalendar
-          appointment={appointment}
-          onClose={() => setAction(null)}
-        />
+        <AddToCalendar appointment={appointment} onClose={() => setAction(null)} />
       ),
     },
     {

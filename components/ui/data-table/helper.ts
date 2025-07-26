@@ -1,7 +1,6 @@
 import { Selection } from '@heroui/react';
 
-export const isAll = (selection: Selection): selection is 'all' =>
-  selection === 'all';
+export const isAll = (selection: Selection): selection is 'all' => selection === 'all';
 
 export const convertSelectionToKeys = (selection: Selection): number[] => {
   let keys = [];

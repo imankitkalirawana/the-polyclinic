@@ -62,20 +62,16 @@ serviceSchema.pre('save', async function (next) {
   next();
 });
 
-serviceSchema.pre(
-  ['findOneAndUpdate', 'updateOne', 'updateMany'],
-  async function (next) {
-    const session = await auth();
-    this.setUpdate({
-      ...this.getUpdate(),
-      updatedBy: session?.user?.email || 'system-admin@divinely.dev',
-    });
-    next();
-  }
-);
+serviceSchema.pre(['findOneAndUpdate', 'updateOne', 'updateMany'], async function (next) {
+  const session = await auth();
+  this.setUpdate({
+    ...this.getUpdate(),
+    updatedBy: session?.user?.email || 'system-admin@divinely.dev',
+  });
+  next();
+});
 
 const Service: Model<ServiceType> =
-  mongoose.models.Service ||
-  mongoose.model<ServiceType>('Service', serviceSchema);
+  mongoose.models.Service || mongoose.model<ServiceType>('Service', serviceSchema);
 
 export default Service;

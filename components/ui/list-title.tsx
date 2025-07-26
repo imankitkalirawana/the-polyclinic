@@ -16,19 +16,12 @@ interface ListTitleProps {
 
 export default function ListTitle(props: ListTitleProps) {
   return (
-    <>
-      <div
-        className={cn(
-          'my-4 flex items-center justify-between',
-          props.className
-        )}
-      >
-        <div className="flex items-center gap-2">
-          {props.icon}
-          <h1>{props.title || 'Title'}</h1>
-        </div>
-        <div>{props.button}</div>
+    <div className={cn('my-4 flex items-center justify-between', props.className)}>
+      <div className="flex items-center gap-2">
+        {props.icon}
+        <h1>{props.title || 'Title'}</h1>
       </div>
-    </>
+      <div>{props.button}</div>
+    </div>
   );
 }

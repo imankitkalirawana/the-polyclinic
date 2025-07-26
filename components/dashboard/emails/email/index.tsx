@@ -30,10 +30,7 @@ export default function Email({ id }: { id: string }) {
     <div className="mx-auto w-full">
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between border-b p-4">
-        <h1
-          title={email?.subject}
-          className="line-clamp-1 text-large font-medium"
-        >
+        <h1 title={email?.subject} className="line-clamp-1 text-large font-medium">
           {email?.subject}
         </h1>
         <span

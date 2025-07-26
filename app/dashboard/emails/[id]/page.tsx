@@ -1,8 +1,4 @@
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from '@tanstack/react-query';
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 import Email from '@/components/dashboard/emails/email';
 import { getEmailWithID } from '@/services/api/email';
@@ -28,10 +24,8 @@ export default async function Page(props: Props) {
   });
 
   return (
-    <>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <Email id={params.id} />
-      </HydrationBoundary>
-    </>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <Email id={params.id} />
+    </HydrationBoundary>
   );
 }

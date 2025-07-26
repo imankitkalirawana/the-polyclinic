@@ -1,5 +1,5 @@
-import bcrypt from 'bcryptjs';
 import { NextResponse } from 'next/server';
+import bcrypt from 'bcryptjs';
 
 import { auth } from '@/auth';
 import { API_ACTIONS } from '@/lib/config';
@@ -8,15 +8,9 @@ import User from '@/models/User';
 import { $FixMe } from '@/types';
 
 // get user by id from param
-export const GET = auth(async function GET(request: $FixMe, context: $FixMe) {
+export const GET = auth(async (request: $FixMe, context: $FixMe) => {
   try {
-    const allowedRoles = [
-      'admin',
-      'doctor',
-      'receptionist',
-      'nurse',
-      'pharmacist',
-    ];
+    const allowedRoles = ['admin', 'doctor', 'receptionist', 'nurse', 'pharmacist'];
 
     if (request.auth?.user?.uid !== context?.params?.uid) {
       if (!allowedRoles.includes(request.auth?.user?.role)) {
@@ -37,7 +31,7 @@ export const GET = auth(async function GET(request: $FixMe, context: $FixMe) {
 });
 
 // update user by id from param
-export const PUT = auth(async function PUT(request: $FixMe, context: $FixMe) {
+export const PUT = auth(async (request: $FixMe, context: $FixMe) => {
   try {
     const allowedRoles = ['admin', 'doctor', 'receptionist'];
     if (request.auth?.user?.uid !== context?.params?.uid) {
@@ -68,10 +62,7 @@ export const PUT = auth(async function PUT(request: $FixMe, context: $FixMe) {
 });
 
 // delete user by id from param
-export const DELETE = auth(async function DELETE(
-  request: $FixMe,
-  context: $FixMe
-) {
+export const DELETE = auth(async (request: $FixMe, context: $FixMe) => {
   try {
     const allowedRoles = ['admin', 'doctor', 'receptionist'];
     if (request.auth?.user?.uid !== context?.params?.uid) {
@@ -93,9 +84,6 @@ export const DELETE = auth(async function DELETE(
     return NextResponse.json({ message: 'User deleted' });
   } catch (error: $FixMe) {
     console.error(error);
-    return NextResponse.json(
-      { message: error?.message || 'An error occurred' },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: error?.message || 'An error occurred' }, { status: 500 });
   }
 });

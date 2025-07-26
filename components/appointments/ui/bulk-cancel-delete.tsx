@@ -1,7 +1,7 @@
-import { addToast, Card, CardBody, ScrollShadow, User } from '@heroui/react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { format } from 'date-fns';
 import React, { useMemo } from 'react';
+import { addToast, Card, CardBody, ScrollShadow, User } from '@heroui/react';
+import { format } from 'date-fns';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import Modal from '@/components/ui/modal';
@@ -22,38 +22,34 @@ export default function CancelDeleteAppointments({
   const body = React.useMemo(
     () => (
       <Card className="w-full border-small border-divider bg-default-50 shadow-none">
-        <CardBody
-          as={ScrollShadow}
-          className="flex max-h-[300px] flex-col gap-2 scrollbar-hide"
-        >
-          {appointments.map((appointment) => {
-            return (
-              <div className="flex items-center justify-between gap-4">
-                <User
-                  name={appointment.patient.name}
-                  avatarProps={{
-                    src: appointment.patient.image,
-                    size: 'sm',
-                    name: appointment.patient.name,
-                  }}
-                  classNames={{
-                    description: 'text-default-400 text-tiny',
-                  }}
-                  description={`#${appointment.aid} - ${format(new Date(appointment.date), 'PP')}`}
-                />
-                {renderChip({ item: appointment.status })}
-              </div>
-            );
-          })}
+        <CardBody as={ScrollShadow} className="flex max-h-[300px] flex-col gap-2 scrollbar-hide">
+          {appointments.map((appointment) => (
+            <div className="flex items-center justify-between gap-4" key={appointment.aid}>
+              <User
+                name={appointment.patient.name}
+                avatarProps={{
+                  src: appointment.patient.image,
+                  size: 'sm',
+                  name: appointment.patient.name,
+                }}
+                classNames={{
+                  description: 'text-default-400 text-tiny',
+                }}
+                description={`#${appointment.aid} - ${format(new Date(appointment.date), 'PP')}`}
+              />
+              {renderChip({ item: appointment.status })}
+            </div>
+          ))}
         </CardBody>
       </Card>
     ),
     [appointments]
   );
 
-  const ids = useMemo(() => {
-    return appointments.map((appointment) => appointment.aid);
-  }, [appointments, type]);
+  const ids = useMemo(
+    () => appointments.map((appointment) => appointment.aid),
+    [appointments, type]
+  );
 
   const cancelDeleteMutation = useMutation({
     mutationFn: async () =>

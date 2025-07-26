@@ -1,8 +1,4 @@
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from '@tanstack/react-query';
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 import Appointment from '@/components/appointments/id';
 import { getAppointmentWithAID } from '@/services/api/appointment';
@@ -28,10 +24,8 @@ export default async function Page(props: Props) {
   });
 
   return (
-    <>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <Appointment aid={params.aid} />
-      </HydrationBoundary>
-    </>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <Appointment aid={params.aid} />
+    </HydrationBoundary>
   );
 }

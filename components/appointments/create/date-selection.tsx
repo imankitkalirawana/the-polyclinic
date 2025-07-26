@@ -1,13 +1,14 @@
 'use client';
+
 import { Calendar, cn } from '@heroui/react';
+import { format } from 'date-fns';
 import { CalendarDate, getLocalTimeZone, today } from '@internationalized/date';
 import { useLocale } from '@react-aria/i18n';
-import { format } from 'date-fns';
+
+import { isDateUnavailable } from './helper';
 
 import CalendarTimeSelect from '@/components/ui/calendar/booking/calendar-time-select';
 import { TIMINGS } from '@/lib/config';
-
-import { isDateUnavailable } from './helper';
 
 export default function DateSelection({
   onSubmit,
@@ -32,13 +33,7 @@ export default function DateSelection({
           days: TIMINGS.booking.maximum,
         })}
         // @ts-expect-error - TODO: fix this
-        value={
-          new CalendarDate(
-            date.getFullYear(),
-            date.getMonth() + 1,
-            date.getDate()
-          )
-        }
+        value={new CalendarDate(date.getFullYear(), date.getMonth() + 1, date.getDate())}
         onChange={(selectedDate: CalendarDate) => {
           // Preserve the current time when changing the date
           const newDate = new Date(
@@ -67,22 +62,12 @@ export default function DateSelection({
             'w-full h-9 rounded-medium data-[selected]:shadow-[0_2px_12px_0] data-[selected]:shadow-primary-300 text-small font-medium',
         }}
       />
-      <CalendarTimeSelect
-        date={date}
-        onConfirm={handleTimeConfirm}
-        setDate={setDate}
-      />
+      <CalendarTimeSelect date={date} onConfirm={handleTimeConfirm} setDate={setDate} />
     </div>
   );
 }
 
-export function DateSelectionTitle({
-  date,
-  isSelected,
-}: {
-  date: Date;
-  isSelected: boolean;
-}) {
+export function DateSelectionTitle({ date, isSelected }: { date: Date; isSelected: boolean }) {
   return date ? (
     <h3
       className={cn('text-2xl font-semibold transition-all', {

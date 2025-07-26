@@ -1,15 +1,9 @@
 'use client';
 
-import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  ScrollShadow,
-} from '@heroui/react';
-import { format } from 'date-fns';
-import Link from 'next/link';
 import React from 'react';
+import Link from 'next/link';
+import { Button, Card, CardBody, CardHeader, ScrollShadow } from '@heroui/react';
+import { format } from 'date-fns';
 
 import CellValue from '@/components/ui/cell-value';
 import { useDrugWithDid } from '@/services/drug';
@@ -29,15 +23,9 @@ export default function DrugCard({ did }: { did: number }) {
       <CardHeader className="justify-between px-0">
         <div className="flex flex-col items-start">
           <p className="text-large">Drug Details</p>
-          <p className="text-small text-default-500">
-            View and manage drug details
-          </p>
+          <p className="text-small text-default-500">View and manage drug details</p>
         </div>
-        <Button
-          color="primary"
-          as={Link}
-          href={`/dashboard/drugs/${drug.did}/edit`}
-        >
+        <Button color="primary" as={Link} href={`/dashboard/drugs/${drug.did}/edit`}>
           Edit
         </Button>
       </CardHeader>

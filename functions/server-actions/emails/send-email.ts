@@ -26,18 +26,14 @@ export const sendHTMLEmail = async (
     }
     await transporter
       .sendMail(options)
-      .then(async () => {
-        return {
-          success: true,
-          message: 'Email sent successfully',
-        };
-      })
-      .catch((err) => {
-        return {
-          success: false,
-          message: err.message,
-        };
-      });
+      .then(async () => ({
+        success: true,
+        message: 'Email sent successfully',
+      }))
+      .catch((err) => ({
+        success: false,
+        message: err.message,
+      }));
   });
   return {
     success: false,

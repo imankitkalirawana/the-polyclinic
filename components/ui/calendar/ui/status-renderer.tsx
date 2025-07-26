@@ -1,5 +1,5 @@
-import { cn, Tooltip } from '@heroui/react';
 import React from 'react';
+import { cn, Tooltip } from '@heroui/react';
 
 import { chipColorMap } from '@/lib/chip';
 import { AppointmentType } from '@/types/appointment';
@@ -37,7 +37,7 @@ export default function StatusRenderer({
             'rounded-full',
             chipColorMap[status].text
           )}
-        ></span>
+        />
         {!isDotOnly && (
           <span className={cn('text-tiny capitalize', className)}>
             {status.split('-').join(' ')}

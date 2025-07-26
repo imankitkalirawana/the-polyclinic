@@ -1,13 +1,14 @@
 'use client';
+
+import React from 'react';
 import { Button } from '@heroui/react';
 import { AnimatePresence, domAnimation, LazyMotion, m } from 'framer-motion';
-import React from 'react';
-
-import Logo from '@/components/ui/logo';
-import { BlurIn } from '@/components/ui/text/blur-in';
 
 import { Header } from './header';
 import { AuthProps } from './types';
+
+import Logo from '@/components/ui/logo';
+import { BlurIn } from '@/components/ui/text/blur-in';
 
 // Animation variants
 const variants = {
@@ -28,13 +29,7 @@ const variants = {
 };
 
 // Reusable Auth Flow Component
-const Auth: React.FC<AuthProps> = ({
-  steps,
-  formik,
-  paginate,
-  footer,
-  showFullPage = true,
-}) => {
+const Auth: React.FC<AuthProps> = ({ steps, formik, paginate, footer, showFullPage = true }) => {
   const currentStep = steps[formik.values.page];
 
   const renderContent = () => (
@@ -45,11 +40,7 @@ const Auth: React.FC<AuthProps> = ({
         isBack={formik.values.page > 0}
         onBack={() => paginate(-1)}
       />
-      <AnimatePresence
-        custom={formik.values.direction}
-        initial={false}
-        mode="wait"
-      >
+      <AnimatePresence custom={formik.values.direction} initial={false} mode="wait">
         <m.form
           key={formik.values.page}
           animate="center"

@@ -1,4 +1,5 @@
 import { $FixMe } from '@/types';
+
 export type Schema = 'appointment' | 'user' | 'drug' | 'service';
 
 export enum Status {

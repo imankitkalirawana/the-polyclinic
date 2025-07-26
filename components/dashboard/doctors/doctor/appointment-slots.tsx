@@ -1,18 +1,11 @@
 'use client';
-import { faker } from '@faker-js/faker';
-import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  cn,
-  ScrollShadow,
-  Tooltip,
-} from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import Link from 'next/link';
+
 import { useState } from 'react';
+import Link from 'next/link';
+import { Button, Card, CardBody, CardHeader, cn, ScrollShadow, Tooltip } from '@heroui/react';
 import { v4 as uuidv4 } from 'uuid';
+import { faker } from '@faker-js/faker';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 import { TIMINGS } from '@/lib/config';
 
@@ -85,11 +78,7 @@ export default function AppointmentSlots({ uid }: { uid: number }) {
         orientation="horizontal"
       >
         {slots.map((slot) => (
-          <Tooltip
-            key={slot.id}
-            content={`${slot.slots} slots available`}
-            placement="top"
-          >
+          <Tooltip key={slot.id} content={`${slot.slots} slots available`} placement="top">
             <Card
               isPressable
               isDisabled={!slot.isAvailable}

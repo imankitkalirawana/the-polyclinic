@@ -3,9 +3,9 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { create } from 'zustand';
 
-import { DoctorType } from '@/types/doctor';
-
 import { ActionType } from './types';
+
+import { DoctorType } from '@/types/doctor';
 
 interface DoctorStoreState {
   selected: DoctorType | null;
@@ -27,8 +27,7 @@ export const useDoctorStore = create<DoctorStoreState>((set) => ({
 }));
 
 export const useDoctorForm = () => {
-  const { selected, action, setSelected, setAction, resetState } =
-    useDoctorStore();
+  const { selected, action, setSelected, setAction, resetState } = useDoctorStore();
 
   const formik = useFormik({
     initialValues: {
@@ -40,9 +39,7 @@ export const useDoctorForm = () => {
       selected: Yup.object()
         .shape({
           name: Yup.string().required('Name is required'),
-          email: Yup.string()
-            .email('Invalid email')
-            .required('Email is required'),
+          email: Yup.string().email('Invalid email').required('Email is required'),
           phone: Yup.string().required('Phone is required'),
           designation: Yup.string().required('Designation is required'),
           image: Yup.string().required('Image is required'),

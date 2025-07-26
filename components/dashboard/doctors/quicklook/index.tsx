@@ -1,19 +1,16 @@
+import { useMemo } from 'react';
 import { addToast } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useMemo } from 'react';
-
-import QuickLook from '@/components/ui/dashboard/quicklook';
-import {
-  ButtonProps,
-  DropdownItemProps,
-} from '@/components/ui/dashboard/quicklook/types';
-import { DoctorType } from '@/types/doctor';
 
 import { useDoctorStore } from '../store';
 import { ActionType, DropdownKeyType } from '../types';
 import { permissions, sidebarContent } from './data';
 
-export const UserQuickLook = () => {
+import QuickLook from '@/components/ui/dashboard/quicklook';
+import { ButtonProps, DropdownItemProps } from '@/components/ui/dashboard/quicklook/types';
+import { DoctorType } from '@/types/doctor';
+
+export function UserQuickLook() {
   const { selected, setSelected, setAction, action } = useDoctorStore();
 
   const buttons: Array<Partial<ButtonProps<ActionType>>> = useMemo(
@@ -21,9 +18,7 @@ export const UserQuickLook = () => {
       {
         key: 'new-tab',
         children: 'Open in new tab',
-        startContent: (
-          <Icon icon="solar:arrow-right-up-line-duotone" width="20" />
-        ),
+        startContent: <Icon icon="solar:arrow-right-up-line-duotone" width="20" />,
         color: 'default',
         variant: 'flat',
         position: 'left',
@@ -42,9 +37,7 @@ export const UserQuickLook = () => {
       {
         key: 'invoice',
         children: 'Download Invoice',
-        startContent: (
-          <Icon icon="solar:file-download-bold-duotone" width="20" />
-        ),
+        startContent: <Icon icon="solar:file-download-bold-duotone" width="20" />,
         onPress: () =>
           addToast({
             title: 'Invoice Downloaded',
@@ -56,9 +49,7 @@ export const UserQuickLook = () => {
       {
         key: 'edit',
         children: 'Edit User',
-        startContent: (
-          <Icon icon="solar:pen-new-square-bold-duotone" width="20" />
-        ),
+        startContent: <Icon icon="solar:pen-new-square-bold-duotone" width="20" />,
         onPress: () =>
           addToast({
             title: 'User Edited',
@@ -124,4 +115,4 @@ export const UserQuickLook = () => {
       content={content(selected)}
     />
   );
-};
+}

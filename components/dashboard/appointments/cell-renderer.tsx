@@ -4,11 +4,7 @@ import { format } from 'date-fns';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { AppointmentType } from '@/types/appointment';
 
-export function ModalCellRenderer({
-  appointment,
-}: {
-  appointment: AppointmentType;
-}) {
+export function ModalCellRenderer({ appointment }: { appointment: AppointmentType }) {
   return (
     <div className="flex items-center justify-between gap-4">
       <User

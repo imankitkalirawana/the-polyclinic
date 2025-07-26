@@ -1,19 +1,16 @@
-import { Icon } from '@iconify/react/dist/iconify.js';
 import { useMemo } from 'react';
-
-import QuickLook from '@/components/ui/dashboard/quicklook';
-import {
-  ButtonProps,
-  DropdownItemProps,
-} from '@/components/ui/dashboard/quicklook/types';
-import { renderChip } from '@/components/ui/data-table/cell-renderers';
-import { ServiceType } from '@/types/service';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 import { useServiceStore } from '../store';
 import { ActionType, DropdownKeyType } from '../types';
 import { permissions } from './data';
 
-export const ServiceQuickLook = () => {
+import QuickLook from '@/components/ui/dashboard/quicklook';
+import { ButtonProps, DropdownItemProps } from '@/components/ui/dashboard/quicklook/types';
+import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import { ServiceType } from '@/types/service';
+
+export function ServiceQuickLook() {
   const { selected, setSelected, setAction, action } = useServiceStore();
 
   const buttons: Array<Partial<ButtonProps<ActionType>>> = useMemo(
@@ -21,9 +18,7 @@ export const ServiceQuickLook = () => {
       {
         key: 'new-tab',
         children: 'Open in new tab',
-        startContent: (
-          <Icon icon="solar:arrow-right-up-line-duotone" width="20" />
-        ),
+        startContent: <Icon icon="solar:arrow-right-up-line-duotone" width="20" />,
         color: 'default',
         variant: 'flat',
         position: 'left',
@@ -120,4 +115,4 @@ export const ServiceQuickLook = () => {
       content={content(selected)}
     />
   );
-};
+}

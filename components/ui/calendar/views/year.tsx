@@ -1,12 +1,7 @@
 'use client';
 
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  ScrollShadow,
-  Tooltip,
-} from '@heroui/react';
+import React, { memo, useMemo } from 'react';
+import { Card, CardBody, CardHeader, ScrollShadow, Tooltip } from '@heroui/react';
 import {
   eachDayOfInterval,
   eachMonthOfInterval,
@@ -20,14 +15,13 @@ import {
   startOfWeek,
   startOfYear,
 } from 'date-fns';
-import React, { memo, useMemo } from 'react';
+
+import { weekdays } from '../data';
+import AppointmentList from '../ui/appointment-list';
 
 import { cn } from '@/lib/utils';
 import { useAppointmentStore } from '@/store/appointment';
 import { AppointmentType } from '@/types/appointment';
-
-import { weekdays } from '../data';
-import AppointmentList from '../ui/appointment-list';
 
 interface YearViewProps {
   appointments: AppointmentType[];
@@ -77,8 +71,7 @@ const DayCell = memo(
               'hover:bg-default-100': !hasAppointments,
               'text-white': hasAppointments,
               [colorDensityMap[appointmentCount]]: hasAppointments,
-              'bg-secondary text-secondary-foreground hover:bg-secondary-300':
-                isDayToday,
+              'bg-secondary text-secondary-foreground hover:bg-secondary-300': isDayToday,
             }
           )}
         >
@@ -188,10 +181,7 @@ export function YearView({ appointments, currentDate }: YearViewProps) {
       <div className="mx-auto grid w-fit auto-rows-fr grid-cols-1 place-items-center gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
         {months.map((month) => (
           <div key={month.toISOString()}>
-            <MonthCalendar
-              month={month}
-              appointmentsByDate={appointmentsByDate}
-            />
+            <MonthCalendar month={month} appointmentsByDate={appointmentsByDate} />
           </div>
         ))}
       </div>

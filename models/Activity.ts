@@ -28,8 +28,6 @@ const ActivityLogSchema = new mongoose.Schema<ActivityLogType>(
   }
 );
 
-const ActivityLog =
-  mongoose.models.ActivityLog ||
-  mongoose.model('ActivityLog', ActivityLogSchema);
+const ActivityLog = mongoose.models.ActivityLog || mongoose.model('ActivityLog', ActivityLogSchema);
 
 export default ActivityLog;

@@ -3,9 +3,9 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { create } from 'zustand';
 
-import { DrugType } from '@/types/drug';
-
 import { ActionType } from './types';
+
+import { DrugType } from '@/types/drug';
 
 interface DrugStoreState {
   selected: DrugType | null;
@@ -26,8 +26,7 @@ export const useDrugStore = create<DrugStoreState>((set) => ({
   resetState: () => set({ selected: null, action: null, keys: undefined }),
 }));
 export const useDrugForm = () => {
-  const { selected, action, setSelected, setAction, resetState } =
-    useDrugStore();
+  const { selected, action, setSelected, setAction, resetState } = useDrugStore();
 
   const formik = useFormik({
     initialValues: {

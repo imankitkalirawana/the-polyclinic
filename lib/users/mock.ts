@@ -20,17 +20,17 @@ export async function generateUsers({
       phone: faker.phone.number(),
       password: faker.internet.password(),
       name: faker.person.fullName(),
-      role: role
-        ? role
-        : faker.helpers.arrayElement([
-            'user',
-            'admin',
-            'receptionist',
-            'nurse',
-            'doctor',
-            'pharmacist',
-            'laboratorist',
-          ]),
+      role:
+        role ||
+        faker.helpers.arrayElement([
+          'user',
+          'admin',
+          'receptionist',
+          'nurse',
+          'doctor',
+          'pharmacist',
+          'laboratorist',
+        ]),
       status: faker.helpers.arrayElement(['active', 'inactive', 'blocked']),
       country: faker.location.country(),
       state: faker.location.state(),
@@ -38,9 +38,7 @@ export async function generateUsers({
       address: faker.location.streetAddress(),
       zipcode: faker.location.zipCode(),
       passwordResetToken: faker.string.uuid(),
-      dob: faker.date
-        .birthdate({ min: 18, max: 60, mode: 'age' })
-        .toISOString(),
+      dob: faker.date.birthdate({ min: 18, max: 60, mode: 'age' }).toISOString(),
       gender: faker.person.sexType(),
       image: faker.image.avatar(),
       createdAt: faker.date.recent(),

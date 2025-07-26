@@ -1,22 +1,23 @@
 'use client';
+
+import { createContext, useContext } from 'react';
+import { useRouter } from 'nextjs-toploader/app';
 import { addToast } from '@heroui/react';
 import { useFormik } from 'formik';
-import { useRouter } from 'nextjs-toploader/app';
 import { useQueryState } from 'nuqs';
-import { createContext, useContext } from 'react';
 import * as Yup from 'yup';
+
+import { AuthContextType, FlowType } from './types';
 
 import { verifyEmail } from '@/functions/server-actions/auth/verification';
 import { login, register, sendOTP, verifyOTP } from '@/lib/server-actions/auth';
 import { $FixMe } from '@/types';
 
-import { AuthContextType, FlowType } from './types';
-
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Provider Factory
-export const createAuthProvider = (flowType: FlowType) => {
-  return ({ children }: { children: React.ReactNode }) => {
+export const createAuthProvider = (flowType: FlowType) =>
+  function AuthProvider({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const [email] = useQueryState('email');
 
@@ -153,7 +154,6 @@ export const createAuthProvider = (flowType: FlowType) => {
           case 'forgot-password':
             return handleForgotPasswordSubmit(values, { setFieldError });
           default:
-            return;
         }
       } catch {
         addToast({
@@ -165,17 +165,13 @@ export const createAuthProvider = (flowType: FlowType) => {
     };
 
     // Registration flow
-    const handleRegisterSubmit = async (
-      values: $FixMe,
-      { setFieldError }: $FixMe
-    ) => {
+    const handleRegisterSubmit = async (values: $FixMe, { setFieldError }: $FixMe) => {
       if (values.page === 0) {
         paginate(1);
       } else if (values.page === 1) {
         // Check if email exists
         if (await verifyEmail(values.email)) {
           setFieldError('email', 'Email already exists');
-          return;
         } else {
           paginate(1);
         }
@@ -227,10 +223,7 @@ export const createAuthProvider = (flowType: FlowType) => {
     };
 
     // Login flow
-    const handleLoginSubmit = async (
-      values: $FixMe,
-      { setFieldError }: $FixMe
-    ) => {
+    const handleLoginSubmit = async (values: $FixMe, { setFieldError }: $FixMe) => {
       if (values.page === 0) {
         paginate(1);
       }
@@ -238,7 +231,6 @@ export const createAuthProvider = (flowType: FlowType) => {
         // Check if email exists
         if (!(await verifyEmail(values.email))) {
           setFieldError('email', 'Email not found');
-          return;
         } else {
           paginate(1);
         }
@@ -257,10 +249,7 @@ export const createAuthProvider = (flowType: FlowType) => {
     };
 
     // Forgot password flow
-    const handleForgotPasswordSubmit = async (
-      values: $FixMe,
-      { setFieldError }: $FixMe
-    ) => {
+    const handleForgotPasswordSubmit = async (values: $FixMe, { setFieldError }: $FixMe) => {
       if (values.page === 0) {
         // Send OTP
         const res = await sendOTP({
@@ -312,7 +301,7 @@ export const createAuthProvider = (flowType: FlowType) => {
             description: 'You can now login with your new password.',
             color: 'success',
           });
-          router.push('/auth/login?email=' + values.email);
+          router.push(`/auth/login?email=${values.email}`);
         } catch {
           addToast({
             title: 'An error occurred',
@@ -335,19 +324,13 @@ export const createAuthProvider = (flowType: FlowType) => {
       formik.setFieldValue('direction', newDirection);
     };
 
-    return (
-      <AuthContext.Provider value={{ formik, paginate }}>
-        {children}
-      </AuthContext.Provider>
-    );
+    return <AuthContext.Provider value={{ formik, paginate }}>{children}</AuthContext.Provider>;
   };
-};
 
 // Custom hooks
 export const useRegister = () => {
   const context = useContext(AuthContext);
-  if (!context)
-    throw new Error('useRegister must be used within a RegisterProvider');
+  if (!context) throw new Error('useRegister must be used within a RegisterProvider');
   return context;
 };
 
@@ -359,10 +342,7 @@ export const useLogin = () => {
 
 export const useForgetPassword = () => {
   const context = useContext(AuthContext);
-  if (!context)
-    throw new Error(
-      'useForgetPassword must be used within a ForgotPasswordProvider'
-    );
+  if (!context) throw new Error('useForgetPassword must be used within a ForgotPasswordProvider');
   return context;
 };
 

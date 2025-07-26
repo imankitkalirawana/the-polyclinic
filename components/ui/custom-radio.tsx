@@ -1,5 +1,5 @@
-import { RadioProps, useRadio, VisuallyHidden } from '@heroui/react';
 import React from 'react';
+import { RadioProps, useRadio, VisuallyHidden } from '@heroui/react';
 
 import { cn } from '@/lib/utils';
 
@@ -35,9 +35,7 @@ export default function CustomRadio(props: RadioProps) {
       <div {...getLabelWrapperProps()}>
         {children && <span {...getLabelProps()}>{children}</span>}
         {description && (
-          <span className="text-small text-foreground opacity-70">
-            {description}
-          </span>
+          <span className="text-small text-foreground opacity-70">{description}</span>
         )}
       </div>
     </Component>

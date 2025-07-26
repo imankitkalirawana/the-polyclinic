@@ -10,12 +10,10 @@ export const durations = [
 ];
 
 // sample time zone options
-export const timeZoneOptions = Intl.supportedValuesOf('timeZone').map(
-  (timeZone) => ({
-    label: timeZone,
-    value: timeZone,
-  })
-);
+export const timeZoneOptions = Intl.supportedValuesOf('timeZone').map((timeZone) => ({
+  label: timeZone,
+  value: timeZone,
+}));
 
 export enum TimeFormatEnum {
   TwelveHour = '12h',

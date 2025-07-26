@@ -1,9 +1,9 @@
 'use client';
 
-import { Button } from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import { isToday } from 'date-fns';
 import { useState } from 'react';
+import { Button } from '@heroui/react';
+import { isToday } from 'date-fns';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 import type { SlotConfig } from '@/types/slots';
 
@@ -27,17 +27,12 @@ export function CalendarPreview({ config }: CalendarPreviewProps) {
     return days;
   };
 
-  const getDayName = (date: Date) => {
-    return date.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
-  };
+  const getDayName = (date: Date) =>
+    date.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
 
-  const getDayNumber = (date: Date) => {
-    return date.getDate();
-  };
+  const getDayNumber = (date: Date) => date.getDate();
 
-  const getDateString = (date: Date) => {
-    return date.toISOString().split('T')[0];
-  };
+  const getDateString = (date: Date) => date.toISOString().split('T')[0];
 
   const getSpecificDateAvailability = (date: Date) => {
     const dateString = getDateString(date);
@@ -52,9 +47,7 @@ export function CalendarPreview({ config }: CalendarPreviewProps) {
     }
 
     // Fall back to weekly schedule
-    const dayName = date
-      .toLocaleDateString('en-US', { weekday: 'long' })
-      .toLowerCase();
+    const dayName = date.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
     return config.availability.schedule[dayName]?.enabled || false;
   };
 
@@ -70,9 +63,7 @@ export function CalendarPreview({ config }: CalendarPreviewProps) {
     } else {
       // Use weekly schedule
 
-      const dayName = date
-        .toLocaleDateString('en-US', { weekday: 'long' })
-        .toLowerCase();
+      const dayName = date.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
       const dayConfig = config.availability.schedule[dayName];
 
       if (!dayConfig || !dayConfig.enabled) return [];
@@ -105,16 +96,12 @@ export function CalendarPreview({ config }: CalendarPreviewProps) {
     return allSlots;
   };
 
-  const hasSpecificDateOverride = (date: Date) => {
-    return getSpecificDateAvailability(date) !== undefined;
-  };
+  const hasSpecificDateOverride = (date: Date) => getSpecificDateAvailability(date) !== undefined;
 
   const weekDays = getWeekDays();
   const timeLabels: string[] = [];
   for (let hour = 8; hour <= 20; hour++) {
-    timeLabels.push(
-      `${hour > 12 ? hour - 12 : hour} ${hour >= 12 ? 'PM' : 'AM'}`
-    );
+    timeLabels.push(`${hour > 12 ? hour - 12 : hour} ${hour >= 12 ? 'PM' : 'AM'}`);
   }
 
   const navigateWeek = (direction: 'prev' | 'next') => {
@@ -166,9 +153,7 @@ export function CalendarPreview({ config }: CalendarPreviewProps) {
             <div key={dayIndex} className="border-r border-divider">
               {/* Day header */}
               <div className="relative flex h-16 flex-col items-center justify-center border-b border-divider">
-                <div className="mb-1 text-xs text-default-500">
-                  {getDayName(day)}
-                </div>
+                <div className="mb-1 text-xs text-default-500">{getDayName(day)}</div>
                 <div
                   className={`text-lg font-medium ${
                     isToday(day)
@@ -190,10 +175,7 @@ export function CalendarPreview({ config }: CalendarPreviewProps) {
               {/* Time slots */}
               <div className="relative h-full overflow-auto">
                 {timeLabels.map((_, timeIndex) => (
-                  <div
-                    key={timeIndex}
-                    className="h-16 border-b border-divider"
-                  ></div>
+                  <div key={timeIndex} className="h-16 border-b border-divider" />
                 ))}
 
                 {/* Available slots overlay */}
@@ -221,11 +203,9 @@ export function CalendarPreview({ config }: CalendarPreviewProps) {
                           <div className="p-1">
                             <div
                               className={`h-3 w-3 rounded-sm ${
-                                isDayOverridden
-                                  ? 'bg-orange-400'
-                                  : 'bg-primary-400'
+                                isDayOverridden ? 'bg-orange-400' : 'bg-primary-400'
                               }`}
-                            ></div>
+                            />
                           </div>
                         </div>
                       );

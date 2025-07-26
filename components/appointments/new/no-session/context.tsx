@@ -1,8 +1,9 @@
 'use client';
+
+import React, { createContext, useContext } from 'react';
+import { signIn } from 'next-auth/react';
 import { addToast } from '@heroui/react';
 import { useFormik } from 'formik';
-import { signIn } from 'next-auth/react';
-import React, { createContext, useContext } from 'react';
 import * as Yup from 'yup';
 
 import registerUser from '@/functions/server-actions/auth/register';
@@ -22,9 +23,7 @@ const validationSchema = Yup.object({
     month: Yup.string().required('Enter a valid month'),
     year: Yup.string().required('Enter a valid year'),
   }),
-  id: Yup.string().required(
-    'Enter a valid email / phone. OTP will be sent to this.'
-  ),
+  id: Yup.string().required('Enter a valid email / phone. OTP will be sent to this.'),
   password: Yup.string()
     .required('Enter a password')
     .matches(
@@ -34,9 +33,7 @@ const validationSchema = Yup.object({
   confirmPassword: Yup.string().when('password', {
     is: (password: string) => password && password.length > 0,
     then: (schema) =>
-      schema
-        .required('Confirm your password')
-        .oneOf([Yup.ref('password')], 'Passwords must match'),
+      schema.required('Confirm your password').oneOf([Yup.ref('password')], 'Passwords must match'),
   }),
 });
 
@@ -57,7 +54,7 @@ interface FormContextType {
 
 const FormContext = createContext<FormContextType | undefined>(undefined);
 
-export const FormProvider = ({ children }: { children: React.ReactNode }) => {
+export function FormProvider({ children }: { children: React.ReactNode }) {
   const formik = useFormik<RegisterFormType>({
     initialValues: {
       firstName: '',
@@ -86,7 +83,6 @@ export const FormProvider = ({ children }: { children: React.ReactNode }) => {
           })
           .catch(() => {
             formik.setFieldError('otp', 'Invalid OTP');
-            return;
           });
         return;
       }
@@ -101,7 +97,6 @@ export const FormProvider = ({ children }: { children: React.ReactNode }) => {
       await verifyEmail(formik.values.id).then(async (res) => {
         if (res) {
           formik.setFieldError('id', 'Email already exists');
-          return;
         } else {
           formik.setFieldError('id', '');
           await sendMailWithOTP(formik.values.id)
@@ -114,17 +109,13 @@ export const FormProvider = ({ children }: { children: React.ReactNode }) => {
         }
       });
     } else {
-      formik.setFieldError(
-        'id',
-        'Phone number not supported yet, use email instead.'
-      );
-      return;
+      formik.setFieldError('id', 'Phone number not supported yet, use email instead.');
     }
   };
 
   const handleRegister = async () => {
     const data = {
-      name: formik.values.firstName + ' ' + formik.values.lastName,
+      name: `${formik.values.firstName} ${formik.values.lastName}`,
       dob: formik.values.dob,
       id: formik.values.id,
       password: formik.values.password,
@@ -155,10 +146,8 @@ export const FormProvider = ({ children }: { children: React.ReactNode }) => {
       });
   };
 
-  return (
-    <FormContext.Provider value={{ formik }}>{children}</FormContext.Provider>
-  );
-};
+  return <FormContext.Provider value={{ formik }}>{children}</FormContext.Provider>;
+}
 
 export const useForm = () => {
   const context = useContext(FormContext);

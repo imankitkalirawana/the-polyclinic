@@ -1,5 +1,7 @@
 'use client';
 
+import React from 'react';
+import Link from 'next/link';
 import {
   Avatar,
   Button,
@@ -9,16 +11,14 @@ import {
   CardHeader,
   ScrollShadow,
 } from '@heroui/react';
-import Link from 'next/link';
-import React from 'react';
+
+import CellValue from '../../../ui/cell-value';
 
 import Loading from '@/app/loading';
 import { humanReadableDate, humanReadableTime } from '@/lib/utility';
 import { castData } from '@/lib/utils';
 import { useUserWithUID } from '@/services/user';
 import { UserType } from '@/types/user';
-
-import CellValue from '../../../ui/cell-value';
 
 export default function UserCard({ uid }: { uid: number }) {
   const { data, isError, isLoading } = useUserWithUID(uid);
@@ -44,22 +44,12 @@ export default function UserCard({ uid }: { uid: number }) {
     pharmacist: null,
     laboratorist: null,
     user: (
-      <Button
-        as={Link}
-        href={`/appointments?uid=${user.uid}`}
-        variant="flat"
-        color="secondary"
-      >
+      <Button as={Link} href={`/appointments?uid=${user.uid}`} variant="flat" color="secondary">
         Book Appointment
       </Button>
     ),
     doctor: (
-      <Button
-        as={Link}
-        href={`/dashboard/doctors/${user.uid}`}
-        variant="flat"
-        color="secondary"
-      >
+      <Button as={Link} href={`/dashboard/doctors/${user.uid}`} variant="flat" color="secondary">
         View Doctor
       </Button>
     ),
@@ -69,9 +59,7 @@ export default function UserCard({ uid }: { uid: number }) {
       <CardHeader className="justify-between px-0">
         <div className="no-scrollbar flex flex-col items-start">
           <p className="text-large">Personal Details</p>
-          <p className="text-small text-default-500">
-            Manage your personal details
-          </p>
+          <p className="text-small text-default-500">Manage your personal details</p>
         </div>
         <Button as={Link} href={`/dashboard/users/${user.uid}/edit`}>
           Edit
@@ -104,14 +92,8 @@ export default function UserCard({ uid }: { uid: number }) {
           <CellValue label="Zip Code" value={user.zipcode || '-'} />
           <CellValue label="Phone Number" value={user.phone || '-'} />
           <CellValue label="Email" value={user.email || '-'} />
-          <CellValue
-            label="Status"
-            value={<span className="capitalize">{user.status}</span>}
-          />
-          <CellValue
-            label="Role"
-            value={<span className="capitalize">{user.role}</span>}
-          />
+          <CellValue label="Status" value={<span className="capitalize">{user.status}</span>} />
+          <CellValue label="Role" value={<span className="capitalize">{user.role}</span>} />
           <CellValue
             label="Created By"
             value={`${user.createdBy || 'Admin'} on ${humanReadableDate(user.createdAt)} at ${humanReadableTime(user.createdAt)}`}

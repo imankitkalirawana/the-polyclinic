@@ -1,11 +1,11 @@
 'use server';
 
-import axios from 'axios';
 import { cookies } from 'next/headers';
-
-import type { $FixMe } from '@/types';
+import axios from 'axios';
 
 import { BASE_URL } from './helper';
+
+import type { $FixMe } from '@/types';
 
 export interface ApiResponse<T> {
   success: boolean;

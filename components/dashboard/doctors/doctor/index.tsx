@@ -3,14 +3,14 @@
 import { Button, Card, Chip, Image, Link, ScrollShadow } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
+import AppointmentSlots from './appointment-slots';
+import Appointments from './appointments';
+
 import Loading from '@/app/loading';
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { castData } from '@/lib/utils';
 import { useDoctor } from '@/services/doctor';
 import { DoctorType } from '@/types/doctor';
-
-import AppointmentSlots from './appointment-slots';
-import Appointments from './appointments';
 
 type ListItem = {
   label: string;
@@ -155,9 +155,7 @@ export default function DashboardDoctor({ uid }: { uid: number }) {
                 <div className="flex flex-col">
                   <h2 className="text-xl font-medium">{doctor.name}</h2>
                   <p className="text-sm text-default-500">
-                    {doctor.specialization ||
-                      doctor.department ||
-                      doctor.department}
+                    {doctor.specialization || doctor.department || doctor.department}
                   </p>
                 </div>
               </div>
@@ -201,16 +199,12 @@ export default function DashboardDoctor({ uid }: { uid: number }) {
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2">
               <div className="rounded-small bg-blue-100 p-1 text-blue-500">
-                <Icon
-                  icon="solar:users-group-two-rounded-bold-duotone"
-                  width={32}
-                />
+                <Icon icon="solar:users-group-two-rounded-bold-duotone" width={32} />
               </div>
               <p className="text-2xl font-medium text-default-500">100</p>
             </div>
             <p className="text-tiny text-default-500">
-              <span className="text-success">3.5%</span> Have increased from
-              yesterday
+              <span className="text-success">3.5%</span> Have increased from yesterday
             </p>
           </div>
         </Card>
@@ -224,8 +218,7 @@ export default function DashboardDoctor({ uid }: { uid: number }) {
               <p className="text-2xl font-medium text-default-500">100</p>
             </div>
             <p className="text-tiny text-default-500">
-              <span className="text-success">1.5%</span> Have increased from
-              yesterday
+              <span className="text-success">1.5%</span> Have increased from yesterday
             </p>
           </div>
         </Card>
@@ -240,9 +233,7 @@ export default function DashboardDoctor({ uid }: { uid: number }) {
                 4.5<span className="text-base text-default-400">/5.0</span>
               </p>
             </div>
-            <p className="text-tiny text-default-500">
-              Based on 120 reviews from patients.
-            </p>
+            <p className="text-tiny text-default-500">Based on 120 reviews from patients.</p>
           </div>
         </Card>
         <Appointments />

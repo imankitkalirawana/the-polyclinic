@@ -1,15 +1,15 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 
-import { CityProps, CountryProps, StateProps } from '@/types';
-
 import {
   getAllCitiesByCountryAndState,
   getAllCountries,
   getAllStatesByCountry,
 } from './api/external';
 
-export const useAllCountries = (): UseQueryResult<CountryProps[]> => {
-  return useQuery({
+import { CityProps, CountryProps, StateProps } from '@/types';
+
+export const useAllCountries = (): UseQueryResult<CountryProps[]> =>
+  useQuery({
     queryKey: ['countries'],
     queryFn: async () => {
       const res = await getAllCountries();
@@ -19,12 +19,11 @@ export const useAllCountries = (): UseQueryResult<CountryProps[]> => {
       throw new Error(res.message);
     },
   });
-};
 
 export const useAllStatesByCountry = (
   country: CountryProps['iso2']
-): UseQueryResult<StateProps[]> => {
-  return useQuery({
+): UseQueryResult<StateProps[]> =>
+  useQuery({
     queryKey: ['states', country],
     queryFn: async () => {
       const res = await getAllStatesByCountry(country);
@@ -35,13 +34,12 @@ export const useAllStatesByCountry = (
     },
     enabled: !!country,
   });
-};
 
 export const useAllCitiesByCountryAndState = (
   country: CountryProps['iso2'],
   state: StateProps['iso2']
-): UseQueryResult<CityProps[]> => {
-  return useQuery({
+): UseQueryResult<CityProps[]> =>
+  useQuery({
     queryKey: ['cities', country, state],
     queryFn: async () => {
       const res = await getAllCitiesByCountryAndState(country, state);
@@ -52,4 +50,3 @@ export const useAllCitiesByCountryAndState = (
     },
     enabled: !!country && !!state,
   });
-};

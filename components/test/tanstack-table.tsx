@@ -1,4 +1,6 @@
 'use client';
+
+import React, { useMemo, useState } from 'react';
 import { cn, TableColumn, TableHeader, TableRow } from '@heroui/react';
 import {
   CellContext,
@@ -9,7 +11,6 @@ import {
   Table as TanStackTable,
   useReactTable,
 } from '@tanstack/react-table';
-import React, { useMemo, useState } from 'react';
 
 import { Table } from './ui/table';
 
@@ -24,12 +25,7 @@ interface TableMeta {
   updateData: (rowIndex: number, columnId: string, value: string) => void;
 }
 
-const EditableCell: React.FC<CellContext<Person, string>> = ({
-  getValue,
-  row,
-  column,
-  table,
-}) => {
+const EditableCell: React.FC<CellContext<Person, string>> = ({ getValue, row, column, table }) => {
   const initialValue = getValue();
   const [value, setValue] = useState<string>(initialValue);
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -56,9 +52,7 @@ const EditableCell: React.FC<CellContext<Person, string>> = ({
     return (
       <input
         value={value}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setValue(e.target.value)
-        }
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value)}
         onBlur={onBlur}
         onKeyDown={onKeyDown}
         className="w-full rounded border-none px-2 py-1 focus:outline-none focus:ring-1 focus:ring-primary-500"
@@ -68,10 +62,7 @@ const EditableCell: React.FC<CellContext<Person, string>> = ({
   }
 
   return (
-    <div
-      onClick={() => setIsEditing(true)}
-      className="cursor-text rounded px-2 py-1"
-    >
+    <div onClick={() => setIsEditing(true)} className="cursor-text rounded px-2 py-1">
       {value}
     </div>
   );
@@ -82,20 +73,18 @@ interface ColumnResizerProps {
   table: TanStackTable<Person>;
 }
 
-const ColumnResizer: React.FC<ColumnResizerProps> = ({ header }) => {
-  return (
-    <div
-      onMouseDown={header.getResizeHandler()}
-      onTouchStart={header.getResizeHandler()}
-      className={cn(
-        'absolute right-0 top-0 h-full w-px cursor-col-resize touch-none select-none bg-default-300 hover:w-[2px] hover:bg-primary-500',
-        {
-          'bg-primary-500': header.column.getIsResizing(),
-        }
-      )}
-    />
-  );
-};
+const ColumnResizer: React.FC<ColumnResizerProps> = ({ header }) => (
+  <div
+    onMouseDown={header.getResizeHandler()}
+    onTouchStart={header.getResizeHandler()}
+    className={cn(
+      'absolute right-0 top-0 h-full w-px cursor-col-resize touch-none select-none bg-default-300 hover:w-[2px] hover:bg-primary-500',
+      {
+        'bg-primary-500': header.column.getIsResizing(),
+      }
+    )}
+  />
+);
 
 const App: React.FC = () => {
   const [data, setData] = useState<Person[]>([
@@ -162,9 +151,7 @@ const App: React.FC = () => {
     meta: {
       updateData: (rowIndex: number, columnId: string, value: string) => {
         setData((prevData) =>
-          prevData.map((row, index) =>
-            index === rowIndex ? { ...row, [columnId]: value } : row
-          )
+          prevData.map((row, index) => (index === rowIndex ? { ...row, [columnId]: value } : row))
         );
       },
     } as TableMeta,
@@ -191,10 +178,7 @@ const App: React.FC = () => {
                   >
                     {header.isPlaceholder
                       ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                      : flexRender(header.column.columnDef.header, header.getContext())}
                     {header.column.getCanResize() && (
                       <ColumnResizer header={header} table={table} />
                     )}
@@ -235,9 +219,7 @@ const App: React.FC = () => {
 
       <div className="mt-4 rounded-lg bg-primary-100 p-4">
         <h3 className="mb-2 font-semibold">Current Data:</h3>
-        <pre className="text-xs text-default-500">
-          {JSON.stringify(data, null, 2)}
-        </pre>
+        <pre className="text-xs text-default-500">{JSON.stringify(data, null, 2)}</pre>
       </div>
     </div>
   );

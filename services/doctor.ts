@@ -7,18 +7,13 @@ import {
   UseQueryResult,
 } from '@tanstack/react-query';
 
+import { createDoctor, deleteDoctor, getDoctor, getDoctors } from './api/doctor';
+import { ApiResponse } from './api';
+
 import { CreateDoctorType, DoctorType } from '@/types/doctor';
 
-import { ApiResponse } from './api';
-import {
-  createDoctor,
-  deleteDoctor,
-  getDoctor,
-  getDoctors,
-} from './api/doctor';
-
-export const useAllDoctors = (): UseQueryResult<DoctorType[]> => {
-  return useQuery({
+export const useAllDoctors = (): UseQueryResult<DoctorType[]> =>
+  useQuery({
     queryKey: ['doctors'],
     queryFn: async () => {
       const res = await getDoctors();
@@ -28,10 +23,9 @@ export const useAllDoctors = (): UseQueryResult<DoctorType[]> => {
       throw new Error(res.message);
     },
   });
-};
 
-export const useDoctor = (uid: number): UseQueryResult<DoctorType> => {
-  return useQuery({
+export const useDoctor = (uid: number): UseQueryResult<DoctorType> =>
+  useQuery({
     queryKey: ['doctor', uid],
     queryFn: async () => {
       const res = await getDoctor(uid);
@@ -41,7 +35,6 @@ export const useDoctor = (uid: number): UseQueryResult<DoctorType> => {
       throw new Error(res.message);
     },
   });
-};
 
 export const useCreateDoctor = (): UseMutationResult<
   ApiResponse<DoctorType>,
@@ -73,11 +66,7 @@ export const useCreateDoctor = (): UseMutationResult<
   });
 };
 
-export const useDeleteDoctor = (): UseMutationResult<
-  ApiResponse<DoctorType>,
-  Error,
-  number
-> => {
+export const useDeleteDoctor = (): UseMutationResult<ApiResponse<DoctorType>, Error, number> => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (uid: number) => {

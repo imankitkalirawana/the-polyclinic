@@ -1,11 +1,11 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 
-import { EmailType } from '@/types/email';
-
 import { getAllEmails, getEmailWithID } from './api/email';
 
-export const useAllEmails = (): UseQueryResult<EmailType[]> => {
-  return useQuery({
+import { EmailType } from '@/types/email';
+
+export const useAllEmails = (): UseQueryResult<EmailType[]> =>
+  useQuery({
     queryKey: ['emails'],
     queryFn: async () => {
       const res = await getAllEmails();
@@ -15,10 +15,9 @@ export const useAllEmails = (): UseQueryResult<EmailType[]> => {
       throw new Error(res.message);
     },
   });
-};
 
-export const useEmailWithID = (id: string): UseQueryResult<EmailType> => {
-  return useQuery({
+export const useEmailWithID = (id: string): UseQueryResult<EmailType> =>
+  useQuery({
     queryKey: ['email', id],
     queryFn: async () => {
       const res = await getEmailWithID(id);
@@ -28,4 +27,3 @@ export const useEmailWithID = (id: string): UseQueryResult<EmailType> => {
       throw new Error(res.message);
     },
   });
-};

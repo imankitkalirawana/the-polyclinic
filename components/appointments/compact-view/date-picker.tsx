@@ -1,9 +1,9 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import { ScrollShadow, Tab, Tabs } from '@heroui/react';
 import { addDays, format, subDays } from 'date-fns';
 import { useQueryState } from 'nuqs';
-import { useEffect, useRef } from 'react';
 
 export default function DatePicker() {
   const [date, setDate] = useQueryState('date', {
@@ -13,9 +13,7 @@ export default function DatePicker() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const tabRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-  const dates = Array.from({ length: 61 }, (_, i) => {
-    return subDays(addDays(new Date(), 30), 60 - i);
-  });
+  const dates = Array.from({ length: 61 }, (_, i) => subDays(addDays(new Date(), 30), 60 - i));
 
   useEffect(() => {
     if (scrollRef.current && tabRefs.current[date]) {

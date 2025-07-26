@@ -1,17 +1,15 @@
-import { Icon } from '@iconify/react/dist/iconify.js';
 import { useMemo } from 'react';
-
-import QuickLook from '@/components/ui/dashboard/quicklook';
-import {
-  ButtonProps,
-  DropdownItemProps,
-} from '@/components/ui/dashboard/quicklook/types';
-import { EmailType } from '@/types/email';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 import { useEmailStore } from '../store';
 import { ActionType, DropdownKeyType } from '../types';
 import { permissions } from './data';
-export const EmailQuickLook = () => {
+
+import QuickLook from '@/components/ui/dashboard/quicklook';
+import { ButtonProps, DropdownItemProps } from '@/components/ui/dashboard/quicklook/types';
+import { EmailType } from '@/types/email';
+
+export function EmailQuickLook() {
   const { selected, setSelected, setAction, action } = useEmailStore();
 
   const buttons: Array<Partial<ButtonProps<ActionType>>> = useMemo(
@@ -19,9 +17,7 @@ export const EmailQuickLook = () => {
       {
         key: 'new-tab',
         children: 'Open in new tab',
-        startContent: (
-          <Icon icon="solar:arrow-right-up-line-duotone" width="20" />
-        ),
+        startContent: <Icon icon="solar:arrow-right-up-line-duotone" width="20" />,
         color: 'default',
         variant: 'flat',
         position: 'left',
@@ -110,4 +106,4 @@ export const EmailQuickLook = () => {
       content={content(selected)}
     />
   );
-};
+}

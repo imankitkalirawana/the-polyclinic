@@ -37,17 +37,14 @@ doctorSchema.pre('save', async function (next) {
   next();
 });
 
-doctorSchema.pre(
-  ['findOneAndUpdate', 'updateOne', 'updateMany'],
-  async function (next) {
-    const session = await auth();
-    this.setUpdate({
-      ...this.getUpdate(),
-      updatedBy: session?.user?.email || 'system-admin@divinely.dev',
-    });
-    next();
-  }
-);
+doctorSchema.pre(['findOneAndUpdate', 'updateOne', 'updateMany'], async function (next) {
+  const session = await auth();
+  this.setUpdate({
+    ...this.getUpdate(),
+    updatedBy: session?.user?.email || 'system-admin@divinely.dev',
+  });
+  next();
+});
 
 const Doctor = mongoose.models.Doctor || mongoose.model('Doctor', doctorSchema);
 

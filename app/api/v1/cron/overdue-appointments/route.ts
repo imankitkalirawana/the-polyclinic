@@ -19,9 +19,7 @@ export const POST = async function POST() {
     ).lean();
 
     // Step 2: Filter again in JS to be extra safe if date is not a true Date object
-    const trulyPastAppointments = matchingAppointments.filter(
-      (a) => new Date(a.date) < now
-    );
+    const trulyPastAppointments = matchingAppointments.filter((a) => new Date(a.date) < now);
 
     if (trulyPastAppointments.length === 0) {
       return NextResponse.json(

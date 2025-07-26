@@ -1,28 +1,19 @@
 'use client';
 
-import { Button, DropdownItem, DropdownMenu, Selection } from '@heroui/react';
-import { useRouter } from 'nextjs-toploader/app';
 import { useMemo } from 'react';
+import { useRouter } from 'nextjs-toploader/app';
+import { Button, DropdownItem, DropdownMenu, Selection } from '@heroui/react';
+
+import { EmailQuickLook } from './quicklook';
+import { useEmailStore } from './store';
 
 import { Table } from '@/components/ui/data-table';
-import {
-  renderActions,
-  renderDate,
-} from '@/components/ui/data-table/cell-renderers';
+import { renderActions, renderDate } from '@/components/ui/data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 import { useAllEmails } from '@/services/email';
 import { EmailType } from '@/types/email';
 
-import { EmailQuickLook } from './quicklook';
-import { useEmailStore } from './store';
-const INITIAL_VISIBLE_COLUMNS = [
-  'id',
-  'from',
-  'to',
-  'subject',
-  'message',
-  'createdAt',
-];
+const INITIAL_VISIBLE_COLUMNS = ['id', 'from', 'to', 'subject', 'message', 'createdAt'];
 
 export default function Emails() {
   const router = useRouter();
@@ -39,35 +30,28 @@ export default function Emails() {
         uid: 'from',
         sortable: true,
         renderCell: (email) => (
-          <div className="font-medium text-default-foreground">
-            {email.from}
-          </div>
+          <div className="font-medium text-default-foreground">{email.from}</div>
         ),
       },
       {
         name: 'To',
         uid: 'to',
         sortable: true,
-        renderCell: (email) => (
-          <div className="truncate text-default-foreground">{email.to}</div>
-        ),
+        renderCell: (email) => <div className="truncate text-default-foreground">{email.to}</div>,
       },
       {
         name: 'Subject',
         uid: 'subject',
         sortable: true,
         renderCell: (email) => (
-          <div className="truncate capitalize text-default-foreground">
-            {email.subject}
-          </div>
+          <div className="truncate capitalize text-default-foreground">{email.subject}</div>
         ),
       },
       {
         name: 'Created At',
         uid: 'createdAt',
         sortable: true,
-        renderCell: (email) =>
-          renderDate({ date: email.createdAt, isTime: true }),
+        renderCell: (email) => renderDate({ date: email.createdAt, isTime: true }),
       },
       {
         name: 'Actions',
@@ -142,37 +126,35 @@ export default function Emails() {
     </Button>
   );
 
-  const renderSelectedActions = (selectedKeys: Selection) => {
-    return (
-      <DropdownMenu aria-label="Selected Actions">
-        <DropdownItem
-          key="bulk-edit"
-          onPress={() => {
-            console.log('Bulk edit', selectedKeys);
-          }}
-        >
-          Bulk edit
-        </DropdownItem>
-        <DropdownItem
-          key="export"
-          onPress={() => {
-            console.log('Export', selectedKeys);
-          }}
-        >
-          Export
-        </DropdownItem>
-        <DropdownItem
-          key="delete"
-          className="text-danger"
-          onPress={() => {
-            console.log('Delete', selectedKeys);
-          }}
-        >
-          Delete
-        </DropdownItem>
-      </DropdownMenu>
-    );
-  };
+  const renderSelectedActions = (selectedKeys: Selection) => (
+    <DropdownMenu aria-label="Selected Actions">
+      <DropdownItem
+        key="bulk-edit"
+        onPress={() => {
+          console.log('Bulk edit', selectedKeys);
+        }}
+      >
+        Bulk edit
+      </DropdownItem>
+      <DropdownItem
+        key="export"
+        onPress={() => {
+          console.log('Export', selectedKeys);
+        }}
+      >
+        Export
+      </DropdownItem>
+      <DropdownItem
+        key="delete"
+        className="text-danger"
+        onPress={() => {
+          console.log('Delete', selectedKeys);
+        }}
+      >
+        Delete
+      </DropdownItem>
+    </DropdownMenu>
+  );
 
   return (
     <>
@@ -187,9 +169,7 @@ export default function Emails() {
         searchField={(email, searchValue) =>
           email.from.toLowerCase().includes(searchValue.toLowerCase()) ||
           email.to.toLowerCase().includes(searchValue.toLowerCase()) ||
-          (email.message
-            ? email.message.toLowerCase().includes(searchValue.toLowerCase())
-            : false)
+          (email.message ? email.message.toLowerCase().includes(searchValue.toLowerCase()) : false)
         }
         endContent={endContent}
         renderSelectedActions={renderSelectedActions}

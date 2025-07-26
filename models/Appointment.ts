@@ -49,15 +49,7 @@ const appointmentSchema = new mongoose.Schema(
     status: {
       type: String,
       default: 'booked',
-      enum: [
-        'booked',
-        'confirmed',
-        'in-progress',
-        'completed',
-        'cancelled',
-        'overdue',
-        'on-hold',
-      ],
+      enum: ['booked', 'confirmed', 'in-progress', 'completed', 'cancelled', 'overdue', 'on-hold'],
     },
     data: {
       type: Map,
@@ -89,24 +81,20 @@ appointmentSchema.pre('save', async function (next) {
   next();
 });
 
-appointmentSchema.pre(
-  ['findOneAndUpdate', 'updateOne', 'updateMany'],
-  async function (next) {
-    const session = await auth();
-    this.setUpdate({
-      ...this.getUpdate(),
-      updatedBy: session?.user?.email || 'system-admin@divinely.dev',
-    });
+appointmentSchema.pre(['findOneAndUpdate', 'updateOne', 'updateMany'], async function (next) {
+  const session = await auth();
+  this.setUpdate({
+    ...this.getUpdate(),
+    updatedBy: session?.user?.email || 'system-admin@divinely.dev',
+  });
 
-    next();
-  }
-);
+  next();
+});
 
 // @ts-expect-error - mongoose-sequence is not typed
 appointmentSchema.plugin(AutoIncrement, { inc_field: 'aid', start_seq: 1000 });
 
 const Appointment: Model<AppointmentType> =
-  mongoose.models.Appointment ||
-  mongoose.model<AppointmentType>('Appointment', appointmentSchema);
+  mongoose.models.Appointment || mongoose.model<AppointmentType>('Appointment', appointmentSchema);
 
 export default Appointment;
