@@ -1,4 +1,5 @@
 import { PermissionProps } from '@/components/ui/dashboard/quicklook/types';
+
 import { ActionType, DropdownKeyType } from '../types';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {

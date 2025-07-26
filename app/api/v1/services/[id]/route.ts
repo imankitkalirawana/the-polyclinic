@@ -33,7 +33,7 @@ export const PUT = auth(async function PUT(request: any, context: any) {
 
   try {
     const id = context.params.id;
-    let data: ServiceType = await request.json();
+    const data: ServiceType = await request.json();
     await connectDB();
     const service = await Service.findOneAndUpdate({ uniqueId: id }, data, {
       new: true,

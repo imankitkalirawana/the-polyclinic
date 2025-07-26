@@ -1,3 +1,4 @@
+import { $FixMe } from '@/types';
 export type Schema = 'appointment' | 'user' | 'drug' | 'service';
 
 export enum Status {
@@ -21,7 +22,7 @@ export interface ActivityLogType {
   status?: Status;
   metadata?: {
     fields?: string[];
-    diff?: Record<string, { old: any; new: any }>;
+    diff?: Record<string, { old: $FixMe; new: $FixMe }>;
   };
   ip?: string;
   userAgent?: string;

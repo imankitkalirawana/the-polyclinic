@@ -1,10 +1,10 @@
 'use client';
 
-import type { CalendarBookingStepType } from './types';
-
-import { useCallback } from 'react';
+import { Button, Chip, Link, Spacer } from '@heroui/react';
 import { Icon } from '@iconify/react';
-import { Spacer, Chip, Link, Button } from '@heroui/react';
+import React, { useCallback } from 'react';
+
+import type { CalendarBookingStepType } from './types';
 
 interface CalendarBookingConfirmationProps {
   setCalendarBookingStep?: (step: CalendarBookingStepType) => void;

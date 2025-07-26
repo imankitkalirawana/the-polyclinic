@@ -1,9 +1,8 @@
 'use client';
 
-import React from 'react';
 import type { AvatarProps } from '@heroui/react';
-import { Avatar } from '@heroui/react';
-import { cn } from '@heroui/react';
+import { Avatar, cn } from '@heroui/react';
+import React from 'react';
 
 const TeamAvatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
   ({ name, className, classNames = {}, ...props }, ref) => (

@@ -1,8 +1,10 @@
-import { Base } from '@/lib/interface';
-import { Gender } from '@/types/user';
-import { ValuesOf } from '@/lib/utils';
-import { UserType } from '@/types/user';
 import { ButtonProps } from '@heroui/react';
+
+import { Base } from '@/lib/interface';
+import { ValuesOf } from '@/lib/utils';
+import { Gender, UserType } from '@/types/user';
+
+import type { $FixMe } from '.';
 
 export const appointmentTypes = [
   {
@@ -117,7 +119,7 @@ export interface ButtonConfig {
   };
   action: {
     type: 'store-action' | 'async-function' | 'navigation';
-    payload?: any;
+    payload?: $FixMe;
     handler?: (appointment: AppointmentType) => Promise<void> | void;
     url?: (appointment: AppointmentType) => string;
   };

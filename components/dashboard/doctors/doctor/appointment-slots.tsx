@@ -1,5 +1,4 @@
 'use client';
-import { TIMINGS } from '@/lib/config';
 import { faker } from '@faker-js/faker';
 import {
   Button,
@@ -14,6 +13,8 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import Link from 'next/link';
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+
+import { TIMINGS } from '@/lib/config';
 
 type Slot = {
   id: string;
@@ -53,7 +54,8 @@ function generateSlots(start: number, end: number, interval: number): Slot[] {
 }
 
 export default function AppointmentSlots({ uid }: { uid: number }) {
-  const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
 
   const slots = generateSlots(
     TIMINGS.appointment.start,

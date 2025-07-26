@@ -1,8 +1,5 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { format, subMinutes } from 'date-fns';
-import { useQueryState } from 'nuqs';
 import {
   Avatar,
   Button,
@@ -14,13 +11,16 @@ import {
   Tooltip,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import { format, subMinutes } from 'date-fns';
+import { useQueryState } from 'nuqs';
+import { useEffect, useRef } from 'react';
+
+import CalendarWidget from '@/components/ui/calendar-widget';
+import { AppointmentType } from '@/types/appointment';
 
 import AppointmentDetailsModal from './appointment-details-modal';
 import { useForm } from './context';
 import StatusReferences from './status-references';
-
-import CalendarWidget from '@/components/ui/calendar-widget';
-import { AppointmentType } from '@/types/appointment';
 
 // Get background and icon colors based on appointment type
 export const getAppointmentStyles = (status: AppointmentType['status']) => {
@@ -226,7 +226,7 @@ export default function AppointmentsTimeline() {
                 .map((appointment, index, sortedAppointments) => {
                   const styles = getAppointmentStyles(appointment.status);
 
-                  let startTime = convertISOTimetoTime(
+                  const startTime = convertISOTimetoTime(
                     appointment.date.toString()
                   );
                   const [startHour, startMinute] = startTime
@@ -239,8 +239,8 @@ export default function AppointmentsTimeline() {
                   let leftOffset = 16;
                   let width = '45%';
                   let overlappingCount = 0;
-                  let overlappingAppointments: (typeof appointment)[] = [];
-                  let remainingAppointments: (typeof appointment)[] = [];
+                  const overlappingAppointments: (typeof appointment)[] = [];
+                  const remainingAppointments: (typeof appointment)[] = [];
 
                   // Find overlapping appointments
                   sortedAppointments.forEach((other, i) => {
@@ -285,10 +285,6 @@ export default function AppointmentsTimeline() {
                           const aptStart = aptHour * 60 + aptMinute;
                           return Math.abs(aptStart - startTimeInMinutes) <= 30;
                         }).length - 2;
-
-                      remainingAppointments = sortedAppointments.filter(
-                        (apt, index) => {}
-                      );
 
                       if (remainingCount > 0) {
                         return (

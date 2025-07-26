@@ -1,32 +1,33 @@
 'use client';
 import {
+  Button,
   Card,
   CardBody,
   CardHeader,
-  Divider,
-  Progress,
-  Button,
-  Image,
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
   Chip,
+  Divider,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Image,
+  Progress,
   Tooltip,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useAppointmentStore } from '@/store/appointment';
-import NoResults from '@/components/ui/no-results';
-import { AppointmentType } from '@/types/appointment';
-import { renderChip } from '@/components/ui/data-table/cell-renderers';
-import { CellRenderer } from '@/components/ui/cell-renderer';
 import { format } from 'date-fns';
-import ActivityTimeline from '@/components/ui/activity/timeline';
+
+import Loading from '@/app/loading';
 import CancelDeleteAppointment from '@/components/appointments/ui/cancel-delete';
 import RescheduleAppointment from '@/components/appointments/ui/reschedule-modal'; // Ensure this path is correct
+import ActivityTimeline from '@/components/ui/activity/timeline';
 import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
+import { CellRenderer } from '@/components/ui/cell-renderer';
+import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import NoResults from '@/components/ui/no-results';
 import { useAppointmentWithAID } from '@/services/appointment';
-import Loading from '@/app/loading';
+import { useAppointmentStore } from '@/store/appointment';
+import { AppointmentType } from '@/types/appointment';
 
 export default function Appointment({ aid }: { aid: number }) {
   const { action, setAction, setAppointment } = useAppointmentStore();

@@ -1,23 +1,16 @@
 'use client';
 
+import { Button, Card, Chip, Image, Link, ScrollShadow } from '@heroui/react';
+import { Icon } from '@iconify/react/dist/iconify.js';
+
 import Loading from '@/app/loading';
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { castData } from '@/lib/utils';
 import { useDoctor } from '@/services/doctor';
 import { DoctorType } from '@/types/doctor';
-import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Chip,
-  Image,
-  Link,
-  ScrollShadow,
-} from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import Appointments from './appointments';
+
 import AppointmentSlots from './appointment-slots';
+import Appointments from './appointments';
 
 type ListItem = {
   label: string;

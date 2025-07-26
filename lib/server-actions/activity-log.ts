@@ -2,6 +2,7 @@
 
 import ActivityLog from '@/models/Activity';
 import { ActivityLogType } from '@/types/activity';
+
 import { connectDB } from '../db';
 
 export async function logActivity(

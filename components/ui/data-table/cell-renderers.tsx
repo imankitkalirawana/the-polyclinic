@@ -1,6 +1,5 @@
 'use client';
 
-import type React from 'react';
 import {
   addToast,
   Button,
@@ -16,10 +15,10 @@ import {
   User,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
+import { format } from 'date-fns';
+import type React from 'react';
 
 import { CopyText } from '@/components/ui/copy';
-import { format } from 'date-fns';
-
 import { chipColorMap, ChipColorType } from '@/lib/chip';
 
 export const renderCopyableText = (text: string) => {
@@ -27,12 +26,10 @@ export const renderCopyableText = (text: string) => {
 };
 
 export const renderUser = ({
-  uid,
   avatar,
   name,
   description,
 }: {
-  uid: number;
   avatar?: string | undefined;
   name: string | undefined;
   description?: string | number | undefined;

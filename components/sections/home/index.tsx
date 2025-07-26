@@ -1,6 +1,7 @@
 'use client';
-import { Icon } from '@iconify/react/dist/iconify.js';
 import { Button, Image } from '@heroui/react';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import React from 'react';
 
 const CompanyLogo = ({
   src,
@@ -31,7 +32,7 @@ export default function Home() {
           <div className="flex w-full items-center justify-between gap-12">
             <div className="max-w-lg">
               <h1 className="text-brand-dark text-5xl font-bold leading-tight md:text-6xl">
-                Build the best teams at the world's best price.
+                Build the best teams at the world&apos;s best price.
               </h1>
               <p className="text-brand-gray mt-6 text-lg">
                 Skip the hassle of opening additional entities and decoding
@@ -123,9 +124,9 @@ export default function Home() {
                 International talent, secured. Global payroll, sorted.
               </h2>
               <p className="text-brand-gray mt-6 text-lg">
-                Employing remote teams shouldn't be difficult. That's why
-                RemoFirst is the best platform to manage your international HR
-                and help you employ global talent.
+                Employing remote teams shouldn&apos;t be difficult. That&apos;s
+                why RemoFirst is the best platform to manage your international
+                HR and help you employ global talent.
               </p>
               <div className="absolute left-1/2 top-1/2 w-[90%] max-w-md -translate-x-1/2 -translate-y-1/4 rounded-2xl bg-white p-6 shadow-2xl">
                 <p className="font-semibold">Payroll expenses</p>
@@ -193,8 +194,8 @@ export default function Home() {
             <div>
               <h3 className="text-xl font-bold">Fast Onboarding</h3>
               <p className="text-brand-gray mt-2">
-                Save hours on admin and paperwork. We'll get your international
-                team ready to go, with 24/5 customer service.
+                Save hours on admin and paperwork. We&apos;ll get your
+                international team ready to go, with 24/5 customer service.
               </p>
             </div>
           </div>
@@ -212,13 +213,13 @@ export default function Home() {
         <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="text-3xl font-bold leading-snug">
-              "RemoFirst enables me to work remotely and stay compliant in my
-              home country. It's also very helpful for submitting and managing
-              expenses, making it a great addition to my primary HR platform
-              with its simple, intuitive, and easy to navigate, with more than
-              adequate admin features. The platform is simple, intuitive, and
-              easy to navigate, with more than adequate functionality for
-              getting things done efficiently."
+              &quot;RemoFirst enables me to work remotely and stay compliant in
+              my home country. It&apos;s also very helpful for submitting and
+              managing expenses, making it a great addition to my primary HR
+              platform with its simple, intuitive, and easy to navigate, with
+              more than adequate admin features. The platform is simple,
+              intuitive, and easy to navigate, with more than adequate
+              functionality for getting things done efficiently.&quot;
             </h2>
             <p className="mt-8 font-semibold">
               Martin P. - Head of Marketing @ BetVictor
@@ -268,8 +269,8 @@ export default function Home() {
                   Find your global talent
                 </h3>
                 <p className="text-brand-gray mt-2">
-                  You've sourced a full-time employee or contractor located in a
-                  country where your company is not incorporated.
+                  You&apos;ve sourced a full-time employee or contractor located
+                  in a country where your company is not incorporated.
                 </p>
               </div>
             </div>

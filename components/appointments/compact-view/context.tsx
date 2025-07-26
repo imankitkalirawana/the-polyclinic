@@ -1,13 +1,12 @@
 'use client';
-import React, { createContext, useContext } from 'react';
 import { useFormik } from 'formik';
-import { useQueryState } from 'nuqs';
+import React, { createContext, useContext } from 'react';
 
-import { ActionType } from './appointment-details-modal';
-
+import { useAllAppointments } from '@/services/appointment';
 import { AppointmentType } from '@/types/appointment';
 import { AuthUser } from '@/types/user';
-import { useAllAppointments } from '@/services/appointment';
+
+import { ActionType } from './appointment-details-modal';
 
 interface FormType {
   selected: AppointmentType | null;
@@ -31,10 +30,6 @@ export const FormProvider = ({
   children: React.ReactNode;
   session?: AuthUser | null;
 }) => {
-  const [date] = useQueryState('date', {
-    defaultValue: new Date().toISOString().split('T')[0],
-  });
-
   const { data, refetch, isLoading } = useAllAppointments();
 
   const appointments = data || [];

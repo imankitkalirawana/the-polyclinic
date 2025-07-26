@@ -1,6 +1,7 @@
 'use server';
-import { fetchData } from '.';
 import { DrugType } from '@/types/drug';
+
+import { fetchData } from '.';
 
 export async function getAllDrugs() {
   return await fetchData<DrugType[]>('/drugs');

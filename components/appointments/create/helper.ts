@@ -1,10 +1,7 @@
+import { DateValue, isWeekend } from '@internationalized/date';
+
 import { disabledDates } from '@/lib/appointments/new';
 import { TIMINGS } from '@/lib/config';
-import {
-  DateValue,
-  getLocalTimeZone,
-  isWeekend,
-} from '@internationalized/date';
 
 export const generateTimeSlots = () => {
   const slots: string[] = [];

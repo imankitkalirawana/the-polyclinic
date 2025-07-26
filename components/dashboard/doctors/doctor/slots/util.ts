@@ -49,10 +49,9 @@ export function getValidEndTimes(
 
 export function getValidStartTimes(
   duration: number,
-  previousSlotEndTime?: string,
-  appointmentDuration = 0
+  previousSlotEndTime?: string
 ): string[] {
-  const allTimes = generateTimeOptions(duration, 6, 22); // 6 AM to 10 PM
+  const allTimes = generateTimeOptions(duration, 6, 22);
 
   if (!previousSlotEndTime) return allTimes;
 

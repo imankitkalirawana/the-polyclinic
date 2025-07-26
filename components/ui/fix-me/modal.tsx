@@ -6,6 +6,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from '@heroui/react';
+import React from 'react';
 
 export default function FixMeModal() {
   return (

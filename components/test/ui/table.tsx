@@ -1,3 +1,5 @@
+import React from 'react';
+
 interface TableProps {
   children: React.ReactNode;
   style?: React.CSSProperties;
@@ -11,10 +13,6 @@ interface TableHeaderProps {
 interface TableColumnProps {
   children: React.ReactNode;
   style?: React.CSSProperties;
-}
-
-interface TableBodyProps {
-  children: React.ReactNode;
 }
 
 interface TableRowProps {

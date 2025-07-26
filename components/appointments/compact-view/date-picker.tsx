@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { ScrollShadow, Tab, Tabs } from '@heroui/react';
 import { addDays, format, subDays } from 'date-fns';
 import { useQueryState } from 'nuqs';
-import { ScrollShadow, Tab, Tabs } from '@heroui/react';
+import { useEffect, useRef } from 'react';
 
 export default function DatePicker() {
   const [date, setDate] = useQueryState('date', {

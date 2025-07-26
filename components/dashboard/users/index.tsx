@@ -1,15 +1,17 @@
 'use client';
 
-import { useMemo } from 'react';
 import {
-  addToast,
   Button,
   DropdownItem,
   DropdownMenu,
   Selection,
   useDisclosure,
 } from '@heroui/react';
+import { useRouter } from 'nextjs-toploader/app';
+import React, { useMemo } from 'react';
+import { toast } from 'sonner';
 
+import { Table } from '@/components/ui/data-table';
 import {
   renderActions,
   renderChip,
@@ -18,13 +20,11 @@ import {
   renderUser,
 } from '@/components/ui/data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
-import { Table } from '@/components/ui/data-table';
+import { useAllUsers, useDeleteUser } from '@/services/user';
 import { UserType } from '@/types/user';
-import { useRouter } from 'nextjs-toploader/app';
-import { toast } from 'sonner';
+
 import { UserQuickLook } from './quicklook';
 import { useUserStore } from './store';
-import { useAllUsers, useDeleteUser } from '@/services/user';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'image',
@@ -66,7 +66,6 @@ export default function Users() {
         sortable: true,
         renderCell: (user) =>
           renderUser({
-            uid: user.uid,
             avatar: user.image,
             name: user.name,
             description: user.email,

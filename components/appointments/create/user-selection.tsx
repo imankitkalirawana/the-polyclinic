@@ -9,13 +9,15 @@ import {
   ScrollShadow,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import NoResults from '../../ui/no-results';
 import { useState } from 'react';
 import { useDebounce } from 'react-haiku';
-import Skeleton from '../../ui/skeleton';
-import { UserType } from '@/types/user';
-import { DoctorType } from '@/types/doctor';
+
 import { CreateAppointmentType } from '@/types/appointment';
+import { DoctorType } from '@/types/doctor';
+import { UserType } from '@/types/user';
+
+import NoResults from '../../ui/no-results';
+import Skeleton from '../../ui/skeleton';
 
 const SizeMap = {
   sm: {

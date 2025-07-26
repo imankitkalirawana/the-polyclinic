@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import {
   Accordion,
   AccordionItem,
@@ -11,22 +10,23 @@ import {
   Tooltip,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
+import React from 'react';
 
-import DataTable from './data-table';
-import { CircleChartCard } from './graph';
-
+import Loading from '@/app/loading';
 import PriceDisplay from '@/components/helper/display-price';
+import NoResults from '@/components/ui/no-results';
 import {
   convertMinutesToHoursAndMinutes,
   humanReadableDate,
   humanReadableTime,
 } from '@/lib/utility';
+import { castData } from '@/lib/utils';
+import { useServiceWithUID } from '@/services/service';
 import { ServiceType } from '@/types/service';
 import { AuthUser } from '@/types/user';
-import { useServiceWithUID } from '@/services/service';
-import { castData } from '@/lib/utils';
-import Loading from '@/app/loading';
-import NoResults from '@/components/ui/no-results';
+
+import DataTable from './data-table';
+import { CircleChartCard } from './graph';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   active: 'success',

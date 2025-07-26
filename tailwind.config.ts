@@ -1,5 +1,5 @@
-import type { Config } from 'tailwindcss';
 import { heroui } from '@heroui/react';
+import type { Config } from 'tailwindcss';
 
 const config = {
   content: [
@@ -53,6 +53,7 @@ const config = {
   },
   darkMode: ['class', '[data-theme^="dark-"]'],
   plugins: [
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     require('tailwindcss-animate'),
     heroui({
       themes: {

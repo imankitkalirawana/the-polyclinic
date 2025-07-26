@@ -1,8 +1,9 @@
-import { UserType } from '@/types/user';
 import {
   ButtonProps as HeroButtonProps,
   DropdownItemProps as HeroDropdownItemProps,
 } from '@heroui/react';
+
+import { UserType } from '@/types/user';
 
 export type ActionType<T extends string> = T;
 export type DropdownKeyType<T extends string> = T;

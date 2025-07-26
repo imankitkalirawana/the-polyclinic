@@ -1,8 +1,8 @@
-import NextAuth, { AuthError } from 'next-auth';
-import Google from 'next-auth/providers/google';
 import { MongoDBAdapter } from '@auth/mongodb-adapter';
-import credentials from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
+import NextAuth, { AuthError } from 'next-auth';
+import credentials from 'next-auth/providers/credentials';
+import Google from 'next-auth/providers/google';
 
 import client from '@/lib/db';
 import User from '@/models/User';
@@ -31,7 +31,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (!credentials?.email || !credentials?.password) {
           throw new ErrorMessage('Invalid Email/Password');
         }
-        // @ts-ignore
         user = await User.findOne({ email: credentials.email });
         const key = await client
           .db('thepolyclinic')

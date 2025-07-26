@@ -1,5 +1,6 @@
-import CustomError from '@/components/error';
 import { Metadata } from 'next';
+
+import CustomError from '@/components/error';
 
 export const metadata: Metadata = {
   title: 'Not Found',

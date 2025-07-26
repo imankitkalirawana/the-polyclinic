@@ -1,7 +1,8 @@
 'use server';
 
-import { UserType } from '@/types/user';
 import { faker } from '@faker-js/faker';
+
+import { UserType } from '@/types/user';
 
 export async function generateUsers({
   count,

@@ -1,6 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
 import {
   Button,
   DropdownItem,
@@ -8,7 +7,12 @@ import {
   Selection,
   Tooltip,
 } from '@heroui/react';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import Link from 'next/link';
+import { useRouter } from 'nextjs-toploader/app';
+import { useMemo } from 'react';
 
+import { Table } from '@/components/ui/data-table';
 import {
   renderActions,
   renderChip,
@@ -16,19 +20,15 @@ import {
   renderDate,
   renderUser,
 } from '@/components/ui/data-table/cell-renderers';
-import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
-
-import { Table } from '@/components/ui/data-table';
-import { AppointmentType } from '@/types/appointment';
-import { useRouter } from 'nextjs-toploader/app';
-import { useAppointmentStore } from '@/store/appointment';
-import { apiRequest } from '@/lib/axios';
-import { AppointmentQuickLook } from './quicklook';
-import CancelDeleteAppointments from '../../appointments/ui/bulk-cancel-delete';
 import { convertSelectionToKeys } from '@/components/ui/data-table/helper';
-import Link from 'next/link';
+import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
+import { apiRequest } from '@/lib/axios';
 import { useAllAppointments } from '@/services/appointment';
-import { Icon } from '@iconify/react/dist/iconify.js';
+import { useAppointmentStore } from '@/store/appointment';
+import { AppointmentType } from '@/types/appointment';
+
+import CancelDeleteAppointments from '../../appointments/ui/bulk-cancel-delete';
+import { AppointmentQuickLook } from './quicklook';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'aid',
@@ -66,7 +66,6 @@ export default function Appointments() {
         sortable: true,
         renderCell: (appointment) =>
           renderUser({
-            uid: appointment.patient.uid,
             avatar: appointment.patient.image,
             name: appointment.patient.name,
             description: `#${appointment.patient.uid}`,
@@ -79,7 +78,6 @@ export default function Appointments() {
         renderCell: (appointment) =>
           appointment.doctor?.uid
             ? renderUser({
-                uid: appointment.doctor?.uid,
                 avatar: appointment.doctor?.image,
                 name: appointment.doctor?.name,
                 description: `#${appointment.doctor?.uid}`,

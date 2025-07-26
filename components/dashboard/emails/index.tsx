@@ -1,20 +1,20 @@
 'use client';
 
-import { useMemo } from 'react';
 import { Button, DropdownItem, DropdownMenu, Selection } from '@heroui/react';
+import { useRouter } from 'nextjs-toploader/app';
+import { useMemo } from 'react';
 
+import { Table } from '@/components/ui/data-table';
 import {
   renderActions,
   renderDate,
 } from '@/components/ui/data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
-
-import { Table } from '@/components/ui/data-table';
-import { EmailType } from '@/types/email';
-import { useRouter } from 'nextjs-toploader/app';
-import { useEmailStore } from './store';
-import { EmailQuickLook } from './quicklook';
 import { useAllEmails } from '@/services/email';
+import { EmailType } from '@/types/email';
+
+import { EmailQuickLook } from './quicklook';
+import { useEmailStore } from './store';
 const INITIAL_VISIBLE_COLUMNS = [
   'id',
   'from',

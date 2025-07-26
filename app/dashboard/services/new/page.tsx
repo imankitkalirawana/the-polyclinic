@@ -1,6 +1,7 @@
+import { unauthorized } from 'next/navigation';
+
 import { auth } from '@/auth';
 import NewService from '@/components/dashboard/services/new';
-import { unauthorized } from 'next/navigation';
 
 export default async function Page() {
   const session = await auth();

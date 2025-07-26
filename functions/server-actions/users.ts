@@ -18,12 +18,12 @@ export const getAllPatients = async () => {
 
 export const getAllPatientsWithEmail = async (email: string) => {
   await connectDB();
-  let user = await User.findOne({ email }).select('phone').lean();
+  const user = await User.findOne({ email }).select('phone').lean();
   if (!user) {
     throw new Error('User not found');
   }
 
-  let users = await User.find(user?.phone ? { phone: user.phone } : { email })
+  const users = await User.find(user?.phone ? { phone: user.phone } : { email })
     .select('-password')
     .lean();
 

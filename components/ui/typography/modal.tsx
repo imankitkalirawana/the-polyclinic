@@ -1,4 +1,5 @@
 import { cn } from '@heroui/react';
+import React from 'react';
 
 export function Title({
   title,

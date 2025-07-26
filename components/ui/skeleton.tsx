@@ -1,5 +1,6 @@
 'use client';
 import { cn, Skeleton as NextSkeleton } from '@heroui/react';
+import React from 'react';
 
 export default function Skeleton({ className }: { className?: string }) {
   return (

@@ -1,30 +1,33 @@
 'use client';
 
-import {
-  startOfMonth,
-  endOfMonth,
-  startOfWeek,
-  endOfWeek,
-  eachDayOfInterval,
-  isSameMonth,
-  isSameDay,
-  isPast,
-} from 'date-fns';
-import { cn } from '@/lib/utils';
-import { views } from '../types';
 import { Tooltip } from '@heroui/react';
-import DateChip from '../ui/date-chip';
-import { TIMINGS } from '@/lib/config';
+import {
+  eachDayOfInterval,
+  endOfMonth,
+  endOfWeek,
+  isPast,
+  isSameDay,
+  isSameMonth,
+  startOfMonth,
+  startOfWeek,
+} from 'date-fns';
+import { useSession } from 'next-auth/react';
 import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs';
-import AppointmentTriggerItem from '../ui/appointment-trigger-item';
-import AppointmentList from '../ui/appointment-list';
+import React from 'react';
+
+import { TIMINGS } from '@/lib/config';
+import { cn } from '@/lib/utils';
+import { useAppointmentStore } from '@/store/appointment';
+import { AppointmentType } from '@/types/appointment';
+
 import {
   allowedRolesToCreateAppointment,
   MAX_APPOINTMENTS_IN_CELL,
 } from '../data';
-import { AppointmentType } from '@/types/appointment';
-import { useSession } from 'next-auth/react';
-import { useAppointmentStore } from '@/store/appointment';
+import { views } from '../types';
+import AppointmentList from '../ui/appointment-list';
+import AppointmentTriggerItem from '../ui/appointment-trigger-item';
+import DateChip from '../ui/date-chip';
 
 interface MonthViewProps {
   appointments: AppointmentType[];
@@ -40,6 +43,7 @@ export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
 
   const { appointment, setIsTooltipOpen } = useAppointmentStore();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_view, setView] = useQueryState('view', parseAsStringEnum(views));
 
   const monthStart = startOfMonth(currentDate);

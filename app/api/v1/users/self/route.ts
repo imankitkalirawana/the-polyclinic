@@ -1,14 +1,15 @@
 import { NextResponse } from 'next/server';
+import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import User from '@/models/User';
 
-export const GET = auth(async function GET(request: any) {
+export const GET = auth(async function GET(request: NextAuthRequest) {
   try {
     await connectDB();
     const user = await User.findOne({
-      email: request.auth?.user?.email,
+      email: request.auth?.email,
     }).select('-password');
 
     return NextResponse.json(user);

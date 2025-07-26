@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
-import { useFormik } from 'formik';
-import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+
 import { Button, Tooltip } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-
-import 'react-quill/dist/quill.snow.css';
+import { useFormik } from 'formik';
+import { useState } from 'react';
+import ReactQuill from 'react-quill';
 
 import { cn } from '@/lib/utils';
 

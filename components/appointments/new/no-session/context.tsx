@@ -1,9 +1,9 @@
 'use client';
-import React, { createContext, useContext } from 'react';
-import { signIn } from 'next-auth/react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { addToast } from '@heroui/react';
+import { useFormik } from 'formik';
+import { signIn } from 'next-auth/react';
+import React, { createContext, useContext } from 'react';
+import * as Yup from 'yup';
 
 import registerUser from '@/functions/server-actions/auth/register';
 import {

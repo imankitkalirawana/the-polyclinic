@@ -1,6 +1,8 @@
 // lib/axios.ts
-import axios, { AxiosRequestConfig } from 'axios';
 import { addToast } from '@heroui/react'; // Assuming addToast is available
+import axios, { AxiosRequestConfig } from 'axios';
+
+import type { $FixMe } from '@/types';
 
 export const api = axios.create({
   baseURL: '/api/v1',
@@ -29,8 +31,8 @@ interface ApiOptions {
     title?: string;
     description?: string;
   }; // Optional error message
-  onSuccess?: (responseData: any) => void; // Optional success callback
-  onError?: (error: any) => void; // Optional error callback
+  onSuccess?: (responseData: $FixMe) => void; // Optional success callback
+  onError?: (error: $FixMe) => void; // Optional error callback
   showToast?: boolean; // Optional toast
 }
 
@@ -72,7 +74,7 @@ export const apiRequest = async ({
     }
 
     return response.data;
-  } catch (error: any) {
+  } catch (error: $FixMe) {
     console.error('API Request failed', error);
     // Handle error response
     if (showToast) {

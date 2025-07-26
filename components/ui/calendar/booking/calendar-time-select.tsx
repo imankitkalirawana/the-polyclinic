@@ -1,16 +1,17 @@
 import { ScrollShadow } from '@heroui/react';
-
-import CalendarTime from './calendar-time';
+import { parseDate } from '@internationalized/date';
+import { useLocale } from '@react-aria/i18n';
 import { format } from 'date-fns';
+import React, { useMemo } from 'react';
+
 import {
   generateTimeSlots,
   getDateTime,
   getTimeSlot,
   isDateUnavailable,
 } from '@/components/appointments/create/helper';
-import { useMemo } from 'react';
-import { useLocale } from '@react-aria/i18n';
-import { parseDate } from '@internationalized/date';
+
+import CalendarTime from './calendar-time';
 
 const timeSlots = generateTimeSlots();
 

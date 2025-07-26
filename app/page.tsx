@@ -1,6 +1,7 @@
 'use client';
-import { useModal } from '@/components/ui/global-modal';
 import { Button } from '@heroui/react';
+
+import { useModal } from '@/components/ui/global-modal';
 
 export default function HomePage() {
   const modal = useModal();

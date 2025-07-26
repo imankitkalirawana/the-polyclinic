@@ -1,8 +1,7 @@
 'use server';
-
 import { CreateUserType, UserType } from '@/types/user';
+
 import { fetchData } from '.';
-import { DoctorType } from '@/types/doctor';
 
 /**
  * GET APIs

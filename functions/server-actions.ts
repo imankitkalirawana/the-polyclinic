@@ -2,12 +2,12 @@
 import bcrypt from 'bcryptjs';
 import { MailOptions } from 'nodemailer/lib/json-transport';
 
-import { sendHTMLEmail } from './server-actions/emails/send-email';
-
 import { connectDB } from '@/lib/db';
 import Otp from '@/models/Otp';
 import Service from '@/models/Service';
 import User from '@/models/User';
+
+import { sendHTMLEmail } from './server-actions/emails/send-email';
 import { generateOtp } from './utils';
 
 export const sendSMS = async (phone: string, message: string) => {

@@ -1,7 +1,4 @@
 'use client';
-import { useState } from 'react';
-import { useRouter } from 'nextjs-toploader/app';
-import { format } from 'date-fns';
 import {
   addToast,
   Avatar,
@@ -23,13 +20,17 @@ import {
   ScrollShadow,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import { format } from 'date-fns';
+import { useRouter } from 'nextjs-toploader/app';
+import { useState } from 'react';
+
+import FixMeModal from '@/components/ui/fix-me/modal';
+import { downloadAppointmentReceipt } from '@/functions/client/appointment/receipt';
+import { cn } from '@/lib/utils';
+import { $FixMe } from '@/types';
 
 import { getAppointmentStyles } from './appointments';
 import { useForm } from './context';
-
-import { downloadAppointmentReceipt } from '@/functions/client/appointment/receipt';
-import { cn } from '@/lib/utils';
-import FixMeModal from '@/components/ui/fix-me/modal';
 
 interface DropdownItemProps {
   key: string;
@@ -215,7 +216,7 @@ export default function AppointmentDetailsModal() {
                             className={cn(
                               'block size-4 rounded-md bg-default-500',
                               getAppointmentStyles(
-                                formik.values.selected?.status as any
+                                formik.values.selected?.status as $FixMe
                               ).avatarBg
                             )}
                           />

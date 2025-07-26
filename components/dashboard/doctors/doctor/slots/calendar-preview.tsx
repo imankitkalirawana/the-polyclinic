@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
-import type { SlotConfig } from '@/types/slots';
 import { Button } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { isToday } from 'date-fns';
+import { useState } from 'react';
+
+import type { SlotConfig } from '@/types/slots';
 
 interface CalendarPreviewProps {
   config: SlotConfig;

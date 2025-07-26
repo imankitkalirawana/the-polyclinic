@@ -11,32 +11,35 @@ import {
   ModalProps,
   ScrollShadow,
 } from '@heroui/react';
-import { AccordionTitle } from './accordion-title';
-import { useFormik } from 'formik';
-import { UserType } from '@/types/user';
-import { DoctorType } from '@/types/doctor';
-import { useLinkedUsers } from '@/services/user';
-import UserSelection from '@/components/appointments/create/user-selection';
-import { useEffect, useState } from 'react';
-import DateSelection, { DateSelectionTitle } from './date-selection';
-import AdditionalDetailsSelection, {
-  AdditionalDetailsSelectionTitle,
-} from './additional-details-selection';
-import { AppointmentType, CreateAppointmentType } from '@/types/appointment';
 import { format } from 'date-fns';
+import { useFormik } from 'formik';
+import { useRouter } from 'nextjs-toploader/app';
+import { useEffect, useState } from 'react';
+
+import UserSelection from '@/components/appointments/create/user-selection';
+import { castData } from '@/lib/utils';
 import {
   useAllAppointments,
   useCreateAppointment,
 } from '@/services/appointment';
-import { castData } from '@/lib/utils';
-import { $FixMe } from '@/types';
-import { getNextAvailableTimeSlot } from './helper';
-import { useRouter } from 'nextjs-toploader/app';
 import { useAllDoctors } from '@/services/doctor';
+import { useLinkedUsers } from '@/services/user';
+import { useAppointmentStore } from '@/store/appointment';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { $FixMe } from '@/types';
+import { AppointmentType, CreateAppointmentType } from '@/types/appointment';
+import { DoctorType } from '@/types/doctor';
+import { UserType } from '@/types/user';
+
+import { AccordionTitle } from './accordion-title';
+import AdditionalDetailsSelection, {
+  AdditionalDetailsSelectionTitle,
+} from './additional-details-selection';
 import AppointmentTypeSelection, {
   AppointmentTypeSelectionTitle,
 } from './appointment-type-selection';
-import { useAppointmentStore } from '@/store/appointment';
+import DateSelection, { DateSelectionTitle } from './date-selection';
+import { getNextAvailableTimeSlot } from './helper';
 
 const KeyMap: Record<number, string> = {
   1: 'patient',

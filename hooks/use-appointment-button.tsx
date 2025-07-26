@@ -1,13 +1,15 @@
-import { AppointmentType, ProcessedButton } from '@/types/appointment';
-import { useAppointmentStore } from '@/store/appointment';
-import { UserType } from '@/types/user';
-import { useMemo } from 'react';
+import { Icon } from '@iconify/react/dist/iconify.js';
 import { useRouter } from 'nextjs-toploader/app';
+import React, { useMemo } from 'react';
+
+import { useAppointmentStore } from '@/store/appointment';
+import { AppointmentType, ProcessedButton } from '@/types/appointment';
+import { UserType } from '@/types/user';
+
 import {
   APPOINTMENT_BUTTON_CONFIGS,
   isButtonVisible,
 } from '../config/appointments';
-import { Icon } from '@iconify/react/dist/iconify.js';
 
 const useAppointmentButtonsInDrawer = ({
   selected,

@@ -1,6 +1,4 @@
 'use client';
-import { useRouter } from 'next/navigation';
-import { useFormik } from 'formik';
 import {
   Autocomplete,
   AutocompleteItem,
@@ -11,32 +9,30 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
-  cn,
   Divider,
   Form,
   Input,
   RadioGroup,
-  RadioProps,
   ScrollShadow,
   Select,
   SelectItem,
   Textarea,
   Tooltip,
-  useRadio,
-  VisuallyHidden,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { Genders } from '@/lib/options';
-import { UserType } from '@/types/user';
-import { useAllUsers } from '@/services/user';
+import { useFormik } from 'formik';
+import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { castData, generateEmail, generatePhoneNumber } from '@/lib/utils';
-import { doctorValidationSchema } from './helper';
-import { CreateDoctorType } from '@/types/doctor';
-import { useCreateDoctor } from '@/services/doctor';
-import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { useState } from 'react';
+
 import CustomRadio from '@/components/ui/custom-radio';
+import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import { Genders } from '@/lib/options';
+import { castData, generateEmail, generatePhoneNumber } from '@/lib/utils';
+import { useCreateDoctor } from '@/services/doctor';
+import { useAllUsers } from '@/services/user';
+import { CreateDoctorType } from '@/types/doctor';
+import { UserType } from '@/types/user';
 
 export default function NewDoctor() {
   const router = useRouter();

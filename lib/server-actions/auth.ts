@@ -1,18 +1,18 @@
 'use server';
 
 import bcrypt from 'bcryptjs';
+import { AuthError } from 'next-auth';
 
-import { connectDB } from '../db';
-import { sendHTMLEmail } from './email';
-
+import { signIn } from '@/auth';
+import { generateOtp } from '@/functions/utils';
 import { APP_INFO } from '@/lib/config';
 import Otp from '@/models/Otp';
 import User from '@/models/User';
 import { OtpEmail, WelcomeUser } from '@/templates/email';
 import { Gender } from '@/types/user';
-import { AuthError } from 'next-auth';
-import { signIn } from '@/auth';
-import { generateOtp } from '@/functions/utils';
+
+import { connectDB } from '../db';
+import { sendHTMLEmail } from './email';
 
 export const sendOTP = async ({
   email,

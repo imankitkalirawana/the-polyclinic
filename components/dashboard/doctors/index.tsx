@@ -1,6 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
 import {
   Button,
   DropdownItem,
@@ -8,7 +7,12 @@ import {
   Selection,
   useDisclosure,
 } from '@heroui/react';
+import { useRouter } from 'nextjs-toploader/app';
+import { useMemo } from 'react';
+import { toast } from 'sonner';
 
+import Loading from '@/app/loading';
+import { Table } from '@/components/ui/data-table';
 import {
   renderActions,
   renderCopyableText,
@@ -16,15 +20,12 @@ import {
   renderUser,
 } from '@/components/ui/data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
-import { Table } from '@/components/ui/data-table';
+import { castData } from '@/lib/utils';
+import { useAllDoctors, useDeleteDoctor } from '@/services/doctor';
 import { DoctorType } from '@/types/doctor';
-import { useRouter } from 'nextjs-toploader/app';
-import { toast } from 'sonner';
+
 import { UserQuickLook } from './quicklook';
 import { useDoctorStore } from './store';
-import { useAllDoctors, useDeleteDoctor } from '@/services/doctor';
-import { castData } from '@/lib/utils';
-import Loading from '@/app/loading';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'image',
@@ -67,7 +68,6 @@ export default function Doctors() {
         sortable: true,
         renderCell: (doctor) =>
           renderUser({
-            uid: doctor.uid,
             avatar: doctor.image,
             name: doctor.name,
             description: doctor.email,

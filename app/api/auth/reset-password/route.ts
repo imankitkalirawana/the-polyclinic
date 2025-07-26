@@ -1,8 +1,9 @@
-import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
+import { NextResponse } from 'next/server';
+
 import { connectDB } from '@/lib/db';
-import User from '@/models/User';
 import Otp from '@/models/Otp';
+import User from '@/models/User';
 
 export const PATCH = async (request: any) => {
   try {

@@ -1,11 +1,13 @@
 'use client';
-import { useQueryState } from 'nuqs';
 import { Tab, Tabs } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import { useQueryState } from 'nuqs';
+
+import { useUserWithUID } from '@/services/user';
+
 import AccountDetails from './account-details';
 import NotificationsSettings from './notifications-settings';
 import SecuritySettings from './security-settings';
-import { useUserWithUID } from '@/services/user';
 
 export default function EditUser({ uid }: { uid: number }) {
   const [tab, setTab] = useQueryState('tab', {

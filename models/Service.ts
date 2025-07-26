@@ -1,6 +1,7 @@
+import mongoose, { Model } from 'mongoose';
+
 import { auth } from '@/auth';
 import { ServiceStatus, ServiceType, ServiceTypes } from '@/types/service';
-import mongoose, { Model } from 'mongoose';
 
 const serviceSchema = new mongoose.Schema(
   {

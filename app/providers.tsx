@@ -1,13 +1,14 @@
 'use client';
-import React from 'react';
+import { HeroUIProvider, Spinner, ToastProvider } from '@heroui/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import NextTopLoader from 'nextjs-toploader';
 import { useRouter } from 'nextjs-toploader/app';
-import { HeroUIProvider, Spinner, ToastProvider } from '@heroui/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import React from 'react';
 import { Toaster } from 'sonner';
+
 import { ModalProvider } from '@/components/ui/global-modal';
 
 declare module '@react-types/shared' {
@@ -86,7 +87,7 @@ export function Providers({
             color="hsl(var(--heroui-primary))"
           />
           <ModalProvider>{children}</ModalProvider>
-          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+          <ReactQueryDevtools initialIsOpen={false} />
         </SessionProvider>
       </QueryClientProvider>
     </HeroUIProvider>

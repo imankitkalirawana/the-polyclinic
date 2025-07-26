@@ -1,8 +1,10 @@
-import { create } from 'zustand';
+import { Selection } from '@heroui/react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { create } from 'zustand';
+
 import { ServiceType } from '@/types/service';
-import { Selection } from '@heroui/react';
+
 import { ActionType } from './types';
 
 interface ServiceStoreState {
@@ -43,8 +45,6 @@ export const useServiceForm = () => {
     }),
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        if (values.action === 'reschedule' && values.selected) {
-        }
         resetState();
       } catch (error) {
         console.error('Submission failed:', error);

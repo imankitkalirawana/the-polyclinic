@@ -13,11 +13,11 @@ export const GET = auth(async function GET(request: any) {
     const { email } = request.auth?.user;
 
     await connectDB();
-    let user = await User.findOne({ email }).select('phone').lean();
+    const user = await User.findOne({ email }).select('phone').lean();
     if (!user)
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
 
-    let users = await User.find(
+    const users = await User.find(
       user?.phone ? { phone: user.phone } : { email }
     ).select('-password');
 

@@ -1,14 +1,16 @@
-import QuickLook from '@/components/ui/dashboard/quicklook';
-import { EmailType } from '@/types/email';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useEmailStore } from '../store';
+import { useMemo } from 'react';
+
+import QuickLook from '@/components/ui/dashboard/quicklook';
 import {
   ButtonProps,
   DropdownItemProps,
 } from '@/components/ui/dashboard/quicklook/types';
-import { useMemo } from 'react';
-import { permissions } from './data';
+import { EmailType } from '@/types/email';
+
+import { useEmailStore } from '../store';
 import { ActionType, DropdownKeyType } from '../types';
+import { permissions } from './data';
 export const EmailQuickLook = () => {
   const { selected, setSelected, setAction, action } = useEmailStore();
 

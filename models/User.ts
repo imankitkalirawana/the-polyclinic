@@ -1,9 +1,10 @@
-import { auth } from '@/auth';
-import { UserType } from '@/types/user';
 import mongoose, { Model } from 'mongoose';
 import mongooseSequence from 'mongoose-sequence';
 
-// @ts-ignore
+import { auth } from '@/auth';
+import { UserType } from '@/types/user';
+
+// @ts-expect-error - mongoose-sequence is not typed
 const AutoIncrement = mongooseSequence(mongoose);
 
 const userSchema = new mongoose.Schema(
@@ -93,7 +94,7 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// @ts-ignore
+// @ts-expect-error - mongoose-sequence is not typed
 userSchema.plugin(AutoIncrement, { inc_field: 'uid', start_seq: 1000 });
 
 userSchema.pre('save', async function (next) {

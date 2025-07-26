@@ -1,11 +1,12 @@
 'use client';
-import React from 'react';
 import { Link } from '@heroui/react';
+import React from 'react';
+
 import { APP_INFO } from '@/lib/config';
 
 import Auth from '..';
-import { ForgotPasswordProvider, useForgetPassword } from '../store';
 import { Input, OtpInput, PasswordInput } from '../form';
+import { ForgotPasswordProvider, useForgetPassword } from '../store';
 import { AuthStep } from '../types';
 
 const ForgotPasswordComponent: React.FC = () => {

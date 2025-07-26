@@ -1,5 +1,6 @@
 'use client';
 import { motion } from 'framer-motion';
+import React from 'react';
 
 export function BlurIn({ children }: { children: React.ReactNode }) {
   const variants1 = {

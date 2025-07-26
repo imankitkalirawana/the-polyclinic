@@ -1,8 +1,7 @@
 'use client';
-
-import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Button,
+  cn,
   Divider,
   Dropdown,
   DropdownItem,
@@ -16,6 +15,7 @@ import {
   Radio,
   RadioGroup,
   ScrollShadow,
+  Spinner,
   Table as HeroTable,
   TableBody,
   TableCell,
@@ -23,16 +23,17 @@ import {
   TableHeader,
   TableRow,
   Tooltip,
-  Spinner,
 } from '@heroui/react';
-import { cn } from '@heroui/react';
 import { SearchIcon } from '@heroui/shared-icons';
 import { Icon } from '@iconify/react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useDebounce } from 'react-haiku';
 
+import type { $FixMe } from '@/types';
+
+import { isAll } from './helper';
 import type { TableItem, TableProps, TableState } from './types';
 import { useMemoizedCallback } from './use-memoized-callback';
-import { useDebounce } from 'react-haiku';
-import { isAll } from './helper';
 
 export function Table<T extends TableItem>({
   uniqueKey,
@@ -143,7 +144,7 @@ export function Table<T extends TableItem>({
   }, [data, state.filterValue, itemFilter, searchField, isLoading]);
 
   // Helper function to get nested object values using dot notation
-  const getNestedValue = (obj: T, path: string): any => {
+  const getNestedValue = (obj: T, path: string): $FixMe => {
     // If the path doesn't contain dots, it's a direct property
     if (!path.includes('.')) {
       const value = obj[path];
@@ -158,7 +159,7 @@ export function Table<T extends TableItem>({
 
     // For nested paths like "patient.name", split and traverse
     const keys = path.split('.');
-    let current = obj as unknown as Record<string, any>;
+    let current = obj as unknown as Record<string, $FixMe>;
 
     // Early return if the root object is null or undefined
     if (current === null || current === undefined) {

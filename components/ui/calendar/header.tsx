@@ -1,24 +1,25 @@
 'use client';
-
 import { Button, Kbd, Select, SelectItem } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import {
-  format,
-  addMonths,
-  subMonths,
-  addYears,
-  subYears,
-  addWeeks,
-  subWeeks,
   addDays,
-  subDays,
+  addMonths,
+  addWeeks,
+  addYears,
+  format,
   isToday,
+  subDays,
+  subMonths,
+  subWeeks,
+  subYears,
 } from 'date-fns';
-import { View, views as Views } from './types';
-import { parseAsStringEnum, useQueryState } from 'nuqs';
-import { useKeyPress } from 'react-haiku';
 import { useSession } from 'next-auth/react';
+import { parseAsStringEnum, useQueryState } from 'nuqs';
+import React from 'react';
+import { useKeyPress } from 'react-haiku';
+
 import { allowedRolesToCreateAppointment } from './data';
+import { View, views as Views } from './types';
 
 interface CalendarHeaderProps {
   currentDate: Date;
@@ -47,7 +48,7 @@ export function CalendarHeader({
     parseAsStringEnum(Views).withDefault('schedule')
   );
 
-  useKeyPress(['m'], (e) => {
+  useKeyPress(['m'], () => {
     setView('month');
   });
   useKeyPress(['y'], () => {

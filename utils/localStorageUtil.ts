@@ -1,6 +1,8 @@
+import type { $FixMe } from '@/types';
+
 const LOCAL_STORAGE_KEY = 'config';
 
-export function saveTableConfig(table: string, config: any) {
+export function saveTableConfig(table: string, config: $FixMe) {
   const existingConfig = JSON.parse(
     (typeof window !== 'undefined'
       ? window.localStorage.getItem(LOCAL_STORAGE_KEY)

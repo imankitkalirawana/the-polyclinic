@@ -1,9 +1,4 @@
-import { PermissionProps } from '@/components/ui/dashboard/quicklook/types';
-import { renderChip } from '@/components/ui/data-table/cell-renderers';
-import { avatars } from '@/lib/avatar';
-import { DrugType } from '@/types/drug';
 import {
-  Avatar,
   Button,
   Dropdown,
   DropdownItem,
@@ -14,8 +9,13 @@ import {
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { format } from 'date-fns';
-import { ActionType, DropdownKeyType } from '../types';
+
+import { PermissionProps } from '@/components/ui/dashboard/quicklook/types';
+import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import { DrugType } from '@/types/drug';
+
 import ActivityTimeline from '../../../ui/activity/timeline';
+import { ActionType, DropdownKeyType } from '../types';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
   doctor: [

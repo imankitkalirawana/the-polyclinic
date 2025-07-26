@@ -1,4 +1,3 @@
-import { AppointmentType } from '@/types/appointment';
 import {
   Card,
   CardBody,
@@ -7,13 +6,17 @@ import {
   cn,
   ScrollShadow,
 } from '@heroui/react';
-import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs';
 import { format } from 'date-fns';
-import DateChip from './date-chip';
-import StatusRenderer from './status-renderer';
+import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs';
+import React from 'react';
+
+import { useAppointmentStore } from '@/store/appointment';
+import { AppointmentType } from '@/types/appointment';
+
 import { formatTime } from '../helper';
 import { views } from '../types';
-import { useAppointmentStore } from '@/store/appointment';
+import DateChip from './date-chip';
+import StatusRenderer from './status-renderer';
 
 export default function AppointmentList({
   appointments,
@@ -22,10 +25,12 @@ export default function AppointmentList({
   appointments: AppointmentType[] | null;
   date: Date;
 }) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_currentDate, setCurrentDate] = useQueryState(
     'date',
     parseAsIsoDateTime.withDefault(new Date())
   );
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_view, setView] = useQueryState('view', parseAsStringEnum(views));
   const { setAppointment } = useAppointmentStore();
 

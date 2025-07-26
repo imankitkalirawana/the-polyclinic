@@ -1,5 +1,4 @@
 'use client';
-import { signIn } from 'next-auth/react';
 import {
   Button,
   Card,
@@ -15,9 +14,10 @@ import {
   Tooltip,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import { signIn } from 'next-auth/react';
 
-import VerifyId from './modals/verify-id';
 import { useForm } from './context';
+import VerifyId from './modals/verify-id';
 
 export default function DetailsInput() {
   const { formik } = useForm();

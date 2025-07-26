@@ -1,13 +1,14 @@
-import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
+import { NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
+import { API_ACTIONS } from '@/lib/config';
 import { connectDB } from '@/lib/db';
 import User from '@/models/User';
-import { API_ACTIONS } from '@/lib/config';
+import { $FixMe } from '@/types';
 
 // get user by id from param
-export const GET = auth(async function GET(request: any, context: any) {
+export const GET = auth(async function GET(request: $FixMe, context: $FixMe) {
   try {
     const allowedRoles = [
       'admin',
@@ -17,7 +18,6 @@ export const GET = auth(async function GET(request: any, context: any) {
       'pharmacist',
     ];
 
-    // @ts-ignore
     if (request.auth?.user?.uid !== context?.params?.uid) {
       if (!allowedRoles.includes(request.auth?.user?.role)) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -37,10 +37,9 @@ export const GET = auth(async function GET(request: any, context: any) {
 });
 
 // update user by id from param
-export const PUT = auth(async function PUT(request: any, context: any) {
+export const PUT = auth(async function PUT(request: $FixMe, context: $FixMe) {
   try {
     const allowedRoles = ['admin', 'doctor', 'receptionist'];
-    // @ts-ignore
     if (request.auth?.user?.uid !== context?.params?.uid) {
       if (!allowedRoles.includes(request.auth?.user?.role)) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -57,7 +56,6 @@ export const PUT = auth(async function PUT(request: any, context: any) {
     user.updatedBy = request.auth?.user?.email;
     if (data.password) {
       user.password = await bcrypt.hash(data.password, 10);
-      console;
     }
     user = await User.findOneAndUpdate({ uid }, data, {
       new: true,
@@ -70,10 +68,12 @@ export const PUT = auth(async function PUT(request: any, context: any) {
 });
 
 // delete user by id from param
-export const DELETE = auth(async function DELETE(request: any, context: any) {
+export const DELETE = auth(async function DELETE(
+  request: $FixMe,
+  context: $FixMe
+) {
   try {
     const allowedRoles = ['admin', 'doctor', 'receptionist'];
-    // @ts-ignore
     if (request.auth?.user?.uid !== context?.params?.uid) {
       if (!allowedRoles.includes(request.auth?.user?.role)) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -82,14 +82,16 @@ export const DELETE = auth(async function DELETE(request: any, context: any) {
     await connectDB();
     const uid = parseInt(context.params.uid);
 
-    let user = await User.findOne({ uid });
+    const user = await User.findOne({ uid });
     if (!user) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
     }
 
-    API_ACTIONS.isDelete && (await User.findOneAndDelete({ uid }));
+    if (API_ACTIONS.isDelete) {
+      await User.findOneAndDelete({ uid });
+    }
     return NextResponse.json({ message: 'User deleted' });
-  } catch (error: any) {
+  } catch (error: $FixMe) {
     console.error(error);
     return NextResponse.json(
       { message: error?.message || 'An error occurred' },

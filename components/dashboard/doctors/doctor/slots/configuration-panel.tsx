@@ -1,8 +1,5 @@
 'use client';
 
-import type React from 'react';
-
-import type { SlotConfig, TimeSlot } from '@/types/slots';
 import {
   Accordion,
   AccordionItem,
@@ -17,9 +14,12 @@ import {
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import type { FormikProps } from 'formik';
-import { getValidEndTimes, getValidStartTimes, timeToMinutes } from './util';
+import type React from 'react';
+
+import type { SlotConfig, TimeSlot } from '@/types/slots';
 
 import { SpecificDateManager } from './specific-date-manager';
+import { getValidEndTimes, getValidStartTimes, timeToMinutes } from './util';
 
 interface ConfigurationPanelProps {
   formik: FormikProps<SlotConfig>;

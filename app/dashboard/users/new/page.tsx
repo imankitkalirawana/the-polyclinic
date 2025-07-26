@@ -1,12 +1,13 @@
-import { auth } from '@/auth';
-import NewUser from '@/components/dashboard/users/new';
-import { getAllCountries } from '@/services/api/external';
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from '@tanstack/react-query';
 import { redirect } from 'next/navigation';
+
+import { auth } from '@/auth';
+import NewUser from '@/components/dashboard/users/new';
+import { getAllCountries } from '@/services/api/external';
 
 const allowedRoles = [
   'admin',

@@ -1,14 +1,15 @@
 'use client';
-import React from 'react';
 import { addToast, Button, Link } from '@heroui/react';
-import { APP_INFO } from '@/lib/config';
-
-import { LoginProvider, useLogin } from '../store';
-import { Input, PasswordInput } from '../form';
-import Auth from '..';
-import { AuthStep } from '../types';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import React from 'react';
+
+import { APP_INFO } from '@/lib/config';
 import { googleLogin } from '@/lib/server-actions/auth';
+
+import Auth from '..';
+import { Input, PasswordInput } from '../form';
+import { LoginProvider, useLogin } from '../store';
+import { AuthStep } from '../types';
 
 const LoginComponent: React.FC = () => {
   const { formik, paginate } = useLogin();

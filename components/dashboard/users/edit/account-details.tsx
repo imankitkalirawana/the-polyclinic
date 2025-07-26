@@ -1,9 +1,5 @@
 'use client';
 
-import React from 'react';
-import Link from 'next/link';
-import { useSession } from 'next-auth/react';
-import { useFormik } from 'formik';
 import {
   Avatar,
   Badge,
@@ -21,12 +17,17 @@ import {
 import { Icon } from '@iconify/react';
 import { getLocalTimeZone, today } from '@internationalized/date';
 import { I18nProvider } from '@react-aria/i18n';
+import { useFormik } from 'formik';
+import Link from 'next/link';
+import { useSession } from 'next-auth/react';
+import React from 'react';
 
+import { verifyEmail } from '@/functions/server-actions';
 import { Genders } from '@/lib/options';
 import { userValidationSchema } from '@/lib/validation';
-import { UserType } from '@/types/user';
 import { useUpdateUser } from '@/services/user';
-import { verifyEmail } from '@/functions/server-actions';
+import { $FixMe } from '@/types';
+import { UserType } from '@/types/user';
 
 export default function AccountDetails({ user }: { user: UserType }) {
   const { data: session } = useSession();
@@ -112,17 +113,14 @@ export default function AccountDetails({ user }: { user: UserType }) {
             }
           }}
           onChange={(e) => {
-            // @ts-ignore
             if (allowedRoles.includes(session?.user?.role)) {
               formik.setFieldValue('email', e.target.value);
             }
           }}
           isInvalid={formik.touched.email && formik.errors.email ? true : false}
           errorMessage={formik.touched.email && formik.errors.email}
-          // @ts-ignore
           isDisabled={!allowedRoles.includes(session?.user?.role)}
           description={
-            // @ts-ignore
             !allowedRoles.includes(session?.user?.role) && (
               <>
                 Please go{session?.role} to{' '}
@@ -142,7 +140,6 @@ export default function AccountDetails({ user }: { user: UserType }) {
           placeholder="Enter phone number"
           name="phone"
           onChange={(e) => {
-            // @ts-ignore
             if (allowedRoles.includes(session?.user?.role)) {
               formik.setFieldValue('phone', e.target.value);
             }
@@ -155,7 +152,6 @@ export default function AccountDetails({ user }: { user: UserType }) {
           }
           isDisabled={!allowedRoles.includes(session?.user?.role)}
           description={
-            // @ts-ignore
             !allowedRoles.includes(session?.user?.role) && (
               <>
                 Please go{session?.role} to{' '}
@@ -193,11 +189,11 @@ export default function AccountDetails({ user }: { user: UserType }) {
             label="DOB (DD-MM-YYYY)"
             onChange={(date) => {
               const dob =
-                // @ts-ignore
+                // @ts-expect-error - date is not typed
                 date instanceof Date
-                  ? // @ts-ignore
+                  ? // @ts-expect-error - date is not typed
                     date.toISOString().split('T')[0]
-                  : new Date(date as any).toISOString().split('T')[0];
+                  : new Date(date as $FixMe).toISOString().split('T')[0];
               formik.setFieldValue('dob', dob);
             }}
             // value={}

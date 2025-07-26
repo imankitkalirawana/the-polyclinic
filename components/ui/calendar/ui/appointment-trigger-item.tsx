@@ -1,8 +1,11 @@
-import { AppointmentType } from '@/types/appointment';
 import { cn } from '@heroui/react';
-import StatusRenderer from './status-renderer';
-import { formatTime } from '../helper';
+import React from 'react';
+
 import { useAppointmentStore } from '@/store/appointment';
+import { AppointmentType } from '@/types/appointment';
+
+import { formatTime } from '../helper';
+import StatusRenderer from './status-renderer';
 
 export default function AppointmentTriggerItem({
   appointment,

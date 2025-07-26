@@ -1,5 +1,4 @@
 'use client';
-import * as React from 'react';
 import {
   Calendar,
   CalendarProps,
@@ -15,10 +14,11 @@ import {
   Time,
   today,
 } from '@internationalized/date';
-import { useLocale } from '@react-aria/i18n';
+import * as React from 'react';
 
 import { disabledDates } from '@/lib/appointments/new';
 import { TIMINGS } from '@/lib/config';
+import { $FixMe } from '@/types';
 
 export default function DateTimePicker({
   date = today(getLocalTimeZone()),
@@ -35,21 +35,19 @@ export default function DateTimePicker({
   dateProps?: CalendarProps;
   timeProps?: TimeInputProps;
 }) {
-  const { locale } = useLocale();
-
   return (
     <>
       <div className="flex flex-col items-center gap-4 xs:items-start">
         <Calendar
           {...dateProps}
           aria-label="Date (Min Date Value)"
-          // @ts-ignore
+          // @ts-expect-error - TODO: fix this
           defaultValue={today(getLocalTimeZone()) as unknown as DateValue}
           minValue={today(getLocalTimeZone())}
           maxValue={today(getLocalTimeZone()).add({
             days: TIMINGS.booking.maximum,
           })}
-          // @ts-ignore
+          // @ts-expect-error - TODO: fix this
           value={date}
           onChange={(selectedDate) =>
             onDateChange?.(selectedDate as CalendarDate)
@@ -79,7 +77,7 @@ export default function DateTimePicker({
               maxValue={new Time(TIMINGS.appointment.end)}
               isRequired
               value={time}
-              onChange={onTimeChange as any}
+              onChange={onTimeChange as $FixMe}
             />
           </div>
         </Tooltip>

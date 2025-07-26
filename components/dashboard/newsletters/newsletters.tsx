@@ -1,6 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
 import {
   addToast,
   Button,
@@ -8,17 +7,17 @@ import {
   DropdownMenu,
   Selection,
 } from '@heroui/react';
+import { useRouter } from 'nextjs-toploader/app';
+import { useMemo } from 'react';
 
+import { Table } from '@/components/ui/data-table';
 import {
   renderActions,
   renderDate,
 } from '@/components/ui/data-table/cell-renderers';
 import type { ColumnDef } from '@/components/ui/data-table/types';
-
-import { Table } from '@/components/ui/data-table';
-import { NewsletterType } from '@/types/newsletter';
-import { useRouter } from 'nextjs-toploader/app';
 import { useAllNewsletters } from '@/services/newsletter';
+import { NewsletterType } from '@/types/newsletter';
 
 const INITIAL_VISIBLE_COLUMNS = ['email', 'updatedAt', 'createdAt'];
 

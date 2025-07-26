@@ -1,5 +1,4 @@
 'use client';
-import React from 'react';
 import {
   addToast,
   Button,
@@ -9,19 +8,23 @@ import {
   SelectItem,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { parseDate, getLocalTimeZone, today } from '@internationalized/date';
+import { getLocalTimeZone, parseDate, today } from '@internationalized/date';
 import { I18nProvider } from '@react-aria/i18n';
 import { useQueryState } from 'nuqs';
-import { Gender, genders } from '@/types/user';
-import { APP_INFO } from '@/lib/config';
+import React from 'react';
 
-import { RegisterProvider, useRegister } from '../store';
-import { Input, OtpInput, PasswordInput } from '../form';
-import { AuthStep } from '../types';
+import { APP_INFO } from '@/lib/config';
+import { $FixMe } from '@/types';
+import { Gender, genders } from '@/types/user';
+
 import Auth from '..';
+import { Input, OtpInput, PasswordInput } from '../form';
+import { RegisterProvider, useRegister } from '../store';
+import { AuthStep } from '../types';
 
 const RegisterComponent: React.FC = () => {
   const { formik, paginate } = useRegister();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_email, setEmail] = useQueryState('email');
 
   const REGISTER_STEPS: Record<number, AuthStep> = {
@@ -124,10 +127,12 @@ const RegisterComponent: React.FC = () => {
           <I18nProvider locale="en-IN">
             <DatePicker
               label="Date of Birth (Optional)"
-              // @ts-expect-error
+              // @ts-expect-error - TODO: fix this
               value={formik.values.dob ? parseDate(formik.values.dob) : null}
               onChange={(value) => {
-                const dob = new Date(value as any).toISOString().split('T')[0];
+                const dob = new Date(value as $FixMe)
+                  .toISOString()
+                  .split('T')[0];
                 formik.setFieldValue('dob', dob);
               }}
               maxValue={today(getLocalTimeZone())}

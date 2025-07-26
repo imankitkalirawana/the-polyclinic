@@ -1,16 +1,18 @@
 'use client';
-
-import { apiRequest } from '@/lib/axios';
-import { ActivityLogType, Schema } from '@/types/activity';
 import { Avatar, ScrollShadow } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useQuery } from '@tanstack/react-query';
 import { format, isToday, isYesterday } from 'date-fns';
-import { useState } from 'react';
+import React, { useState } from 'react';
+
+import { apiRequest } from '@/lib/axios';
+import type { $FixMe } from '@/types';
+import { ActivityLogType, Schema } from '@/types/activity';
+
 import ActivityLoading from './loading';
 import ActivityNotFound from './not-found';
 
-const isDate = (value: any) => {
+const isDate = (value: $FixMe) => {
   return (
     value instanceof Date ||
     (typeof value === 'string' && !isNaN(Date.parse(value)))

@@ -1,12 +1,13 @@
 'use client';
-import React from 'react';
 import { Button } from '@heroui/react';
-import { AnimatePresence, LazyMotion, domAnimation, m } from 'framer-motion';
-import { useQueryState } from 'nuqs';
+import { AnimatePresence, domAnimation, LazyMotion, m } from 'framer-motion';
+import React from 'react';
+
 import Logo from '@/components/ui/logo';
 import { BlurIn } from '@/components/ui/text/blur-in';
-import { AuthProps } from './types';
+
 import { Header } from './header';
+import { AuthProps } from './types';
 
 // Animation variants
 const variants = {
@@ -34,8 +35,6 @@ const Auth: React.FC<AuthProps> = ({
   footer,
   showFullPage = true,
 }) => {
-  const [_email, setEmail] = useQueryState('email');
-
   const currentStep = steps[formik.values.page];
 
   const renderContent = () => (

@@ -1,7 +1,8 @@
 'use server';
 
-import { ServiceStatus, ServiceType, ServiceTypes } from '@/types/service';
 import { faker } from '@faker-js/faker';
+
+import { ServiceStatus, ServiceType, ServiceTypes } from '@/types/service';
 
 export async function generateServices(count: number) {
   const services: ServiceType[] = [];

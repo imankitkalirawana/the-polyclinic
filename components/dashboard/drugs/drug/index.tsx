@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-import Link from 'next/link';
 import {
   Button,
   Card,
@@ -9,10 +7,13 @@ import {
   CardHeader,
   ScrollShadow,
 } from '@heroui/react';
-import CellValue from '@/components/ui/cell-value';
-import { DrugType } from '@/types/drug';
-import { useDrugWithDid } from '@/services/drug';
 import { format } from 'date-fns';
+import Link from 'next/link';
+import React from 'react';
+
+import CellValue from '@/components/ui/cell-value';
+import { useDrugWithDid } from '@/services/drug';
+import { DrugType } from '@/types/drug';
 
 export default function DrugCard({ did }: { did: number }) {
   const { data } = useDrugWithDid(did);

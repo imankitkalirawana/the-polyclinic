@@ -1,6 +1,7 @@
-import { connectDB } from '@/lib/db';
-import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
+
+import { auth } from '@/auth';
+import { connectDB } from '@/lib/db';
 import User from '@/models/User';
 import { UserType } from '@/types/user';
 

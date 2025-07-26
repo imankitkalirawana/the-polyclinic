@@ -1,10 +1,5 @@
 'use client';
 
-import React from 'react';
-import { usePathname } from 'next/navigation';
-import { signIn, signOut, useSession } from 'next-auth/react';
-import { useRouter } from 'nextjs-toploader/app';
-import { motion } from 'framer-motion';
 import {
   Avatar,
   Button,
@@ -25,11 +20,16 @@ import {
   NavbarMenuToggle,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-
-import ModeToggle from '../../mode-toggle';
+import { motion } from 'framer-motion';
+import { usePathname } from 'next/navigation';
+import { signIn, signOut, useSession } from 'next-auth/react';
+import { useRouter } from 'nextjs-toploader/app';
+import React from 'react';
 
 import { avatars } from '@/lib/avatar';
 import { UserType } from '@/types/user';
+
+import ModeToggle from '../../mode-toggle';
 import { defaultItems, itemsMap } from './data';
 
 export default function Navbar() {

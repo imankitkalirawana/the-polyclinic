@@ -1,11 +1,4 @@
 import {
-  ButtonProps,
-  PermissionProps,
-} from '@/components/ui/dashboard/quicklook/types';
-import { renderChip } from '@/components/ui/data-table/cell-renderers';
-import { avatars } from '@/lib/avatar';
-import { AppointmentType } from '@/types/appointment';
-import {
   addToast,
   Avatar,
   Button,
@@ -18,13 +11,24 @@ import {
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { format } from 'date-fns';
-import { ActionType, DropdownKeyType } from '@/types/appointment';
-import ActivityTimeline from '@/components/ui/activity/timeline';
-import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
-import { useAppointmentStore } from '@/store/appointment';
-import { UserType } from '@/types/user';
+
 import CancelDeleteAppointment from '@/components/appointments/ui/cancel-delete';
 import RescheduleAppointment from '@/components/appointments/ui/reschedule-modal';
+import ActivityTimeline from '@/components/ui/activity/timeline';
+import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
+import {
+  ButtonProps,
+  PermissionProps,
+} from '@/components/ui/dashboard/quicklook/types';
+import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import { avatars } from '@/lib/avatar';
+import { useAppointmentStore } from '@/store/appointment';
+import {
+  ActionType,
+  AppointmentType,
+  DropdownKeyType,
+} from '@/types/appointment';
+import { UserType } from '@/types/user';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
   doctor: [

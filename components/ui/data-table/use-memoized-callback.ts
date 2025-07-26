@@ -1,6 +1,8 @@
 import { useMemo, useRef } from 'react';
 
-type noop = (this: any, ...args: any[]) => any;
+import type { $FixMe } from '@/types';
+
+type noop = (this: $FixMe, ...args: $FixMe[]) => $FixMe;
 
 type PickFunction<T extends noop> = (
   this: ThisParameterType<T>,

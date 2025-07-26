@@ -1,6 +1,6 @@
-import { type SidebarItem } from './sidebar';
-
 import ModeToggle from '@/components/mode-toggle';
+
+import { type SidebarItem } from './sidebar';
 
 export const sectionItems: SidebarItem[] = [
   {

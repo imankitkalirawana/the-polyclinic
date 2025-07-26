@@ -1,6 +1,7 @@
 'use server';
 
 import { AppointmentType, CreateAppointmentType } from '@/types/appointment';
+
 import { fetchData } from '.';
 
 export const getAllAppointments = async () => {

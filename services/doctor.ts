@@ -1,3 +1,4 @@
+import { addToast } from '@heroui/react';
 import {
   useMutation,
   UseMutationResult,
@@ -5,15 +6,16 @@ import {
   useQueryClient,
   UseQueryResult,
 } from '@tanstack/react-query';
-import { ApiResponse } from './api';
+
 import { CreateDoctorType, DoctorType } from '@/types/doctor';
+
+import { ApiResponse } from './api';
 import {
   createDoctor,
   deleteDoctor,
   getDoctor,
   getDoctors,
 } from './api/doctor';
-import { addToast } from '@heroui/react';
 
 export const useAllDoctors = (): UseQueryResult<DoctorType[]> => {
   return useQuery({

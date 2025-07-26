@@ -1,10 +1,12 @@
 import { useFormik } from 'formik';
 import { ReactNode } from 'react';
 
+import { $FixMe } from '@/types';
+
 export type FlowType = 'register' | 'login' | 'forgot-password';
 
 export interface AuthContextType {
-  formik: ReturnType<typeof useFormik<any>>;
+  formik: ReturnType<typeof useFormik<$FixMe>>;
   paginate: (newDirection: number) => void;
 }
 
@@ -18,7 +20,7 @@ export type AuthStep = {
 export interface AuthProps {
   flowType: 'register' | 'login' | 'forgot-password';
   steps: Record<number, AuthStep>;
-  formik: ReturnType<typeof useFormik<any>>;
+  formik: ReturnType<typeof useFormik<$FixMe>>;
   paginate: (newDirection: number) => void;
   footer?: ReactNode;
   showFullPage?: boolean;

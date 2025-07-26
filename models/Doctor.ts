@@ -1,5 +1,6 @@
+import mongoose from 'mongoose';
+
 import { auth } from '@/auth';
-import mongoose, { Model } from 'mongoose';
 
 const doctorSchema = new mongoose.Schema(
   {

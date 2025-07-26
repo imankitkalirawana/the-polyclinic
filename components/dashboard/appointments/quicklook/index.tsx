@@ -1,16 +1,17 @@
-import QuickLook from '@/components/ui/dashboard/quicklook';
-import { AppointmentType } from '@/types/appointment';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import { useAppointmentStore } from '@/store/appointment';
-import { DropdownItemProps } from '@/components/ui/dashboard/quicklook/types';
-import { useMemo } from 'react';
-import { permissions, sidebarContent, useAppointmentButtons } from './data';
-import { DropdownKeyType } from '@/types/appointment';
 import { addToast, Select, SelectItem } from '@heroui/react';
-import CancelDeleteAppointment from '@/components/appointments/ui/cancel-delete';
-import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import { Icon } from '@iconify/react/dist/iconify.js';
 import { format } from 'date-fns';
 import { useSession } from 'next-auth/react';
+import { useMemo } from 'react';
+
+import CancelDeleteAppointment from '@/components/appointments/ui/cancel-delete';
+import QuickLook from '@/components/ui/dashboard/quicklook';
+import { DropdownItemProps } from '@/components/ui/dashboard/quicklook/types';
+import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import { useAppointmentStore } from '@/store/appointment';
+import { AppointmentType, DropdownKeyType } from '@/types/appointment';
+
+import { permissions, sidebarContent, useAppointmentButtons } from './data';
 
 export const AppointmentQuickLook = () => {
   const { data: session } = useSession();

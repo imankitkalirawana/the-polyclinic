@@ -3,6 +3,7 @@ import {
   HydrationBoundary,
   QueryClient,
 } from '@tanstack/react-query';
+
 import EditService from '@/components/dashboard/services/service-item/edit';
 import { getServiceWithUID } from '@/services/api/service';
 

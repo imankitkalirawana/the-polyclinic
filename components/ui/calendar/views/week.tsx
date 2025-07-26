@@ -1,32 +1,33 @@
 'use client';
 
+import { ScrollShadow, Tooltip } from '@heroui/react';
 import {
-  format,
-  startOfWeek,
-  endOfWeek,
   eachDayOfInterval,
+  endOfWeek,
+  format,
+  isPast,
   isSameDay,
   isToday,
-  isPast,
+  startOfWeek,
 } from 'date-fns';
-import { cn } from '@/lib/utils';
-import type { AppointmentType } from '@/types/appointment';
+import { useSession } from 'next-auth/react';
+import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs';
+import React, { useEffect, useRef } from 'react';
+
 import { TIMINGS } from '@/lib/config';
-import { ScrollShadow, Tooltip } from '@heroui/react';
-import { useEffect, useRef } from 'react';
-import { CurrentHourIndicator } from '../ui/current-hour-indicator';
-import AppointmentList from '../ui/appointment-list';
-import AppointmentTriggerItem from '../ui/appointment-trigger-item';
+import { cn } from '@/lib/utils';
+import { useAppointmentStore } from '@/store/appointment';
+import type { AppointmentType } from '@/types/appointment';
+
 import {
   allowedRolesToCreateAppointment,
   MAX_APPOINTMENTS_IN_CELL,
 } from '../data';
-import DateChip from '../ui/date-chip';
 import { views } from '../types';
-import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs';
-import React from 'react';
-import { useSession } from 'next-auth/react';
-import { useAppointmentStore } from '@/store/appointment';
+import AppointmentList from '../ui/appointment-list';
+import AppointmentTriggerItem from '../ui/appointment-trigger-item';
+import { CurrentHourIndicator } from '../ui/current-hour-indicator';
+import DateChip from '../ui/date-chip';
 
 interface WeekViewProps {
   appointments: AppointmentType[];
@@ -41,10 +42,12 @@ export function WeekView({
 }: WeekViewProps) {
   const { data: session } = useSession();
   const ref = useRef<HTMLDivElement>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_currentDate, setCurrentDate] = useQueryState(
     'date',
     parseAsIsoDateTime.withDefault(new Date())
   );
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_view, setView] = useQueryState('view', parseAsStringEnum(views));
 
   const weekStart = startOfWeek(currentDate);
@@ -54,8 +57,7 @@ export function WeekView({
     session?.user?.role
   );
 
-  const { appointment, setIsTooltipOpen, setAppointment } =
-    useAppointmentStore();
+  const { appointment, setIsTooltipOpen } = useAppointmentStore();
   const displayHours = Array.from(
     { length: TIMINGS.appointment.end - TIMINGS.appointment.start },
     (_, i) => i + TIMINGS.appointment.start

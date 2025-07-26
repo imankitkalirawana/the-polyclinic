@@ -1,10 +1,13 @@
 'use client';
-import { format, isWithinInterval, startOfMonth, endOfMonth } from 'date-fns';
-import { AppointmentType } from '@/types/appointment';
-import { views } from '../types';
-import DateChip from '../ui/date-chip';
+import { endOfMonth, format, isWithinInterval, startOfMonth } from 'date-fns';
 import { parseAsStringEnum, useQueryState } from 'nuqs';
+import React from 'react';
+
+import { AppointmentType } from '@/types/appointment';
+
+import { views } from '../types';
 import AppointmentTriggerItem from '../ui/appointment-trigger-item';
+import DateChip from '../ui/date-chip';
 
 interface ScheduleViewProps {
   appointments: AppointmentType[];
@@ -12,6 +15,7 @@ interface ScheduleViewProps {
 }
 
 export function ScheduleView({ appointments, currentDate }: ScheduleViewProps) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_view, setView] = useQueryState('view', parseAsStringEnum(views));
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);

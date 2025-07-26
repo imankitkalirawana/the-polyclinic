@@ -1,12 +1,11 @@
 'use client';
 
-import React from 'react';
-import type { CardProps } from '@heroui/react';
 import { Button, Card, CardBody, CardHeader } from '@heroui/react';
+import React from 'react';
 
 import SwitchCell from './switch-cell';
 
-export default function NotificationsSettings(props: CardProps) {
+export default function NotificationsSettings() {
   return (
     <Card className="bg-transparent p-2 shadow-none">
       <CardHeader className="flex flex-col items-start px-4 pb-0 pt-4">

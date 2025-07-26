@@ -1,3 +1,5 @@
+import React from 'react';
+
 export default function BookAppointment() {
   return (
     <div className="p-4">

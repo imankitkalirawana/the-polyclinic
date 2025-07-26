@@ -1,5 +1,6 @@
-import { Icon } from '@iconify/react/dist/iconify.js';
 import { cn } from '@heroui/react';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import React from 'react';
 
 export interface CellRendererProps {
   label?: string;

@@ -1,5 +1,7 @@
-import { cn } from '@/lib/utils';
 import { RadioProps, useRadio, VisuallyHidden } from '@heroui/react';
+import React from 'react';
+
+import { cn } from '@/lib/utils';
 
 export default function CustomRadio(props: RadioProps) {
   const {

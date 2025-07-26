@@ -8,14 +8,15 @@ import {
   CardHeader,
   cn,
 } from '@heroui/react';
-import { format } from 'date-fns';
-import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import { format } from 'date-fns';
 import { useState } from 'react';
-import { useAllAppointments } from '@/services/appointment';
-import { castData } from '@/lib/utils';
-import { AppointmentType } from '@/types/appointment';
+
+import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import Skeleton from '@/components/ui/skeleton';
+import { castData } from '@/lib/utils';
+import { useAllAppointments } from '@/services/appointment';
+import { AppointmentType } from '@/types/appointment';
 
 const APPOINTMENTS_PER_PAGE = 6;
 

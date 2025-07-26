@@ -1,8 +1,5 @@
 'use client';
 
-import React from 'react';
-import { useRouter } from 'next/navigation';
-import { useFormik } from 'formik';
 import {
   Button,
   Card,
@@ -14,10 +11,14 @@ import {
   Textarea,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { drugValidationSchema } from '@/lib/validation';
-import { DrugType } from '@/types/drug';
-import { useDrugWithDid, useUpdateDrug } from '@/services/drug';
+import { useFormik } from 'formik';
+import { useRouter } from 'next/navigation';
+import React from 'react';
+
 import NoResults from '@/components/ui/no-results';
+import { drugValidationSchema } from '@/lib/validation';
+import { useDrugWithDid, useUpdateDrug } from '@/services/drug';
+import { DrugType } from '@/types/drug';
 
 export default function EditDrug({ did }: { did: number }) {
   const router = useRouter();

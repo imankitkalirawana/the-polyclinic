@@ -1,14 +1,16 @@
 'use client';
-import type { FormikProps } from 'formik';
-import { getValidEndTimes, getValidStartTimes, timeToMinutes } from './util';
-import type {
-  SlotConfig,
-  TimeSlot,
-  SpecificDateAvailability,
-} from '@/types/slots';
 import { Button, Input, Select, SelectItem, Tooltip } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import type { FormikProps } from 'formik';
 import React from 'react';
+
+import type {
+  SlotConfig,
+  SpecificDateAvailability,
+  TimeSlot,
+} from '@/types/slots';
+
+import { getValidEndTimes, getValidStartTimes, timeToMinutes } from './util';
 
 interface SpecificDateManagerProps {
   formik: FormikProps<SlotConfig>;

@@ -1,18 +1,19 @@
-import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
-import QuickLook from '@/components/ui/dashboard/quicklook';
-import { DrugType } from '@/types/drug';
+import { addToast } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useDrugStore } from '../store';
+import { format } from 'date-fns';
+import { useMemo } from 'react';
+
+import QuickLook from '@/components/ui/dashboard/quicklook';
 import {
   ButtonProps,
   DropdownItemProps,
 } from '@/components/ui/dashboard/quicklook/types';
-import { useMemo } from 'react';
-import { permissions, sidebarContent } from './data';
-import { ActionType, DropdownKeyType } from '../types';
-import { addToast, Select, SelectItem } from '@heroui/react';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
-import { format } from 'date-fns';
+import { DrugType } from '@/types/drug';
+
+import { useDrugStore } from '../store';
+import { ActionType, DropdownKeyType } from '../types';
+import { permissions, sidebarContent } from './data';
 
 export const DrugQuickLook = () => {
   const { selected, setSelected, setAction, action } = useDrugStore();

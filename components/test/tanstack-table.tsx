@@ -1,24 +1,16 @@
 'use client';
-import React, { useState, useMemo } from 'react';
+import { cn, TableColumn, TableHeader, TableRow } from '@heroui/react';
 import {
-  useReactTable,
-  getCoreRowModel,
-  flexRender,
-  createColumnHelper,
-  Column,
-  Header,
-  Cell,
-  Row,
-  Table as TanStackTable,
   CellContext,
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  Header,
+  Table as TanStackTable,
+  useReactTable,
 } from '@tanstack/react-table';
-import {
-  cn,
-  TableBody,
-  TableColumn,
-  TableHeader,
-  TableRow,
-} from '@heroui/react';
+import React, { useMemo, useState } from 'react';
+
 import { Table } from './ui/table';
 
 interface Person {

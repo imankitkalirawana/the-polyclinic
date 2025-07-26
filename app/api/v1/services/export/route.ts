@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
 import { format } from 'date-fns';
 import ExcelJS from 'exceljs';
+import { NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
@@ -14,7 +14,7 @@ export const GET = auth(async function GET(request: any) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
     await connectDB();
-    let services = await Service.find();
+    const services = await Service.find();
 
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Services');

@@ -1,5 +1,4 @@
 import { CalendarDate } from '@internationalized/date';
-import { isWeekend } from 'date-fns';
 
 import { TIMINGS } from '../config';
 

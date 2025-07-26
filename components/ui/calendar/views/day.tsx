@@ -1,21 +1,23 @@
 'use client';
 
-import { format, isPast, isSameDay, isToday } from 'date-fns';
-import { cn } from '@/lib/utils';
-import type { AppointmentType } from '@/types/appointment';
-import React, { useEffect, useRef, useState, type MouseEvent } from 'react';
-import { TIMINGS } from '@/lib/config'; // Assuming this provides start/end hours
 import { ScrollShadow, Tooltip } from '@heroui/react';
-import { CurrentHourIndicator } from '../ui/current-hour-indicator';
-import DateChip from '../ui/date-chip';
-import AppointmentTriggerItem from '../ui/appointment-trigger-item';
-import AppointmentList from '../ui/appointment-list';
+import { format, isPast, isSameDay, isToday } from 'date-fns';
+import { useSession } from 'next-auth/react';
+import React, { type MouseEvent, useEffect, useRef } from 'react';
+
+import { TIMINGS } from '@/lib/config'; // Assuming this provides start/end hours
+import { cn } from '@/lib/utils';
+import { useAppointmentStore } from '@/store/appointment';
+import type { AppointmentType } from '@/types/appointment';
+
 import {
   allowedRolesToCreateAppointment,
   MAX_APPOINTMENTS_IN_CELL,
 } from '../data';
-import { useSession } from 'next-auth/react';
-import { useAppointmentStore } from '@/store/appointment';
+import AppointmentList from '../ui/appointment-list';
+import AppointmentTriggerItem from '../ui/appointment-trigger-item';
+import { CurrentHourIndicator } from '../ui/current-hour-indicator';
+import DateChip from '../ui/date-chip';
 
 interface DayViewProps {
   appointments: AppointmentType[];

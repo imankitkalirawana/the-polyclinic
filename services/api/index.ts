@@ -2,6 +2,9 @@
 
 import axios from 'axios';
 import { cookies } from 'next/headers';
+
+import type { $FixMe } from '@/types';
+
 import { BASE_URL } from './helper';
 
 export interface ApiResponse<T> {
@@ -14,10 +17,10 @@ export async function fetchData<T>(
   endpoint: string,
   options: {
     method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
-    data?: any;
-    params?: any;
+    data?: $FixMe;
+    params?: $FixMe;
     baseUrl?: string;
-    headers?: any;
+    headers?: $FixMe;
   } = {}
 ): Promise<ApiResponse<T>> {
   try {
@@ -39,7 +42,7 @@ export async function fetchData<T>(
       message: res.data?.message || 'Request successful',
       data: res.data?.data || res.data,
     };
-  } catch (error: any) {
+  } catch (error: $FixMe) {
     return {
       success: false,
       message: error?.response?.data?.message || 'Request failed',

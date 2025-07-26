@@ -1,5 +1,7 @@
+import { useQuery, UseQueryResult } from '@tanstack/react-query';
+
 import { CityProps, CountryProps, StateProps } from '@/types';
-import { UseQueryResult, useQuery } from '@tanstack/react-query';
+
 import {
   getAllCitiesByCountryAndState,
   getAllCountries,

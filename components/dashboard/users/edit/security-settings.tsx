@@ -1,10 +1,5 @@
 'use client';
 
-import React from 'react';
-import axios from 'axios';
-import { useFormik } from 'formik';
-import { MailOptions } from 'nodemailer/lib/sendmail-transport';
-import * as Yup from 'yup';
 import {
   addToast,
   Button,
@@ -24,9 +19,11 @@ import {
   useDisclosure,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
-
-import CellWrapper from './cell-wrapper';
-import SwitchCell from './switch-cell';
+import axios from 'axios';
+import { useFormik } from 'formik';
+import { MailOptions } from 'nodemailer/lib/sendmail-transport';
+import React from 'react';
+import * as Yup from 'yup';
 
 import {
   changePassword,
@@ -36,6 +33,9 @@ import {
 } from '@/functions/server-actions';
 import { UserRoles } from '@/lib/options';
 import { UserType } from '@/types/user';
+
+import CellWrapper from './cell-wrapper';
+import SwitchCell from './switch-cell';
 
 export default function SecuritySettings({
   user,
@@ -141,7 +141,7 @@ export default function SecuritySettings({
         .min(8, 'Password must be at least 8 characters.')
         .required('Please enter your password.'),
       confirmPassword: Yup.string()
-        // @ts-ignore
+        // @ts-expect-error - Yup.ref is not typed
         .oneOf([Yup.ref('password'), null], 'Passwords must match.')
         .required('Please confirm your password.'),
     }),
@@ -192,14 +192,12 @@ export default function SecuritySettings({
       }
       await axios
         .put(`/api/v1/users/uid/${user?.uid}`, {
-          // @ts-ignore
           status: user.status === 'active' ? 'inactive' : 'active',
         })
         .then(() => {
           refetch();
           addToast({
             title: `Account ${
-              // @ts-ignore
               user.status === 'inactive' ? 'activated' : 'deactivated'
             } successfully.`,
             color: 'success',
@@ -236,14 +234,12 @@ export default function SecuritySettings({
       }
       await axios
         .put(`/api/v1/users/uid/${user.uid}`, {
-          // @ts-ignore
           status: user.status === 'active' ? 'deleted' : 'active',
         })
         .then(() => {
           refetch();
           addToast({
             title: `Account ${
-              // @ts-ignore
               user.status === 'deleted' ? 'recovered' : 'deleted'
             } successfully.`,
             color: 'success',
@@ -401,14 +397,8 @@ export default function SecuritySettings({
           {/* Deactivate Account */}
           <CellWrapper>
             <div>
-              <p>
-                {
-                  // @ts-ignore
-                  user.status === 'active' ? 'Deactivate' : 'Activate'
-                }
-              </p>
+              <p>{user.status === 'active' ? 'Deactivate' : 'Activate'}</p>
               <p className="text-small text-default-500">
-                {/* @ts-ignore */}
                 {user.status === 'active' ? 'Deactivate' : 'Activate'} your
                 account and delete all your data.
               </p>
@@ -418,29 +408,24 @@ export default function SecuritySettings({
               variant="bordered"
               onPress={deactivateModal.onOpen}
             >
-              {/* @ts-ignore */}
               {user.status === 'active' ? 'Deactivate' : 'Activate'}
             </Button>
           </CellWrapper>
           {/* Delete Account */}
           <CellWrapper>
             <div>
-              {/* @ts-ignore */}
               <p>{user.status === 'deleted' ? 'Recover' : 'Delete'} Account</p>
               <p className="text-small text-default-500">
-                {/* @ts-ignore */}
                 {user.status === 'deleted' ? 'Recover' : 'Delete'} your account
                 and all your data.
               </p>
             </div>
             <Button
-              // @ts-ignore
               color={user.status === 'deleted' ? 'success' : 'danger'}
               radius="full"
               variant="flat"
               onPress={deleteModal.onOpen}
             >
-              {/* @ts-ignore */}
               {user.status === 'deleted' ? 'Recover' : 'Delete'}
             </Button>
           </CellWrapper>
@@ -601,7 +586,6 @@ export default function SecuritySettings({
 
       <EditModal
         header={{
-          // @ts-ignore
           title: user.status === 'active' ? 'Deactivate' : 'Activate',
           subtitle: (
             <>
@@ -612,7 +596,6 @@ export default function SecuritySettings({
         editEmailModal={deactivateModal}
         button={
           <Button
-            // @ts-ignore
             color={user.status === 'active' ? 'danger' : 'success'}
             fullWidth
             onPress={() => deactivateFormik.handleSubmit()}
@@ -621,7 +604,6 @@ export default function SecuritySettings({
               deactivateFormik.values.email !== user.email ? true : false
             }
           >
-            {/* @ts-ignore */}
             {user.status === 'active'
               ? 'Deactivate Account'
               : 'Activate Account'}
@@ -650,7 +632,6 @@ export default function SecuritySettings({
 
       <EditModal
         header={{
-          // @ts-ignore
           title: user.status === 'deleted' ? 'Recover' : 'Delete',
           subtitle: (
             <>
@@ -661,14 +642,12 @@ export default function SecuritySettings({
         editEmailModal={deleteModal}
         button={
           <Button
-            // @ts-ignore
             color={user.status === 'deleted' ? 'success' : 'danger'}
             fullWidth
             onPress={() => deleteFormik.handleSubmit()}
             isLoading={deleteFormik.isSubmitting}
             isDisabled={deleteFormik.values.email !== user.email ? true : false}
           >
-            {/* @ts-ignore */}
             {user.status === 'deleted' ? 'Recover Account' : 'Delete Account'}
           </Button>
         }
@@ -697,7 +676,11 @@ export default function SecuritySettings({
 }
 
 interface EditModalProps {
-  editEmailModal: any;
+  editEmailModal: {
+    isOpen: boolean;
+    onOpen: () => void;
+    onClose: () => void;
+  };
   onSubmit?: () => void;
   header?: {
     title: React.ReactNode;
@@ -746,7 +729,7 @@ const EditModal = ({
                     color="primary"
                     fullWidth
                     onPress={() => {
-                      onSubmit && onSubmit();
+                      onSubmit?.();
                     }}
                   >
                     Send OTP

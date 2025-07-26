@@ -1,17 +1,21 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-  Modal as HeroModal,
-  ModalProps as HeroModalProps,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
+  Alert,
+  AlertProps,
   Button,
   ButtonProps,
-  AlertProps,
-  Alert,
+  Modal as HeroModal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalProps as HeroModalProps,
   ScrollShadow,
 } from '@heroui/react';
 import React from 'react';
+
+import { $FixMe } from '@/types';
+
 import AsyncButton from '../buttons/async-button';
 
 interface ModalProps {
@@ -96,7 +100,7 @@ function Modal({
                     )}
                     fn={async () => {
                       if (primaryButton.onPress) {
-                        await primaryButton.onPress({} as any);
+                        await primaryButton.onPress({} as $FixMe);
                       }
                     }}
                     whileSubmitting={primaryButton.whileSubmitting}

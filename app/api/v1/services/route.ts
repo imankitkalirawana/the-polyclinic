@@ -30,7 +30,7 @@ export const POST = auth(async function POST(request: any) {
   }
 
   try {
-    let data: ServiceType = await request.json();
+    const data: ServiceType = await request.json();
     data.createdBy = request.auth.user.email;
     await connectDB();
     if (await Service.exists({ uniqueId: data.uniqueId })) {

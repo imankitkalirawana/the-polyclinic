@@ -1,6 +1,7 @@
-import { NextResponse } from 'next/server';
 import { format } from 'date-fns';
 import ExcelJS from 'exceljs';
+import { NextResponse } from 'next/server';
+
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import Appointment from '@/models/Appointment';
@@ -16,7 +17,7 @@ export const POST = auth(async function POST(request: any) {
     const { keys } = await request.json();
 
     await connectDB();
-    let appointments = await Appointment.find(
+    const appointments = await Appointment.find(
       keys && keys.length > 0 && keys[0] !== -1 ? { aid: { $in: keys } } : {}
     );
 

@@ -1,17 +1,18 @@
 'use client';
+import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs';
+import React, { useState } from 'react';
 
-import { useState } from 'react';
-import { CalendarHeader } from './header';
-import { MonthView } from './views/month';
-import { WeekView } from './views/week';
-import { DayView } from './views/day';
-import { ScheduleView } from './views/schedule';
-import { YearView } from './views/year';
-import { AppointmentType } from '@/types/appointment';
-import { views } from './types';
-import { parseAsStringEnum, useQueryState, parseAsIsoDateTime } from 'nuqs';
-import AppointmentDrawer from './ui/appointment-drawer';
 import { CreateAppointment } from '@/components/appointments/create';
+import { AppointmentType } from '@/types/appointment';
+
+import { CalendarHeader } from './header';
+import { views } from './types';
+import AppointmentDrawer from './ui/appointment-drawer';
+import { DayView } from './views/day';
+import { MonthView } from './views/month';
+import { ScheduleView } from './views/schedule';
+import { WeekView } from './views/week';
+import { YearView } from './views/year';
 
 interface CalendarProps {
   appointments: AppointmentType[];
@@ -29,7 +30,7 @@ export function Calendar({ appointments }: CalendarProps) {
 
   const [showDialog, setShowDialog] = useState(false);
 
-  const handleTimeSlotClick = (date: Date, time?: string) => {
+  const handleTimeSlotClick = (date: Date) => {
     setCurrentDate(date);
     setShowDialog(true);
   };

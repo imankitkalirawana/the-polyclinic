@@ -1,10 +1,11 @@
-import { genders } from '@/types/user';
-import { AppointmentType } from '@/types/appointment';
 import mongoose, { Model } from 'mongoose';
 import mongooseSequence from 'mongoose-sequence';
-import { auth } from '@/auth';
 
-// @ts-ignore
+import { auth } from '@/auth';
+import { AppointmentType } from '@/types/appointment';
+import { genders } from '@/types/user';
+
+// @ts-expect-error - mongoose-sequence is not typed
 const AutoIncrement = mongooseSequence(mongoose);
 
 const appointmentSchema = new mongoose.Schema(
@@ -101,7 +102,7 @@ appointmentSchema.pre(
   }
 );
 
-// @ts-ignore
+// @ts-expect-error - mongoose-sequence is not typed
 appointmentSchema.plugin(AutoIncrement, { inc_field: 'aid', start_seq: 1000 });
 
 const Appointment: Model<AppointmentType> =

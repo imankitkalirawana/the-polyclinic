@@ -1,9 +1,8 @@
+import axios from 'axios';
 import { NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
-import { connectDB } from '@/lib/db';
-import Appointment from '@/models/Appointment';
-import { UserType } from '@/types/user';
+import { generateAppointments } from '@/lib/appointments/mock';
 import {
   API_ACTIONS,
   APPOINTMENT,
@@ -11,10 +10,11 @@ import {
   MOCK_DATA,
   TIMINGS,
 } from '@/lib/config';
-import { generateAppointments } from '@/lib/appointments/mock';
-import axios from 'axios';
+import { connectDB } from '@/lib/db';
+import Appointment from '@/models/Appointment';
+import { UserType } from '@/types/user';
 
-let defaultConfig = {
+const defaultConfig = {
   method: 'post',
   maxBodyLength: Infinity,
   url: 'https://n8n.divinely.dev/webhook/appointment/create',
@@ -90,7 +90,7 @@ export const POST = auth(async function POST(request: any) {
     const appointment = new Appointment(data);
     await appointment.save();
 
-    let dataContent = JSON.stringify({
+    const dataContent = JSON.stringify({
       summary: `${CLINIC_INFO.name} - ${data.patient.name}/${data.doctor.name}`,
       description: data.additionalInfo.description,
       date: appointment.date,

@@ -1,3 +1,5 @@
+import type { $FixMe } from '@/types';
+
 export const formatPrice = (price: number) => {
   return new Intl.NumberFormat('en-IN', {
     style: 'currency',
@@ -49,9 +51,12 @@ export const convertMinutesToHoursAndMinutes = (minutes: number) => {
 };
 
 // flatten object
-export const flattenObject = (obj: any, prefix = ''): Record<string, any> => {
+export const flattenObject = (
+  obj: $FixMe,
+  prefix = ''
+): Record<string, $FixMe> => {
   return Object.keys(obj || {}).reduce(
-    (acc: Record<string, any>, key: string) => {
+    (acc: Record<string, $FixMe>, key: string) => {
       const propKey = prefix ? `${prefix}.${key}` : key;
       if (
         typeof obj[key] === 'object' &&
@@ -77,11 +82,11 @@ export const flattenObject = (obj: any, prefix = ''): Record<string, any> => {
  * @returns An object containing tracked changes
  */
 export const trackObjectChanges = (
-  originalObj: any,
-  updatedObj: any
+  originalObj: $FixMe,
+  updatedObj: $FixMe
 ): {
   changedFields: string[];
-  fieldDiffs: Record<string, { old: any; new: any }>;
+  fieldDiffs: Record<string, { old: $FixMe; new: $FixMe }>;
 } => {
   // Convert mongoose documents to plain objects if needed
   const original =
@@ -113,7 +118,7 @@ export const trackObjectChanges = (
       };
       return acc;
     },
-    {} as Record<string, { old: any; new: any }>
+    {} as Record<string, { old: $FixMe; new: $FixMe }>
   );
 
   return { changedFields, fieldDiffs };

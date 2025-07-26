@@ -1,12 +1,14 @@
 'use server';
 
+import { faker } from '@faker-js/faker';
+import { addDays, subDays } from 'date-fns';
+
 import {
   appointmentModes,
   AppointmentType,
   appointmentTypes,
 } from '@/types/appointment';
-import { faker } from '@faker-js/faker';
-import { addDays, subDays } from 'date-fns';
+
 import { TIMINGS } from '../config';
 
 export async function generateAppointments({

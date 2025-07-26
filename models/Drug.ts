@@ -1,6 +1,7 @@
-import { DrugStatus, DrugType } from '@/types/drug';
 import mongoose, { Model } from 'mongoose';
+
 import { auth } from '@/auth';
+import { DrugStatus, DrugType } from '@/types/drug';
 
 const drugSchema = new mongoose.Schema<DrugType>(
   {

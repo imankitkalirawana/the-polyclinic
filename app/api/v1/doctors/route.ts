@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import Doctor from '@/models/Doctor';
@@ -56,7 +57,7 @@ export const POST = auth(async function POST(request: any) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    let data = await request.json();
+    const data = await request.json();
 
     const { uid, creation_type } = data;
 

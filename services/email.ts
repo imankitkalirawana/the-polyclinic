@@ -1,6 +1,8 @@
-import { UseQueryResult, useQuery } from '@tanstack/react-query';
-import { getAllEmails, getEmailWithID } from './api/email';
+import { useQuery, UseQueryResult } from '@tanstack/react-query';
+
 import { EmailType } from '@/types/email';
+
+import { getAllEmails, getEmailWithID } from './api/email';
 
 export const useAllEmails = (): UseQueryResult<EmailType[]> => {
   return useQuery({

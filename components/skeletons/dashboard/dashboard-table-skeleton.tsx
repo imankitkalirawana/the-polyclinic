@@ -1,6 +1,7 @@
 'use client';
-
 import { Card } from '@heroui/react';
+import React from 'react';
+
 import Skeleton from '@/components/ui/skeleton';
 
 export default function DashboardTableSkeleton() {

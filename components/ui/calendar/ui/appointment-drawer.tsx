@@ -1,4 +1,3 @@
-import { AppointmentType } from '@/types/appointment';
 import {
   Button,
   ButtonGroup,
@@ -23,19 +22,22 @@ import {
   User,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { CellRenderer } from '@/components/ui/cell-renderer';
-import { CLINIC_INFO } from '@/lib/config';
 import { format } from 'date-fns';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { memo, useMemo, useCallback } from 'react';
 import Link from 'next/link';
-import { useAppointmentWithAID } from '@/services/appointment';
 import { useSession } from 'next-auth/react';
-import useAppointmentButtonsInDrawer from '@/hooks/use-appointment-button';
-import { renderChip } from '@/components/ui/data-table/cell-renderers';
-import StatusRenderer from './status-renderer';
+import React, { memo, useCallback, useMemo } from 'react';
+
 import AsyncButton from '@/components/ui/buttons/async-button';
+import { CellRenderer } from '@/components/ui/cell-renderer';
+import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import useAppointmentButtonsInDrawer from '@/hooks/use-appointment-button';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { CLINIC_INFO } from '@/lib/config';
+import { useAppointmentWithAID } from '@/services/appointment';
 import { useAppointmentStore } from '@/store/appointment';
+import { AppointmentType } from '@/types/appointment';
+
+import StatusRenderer from './status-renderer';
 
 const DRAWER_DELAY = 200;
 
@@ -418,7 +420,7 @@ const AppointmentFooter = memo(function AppointmentFooter({
 }: {
   appointment: AppointmentType;
 }) {
-  const { action, setAction } = useAppointmentStore();
+  const { action } = useAppointmentStore();
   const { data: session } = useSession();
   const buttons = useAppointmentButtonsInDrawer({
     selected: appointment,

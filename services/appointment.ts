@@ -1,17 +1,19 @@
 import {
-  UseMutationResult,
-  UseQueryResult,
   useMutation,
+  UseMutationResult,
   useQuery,
   useQueryClient,
+  UseQueryResult,
 } from '@tanstack/react-query';
+
 import { AppointmentType, CreateAppointmentType } from '@/types/appointment';
+
+import { ApiResponse } from './api';
 import {
   createAppointment,
   getAllAppointments,
   getAppointmentWithAID,
 } from './api/appointment';
-import { ApiResponse } from './api';
 
 export const useAllAppointments = (): UseQueryResult<AppointmentType[]> => {
   return useQuery({

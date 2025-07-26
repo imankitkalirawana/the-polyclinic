@@ -1,12 +1,13 @@
-import Modal from '@/components/ui/modal';
-import { useAppointmentStore } from '@/store/appointment';
-import { apiRequest } from '@/lib/axios';
-import { format } from 'date-fns';
 import { addToast, Card, CardBody, ScrollShadow, User } from '@heroui/react';
-import React, { useMemo } from 'react';
-import { AppointmentType } from '@/types/appointment';
-import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { format } from 'date-fns';
+import React, { useMemo } from 'react';
+
+import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import Modal from '@/components/ui/modal';
+import { apiRequest } from '@/lib/axios';
+import { useAppointmentStore } from '@/store/appointment';
+import { AppointmentType } from '@/types/appointment';
 
 export default function CancelDeleteAppointments({
   appointments,

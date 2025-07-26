@@ -1,12 +1,13 @@
 'use client';
 
-import { format } from 'date-fns';
 import { Chip } from '@heroui/react';
-import { EmailType } from '@/types/email';
-import { useEmailWithID } from '@/services/email';
+import { format } from 'date-fns';
+
+import Loading from '@/app/loading';
 import NoResults from '@/components/ui/no-results';
 import { castData } from '@/lib/utils';
-import Loading from '@/app/loading';
+import { useEmailWithID } from '@/services/email';
+import { EmailType } from '@/types/email';
 
 export default function Email({ id }: { id: string }) {
   const { data, isLoading, isError } = useEmailWithID(id);

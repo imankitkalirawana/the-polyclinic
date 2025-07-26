@@ -1,12 +1,12 @@
 'use server';
 import bcrypt from 'bcryptjs';
 
-import { sendHTMLEmail } from '../emails/send-email';
-
 import { CLINIC_INFO } from '@/lib/config';
 import { connectDB } from '@/lib/db';
 import User from '@/models/User';
 import { WelcomeUser } from '@/utils/email-template/patient/new-user';
+
+import { sendHTMLEmail } from '../emails/send-email';
 
 export default async function registerUser(data: {
   name: string;
@@ -67,7 +67,7 @@ export default async function registerUser(data: {
 export const generatePassword = (length: number) => {
   // show contain at least one number, one lowercase, one uppercase and one special character
   const charset =
-    'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]\:;?><,./-=';
+    'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=';
   let password = '';
   for (let i = 0; i < length; i++) {
     password += charset.charAt(Math.floor(Math.random() * charset.length));

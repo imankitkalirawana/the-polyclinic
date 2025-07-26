@@ -1,5 +1,3 @@
-import { PermissionProps } from '@/components/ui/dashboard/quicklook/types';
-import { avatars } from '@/lib/avatar';
 import {
   Avatar,
   Button,
@@ -11,9 +9,12 @@ import {
   Tabs,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { ActionType, DropdownKeyType } from '../types';
-import ActivityTimeline from '../../../ui/activity/timeline';
+
+import { PermissionProps } from '@/components/ui/dashboard/quicklook/types';
+import { avatars } from '@/lib/avatar';
 import { DoctorType } from '@/types/doctor';
+
+import { ActionType, DropdownKeyType } from '../types';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
   doctor: [

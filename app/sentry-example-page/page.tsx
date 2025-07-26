@@ -1,8 +1,8 @@
 'use client';
 
-import Head from 'next/head';
 import * as Sentry from '@sentry/nextjs';
-import { useState, useEffect } from 'react';
+import Head from 'next/head';
+import { useEffect, useState } from 'react';
 
 class SentryExampleFrontendError extends Error {
   constructor(message: string | undefined) {
@@ -50,6 +50,7 @@ export default function Page() {
           <a
             target="_blank"
             href="https://devocode.sentry.io/issues/?project=4509429541502976"
+            rel="noreferrer"
           >
             Issues Page
           </a>
@@ -57,6 +58,7 @@ export default function Page() {
           <a
             target="_blank"
             href="https://docs.sentry.io/platforms/javascript/guides/nextjs/"
+            rel="noreferrer"
           >
             read our docs
           </a>
@@ -96,6 +98,7 @@ export default function Page() {
               <a
                 target="_blank"
                 href="https://docs.sentry.io/platforms/javascript/guides/nextjs/troubleshooting/#the-sdk-is-not-sending-any-data"
+                rel="noreferrer"
               >
                 the troubleshooting guide
               </a>

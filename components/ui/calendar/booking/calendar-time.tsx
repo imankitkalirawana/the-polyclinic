@@ -1,6 +1,6 @@
 import { Button } from '@heroui/react';
 import { motion } from 'framer-motion';
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 interface CalendarTimeProps {
   slot: string;

@@ -1,9 +1,10 @@
-import { useState, useMemo } from 'react';
+import { Button, Input, RadioGroup, ScrollShadow } from '@heroui/react';
+import { useMemo, useState } from 'react';
+
 import CustomRadio from '@/components/ui/custom-radio';
 import { castData } from '@/lib/utils';
 import { useAllAppointments } from '@/services/appointment';
 import { AppointmentType, appointmentTypes } from '@/types/appointment';
-import { Button, Input, RadioGroup, ScrollShadow } from '@heroui/react';
 
 export default function AppointmentTypeSelection({
   appointmentType,

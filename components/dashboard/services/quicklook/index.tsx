@@ -1,16 +1,17 @@
-import QuickLook from '@/components/ui/dashboard/quicklook';
-import { ServiceType } from '@/types/service';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useServiceStore } from '../store';
+import { useMemo } from 'react';
+
+import QuickLook from '@/components/ui/dashboard/quicklook';
 import {
   ButtonProps,
   DropdownItemProps,
 } from '@/components/ui/dashboard/quicklook/types';
-import { useMemo } from 'react';
-import { permissions } from './data';
-import { ActionType, DropdownKeyType } from '../types';
-import { addToast, Select, SelectItem } from '@heroui/react';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import { ServiceType } from '@/types/service';
+
+import { useServiceStore } from '../store';
+import { ActionType, DropdownKeyType } from '../types';
+import { permissions } from './data';
 
 export const ServiceQuickLook = () => {
   const { selected, setSelected, setAction, action } = useServiceStore();

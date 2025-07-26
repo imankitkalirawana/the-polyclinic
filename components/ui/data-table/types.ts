@@ -1,7 +1,9 @@
-import type React from 'react';
 import type { Selection, SortDescriptor } from '@heroui/react';
+import type React from 'react';
 
-export type TableItem = Record<string, any>;
+import type { $FixMe } from '@/types';
+
+export type TableItem = Record<string, $FixMe>;
 
 export interface ColumnDef<T extends TableItem> {
   name: string;

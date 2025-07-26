@@ -1,16 +1,18 @@
-import QuickLook from '@/components/ui/dashboard/quicklook';
-import { UserType } from '@/types/user';
+import { addToast } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useUserStore } from '../store';
+import React, { useMemo } from 'react';
+
+import QuickLook from '@/components/ui/dashboard/quicklook';
 import {
   ButtonProps,
   DropdownItemProps,
 } from '@/components/ui/dashboard/quicklook/types';
-import { useMemo } from 'react';
-import { permissions, sidebarContent } from './data';
-import { ActionType, DropdownKeyType } from '../types';
-import { addToast, Select, SelectItem } from '@heroui/react';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import { UserType } from '@/types/user';
+
+import { useUserStore } from '../store';
+import { ActionType, DropdownKeyType } from '../types';
+import { permissions, sidebarContent } from './data';
 
 export const UserQuickLook = () => {
   const { selected, setSelected, setAction, action } = useUserStore();

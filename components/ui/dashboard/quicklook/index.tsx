@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 import {
   Button,
@@ -16,10 +17,13 @@ import {
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useSession } from 'next-auth/react';
 import React, { useCallback, useMemo } from 'react';
+
 import AsyncButton from '@/components/ui/buttons/async-button';
-import { Title } from '@/components/ui/typography/modal';
-import { QuickLookProps } from './types';
 import { CellRenderer } from '@/components/ui/cell-renderer';
+import { Title } from '@/components/ui/typography/modal';
+import { $FixMe } from '@/types';
+
+import { QuickLookProps } from './types';
 
 export default function QuickLook<
   T,
@@ -35,14 +39,12 @@ export default function QuickLook<
   dropdown,
   sidebarContent,
   content,
-}: QuickLookProps<T, A, D>): React.ReactElement<any> {
+}: QuickLookProps<T, A, D>): React.ReactElement<$FixMe> {
   const { data: session } = useSession();
-  // const role = useMemo(
-  //   () => session?.user?.role ?? 'user',
-  //   [session?.user?.role]
-  // );
-
-  const role = 'admin';
+  const role = useMemo(
+    () => session?.user?.role ?? 'user',
+    [session?.user?.role]
+  );
 
   const item = useMemo(() => selectedItem || ({} as T), [selectedItem]);
   const availablePermissions = useMemo(() => {
@@ -121,7 +123,7 @@ export default function QuickLook<
                   rest)(btn)}
                 fn={async () => {
                   if (btn.onPress) {
-                    await btn.onPress({} as any);
+                    await btn.onPress({} as $FixMe);
                   }
                 }}
               >
@@ -160,7 +162,7 @@ export default function QuickLook<
                 whileSubmitting={btn.whileLoading}
                 fn={async () => {
                   if (btn.onPress) {
-                    await btn.onPress({} as any);
+                    await btn.onPress({} as $FixMe);
                   }
                 }}
               >

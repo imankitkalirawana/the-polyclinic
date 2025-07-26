@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-import Link from 'next/link';
 import {
   Avatar,
   Button,
@@ -11,12 +9,16 @@ import {
   CardHeader,
   ScrollShadow,
 } from '@heroui/react';
+import Link from 'next/link';
+import React from 'react';
+
+import Loading from '@/app/loading';
 import { humanReadableDate, humanReadableTime } from '@/lib/utility';
-import CellValue from '../../../ui/cell-value';
+import { castData } from '@/lib/utils';
 import { useUserWithUID } from '@/services/user';
 import { UserType } from '@/types/user';
-import { castData } from '@/lib/utils';
-import Loading from '@/app/loading';
+
+import CellValue from '../../../ui/cell-value';
 
 export default function UserCard({ uid }: { uid: number }) {
   const { data, isError, isLoading } = useUserWithUID(uid);

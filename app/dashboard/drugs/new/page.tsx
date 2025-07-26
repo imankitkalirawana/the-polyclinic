@@ -1,5 +1,6 @@
-import { auth } from '@/auth';
 import { unauthorized } from 'next/navigation';
+
+import { auth } from '@/auth';
 
 export default async function Page() {
   const session = await auth();

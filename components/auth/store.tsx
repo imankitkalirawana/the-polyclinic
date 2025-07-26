@@ -1,13 +1,15 @@
 'use client';
-import { createContext, useContext } from 'react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { useQueryState } from 'nuqs';
-import { useRouter } from 'nextjs-toploader/app';
 import { addToast } from '@heroui/react';
-import { Gender } from '@/types/user';
-import { register, sendOTP, verifyOTP, login } from '@/lib/server-actions/auth';
+import { useFormik } from 'formik';
+import { useRouter } from 'nextjs-toploader/app';
+import { useQueryState } from 'nuqs';
+import { createContext, useContext } from 'react';
+import * as Yup from 'yup';
+
 import { verifyEmail } from '@/functions/server-actions/auth/verification';
+import { login, register, sendOTP, verifyOTP } from '@/lib/server-actions/auth';
+import { $FixMe } from '@/types';
+
 import { AuthContextType, FlowType } from './types';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -141,7 +143,7 @@ export const createAuthProvider = (flowType: FlowType) => {
     };
 
     // Handle form submission based on flow type
-    const handleSubmit = async (values: any, { setFieldError }: any) => {
+    const handleSubmit = async (values: $FixMe, { setFieldError }: $FixMe) => {
       try {
         switch (flowType) {
           case 'register':
@@ -153,7 +155,7 @@ export const createAuthProvider = (flowType: FlowType) => {
           default:
             return;
         }
-      } catch (error) {
+      } catch {
         addToast({
           title: 'An error occurred',
           description: 'Please try again later.',
@@ -164,8 +166,8 @@ export const createAuthProvider = (flowType: FlowType) => {
 
     // Registration flow
     const handleRegisterSubmit = async (
-      values: any,
-      { setFieldError }: any
+      values: $FixMe,
+      { setFieldError }: $FixMe
     ) => {
       if (values.page === 0) {
         paginate(1);
@@ -225,7 +227,10 @@ export const createAuthProvider = (flowType: FlowType) => {
     };
 
     // Login flow
-    const handleLoginSubmit = async (values: any, { setFieldError }: any) => {
+    const handleLoginSubmit = async (
+      values: $FixMe,
+      { setFieldError }: $FixMe
+    ) => {
       if (values.page === 0) {
         paginate(1);
       }
@@ -253,8 +258,8 @@ export const createAuthProvider = (flowType: FlowType) => {
 
     // Forgot password flow
     const handleForgotPasswordSubmit = async (
-      values: any,
-      { setFieldError }: any
+      values: $FixMe,
+      { setFieldError }: $FixMe
     ) => {
       if (values.page === 0) {
         // Send OTP
@@ -308,7 +313,7 @@ export const createAuthProvider = (flowType: FlowType) => {
             color: 'success',
           });
           router.push('/auth/login?email=' + values.email);
-        } catch (error) {
+        } catch {
           addToast({
             title: 'An error occurred',
             description: 'Please try again later.',

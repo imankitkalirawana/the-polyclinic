@@ -1,11 +1,12 @@
-import Modal from '@/components/ui/modal';
-import { useAppointmentStore } from '@/store/appointment';
-import { apiRequest } from '@/lib/axios';
-import { format } from 'date-fns';
 import { addToast, Card, CardBody } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import React from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { format } from 'date-fns';
+import React from 'react';
+
+import Modal from '@/components/ui/modal';
+import { apiRequest } from '@/lib/axios';
+import { useAppointmentStore } from '@/store/appointment';
 
 export default function CancelDeleteAppointment({
   type = 'cancel',

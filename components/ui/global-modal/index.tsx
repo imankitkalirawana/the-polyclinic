@@ -1,13 +1,13 @@
 'use client';
 
-import { createContext, useContext, useState, ReactNode } from 'react';
 import {
   Modal,
-  ModalContent,
-  ModalHeader,
   ModalBody,
+  ModalContent,
   ModalFooter,
+  ModalHeader,
 } from '@heroui/modal';
+import React, { createContext, ReactNode, useContext, useState } from 'react';
 
 type ModalOptions = {
   body: ReactNode;

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+
 import client from '@/lib/db';
 
 export const GET = async function GET() {

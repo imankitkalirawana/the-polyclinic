@@ -1,4 +1,5 @@
 import { Image } from '@heroui/react';
+import React from 'react';
 
 interface Props {
   message?: string;

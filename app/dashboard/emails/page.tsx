@@ -3,6 +3,7 @@ import {
   HydrationBoundary,
   QueryClient,
 } from '@tanstack/react-query';
+
 import Emails from '@/components/dashboard/emails';
 import { getAllEmails } from '@/services/api/email';
 

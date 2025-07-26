@@ -1,8 +1,4 @@
 'use client';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useFormik } from 'formik';
-import ReactQuill from 'react-quill';
 import {
   Button,
   Card,
@@ -18,16 +14,20 @@ import {
   Tooltip,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import { useFormik } from 'formik';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import ReactQuill from 'react-quill';
 
+import Loading from '@/app/loading';
+import NoResults from '@/components/ui/no-results';
 import QuillInput from '@/components/ui/quill-input';
 import { verifyUID } from '@/functions/server-actions';
 import { ServiceStatuses, ServiceTypes } from '@/lib/interface';
-import { serviceValidationSchema } from '@/lib/validation';
-import { ServiceType } from '@/types/service';
-import { useServiceWithUID, useUpdateService } from '@/services/service';
 import { castData } from '@/lib/utils';
-import Loading from '@/app/loading';
-import NoResults from '@/components/ui/no-results';
+import { serviceValidationSchema } from '@/lib/validation';
+import { useServiceWithUID, useUpdateService } from '@/services/service';
+import { ServiceType } from '@/types/service';
 
 export default function EditService({ uid }: { uid: string }) {
   const updateService = useUpdateService();
@@ -42,7 +42,7 @@ export default function EditService({ uid }: { uid: string }) {
     initialValues: service,
     validationSchema: serviceValidationSchema,
     onSubmit: async (values) => {
-      await updateService.mutateAsync(values).then((res) => {
+      await updateService.mutateAsync(values).then(() => {
         router.push(`/dashboard/services/${values.uniqueId}`);
       });
     },
@@ -50,6 +50,7 @@ export default function EditService({ uid }: { uid: string }) {
 
   const [numRows, setNumRows] = useState(
     Math.max(
+      // eslint-disable-next-line no-unsafe-optional-chaining
       ...Object?.keys(formik.values.data)?.map((key) =>
         parseInt(key.split('-')[1])
       )
@@ -58,6 +59,7 @@ export default function EditService({ uid }: { uid: string }) {
 
   const [numCols, setNumCols] = useState(
     Math.max(
+      // eslint-disable-next-line no-unsafe-optional-chaining
       ...Object?.keys(formik.values.data)?.map((key) =>
         parseInt(key.split('-')[2])
       )

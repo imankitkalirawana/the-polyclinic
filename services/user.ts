@@ -1,3 +1,12 @@
+import { addToast } from '@heroui/react';
+import {
+  useMutation,
+  UseMutationResult,
+  useQuery,
+  useQueryClient,
+  UseQueryResult,
+} from '@tanstack/react-query';
+
 import {
   createUser,
   deleteUser,
@@ -7,17 +16,10 @@ import {
   getUserWithUID,
   updateUser,
 } from '@/services/api/user';
-import { CreateUserType, UserType } from '@/types/user';
-import {
-  useMutation,
-  UseMutationResult,
-  useQuery,
-  useQueryClient,
-  UseQueryResult,
-} from '@tanstack/react-query';
-import { ApiResponse } from './api';
-import { addToast } from '@heroui/react';
 import { $FixMe } from '@/types';
+import { CreateUserType, UserType } from '@/types/user';
+
+import { ApiResponse } from './api';
 
 /**
  * GET request hooks

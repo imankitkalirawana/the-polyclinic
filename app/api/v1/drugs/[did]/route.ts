@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import Drug from '@/models/Drug';
@@ -67,7 +68,7 @@ export const DELETE = auth(async function DELETE(request: any, context: any) {
     await connectDB();
     const did = parseInt(context.params.did);
 
-    let drug = await Drug.findOne({ did });
+    const drug = await Drug.findOne({ did });
     if (!drug) {
       return NextResponse.json({ message: 'Drug not found' }, { status: 404 });
     }

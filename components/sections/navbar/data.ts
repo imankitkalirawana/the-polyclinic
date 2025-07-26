@@ -1,7 +1,8 @@
 // role based navbar
 
-import { NavItem } from './types';
 import { UserType } from '@/types/user';
+
+import { NavItem } from './types';
 
 export const itemsMap: Record<UserType['role'], NavItem[]> = {
   admin: [

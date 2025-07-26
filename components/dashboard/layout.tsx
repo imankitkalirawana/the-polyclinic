@@ -1,9 +1,4 @@
 'use client';
-import React, { useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Session } from 'next-auth';
-import { signOut } from 'next-auth/react';
 import {
   Avatar,
   BreadcrumbItem,
@@ -15,11 +10,16 @@ import {
   Tooltip,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
-
-import Logo from '../ui/logo';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Session } from 'next-auth';
+import { signOut } from 'next-auth/react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import Sidebar from '@/components/dashboard/sidebar/sidebar';
 import { sectionItemsWithTeams } from '@/components/dashboard/sidebar/sidebar-items';
+
+import Logo from '../ui/logo';
 
 export default function DashboardLayout({
   children,
@@ -36,7 +36,7 @@ export default function DashboardLayout({
   }, []);
 
   const pathname = usePathname();
-  let currentPath = pathname.split('/')?.[2];
+  const currentPath = pathname.split('/')?.[2];
 
   const pathSegments = pathname?.split('/').filter((segment) => segment !== '');
 

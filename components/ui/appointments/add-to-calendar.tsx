@@ -1,5 +1,4 @@
 'use client';
-import { useState } from 'react';
 import {
   Button,
   ButtonGroup,
@@ -13,6 +12,7 @@ import {
   ModalHeader,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import React, { useState } from 'react';
 
 import {
   addToGoogleCalendar,

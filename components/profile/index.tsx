@@ -1,8 +1,4 @@
 'use client';
-import { signOut } from 'next-auth/react';
-import axios from 'axios';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import {
   addToast,
   Alert,
@@ -16,10 +12,14 @@ import {
   Textarea,
   useDisclosure,
 } from '@heroui/react';
-import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { useFormik } from 'formik';
+import { signOut } from 'next-auth/react';
+import React from 'react';
+import * as Yup from 'yup';
 
-import { UserType } from '@/types/user';
 import { useSelf } from '@/services/user';
+import { UserType } from '@/types/user';
 
 export default function Profile() {
   const { data } = useSelf();

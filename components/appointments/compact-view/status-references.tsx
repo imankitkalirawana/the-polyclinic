@@ -1,8 +1,9 @@
 'use client';
 
-import { getAppointmentStyles } from './appointments';
-
 import { cn } from '@/lib/utils';
+import { $FixMe } from '@/types';
+
+import { getAppointmentStyles } from './appointments';
 
 export default function StatusReferences() {
   const statuses = [
@@ -22,7 +23,7 @@ export default function StatusReferences() {
           <span
             className={cn(
               'block size-4 rounded-md bg-default-500',
-              getAppointmentStyles(status as any).avatarBg
+              getAppointmentStyles(status as $FixMe).avatarBg
             )}
           />
           <span className="text-small capitalize text-default-700">

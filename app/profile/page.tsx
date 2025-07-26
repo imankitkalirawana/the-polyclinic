@@ -1,9 +1,9 @@
-import type { Metadata } from 'next';
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from '@tanstack/react-query';
+import type { Metadata } from 'next';
 
 import Profile from '@/components/profile';
 import { useSelf } from '@/services/user';

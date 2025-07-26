@@ -1,6 +1,4 @@
 'use client';
-import { useState } from 'react';
-import { format } from 'date-fns';
 import {
   addToast,
   Button,
@@ -11,11 +9,13 @@ import {
   ScrollShadow,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import { format } from 'date-fns';
+import { useState } from 'react';
+
+import { AppointmentType } from '@/types/appointment';
 
 import { Subtitle } from '../appointment-details-modal';
 import { useForm } from '../context';
-
-import { AppointmentType } from '@/types/appointment';
 
 export default function PendingAppointments({
   appointments,

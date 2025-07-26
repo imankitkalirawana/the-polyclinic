@@ -1,9 +1,10 @@
-import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
+import { NextResponse } from 'next/server';
+
 import { auth } from '@/auth';
+import { API_ACTIONS } from '@/lib/config';
 import { connectDB } from '@/lib/db';
 import User from '@/models/User';
-import { API_ACTIONS } from '@/lib/config';
 
 // get user by id from param
 export const GET = auth(async function GET(request: any, context: any) {
@@ -80,7 +81,7 @@ export const DELETE = auth(async function DELETE(request: any, context: any) {
     await connectDB();
     const uid = parseInt(context.params.uid);
 
-    let user = await User.findOne({ uid });
+    const user = await User.findOne({ uid });
     if (!user) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
     }

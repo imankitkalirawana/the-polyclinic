@@ -1,12 +1,13 @@
 'use client';
-import { format } from 'date-fns';
 import { Calendar, cn } from '@heroui/react';
 import { CalendarDate, getLocalTimeZone, today } from '@internationalized/date';
-
-import { TIMINGS } from '@/lib/config';
-import CalendarTimeSelect from '@/components/ui/calendar/booking/calendar-time-select';
-import { isDateUnavailable } from './helper';
 import { useLocale } from '@react-aria/i18n';
+import { format } from 'date-fns';
+
+import CalendarTimeSelect from '@/components/ui/calendar/booking/calendar-time-select';
+import { TIMINGS } from '@/lib/config';
+
+import { isDateUnavailable } from './helper';
 
 export default function DateSelection({
   onSubmit,
@@ -30,7 +31,7 @@ export default function DateSelection({
         maxValue={today(getLocalTimeZone()).add({
           days: TIMINGS.booking.maximum,
         })}
-        // @ts-ignore
+        // @ts-expect-error - TODO: fix this
         value={
           new CalendarDate(
             date.getFullYear(),

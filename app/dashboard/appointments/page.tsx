@@ -3,6 +3,7 @@ import {
   HydrationBoundary,
   QueryClient,
 } from '@tanstack/react-query';
+
 import Appointments from '@/components/dashboard/appointments';
 import { getAllAppointments } from '@/services/api/appointment';
 

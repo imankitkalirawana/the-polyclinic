@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server';
+
 import { auth } from '@/auth';
-import { connectDB } from '@/lib/db';
-import Appointment from '@/models/Appointment';
-import { UserRole } from '@/types/user';
 import { API_ACTIONS } from '@/lib/config';
+import { connectDB } from '@/lib/db';
 import { logActivity } from '@/lib/server-actions/activity-log';
-import { Schema, Status } from '@/types/activity';
 import { trackObjectChanges } from '@/lib/utility';
+import Appointment from '@/models/Appointment';
+import { Schema, Status } from '@/types/activity';
+import { UserRole } from '@/types/user';
 
 // get appointment by id from param
 export const GET = auth(async function GET(request: any, context: any) {

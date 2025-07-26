@@ -3,6 +3,7 @@ import {
   HydrationBoundary,
   QueryClient,
 } from '@tanstack/react-query';
+
 import Drugs from '@/components/dashboard/drugs';
 import { getAllDrugs } from '@/services/api/drug';
 

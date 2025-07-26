@@ -1,15 +1,17 @@
-import QuickLook from '@/components/ui/dashboard/quicklook';
-import { DoctorType } from '@/types/doctor';
+import { addToast } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useDoctorStore } from '../store';
+import { useMemo } from 'react';
+
+import QuickLook from '@/components/ui/dashboard/quicklook';
 import {
   ButtonProps,
   DropdownItemProps,
 } from '@/components/ui/dashboard/quicklook/types';
-import { useMemo } from 'react';
-import { permissions, sidebarContent } from './data';
+import { DoctorType } from '@/types/doctor';
+
+import { useDoctorStore } from '../store';
 import { ActionType, DropdownKeyType } from '../types';
-import { addToast } from '@heroui/react';
+import { permissions, sidebarContent } from './data';
 
 export const UserQuickLook = () => {
   const { selected, setSelected, setAction, action } = useDoctorStore();

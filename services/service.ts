@@ -1,10 +1,15 @@
+import { addToast } from '@heroui/react';
 import {
-  UseMutationResult,
-  UseQueryResult,
   useMutation,
+  UseMutationResult,
   useQuery,
   useQueryClient,
+  UseQueryResult,
 } from '@tanstack/react-query';
+
+import { ServiceType } from '@/types/service';
+
+import { ApiResponse } from './api';
 import {
   createService,
   deleteService,
@@ -12,9 +17,6 @@ import {
   getServiceWithUID,
   updateService,
 } from './api/service';
-import { ServiceType } from '@/types/service';
-import { ApiResponse } from './api';
-import { addToast } from '@heroui/react';
 
 export const useAllServices = (): UseQueryResult<ServiceType[]> => {
   return useQuery({

@@ -1,8 +1,4 @@
 'use client';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useFormik } from 'formik';
-
 import {
   Button,
   cn,
@@ -13,14 +9,17 @@ import {
   Tooltip,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import { useFormik } from 'formik';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 import QuillInput from '@/components/ui/quill-input';
+import ReactQuill from '@/components/ui/react-quill';
 import { verifyUID } from '@/functions/server-actions';
 import { ServiceStatuses, ServiceTypes } from '@/lib/interface';
 import { serviceValidationSchema } from '@/lib/validation';
 import { useCreateService } from '@/services/service';
 import { ServiceType } from '@/types/service';
-import ReactQuill from '@/components/ui/react-quill';
 
 export default function NewService() {
   const router = useRouter();

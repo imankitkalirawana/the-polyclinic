@@ -1,5 +1,7 @@
 import { Button } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import React from 'react';
+
 import AppScreenshot from './app-screenshot';
 
 export default function Banner() {

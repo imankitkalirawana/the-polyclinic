@@ -1,8 +1,9 @@
 'use client';
 
-import { CreateAppointmentType } from '@/types/appointment';
 import { Button, Input, Select, SelectItem, Textarea } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
+
+import { CreateAppointmentType } from '@/types/appointment';
 
 export default function AdditionalDetailsSelection({
   appointment,

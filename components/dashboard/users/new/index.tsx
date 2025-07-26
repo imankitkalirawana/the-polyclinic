@@ -1,11 +1,8 @@
 'use client';
-import { useRouter } from 'next/navigation';
-import { useFormik } from 'formik';
+import { faker } from '@faker-js/faker';
 import {
   Autocomplete,
   AutocompleteItem,
-  Avatar,
-  Badge,
   Button,
   Card,
   CardBody,
@@ -22,19 +19,22 @@ import {
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { getLocalTimeZone, parseDate, today } from '@internationalized/date';
 import { I18nProvider } from '@react-aria/i18n';
-import { CityProps, CountryProps, StateProps } from '@/types';
+import { useFormik } from 'formik';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import React from 'react';
+
 import { Genders } from '@/lib/options';
+import { generateEmail, generatePhoneNumber, toCapitalCase } from '@/lib/utils';
 import { userValidationSchema } from '@/lib/validation';
-import { CreateUserType, userRoles } from '@/types/user';
 import {
   useAllCitiesByCountryAndState,
   useAllCountries,
   useAllStatesByCountry,
 } from '@/services/external';
 import { useCreateUser } from '@/services/user';
-import { useSession } from 'next-auth/react';
-import { generateEmail, generatePhoneNumber, toCapitalCase } from '@/lib/utils';
-import { faker } from '@faker-js/faker';
+import { $FixMe, CityProps, CountryProps, StateProps } from '@/types';
+import { CreateUserType, userRoles } from '@/types/user';
 
 export default function NewUser() {
   const router = useRouter();
@@ -222,10 +222,10 @@ export default function NewUser() {
               <DatePicker
                 name="dob"
                 label="Date of Birth (Optional)"
-                // @ts-expect-error
+                // @ts-expect-error - value is not typed
                 value={formik.values.dob ? parseDate(formik.values.dob) : null}
                 onChange={(value) => {
-                  const dob = new Date(value as any)
+                  const dob = new Date(value as $FixMe)
                     .toISOString()
                     .split('T')[0];
                   formik.setFieldValue('dob', dob);

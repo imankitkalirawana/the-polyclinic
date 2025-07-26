@@ -1,14 +1,15 @@
 'use client';
-import { format } from 'date-fns';
-import { motion, useAnimation } from 'framer-motion';
 import { Card, Chip, ScrollShadow } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-
-import { getAppointmentStyles } from '../appointments/compact-view/appointments';
-import { useForm } from '../appointments/compact-view/context';
+import { format } from 'date-fns';
+import { motion, useAnimation } from 'framer-motion';
+import React from 'react';
 
 import { cn } from '@/lib/utils';
 import { AppointmentType } from '@/types/appointment';
+
+import { getAppointmentStyles } from '../appointments/compact-view/appointments';
+import { useForm } from '../appointments/compact-view/context';
 
 interface CalendarWidgetProps {
   className?: string;
