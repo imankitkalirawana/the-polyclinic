@@ -4,6 +4,7 @@ import { addToast } from '@heroui/react';
 
 import { printAppointmentReceipt } from '@/functions/server-actions/receipt';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { $FixMe } from '@/types';
 
 export const downloadAppointmentReceipt = async (aid: number) => {
   try {

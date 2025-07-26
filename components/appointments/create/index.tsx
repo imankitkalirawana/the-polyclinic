@@ -34,6 +34,7 @@ import { useAllDoctors } from '@/services/doctor';
 import { useLinkedUsers } from '@/services/user';
 import { useAppointmentStore } from '@/store/appointment';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { $FixMe } from '@/types';
 import { AppointmentType, CreateAppointmentType } from '@/types/appointment';
 import { DoctorType } from '@/types/doctor';
 import { UserType } from '@/types/user';

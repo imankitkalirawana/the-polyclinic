@@ -123,11 +123,7 @@ export function SpecificDateManager({ formik }: SpecificDateManagerProps) {
     const lastSlot = specificDate.slots[specificDate.slots.length - 1];
     const durationIncrement = getDurationIncrement();
 
-    const validStartTimes = getValidStartTimes(
-      durationIncrement,
-      lastSlot?.end,
-      formik.values.duration
-    );
+    const validStartTimes = getValidStartTimes(durationIncrement, lastSlot?.end);
 
     if (validStartTimes.length === 0) return;
 
@@ -184,8 +180,7 @@ export function SpecificDateManager({ formik }: SpecificDateManagerProps) {
                     const previousSlotEndTime = getPreviousSlotEndTime(dateIndex, slotIndex);
                     const validStartTimes = getValidStartTimes(
                       durationIncrement,
-                      previousSlotEndTime,
-                      formik.values.duration
+                      previousSlotEndTime
                     );
                     const validEndTimes = getValidEndTimes(
                       slot.start,
@@ -270,8 +265,7 @@ export function SpecificDateManager({ formik }: SpecificDateManagerProps) {
                                 isDisabled={
                                   getValidStartTimes(
                                     durationIncrement,
-                                    specificDate.slots[specificDate.slots.length - 1]?.end,
-                                    formik.values.duration
+                                    specificDate.slots[specificDate.slots.length - 1]?.end
                                   ).length === 0
                                 }
                                 radius="full"

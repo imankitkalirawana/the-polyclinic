@@ -83,11 +83,7 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
     const daySchedule = formik.values.availability.schedule[day];
     const lastSlot = daySchedule.slots[daySchedule.slots.length - 1];
     const durationIncrement = getDurationIncrement();
-    const validStartTimes = getValidStartTimes(
-      durationIncrement,
-      lastSlot?.end,
-      formik.values.duration
-    );
+    const validStartTimes = getValidStartTimes(durationIncrement, lastSlot?.end);
 
     if (validStartTimes.length === 0) return; // No valid start times available
 
@@ -208,8 +204,7 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
                       const previousSlotEndTime = getPreviousSlotEndTime(key, slotIndex);
                       const validStartTimes = getValidStartTimes(
                         durationIncrement,
-                        previousSlotEndTime,
-                        formik.values.duration
+                        previousSlotEndTime
                       );
                       const validEndTimes = getValidEndTimes(
                         slot.start,
@@ -293,8 +288,7 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
                                   isDisabled={
                                     getValidStartTimes(
                                       durationIncrement,
-                                      dayConfig.slots[dayConfig.slots.length - 1]?.end,
-                                      formik.values.duration
+                                      dayConfig.slots[dayConfig.slots.length - 1]?.end
                                     ).length === 0
                                   }
                                   isIconOnly
