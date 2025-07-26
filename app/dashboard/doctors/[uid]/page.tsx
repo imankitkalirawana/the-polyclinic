@@ -5,17 +5,19 @@ import { getDoctor } from '@/services/api/doctor';
 
 interface Props {
   params: Promise<{
-    uid: number;
+    uid: string;
   }>;
 }
 
 export default async function DashboardDoctorPage(props: Props) {
   const params = await props.params;
+  const uid = Number(params.uid);
+
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
-    queryKey: ['doctor', params.uid],
+    queryKey: ['doctor', uid],
     queryFn: async () => {
-      const res = await getDoctor(params.uid);
+      const res = await getDoctor(uid);
       if (res.success) {
         return res.data;
       }
@@ -25,7 +27,7 @@ export default async function DashboardDoctorPage(props: Props) {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <DashboardDoctor uid={params.uid} />
+      <DashboardDoctor uid={uid} />
     </HydrationBoundary>
   );
 }

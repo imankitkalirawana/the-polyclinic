@@ -5,6 +5,10 @@ import mongoose from 'mongoose';
 const uri = process.env.MONGODB_URI || '';
 
 const connectDB = async () => {
+  if (mongoose.connection.readyState === 1 || mongoose.connection.readyState === 2) {
+    return;
+  }
+
   try {
     await mongoose.connect(uri);
   } catch (error) {

@@ -1,11 +1,11 @@
 'use client';
 
 import { Formik, FormikProps } from 'formik';
-import { useClipboard } from 'react-haiku';
 
 import { CalendarPreview } from './calendar-preview';
 import { ConfigurationPanel } from './configuration-panel';
 
+import { useSlotsByUID, useUpdateSlots } from '@/services/slots';
 import type { SlotConfig } from '@/types/slots';
 
 const initialValues: SlotConfig = {
@@ -53,15 +53,19 @@ const initialValues: SlotConfig = {
   timezone: 'GMT+05:30',
 };
 
-export function AppointmentScheduler() {
-  const { copy } = useClipboard();
-  const handleSubmit = (values: SlotConfig) => {
-    copy(JSON.stringify(values));
+export function AppointmentScheduler({ uid }: { uid: number }) {
+  const updateSlots = useUpdateSlots(uid);
+  const { data: slots } = useSlotsByUID(uid);
+
+  const handleSubmit = async (values: SlotConfig) => {
+    await updateSlots.mutateAsync(values);
   };
+
+  console.log(slots);
 
   return (
     <div className="flex h-full">
-      <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+      <Formik initialValues={slots || initialValues} onSubmit={handleSubmit} enableReinitialize>
         {(formik: FormikProps<SlotConfig>) => (
           <>
             <ConfigurationPanel formik={formik} />

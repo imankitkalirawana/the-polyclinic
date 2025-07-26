@@ -168,6 +168,7 @@ export function SpecificDateManager({ formik }: SpecificDateManagerProps) {
           {formik.values.availability.specificDates.map((specificDate, dateIndex) => (
             <div key={specificDate.date} className="space-y-3">
               <Input
+                aria-label="Date"
                 type="date"
                 value={specificDate.date}
                 min={getTomorrowDate()}
@@ -192,6 +193,7 @@ export function SpecificDateManager({ formik }: SpecificDateManagerProps) {
                     return (
                       <React.Fragment key={slot.id}>
                         <Select
+                          aria-label="Start time"
                           value={slot.start}
                           className="col-span-3"
                           defaultSelectedKeys={[slot.start]}
@@ -214,6 +216,7 @@ export function SpecificDateManager({ formik }: SpecificDateManagerProps) {
                           -
                         </span>
                         <Select
+                          aria-label="End time"
                           value={slot.end}
                           className="col-span-3"
                           defaultSelectedKeys={[slot.end]}

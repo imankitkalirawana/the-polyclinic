@@ -21,6 +21,9 @@ import { getValidEndTimes, getValidStartTimes, timeToMinutes } from './util';
 
 import type { SlotConfig, TimeSlot } from '@/types/slots';
 
+const DEFAULT_BUFFER_TIME = 30;
+const DEFAULT_MAX_BOOKINGS_PER_DAY = 10;
+
 interface ConfigurationPanelProps {
   formik: FormikProps<SlotConfig>;
 }
@@ -163,7 +166,7 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
             name="duration"
             className="max-w-36"
             value={formik.values.duration}
-            defaultSelectedKeys={[formik.values.duration.toString()]}
+            defaultSelectedKeys={[formik.values.duration?.toString()]}
             items={durationOptions}
             disallowEmptySelection
             onSelectionChange={(value) => {
@@ -353,8 +356,10 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
                 <div className="flex items-center gap-2">
                   <Checkbox
                     name="bufferTime"
-                    checked={formik.values.bufferTime > 0}
-                    onChange={formik.handleChange}
+                    isSelected={formik.values.bufferTime > 0}
+                    onChange={(e) => {
+                      formik.setFieldValue('bufferTime', e.target.checked ? 30 : 0);
+                    }}
                   />
                   <NumberInput
                     aria-label="Buffer time"
@@ -363,7 +368,7 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
                     className="max-w-36"
                     value={formik.values.bufferTime}
                     onValueChange={(value) => formik.setFieldValue('bufferTime', Number(value))}
-                    defaultValue={30}
+                    defaultValue={DEFAULT_BUFFER_TIME}
                     minValue={1}
                     maxValue={60}
                     isDisabled={formik.values.bufferTime === 0}
@@ -383,15 +388,20 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
                   <Checkbox
                     aria-label="Maximum bookings per day"
                     name="maxBookingsPerDay"
-                    checked={formik.values.maxBookingsPerDay !== null}
-                    onChange={formik.handleChange}
+                    isSelected={formik.values.maxBookingsPerDay !== null}
+                    onValueChange={(value) => {
+                      formik.setFieldValue(
+                        'maxBookingsPerDay',
+                        value.valueOf() ? DEFAULT_MAX_BOOKINGS_PER_DAY : null
+                      );
+                    }}
                   />
                   <NumberInput
                     aria-label="Maximum bookings per day"
                     hideStepper
                     size="sm"
                     className="max-w-28"
-                    value={formik.values.maxBookingsPerDay || 4}
+                    value={formik.values.maxBookingsPerDay || DEFAULT_MAX_BOOKINGS_PER_DAY}
                     onValueChange={(value) =>
                       formik.setFieldValue('maxBookingsPerDay', Number(value))
                     }
@@ -405,7 +415,7 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
                   <Checkbox
                     aria-label="Guest permissions"
                     name="guestPermissions.canInviteOthers"
-                    checked={formik.values.guestPermissions.canInviteOthers}
+                    isSelected={formik.values.guestPermissions.canInviteOthers}
                     onChange={formik.handleChange}
                   />
                   <div>
@@ -423,7 +433,7 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
       </div>
       {/* Save button */}
       <div className="flex justify-end border-t border-divider px-4 pt-2">
-        <Button onPress={handleSave} color="primary" radius="full">
+        <Button onPress={handleSave} isLoading={formik.isSubmitting} color="primary" radius="full">
           Save
         </Button>
       </div>

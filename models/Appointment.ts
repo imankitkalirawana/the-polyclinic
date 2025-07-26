@@ -14,7 +14,7 @@ const appointmentSchema = new mongoose.Schema(
       type: Number,
       unique: true,
     },
-    date: String,
+    date: Date,
     patient: {
       uid: Number,
       name: String,

@@ -31,7 +31,8 @@ export interface SpecificDateAvailability {
 }
 
 export interface SlotConfig {
-  title: string;
+  uid?: number;
+  title?: string;
   duration: number;
   availability: {
     type: 'weekly' | 'custom';
