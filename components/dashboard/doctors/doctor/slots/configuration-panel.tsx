@@ -1,46 +1,31 @@
 'use client';
 
-import { useState } from 'react';
+import type React from 'react';
 
-import type { AppointmentConfig, TimeSlot } from './types';
+import type { SlotConfig, TimeSlot } from '@/types/slots';
 import {
+  Accordion,
+  AccordionItem,
   Button,
   Checkbox,
+  cn,
   Input,
   NumberInput,
   Select,
   SelectItem,
-  TimeInput,
+  Tooltip,
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { FormikProps } from 'formik';
+import type { FormikProps } from 'formik';
 import { getValidEndTimes, getValidStartTimes, timeToMinutes } from './util';
 
-import {
-  parseAbsoluteToLocal,
-  Time,
-  ZonedDateTime,
-} from '@internationalized/date';
-import { useDateFormatter } from '@react-aria/i18n';
+import { SpecificDateManager } from './specific-date-manager';
 
 interface ConfigurationPanelProps {
-  formik: FormikProps<AppointmentConfig>;
+  formik: FormikProps<SlotConfig>;
 }
 
 export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
-  const [expandedSections, setExpandedSections] = useState({
-    schedulingWindow: false,
-    adjustedAvailability: false,
-    bookedSettings: false,
-  });
-
-  const toggleSection = (section: keyof typeof expandedSections) => {
-    setExpandedSections((prev) => ({
-      ...prev,
-      [section]: !prev[section],
-    }));
-  };
-
   const updateDayEnabled = (day: string, enabled: boolean) => {
     formik.setFieldValue(`availability.schedule.${day}.enabled`, enabled);
   };
@@ -150,7 +135,7 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
     formik.setFieldValue(`availability.schedule.${day}.slots`, finalSlots);
   };
 
-  const handleNextClick = () => {
+  const handleSave = () => {
     formik.handleSubmit();
   };
 
@@ -175,492 +160,402 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
   ];
 
   return (
-    <div className="w-96 overflow-y-auto border-r p-4 pl-0">
-      <div>
-        <Input
-          name="title"
-          value={formik.values.title}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          placeholder="Add title"
-          isInvalid={formik.touched.title && !!formik.errors.title}
-          errorMessage={formik.touched.title && formik.errors.title}
-        />
-      </div>
+    <div className="relative flex w-[448px] max-w-md flex-col justify-between gap-4 overflow-y-auto overflow-x-hidden border-r border-divider">
+      {/* Title */}
+      <div className="flex flex-col gap-4 overflow-y-auto pr-2">
+        <Item>
+          <Input
+            aria-label="Appointment title"
+            name="title"
+            value={formik.values.title}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            placeholder="Add title"
+            isInvalid={formik.touched.title && !!formik.errors.title}
+            errorMessage={formik.touched.title && formik.errors.title}
+          />
+        </Item>
 
-      {/* Appointment Duration */}
-      <div className="border-b">
-        <div className="mb-2 flex items-center gap-2">
-          <Icon icon="mdi:clock" className="h-4 w-4" />
-          <h3 className="font-medium">Appointment duration</h3>
-        </div>
-        <Select
-          label="How long should each appointment last?"
-          name="duration"
-          value={formik.values.duration}
-          defaultSelectedKeys={[formik.values.duration.toString()]}
-          items={durationOptions}
-          disallowEmptySelection
-          onSelectionChange={(value) => {
-            const newDuration = Number.parseInt(value.currentKey || '0');
-            formik.setFieldValue('duration', newDuration);
-
-            // Reset all time slots to valid values when duration changes
-            const newIncrement = newDuration >= 60 ? 30 : 15;
-            const defaultStart = '09:00';
-            const defaultEndMinutes = timeToMinutes(defaultStart) + newDuration;
-            const defaultEnd = `${Math.floor(defaultEndMinutes / 60)
-              .toString()
-              .padStart(
-                2,
-                '0'
-              )}:${(defaultEndMinutes % 60).toString().padStart(2, '0')}`;
-
-            days.forEach(({ key }) => {
-              const daySchedule = formik.values.availability.schedule[key];
-              if (daySchedule.enabled) {
-                formik.setFieldValue(`availability.schedule.${key}.slots`, [
-                  { id: '1', start: defaultStart, end: defaultEnd },
-                ]);
-              }
-            });
-          }}
+        {/* Appointment duration */}
+        <Item
+          title="Appointment duration"
+          subtitle="How long should each appointment last?"
+          icon="solar:sort-by-time-bold-duotone"
         >
-          {(item) => <SelectItem key={item.value}>{item.label}</SelectItem>}
-        </Select>
-      </div>
+          <Select
+            aria-label="Appointment duration"
+            name="duration"
+            className="max-w-36"
+            value={formik.values.duration}
+            defaultSelectedKeys={[formik.values.duration.toString()]}
+            items={durationOptions}
+            disallowEmptySelection
+            onSelectionChange={(value) => {
+              const newDuration = Number.parseInt(value.currentKey || '0');
+              formik.setFieldValue('duration', newDuration);
+            }}
+          >
+            {(item) => <SelectItem key={item.value}>{item.label}</SelectItem>}
+          </Select>
+        </Item>
 
-      {/* General Availability */}
-      <div className="border-b">
-        <div className="mb-2 flex items-center gap-2">
-          <Icon icon="mdi:clock" className="h-4 w-4" />
-          <h3 className="font-medium">General availability</h3>
-        </div>
-        <p className="mb-4 text-sm">
-          Set when you're regularly available for appointments.{' '}
-          <span className="cursor-pointer text-primary-400">Learn more</span>
-        </p>
+        {/* General availability */}
+        <Item
+          title="General availability"
+          subtitle="Set when you're regularly available for appointments"
+          icon="solar:clock-circle-bold-duotone"
+          className="gap-2"
+        >
+          <Select
+            aria-label="General availability"
+            className="max-w-36"
+            value="weekly"
+            selectedKeys={['weekly']}
+            disallowEmptySelection
+            disabledKeys={['custom']}
+          >
+            <SelectItem key="weekly">Repeat weekly</SelectItem>
+            <SelectItem key="custom">Custom</SelectItem>
+          </Select>
+          <div className="flex flex-col items-start gap-2">
+            {days.map(({ key, label }) => {
+              const dayConfig = formik.values.availability.schedule[key];
+              return (
+                <div key={key} className="flex w-full gap-2">
+                  <div className="w-8 text-sm">{label}</div>
+                  <div className="flex w-full flex-1 flex-col gap-2">
+                    {dayConfig.slots.map((slot, slotIndex) => {
+                      const previousSlotEndTime = getPreviousSlotEndTime(
+                        key,
+                        slotIndex
+                      );
+                      const validStartTimes = getValidStartTimes(
+                        durationIncrement,
+                        previousSlotEndTime,
+                        formik.values.duration
+                      );
+                      const validEndTimes = getValidEndTimes(
+                        slot.start,
+                        durationIncrement,
+                        formik.values.duration
+                      );
 
-        <Select value="weekly" selectedKeys={['weekly']}>
-          <SelectItem key="weekly">Repeat weekly</SelectItem>
-        </Select>
-
-        <div className="space-y-4">
-          {days.map(({ key, label }) => {
-            const dayConfig = formik.values.availability.schedule[key];
-            return (
-              <div key={key} className="flex items-start gap-2">
-                <div className="flex w-8 items-start gap-3">
-                  <div className="text-sm">{label}</div>
-                  {dayConfig.enabled ? (
-                    <div className="flex flex-1 items-center gap-2"></div>
-                  ) : (
-                    <div className="flex flex-1 items-center gap-2">
-                      <span className="text-sm">Unavailable</span>
-                      <Button
-                        isIconOnly
-                        variant="flat"
-                        size="sm"
-                        radius="full"
-                        onPress={() => updateDayEnabled(key, true)}
-                        type="button"
-                      >
-                        +
-                      </Button>
-                    </div>
-                  )}
-                </div>
-
-                {dayConfig.enabled && (
-                  <div className="flex flex-1 items-start gap-2">
-                    <div className="flex w-full flex-col gap-1">
-                      {dayConfig.slots.map((slot, slotIndex) => {
-                        const previousSlotEndTime = getPreviousSlotEndTime(
-                          key,
-                          slotIndex
-                        );
-                        const validStartTimes = getValidStartTimes(
-                          durationIncrement,
-                          previousSlotEndTime,
-                          formik.values.duration
-                        );
-                        const validEndTimes = getValidEndTimes(
-                          slot.start,
-                          durationIncrement,
-                          formik.values.duration
-                        );
-
-                        return (
-                          <div
-                            key={slot.id}
-                            className="flex w-full items-center gap-2"
-                          >
-                            <Select
-                              value={slot.start}
-                              defaultSelectedKeys={[slot.start]}
-                              onSelectionChange={(value) =>
-                                updateSlotStartTime(
-                                  key,
-                                  slot.id,
-                                  value.currentKey || ''
-                                )
-                              }
-                            >
-                              {validStartTimes.map((time) => (
-                                <SelectItem key={time}>{time}</SelectItem>
-                              ))}
-                            </Select>
-
-                            <span className="text-gray-400">-</span>
-
-                            <Select
-                              value={slot.end}
-                              defaultSelectedKeys={[slot.end]}
-                              onSelectionChange={(value) =>
-                                updateSlotEndTime(
-                                  key,
-                                  slot.id,
-                                  value.currentKey || ''
-                                )
-                              }
-                            >
-                              {validEndTimes.map((time) => (
-                                <SelectItem key={time}>{time}</SelectItem>
-                              ))}
-                            </Select>
-
-                            {dayConfig.slots.length > 1 && (
-                              <Button
-                                isIconOnly
-                                type="button"
-                                variant="flat"
-                                size="sm"
-                                color="danger"
-                                onPress={() => removeSlot(key, slot.id)}
+                      return (
+                        <div
+                          key={slot.id}
+                          className="grid w-full grid-cols-9 gap-2"
+                        >
+                          {dayConfig.enabled ? (
+                            <>
+                              <Select
+                                aria-label="Start time"
+                                className="col-span-3"
+                                value={slot.start}
+                                defaultSelectedKeys={[slot.start]}
+                                onSelectionChange={(value) =>
+                                  updateSlotStartTime(
+                                    key,
+                                    slot.id,
+                                    value.currentKey || ''
+                                  )
+                                }
                               >
-                                <Icon
-                                  icon="mdi:trash-can"
-                                  className="h-3 w-3"
-                                />
-                              </Button>
+                                {validStartTimes.map((time) => (
+                                  <SelectItem key={time}>{time}</SelectItem>
+                                ))}
+                              </Select>
+                              <span className="flex items-center justify-center text-center text-default-500">
+                                -
+                              </span>
+                              <Select
+                                aria-label="End time"
+                                className="col-span-3"
+                                value={slot.end}
+                                defaultSelectedKeys={[slot.end]}
+                                onSelectionChange={(value) =>
+                                  updateSlotEndTime(
+                                    key,
+                                    slot.id,
+                                    value.currentKey || ''
+                                  )
+                                }
+                              >
+                                {validEndTimes.map((time) => (
+                                  <SelectItem key={time}>{time}</SelectItem>
+                                ))}
+                              </Select>
+                            </>
+                          ) : (
+                            <div className="col-span-7 text-default-500">
+                              Unavailable
+                            </div>
+                          )}
+                          <div className="col-span-2 flex items-center gap-2">
+                            {dayConfig.enabled ? (
+                              <Tooltip
+                                delay={1000}
+                                content="Unavailable all day"
+                              >
+                                <Button
+                                  isIconOnly
+                                  type="button"
+                                  variant="light"
+                                  size="sm"
+                                  onPress={() => {
+                                    if (dayConfig.slots.length === 1) {
+                                      updateDayEnabled(key, false);
+                                    } else {
+                                      removeSlot(key, slot.id);
+                                    }
+                                  }}
+                                  radius="full"
+                                >
+                                  <Icon
+                                    icon="solar:forbidden-circle-outline"
+                                    width={20}
+                                  />
+                                </Button>
+                              </Tooltip>
+                            ) : (
+                              <div className="col-span-1 aspect-square h-full">
+                                &nbsp;
+                              </div>
+                            )}
+                            {slotIndex === 0 && (
+                              <Tooltip
+                                delay={1000}
+                                content="Add another period for this day"
+                              >
+                                <Button
+                                  type="button"
+                                  variant="light"
+                                  size="sm"
+                                  onPress={() => {
+                                    if (dayConfig.enabled) {
+                                      addSlot(key);
+                                    } else {
+                                      updateDayEnabled(key, true);
+                                    }
+                                  }}
+                                  isDisabled={
+                                    getValidStartTimes(
+                                      durationIncrement,
+                                      dayConfig.slots[
+                                        dayConfig.slots.length - 1
+                                      ]?.end,
+                                      formik.values.duration
+                                    ).length === 0
+                                  }
+                                  isIconOnly
+                                  radius="full"
+                                >
+                                  <Icon
+                                    icon="solar:add-circle-linear"
+                                    width={20}
+                                  />
+                                </Button>
+                              </Tooltip>
                             )}
                           </div>
-                        );
-                      })}
-                    </div>
-                    <Button
-                      type="button"
-                      variant="flat"
-                      size="sm"
-                      onPress={() => addSlot(key)}
-                      isDisabled={
-                        getValidStartTimes(
-                          durationIncrement,
-                          dayConfig.slots[dayConfig.slots.length - 1]?.end,
-                          formik.values.duration
-                        ).length === 0
-                      }
-                      isIconOnly
-                    >
-                      <Icon icon="mdi:plus" className="h-3 w-3" />
-                    </Button>
+                        </div>
+                      );
+                    })}
                   </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
+                </div>
+              );
+            })}
+          </div>
+        </Item>
 
-      {/* Scheduling Window */}
-      <div className="border-b">
-        <button
-          onClick={() => toggleSection('schedulingWindow')}
-          className="hover:bg-gray-750 flex w-full items-center justify-between p-6"
+        {/* Adjusted availability */}
+        <Item
+          title="Adjusted availability"
+          subtitle="Set when you're available for specific dates"
+          icon="iconamoon:history-duotone"
         >
-          <div className="flex items-center gap-2">
-            <Icon icon="mdi:calendar" className="h-4 w-4" />
-            <div className="text-left">
-              <h3 className="font-medium">Scheduling window</h3>
-              <div className="text-sm">
-                Limit the time range that appointments can be booked
-              </div>
-            </div>
-          </div>
-          {expandedSections.schedulingWindow ? (
-            <Icon icon="mdi:chevron-up" className="h-4 w-4" />
-          ) : (
-            <Icon icon="mdi:chevron-down" className="h-4 w-4" />
-          )}
-        </button>
+          <SpecificDateManager formik={formik} />
+        </Item>
 
-        {expandedSections.schedulingWindow && (
-          <div className="space-y-4 px-6 pb-6">
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  id="available_now"
-                  name="scheduling_window"
-                  checked={
-                    formik.values.schedulingWindow.type === 'available_now'
-                  }
-                  onChange={() =>
-                    formik.setFieldValue(
-                      'schedulingWindow.type',
-                      'available_now'
-                    )
-                  }
-                  className="text-blue-500"
-                />
-                <h3>Available now</h3>
-              </div>
-              <div className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  id="date_range"
-                  name="scheduling_window"
-                  checked={formik.values.schedulingWindow.type === 'date_range'}
-                  onChange={() =>
-                    formik.setFieldValue('schedulingWindow.type', 'date_range')
-                  }
-                  className="text-blue-500"
-                />
-                <h3>Start and end dates</h3>
-              </div>
-              <p className="ml-6 text-sm">
-                Limit the date range for all appointments
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-sm">
-                Maximum time in advance that an appointment can be booked
-              </h3>
-              <div className="mt-2 flex items-center gap-2">
-                <Checkbox
-                  checked={
-                    formik.values.schedulingWindow.maxAdvanceDays !== null
-                  }
-                  onValueChange={(checked) =>
-                    formik.setFieldValue(
-                      'schedulingWindow.maxAdvanceDays',
-                      checked ? 60 : null
-                    )
-                  }
-                />
-                <Input
-                  type="number"
-                  value={
-                    formik.values.schedulingWindow.maxAdvanceDays?.toString() ||
-                    '60'
-                  }
-                  onChange={(e) =>
-                    formik.setFieldValue(
-                      'schedulingWindow.maxAdvanceDays',
-                      Number.parseInt(e.target.value)
-                    )
-                  }
-                  className="w-20 border-gray-600 bg-gray-700"
-                />
-                <span className="text-gray-300">days</span>
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-sm">
-                Minimum time before the appointment start that it can be booked
-              </h3>
-              <div className="mt-2 flex items-center gap-2">
-                <Checkbox
-                  checked={
-                    formik.values.schedulingWindow.minAdvanceHours !== null
-                  }
-                  onValueChange={(checked) =>
-                    formik.setFieldValue(
-                      'schedulingWindow.minAdvanceHours',
-                      checked ? 4 : null
-                    )
-                  }
-                />
-                <Input
-                  type="number"
-                  value={
-                    formik.values.schedulingWindow.minAdvanceHours?.toString() ||
-                    '4'
-                  }
-                  onChange={(e) =>
-                    formik.setFieldValue(
-                      'schedulingWindow.minAdvanceHours',
-                      Number.parseInt(e.target.value)
-                    )
-                  }
-                  className="w-20 border-gray-600 bg-gray-700"
-                />
-                <span className="text-gray-300">hours</span>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Adjusted Availability */}
-      <div className="border-b">
-        <button
-          onClick={() => toggleSection('adjustedAvailability')}
-          className="hover:bg-gray-750 flex w-full items-center justify-between p-6"
+        {/* Booked appointment settings */}
+        <Accordion
+          selectionMode="multiple"
+          itemClasses={{
+            subtitle: 'text-default-500',
+          }}
         >
-          <div className="flex items-center gap-2">
-            <Icon icon="mdi:clock" className="h-4 w-4" />
-            <div className="text-left">
-              <h3 className="font-medium">Adjusted availability</h3>
-              <div className="text-sm">
-                Indicate times you're available for specific dates
+          {/* Booked Appointment Settings */}
+          <AccordionItem
+            key="bookedSettings"
+            title="Booked appointment settings"
+            subtitle={`${
+              formik.values.bufferTime > 0
+                ? `${formik.values.bufferTime} minutes buffer`
+                : 'No buffer time'
+            } · ${
+              formik.values.maxBookingsPerDay
+                ? `${formik.values.maxBookingsPerDay} max bookings`
+                : 'No maximum bookings'
+            } per day · Guest permissions`}
+            startContent={
+              <ItemIcon icon="solar:settings-minimalistic-bold-duotone" />
+            }
+            classNames={{
+              subtitle: 'text-default-500 text-tiny',
+              trigger: 'gap-1 items-start',
+            }}
+          >
+            <div className="ml-8 flex flex-col gap-4">
+              <div className="flex flex-col gap-2">
+                <div className="flex flex-col">
+                  <h3 className="text-small font-medium">Buffer time</h3>
+                  <p className="text-tiny text-default-500">
+                    Add time between appointment slots
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    name="bufferTime"
+                    checked={formik.values.bufferTime > 0}
+                    onChange={formik.handleChange}
+                  />
+                  <NumberInput
+                    aria-label="Buffer time"
+                    hideStepper
+                    size="sm"
+                    className="max-w-36"
+                    value={formik.values.bufferTime}
+                    onValueChange={(value) =>
+                      formik.setFieldValue('bufferTime', Number(value))
+                    }
+                    defaultValue={30}
+                    minValue={1}
+                    maxValue={60}
+                    isDisabled={formik.values.bufferTime === 0}
+                    endContent={
+                      <span className="text-default-500">Minutes</span>
+                    }
+                  />
+                </div>
               </div>
-            </div>
-          </div>
-          {expandedSections.adjustedAvailability ? (
-            <Icon icon="mdi:chevron-up" className="h-4 w-4" />
-          ) : (
-            <Icon icon="mdi:chevron-down" className="h-4 w-4" />
-          )}
-        </button>
 
-        {expandedSections.adjustedAvailability && (
-          <div className="px-6 pb-6">
-            <Button
-              variant="outline"
-              className="w-full border-gray-600 bg-gray-700 hover:bg-gray-600"
-            >
-              Change a date's availability
-            </Button>
-          </div>
-        )}
-      </div>
-
-      {/* Booked Appointment Settings */}
-      <div className="border-b">
-        <button
-          onClick={() => toggleSection('bookedSettings')}
-          className="hover:bg-gray-750 flex w-full items-center justify-between p-6"
-        >
-          <div className="flex items-center gap-2">
-            <Icon icon="mdi:settings" className="h-4 w-4" />
-            <div className="text-left">
-              <h3 className="font-medium">Booked appointment settings</h3>
-              <div className="text-sm">
-                {formik.values.bufferTime > 0
-                  ? `${formik.values.bufferTime} minutes buffer`
-                  : 'No buffer time'}{' '}
-                ·{' '}
-                {formik.values.maxBookingsPerDay
-                  ? `${formik.values.maxBookingsPerDay} max bookings`
-                  : 'No maximum bookings'}{' '}
-                per day · Guest permissions
+              <div className="flex flex-col gap-2">
+                <div className="flex flex-col">
+                  <h3 className="text-small font-medium">
+                    Maximum bookings per day
+                  </h3>
+                  <p className="text-tiny text-default-500">
+                    Limit how many booked appointments to accept in a single day
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    aria-label="Maximum bookings per day"
+                    name="maxBookingsPerDay"
+                    checked={formik.values.maxBookingsPerDay !== null}
+                    onChange={formik.handleChange}
+                  />
+                  <NumberInput
+                    aria-label="Maximum bookings per day"
+                    hideStepper
+                    size="sm"
+                    className="max-w-28"
+                    value={formik.values.maxBookingsPerDay || 4}
+                    onValueChange={(value) =>
+                      formik.setFieldValue('maxBookingsPerDay', Number(value))
+                    }
+                    isDisabled={formik.values.maxBookingsPerDay === null}
+                  />
+                </div>
               </div>
-            </div>
-          </div>
-          {expandedSections.bookedSettings ? (
-            <Icon icon="mdi:chevron-up" className="h-4 w-4" />
-          ) : (
-            <Icon icon="mdi:chevron-down" className="h-4 w-4" />
-          )}
-        </button>
-
-        {expandedSections.bookedSettings && (
-          <div className="space-y-6 px-6 pb-6">
-            <div>
-              <h3 className="font-medium">Buffer time</h3>
-              <p className="mb-3 text-sm">Add time between appointment slots</p>
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  checked={formik.values.bufferTime > 0}
-                  onValueChange={(checked) =>
-                    formik.setFieldValue('bufferTime', checked ? 30 : 0)
-                  }
-                />
-                <NumberInput
-                  value={formik.values.bufferTime}
-                  onValueChange={(value) =>
-                    formik.setFieldValue('bufferTime', Number.parseInt(value))
-                  }
-                  className="w-20 border-gray-600 bg-gray-700"
-                  disabled={formik.values.bufferTime === 0}
-                />
-                <span className="text-gray-300">minutes</span>
-              </div>
-            </div>
-
-            <div>
-              <h3 className="font-medium">Maximum bookings per day</h3>
-              <p className="mb-3 text-sm">
-                Limit how many booked appointments to accept in a single day
-              </p>
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  checked={formik.values.maxBookingsPerDay !== null}
-                  onValueChange={(checked) =>
-                    formik.setFieldValue(
-                      'maxBookingsPerDay',
-                      checked ? 4 : null
-                    )
-                  }
-                />
-                <NumberInput
-                  value={formik.values.maxBookingsPerDay?.toString() || '4'}
-                  onValueChange={(value) =>
-                    formik.setFieldValue(
-                      'maxBookingsPerDay',
-                      Number.parseInt(value)
-                    )
-                  }
-                  className="w-20 border-gray-600 bg-gray-700"
-                  disabled={formik.values.maxBookingsPerDay === null}
-                />
-              </div>
-            </div>
-
-            <div>
-              <h3 className="font-medium">Guest permissions</h3>
-              <div className="mt-3 flex items-center gap-2">
-                <Checkbox
-                  checked={formik.values.guestPermissions.canInviteOthers}
-                  onValueChange={(checked) =>
-                    formik.setFieldValue(
-                      'guestPermissions.canInviteOthers',
-                      !!checked
-                    )
-                  }
-                />
-                <div>
-                  <div className="text-sm">Guests can invite others</div>
-                  <div className="text-xs">
-                    After booking an appointment guests can modify the calendar
-                    event to invite others
+              <div className="flex flex-col gap-2">
+                <h3 className="text-small font-medium">Guest permissions</h3>
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    aria-label="Guest permissions"
+                    name="guestPermissions.canInviteOthers"
+                    checked={formik.values.guestPermissions.canInviteOthers}
+                    onChange={formik.handleChange}
+                  />
+                  <div>
+                    <div className="text-small font-medium">
+                      Guests can invite others
+                    </div>
+                    <div className="text-tiny text-default-500">
+                      After booking an appointment guests can modify the
+                      calendar event to invite others
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          </AccordionItem>
+        </Accordion>
       </div>
+      {/* Save button */}
+      <div className="flex justify-end border-t border-divider px-4 pt-2">
+        <Button onPress={handleSave} color="primary" radius="full">
+          Save
+        </Button>
+      </div>
+    </div>
+  );
+}
 
-      {/* Calendars */}
-      <div className="p-6">
-        <div className="mb-4 flex items-center gap-2">
-          <Icon icon="mdi:calendar" className="h-4 w-4 text-blue-400" />
-          <h3 className="font-medium">Calendars</h3>
-          <div className="h-2 w-2 rounded-full bg-blue-400"></div>
+function Title({ title }: { title: string }) {
+  return <h3>{title}</h3>;
+}
+
+function Subtitle({ subtitle }: { subtitle: string }) {
+  return <p className="text-tiny text-default-500">{subtitle}</p>;
+}
+
+function ItemIcon({ icon, className }: { icon: string; className?: string }) {
+  return (
+    <div
+      className={cn(
+        'flex items-center gap-2 rounded-small p-1 text-default-500',
+        className
+      )}
+    >
+      <Icon icon={icon} width={20} />
+    </div>
+  );
+}
+
+function Item({
+  title,
+  subtitle,
+  icon,
+  children,
+  className,
+  isBorder = true,
+}: {
+  title?: string;
+  subtitle?: string;
+  icon?: string;
+  children: React.ReactNode;
+  className?: string;
+  isBorder?: boolean;
+}) {
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="flex items-start gap-1">
+        {icon ? <ItemIcon icon={icon} /> : <div className="w-8" />}
+        <div>
+          {title && <Title title={title} />}
+          {subtitle && <Subtitle subtitle={subtitle} />}
         </div>
       </div>
-
-      <div className="border-t p-6">
-        <Button
-          onPress={handleNextClick}
-          className="w-full bg-blue-600 hover:bg-blue-700"
-        >
-          Next
-        </Button>
+      <div
+        className={cn(
+          'ml-8 flex flex-col',
+          {
+            'border-b border-divider pb-4': isBorder,
+          },
+          className
+        )}
+      >
+        {children}
       </div>
     </div>
   );

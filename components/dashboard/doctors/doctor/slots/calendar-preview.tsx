@@ -1,23 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import type { AppointmentConfig } from './types';
+import type { SlotConfig } from '@/types/slots';
 import { Button } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import { isToday } from 'date-fns';
 
 interface CalendarPreviewProps {
-  config: AppointmentConfig;
+  config: SlotConfig;
 }
 
 export function CalendarPreview({ config }: CalendarPreviewProps) {
-  const [currentDate, setCurrentDate] = useState(new Date(2025, 6, 20)); // July 2025
-
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString('en-US', {
-      month: 'long',
-      year: 'numeric',
-    });
-  };
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   const getWeekDays = () => {
     const startOfWeek = new Date(currentDate);
@@ -40,12 +34,23 @@ export function CalendarPreview({ config }: CalendarPreviewProps) {
     return date.getDate();
   };
 
-  const isToday = (date: Date) => {
-    const today = new Date();
-    return date.toDateString() === today.toDateString();
+  const getDateString = (date: Date) => {
+    return date.toISOString().split('T')[0];
+  };
+
+  const getSpecificDateAvailability = (date: Date) => {
+    const dateString = getDateString(date);
+    return config.availability.specificDates.find((d) => d.date === dateString);
   };
 
   const isDayAvailable = (date: Date) => {
+    // Check if there's a specific date override
+    const specificDate = getSpecificDateAvailability(date);
+    if (specificDate) {
+      return specificDate.enabled;
+    }
+
+    // Fall back to weekly schedule
     const dayName = date
       .toLocaleDateString('en-US', { weekday: 'long' })
       .toLowerCase();
@@ -55,19 +60,30 @@ export function CalendarPreview({ config }: CalendarPreviewProps) {
   const generateTimeSlots = (date: Date) => {
     if (!isDayAvailable(date)) return [];
 
-    const dayName = date
-      .toLocaleDateString('en-US', { weekday: 'long' })
-      .toLowerCase();
-    const dayConfig = config.availability.schedule[dayName];
+    // Check if there's a specific date override
+    const specificDate = getSpecificDateAvailability(date);
+    let slotsToUse;
 
-    if (!dayConfig || !dayConfig.enabled) return [];
+    if (specificDate) {
+      slotsToUse = specificDate.slots;
+    } else {
+      // Use weekly schedule
 
-    const allSlots = [];
+      const dayName = date
+        .toLocaleDateString('en-US', { weekday: 'long' })
+        .toLowerCase();
+      const dayConfig = config.availability.schedule[dayName];
+
+      if (!dayConfig || !dayConfig.enabled) return [];
+      slotsToUse = dayConfig.slots;
+    }
+
+    const allSlots: { start: number; duration: number }[] = [];
 
     const duration = Number(config.duration);
 
     // Process each time slot for the day
-    dayConfig.slots.forEach((timeSlot) => {
+    slotsToUse.forEach((timeSlot) => {
       const [startHour, startMinute] = timeSlot.start.split(':').map(Number);
       const [endHour, endMinute] = timeSlot.end.split(':').map(Number);
 
@@ -88,16 +104,12 @@ export function CalendarPreview({ config }: CalendarPreviewProps) {
     return allSlots;
   };
 
-  const formatTime = (minutes: number) => {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    const period = hours >= 12 ? 'PM' : 'AM';
-    const displayHours = hours > 12 ? hours - 12 : hours === 0 ? 12 : hours;
-    return `${displayHours}${mins > 0 ? ':' + mins.toString().padStart(2, '0') : ''} ${period}`;
+  const hasSpecificDateOverride = (date: Date) => {
+    return getSpecificDateAvailability(date) !== undefined;
   };
 
   const weekDays = getWeekDays();
-  const timeLabels = [];
+  const timeLabels: string[] = [];
   for (let hour = 8; hour <= 20; hour++) {
     timeLabels.push(
       `${hour > 12 ? hour - 12 : hour} ${hour >= 12 ? 'PM' : 'AM'}`
@@ -111,50 +123,75 @@ export function CalendarPreview({ config }: CalendarPreviewProps) {
   };
 
   return (
-    <div className="flex-1 bg-gray-900 text-white">
+    <div className="h-full flex-1 overflow-y-auto">
+      <div className="flex items-center gap-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          onPress={() => navigateWeek('prev')}
+          className="p-1 text-default-400"
+        >
+          <Icon icon="mdi:chevron-left" className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onPress={() => navigateWeek('next')}
+          className="p-1 text-default-400"
+        >
+          <Icon icon="mdi:chevron-right" className="h-4 w-4" />
+        </Button>
+      </div>
       {/* Calendar Grid */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1">
         <div className="grid min-h-full grid-cols-8">
           {/* Time column */}
-          <div className="border-r border-gray-700">
-            <div className="flex h-16 items-center justify-center border-b border-gray-700 text-xs text-gray-400">
+          <div className="border-r border-divider">
+            <div className="flex h-16 items-center justify-center border-b border-divider text-xs text-default-500">
               {config.timezone}
             </div>
-            {timeLabels.map((time, index) => (
+            {timeLabels.map((time) => (
               <div
                 key={time}
-                className="flex h-16 items-start justify-end border-b border-gray-700 pr-2 pt-1"
+                className="flex h-16 items-start justify-end border-b border-divider pr-2 pt-1"
               >
-                <span className="text-xs text-gray-400">{time}</span>
+                <span className="text-xs text-default-500">{time}</span>
               </div>
             ))}
           </div>
 
           {/* Day columns */}
           {weekDays.map((day, dayIndex) => (
-            <div key={dayIndex} className="border-r border-gray-700">
+            <div key={dayIndex} className="border-r border-divider">
               {/* Day header */}
-              <div className="flex h-16 flex-col items-center justify-center border-b border-gray-700">
-                <div className="mb-1 text-xs text-gray-400">
+              <div className="relative flex h-16 flex-col items-center justify-center border-b border-divider">
+                <div className="mb-1 text-xs text-default-500">
                   {getDayName(day)}
                 </div>
                 <div
                   className={`text-lg font-medium ${
                     isToday(day)
-                      ? 'flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 text-white'
-                      : 'text-white'
+                      ? 'flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-primary-foreground'
+                      : ''
                   }`}
                 >
                   {getDayNumber(day)}
                 </div>
+                {/* Indicator for specific date override */}
+                {hasSpecificDateOverride(day) && (
+                  <div
+                    className="absolute right-1 top-1 h-2 w-2 rounded-full bg-orange-400"
+                    title="Custom availability"
+                  />
+                )}
               </div>
 
               {/* Time slots */}
-              <div className="relative">
+              <div className="relative h-full overflow-auto">
                 {timeLabels.map((_, timeIndex) => (
                   <div
                     key={timeIndex}
-                    className="h-16 border-b border-gray-700"
+                    className="h-16 border-b border-divider"
                   ></div>
                 ))}
 
@@ -165,17 +202,29 @@ export function CalendarPreview({ config }: CalendarPreviewProps) {
                       const topOffset = ((slot.start - 480) / 60) * 64; // 480 = 8 AM in minutes, 64px per hour
                       const height = (slot.duration / 60) * 64;
 
+                      const isDayOverridden = hasSpecificDateOverride(day);
+
                       return (
                         <div
                           key={slotIndex}
-                          className="absolute left-1 right-1 cursor-pointer rounded border border-blue-400 bg-blue-400 bg-opacity-30 transition-colors hover:bg-opacity-50"
+                          className={`absolute left-1 right-1 cursor-pointer rounded border transition-colors hover:bg-opacity-50 ${
+                            isDayOverridden
+                              ? 'border-orange-400 bg-orange-400 bg-opacity-30'
+                              : 'border-primary-400 bg-primary-400 bg-opacity-30'
+                          }`}
                           style={{
                             top: `${topOffset}px`,
                             height: `${height}px`,
                           }}
                         >
                           <div className="p-1">
-                            <div className="h-3 w-3 rounded-sm bg-blue-400"></div>
+                            <div
+                              className={`h-3 w-3 rounded-sm ${
+                                isDayOverridden
+                                  ? 'bg-orange-400'
+                                  : 'bg-primary-400'
+                              }`}
+                            ></div>
                           </div>
                         </div>
                       );

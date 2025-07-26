@@ -20,27 +20,25 @@ export interface WeeklySchedule {
   [key: string]: DaySchedule;
 }
 
-export interface SchedulingWindow {
-  type: 'available_now' | 'date_range';
-  maxAdvanceDays: number | null;
-  minAdvanceHours: number | null;
-  startDate?: string;
-  endDate?: string;
-}
-
 export interface GuestPermissions {
   canInviteOthers: boolean;
 }
 
-export interface AppointmentConfig {
+export interface SpecificDateAvailability {
+  date: string;
+  enabled: boolean;
+  slots: TimeSlot[];
+}
+
+export interface SlotConfig {
   title: string;
-  duration: number; // in minutes
+  duration: number;
   availability: {
     type: 'weekly' | 'custom';
     schedule: WeeklySchedule;
+    specificDates: SpecificDateAvailability[];
   };
-  schedulingWindow: SchedulingWindow;
-  bufferTime: number; // in minutes
+  bufferTime: number;
   maxBookingsPerDay: number | null;
   guestPermissions: GuestPermissions;
   timezone: string;

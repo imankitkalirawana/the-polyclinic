@@ -1,12 +1,11 @@
 'use client';
-
-import { useState } from 'react';
 import { ConfigurationPanel } from './configuration-panel';
 import { CalendarPreview } from './calendar-preview';
-import type { AppointmentConfig } from './types';
-import { Formik, FormikProps, useFormik } from 'formik';
+import type { SlotConfig } from '@/types/slots';
+import { Formik, FormikProps } from 'formik';
+import { useClipboard } from 'react-haiku';
 
-const initialValues: AppointmentConfig = {
+const initialValues: SlotConfig = {
   title: '',
   duration: 60,
   availability: {
@@ -41,46 +40,26 @@ const initialValues: AppointmentConfig = {
         slots: [{ id: '1', start: '09:00', end: '17:00' }],
       },
     },
-  },
-  schedulingWindow: {
-    type: 'available_now',
-    maxAdvanceDays: 60,
-    minAdvanceHours: 4,
+    specificDates: [],
   },
   bufferTime: 0,
   maxBookingsPerDay: null,
   guestPermissions: {
-    canInviteOthers: true,
+    canInviteOthers: false,
   },
   timezone: 'GMT+05:30',
 };
 
 export function AppointmentScheduler() {
-  const [config, setConfig] = useState<AppointmentConfig>(initialValues);
-
-  const formik = useFormik<AppointmentConfig>({
-    initialValues: initialValues,
-    onSubmit: (values) => {
-      console.log(values);
-    },
-  });
-
-  const updateConfig = (updates: Partial<AppointmentConfig>) => {
-    setConfig((prev) => ({ ...prev, ...updates }));
-  };
-
-  const handleSubmit = (values: AppointmentConfig) => {
-    console.log(values);
+  const { copy } = useClipboard();
+  const handleSubmit = (values: SlotConfig) => {
+    copy(JSON.stringify(values));
   };
 
   return (
-    <div className="flex h-screen">
-      <Formik
-        initialValues={initialValues}
-        onSubmit={handleSubmit}
-        enableReinitialize
-      >
-        {(formik: FormikProps<AppointmentConfig>) => (
+    <div className="flex h-full">
+      <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+        {(formik: FormikProps<SlotConfig>) => (
           <>
             <ConfigurationPanel formik={formik} />
             <CalendarPreview config={formik.values} />
