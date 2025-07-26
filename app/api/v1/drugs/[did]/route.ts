@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server';
+import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import Drug from '@/models/Drug';
+import { $FixMe } from '@/types';
 
 // get drug by id from param
-export const GET = auth(async (request: any, context: any) => {
+export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
     const allowedRoles = ['admin', 'doctor', 'receptionist'];
     if (!allowedRoles.includes(request.auth?.user?.role)) {
@@ -19,14 +21,17 @@ export const GET = auth(async (request: any, context: any) => {
       return NextResponse.json({ message: 'Drug not found' }, { status: 404 });
     }
     return NextResponse.json(drug);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error);
-    return NextResponse.json({ message: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 });
 
 // update drug by did from param
-export const PUT = auth(async (request: any, context: any) => {
+export const PUT = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
     const allowedRoles = ['admin', 'laboratorist'];
     if (!allowedRoles.includes(request.auth?.user?.role)) {
@@ -51,14 +56,17 @@ export const PUT = auth(async (request: any, context: any) => {
     }
 
     return NextResponse.json({ message: 'Drug not found' }, { status: 404 });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(error);
-    return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 });
 
 // delete drug by did from param
-export const DELETE = auth(async (request: any, context: any) => {
+export const DELETE = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
     const allowedRoles = ['admin', 'laboratorist'];
     if (!allowedRoles.includes(request.auth?.user?.role)) {
@@ -77,8 +85,11 @@ export const DELETE = auth(async (request: any, context: any) => {
     return NextResponse.json({
       message: `${drug.brandName} deleted successfully`,
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(error);
-    return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 });

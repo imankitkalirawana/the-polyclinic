@@ -24,9 +24,12 @@ export const GET = auth(async (request: $FixMe, context: $FixMe) => {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
     }
     return NextResponse.json(user);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(error);
-    return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 });
 
@@ -55,9 +58,12 @@ export const PUT = auth(async (request: $FixMe, context: $FixMe) => {
       new: true,
     });
     return NextResponse.json(user);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(error);
-    return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 });
 
@@ -82,8 +88,11 @@ export const DELETE = auth(async (request: $FixMe, context: $FixMe) => {
       await User.findOneAndDelete({ uid });
     }
     return NextResponse.json({ message: 'User deleted' });
-  } catch (error: $FixMe) {
+  } catch (error: unknown) {
     console.error(error);
-    return NextResponse.json({ message: error?.message || 'An error occurred' }, { status: 500 });
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 });

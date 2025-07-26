@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
+import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import User from '@/models/User';
 
-export const GET = auth(async (request: any) => {
+export const GET = auth(async (request: NextAuthRequest) => {
   try {
     if (!request.auth?.user) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });

@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
+import { NextAuthRequest } from 'next-auth';
 import bcrypt from 'bcryptjs';
 
 import { connectDB } from '@/lib/db';
 import Otp from '@/models/Otp';
 import User from '@/models/User';
 
-export const PATCH = async (request: any) => {
+export const PATCH = async (request: NextAuthRequest) => {
   try {
     await connectDB();
     const { email, password, otp } = await request.json();
@@ -34,10 +35,10 @@ export const PATCH = async (request: any) => {
     await Otp.deleteOne({ id: email });
 
     return NextResponse.json({ message: 'Password reset successfully' }, { status: 200 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error);
     return NextResponse.json(
-      { message: error.message || 'Internal server error' },
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
       { status: 500 }
     );
   }

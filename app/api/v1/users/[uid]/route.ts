@@ -1,13 +1,15 @@
 import { NextResponse } from 'next/server';
+import { NextAuthRequest } from 'next-auth';
 import bcrypt from 'bcryptjs';
 
 import { auth } from '@/auth';
 import { API_ACTIONS } from '@/lib/config';
 import { connectDB } from '@/lib/db';
 import User from '@/models/User';
+import { $FixMe } from '@/types';
 
 // get user by id from param
-export const GET = auth(async (request: any, context: any) => {
+export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
     const uid = parseInt(context.params.uid);
 
@@ -22,13 +24,16 @@ export const GET = auth(async (request: any, context: any) => {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
     }
     return NextResponse.json(user);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(error);
-    return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 });
 
-export const PUT = auth(async (request: any, context: any) => {
+export const PUT = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
     const allowedRoles = ['admin', 'receptionist'];
     // @ts-ignore
@@ -47,7 +52,7 @@ export const PUT = auth(async (request: any, context: any) => {
     if (!user) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
     }
-    user.updatedBy = request.auth?.user?.email;
+    user.updatedBy = request.auth?.user?.email ?? '';
     if (data.password) {
       user.password = await bcrypt.hash(data.password, 10);
       console;
@@ -59,14 +64,17 @@ export const PUT = auth(async (request: any, context: any) => {
       message: 'User updated successfully',
       data: user,
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(error);
-    return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 });
 
 // delete user by id from param
-export const DELETE = auth(async (request: any, context: any) => {
+export const DELETE = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
     const allowedRoles = ['admin', 'receptionist'];
     // @ts-ignore
@@ -87,8 +95,11 @@ export const DELETE = auth(async (request: any, context: any) => {
     return NextResponse.json({
       message: `${user.name} was deleted successfully`,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error);
-    return NextResponse.json({ message: error?.message || 'An error occurred' }, { status: 500 });
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 });

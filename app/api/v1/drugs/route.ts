@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
+import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import Drug from '@/models/Drug';
 
-export const GET = auth(async (request: any) => {
+export const GET = auth(async (request: NextAuthRequest) => {
   try {
     const allowedRoles = ['admin', 'receptionist', 'doctor', 'user'];
 
@@ -17,13 +18,16 @@ export const GET = auth(async (request: any) => {
     const drugs = await Drug.find().sort({ name: 1 });
 
     return NextResponse.json(drugs);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(error);
-    return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 });
 
-export const POST = auth(async (request: any) => {
+export const POST = auth(async (request: NextAuthRequest) => {
   try {
     if (request.auth?.user?.role !== 'admin') {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -35,12 +39,15 @@ export const POST = auth(async (request: any) => {
     const drug = new Drug(data);
     await drug.save();
     return NextResponse.json(drug);
-  } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 });
 
-export const PUT = auth(async (request: any) => {
+export const PUT = auth(async (request: NextAuthRequest) => {
   try {
     if (request.auth?.user?.role !== 'admin') {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -55,7 +62,10 @@ export const PUT = auth(async (request: any) => {
 
     const drugs = await Drug.insertMany(data);
     return NextResponse.json(drugs);
-  } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 });

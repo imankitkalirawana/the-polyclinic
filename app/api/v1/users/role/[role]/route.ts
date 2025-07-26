@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server';
+import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import User from '@/models/User';
+import { $FixMe } from '@/types';
 
-export const GET = auth(async (request: any, context: any) => {
+export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
     if (!request.auth?.user) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -23,8 +25,11 @@ export const GET = auth(async (request: any, context: any) => {
     const users = await User.find({ role }).select('-password');
 
     return NextResponse.json(users);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(error);
-    return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 });

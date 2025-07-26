@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { NextAuthRequest } from 'next-auth';
 import { format } from 'date-fns';
 import ExcelJS from 'exceljs';
 
@@ -7,7 +8,7 @@ import { connectDB } from '@/lib/db';
 import Appointment from '@/models/Appointment';
 import { UserType } from '@/types/user';
 
-export const POST = auth(async (request: any) => {
+export const POST = auth(async (request: NextAuthRequest) => {
   try {
     const allowedRoles: UserType['role'][] = ['admin'];
     if (!allowedRoles.includes(request.auth?.user?.role)) {
@@ -74,8 +75,11 @@ export const POST = auth(async (request: any) => {
         'Content-Disposition': 'attachment; filename="appointments.xlsx"',
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error);
-    return NextResponse.json({ message: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 });

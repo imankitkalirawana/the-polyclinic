@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server';
+import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import Doctor from '@/models/Doctor';
+import { $FixMe } from '@/types';
 
-export const GET = auth(async (request: any, context: any) => {
+export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
     const allowedRoles = ['admin', 'doctor'];
 
@@ -53,8 +55,11 @@ export const GET = auth(async (request: any, context: any) => {
       message: 'Doctor fetched successfully',
       data: doctors[0],
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(error);
-    return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 });

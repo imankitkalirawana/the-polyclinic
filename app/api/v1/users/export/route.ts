@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { NextAuthRequest } from 'next-auth';
 import { format } from 'date-fns';
 import ExcelJS from 'exceljs';
 
@@ -6,7 +7,7 @@ import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import User from '@/models/User';
 
-export const POST = auth(async (request: any) => {
+export const POST = auth(async (request: NextAuthRequest) => {
   try {
     if (request.auth?.user?.role !== 'admin') {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -68,8 +69,11 @@ export const POST = auth(async (request: any) => {
         'Content-Disposition': 'attachment; filename="users.xlsx"',
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error);
-    return NextResponse.json({ message: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 });

@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server';
+import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import ActivityLog from '@/models/Activity';
+import { $FixMe } from '@/types';
 
-export const GET = auth(async (request: any, context: any) => {
+export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
     if (!request.auth?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

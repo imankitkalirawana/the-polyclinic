@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
+import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import Doctor from '@/models/Doctor';
 import User from '@/models/User';
 
-export const GET = auth(async (request: any) => {
+export const GET = auth(async (request: NextAuthRequest) => {
   try {
     if (!request.auth?.user) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -45,13 +46,16 @@ export const GET = auth(async (request: any) => {
       message: 'Doctors fetched successfully',
       data: doctors,
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(error);
-    return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 });
 
-export const POST = auth(async (request: any) => {
+export const POST = auth(async (request: NextAuthRequest) => {
   try {
     if (!request.auth?.user) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -88,10 +92,10 @@ export const POST = auth(async (request: any) => {
       message: 'Doctor created successfully',
       data: doctor,
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(error);
     return NextResponse.json(
-      { message: (error as Error).message || 'An error occurred' },
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
       { status: 500 }
     );
   }

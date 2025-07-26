@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
 import { API_ACTIONS } from '@/lib/config';
@@ -6,11 +7,12 @@ import { connectDB } from '@/lib/db';
 import { logActivity } from '@/lib/server-actions/activity-log';
 import { trackObjectChanges } from '@/lib/utility';
 import Appointment from '@/models/Appointment';
+import { $FixMe } from '@/types';
 import { Schema, Status } from '@/types/activity';
 import { UserRole } from '@/types/user';
 
 // get appointment by id from param
-export const GET = auth(async (request: any, context: any) => {
+export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
     const allowedRoles: UserRole[] = ['user', 'admin', 'doctor', 'receptionist'];
 
@@ -49,18 +51,18 @@ export const GET = auth(async (request: any, context: any) => {
     }
 
     return NextResponse.json(appointment);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(error);
     return NextResponse.json(
       {
-        message: 'An error occurred',
+        message: error instanceof Error ? error.message : 'Internal Server Error',
       },
       { status: 500 }
     );
   }
 });
 
-export const PATCH = auth(async (request: any, context: any) => {
+export const PATCH = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
     const allowedRoles: UserRole[] = ['user', 'admin', 'doctor', 'receptionist'];
 
@@ -111,22 +113,26 @@ export const PATCH = auth(async (request: any, context: any) => {
       id: aid,
       title: `Appointment ${changedFields.includes('status') ? `status` : 'updated'}`,
       schema: 'appointment' as Schema,
-      by: request.auth?.user,
+      by: request.auth?.user as $FixMe,
       status: Status.SUCCESS,
-      ip: request.ip,
-      userAgent: request.headers.get('user-agent'),
+      ip: request.headers.get('x-forwarded-for') ?? undefined,
+      userAgent: request.headers.get('user-agent') ?? undefined,
       metadata: {
         fields: changedFields,
         diff: fieldDiffs,
       },
     });
     return NextResponse.json(updatedAppointment);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(error);
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 });
 
-export const DELETE = auth(async (request: any, context: any) => {
+export const DELETE = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
     const user = request.auth?.user;
     const allowedRoles: UserRole[] = ['admin'];
@@ -146,10 +152,10 @@ export const DELETE = auth(async (request: any, context: any) => {
       id: aid,
       title: 'Appointment deleted',
       schema: 'appointment' as Schema,
-      by: user,
+      by: user as $FixMe,
       status: Status.SUCCESS,
-      ip: request.ip,
-      userAgent: request.headers.get('user-agent'),
+      ip: request.headers.get('x-forwarded-for') ?? undefined,
+      userAgent: request.headers.get('user-agent') ?? undefined,
     });
 
     return NextResponse.json(
@@ -158,11 +164,11 @@ export const DELETE = auth(async (request: any, context: any) => {
       },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(error);
     return NextResponse.json(
       {
-        message: 'An error occurred',
+        message: error instanceof Error ? error.message : 'Internal Server Error',
       },
       { status: 500 }
     );

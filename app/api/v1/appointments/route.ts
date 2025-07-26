@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { NextAuthRequest } from 'next-auth';
 import axios from 'axios';
 
 import { auth } from '@/auth';
@@ -19,7 +20,7 @@ const defaultConfig = {
   data: {},
 };
 
-export const GET = auth(async (request: any) => {
+export const GET = auth(async (request: NextAuthRequest) => {
   try {
     const role: UserType['role'] = request.auth?.user?.role;
     const disallowedRoles: UserType['role'][] = ['nurse', 'pharmacist', 'laboratorist'];
@@ -58,13 +59,16 @@ export const GET = auth(async (request: any) => {
     });
 
     return NextResponse.json(appointments);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(error);
-    return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 });
 
-export const POST = auth(async (request: any) => {
+export const POST = auth(async (request: NextAuthRequest) => {
   try {
     const allowedRoles = ['admin', 'doctor', 'receptionist', 'user'];
     // @ts-ignore
@@ -112,16 +116,16 @@ export const POST = auth(async (request: any) => {
     }
 
     return NextResponse.json(appointment);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('API Error:', error);
     return NextResponse.json(
-      { message: 'An error occurred while processing your request' },
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
       { status: 500 }
     );
   }
 });
 
-export const PATCH = auth(async (request: any) => {
+export const PATCH = auth(async (request: NextAuthRequest) => {
   try {
     const allowedRoles = ['admin', 'receptionist'];
     if (!allowedRoles.includes(request.auth?.user?.role)) {
@@ -136,13 +140,16 @@ export const PATCH = auth(async (request: any) => {
     });
 
     return NextResponse.json({ message: 'Appointments cancelled' }, { status: 200 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error);
-    return NextResponse.json({ message: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 });
 
-export const DELETE = auth(async (request: any) => {
+export const DELETE = auth(async (request: NextAuthRequest) => {
   try {
     const allowedRoles = ['admin', 'receptionist'];
     if (!allowedRoles.includes(request.auth?.user?.role)) {
@@ -170,8 +177,11 @@ export const DELETE = auth(async (request: any) => {
       },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error);
-    return NextResponse.json({ message: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 });

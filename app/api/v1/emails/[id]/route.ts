@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server';
+import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import Email from '@/models/Email';
+import { $FixMe } from '@/types';
 
-export const GET = auth(async (request: any, context: any) => {
+export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
     if (request.auth?.user?.role !== 'admin') {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -16,13 +18,16 @@ export const GET = auth(async (request: any, context: any) => {
       return NextResponse.json({ message: 'Email not found' }, { status: 404 });
     }
     return NextResponse.json(email);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error);
-    return NextResponse.json({ message: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 });
 
-export const DELETE = auth(async (request: any, context: any) => {
+export const DELETE = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
     if (request.auth?.user?.role !== 'admin') {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -35,8 +40,11 @@ export const DELETE = auth(async (request: any, context: any) => {
       return NextResponse.json({ message: 'Email not found' }, { status: 404 });
     }
     return NextResponse.json({ message: 'Email deleted successfully' });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error);
-    return NextResponse.json({ message: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 });

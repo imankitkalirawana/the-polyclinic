@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server';
+import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import Service from '@/models/Service';
+import { $FixMe } from '@/types';
 import { ServiceType } from '@/types/service';
 
-export const GET = async function GET(_request: any, context: any) {
+export const GET = async function GET(_request: NextAuthRequest, context: $FixMe) {
   try {
     const { id } = await context.params;
     await connectDB();
@@ -16,13 +18,16 @@ export const GET = async function GET(_request: any, context: any) {
     return NextResponse.json({
       data: service,
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(error);
-    return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 };
 
-export const PUT = auth(async (request: any, context: any) => {
+export const PUT = auth(async (request: NextAuthRequest, context: $FixMe) => {
   const allowedRoles = ['admin'];
   if (!allowedRoles.includes(request.auth?.user?.role)) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -48,7 +53,7 @@ export const PUT = auth(async (request: any, context: any) => {
   }
 });
 
-export const DELETE = auth(async (request: any, context: any) => {
+export const DELETE = auth(async (request: NextAuthRequest, context: $FixMe) => {
   const allowedRoles = ['admin'];
   if (!allowedRoles.includes(request.auth?.user?.role)) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -65,8 +70,11 @@ export const DELETE = auth(async (request: any, context: any) => {
       message: `${service.name} deleted successfully`,
       data: service,
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(error);
-    return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 });

@@ -44,12 +44,13 @@
         "varsIgnorePattern": "^_"
       }
     ],
+    "@typescript-eslint/no-explicit-any": "error", // This rule disallows the use of the `any` type.
     "simple-import-sort/imports": [
       "warn",
       {
         "groups": [
           ["^react$", "^next", "^@heroui", "^components", "^[a-z]", "^@\\w+"],
-          ["^store", "^services", "^util", "^lib", "^public"],
+          ["^types", "^store", "^services", "^util", "^lib", "^public"],
           [
             "^\\.\\.(?!/?$)",
             "^\\.\\./?$",

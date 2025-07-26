@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
+import { NextAuthRequest } from 'next-auth';
 import bcrypt from 'bcryptjs';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import User from '@/models/User';
 
-export const PATCH = auth(async (request: any) => {
+export const PATCH = auth(async (request: NextAuthRequest) => {
   try {
     if (!request.auth?.user) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -25,8 +26,11 @@ export const PATCH = auth(async (request: any) => {
     user.password = hashedPassword;
     await user.save();
     return NextResponse.json({ message: 'Password updated successfully' });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error);
-    return NextResponse.json({ message: error.message || 'An error occurred' }, { status: 500 });
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 });

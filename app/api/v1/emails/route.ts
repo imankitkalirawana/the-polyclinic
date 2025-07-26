@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
+import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import Email from '@/models/Email';
 
-export const GET = auth(async (request: any) => {
+export const GET = auth(async (request: NextAuthRequest) => {
   try {
     const allowedRoles = ['admin'];
 
@@ -17,13 +18,16 @@ export const GET = auth(async (request: any) => {
     const emails = await Email.find();
 
     return NextResponse.json(emails);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(error);
-    return NextResponse.json({ message: 'An error occurred' }, { status: 500 });
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 });
 
-export const POST = async function POST(request: any) {
+export const POST = async function POST(request: NextAuthRequest) {
   try {
     const data = await request.json();
 
@@ -37,8 +41,11 @@ export const POST = async function POST(request: any) {
 
     await connectDB();
     // const res =
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error);
-    return NextResponse.json({ message: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 };
