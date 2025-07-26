@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '@heroui/react';
+import { Button, cn } from '@heroui/react';
 import { isToday } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
@@ -111,7 +111,7 @@ export function CalendarPreview({ config }: CalendarPreviewProps) {
   };
 
   return (
-    <div className="h-full flex-1 overflow-y-auto">
+    <div className="flex-1 overflow-y-auto">
       <div className="flex items-center gap-2">
         <Button
           variant="ghost"
@@ -135,13 +135,24 @@ export function CalendarPreview({ config }: CalendarPreviewProps) {
         <div className="grid min-h-full grid-cols-8">
           {/* Time column */}
           <div className="border-r border-divider">
-            <div className="flex h-16 items-center justify-center border-b border-divider text-xs text-default-500">
+            <div
+              className={cn(
+                'flex h-16 items-center justify-center border-b border-divider text-xs text-default-500',
+                'h-20',
+                config.duration === 15
+              )}
+            >
               {config.timezone}
             </div>
             {timeLabels.map((time) => (
               <div
                 key={time}
-                className="flex h-16 items-start justify-end border-b border-divider pr-2 pt-1"
+                className={cn(
+                  'flex h-16 items-start justify-end border-b border-divider pr-2 pt-1',
+                  {
+                    'h-20': config.duration === 15,
+                  }
+                )}
               >
                 <span className="text-xs text-default-500">{time}</span>
               </div>
@@ -152,7 +163,14 @@ export function CalendarPreview({ config }: CalendarPreviewProps) {
           {weekDays.map((day, dayIndex) => (
             <div key={dayIndex} className="border-r border-divider">
               {/* Day header */}
-              <div className="relative flex h-16 flex-col items-center justify-center border-b border-divider">
+              <div
+                className={cn(
+                  'relative flex h-16 flex-col items-center justify-center border-b border-divider',
+                  {
+                    'h-20': config.duration === 15,
+                  }
+                )}
+              >
                 <div className="mb-1 text-xs text-default-500">{getDayName(day)}</div>
                 <div
                   className={`text-lg font-medium ${
@@ -175,16 +193,21 @@ export function CalendarPreview({ config }: CalendarPreviewProps) {
               {/* Time slots */}
               <div className="relative h-full overflow-auto">
                 {timeLabels.map((_, timeIndex) => (
-                  <div key={timeIndex} className="h-16 border-b border-divider" />
+                  <div
+                    key={timeIndex}
+                    className={cn('h-16 border-b border-divider', {
+                      'h-20': config.duration === 15,
+                    })}
+                  />
                 ))}
 
                 {/* Available slots overlay */}
                 {isDayAvailable(day) && (
                   <div className="absolute inset-0">
                     {generateTimeSlots(day).map((slot, slotIndex) => {
-                      const topOffset = ((slot.start - 480) / 60) * 64; // 480 = 8 AM in minutes, 64px per hour
-                      const height = (slot.duration / 60) * 64;
-
+                      const topOffset =
+                        ((slot.start - 480) / 60) * (config.duration === 15 ? 80 : 64); // 480 = 8 AM in minutes, 64px per hour
+                      const height = (slot.duration / 60) * (config.duration === 15 ? 80 : 64);
                       const isDayOverridden = hasSpecificDateOverride(day);
 
                       return (
