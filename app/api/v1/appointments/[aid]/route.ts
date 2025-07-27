@@ -9,13 +9,15 @@ import { trackObjectChanges } from '@/lib/utility';
 import Appointment from '@/models/Appointment';
 import { $FixMe } from '@/types';
 import { Schema, Status } from '@/types/activity';
+import { UserType } from '@/types/user';
 
 // get appointment by id from param
 export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
     const allowedRoles = ['user', 'admin', 'doctor', 'receptionist'];
+    const role = request.auth?.user?.role;
 
-    if (!allowedRoles.includes(request.auth?.user?.role ?? '')) {
+    if (!role || !allowedRoles.includes(role)) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
@@ -23,10 +25,24 @@ export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
     const aid = Number(params.aid);
     await connectDB();
 
-    const appointments = await Appointment.aggregate([
-      {
+    const queryMap: Record<UserType['role'], { $match: Record<string, unknown> }> = {
+      admin: {
         $match: { aid },
       },
+      doctor: {
+        $match: { aid, doctor: request.auth?.user?.uid },
+      },
+      receptionist: {
+        $match: { aid },
+      },
+      user: { $match: { aid, patient: request.auth?.user?.uid } },
+      nurse: { $match: { aid } },
+      pharmacist: { $match: { aid } },
+      laboratorist: { $match: { aid } },
+    };
+
+    const appointments = await Appointment.aggregate([
+      queryMap[role],
       {
         $lookup: {
           from: 'users',
@@ -89,7 +105,12 @@ export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
           updatedBy: 1,
         },
       },
+      { $limit: 1 },
     ]);
+
+    if (appointments.length === 0) {
+      return NextResponse.json({ message: 'Appointment not found' }, { status: 404 });
+    }
 
     return NextResponse.json(appointments[0]);
   } catch (error: unknown) {

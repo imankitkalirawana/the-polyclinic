@@ -259,13 +259,11 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
             {appointment.additionalInfo.symptoms && (
               <CellRenderer
                 label="Symptoms"
-                icon="solar:notes-bold-duotone"
+                icon="solar:heart-pulse-bold-duotone"
                 value={appointment.additionalInfo.symptoms}
                 className="p-0"
                 classNames={{
                   icon: 'text-orange-500 bg-orange-50',
-                  label: 'text-tiny',
-                  value: 'text-tiny',
                 }}
               />
             )}
@@ -274,6 +272,7 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
                 label="Notes"
                 icon="solar:notes-bold-duotone"
                 value={appointment.additionalInfo.notes}
+                className="p-0"
                 classNames={{
                   icon: 'text-amber-500 bg-amber-50',
                 }}
@@ -284,6 +283,7 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
                 label="Description"
                 icon="solar:document-text-bold-duotone"
                 value={appointment.additionalInfo.description}
+                className="p-0"
                 classNames={{
                   icon: 'text-pink-500 bg-pink-50',
                 }}
@@ -294,6 +294,7 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
                 label="Instructions"
                 icon="solar:document-text-bold-duotone"
                 value={appointment.additionalInfo.instructions}
+                className="p-0"
               />
             )}
           </div>
@@ -327,7 +328,9 @@ const AppointmentHeader = memo(
             <h2 className="text-large font-medium capitalize text-primary-foreground">
               #{appointment.aid} - {appointment.type}
             </h2>
-            <Icon icon="solar:danger-triangle-bold" className="animate-pulse text-warning-500" />
+            {appointment.type === 'emergency' && (
+              <Icon icon="solar:danger-triangle-bold" className="animate-pulse text-warning-500" />
+            )}
           </div>
           <div className="flex items-center gap-1">
             <StatusRenderer status={appointment.status} />

@@ -13,7 +13,7 @@ export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
     }
 
     await connectDB();
-    const { id } = context.params;
+    const { id } = await context.params;
 
     const activity = await ActivityLog.find({
       id: Number(id),

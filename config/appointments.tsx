@@ -80,7 +80,9 @@ export const APPOINTMENT_BUTTON_CONFIGS: ButtonConfig[] = [
       statuses: ['booked', 'confirmed', 'in-progress', 'on-hold', 'overdue'],
       roles: ['user', 'doctor', 'receptionist', 'admin'],
       custom: (appointment) =>
-        appointment.status === 'booked' || appointment.status === 'confirmed',
+        appointment.status === 'booked' ||
+        appointment.status === 'confirmed' ||
+        appointment.status === 'overdue',
     },
     action: {
       type: 'store-action',
