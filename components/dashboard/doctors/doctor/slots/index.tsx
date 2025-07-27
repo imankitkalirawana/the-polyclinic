@@ -61,8 +61,6 @@ export function AppointmentScheduler({ uid }: { uid: number }) {
     await updateSlots.mutateAsync(values);
   };
 
-  console.log(slots);
-
   return (
     <div className="flex h-full">
       <Formik initialValues={slots || initialValues} onSubmit={handleSubmit} enableReinitialize>

@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { Button, cn } from '@heroui/react';
+import { useEffect, useRef, useState } from 'react';
+import { Button, ButtonGroup } from '@heroui/react';
 import { isToday } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
@@ -13,11 +13,11 @@ interface CalendarPreviewProps {
 
 export function CalendarPreview({ config }: CalendarPreviewProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const getWeekDays = () => {
     const startOfWeek = new Date(currentDate);
     startOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
-
     const days = [];
     for (let i = 0; i < 7; i++) {
       const day = new Date(startOfWeek);
@@ -40,13 +40,10 @@ export function CalendarPreview({ config }: CalendarPreviewProps) {
   };
 
   const isDayAvailable = (date: Date) => {
-    // Check if there's a specific date override
     const specificDate = getSpecificDateAvailability(date);
     if (specificDate) {
       return specificDate.enabled;
     }
-
-    // Fall back to weekly schedule
     const dayName = date.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
     return config.availability.schedule[dayName]?.enabled || false;
   };
@@ -54,31 +51,24 @@ export function CalendarPreview({ config }: CalendarPreviewProps) {
   const generateTimeSlots = (date: Date) => {
     if (!isDayAvailable(date)) return [];
 
-    // Check if there's a specific date override
     const specificDate = getSpecificDateAvailability(date);
     let slotsToUse;
 
     if (specificDate) {
       slotsToUse = specificDate.slots;
     } else {
-      // Use weekly schedule
-
       const dayName = date.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
       const dayConfig = config.availability.schedule[dayName];
-
       if (!dayConfig || !dayConfig.enabled) return [];
       slotsToUse = dayConfig.slots;
     }
 
     const allSlots: { start: number; duration: number }[] = [];
-
     const duration = Number(config.duration);
 
-    // Process each time slot for the day
     slotsToUse.forEach((timeSlot) => {
       const [startHour, startMinute] = timeSlot.start.split(':').map(Number);
       const [endHour, endMinute] = timeSlot.end.split(':').map(Number);
-
       const startTime = startHour * 60 + startMinute;
       const endTime = endHour * 60 + endMinute;
       const slotDuration = duration + config.bufferTime;
@@ -99,9 +89,18 @@ export function CalendarPreview({ config }: CalendarPreviewProps) {
   const hasSpecificDateOverride = (date: Date) => getSpecificDateAvailability(date) !== undefined;
 
   const weekDays = getWeekDays();
+
   const timeLabels: string[] = [];
-  for (let hour = 8; hour <= 20; hour++) {
-    timeLabels.push(`${hour > 12 ? hour - 12 : hour} ${hour >= 12 ? 'PM' : 'AM'}`);
+  for (let hour = 0; hour < 24; hour++) {
+    if (hour === 0) {
+      timeLabels.push('12 AM');
+    } else if (hour < 12) {
+      timeLabels.push(`${hour} AM`);
+    } else if (hour === 12) {
+      timeLabels.push('12 PM');
+    } else {
+      timeLabels.push(`${hour - 12} PM`);
+    }
   }
 
   const navigateWeek = (direction: 'prev' | 'next') => {
@@ -110,66 +109,67 @@ export function CalendarPreview({ config }: CalendarPreviewProps) {
     setCurrentDate(newDate);
   };
 
+  const formatMonthYear = (date: Date) => {
+    const month = date.toLocaleDateString('en-US', { month: 'short' });
+    const year = date.getFullYear();
+    const endOfWeek = new Date(date);
+    endOfWeek.setDate(date.getDate() + 6);
+    const endMonth = endOfWeek.toLocaleDateString('en-US', { month: 'short' });
+
+    if (month === endMonth) {
+      return `${month} ${year}`;
+    } else {
+      return `${month} - ${endMonth} ${year}`;
+    }
+  };
+
+  const hourHeight = config.duration === 15 ? 80 : 64;
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      const hourHeight = config.duration === 15 ? 80 : 64;
+      const nineAMOffset = 9 * hourHeight;
+      scrollRef.current.scrollTo({
+        top: nineAMOffset,
+        behavior: 'smooth',
+      });
+    }
+  }, [config.duration, currentDate]);
+
   return (
-    <div className="flex-1 overflow-y-auto">
-      <div className="flex items-center gap-2">
-        <Button
-          variant="ghost"
-          size="sm"
-          onPress={() => navigateWeek('prev')}
-          className="p-1 text-default-400"
-        >
-          <Icon icon="mdi:chevron-left" className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onPress={() => navigateWeek('next')}
-          className="p-1 text-default-400"
-        >
-          <Icon icon="mdi:chevron-right" className="h-4 w-4" />
-        </Button>
+    <div className="flex h-full flex-1 flex-col">
+      {/* Navigation */}
+      <div className="flex items-center justify-between gap-2 p-2">
+        <ButtonGroup isIconOnly variant="flat" size="sm">
+          <Button onPress={() => navigateWeek('prev')}>
+            <Icon icon="solar:alt-arrow-left-linear" className="h-4 w-4" />
+          </Button>
+          <Button onPress={() => navigateWeek('next')}>
+            <Icon icon="solar:alt-arrow-right-linear" className="h-4 w-4" />
+          </Button>
+        </ButtonGroup>
+        <div className="flex items-center gap-2">
+          <Button onPress={() => setCurrentDate(new Date())} variant="flat" size="sm">
+            Today
+          </Button>
+
+          <h4 className="text-sm text-default-500">{formatMonthYear(currentDate)}</h4>
+        </div>
       </div>
-      {/* Calendar Grid */}
-      <div className="flex-1">
-        <div className="grid min-h-full grid-cols-8">
-          {/* Time column */}
-          <div className="border-r border-divider">
-            <div
-              className={cn(
-                'flex h-16 items-center justify-center border-b border-divider text-xs text-default-500',
-                'h-20',
-                config.duration === 15
-              )}
-            >
+
+      {/* Calendar Container */}
+      <div className="flex flex-1 flex-col overflow-hidden">
+        {/* Sticky Day Headers */}
+        <div className="sticky top-0 z-20 bg-background">
+          <div className="grid grid-cols-8 border-b border-divider">
+            <div className="flex h-16 items-center justify-center border-r border-divider text-xs text-default-500">
               {config.timezone}
             </div>
-            {timeLabels.map((time) => (
-              <div
-                key={time}
-                className={cn(
-                  'flex h-16 items-start justify-end border-b border-divider pr-2 pt-1',
-                  {
-                    'h-20': config.duration === 15,
-                  }
-                )}
-              >
-                <span className="text-xs text-default-500">{time}</span>
-              </div>
-            ))}
-          </div>
 
-          {/* Day columns */}
-          {weekDays.map((day, dayIndex) => (
-            <div key={dayIndex} className="border-r border-divider">
-              {/* Day header */}
+            {weekDays.map((day, dayIndex) => (
               <div
-                className={cn(
-                  'relative flex h-16 flex-col items-center justify-center border-b border-divider',
-                  {
-                    'h-20': config.duration === 15,
-                  }
-                )}
+                key={dayIndex}
+                className="relative flex h-16 flex-col items-center justify-center border-r border-divider bg-background"
               >
                 <div className="mb-1 text-xs text-default-500">{getDayName(day)}</div>
                 <div
@@ -181,7 +181,6 @@ export function CalendarPreview({ config }: CalendarPreviewProps) {
                 >
                   {getDayNumber(day)}
                 </div>
-                {/* Indicator for specific date override */}
                 {hasSpecificDateOverride(day) && (
                   <div
                     className="absolute right-1 top-1 h-2 w-2 rounded-full bg-orange-400"
@@ -189,25 +188,40 @@ export function CalendarPreview({ config }: CalendarPreviewProps) {
                   />
                 )}
               </div>
+            ))}
+          </div>
+        </div>
 
-              {/* Time slots */}
-              <div className="relative h-full overflow-auto">
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto" ref={scrollRef}>
+          <div className="grid grid-cols-8" style={{ height: `${24 * hourHeight}px` }}>
+            <div className="border-r border-divider">
+              {timeLabels.map((time, timeIndex) => (
+                <div
+                  key={timeIndex}
+                  className="flex items-start justify-end border-b border-divider pr-2 pt-1"
+                  style={{ height: `${hourHeight}px` }}
+                >
+                  <span className="text-xs text-default-500">{time}</span>
+                </div>
+              ))}
+            </div>
+
+            {weekDays.map((day, dayIndex) => (
+              <div key={dayIndex} className="relative border-r border-divider">
                 {timeLabels.map((_, timeIndex) => (
                   <div
                     key={timeIndex}
-                    className={cn('h-16 border-b border-divider', {
-                      'h-20': config.duration === 15,
-                    })}
+                    className="border-b border-divider"
+                    style={{ height: `${hourHeight}px` }}
                   />
                 ))}
 
-                {/* Available slots overlay */}
                 {isDayAvailable(day) && (
                   <div className="absolute inset-0">
                     {generateTimeSlots(day).map((slot, slotIndex) => {
-                      const topOffset =
-                        ((slot.start - 480) / 60) * (config.duration === 15 ? 80 : 64); // 480 = 8 AM in minutes, 64px per hour
-                      const height = (slot.duration / 60) * (config.duration === 15 ? 80 : 64);
+                      const topOffset = (slot.start / 60) * hourHeight;
+                      const height = (slot.duration / 60) * hourHeight;
                       const isDayOverridden = hasSpecificDateOverride(day);
 
                       return (
@@ -236,8 +250,8 @@ export function CalendarPreview({ config }: CalendarPreviewProps) {
                   </div>
                 )}
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </div>
