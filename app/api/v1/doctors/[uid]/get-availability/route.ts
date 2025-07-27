@@ -189,7 +189,7 @@ export const POST = auth(async (request: NextAuthRequest, context: $FixMe) => {
       };
     } else {
       // For specific dates, use $in operator
-      dateQuery = { $in: dates.map((date) => new Date(`${date}T00:00:00.000Z`)) };
+      dateQuery = { $in: dates.map((date: string) => new Date(`${date}T00:00:00.000Z`)) };
     }
 
     // Get appointments for the date range/dates
@@ -202,7 +202,7 @@ export const POST = auth(async (request: NextAuthRequest, context: $FixMe) => {
 
     // Process each date individually
     const dateSlots = await Promise.all(
-      dates.map((date) => processDateSlots(date, appointments, slotsConfig))
+      dates.map((date: string) => processDateSlots(date, appointments, slotsConfig))
     );
 
     // Calculate total dates properly
