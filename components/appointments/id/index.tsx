@@ -144,7 +144,7 @@ export default function Appointment({ aid }: { aid: number }) {
                     alt={appointment.patient.name}
                     width={100}
                     height={100}
-                    className="rounded-full text-slate-300"
+                    className="rounded-full bg-slate-300"
                   />
                 </div>
                 <div className="flex flex-col">
@@ -222,7 +222,7 @@ export default function Appointment({ aid }: { aid: number }) {
                       alt={appointment.doctor?.name}
                       width={100}
                       height={100}
-                      className="rounded-full text-slate-300"
+                      className="rounded-full bg-slate-300"
                     />
                   </div>
                   <div className="flex flex-col">

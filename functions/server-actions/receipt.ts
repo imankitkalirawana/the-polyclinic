@@ -8,7 +8,7 @@ import { Receipt } from '@/utils/receipt-template/receipt';
 
 export const printAppointmentReceipt = async (aid: number) => {
   await connectDB();
-  const appointment = await Appointment.findOne({ aid }).lean();
+  const appointment = await Appointment.findOne({ aid });
   if (!appointment) {
     throw new Error('Appointment not found');
   }
