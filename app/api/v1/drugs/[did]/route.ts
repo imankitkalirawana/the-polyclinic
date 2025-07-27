@@ -10,7 +10,7 @@ import { $FixMe } from '@/types';
 export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
     const allowedRoles = ['admin', 'doctor', 'receptionist'];
-    if (!allowedRoles.includes(request.auth?.user?.role)) {
+    if (!allowedRoles.includes(request.auth?.user?.role ?? '')) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
@@ -34,7 +34,7 @@ export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
 export const PUT = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
     const allowedRoles = ['admin', 'laboratorist'];
-    if (!allowedRoles.includes(request.auth?.user?.role)) {
+    if (!allowedRoles.includes(request.auth?.user?.role ?? '')) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
@@ -69,7 +69,7 @@ export const PUT = auth(async (request: NextAuthRequest, context: $FixMe) => {
 export const DELETE = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
     const allowedRoles = ['admin', 'laboratorist'];
-    if (!allowedRoles.includes(request.auth?.user?.role)) {
+    if (!allowedRoles.includes(request.auth?.user?.role ?? '')) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 

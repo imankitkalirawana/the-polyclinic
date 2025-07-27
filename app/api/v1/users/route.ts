@@ -46,7 +46,7 @@ export const GET = auth(async (request: NextAuthRequest) => {
 export const POST = auth(async (request: NextAuthRequest) => {
   try {
     const allowedRoles = ['admin', 'receptionist'];
-    if (!allowedRoles.includes(request.auth?.user?.role)) {
+    if (!allowedRoles.includes(request.auth?.user?.role ?? '')) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
@@ -72,7 +72,7 @@ export const POST = auth(async (request: NextAuthRequest) => {
 export const DELETE = auth(async (request: NextAuthRequest) => {
   try {
     const allowedRoles = ['admin', 'receptionist'];
-    if (!allowedRoles.includes(request.auth?.user?.role)) {
+    if (!allowedRoles.includes(request.auth?.user?.role ?? '')) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 

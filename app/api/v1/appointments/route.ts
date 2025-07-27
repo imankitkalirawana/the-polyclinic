@@ -3,8 +3,7 @@ import { NextAuthRequest } from 'next-auth';
 import axios from 'axios';
 
 import { auth } from '@/auth';
-import { generateAppointments } from '@/lib/appointments/mock';
-import { API_ACTIONS, APPOINTMENT, CLINIC_INFO, MOCK_DATA, TIMINGS } from '@/lib/config';
+import { API_ACTIONS, APPOINTMENT, CLINIC_INFO, TIMINGS } from '@/lib/config';
 import { connectDB } from '@/lib/db';
 import Appointment from '@/models/Appointment';
 import { UserType } from '@/types/user';
@@ -22,43 +21,92 @@ const defaultConfig = {
 
 export const GET = auth(async (request: NextAuthRequest) => {
   try {
-    const role: UserType['role'] = request.auth?.user?.role;
-    const disallowedRoles: UserType['role'][] = ['nurse', 'pharmacist', 'laboratorist'];
+    await connectDB();
 
-    if (disallowedRoles.includes(role)) {
+    if (!request.auth?.user) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    if (MOCK_DATA.appointments.isMock) {
-      const appointments = await generateAppointments({
-        count: MOCK_DATA.appointments.count,
-      });
-
-      return NextResponse.json(
-        appointments.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-      );
-    }
-
-    const queryMap: Record<UserType['role'], object> = {
-      admin: {},
-      receptionist: {},
+    const role = request.auth?.user?.role;
+    const queryMap: Record<UserType['role'], { $match: Record<string, unknown> }> = {
+      admin: {
+        $match: {},
+      },
       doctor: {
-        'doctor.email': request.auth?.user?.email,
+        $match: { doctor: request.auth?.user?.uid },
       },
-      user: {
-        'patient.email': request.auth?.user?.email,
+      receptionist: {
+        $match: {},
       },
-      nurse: {},
-      pharmacist: {},
-      laboratorist: {},
+      user: { $match: { patient: request.auth?.user?.uid } },
+      nurse: { $match: {} },
+      pharmacist: { $match: {} },
+      laboratorist: { $match: {} },
     };
 
-    await connectDB();
-    const appointments = await Appointment.find(queryMap[role]).sort({
-      date: 'ascending',
-    });
+    const appointments = await Appointment.aggregate([
+      queryMap[role],
+      {
+        $lookup: {
+          from: 'users', // collection name
+          localField: 'doctor',
+          foreignField: 'uid', // doctor field matches user.uid
+          as: 'doctorDetails',
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'patient',
+          foreignField: 'uid', // patient field matches user.uid
+          as: 'patientDetails',
+        },
+      },
+      {
+        $lookup: {
+          from: 'doctors', // doctors collection
+          localField: 'doctor', // doctor UID from appointment
+          foreignField: 'uid', // doctor UID in doctors collection
+          as: 'moreDoctorDetails',
+        },
+      },
+      {
+        $unwind: { path: '$doctorDetails', preserveNullAndEmptyArrays: true },
+      },
+      {
+        $unwind: { path: '$patientDetails', preserveNullAndEmptyArrays: false },
+      },
+      {
+        $unwind: { path: '$moreDoctorDetails', preserveNullAndEmptyArrays: true },
+      },
+      {
+        $project: {
+          date: 1,
+          type: 1,
+          status: 1,
+          additionalInfo: 1,
+          aid: 1,
+          doctor: {
+            name: '$doctorDetails.name',
+            email: '$doctorDetails.email',
+            uid: '$doctorDetails.uid',
+            phone: '$doctorDetails.phone',
+            seating: '$moreDoctorDetails.seating',
+          },
+          patient: {
+            name: '$patientDetails.name',
+            email: '$patientDetails.email',
+            uid: '$patientDetails.uid',
+            phone: '$patientDetails.phone',
+          },
+          createdAt: 1,
+          updatedAt: 1,
+          updatedBy: 1,
+        },
+      },
+    ]);
 
-    return NextResponse.json(appointments);
+    return NextResponse.json(appointments, { status: 200 });
   } catch (error: unknown) {
     console.error(error);
     return NextResponse.json(
@@ -128,7 +176,7 @@ export const POST = auth(async (request: NextAuthRequest) => {
 export const PATCH = auth(async (request: NextAuthRequest) => {
   try {
     const allowedRoles = ['admin', 'receptionist'];
-    if (!allowedRoles.includes(request.auth?.user?.role)) {
+    if (request.auth?.user && !allowedRoles.includes(request.auth?.user?.role)) {
       return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
 
@@ -152,7 +200,7 @@ export const PATCH = auth(async (request: NextAuthRequest) => {
 export const DELETE = auth(async (request: NextAuthRequest) => {
   try {
     const allowedRoles = ['admin', 'receptionist'];
-    if (!allowedRoles.includes(request.auth?.user?.role)) {
+    if (request.auth?.user && !allowedRoles.includes(request.auth?.user?.role)) {
       return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
 

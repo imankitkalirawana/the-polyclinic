@@ -56,7 +56,7 @@ export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
     appointments.filter((apt) => isSameDay(new Date(apt.date), date));
 
   const isAllowedToCreateAppointment = allowedRolesToCreateAppointment.includes(
-    session?.user?.role
+    session?.user?.role || 'user'
   );
 
   return (

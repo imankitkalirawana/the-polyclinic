@@ -47,7 +47,7 @@ export function WeekView({ appointments, currentDate, onTimeSlotClick }: WeekVie
   const weekEnd = endOfWeek(currentDate);
   const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd });
   const isAllowedToCreateAppointment = allowedRolesToCreateAppointment.includes(
-    session?.user?.role
+    session?.user?.role || 'user'
   );
 
   const { appointment, setIsTooltipOpen } = useAppointmentStore();

@@ -28,7 +28,6 @@ function formatTime(minutes: number): string {
 }
 
 // Generate date array from range
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function generateDateRange(from: string, to: string): string[] {
   const dates: string[] = [];
   const startDate = new Date(`${from}T00:00:00.000Z`);
@@ -79,7 +78,6 @@ function generateTimeSlots(baseSlots: $FixMe[], duration: number, bufferTime: nu
 }
 
 // Process slots for a single date
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function processDateSlots(date: string, allAppointments: $FixMe[], slotsConfig: $FixMe) {
   const baseSlots = getBaseSlotsForDate(date, slotsConfig);
 
@@ -101,8 +99,13 @@ async function processDateSlots(date: string, allAppointments: $FixMe[], slotsCo
     slotsConfig.bufferTime
   );
 
-  // FIX: Filter appointments for the current date correctly
-  const dateAppointments = allAppointments.filter((app) => app.date.toISOString().startsWith(date));
+  // Filter appointments for the current date correctly
+  // Handle both Date objects and string dates
+  const dateAppointments = allAppointments.filter((app) => {
+    const appointmentDate =
+      app.date instanceof Date ? app.date.toISOString().split('T')[0] : app.date;
+    return appointmentDate === date;
+  });
 
   const bookedSlotTimes = dateAppointments.map((appointment) => appointment.startTime);
   const dailyLimitReached = dateAppointments.length >= (slotsConfig.maxBookingsPerDay || Infinity);
@@ -130,7 +133,7 @@ export const POST = auth(async (request: NextAuthRequest, context: $FixMe) => {
     const data = await request.json();
     const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 
-    const { dates, from, to } = data;
+    let { dates, from, to } = data;
 
     // Validation and Date Generation
     if (!dates && (!from || !to)) {
@@ -140,6 +143,7 @@ export const POST = auth(async (request: NextAuthRequest, context: $FixMe) => {
       );
     }
 
+    // Handle date range scenario
     if (from && to) {
       if (!dateRegex.test(from) || !dateRegex.test(to)) {
         return NextResponse.json(
@@ -150,7 +154,12 @@ export const POST = auth(async (request: NextAuthRequest, context: $FixMe) => {
       if (new Date(from) >= new Date(to)) {
         return NextResponse.json({ message: 'From date must be before to date' }, { status: 400 });
       }
-    } else if (dates) {
+
+      // Generate dates array from range
+      dates = generateDateRange(from, to);
+    }
+    // Handle specific dates scenario
+    else if (dates) {
       if (!Array.isArray(dates)) {
         return NextResponse.json({ message: 'Dates must be an array' }, { status: 400 });
       }
@@ -164,44 +173,66 @@ export const POST = auth(async (request: NextAuthRequest, context: $FixMe) => {
       }
     }
 
+    // Get slots configuration
     const slotsConfig = await Slot.findOne({ uid: Number(uid) });
     if (!slotsConfig) {
       return NextResponse.json({ message: 'Slots configuration not found' }, { status: 404 });
     }
 
-    const dateQuery = dates ? { $in: dates } : { $gte: new Date(from), $lte: new Date(to) };
+    // Build the date query based on the scenario
+    let dateQuery;
+    if (from && to) {
+      // For date range, query between the dates
+      dateQuery = {
+        $gte: new Date(`${from}T00:00:00.000Z`),
+        $lte: new Date(`${to}T23:59:59.999Z`),
+      };
+    } else {
+      // For specific dates, use $in operator
+      dateQuery = { $in: dates.map((date) => new Date(`${date}T00:00:00.000Z`)) };
+    }
 
-    console.log(dateQuery);
-
+    // Get appointments for the date range/dates
     const appointments = await Appointment.find({
       doctor: Number(uid),
       date: dateQuery,
     });
 
-    // const overallStats = {
-    //   totalDates: dates.length,
-    //   totalAvailableSlots: dateSlots.reduce((sum, day) => sum + day.availableSlots.length, 0),
-    //   totalPossibleSlots: dateSlots.reduce((sum, day) => sum + day.totalSlots, 0),
-    //   totalBookedSlots: dateSlots.reduce((sum, day) => sum + day.bookedSlots, 0),
-    //   datesWithAvailability: dateSlots.filter((day) => day.availableSlots.length > 0).length,
-    //   datesWithNoAvailability: dateSlots.filter((day) => day.availableSlots.length === 0).length,
-    // };
+    console.log(appointments);
 
-    // const response = {
-    //   success: true,
-    //   requestType: from && to ? 'dateRange' : 'specificDates',
-    //   dateRange: from && to ? { from, to } : null,
-    //   overallStats,
-    //   dateSlots,
-    //   config: {
-    //     duration: slotsConfig.duration,
-    //     bufferTime: slotsConfig.bufferTime,
-    //     maxBookingsPerDay: slotsConfig.maxBookingsPerDay,
-    //     timezone: slotsConfig.timezone,
-    //   },
-    // };
+    // Process each date individually
+    const dateSlots = await Promise.all(
+      dates.map((date) => processDateSlots(date, appointments, slotsConfig))
+    );
 
-    return NextResponse.json({ message: 'Success', appointments });
+    // Calculate total dates properly
+    const totalDates = dates.length;
+
+    // Calculate overall statistics
+    const overallStats = {
+      totalDates,
+      totalAvailableSlots: dateSlots.reduce((sum, day) => sum + day.availableSlots.length, 0),
+      totalPossibleSlots: dateSlots.reduce((sum, day) => sum + day.totalSlots, 0),
+      totalBookedSlots: dateSlots.reduce((sum, day) => sum + day.bookedSlots, 0),
+      datesWithAvailability: dateSlots.filter((day) => day.availableSlots.length > 0).length,
+      datesWithNoAvailability: dateSlots.filter((day) => day.availableSlots.length === 0).length,
+    };
+
+    const response = {
+      success: true,
+      requestType: from && to ? 'dateRange' : 'specificDates',
+      dateRange: from && to ? { from, to } : null,
+      overallStats,
+      dateSlots,
+      config: {
+        duration: slotsConfig.duration,
+        bufferTime: slotsConfig.bufferTime,
+        maxBookingsPerDay: slotsConfig.maxBookingsPerDay,
+        timezone: slotsConfig.timezone,
+      },
+    };
+
+    return NextResponse.json(response);
   } catch (error: unknown) {
     console.error('Error getting slot availability:', error);
     return NextResponse.json(

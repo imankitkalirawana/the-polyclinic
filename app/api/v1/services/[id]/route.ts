@@ -29,7 +29,7 @@ export const GET = async function GET(_request: NextAuthRequest, context: $FixMe
 
 export const PUT = auth(async (request: NextAuthRequest, context: $FixMe) => {
   const allowedRoles = ['admin'];
-  if (!allowedRoles.includes(request.auth?.user?.role)) {
+  if (!allowedRoles.includes(request.auth?.user?.role ?? '')) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
@@ -55,7 +55,7 @@ export const PUT = auth(async (request: NextAuthRequest, context: $FixMe) => {
 
 export const DELETE = auth(async (request: NextAuthRequest, context: $FixMe) => {
   const allowedRoles = ['admin'];
-  if (!allowedRoles.includes(request.auth?.user?.role)) {
+  if (!allowedRoles.includes(request.auth?.user?.role ?? '')) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 

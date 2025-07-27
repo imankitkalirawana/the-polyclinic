@@ -181,7 +181,7 @@ export function CalendarHeader({
             </SelectItem>
           )}
         </Select>
-        {allowedRolesToCreateAppointment.includes(session?.user?.role) && (
+        {allowedRolesToCreateAppointment.includes(session?.user?.role || 'user') && (
           <Button
             size="sm"
             color="primary"

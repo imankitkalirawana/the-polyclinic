@@ -53,7 +53,7 @@ export interface DoctorInfo {
   name: string;
   email: string;
   phone: string;
-  sitting?: string;
+  seating?: string;
   image?: string;
 }
 

@@ -3,7 +3,6 @@ import mongooseSequence from 'mongoose-sequence';
 
 import { auth } from '@/auth';
 import { AppointmentType } from '@/types/appointment';
-import { genders } from '@/types/user';
 
 // @ts-expect-error - mongoose-sequence is not typed
 const AutoIncrement = mongooseSequence(mongoose);
@@ -16,23 +15,13 @@ const appointmentSchema = new mongoose.Schema(
     },
     date: Date,
     patient: {
-      uid: Number,
-      name: String,
-      phone: String,
-      email: String,
-      gender: {
-        type: String,
-        enum: genders,
-      },
-      age: Number,
-      image: String,
+      type: Number,
+      ref: 'User',
+      required: true,
     },
     doctor: {
-      uid: Number,
-      name: String,
-      email: String,
-      sitting: String,
-      image: String,
+      type: Number,
+      ref: 'Doctor',
     },
     additionalInfo: {
       type: {

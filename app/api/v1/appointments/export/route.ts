@@ -11,7 +11,7 @@ import { UserType } from '@/types/user';
 export const POST = auth(async (request: NextAuthRequest) => {
   try {
     const allowedRoles: UserType['role'][] = ['admin'];
-    if (!allowedRoles.includes(request.auth?.user?.role)) {
+    if (request.auth?.user && !allowedRoles.includes(request.auth?.user?.role)) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
@@ -36,7 +36,7 @@ export const POST = auth(async (request: NextAuthRequest) => {
       { header: 'Doctor ID', key: 'doctorId', width: 10 },
       { header: 'Doctor Name', key: 'doctorName', width: 20 },
       { header: 'Doctor Email', key: 'doctorEmail', width: 30 },
-      { header: 'Doctor Sitting', key: 'doctorSitting', width: 20 },
+      { header: 'Doctor Seating', key: 'doctorSeating', width: 20 },
       { header: 'Date', key: 'date', width: 30 },
 
       { header: 'Created At', key: 'createdAt', width: 40 },
@@ -58,7 +58,7 @@ export const POST = auth(async (request: NextAuthRequest) => {
         doctorId: appointment.doctor?.uid || '',
         doctorName: appointment.doctor?.name,
         doctorEmail: appointment.doctor?.email,
-        doctorSitting: appointment.doctor?.sitting,
+        doctorSeating: appointment.doctor?.seating,
         date: format(new Date(appointment.date), 'PPPp'),
         createdAt: format(new Date(appointment.createdAt), 'PPPp'),
         createdBy: appointment.createdBy,

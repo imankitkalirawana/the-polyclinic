@@ -7,7 +7,7 @@ export default async function Page() {
   const session = await auth();
   const allowed = ['admin'];
 
-  if (!session || !allowed.includes(session?.user?.role)) {
+  if (session?.user && !allowed.includes(session?.user?.role)) {
     unauthorized();
   }
 

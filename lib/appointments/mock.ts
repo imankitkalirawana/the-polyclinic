@@ -53,7 +53,7 @@ export async function generateAppointments({
           name: faker.person.fullName({ sex: 'male' }),
           email: faker.internet.email(),
           phone: faker.phone.number({ style: 'national' }),
-          sitting: String(faker.number.int({ min: 100, max: 300 })),
+          seating: String(faker.number.int({ min: 100, max: 300 })),
           image: faker.image.personPortrait({ size: 256, sex: 'male' }),
         },
       }),

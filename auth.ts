@@ -4,6 +4,8 @@ import Google from 'next-auth/providers/google';
 import bcrypt from 'bcryptjs';
 import { MongoDBAdapter } from '@auth/mongodb-adapter';
 
+import { UserType } from './types/user';
+
 import client from '@/lib/db';
 import User from '@/models/User';
 
@@ -104,7 +106,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return token;
     },
     session({ session, token }) {
-      session.user.role = token.role;
+      session.user.role = token.role as UserType['role'];
       session.user.uid = token.uid as number;
       session.user.image = token.picture as string;
       return session;

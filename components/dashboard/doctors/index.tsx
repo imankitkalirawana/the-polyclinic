@@ -26,7 +26,7 @@ const INITIAL_VISIBLE_COLUMNS = [
   'uid',
   'name',
   'email',
-  'sitting',
+  'seating',
   'designation',
   'createdAt',
 ];

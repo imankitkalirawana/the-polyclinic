@@ -255,10 +255,10 @@ export default function Appointment({ aid }: { aid: number }) {
                         }}
                         iconSize={18}
                       />
-                      {appointment.doctor.sitting && (
+                      {appointment.doctor.seating && (
                         <CellRenderer
                           icon="solar:map-point-bold-duotone"
-                          value={[appointment.doctor.sitting ? appointment.doctor.sitting : '']}
+                          value={[appointment.doctor.seating ? appointment.doctor.seating : '']}
                           classNames={{
                             icon: 'text-default-500 ',
                             value: 'text-black',

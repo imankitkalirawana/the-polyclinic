@@ -34,7 +34,7 @@ export default async function Page() {
     },
   });
 
-  if (!allowedRoles.includes(session?.user?.role)) {
+  if (!session || !allowedRoles.includes(session.user?.role ?? '')) {
     unauthorized();
   }
 

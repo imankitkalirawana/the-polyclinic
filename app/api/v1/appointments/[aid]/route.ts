@@ -9,14 +9,13 @@ import { trackObjectChanges } from '@/lib/utility';
 import Appointment from '@/models/Appointment';
 import { $FixMe } from '@/types';
 import { Schema, Status } from '@/types/activity';
-import { UserRole } from '@/types/user';
 
 // get appointment by id from param
 export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
-    const allowedRoles: UserRole[] = ['user', 'admin', 'doctor', 'receptionist'];
+    const allowedRoles = ['user', 'admin', 'doctor', 'receptionist'];
 
-    if (!allowedRoles.includes(request.auth?.user?.role)) {
+    if (!allowedRoles.includes(request.auth?.user?.role ?? '')) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
@@ -64,11 +63,11 @@ export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
 
 export const PATCH = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
-    const allowedRoles: UserRole[] = ['user', 'admin', 'doctor', 'receptionist'];
+    const allowedRoles = ['user', 'admin', 'doctor', 'receptionist'];
 
     const user = request.auth?.user;
 
-    if (!allowedRoles.includes(user?.role)) {
+    if (!allowedRoles.includes(user?.role ?? '')) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
@@ -135,8 +134,8 @@ export const PATCH = auth(async (request: NextAuthRequest, context: $FixMe) => {
 export const DELETE = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
     const user = request.auth?.user;
-    const allowedRoles: UserRole[] = ['admin'];
-    if (!allowedRoles.includes(user?.role)) {
+    const allowedRoles = ['admin'];
+    if (!allowedRoles.includes(user?.role ?? '')) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 

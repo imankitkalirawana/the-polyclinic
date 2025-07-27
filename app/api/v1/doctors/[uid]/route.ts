@@ -10,7 +10,7 @@ export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
     const allowedRoles = ['admin', 'doctor'];
 
-    if (!allowedRoles.includes(request.auth?.user?.role)) {
+    if (!allowedRoles.includes(request.auth?.user?.role ?? '')) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 

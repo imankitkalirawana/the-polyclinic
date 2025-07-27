@@ -10,7 +10,11 @@ export default async function Layout({
   const session = await auth();
   const allowed = ['admin', 'receptionist', 'doctor'];
 
-  if (!session || !allowed.includes(session?.user?.role)) {
+  if (!session) {
+    unauthorized();
+  }
+
+  if (session?.user && !allowed.includes(session?.user?.role)) {
     unauthorized();
   }
 

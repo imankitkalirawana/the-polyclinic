@@ -22,7 +22,7 @@ export default async function Page() {
     },
   });
 
-  if (!allowedRoles.includes(session?.user?.role)) {
+  if (session?.user && !allowedRoles.includes(session?.user?.role)) {
     return redirect('/dashboard');
   }
 

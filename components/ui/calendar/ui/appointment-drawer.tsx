@@ -125,10 +125,10 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
   const doctorDescription = useMemo(() => {
     if (!appointment.doctor?.uid) return '';
 
-    return [`Doctor • #${appointment.doctor.uid}`, appointment.doctor.sitting]
+    return [`Doctor • #${appointment.doctor.uid}`, appointment.doctor.seating]
       .filter(Boolean)
       .join(' • ');
-  }, [appointment.doctor?.uid, appointment.doctor?.sitting]);
+  }, [appointment.doctor?.uid, appointment.doctor?.seating]);
 
   const appointmentModeContent = useMemo(() => {
     const isOnline = appointment.additionalInfo.type === 'online';
@@ -393,7 +393,7 @@ const AppointmentFooter = memo(({ appointment }: { appointment: AppointmentType 
   const { data: session } = useSession();
   const buttons = useAppointmentButtonsInDrawer({
     selected: appointment,
-    role: session?.user?.role,
+    role: session?.user?.role || 'user',
   });
 
   return (

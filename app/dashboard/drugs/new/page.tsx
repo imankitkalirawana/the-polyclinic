@@ -4,9 +4,9 @@ import { auth } from '@/auth';
 
 export default async function Page() {
   const session = await auth();
-  const allowed = ['admin'];
+  const allowedRoles = ['admin'];
 
-  if (!session || !allowed.includes(session?.user?.role)) {
+  if (!session || !allowedRoles.includes(session.user?.role ?? '')) {
     unauthorized();
   }
 

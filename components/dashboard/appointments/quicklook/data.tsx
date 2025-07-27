@@ -202,7 +202,7 @@ export const useAppointmentButtons = ({
   role,
 }: {
   appointment: AppointmentType | null;
-  role: UserType['role'];
+  role: UserType['role'] | 'user';
 }) => {
   const { setAction } = useAppointmentStore();
 
