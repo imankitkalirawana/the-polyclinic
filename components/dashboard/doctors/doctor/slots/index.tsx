@@ -67,7 +67,12 @@ export function AppointmentScheduler({ uid }: { uid: number }) {
         {(formik: FormikProps<SlotConfig>) => (
           <>
             <ConfigurationPanel formik={formik} />
-            <CalendarPreview config={formik.values} />
+            <CalendarPreview
+              config={formik.values}
+              onSlotClick={(date) => {
+                console.log(date);
+              }}
+            />
           </>
         )}
       </Formik>

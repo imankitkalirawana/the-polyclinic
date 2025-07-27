@@ -1,17 +1,18 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Button, ButtonGroup } from '@heroui/react';
-import { isToday } from 'date-fns';
+import { Button, ButtonGroup, Tooltip } from '@heroui/react';
+import { format, isToday } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 import type { SlotConfig } from '@/types/slots';
 
 interface CalendarPreviewProps {
   config: SlotConfig;
+  onSlotClick?: (date: Date) => void;
 }
 
-export function CalendarPreview({ config }: CalendarPreviewProps) {
+export function CalendarPreview({ config, onSlotClick }: CalendarPreviewProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -224,6 +225,10 @@ export function CalendarPreview({ config }: CalendarPreviewProps) {
                       const height = (slot.duration / 60) * hourHeight;
                       const isDayOverridden = hasSpecificDateOverride(day);
 
+                      const date = new Date(day);
+                      date.setHours(slot.start / 60);
+                      date.setMinutes(slot.start % 60);
+
                       return (
                         <div
                           key={slotIndex}
@@ -236,13 +241,18 @@ export function CalendarPreview({ config }: CalendarPreviewProps) {
                             top: `${topOffset}px`,
                             height: `${height}px`,
                           }}
+                          onClick={() => {
+                            onSlotClick?.(date);
+                          }}
                         >
                           <div className="p-1">
-                            <div
-                              className={`h-3 w-3 rounded-sm ${
-                                isDayOverridden ? 'bg-orange-400' : 'bg-primary-400'
-                              }`}
-                            />
+                            <Tooltip delay={500} content={format(date, 'h:mm a')}>
+                              <div
+                                className={`h-3 w-3 rounded-sm ${
+                                  isDayOverridden ? 'bg-orange-400' : 'bg-primary-400'
+                                }`}
+                              />
+                            </Tooltip>
                           </div>
                         </div>
                       );
