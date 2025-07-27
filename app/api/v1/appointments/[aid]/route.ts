@@ -19,37 +19,79 @@ export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
+    const params = await context.params;
+    const aid = Number(params.aid);
     await connectDB();
-    const { aid } = context.params;
 
-    const appointment = await Appointment.findOne({ aid });
-
-    if (!appointment) {
-      return NextResponse.json(
-        {
-          message: 'Appointment not found',
+    const appointments = await Appointment.aggregate([
+      {
+        $match: { aid },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'patient',
+          foreignField: 'uid',
+          as: 'patientDetails',
         },
-        { status: 404 }
-      );
-    }
+      },
+      {
+        $unwind: { path: '$patientDetails', preserveNullAndEmptyArrays: false },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'doctor',
+          foreignField: 'uid',
+          as: 'doctorDetails',
+        },
+      },
+      {
+        $unwind: { path: '$doctorDetails', preserveNullAndEmptyArrays: true },
+      },
+      {
+        $lookup: {
+          from: 'doctors',
+          localField: 'doctor',
+          foreignField: 'uid',
+          as: 'moreDoctorDetails',
+        },
+      },
+      {
+        $unwind: { path: '$moreDoctorDetails', preserveNullAndEmptyArrays: true },
+      },
+      {
+        $project: {
+          date: 1,
+          type: 1,
+          status: 1,
+          additionalInfo: 1,
+          aid: 1,
+          doctor: {
+            name: '$doctorDetails.name',
+            email: '$doctorDetails.email',
+            uid: '$doctorDetails.uid',
+            phone: '$doctorDetails.phone',
+            image: '$doctorDetails.image',
+            seating: '$moreDoctorDetails.seating',
+          },
+          patient: {
+            name: '$patientDetails.name',
+            email: '$patientDetails.email',
+            uid: '$patientDetails.uid',
+            phone: '$patientDetails.phone',
+            image: '$patientDetails.image',
+            gender: '$patientDetails.gender',
+            age: '$patientDetails.age',
+          },
+          createdAt: 1,
+          updatedAt: 1,
+          updatedBy: 1,
+        },
+      },
+    ]);
 
-    // if request role is user and doesn't match appointment patient email, return unauthorized
-    if (
-      request.auth?.user?.role === 'user' &&
-      request.auth?.user?.email !== appointment?.patient?.email
-    ) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
-
-    // if request role is doctor and doesn't match appointment doctor email, return unauthorized
-    if (
-      request.auth?.user?.role === 'doctor' &&
-      request.auth?.user?.email !== appointment?.doctor?.email
-    ) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
-
-    return NextResponse.json(appointment);
+    return NextResponse.json(appointments[0]);
   } catch (error: unknown) {
     console.error(error);
     return NextResponse.json(
@@ -71,7 +113,7 @@ export const PATCH = auth(async (request: NextAuthRequest, context: $FixMe) => {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    const { aid } = context.params;
+    const { aid } = await context.params;
     const data = await request.json();
     await connectDB();
 
@@ -83,7 +125,7 @@ export const PATCH = auth(async (request: NextAuthRequest, context: $FixMe) => {
 
     // if request role is use and doesn't match appointment patient email, return unauthorized
     if (user?.role === 'user') {
-      if (user?.email !== appointment?.patient?.email) {
+      if (user?.uid !== appointment?.patient) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
       }
       if (data.status && !['booked', 'cancelled'].includes(data.status)) {
@@ -95,7 +137,7 @@ export const PATCH = auth(async (request: NextAuthRequest, context: $FixMe) => {
     }
 
     // if request role is doctor and doesn't match appointment doctor email, return unauthorized
-    if (user?.role === 'doctor' && user?.email !== appointment?.doctor?.email) {
+    if (user?.role === 'doctor' && user?.uid !== appointment?.doctor) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
@@ -139,7 +181,7 @@ export const DELETE = auth(async (request: NextAuthRequest, context: $FixMe) => 
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    const { aid } = context.params;
+    const { aid } = await context.params;
     await connectDB();
 
     // delete appointment

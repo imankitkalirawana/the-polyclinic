@@ -1,8 +1,7 @@
-import mongoose, { Model } from 'mongoose';
+import mongoose from 'mongoose';
 import mongooseSequence from 'mongoose-sequence';
 
 import { auth } from '@/auth';
-import { AppointmentType } from '@/types/appointment';
 
 // @ts-expect-error - mongoose-sequence is not typed
 const AutoIncrement = mongooseSequence(mongoose);
@@ -83,7 +82,6 @@ appointmentSchema.pre(['findOneAndUpdate', 'updateOne', 'updateMany'], async fun
 // @ts-expect-error - mongoose-sequence is not typed
 appointmentSchema.plugin(AutoIncrement, { inc_field: 'aid', start_seq: 1000 });
 
-const Appointment: Model<AppointmentType> =
-  mongoose.models.Appointment || mongoose.model<AppointmentType>('Appointment', appointmentSchema);
+const Appointment = mongoose.models.Appointment || mongoose.model('Appointment', appointmentSchema);
 
 export default Appointment;

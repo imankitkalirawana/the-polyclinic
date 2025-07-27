@@ -91,6 +91,7 @@ export const GET = auth(async (request: NextAuthRequest) => {
             email: '$doctorDetails.email',
             uid: '$doctorDetails.uid',
             phone: '$doctorDetails.phone',
+            image: '$doctorDetails.image',
             seating: '$moreDoctorDetails.seating',
           },
           patient: {
@@ -98,6 +99,9 @@ export const GET = auth(async (request: NextAuthRequest) => {
             email: '$patientDetails.email',
             uid: '$patientDetails.uid',
             phone: '$patientDetails.phone',
+            image: '$patientDetails.image',
+            gender: '$patientDetails.gender',
+            age: '$patientDetails.age',
           },
           createdAt: 1,
           updatedAt: 1,
