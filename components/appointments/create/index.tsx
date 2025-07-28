@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'nextjs-toploader/app';
 import {
   Accordion,
@@ -25,25 +25,25 @@ import AppointmentTypeSelection, {
   AppointmentTypeSelectionTitle,
 } from './appointment-type-selection';
 import DateSelection, { DateSelectionTitle } from './date-selection';
+import DoYouKnowDoctorSelection from './do-you-know-doctor-selection';
+import DoctorSelection from './doctor-selection';
 import { getNextAvailableTimeSlot } from './helper';
 
 import UserSelection from '@/components/appointments/create/user-selection';
 import { castData } from '@/lib/utils';
 import { useAllAppointments, useCreateAppointment } from '@/services/appointment';
-import { useAllDoctors } from '@/services/doctor';
 import { useLinkedUsers } from '@/services/user';
 import { useAppointmentStore } from '@/store/appointment';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { $FixMe } from '@/types';
 import { AppointmentType, CreateAppointmentType } from '@/types/appointment';
-import { DoctorType } from '@/types/doctor';
 import { UserType } from '@/types/user';
 
 const KeyMap: Record<number, string> = {
   1: 'patient',
-  2: 'time',
-  3: 'appointment-type',
-  4: 'doctor',
+  2: 'appointment-type',
+  3: 'do-you-know-your-doctor',
+  4: 'doctor-date-selection',
   5: 'additional-details',
 };
 
@@ -72,12 +72,8 @@ export function CreateAppointment({
   const { setAppointment: setCalendarAppointment } = useAppointmentStore();
   const { data: linkedUsers, isLoading: isLinkedUsersLoading } = useLinkedUsers();
 
-  const { data: doctors, isLoading: isDoctorsLoading } = useAllDoctors();
-
   const formik = useFormik<CreateAppointmentType>({
     initialValues: {
-      patient: castData<UserType>({}),
-      doctor: castData<DoctorType>({}),
       date: selectedDate,
       type: 'consultation',
       additionalInfo: {
@@ -86,6 +82,7 @@ export function CreateAppointment({
         symptoms: '',
       },
       previousAppointment: undefined,
+      knowYourDoctor: false,
     },
     onSubmit: async (values, { resetForm }) => {
       try {
@@ -136,6 +133,11 @@ export function CreateAppointment({
     setAppointment('time', getNextAvailableTimeSlot(selectedDate));
   }, [selectedDate]);
 
+  const selectedPatient = useMemo(
+    () => linkedUsers?.find((user) => user.uid === appointment.patient),
+    [linkedUsers, appointment.patient]
+  );
+
   return (
     <Modal
       size={size}
@@ -158,13 +160,13 @@ export function CreateAppointment({
               title={
                 <AccordionTitle
                   isActive={currentStep === 1}
-                  image={appointment.patient?.image}
+                  image={selectedPatient?.image}
                   title={
                     currentStep === 1
                       ? 'Please select for whom you want to book an appointment?'
-                      : appointment.patient?.name
+                      : selectedPatient?.name || 'No patient selected'
                   }
-                  subtitle={currentStep === 1 ? null : appointment.patient?.email}
+                  subtitle={currentStep === 1 ? null : selectedPatient?.email}
                   onPress={() => {
                     setCurrentStep(1);
                     setAppointment('patient', {} as UserType);
@@ -178,16 +180,16 @@ export function CreateAppointment({
                 isLoading={isLinkedUsersLoading}
                 users={linkedUsers || []}
                 selectedUser={appointment.patient}
-                onSelectionChange={(user) => {
-                  setAppointment('patient', user);
+                onSelectionChange={(uid) => {
+                  setAppointment('patient', uid);
                   setCurrentStep(2);
                 }}
               />
             </AccordionItem>
             <AccordionItem
-              textValue="Time Selection"
+              textValue="Appointment Type"
               isDisabled={currentStep < 2}
-              key="time"
+              key="appointment-type"
               indicator={
                 <Link
                   href="#"
@@ -199,34 +201,6 @@ export function CreateAppointment({
                 </Link>
               }
               hideIndicator={currentStep <= 2}
-              title={
-                <DateSelectionTitle
-                  date={new Date(appointment.date)}
-                  isSelected={currentStep === 2}
-                />
-              }
-            >
-              <DateSelection
-                onSubmit={() => setCurrentStep(3)}
-                date={new Date(appointment.date)}
-                setDate={(date) => setAppointment('date', date)}
-              />
-            </AccordionItem>
-            <AccordionItem
-              textValue="Appointment Type"
-              isDisabled={currentStep < 3}
-              key="appointment-type"
-              indicator={
-                <Link
-                  href="#"
-                  onPress={() => {
-                    setCurrentStep(3);
-                  }}
-                >
-                  Change
-                </Link>
-              }
-              hideIndicator={currentStep <= 3}
               title={
                 <AppointmentTypeSelectionTitle
                   appointmentType={appointment.type}
@@ -250,43 +224,100 @@ export function CreateAppointment({
                       return;
                     }
                   }
-                  setCurrentStep(4);
+                  setCurrentStep(3);
                 }}
               />
             </AccordionItem>
             <AccordionItem
-              textValue="Doctor Selection"
-              isDisabled={currentStep < 4 || appointment.type === 'follow-up'}
-              key="doctor"
+              textValue="Do you know your doctor?"
+              isDisabled={currentStep < 3 || appointment.type === 'follow-up'}
+              key="do-you-know-your-doctor"
+              hideIndicator={currentStep <= 3}
               indicator={
                 <Link
                   href="#"
                   onPress={() => {
-                    setCurrentStep(4);
-                    setAppointment('doctor', {} as DoctorType);
+                    setCurrentStep(3);
                   }}
                 >
                   Change
                 </Link>
               }
-              hideIndicator={currentStep <= 4}
-              title={<DoctorSelectionTitle doctor={appointment.doctor as DoctorType} />}
+              title={
+                <h3 className="text-2xl font-semibold">
+                  Do you know you doctor?
+                  {currentStep > 3 ? (appointment.knowYourDoctor ? ' (Yes)' : ' (No)') : ''}
+                </h3>
+              }
             >
-              <UserSelection
-                id="doctor"
-                size="sm"
-                isLoading={isDoctorsLoading}
-                users={doctors || []}
-                selectedUser={appointment.doctor}
-                onSelectionChange={(user) => {
-                  setAppointment('doctor', user);
-                  setCurrentStep(5);
+              <DoYouKnowDoctorSelection
+                knowYourDoctor={appointment.knowYourDoctor}
+                onSelectionChange={(value) => {
+                  setAppointment('knowYourDoctor', value === 'know-your-doctor');
+                }}
+                onContinue={() => {
+                  setCurrentStep(4);
                 }}
               />
             </AccordionItem>
+            {appointment.knowYourDoctor ? (
+              <AccordionItem
+                textValue="Doctor Selection"
+                isDisabled={currentStep < 4 || appointment.type === 'follow-up'}
+                key="doctor-date-selection"
+                indicator={
+                  <Link
+                    href="#"
+                    onPress={() => {
+                      setCurrentStep(4);
+                      setAppointment('doctor', undefined);
+                    }}
+                  >
+                    Change
+                  </Link>
+                }
+                hideIndicator={currentStep <= 4}
+                title={<DoctorSelectionTitle doctor={appointment?.doctor} />}
+              >
+                <DoctorSelection
+                  selectedDoctor={appointment.doctor}
+                  setAppointment={setAppointment}
+                  setCurrentStep={setCurrentStep}
+                />
+              </AccordionItem>
+            ) : (
+              <AccordionItem
+                textValue="Time Selection"
+                isDisabled={currentStep < 4}
+                key="doctor-date-selection"
+                indicator={
+                  <Link
+                    href="#"
+                    onPress={() => {
+                      setCurrentStep(4);
+                    }}
+                  >
+                    Change
+                  </Link>
+                }
+                hideIndicator={currentStep <= 4}
+                title={
+                  <DateSelectionTitle
+                    date={new Date(appointment.date)}
+                    isSelected={currentStep === 4}
+                  />
+                }
+              >
+                <DateSelection
+                  onSubmit={() => setCurrentStep(5)}
+                  date={new Date(appointment.date)}
+                  setDate={(date) => setAppointment('date', date)}
+                />
+              </AccordionItem>
+            )}
             <AccordionItem
               textValue="Additional Details"
-              isDisabled={currentStep < 5}
+              isDisabled={currentStep < 6}
               key="additional-details"
               title={<AdditionalDetailsSelectionTitle />}
             >
@@ -304,14 +335,12 @@ export function CreateAppointment({
   );
 }
 
-function DoctorSelectionTitle({ doctor }: { doctor: DoctorType }) {
-  return doctor.uid ? (
-    <h3 className="text-2xl font-semibold">
-      {doctor?.uid === 0 ? 'No Doctor Selected' : doctor?.name}
-    </h3>
+function DoctorSelectionTitle({ doctor }: { doctor?: number }) {
+  return doctor ? (
+    <h3 className="text-2xl font-semibold">{doctor}</h3>
   ) : (
     <div className="space-y-4">
-      <h3 className="text-2xl font-semibold">Choose a doctor (Optional)</h3>
+      <h3 className="text-2xl font-semibold">Choose a doctor</h3>
     </div>
   );
 }

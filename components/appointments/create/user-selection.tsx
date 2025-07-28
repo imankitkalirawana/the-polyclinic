@@ -41,9 +41,7 @@ export default function UserSelection({
   isLoading?: boolean;
   selectedUser: CreateAppointmentType['patient'] | CreateAppointmentType['doctor'];
   size?: 'sm' | 'md' | 'lg';
-  onSelectionChange: (
-    user: CreateAppointmentType['patient'] | CreateAppointmentType['doctor']
-  ) => void;
+  onSelectionChange: (uid: number) => void;
 }) {
   const [query, setQuery] = useState('');
   const debounce = useDebounce(query, 500);
@@ -105,10 +103,10 @@ export default function UserSelection({
                       'no-scrollbar rounded-medium border-small border-divider shadow-none',
                       SizeMap[size].card,
                       {
-                        'border-medium border-primary-400': user.uid === selectedUser?.uid,
+                        'border-medium border-primary-400': user.uid === selectedUser,
                       }
                     )}
-                    onPress={() => onSelectionChange(user)}
+                    onPress={() => onSelectionChange(user.uid)}
                   >
                     <CardBody className="group relative items-center justify-center gap-4 overflow-hidden p-6 hover:bg-default-50">
                       <div className="absolute right-2 top-2 opacity-0 transition-opacity group-hover:opacity-100">
