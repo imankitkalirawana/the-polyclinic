@@ -3,8 +3,8 @@ import { Button } from '@heroui/react';
 import UserSelection from './user-selection';
 
 import { useAllDoctors } from '@/services/doctor';
-import { $FixMe } from '@/types';
 import { useSlotsByUID } from '@/services/slots';
+import { $FixMe } from '@/types';
 
 export default function DoctorSelection({
   selectedDoctor,
