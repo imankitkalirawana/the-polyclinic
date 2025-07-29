@@ -281,6 +281,7 @@ export function CreateAppointment({
               >
                 <DoctorSelection
                   selectedDoctor={appointment.doctor}
+                  selectedSlot={appointment.date}
                   setAppointment={setAppointment}
                   setCurrentStep={setCurrentStep}
                 />

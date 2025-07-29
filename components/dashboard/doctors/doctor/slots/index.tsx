@@ -2,8 +2,8 @@
 
 import { Formik, FormikProps } from 'formik';
 
-import { CalendarPreview } from './calendar-preview';
 import { ConfigurationPanel } from './configuration-panel';
+import { SlotsPreview } from './slots-preview';
 
 import { useSlotsByUID, useUpdateSlots } from '@/services/slots';
 import type { SlotConfig } from '@/types/slots';
@@ -67,12 +67,9 @@ export function AppointmentScheduler({ uid }: { uid: number }) {
         {(formik: FormikProps<SlotConfig>) => (
           <>
             <ConfigurationPanel formik={formik} />
-            <CalendarPreview
-              config={formik.values}
-              onSlotClick={(date) => {
-                console.log(date);
-              }}
-            />
+            <div className="w-full flex-1 overflow-scroll">
+              <SlotsPreview config={formik.values} />
+            </div>
           </>
         )}
       </Formik>

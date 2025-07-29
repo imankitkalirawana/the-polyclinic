@@ -1,18 +1,19 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Button, ButtonGroup, Tooltip } from '@heroui/react';
+import { Button, ButtonGroup, cn, Tooltip } from '@heroui/react';
 import { format, isToday } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 import type { SlotConfig } from '@/types/slots';
 
-interface CalendarPreviewProps {
+interface SlotsPreviewProps {
   config: SlotConfig;
-  onSlotClick?: (date: Date) => void;
+  selectedSlot?: Date;
+  setSelectedSlot?: (date: Date) => void;
 }
 
-export function CalendarPreview({ config, onSlotClick }: CalendarPreviewProps) {
+export function SlotsPreview({ config, selectedSlot, setSelectedSlot }: SlotsPreviewProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -104,26 +105,6 @@ export function CalendarPreview({ config, onSlotClick }: CalendarPreviewProps) {
     }
   }
 
-  const navigateWeek = (direction: 'prev' | 'next') => {
-    const newDate = new Date(currentDate);
-    newDate.setDate(currentDate.getDate() + (direction === 'next' ? 7 : -7));
-    setCurrentDate(newDate);
-  };
-
-  const formatMonthYear = (date: Date) => {
-    const month = date.toLocaleDateString('en-US', { month: 'short' });
-    const year = date.getFullYear();
-    const endOfWeek = new Date(date);
-    endOfWeek.setDate(date.getDate() + 6);
-    const endMonth = endOfWeek.toLocaleDateString('en-US', { month: 'short' });
-
-    if (month === endMonth) {
-      return `${month} ${year}`;
-    } else {
-      return `${month} - ${endMonth} ${year}`;
-    }
-  };
-
   const hourHeight = config.duration === 15 ? 80 : 64;
 
   useEffect(() => {
@@ -139,59 +120,41 @@ export function CalendarPreview({ config, onSlotClick }: CalendarPreviewProps) {
 
   return (
     <div className="flex h-full flex-1 flex-col">
-      {/* Navigation */}
-      <div className="flex items-center justify-between gap-2 p-2">
-        <ButtonGroup isIconOnly variant="flat" size="sm">
-          <Button onPress={() => navigateWeek('prev')}>
-            <Icon icon="solar:alt-arrow-left-linear" className="h-4 w-4" />
-          </Button>
-          <Button onPress={() => navigateWeek('next')}>
-            <Icon icon="solar:alt-arrow-right-linear" className="h-4 w-4" />
-          </Button>
-        </ButtonGroup>
-        <div className="flex items-center gap-2">
-          <Button onPress={() => setCurrentDate(new Date())} variant="flat" size="sm">
-            Today
-          </Button>
+      <div className="sticky top-0 z-20 bg-background/50 backdrop-blur-sm">
+        <SlotHeader currentDate={currentDate} setCurrentDate={setCurrentDate} />
+        <div className=""></div>
+        <div className="grid grid-cols-8 border-b border-divider">
+          <div className="flex h-16 items-center justify-center border-r border-divider text-xs text-default-500">
+            {config.timezone}
+          </div>
 
-          <h4 className="text-sm text-default-500">{formatMonthYear(currentDate)}</h4>
+          {weekDays.map((day, dayIndex) => (
+            <div
+              key={dayIndex}
+              className="relative flex h-16 flex-col items-center justify-center border-r border-divider"
+            >
+              <div className="mb-1 text-xs text-default-500">{getDayName(day)}</div>
+              <div
+                className={`text-lg font-medium ${
+                  isToday(day)
+                    ? 'flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-primary-foreground'
+                    : ''
+                }`}
+              >
+                {getDayNumber(day)}
+              </div>
+              {hasSpecificDateOverride(day) && (
+                <div
+                  className="absolute right-1 top-1 h-2 w-2 rounded-full bg-orange-400"
+                  title="Custom availability"
+                />
+              )}
+            </div>
+          ))}
         </div>
       </div>
-
-      {/* Calendar Container */}
-      <div className="flex flex-1 flex-col overflow-hidden">
+      <div className="flex flex-col">
         {/* Sticky Day Headers */}
-        <div className="sticky top-0 z-20 bg-background">
-          <div className="grid grid-cols-8 border-b border-divider">
-            <div className="flex h-16 items-center justify-center border-r border-divider text-xs text-default-500">
-              {config.timezone}
-            </div>
-
-            {weekDays.map((day, dayIndex) => (
-              <div
-                key={dayIndex}
-                className="relative flex h-16 flex-col items-center justify-center border-r border-divider bg-background"
-              >
-                <div className="mb-1 text-xs text-default-500">{getDayName(day)}</div>
-                <div
-                  className={`text-lg font-medium ${
-                    isToday(day)
-                      ? 'flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-primary-foreground'
-                      : ''
-                  }`}
-                >
-                  {getDayNumber(day)}
-                </div>
-                {hasSpecificDateOverride(day) && (
-                  <div
-                    className="absolute right-1 top-1 h-2 w-2 rounded-full bg-orange-400"
-                    title="Custom availability"
-                  />
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
 
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto" ref={scrollRef}>
@@ -229,28 +192,37 @@ export function CalendarPreview({ config, onSlotClick }: CalendarPreviewProps) {
                       date.setHours(slot.start / 60);
                       date.setMinutes(slot.start % 60);
 
+                      const isSelected = selectedSlot?.toISOString() === date.toISOString();
+
                       return (
                         <div
                           key={slotIndex}
-                          className={`absolute left-1 right-1 cursor-pointer rounded border transition-colors hover:bg-opacity-50 ${
-                            isDayOverridden
-                              ? 'border-orange-400 bg-orange-400 bg-opacity-30'
-                              : 'border-primary-400 bg-primary-400 bg-opacity-30'
-                          }`}
+                          className={cn(
+                            'absolute left-1 right-1 cursor-pointer rounded border transition-colors hover:bg-opacity-50',
+                            {
+                              'border-orange-400 bg-orange-400 bg-opacity-30': isDayOverridden,
+                              'border-primary-400 bg-primary-400 bg-opacity-30': !isDayOverridden,
+                              'border-blue-400 bg-blue-400': isSelected,
+                            }
+                          )}
                           style={{
                             top: `${topOffset}px`,
                             height: `${height}px`,
                           }}
                           onClick={() => {
-                            onSlotClick?.(date);
+                            if (setSelectedSlot) {
+                              console.log('date', date);
+                              setSelectedSlot(date);
+                            }
                           }}
                         >
                           <div className="p-1">
                             <Tooltip delay={500} content={format(date, 'h:mm a')}>
                               <div
-                                className={`h-3 w-3 rounded-sm ${
-                                  isDayOverridden ? 'bg-orange-400' : 'bg-primary-400'
-                                }`}
+                                className={cn('h-3 w-3 rounded-sm bg-primary-400', {
+                                  'bg-orange-400': isDayOverridden,
+                                  'bg-blue-400': isSelected,
+                                })}
                               />
                             </Tooltip>
                           </div>
@@ -267,3 +239,50 @@ export function CalendarPreview({ config, onSlotClick }: CalendarPreviewProps) {
     </div>
   );
 }
+
+export const SlotHeader = ({
+  currentDate,
+  setCurrentDate,
+}: {
+  currentDate: Date;
+  setCurrentDate: (date: Date) => void;
+}) => {
+  const formatMonthYear = (date: Date) => {
+    const month = date.toLocaleDateString('en-US', { month: 'short' });
+    const year = date.getFullYear();
+    const endOfWeek = new Date(date);
+    endOfWeek.setDate(date.getDate() + 6);
+    const endMonth = endOfWeek.toLocaleDateString('en-US', { month: 'short' });
+
+    if (month === endMonth) {
+      return `${month} ${year}`;
+    } else {
+      return `${month} - ${endMonth} ${year}`;
+    }
+  };
+  const navigateWeek = (direction: 'prev' | 'next') => {
+    const newDate = new Date(currentDate);
+    newDate.setDate(currentDate.getDate() + (direction === 'next' ? 7 : -7));
+    setCurrentDate(newDate);
+  };
+
+  return (
+    <div className="flex items-center justify-between gap-2 p-2">
+      <ButtonGroup isIconOnly variant="flat" size="sm">
+        <Button onPress={() => navigateWeek('prev')}>
+          <Icon icon="solar:alt-arrow-left-linear" className="h-4 w-4" />
+        </Button>
+        <Button onPress={() => navigateWeek('next')}>
+          <Icon icon="solar:alt-arrow-right-linear" className="h-4 w-4" />
+        </Button>
+      </ButtonGroup>
+      <div className="flex items-center gap-2">
+        <Button onPress={() => setCurrentDate(new Date())} variant="flat" size="sm">
+          Today
+        </Button>
+
+        <h4 className="text-sm text-default-500">{formatMonthYear(currentDate)}</h4>
+      </div>
+    </div>
+  );
+};

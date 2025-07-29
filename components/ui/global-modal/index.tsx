@@ -30,7 +30,13 @@ export function ModalProvider({ children }: { children: ReactNode }) {
   return (
     <ModalContext.Provider value={{ show, hide }}>
       {children}
-      <Modal isOpen={open} backdrop="blur" onOpenChange={(o) => !o && hide()} {...opts.props}>
+      <Modal
+        isOpen={open}
+        backdrop="blur"
+        scrollBehavior="inside"
+        onOpenChange={(o) => !o && hide()}
+        {...opts.props}
+      >
         <ModalContent>
           {() => (
             <>

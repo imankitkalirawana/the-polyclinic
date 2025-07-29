@@ -1,24 +1,23 @@
 import { Button } from '@heroui/react';
 
+import DoctorSlots from './doctor-slots';
 import UserSelection from './user-selection';
 
 import { useAllDoctors } from '@/services/doctor';
-import { useSlotsByUID } from '@/services/slots';
 import { $FixMe } from '@/types';
 
 export default function DoctorSelection({
   selectedDoctor,
+  selectedSlot,
   setAppointment,
   setCurrentStep,
 }: {
   selectedDoctor?: number;
+  selectedSlot?: Date;
   setAppointment: (key: string, value: $FixMe) => void;
   setCurrentStep: (step: number) => void;
 }) {
   const { data: doctors, isLoading: isDoctorsLoading } = useAllDoctors();
-  const { data: slots, isLoading: isSlotsLoading } = useSlotsByUID(selectedDoctor || 0);
-
-  console.log(isSlotsLoading, slots);
 
   const handleDoctorChange = (uid: number) => {
     setAppointment('doctor', uid);
@@ -28,6 +27,8 @@ export default function DoctorSelection({
     setCurrentStep(5);
     setAppointment('doctor', selectedDoctor);
   };
+
+  console.log(selectedSlot);
 
   return (
     <div>
@@ -39,6 +40,13 @@ export default function DoctorSelection({
         selectedUser={selectedDoctor}
         onSelectionChange={handleDoctorChange}
       />
+      {selectedDoctor && (
+        <DoctorSlots
+          selectedDoctor={selectedDoctor}
+          selectedSlot={selectedSlot}
+          setSelectedSlot={(date) => setAppointment('slot', date)}
+        />
+      )}
       <div className="mt-4 flex items-center justify-between">
         <Button
           variant="shadow"
