@@ -9,11 +9,10 @@ import type { SlotConfig } from '@/types/slots';
 
 interface SlotsPreviewProps {
   config: SlotConfig;
-  selectedSlot?: Date;
-  setSelectedSlot?: (date: Date) => void;
+  onSlotSelect?: (date: Date) => void;
 }
 
-export function SlotsPreview({ config, selectedSlot, setSelectedSlot }: SlotsPreviewProps) {
+export function SlotsPreview({ config, onSlotSelect }: SlotsPreviewProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -192,8 +191,6 @@ export function SlotsPreview({ config, selectedSlot, setSelectedSlot }: SlotsPre
                       date.setHours(slot.start / 60);
                       date.setMinutes(slot.start % 60);
 
-                      const isSelected = selectedSlot?.toISOString() === date.toISOString();
-
                       return (
                         <div
                           key={slotIndex}
@@ -202,26 +199,19 @@ export function SlotsPreview({ config, selectedSlot, setSelectedSlot }: SlotsPre
                             {
                               'border-orange-400 bg-orange-400 bg-opacity-30': isDayOverridden,
                               'border-primary-400 bg-primary-400 bg-opacity-30': !isDayOverridden,
-                              'border-blue-400 bg-blue-400': isSelected,
                             }
                           )}
                           style={{
                             top: `${topOffset}px`,
                             height: `${height}px`,
                           }}
-                          onClick={() => {
-                            if (setSelectedSlot) {
-                              console.log('date', date);
-                              setSelectedSlot(date);
-                            }
-                          }}
+                          onClick={() => onSlotSelect?.(date)}
                         >
                           <div className="p-1">
                             <Tooltip delay={500} content={format(date, 'h:mm a')}>
                               <div
                                 className={cn('h-3 w-3 rounded-sm bg-primary-400', {
                                   'bg-orange-400': isDayOverridden,
-                                  'bg-blue-400': isSelected,
                                 })}
                               />
                             </Tooltip>

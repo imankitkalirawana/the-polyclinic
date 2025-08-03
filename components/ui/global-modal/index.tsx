@@ -38,13 +38,9 @@ export function ModalProvider({ children }: { children: ReactNode }) {
         {...opts.props}
       >
         <ModalContent>
-          {() => (
-            <>
-              {opts.header && <ModalHeader>{opts.header}</ModalHeader>}
-              <ModalBody>{opts.body}</ModalBody>
-              {opts.footer && <ModalFooter>{opts.footer}</ModalFooter>}
-            </>
-          )}
+          {opts.header && <ModalHeader>{opts.header}</ModalHeader>}
+          <ModalBody className="pointer-events-auto">{opts.body}</ModalBody>
+          {opts.footer && <ModalFooter>{opts.footer}</ModalFooter>}
         </ModalContent>
       </Modal>
     </ModalContext.Provider>

@@ -97,7 +97,7 @@ export function Calendar({ appointments }: CalendarProps) {
       <CreateAppointment
         open={showDialog}
         onOpenChange={setShowDialog}
-        selectedDate={currentDate}
+        defaultSelectedDate={currentDate}
         onClose={() => setShowDialog(false)}
       />
     </>

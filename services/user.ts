@@ -56,7 +56,7 @@ export const useLinkedUsers = (): UseQueryResult<UserType[]> =>
     },
   });
 
-export const useUserWithUID = (uid: number): UseQueryResult<UserType> =>
+export const useUserWithUID = (uid: number | undefined): UseQueryResult<UserType> =>
   useQuery({
     queryKey: ['user', uid],
     queryFn: async () => {

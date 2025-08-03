@@ -1,50 +1,43 @@
-import { Button } from '@heroui/react';
+import { useState } from 'react';
+import { Button, Modal, ModalBody, ModalContent } from '@heroui/react';
 
-import Loading from '@/app/loading';
+import { useAppointmentDate } from './store';
+
 import { SlotsPreview } from '@/components/dashboard/doctors/doctor/slots/slots-preview';
-import { useModal } from '@/components/ui/global-modal';
 import { useSlotsByUID } from '@/services/slots';
 
-export default function DoctorSlots({
-  selectedDoctor,
-  selectedSlot,
-  setSelectedSlot,
-}: {
-  selectedDoctor: number;
-  selectedSlot?: Date;
-  setSelectedSlot: (date: Date) => void;
-}) {
+export default function DoctorSlots({ selectedDoctor }: { selectedDoctor: number }) {
+  const [isOpen, setIsOpen] = useState(false);
   const { data: slots, isLoading: isSlotsLoading } = useSlotsByUID(selectedDoctor);
-  const modal = useModal();
 
-  if (isSlotsLoading) {
-    return <Loading />;
-  }
-
-  if (!slots) {
-    return <div>No slots found</div>;
-  }
+  const { setSelectedDate } = useAppointmentDate();
 
   return (
-    <div>
-      <Button
-        onPress={() =>
-          modal.show({
-            body: (
+    <>
+      <Button isLoading={isSlotsLoading} onPress={() => setIsOpen(true)}>
+        Select a slot
+      </Button>
+      <Modal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        size="5xl"
+        backdrop="blur"
+        scrollBehavior="inside"
+      >
+        <ModalContent>
+          <ModalBody>
+            {slots && (
               <SlotsPreview
                 config={slots}
-                setSelectedSlot={setSelectedSlot}
-                selectedSlot={selectedSlot}
+                onSlotSelect={(date) => {
+                  setSelectedDate(date);
+                  setIsOpen(false);
+                }}
               />
-            ),
-            props: {
-              size: '5xl',
-            },
-          })
-        }
-      >
-        Choose slot
-      </Button>
-    </div>
+            )}
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </>
   );
 }

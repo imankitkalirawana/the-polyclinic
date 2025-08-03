@@ -12,7 +12,7 @@ export async function getAllUsers() {
   return await fetchData<UserType[]>('/users');
 }
 
-export async function getUserWithUID(uid: number) {
+export async function getUserWithUID(uid: number | undefined) {
   return await fetchData<UserType>(`/users/uid/${uid}`);
 }
 

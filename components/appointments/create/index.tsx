@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'nextjs-toploader/app';
 import {
   Accordion,
@@ -27,12 +27,13 @@ import AppointmentTypeSelection, {
 import DateSelection, { DateSelectionTitle } from './date-selection';
 import DoYouKnowDoctorSelection from './do-you-know-doctor-selection';
 import DoctorSelection from './doctor-selection';
-import { getNextAvailableTimeSlot } from './helper';
+import { useAppointmentDate } from './store';
 
 import UserSelection from '@/components/appointments/create/user-selection';
+import Skeleton from '@/components/ui/skeleton';
 import { castData } from '@/lib/utils';
 import { useAllAppointments, useCreateAppointment } from '@/services/appointment';
-import { useLinkedUsers } from '@/services/user';
+import { useLinkedUsers, useUserWithUID } from '@/services/user';
 import { useAppointmentStore } from '@/store/appointment';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { $FixMe } from '@/types';
@@ -50,19 +51,20 @@ const KeyMap: Record<number, string> = {
 export function CreateAppointment({
   open,
   onOpenChange,
-  selectedDate,
+  defaultSelectedDate,
   onClose,
   size = '5xl',
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  selectedDate: Date;
+  defaultSelectedDate: Date;
   onClose?: () => void;
   size?: ModalProps['size'];
 }) {
   const [currentStep, setCurrentStep] = useState(1);
   const router = useRouter();
 
+  const { selectedDate } = useAppointmentDate();
   const { data: allAppointments } = useAllAppointments();
 
   const appointments = castData<AppointmentType[]>(allAppointments);
@@ -74,7 +76,7 @@ export function CreateAppointment({
 
   const formik = useFormik<CreateAppointmentType>({
     initialValues: {
-      date: selectedDate,
+      date: selectedDate || defaultSelectedDate,
       type: 'consultation',
       additionalInfo: {
         notes: '',
@@ -128,15 +130,17 @@ export function CreateAppointment({
     handleChange: handleAppointmentChange,
   } = formik;
 
-  useEffect(() => {
-    setAppointment('date', selectedDate);
-    setAppointment('time', getNextAvailableTimeSlot(selectedDate));
-  }, [selectedDate]);
+  // useEffect(() => {
+  //   setAppointment('date', selectedDate || defaultSelectedDate);
+  //   setAppointment('time', getNextAvailableTimeSlot(selectedDate || defaultSelectedDate));
+  // }, [selectedDate, defaultSelectedDate]);
 
   const selectedPatient = useMemo(
     () => linkedUsers?.find((user) => user.uid === appointment.patient),
     [linkedUsers, appointment.patient]
   );
+
+  console.log(appointment);
 
   return (
     <Modal
@@ -270,7 +274,6 @@ export function CreateAppointment({
                     href="#"
                     onPress={() => {
                       setCurrentStep(4);
-                      setAppointment('doctor', undefined);
                     }}
                   >
                     Change
@@ -281,9 +284,8 @@ export function CreateAppointment({
               >
                 <DoctorSelection
                   selectedDoctor={appointment.doctor}
-                  selectedSlot={appointment.date}
                   setAppointment={setAppointment}
-                  setCurrentStep={setCurrentStep}
+                  onContinue={() => setCurrentStep(5)}
                 />
               </AccordionItem>
             ) : (
@@ -318,7 +320,7 @@ export function CreateAppointment({
             )}
             <AccordionItem
               textValue="Additional Details"
-              isDisabled={currentStep < 6}
+              isDisabled={currentStep < 5}
               key="additional-details"
               title={<AdditionalDetailsSelectionTitle />}
             >
@@ -337,8 +339,13 @@ export function CreateAppointment({
 }
 
 function DoctorSelectionTitle({ doctor }: { doctor?: number }) {
+  const { data: doctorData, isLoading } = useUserWithUID(doctor);
   return doctor ? (
-    <h3 className="text-2xl font-semibold">{doctor}</h3>
+    isLoading ? (
+      <Skeleton className="h-8 w-32" />
+    ) : (
+      <h3 className="text-2xl font-semibold">{doctorData?.name}</h3>
+    )
   ) : (
     <div className="space-y-4">
       <h3 className="text-2xl font-semibold">Choose a doctor</h3>
@@ -349,7 +356,12 @@ function DoctorSelectionTitle({ doctor }: { doctor?: number }) {
 export default function CreateAppointmentWrapper() {
   return (
     <div className="flex h-full w-full items-center justify-center p-4 md:p-8">
-      <CreateAppointment open onOpenChange={() => {}} selectedDate={new Date()} size="full" />
+      <CreateAppointment
+        open
+        onOpenChange={() => {}}
+        defaultSelectedDate={new Date()}
+        size="full"
+      />
     </div>
   );
 }

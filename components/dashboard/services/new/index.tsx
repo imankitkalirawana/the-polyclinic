@@ -59,7 +59,6 @@ export default function NewService() {
     }
 
     setNumRows(numRows + 1);
-    console.log('formik.values.data', formik.values.data);
     formik.setFieldValue('data', newValues);
   };
 

@@ -1,6 +1,7 @@
 import { Button } from '@heroui/react';
 
 import DoctorSlots from './doctor-slots';
+import { useAppointmentDate } from './store';
 import UserSelection from './user-selection';
 
 import { useAllDoctors } from '@/services/doctor';
@@ -8,27 +9,21 @@ import { $FixMe } from '@/types';
 
 export default function DoctorSelection({
   selectedDoctor,
-  selectedSlot,
   setAppointment,
-  setCurrentStep,
+  onContinue,
 }: {
   selectedDoctor?: number;
-  selectedSlot?: Date;
   setAppointment: (key: string, value: $FixMe) => void;
-  setCurrentStep: (step: number) => void;
+  onContinue: () => void;
 }) {
   const { data: doctors, isLoading: isDoctorsLoading } = useAllDoctors();
+  const { selectedDate, setSelectedDate } = useAppointmentDate();
 
   const handleDoctorChange = (uid: number) => {
     setAppointment('doctor', uid);
   };
 
-  const onContinue = () => {
-    setCurrentStep(5);
-    setAppointment('doctor', selectedDoctor);
-  };
-
-  console.log(selectedSlot);
+  console.log(selectedDoctor);
 
   return (
     <div>
@@ -38,22 +33,24 @@ export default function DoctorSelection({
         isLoading={isDoctorsLoading}
         users={doctors || []}
         selectedUser={selectedDoctor}
-        onSelectionChange={handleDoctorChange}
+        onSelectionChange={(uid) => {
+          handleDoctorChange(uid);
+          setSelectedDate(null);
+        }}
       />
-      {selectedDoctor && (
-        <DoctorSlots
-          selectedDoctor={selectedDoctor}
-          selectedSlot={selectedSlot}
-          setSelectedSlot={(date) => setAppointment('slot', date)}
-        />
-      )}
+      {selectedDoctor && <DoctorSlots selectedDoctor={selectedDoctor} />}
       <div className="mt-4 flex items-center justify-between">
         <Button
+          isDisabled={!selectedDoctor || !selectedDate}
           variant="shadow"
           color="primary"
           radius="lg"
           className="btn btn-primary"
-          onPress={onContinue}
+          onPress={() => {
+            setAppointment('doctor', selectedDoctor);
+            setAppointment('date', selectedDate);
+            onContinue();
+          }}
         >
           Continue
         </Button>
