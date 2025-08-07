@@ -6,7 +6,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import NoResults from '../../ui/no-results';
 import Skeleton from '../../ui/skeleton';
 
-import { CreateAppointmentType } from '@/types/appointment';
+import { CreateAppointmentType } from '@/components/appointments/create/types';
 import { DoctorType } from '@/types/doctor';
 import { UserType } from '@/types/user';
 

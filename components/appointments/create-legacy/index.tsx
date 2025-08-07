@@ -29,6 +29,7 @@ import DoYouKnowDoctorSelection from './do-you-know-doctor-selection';
 import DoctorSelection from './doctor-selection';
 import { useAppointmentDate } from './store';
 
+import { CreateAppointmentType } from '@/components/appointments/create/types';
 import UserSelection from '@/components/appointments/create-legacy/user-selection';
 import Skeleton from '@/components/ui/skeleton';
 import { castData } from '@/lib/utils';
@@ -37,7 +38,7 @@ import { useLinkedUsers, useUserWithUID } from '@/services/user';
 import { useAppointmentStore } from '@/store/appointment';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { $FixMe } from '@/types';
-import { AppointmentType, CreateAppointmentType } from '@/types/appointment';
+import { AppointmentType } from '@/types/appointment';
 import { UserType } from '@/types/user';
 
 const KeyMap: Record<number, string> = {
