@@ -1,79 +1,118 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import { Avatar, Button, Card, Input, ScrollShadow } from '@heroui/react';
+import { Avatar, Button, Card, Input, Link, ScrollShadow } from '@heroui/react';
 import { cn } from '@heroui/react';
 
-import { useAppointmentDate, useCreateAppointment } from '../hooks';
+import { CreateAppointmentFormValues } from '../types';
+import CreateAppointmentContentContainer from '../ui/content-container';
+import CreateAppointmentContentHeader from '../ui/header';
 
+import Skeleton from '@/components/ui/skeleton';
+import { useSharedFormik } from '@/hooks/useSharedFormik';
+import { isSearchMatch } from '@/lib/utils';
 import { useLinkedUsers } from '@/services/user';
 
+function PatientsSkeleton() {
+  return (
+    <div className="col-span-full flex flex-col gap-2">
+      {Array.from({ length: 3 }).map((_, index) => (
+        <div
+          key={`skeleton-${index}`}
+          className="flex items-center gap-4 rounded-large border border-divider p-4 py-2"
+        >
+          <Skeleton className="h-12 w-12 rounded-full" />
+          <div className="flex flex-col gap-2">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-4 w-20" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 const PatientSelection = ({ className }: { className?: string }) => {
-  const { data: patients } = useLinkedUsers();
-  const { formik } = useCreateAppointment();
-  const { setCurrentStep } = useAppointmentDate();
+  const { data: patients, isLoading: isPatientsLoading } = useLinkedUsers();
+  const formik = useSharedFormik<CreateAppointmentFormValues>();
   const [search, setSearch] = useState('');
+
+  const { appointment } = formik.values;
 
   const filteredPatients = useMemo(() => {
     return patients?.filter(
       (patient) =>
-        patient.name.toLowerCase().includes(search.toLowerCase()) ||
-        patient.email.toLowerCase().includes(search.toLowerCase()) ||
-        patient.phone.toLowerCase().includes(search.toLowerCase()) ||
-        patient.uid.toString().includes(search)
+        isSearchMatch(patient.name, search) ||
+        isSearchMatch(patient.email, search) ||
+        isSearchMatch(patient.phone, search) ||
+        isSearchMatch(patient.uid.toString(), search)
     );
   }, [patients, search]);
 
   return (
-    <div className="mx-auto flex w-full max-w-md flex-col items-center justify-center">
-      <div className="flex flex-col items-center justify-center gap-2">
-        <div className="text-3xl font-bold leading-9 text-default-foreground">
-          Patient Selection
-        </div>
-        <div className="text-center leading-5 text-default-500">
-          Select the patient for whom you want to book the appointment
-        </div>
-      </div>
+    <CreateAppointmentContentContainer>
+      <CreateAppointmentContentHeader
+        title="Patient Selection"
+        description="Select the patient for whom you want to book the appointment"
+      />
       <form className={cn('grid w-full grid-cols-12 flex-col py-8', className)}>
-        <Input
-          placeholder="Search for a patient"
-          radius="lg"
-          className="col-span-12 mb-4"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <ScrollShadow className="col-span-12 flex max-h-80 flex-col gap-4 pr-3">
-          {filteredPatients?.map((patient) => (
-            <Card
-              isPressable
-              key={patient.uid}
-              className={cn(
-                'flex flex-row items-center justify-start gap-4 border-2 border-divider px-4 py-4 shadow-none',
-                {
-                  'border-primary': formik.values.patient === patient.uid,
-                }
-              )}
-              onPress={() => formik.setFieldValue('patient', patient.uid)}
-            >
-              <Avatar src={patient.image} />
-              <div className="flex flex-col items-start gap-0">
-                <h4 className="text-small">{patient.name}</h4>
-                <p className="text-sm text-default-500">{patient.email}</p>
+        {isPatientsLoading ? (
+          <PatientsSkeleton />
+        ) : !!filteredPatients && filteredPatients?.length > 0 ? (
+          <>
+            <Input
+              placeholder="Search for a patient"
+              radius="lg"
+              className="col-span-12 mb-4"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <ScrollShadow className="col-span-12 flex max-h-80 flex-col gap-4 pr-3">
+              {filteredPatients?.map((patient) => (
+                <Card
+                  isPressable
+                  key={patient.uid}
+                  className={cn(
+                    'flex flex-row items-center justify-start gap-4 border-2 border-divider px-4 py-4 shadow-none',
+                    {
+                      'border-primary': appointment.patient === patient.uid,
+                    }
+                  )}
+                  onPress={() => formik.setFieldValue('appointment.patient', patient.uid)}
+                >
+                  <Avatar src={patient.image} />
+                  <div className="flex flex-col items-start gap-0">
+                    <h4 className="text-small">{patient.name}</h4>
+                    <p className="text-sm text-default-500">{patient.email}</p>
+                  </div>
+                </Card>
+              ))}
+            </ScrollShadow>
+            <div className="col-span-full mt-4 flex flex-col gap-2">
+              <Button
+                size="lg"
+                variant="shadow"
+                color="primary"
+                onPress={() => formik.setFieldValue('meta.currentStep', 1)}
+                isDisabled={!appointment.patient}
+              >
+                Continue
+              </Button>
+              <div className="text-center text-sm text-default-500">or</div>
+              <div className="flex items-center justify-center">
+                <Link href="/appointments/create?patient=new" color="primary">
+                  Create a new Patient
+                </Link>
               </div>
-            </Card>
-          ))}
-        </ScrollShadow>
-        <Button
-          className="col-span-12 mt-4"
-          size="lg"
-          variant="shadow"
-          color="primary"
-          onPress={() => setCurrentStep(1)}
-        >
-          Continue
-        </Button>
+            </div>
+          </>
+        ) : (
+          <div className="flex items-center justify-center">
+            <p className="text-sm text-default-500">No patients found</p>
+          </div>
+        )}
       </form>
-    </div>
+    </CreateAppointmentContentContainer>
   );
 };
 

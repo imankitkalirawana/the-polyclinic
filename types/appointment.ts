@@ -76,16 +76,6 @@ export interface AppointmentType extends Base {
   previousAppointment?: number;
 }
 
-export type CreateAppointmentType = {
-  date: Date;
-  type: AType['value'];
-  additionalInfo: AppointmentType['additionalInfo'];
-  patient?: number;
-  doctor?: number;
-  previousAppointment?: number;
-  knowYourDoctor?: boolean;
-};
-
 export type AppointmentMode = ValuesOf<typeof appointmentModes>;
 export type AType = ValuesOf<typeof appointmentTypes>;
 export type AppointmentStatus = ValuesOf<typeof appointmentStatuses>;

@@ -50,3 +50,7 @@ export function toSnakeCase(str: string) {
 export function toTitleCase(str: string) {
   return str.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
 }
+
+export function isSearchMatch(term1: string, term2: string) {
+  return term1.toLowerCase().includes(term2.toLowerCase());
+}

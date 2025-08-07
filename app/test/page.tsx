@@ -1,14 +1,28 @@
-import { unauthorized } from 'next/navigation';
+'use client';
 
-import { auth } from '@/auth';
-import TanStackTable from '@/components/test/tanstack-table';
+import { FormikConfig } from 'formik';
 
+import { FormikProvider, useSharedFormik } from '@/hooks/useSharedFormik';
+
+type FormikValues = {
+  name: string;
+};
 export default async function TestPage() {
-  const session = await auth();
+  const formikConfig: FormikConfig<FormikValues> = {
+    initialValues: {
+      name: 'Ankit',
+    },
+    onSubmit: () => {},
+  };
 
-  if (!session) {
-    unauthorized();
-  }
-
-  return <TanStackTable />;
+  return (
+    <FormikProvider<FormikValues> formikConfig={formikConfig}>
+      <Test />
+    </FormikProvider>
+  );
 }
+
+const Test = () => {
+  const formik = useSharedFormik<FormikValues>();
+  return <div>Test {JSON.stringify(formik.values.name)}</div>;
+};

@@ -1,3 +1,7 @@
+'use client';
+
+import CreateAppointmentContentContainer from '../ui/content-container';
+
 export default function AppointmentType() {
-  return <div>Appointment Type</div>;
+  return <CreateAppointmentContentContainer>Hello</CreateAppointmentContentContainer>;
 }
