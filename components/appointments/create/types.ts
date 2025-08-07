@@ -1,6 +1,6 @@
 import { AppointmentType } from '@/types/appointment';
 
-type CreateAppointmentType = {
+export type CreateAppointmentType = {
   date: Date;
   type: AppointmentType['type'];
   additionalInfo: AppointmentType['additionalInfo'];

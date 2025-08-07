@@ -9,7 +9,8 @@ import {
 import { createAppointment, getAllAppointments, getAppointmentWithAID } from './api/appointment';
 import { ApiResponse } from './api';
 
-import { AppointmentType, CreateAppointmentType } from '@/types/appointment';
+import { CreateAppointmentType } from '@/components/appointments/create/types';
+import { AppointmentType } from '@/types/appointment';
 
 export const useAllAppointments = (): UseQueryResult<AppointmentType[]> =>
   useQuery({
