@@ -11,7 +11,7 @@ import {
   getDateTime,
   getTimeSlot,
   isDateUnavailable,
-} from '@/components/appointments/create/helper';
+} from '@/components/appointments/create-legacy/helper';
 
 const timeSlots = generateTimeSlots();
 

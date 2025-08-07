@@ -12,7 +12,7 @@ import { YearView } from './views/year';
 import { CalendarHeader } from './header';
 import { views } from './types';
 
-import { CreateAppointment } from '@/components/appointments/create';
+import { CreateAppointment } from '@/components/appointments/create-legacy';
 import { AppointmentType } from '@/types/appointment';
 
 interface CalendarProps {
