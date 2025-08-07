@@ -2,7 +2,8 @@
 
 import { fetchData } from '.';
 
-import { AppointmentType, CreateAppointmentType } from '@/types/appointment';
+import { CreateAppointmentType } from '@/components/appointments/create/types';
+import { AppointmentType } from '@/types/appointment';
 
 export const getAllAppointments = async () => await fetchData<AppointmentType[]>('/appointments');
 
