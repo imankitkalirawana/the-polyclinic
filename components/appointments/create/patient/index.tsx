@@ -79,41 +79,47 @@ const PatientSelection = ({ className }: { className?: string }) => {
       <div className={cn('grid w-full grid-cols-12 flex-col', className)}>
         {isPatientsLoading ? (
           <PatientsSkeleton />
-        ) : !!filteredPatients && filteredPatients?.length > 0 ? (
-          <>
-            <Input
-              placeholder="Search for a patient"
-              radius="lg"
-              className="col-span-12 mb-4"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            <ScrollShadow className="col-span-12 flex max-h-80 flex-col gap-4 pr-3">
-              {filteredPatients?.map((patient) => (
-                <Card
-                  isPressable
-                  key={patient.uid}
-                  className={cn(
-                    'flex flex-row items-center justify-start gap-4 border-2 border-divider px-4 py-4 shadow-none',
-                    {
-                      'border-primary': appointment.patient === patient.uid,
-                    }
-                  )}
-                  onPress={() => formik.setFieldValue('appointment.patient', patient.uid)}
-                >
-                  <Avatar src={patient.image} />
-                  <div className="flex flex-col items-start gap-0">
-                    <h4 className="text-small">{patient.name}</h4>
-                    <p className="text-sm text-default-500">{patient.email}</p>
-                  </div>
-                </Card>
-              ))}
-            </ScrollShadow>
-          </>
         ) : (
-          <div className="flex items-center justify-center">
-            <p className="text-sm text-default-500">No patients found</p>
-          </div>
+          <>
+            {/* Search input always visible after loading */}
+            <div className="col-span-12 mb-4">
+              <Input
+                placeholder="Search patients..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                radius="full"
+                variant="bordered"
+              />
+            </div>
+
+            {!!filteredPatients && filteredPatients?.length > 0 ? (
+              <ScrollShadow className="col-span-12 flex max-h-80 flex-col gap-4 pr-3">
+                {filteredPatients.map((patient) => (
+                  <Card
+                    isPressable
+                    key={patient.uid}
+                    className={cn(
+                      'flex flex-row items-center justify-start gap-4 border-2 border-divider px-4 py-4 shadow-none',
+                      {
+                        'border-primary': appointment.patient === patient.uid,
+                      }
+                    )}
+                    onPress={() => formik.setFieldValue('appointment.patient', patient.uid)}
+                  >
+                    <Avatar src={patient.image} />
+                    <div className="flex flex-col items-start gap-0">
+                      <h4 className="text-small">{patient.name}</h4>
+                      <p className="text-sm text-default-500">{patient.email}</p>
+                    </div>
+                  </Card>
+                ))}
+              </ScrollShadow>
+            ) : (
+              <div className="col-span-12 flex items-center justify-center">
+                <p className="text-sm text-default-500">No patients found</p>
+              </div>
+            )}
+          </>
         )}
       </div>
     </CreateAppointmentContentContainer>

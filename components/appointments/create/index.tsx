@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Form, Formik, FormikConfig, useFormikContext } from 'formik';
+import { Formik, FormikConfig, useFormikContext } from 'formik';
 
 import AppointmentType from './appointment-type';
 import DoctorSelection from './doctor';
@@ -42,13 +42,15 @@ export default function CreateAppointment() {
 
   return (
     <Formik {...formikConfig}>
-      <Form className="flex h-[calc(100vh-3.75rem)] overflow-hidden">
-        <CreateAppointmentSidebar
-          currentStep={formikConfig.initialValues.meta.currentStep}
-          setCurrentStep={() => {}}
-        />
-        <MainContent />
-      </Form>
+      {({ values, setFieldValue }) => (
+        <form className="flex h-[calc(100vh-3.75rem)] overflow-hidden">
+          <CreateAppointmentSidebar
+            currentStep={values.meta.currentStep}
+            setCurrentStep={(step) => setFieldValue('meta.currentStep', step)}
+          />
+          <MainContent />
+        </form>
+      )}
     </Formik>
   );
 }
