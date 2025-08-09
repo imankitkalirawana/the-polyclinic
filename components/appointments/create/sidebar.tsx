@@ -1,20 +1,19 @@
 import { Progress } from '@heroui/react';
 
 import { steps } from './data';
-import { CreateAppointmentFormValues } from './types';
 import VerticalSteps from './vertical-steps';
 
-import { useSharedFormik } from '@/hooks/useSharedFormik';
 import { APP_INFO } from '@/lib/config';
 
-export const CreateAppointmentSidebar = () => {
-  const formik = useSharedFormik<CreateAppointmentFormValues>();
-
-  const { meta } = formik.values;
-  const { currentStep } = meta;
-
+export const CreateAppointmentSidebar = ({
+  currentStep,
+  setCurrentStep,
+}: {
+  currentStep: number;
+  setCurrentStep: (step: number) => void;
+}) => {
   return (
-    <section className="flex h-full max-w-sm flex-col border-r border-divider p-4">
+    <section className="flex h-full w-full max-w-sm flex-col border-r border-divider p-4">
       <div>
         <h1 className="mb-2 text-xl font-medium" id="getting-started">
           {APP_INFO.name}
@@ -35,11 +34,7 @@ export const CreateAppointmentSidebar = () => {
         value={currentStep}
         valueLabel={`${currentStep + 1} of ${steps.length}`}
       />
-      <VerticalSteps
-        currentStep={currentStep}
-        steps={steps}
-        onStepChange={(step) => formik.setFieldValue('meta.currentStep', step)}
-      />
+      <VerticalSteps currentStep={currentStep} steps={steps} onStepChange={setCurrentStep} />
     </section>
   );
 };

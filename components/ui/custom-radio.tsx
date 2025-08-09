@@ -20,8 +20,8 @@ export default function CustomRadio(props: RadioProps) {
     <Component
       {...getBaseProps()}
       className={cn(
-        'group inline-flex flex-row-reverse items-center justify-between tap-highlight-transparent hover:opacity-70 active:opacity-50',
-        'max-w-[300px] cursor-pointer gap-4 rounded-large border-2 border-default p-4',
+        'group inline-flex w-full flex-row-reverse items-center justify-between tap-highlight-transparent hover:opacity-70 active:opacity-50',
+        'cursor-pointer gap-4 rounded-large border-2 border-default p-4',
         'data-[selected=true]:border-primary',
         props.className
       )}

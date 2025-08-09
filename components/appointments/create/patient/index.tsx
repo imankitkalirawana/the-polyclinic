@@ -1,15 +1,16 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import { Avatar, Button, Card, Input, Link, ScrollShadow } from '@heroui/react';
+import { Avatar, Button, Card, Input, ScrollShadow } from '@heroui/react';
 import { cn } from '@heroui/react';
+import { useFormikContext } from 'formik';
 
 import { CreateAppointmentFormValues } from '../types';
 import CreateAppointmentContentContainer from '../ui/content-container';
 import CreateAppointmentContentHeader from '../ui/header';
+import { CreateAppointmentPatientDetails } from './details';
 
 import Skeleton from '@/components/ui/skeleton';
-import { useSharedFormik } from '@/hooks/useSharedFormik';
 import { isSearchMatch } from '@/lib/utils';
 import { useLinkedUsers } from '@/services/user';
 
@@ -34,7 +35,7 @@ function PatientsSkeleton() {
 
 const PatientSelection = ({ className }: { className?: string }) => {
   const { data: patients, isLoading: isPatientsLoading } = useLinkedUsers();
-  const formik = useSharedFormik<CreateAppointmentFormValues>();
+  const formik = useFormikContext<CreateAppointmentFormValues>();
   const [search, setSearch] = useState('');
 
   const { appointment } = formik.values;
@@ -49,13 +50,33 @@ const PatientSelection = ({ className }: { className?: string }) => {
     );
   }, [patients, search]);
 
+  const patient = useMemo(() => {
+    return patients?.find((p) => p.uid === appointment.patient);
+  }, [patients, appointment.patient]);
+
   return (
-    <CreateAppointmentContentContainer>
-      <CreateAppointmentContentHeader
-        title="Patient Selection"
-        description="Select the patient for whom you want to book the appointment"
-      />
-      <form className={cn('grid w-full grid-cols-12 flex-col py-8', className)}>
+    <CreateAppointmentContentContainer
+      header={
+        <CreateAppointmentContentHeader
+          title="Patient Selection"
+          description="Select the patient for whom you want to book the appointment"
+        />
+      }
+      footer={
+        <Button
+          variant="shadow"
+          color="primary"
+          radius="full"
+          onPress={() => formik.setFieldValue('meta.currentStep', 1)}
+          isDisabled={!appointment.patient}
+          isLoading={isPatientsLoading}
+        >
+          Next
+        </Button>
+      }
+      endContent={!!patient && <CreateAppointmentPatientDetails user={patient} />}
+    >
+      <div className={cn('grid w-full grid-cols-12 flex-col', className)}>
         {isPatientsLoading ? (
           <PatientsSkeleton />
         ) : !!filteredPatients && filteredPatients?.length > 0 ? (
@@ -88,30 +109,13 @@ const PatientSelection = ({ className }: { className?: string }) => {
                 </Card>
               ))}
             </ScrollShadow>
-            <div className="col-span-full mt-4 flex flex-col gap-2">
-              <Button
-                size="lg"
-                variant="shadow"
-                color="primary"
-                onPress={() => formik.setFieldValue('meta.currentStep', 1)}
-                isDisabled={!appointment.patient}
-              >
-                Continue
-              </Button>
-              <div className="text-center text-sm text-default-500">or</div>
-              <div className="flex items-center justify-center">
-                <Link href="/appointments/create?patient=new" color="primary">
-                  Create a new Patient
-                </Link>
-              </div>
-            </div>
           </>
         ) : (
           <div className="flex items-center justify-center">
             <p className="text-sm text-default-500">No patients found</p>
           </div>
         )}
-      </form>
+      </div>
     </CreateAppointmentContentContainer>
   );
 };

@@ -1,15 +1,13 @@
 'use client';
 
 import React from 'react';
-import { FormikConfig } from 'formik';
+import { Form, Formik, FormikConfig, useFormikContext } from 'formik';
 
 import AppointmentType from './appointment-type';
 import DoctorSelection from './doctor';
 import PatientSelection from './patient';
 import { CreateAppointmentSidebar } from './sidebar';
 import { CreateAppointmentFormValues } from './types';
-
-import { FormikProvider, useSharedFormik } from '@/hooks/useSharedFormik';
 
 const contentMap: Record<number, React.ReactNode> = {
   0: <PatientSelection />,
@@ -43,16 +41,19 @@ export default function CreateAppointment() {
   };
 
   return (
-    <FormikProvider<CreateAppointmentFormValues> formikConfig={formikConfig}>
-      <div className="flex h-[calc(100vh-3.75rem)] gap-4 overflow-hidden">
-        <CreateAppointmentSidebar />
+    <Formik {...formikConfig}>
+      <Form className="flex h-[calc(100vh-3.75rem)] overflow-hidden">
+        <CreateAppointmentSidebar
+          currentStep={formikConfig.initialValues.meta.currentStep}
+          setCurrentStep={() => {}}
+        />
         <MainContent />
-      </div>
-    </FormikProvider>
+      </Form>
+    </Formik>
   );
 }
 
 function MainContent() {
-  const formik = useSharedFormik<CreateAppointmentFormValues>();
-  return contentMap[formik.values.meta.currentStep];
+  const { values } = useFormikContext<CreateAppointmentFormValues>();
+  return contentMap[values.meta.currentStep];
 }
