@@ -9,7 +9,7 @@ import Appointments from './appointments';
 import Loading from '@/app/loading';
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { castData } from '@/lib/utils';
-import { useDoctor } from '@/services/doctor';
+import { useDoctorWithUID } from '@/services/doctor';
 import { DoctorType } from '@/types/doctor';
 
 type ListItem = {
@@ -109,7 +109,7 @@ const listItems: ListItem[] = [
 ];
 
 export default function DashboardDoctor({ uid }: { uid: number }) {
-  const { data, isError, isLoading } = useDoctor(uid);
+  const { data, isError, isLoading } = useDoctorWithUID(uid);
 
   const doctor = castData<DoctorType>(data);
 

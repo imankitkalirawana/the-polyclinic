@@ -4,8 +4,10 @@ import React from 'react';
 import { Formik, FormikConfig, useFormikContext } from 'formik';
 
 import AppointmentType from './appointment-type';
+import DateSelectionContainer from './date';
 import DoctorSelection from './doctor';
 import PatientSelection from './patient';
+import AppointmentBookingConfirmation from './receipt';
 import { CreateAppointmentSidebar } from './sidebar';
 import { CreateAppointmentFormValues } from './types';
 
@@ -13,6 +15,7 @@ const contentMap: Record<number, React.ReactNode> = {
   0: <PatientSelection />,
   1: <AppointmentType />,
   2: <DoctorSelection />,
+  3: <DateSelectionContainer />,
 };
 
 export default function CreateAppointment() {
@@ -33,6 +36,7 @@ export default function CreateAppointment() {
       },
       meta: {
         currentStep: 0,
+        showConfirmation: false,
       },
     },
     onSubmit: async (values) => {
@@ -59,5 +63,11 @@ export default function CreateAppointment() {
 
 function MainContent() {
   const { values } = useFormikContext<CreateAppointmentFormValues>();
-  return contentMap[values.meta.currentStep];
+
+  return (
+    <>
+      {contentMap[values.meta.currentStep]}
+      {values.meta.showConfirmation && <AppointmentBookingConfirmation />}
+    </>
+  );
 }

@@ -19,4 +19,8 @@ export const steps = [
     description: 'Please select the date you want to book an appointment with.',
     details: ['Select the date that you would like to book an appointment with.'],
   },
+  {
+    title: 'Appointment Confirmation',
+    description: 'Please confirm your appointment details.',
+  },
 ];

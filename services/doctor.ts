@@ -24,7 +24,7 @@ export const useAllDoctors = (): UseQueryResult<DoctorType[]> =>
     },
   });
 
-export const useDoctor = (uid: number): UseQueryResult<DoctorType> =>
+export const useDoctorWithUID = (uid: number): UseQueryResult<DoctorType> =>
   useQuery({
     queryKey: ['doctor', uid],
     queryFn: async () => {

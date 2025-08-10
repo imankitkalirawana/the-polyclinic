@@ -35,14 +35,16 @@ export default function CreateAppointmentContentContainer({
           {header}
           {children}
         </div>
-        <div
-          className={cn(
-            'flex items-center justify-end gap-4 border-t border-divider p-4',
-            classNames?.footer
-          )}
-        >
-          {footer}
-        </div>
+        {!!footer && (
+          <div
+            className={cn(
+              'flex items-center justify-end gap-4 border-t border-divider p-4',
+              classNames?.footer
+            )}
+          >
+            {footer}
+          </div>
+        )}
       </div>
       {!!endContent && (
         <div className={cn('overflow-hidden p-4', classNames?.endContent)}>{endContent}</div>
