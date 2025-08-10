@@ -69,7 +69,6 @@ const PatientSelection = ({ className }: { className?: string }) => {
           radius="full"
           onPress={() => formik.setFieldValue('meta.currentStep', 1)}
           isDisabled={!appointment.patient}
-          isLoading={isPatientsLoading}
         >
           Next
         </Button>

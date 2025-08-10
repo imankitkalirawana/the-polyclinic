@@ -42,15 +42,17 @@ export default function CreateAppointment() {
 
   return (
     <Formik {...formikConfig}>
-      {({ values, setFieldValue }) => (
-        <form className="flex h-[calc(100vh-3.75rem)] overflow-hidden">
-          <CreateAppointmentSidebar
-            currentStep={values.meta.currentStep}
-            setCurrentStep={(step) => setFieldValue('meta.currentStep', step)}
-          />
-          <MainContent />
-        </form>
-      )}
+      {({ values, setFieldValue }) => {
+        return (
+          <div className="flex h-[calc(100vh-3.75rem)] overflow-hidden">
+            <CreateAppointmentSidebar
+              currentStep={values.meta.currentStep}
+              setCurrentStep={(step) => setFieldValue('meta.currentStep', step)}
+            />
+            <MainContent />
+          </div>
+        );
+      }}
     </Formik>
   );
 }

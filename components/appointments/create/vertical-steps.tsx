@@ -167,11 +167,25 @@ const VerticalCollapsibleSteps = React.forwardRef<HTMLButtonElement, VerticalCol
                   <button
                     key={stepIdx}
                     ref={ref}
+                    title={
+                      status === 'complete'
+                        ? 'Step completed'
+                        : status === 'inactive'
+                          ? 'Complete the previous step first'
+                          : 'Go to step'
+                    }
                     aria-current={status === 'active' ? 'step' : undefined}
                     className={cn(
-                      'flex w-full cursor-pointer items-center justify-center gap-x-4 rounded-large px-3 py-2.5'
+                      'flex w-full cursor-pointer items-center justify-center gap-x-4 rounded-large px-3 py-2.5',
+                      {
+                        'cursor-not-allowed': status !== 'complete',
+                      }
                     )}
-                    onClick={() => setCurrentStep(stepIdx)}
+                    onClick={() => {
+                      if (status === 'complete') {
+                        setCurrentStep(stepIdx);
+                      }
+                    }}
                     {...props}
                   >
                     <div className="flex h-full items-center">

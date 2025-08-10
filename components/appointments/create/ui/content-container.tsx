@@ -8,12 +8,17 @@ export default function CreateAppointmentContentContainer({
   footer,
   endContent,
   className,
+  classNames,
 }: {
   header?: React.ReactNode;
   children: React.ReactNode;
   footer?: React.ReactNode;
   endContent?: React.ReactNode | null;
   className?: string;
+  classNames?: {
+    footer?: string;
+    endContent?: string;
+  };
 }) {
   return (
     <div
@@ -30,9 +35,13 @@ export default function CreateAppointmentContentContainer({
           {header}
           {children}
         </div>
-        <div className="flex justify-end border-t border-divider p-4">{footer}</div>
+        <div className={cn('flex justify-end border-t border-divider p-4', classNames?.footer)}>
+          {footer}
+        </div>
       </div>
-      {!!endContent && <div className="overflow-hidden p-4">{endContent}</div>}
+      {!!endContent && (
+        <div className={cn('overflow-hidden p-4', classNames?.endContent)}>{endContent}</div>
+      )}
     </div>
   );
 }

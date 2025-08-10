@@ -1,43 +1,33 @@
 'use client';
-
-import { useMemo, useState } from 'react';
-import { Button, Input, RadioGroup, ScrollShadow } from '@heroui/react';
+import { useMemo } from 'react';
+import { Button, RadioGroup } from '@heroui/react';
 import { useFormikContext } from 'formik';
 
 import { CreateAppointmentFormValues } from '../types';
 import CreateAppointmentContentContainer from '../ui/content-container';
 import CreateAppointmentContentHeader from '../ui/header';
+import CreateAppointmentFollowUp from './follow-up';
 
 import CustomRadio from '@/components/ui/custom-radio';
-import { castData, cn } from '@/lib/utils';
-import { useAllAppointments } from '@/services/appointment';
+import { cn } from '@/lib/utils';
 import { type AppointmentType, appointmentTypes } from '@/types/appointment';
 
 export default function AppointmentType() {
-  // TODO: instead of fetching all fetching all fetch for spefici patient
-  const { values, setFieldValue, isSubmitting, handleSubmit } =
-    useFormikContext<CreateAppointmentFormValues>();
-  const { data } = useAllAppointments();
-
-  const [search, setSearch] = useState('');
-  const [_previousAppointment, setPreviousAppointment] = useState<AppointmentType['aid']>();
+  const { values, setFieldValue, isSubmitting } = useFormikContext<CreateAppointmentFormValues>();
 
   const { appointment } = values;
 
-  const appointments = castData<AppointmentType[]>(data) || [];
-
-  const filteredAppointments = useMemo(
-    () =>
-      appointments.filter(
-        (appointment) =>
-          appointment.patient.name.toLowerCase().includes(search.toLowerCase()) ||
-          appointment.aid.toString().includes(search)
-      ),
-    [appointments, search]
-  );
+  const isNextButtonDisabled = useMemo(() => {
+    return (
+      (appointment.type === 'follow-up' && !appointment.previousAppointment) || !appointment.type
+    );
+  }, [appointment.type, appointment.previousAppointment]);
 
   return (
     <CreateAppointmentContentContainer
+      classNames={{
+        endContent: 'p-0',
+      }}
       header={
         <CreateAppointmentContentHeader
           title="Appointment Type"
@@ -51,63 +41,20 @@ export default function AppointmentType() {
           color="primary"
           radius="lg"
           className="btn btn-primary"
-          onPress={() => handleSubmit()}
-          isDisabled={isSubmitting}
+          isDisabled={isSubmitting || isNextButtonDisabled}
+          onPress={() => setFieldValue('meta.currentStep', 2)}
         >
           Next
         </Button>
       }
-      endContent={
-        appointment.type === 'follow-up' && (
-          <div className="flex h-full flex-col gap-2">
-            <h3 className="text-sm text-default-500">Previous Appointments</h3>
-            {appointments.length > 0 ? (
-              <>
-                <Input
-                  placeholder="Search for an appointment"
-                  radius="lg"
-                  className="max-w-xs"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-                {filteredAppointments.length > 0 ? (
-                  <RadioGroup
-                    hideScrollBar
-                    as={ScrollShadow}
-                    orientation="horizontal"
-                    value={appointment.previousAppointment?.toString()}
-                    onValueChange={(value) =>
-                      setFieldValue('appointment.previousAppointment', parseInt(value))
-                    }
-                  >
-                    {filteredAppointments.map((appointment) => (
-                      <CustomRadio
-                        key={appointment.aid}
-                        value={appointment.aid.toString()}
-                        className="rounded-medium p-2"
-                        description={`${appointment.patient.name} - ${appointment.doctor?.name}`}
-                      >
-                        #{appointment.aid}
-                      </CustomRadio>
-                    ))}
-                  </RadioGroup>
-                ) : (
-                  <p className="text-sm text-default-500">No appointments found for {search}</p>
-                )}
-              </>
-            ) : (
-              <p className="text-sm text-default-500">No previous appointments found</p>
-            )}
-          </div>
-        )
-      }
+      endContent={appointment.type === 'follow-up' && <CreateAppointmentFollowUp />}
     >
       <RadioGroup
         orientation="horizontal"
         value={appointment.type}
         onValueChange={(value) => {
           setFieldValue('appointment.type', value);
-          setPreviousAppointment?.(undefined);
+          setFieldValue('appointment.previousAppointment', undefined);
         }}
       >
         {appointmentTypes.map((type) => (
@@ -117,7 +64,8 @@ export default function AppointmentType() {
             description={type.description}
             color={type.value === 'emergency' ? 'danger' : 'primary'}
             className={cn({
-              'data-[selected=true]:border-danger': type.value === 'emergency',
+              'data-[selected=true]:border-danger data-[selected=true]:bg-danger/10':
+                type.value === 'emergency',
             })}
           >
             {type.label}

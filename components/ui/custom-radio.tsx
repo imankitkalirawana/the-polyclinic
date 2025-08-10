@@ -22,7 +22,7 @@ export default function CustomRadio(props: RadioProps) {
       className={cn(
         'group inline-flex w-full flex-row-reverse items-center justify-between tap-highlight-transparent hover:opacity-70 active:opacity-50',
         'cursor-pointer gap-4 rounded-large border-2 border-default p-4',
-        'data-[selected=true]:border-primary',
+        'data-[selected=true]:border-primary data-[selected=true]:bg-primary/10',
         props.className
       )}
     >
