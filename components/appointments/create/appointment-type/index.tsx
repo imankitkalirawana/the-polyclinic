@@ -42,7 +42,13 @@ export default function AppointmentType() {
           radius="lg"
           className="btn btn-primary"
           isDisabled={isSubmitting || isNextButtonDisabled}
-          onPress={() => setFieldValue('meta.currentStep', 2)}
+          onPress={() => {
+            if (appointment.type === 'follow-up') {
+              setFieldValue('meta.currentStep', 3);
+            } else {
+              setFieldValue('meta.currentStep', 2);
+            }
+          }}
         >
           Next
         </Button>
@@ -55,6 +61,7 @@ export default function AppointmentType() {
         onValueChange={(value) => {
           setFieldValue('appointment.type', value);
           setFieldValue('appointment.previousAppointment', undefined);
+          setFieldValue('appointment.doctor', undefined);
         }}
       >
         {appointmentTypes.map((type) => (

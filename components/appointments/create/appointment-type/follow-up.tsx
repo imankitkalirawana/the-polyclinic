@@ -50,7 +50,6 @@ export default function CreateAppointmentFollowUp() {
                 value={appointment.previousAppointment?.toString()}
                 onValueChange={(value) => {
                   setFieldValue('appointment.previousAppointment', parseInt(value));
-                  setFieldValue('appointment.doctor', appointment.doctor);
                 }}
               >
                 {filteredAppointments.map((appointment) => (
@@ -59,6 +58,9 @@ export default function CreateAppointmentFollowUp() {
                     value={appointment.aid.toString()}
                     className="rounded-medium p-2"
                     description={`${appointment.patient.name} - ${appointment.doctor?.name}`}
+                    onClick={() => {
+                      setFieldValue('appointment.doctor', appointment.doctor?.uid);
+                    }}
                   >
                     #{appointment.aid}
                   </CustomRadio>

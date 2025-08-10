@@ -1,3 +1,124 @@
-export default function DoctorSelection() {
-  return <div>Doctor Selection</div>;
+import { useMemo, useState } from 'react';
+import { Avatar, Button, Card, cn, Input, ScrollShadow } from '@heroui/react';
+import { useFormikContext } from 'formik';
+
+import { CreateAppointmentFormValues } from '../types';
+import CreateAppointmentContentContainer from '../ui/content-container';
+import CreateAppointmentContentHeader from '../ui/header';
+import { CreateAppointmentDoctorDetails } from './details';
+
+import Skeleton from '@/components/ui/skeleton';
+import { isSearchMatch } from '@/lib/utils';
+import { useAllDoctors } from '@/services/doctor';
+
+export default function DoctorSelection({ className }: { className?: string }) {
+  const { data: doctors, isLoading: isDoctorsLoading } = useAllDoctors();
+  const formik = useFormikContext<CreateAppointmentFormValues>();
+  const [search, setSearch] = useState('');
+
+  const { appointment } = formik.values;
+
+  const filteredDoctors = useMemo(() => {
+    return doctors?.filter(
+      (doctor) =>
+        isSearchMatch(doctor.name, search) ||
+        isSearchMatch(doctor.email, search) ||
+        isSearchMatch(doctor.phone, search) ||
+        isSearchMatch(doctor.uid.toString(), search)
+    );
+  }, [doctors, search]);
+
+  const doctor = useMemo(() => {
+    return doctors?.find((d) => d.uid === appointment.doctor);
+  }, [doctors, appointment.doctor]);
+
+  return (
+    <CreateAppointmentContentContainer
+      header={
+        <CreateAppointmentContentHeader
+          title="Doctor Selection"
+          description="Select the doctor for whom you want to book the appointment"
+        />
+      }
+      footer={
+        <Button
+          variant="shadow"
+          color="primary"
+          radius="full"
+          onPress={() => formik.setFieldValue('meta.currentStep', 1)}
+          isDisabled={!appointment.doctor}
+        >
+          Next
+        </Button>
+      }
+      endContent={!!doctor && <CreateAppointmentDoctorDetails doctor={doctor} />}
+    >
+      <div className={cn('grid w-full grid-cols-12 flex-col', className)}>
+        {isDoctorsLoading ? (
+          <DoctorSkeleton />
+        ) : (
+          <>
+            {/* Search input always visible after loading */}
+            <div className="col-span-12 mb-4">
+              <Input
+                placeholder="Search patients..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                radius="full"
+                variant="bordered"
+              />
+            </div>
+
+            {!!filteredDoctors && filteredDoctors?.length > 0 ? (
+              <ScrollShadow className="col-span-12 flex max-h-80 flex-col gap-4 pr-3">
+                {filteredDoctors.map((doctor) => (
+                  <Card
+                    isDisabled={appointment.type === 'follow-up'}
+                    isPressable
+                    key={doctor.uid}
+                    className={cn(
+                      'flex flex-row items-center justify-start gap-4 border-2 border-divider px-4 py-4 shadow-none',
+                      {
+                        'border-primary': appointment.doctor === doctor.uid,
+                      }
+                    )}
+                    onPress={() => formik.setFieldValue('appointment.doctor', doctor.uid)}
+                  >
+                    <Avatar src={doctor.image} />
+                    <div className="flex flex-col items-start gap-0">
+                      <h4 className="text-small">{doctor.name}</h4>
+                      <p className="text-sm text-default-500">{doctor.email}</p>
+                    </div>
+                  </Card>
+                ))}
+              </ScrollShadow>
+            ) : (
+              <div className="col-span-12 flex items-center justify-center">
+                <p className="text-sm text-default-500">No patients found</p>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </CreateAppointmentContentContainer>
+  );
+}
+
+function DoctorSkeleton() {
+  return (
+    <div className="col-span-full flex flex-col gap-2">
+      {Array.from({ length: 3 }).map((_, index) => (
+        <div
+          key={`skeleton-${index}`}
+          className="flex items-center gap-4 rounded-large border border-divider p-4 py-2"
+        >
+          <Skeleton className="h-12 w-12 rounded-full" />
+          <div className="flex flex-col gap-2">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-4 w-20" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 }
