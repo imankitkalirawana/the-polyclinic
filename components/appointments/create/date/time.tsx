@@ -1,28 +1,22 @@
 'use client';
 
-import { Calendar, cn } from '@heroui/react';
-import { format } from 'date-fns';
+import { Calendar } from '@heroui/react';
 import { CalendarDate, getLocalTimeZone, today } from '@internationalized/date';
+import { useLocale } from '@react-aria/i18n';
 
-// import { useLocale } from '@react-aria/i18n';
-// import { isDateUnavailable } from './helper';
+import { isDateUnavailable } from '../helpers';
+
 import CalendarTimeSelect from '@/components/ui/calendar/booking/calendar-time-select';
 import { TIMINGS } from '@/lib/config';
 
 export default function CreateAppointmentTimeSelection({
-  onSubmit,
   date,
   setDate,
 }: {
-  onSubmit: () => void;
   date: Date;
   setDate: (date: Date) => void;
 }) {
-  //   const { locale } = useLocale();
-  const handleTimeConfirm = () => {
-    onSubmit();
-  };
-
+  const { locale } = useLocale();
   return (
     <div className="flex justify-center">
       <Calendar
@@ -45,7 +39,7 @@ export default function CreateAppointmentTimeSelection({
           setDate(newDate);
         }}
         showHelper
-        // isDateUnavailable={(date) => isDateUnavailable(date, locale)}
+        isDateUnavailable={(date) => isDateUnavailable(date, locale)}
         calendarWidth="372px"
         className="rounded-r-none shadow-none"
         classNames={{
@@ -61,23 +55,7 @@ export default function CreateAppointmentTimeSelection({
             'w-full h-9 rounded-medium data-[selected]:shadow-[0_2px_12px_0] data-[selected]:shadow-primary-300 text-small font-medium',
         }}
       />
-      <CalendarTimeSelect date={date} onConfirm={handleTimeConfirm} setDate={setDate} />
-    </div>
-  );
-}
-
-export function DateSelectionTitle({ date, isSelected }: { date: Date; isSelected: boolean }) {
-  return date ? (
-    <h3
-      className={cn('text-2xl font-semibold transition-all', {
-        'text-center': isSelected,
-      })}
-    >
-      {format(date, 'PPPp')}
-    </h3>
-  ) : (
-    <div className="space-y-4">
-      <h3 className="text-2xl font-semibold">Choose Date & Time</h3>
+      <CalendarTimeSelect date={date} setDate={setDate} />
     </div>
   );
 }

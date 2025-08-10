@@ -38,7 +38,7 @@ export default function CreateAppointmentContentContainer({
         {!!footer && (
           <div
             className={cn(
-              'flex items-center justify-end gap-4 border-t border-divider p-4',
+              'flex flex-row-reverse items-center justify-between gap-4 border-t border-divider p-4',
               classNames?.footer
             )}
           >

@@ -1,4 +1,6 @@
 'use client';
+import { Button } from '@heroui/react';
+import { isPast } from 'date-fns';
 import { useFormikContext } from 'formik';
 
 import { CreateAppointmentFormValues } from '../types';
@@ -18,9 +20,19 @@ export default function DateSelectionContainer() {
           description="Select the date and time for the appointment"
         />
       }
+      footer={
+        <Button
+          variant="shadow"
+          color="primary"
+          radius="full"
+          onPress={() => formik.setFieldValue('meta.currentStep', 4)}
+          isDisabled={isPast(values.appointment.date)}
+        >
+          Next
+        </Button>
+      }
     >
       <CreateAppointmentTimeSelection
-        onSubmit={() => setFieldValue('meta.showConfirmation', true)}
         date={values.appointment.date}
         setDate={(date) => setFieldValue('appointment.date', date)}
       />

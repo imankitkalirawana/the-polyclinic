@@ -1,8 +1,6 @@
 import React, { useMemo } from 'react';
 import { ScrollShadow } from '@heroui/react';
 import { format } from 'date-fns';
-import { parseDate } from '@internationalized/date';
-import { useLocale } from '@react-aria/i18n';
 
 import CalendarTime from './calendar-time';
 
@@ -10,21 +8,17 @@ import {
   generateTimeSlots,
   getDateTime,
   getTimeSlot,
-  isDateUnavailable,
 } from '@/components/appointments/create-legacy/helper';
 
 const timeSlots = generateTimeSlots();
 
 export default function CalendarTimeSelect({
-  onConfirm,
   date,
   setDate,
 }: {
-  onConfirm: () => void;
   date: Date;
   setDate: (date: Date) => void;
 }) {
-  const { locale } = useLocale();
   const time = useMemo(() => getTimeSlot(date), [date]);
 
   return (
@@ -36,18 +30,16 @@ export default function CalendarTimeSelect({
           <span className="text-default-500">{format(date, 'd')}</span>
         </p>
       </div>
-      <div className="flex h-full max-h-[300px] w-full">
+      <div className="flex h-full max-h-[364px] w-full">
         <ScrollShadow hideScrollBar className="flex w-full flex-col gap-2">
           {timeSlots.map((slot) => (
             <CalendarTime
               key={slot}
               slot={slot}
-              onConfirm={onConfirm}
               time={time}
               setTime={(time) => {
                 setDate(getDateTime(date, time));
               }}
-              isDisabled={isDateUnavailable(parseDate(format(date, 'yyyy-MM-dd')), locale)}
             />
           ))}
         </ScrollShadow>

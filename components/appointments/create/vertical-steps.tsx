@@ -148,7 +148,7 @@ const VerticalCollapsibleSteps = React.forwardRef<HTMLButtonElement, VerticalCol
         <ScrollShadow
           hideScrollBar
           as="ol"
-          className={cn('flex flex-col gap-y-3 overflow-y-scroll pb-4', colors, className)}
+          className={cn('flex h-full max-h-[70vh] flex-col gap-y-3 pb-8', colors, className)}
         >
           {steps?.map((step, stepIdx) => {
             let status =

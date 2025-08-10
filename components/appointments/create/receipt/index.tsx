@@ -49,7 +49,7 @@ export default function AppointmentBookingConfirmation() {
           </p>
         </ModalHeader>
         <ModalBody>
-          <div className="flex w-full flex-col items-center gap-4">
+          <div className="flex w-full flex-col items-start gap-2">
             <div className="flex w-full flex-col text-small">
               <p className="text-tiny text-default-500">Patient Name</p>
               {isPatientLoading ? (

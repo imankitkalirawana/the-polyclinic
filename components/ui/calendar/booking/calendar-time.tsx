@@ -1,25 +1,18 @@
 import React, { useEffect, useRef } from 'react';
 import { Button } from '@heroui/react';
-import { motion } from 'framer-motion';
 
 interface CalendarTimeProps {
   slot: string;
-  onConfirm: () => void;
   time: string;
   setTime: (time: string) => void;
-  isDisabled: boolean;
+  isDisabled?: boolean;
 }
 
-export default function CalendarTime({
-  slot,
-  onConfirm,
-  time,
-  setTime,
-  isDisabled,
-}: CalendarTimeProps) {
+export default function CalendarTime({ slot, time, setTime, isDisabled }: CalendarTimeProps) {
   const confirmRef = useRef<HTMLButtonElement>(null);
   const timeSlotRef = useRef<HTMLDivElement>(null);
 
+  // TODO: This is not working
   useEffect(() => {
     if (time === slot && confirmRef.current) {
       confirmRef.current.focus();
@@ -32,43 +25,17 @@ export default function CalendarTime({
 
   return (
     <div ref={timeSlotRef} className="relative flex w-full justify-end gap-2">
-      <motion.div
-        animate={{
-          width: time === slot ? 'calc(100% - 6.5rem)' : '100%',
+      <Button
+        fullWidth
+        onPress={() => {
+          setTime(slot);
         }}
-        className="absolute left-0"
-        initial={false}
+        color={time === slot ? 'primary' : 'default'}
+        variant="flat"
+        isDisabled={isDisabled}
       >
-        <Button
-          className="w-full bg-default-200 text-xs font-semibold leading-4 text-default-500"
-          fullWidth
-          onPress={() => {
-            setTime(slot);
-          }}
-          isDisabled={isDisabled}
-        >
-          {slot}
-        </Button>
-      </motion.div>
-      <motion.div
-        animate={{
-          width: time === slot ? '6rem' : '0',
-          opacity: time === slot ? 1 : 0,
-        }}
-        className="overflow-hidden opacity-0"
-        initial={false}
-      >
-        <Button
-          ref={confirmRef}
-          className="w-24"
-          color="primary"
-          tabIndex={time === slot ? undefined : -1}
-          onPress={onConfirm}
-          isDisabled={isDisabled}
-        >
-          Confirm
-        </Button>
-      </motion.div>
+        {slot}
+      </Button>
     </div>
   );
 }

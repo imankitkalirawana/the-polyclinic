@@ -52,5 +52,5 @@ export function toTitleCase(str: string) {
 }
 
 export function isSearchMatch(term1: string, term2: string) {
-  return term1.toLowerCase().includes(term2.toLowerCase());
+  return term1?.toLowerCase().includes(term2?.toLowerCase());
 }

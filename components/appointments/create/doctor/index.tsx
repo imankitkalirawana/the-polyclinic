@@ -24,6 +24,8 @@ export default function DoctorSelection({ className }: { className?: string }) {
         isSearchMatch(doctor.name, search) ||
         isSearchMatch(doctor.email, search) ||
         isSearchMatch(doctor.phone, search) ||
+        isSearchMatch(doctor.department ?? '', search) ||
+        isSearchMatch(doctor.designation ?? '', search) ||
         isSearchMatch(doctor.uid.toString(), search)
     );
   }, [doctors, search]);
@@ -47,15 +49,6 @@ export default function DoctorSelection({ className }: { className?: string }) {
       footer={
         <>
           <Button
-            variant="light"
-            color="primary"
-            radius="full"
-            onPress={() => formik.setFieldValue('meta.currentStep', 3)}
-            isDisabled={!!appointment.doctor}
-          >
-            Skip
-          </Button>
-          <Button
             variant="shadow"
             color="primary"
             radius="full"
@@ -63,6 +56,18 @@ export default function DoctorSelection({ className }: { className?: string }) {
             isDisabled={!appointment.doctor}
           >
             Next
+          </Button>
+          <Button
+            variant="light"
+            color="primary"
+            radius="full"
+            onPress={() => {
+              formik.setFieldValue('appointment.doctor', undefined);
+              formik.setFieldValue('meta.currentStep', 3);
+            }}
+            isDisabled={isDisabled}
+          >
+            Skip
           </Button>
         </>
       }
@@ -76,7 +81,7 @@ export default function DoctorSelection({ className }: { className?: string }) {
             {/* Search input always visible after loading */}
             <div className="col-span-12 mb-4">
               <Input
-                placeholder="Search patients..."
+                placeholder="Search by name, symptoms, department, etc."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 radius="full"
@@ -109,7 +114,7 @@ export default function DoctorSelection({ className }: { className?: string }) {
                     <Avatar src={doctor.image} />
                     <div className="flex flex-col items-start gap-0">
                       <h4 className="text-small">{doctor.name}</h4>
-                      <p className="text-sm text-default-500">{doctor.email}</p>
+                      <p className="text-sm text-default-500">{doctor.designation}</p>
                     </div>
                   </Card>
                 ))}

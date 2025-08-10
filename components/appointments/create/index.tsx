@@ -3,6 +3,7 @@
 import React from 'react';
 import { Formik, FormikConfig, useFormikContext } from 'formik';
 
+import CreateAppointmentAdditionalDetails from './additional-details';
 import AppointmentType from './appointment-type';
 import DateSelectionContainer from './date';
 import DoctorSelection from './doctor';
@@ -16,13 +17,14 @@ const contentMap: Record<number, React.ReactNode> = {
   1: <AppointmentType />,
   2: <DoctorSelection />,
   3: <DateSelectionContainer />,
+  4: <CreateAppointmentAdditionalDetails />,
 };
 
 export default function CreateAppointment() {
   const formikConfig: FormikConfig<CreateAppointmentFormValues> = {
     initialValues: {
       appointment: {
-        date: new Date(),
+        date: new Date(new Date().setHours(9, 0, 0, 0)),
         type: 'consultation',
         additionalInfo: {
           notes: '',
@@ -48,7 +50,7 @@ export default function CreateAppointment() {
     <Formik {...formikConfig}>
       {({ values, setFieldValue }) => {
         return (
-          <div className="flex h-[calc(100vh-3.75rem)] overflow-hidden">
+          <div className="flex h-[calc(100vh-3.75rem)]">
             <CreateAppointmentSidebar
               currentStep={values.meta.currentStep}
               setCurrentStep={(step) => setFieldValue('meta.currentStep', step)}
