@@ -32,24 +32,39 @@ export default function DoctorSelection({ className }: { className?: string }) {
     return doctors?.find((d) => d.uid === appointment.doctor);
   }, [doctors, appointment.doctor]);
 
+  const isDisabled = useMemo(() => {
+    return appointment.type === 'follow-up';
+  }, [appointment.type]);
+
   return (
     <CreateAppointmentContentContainer
       header={
         <CreateAppointmentContentHeader
-          title="Doctor Selection"
+          title={`Doctor Selection ${appointment.type !== 'follow-up' ? '(Optional)' : ''}`}
           description="Select the doctor for whom you want to book the appointment"
         />
       }
       footer={
-        <Button
-          variant="shadow"
-          color="primary"
-          radius="full"
-          onPress={() => formik.setFieldValue('meta.currentStep', 1)}
-          isDisabled={!appointment.doctor}
-        >
-          Next
-        </Button>
+        <>
+          <Button
+            variant="light"
+            color="primary"
+            radius="full"
+            onPress={() => formik.setFieldValue('meta.currentStep', 3)}
+            isDisabled={!!appointment.doctor}
+          >
+            Skip
+          </Button>
+          <Button
+            variant="shadow"
+            color="primary"
+            radius="full"
+            onPress={() => formik.setFieldValue('meta.currentStep', 3)}
+            isDisabled={!appointment.doctor}
+          >
+            Next
+          </Button>
+        </>
       }
       endContent={!!doctor && <CreateAppointmentDoctorDetails doctor={doctor} />}
     >
@@ -73,16 +88,23 @@ export default function DoctorSelection({ className }: { className?: string }) {
               <ScrollShadow className="col-span-12 flex max-h-80 flex-col gap-4 pr-3">
                 {filteredDoctors.map((doctor) => (
                   <Card
-                    isDisabled={appointment.type === 'follow-up'}
-                    isPressable
                     key={doctor.uid}
+                    isPressable={!isDisabled}
+                    isDisabled={isDisabled}
+                    title={
+                      isDisabled ? 'Cannot change doctor in follow-up appointments' : undefined
+                    }
                     className={cn(
                       'flex flex-row items-center justify-start gap-4 border-2 border-divider px-4 py-4 shadow-none',
                       {
                         'border-primary': appointment.doctor === doctor.uid,
                       }
                     )}
-                    onPress={() => formik.setFieldValue('appointment.doctor', doctor.uid)}
+                    onPress={() => {
+                      if (!isDisabled) {
+                        formik.setFieldValue('appointment.doctor', doctor.uid);
+                      }
+                    }}
                   >
                     <Avatar src={doctor.image} />
                     <div className="flex flex-col items-start gap-0">

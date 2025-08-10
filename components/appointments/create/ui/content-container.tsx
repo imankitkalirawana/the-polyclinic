@@ -35,7 +35,12 @@ export default function CreateAppointmentContentContainer({
           {header}
           {children}
         </div>
-        <div className={cn('flex justify-end border-t border-divider p-4', classNames?.footer)}>
+        <div
+          className={cn(
+            'flex items-center justify-end gap-4 border-t border-divider p-4',
+            classNames?.footer
+          )}
+        >
           {footer}
         </div>
       </div>
