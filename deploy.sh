@@ -6,6 +6,10 @@ git pull
 # install dependencies
 pnpm install
 
+
+# remove the old build
+rm -rf .next
+
 # build the project
 pnpm build
 
