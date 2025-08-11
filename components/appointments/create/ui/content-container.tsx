@@ -23,7 +23,7 @@ export default function CreateAppointmentContentContainer({
   return (
     <div
       className={cn(
-        'mx-auto grid h-full w-full',
+        'mx-auto grid h-full w-full overflow-hidden',
         {
           'grid-cols-2': !!endContent,
         },
@@ -31,7 +31,7 @@ export default function CreateAppointmentContentContainer({
       )}
     >
       <div className="relative flex h-full flex-col justify-between border-r border-divider">
-        <div className="flex flex-col gap-4 p-4">
+        <div className="flex h-full flex-col gap-4 overflow-hidden p-4">
           {header}
           {children}
         </div>
