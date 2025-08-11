@@ -11,18 +11,13 @@ import CalendarTimeSelect from '@/components/ui/calendar/booking/calendar-time-s
 import { TIMINGS } from '@/lib/config';
 
 export default function DateSelection({
-  onSubmit,
   date,
   setDate,
 }: {
-  onSubmit: () => void;
   date: Date;
   setDate: (date: Date) => void;
 }) {
   const { locale } = useLocale();
-  const handleTimeConfirm = () => {
-    onSubmit();
-  };
 
   return (
     <div className="flex justify-center">
@@ -62,7 +57,7 @@ export default function DateSelection({
             'w-full h-9 rounded-medium data-[selected]:shadow-[0_2px_12px_0] data-[selected]:shadow-primary-300 text-small font-medium',
         }}
       />
-      <CalendarTimeSelect date={date} onConfirm={handleTimeConfirm} setDate={setDate} />
+      <CalendarTimeSelect date={date} setDate={setDate} />
     </div>
   );
 }

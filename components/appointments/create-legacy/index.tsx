@@ -311,7 +311,6 @@ export function CreateAppointment({
                 }
               >
                 <DateSelection
-                  onSubmit={() => setCurrentStep(5)}
                   date={new Date(appointment.date)}
                   setDate={(date) => setAppointment('date', date)}
                 />
