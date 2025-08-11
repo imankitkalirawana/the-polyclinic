@@ -3,12 +3,14 @@
 # Pull the latest changes from the remote repository
 git pull
 
-# install dependencies
-pnpm install
-
-
 # remove the old build
 rm -rf .next
+
+# pnpm prune
+pnpm prune
+
+# install dependencies
+pnpm install
 
 # build the project
 pnpm build
