@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Session } from 'next-auth';
@@ -15,6 +15,7 @@ import {
   Spacer,
   Tooltip,
 } from '@heroui/react';
+import { useLocalStorage } from 'react-haiku';
 import { Icon } from '@iconify/react';
 
 import Logo from '../ui/logo';
@@ -29,12 +30,7 @@ export default function DashboardLayout({
   readonly children: React.ReactNode;
   session: Session;
 }) {
-  const [isHidden, setIsHidden] = useState(true);
-
-  useEffect(() => {
-    const isHidden = localStorage.getItem('isHidden');
-    setIsHidden(isHidden === 'true');
-  }, []);
+  const [isHidden, setIsHidden] = useLocalStorage('isDashboardSidebarHidden', true);
 
   const pathname = usePathname();
   const currentPath = pathname.split('/')?.[2];
@@ -131,12 +127,7 @@ export default function DashboardLayout({
           isIconOnly
           size="sm"
           variant="light"
-          onPress={() =>
-            setIsHidden((prev) => {
-              localStorage.setItem('isHidden', !prev ? 'true' : 'false');
-              return !prev;
-            })
-          }
+          onPress={() => setIsHidden(!isHidden)}
         >
           <Icon
             className="text-default-500"
