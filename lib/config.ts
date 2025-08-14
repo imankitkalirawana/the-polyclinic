@@ -148,4 +148,5 @@ export const API_ACTIONS = {
   isUpdate: true,
   isCreate: true,
   isRead: true,
+  isAi: false,
 };
