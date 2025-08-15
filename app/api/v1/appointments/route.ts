@@ -1,23 +1,11 @@
 import { NextResponse } from 'next/server';
 import { NextAuthRequest } from 'next-auth';
-import axios from 'axios';
 
 import { auth } from '@/auth';
-import { API_ACTIONS, APPOINTMENT, CLINIC_INFO, TIMINGS } from '@/lib/config';
+import { API_ACTIONS } from '@/lib/config';
 import { connectDB } from '@/lib/db';
 import Appointment from '@/models/Appointment';
 import { UserType } from '@/types/user';
-
-const defaultConfig = {
-  method: 'post',
-  maxBodyLength: Infinity,
-  url: 'https://n8n.divinely.dev/webhook/appointment/create',
-  headers: {
-    Authorization: `Bearer ${process.env.JWT_TOKEN}`,
-    'Content-Type': 'application/json',
-  },
-  data: {},
-};
 
 export const GET = auth(async (request: NextAuthRequest) => {
   try {
@@ -134,38 +122,13 @@ export const POST = auth(async (request: NextAuthRequest) => {
     const appointment = new Appointment(data);
     await appointment.save();
 
-    const dataContent = JSON.stringify({
-      summary: `${CLINIC_INFO.name} - ${data.patient.name}/${data.doctor.name}`,
-      description: data.additionalInfo.description,
-      date: appointment.date,
-      location: appointment.additionalInfo.type,
-      duration: TIMINGS.appointment.interval,
-      guests: [
-        {
-          name: data.patient.name,
-          email: data.patient.email,
-          role: 'patient',
-        },
-        {
-          name: data.doctor.name,
-          email: data.doctor.email,
-          role: 'doctor',
-        },
-      ],
-    });
-
-    const config = {
-      ...defaultConfig,
-      data: dataContent,
-    };
-
-    try {
-      if (APPOINTMENT.isGoogleCalendar) {
-        Promise.all([axios.request(config)]);
-      }
-    } catch (error) {
-      console.error('Error in sending appointment to n8n:', error);
-    }
+    // try {
+    //   if (APPOINTMENT.isGoogleCalendar) {
+    //     Promise.all([axios.request(config)]);
+    //   }
+    // } catch (error) {
+    //   console.error('Error in sending appointment to n8n:', error);
+    // }
 
     return NextResponse.json(appointment);
   } catch (error: unknown) {

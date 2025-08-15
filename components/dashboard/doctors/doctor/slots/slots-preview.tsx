@@ -2,17 +2,18 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Button, ButtonGroup, cn, Tooltip } from '@heroui/react';
-import { format, isToday } from 'date-fns';
+import { compareAsc, format, isToday } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 import type { SlotConfig } from '@/types/slots';
 
 interface SlotsPreviewProps {
+  selected?: Date;
   config: SlotConfig;
   onSlotSelect?: (date: Date) => void;
 }
 
-export function SlotsPreview({ config, onSlotSelect }: SlotsPreviewProps) {
+export function SlotsPreview({ config, onSlotSelect, selected }: SlotsPreviewProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -210,19 +211,24 @@ export function SlotsPreview({ config, onSlotSelect }: SlotsPreviewProps) {
                           {
                             'border-orange-400 bg-orange-400 bg-opacity-30': isDayOverridden,
                             'border-primary-400 bg-primary-400 bg-opacity-30': !isDayOverridden,
+                            'border-primary-500 bg-primary-500 bg-opacity-100 hover:bg-opacity-100':
+                              compareAsc(date, selected ?? new Date()) === 0,
                           }
                         )}
                         style={{
                           top: `${topOffset}px`,
                           height: `${height}px`,
                         }}
-                        onClick={() => onSlotSelect?.(date)}
+                        onClick={() => {
+                          onSlotSelect?.(date);
+                        }}
                       >
                         <div className="p-1">
                           <Tooltip delay={500} content={format(date, 'h:mm a')}>
                             <div
                               className={cn('h-3 w-3 rounded-sm bg-primary-400', {
                                 'bg-orange-400': isDayOverridden,
+                                'bg-primary-100': compareAsc(date, selected ?? new Date()) === 0,
                               })}
                             />
                           </Tooltip>

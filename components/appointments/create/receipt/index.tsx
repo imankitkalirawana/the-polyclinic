@@ -26,9 +26,8 @@ import { useUserWithUID } from '@/services/user';
 export default function AppointmentBookingReceipt() {
   const { values, resetForm } = useFormikContext<CreateAppointmentFormValues>();
   const { appointment } = values;
-
   const { data: patient, isLoading: isPatientLoading } = useUserWithUID(appointment.patient);
-  const { data: doctor, isLoading: isDoctorLoading } = useDoctorWithUID(appointment.doctor ?? -1);
+  const { data: doctor, isLoading: isDoctorLoading } = useDoctorWithUID(appointment.doctor ?? 0);
 
   return (
     <Modal

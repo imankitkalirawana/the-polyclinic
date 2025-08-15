@@ -34,6 +34,7 @@ export const useDoctorWithUID = (uid: number): UseQueryResult<DoctorType> =>
       }
       throw new Error(res.message);
     },
+    enabled: !!uid,
   });
 
 export const useCreateDoctor = (): UseMutationResult<

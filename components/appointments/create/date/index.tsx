@@ -53,6 +53,7 @@ export default function DateSelectionContainer() {
       {values.appointment.doctor ? (
         slot ? (
           <SlotsPreview
+            selected={values.appointment.date}
             config={slot}
             onSlotSelect={(date) => {
               setFieldValue('appointment.date', date);

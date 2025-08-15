@@ -34,7 +34,7 @@ export default function CreateAppointment({ date, isModal }: { date?: Date; isMo
         date: date ?? new Date(new Date().setHours(9, 0, 0, 0)),
         type: 'consultation',
         additionalInfo: {
-          notes: 'sdfsd',
+          notes: '',
           type: 'online',
           symptoms: '',
         },
