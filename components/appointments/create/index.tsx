@@ -89,11 +89,17 @@ export default function CreateAppointment({ date, isModal }: { date?: Date; isMo
 function MainContent() {
   const { values, setFieldValue } = useFormikContext<CreateAppointmentFormValues>();
 
-  useKeyPress(['Shift', 'Enter'], () => {
-    if (values.meta.currentStep > 0) {
-      setFieldValue('meta.currentStep', values.meta.currentStep - 1);
+  useKeyPress(
+    ['Backspace'],
+    () => {
+      if (values.meta.currentStep > 0) {
+        setFieldValue('meta.currentStep', values.meta.currentStep - 1);
+      }
+    },
+    {
+      capture: true,
     }
-  });
+  );
 
   return (
     <>
