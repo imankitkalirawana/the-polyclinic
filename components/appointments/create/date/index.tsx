@@ -1,6 +1,6 @@
 'use client';
-import { Button } from '@heroui/react';
-import { isPast } from 'date-fns';
+import { Button, Chip } from '@heroui/react';
+import { format, isPast } from 'date-fns';
 import { useFormikContext } from 'formik';
 
 import { CreateAppointmentFormValues } from '../types';
@@ -22,23 +22,42 @@ export default function DateSelectionContainer() {
         <CreateAppointmentContentHeader
           title="Date Selection"
           description="Select the date and time for the appointment"
+          endContent={<div>{format(values.appointment.date, 'PPPp')}</div>}
         />
       }
       footer={
-        <Button
-          variant="shadow"
-          color="primary"
-          radius="full"
-          onPress={() => formik.setFieldValue('meta.currentStep', 4)}
-          isDisabled={isPast(values.appointment.date)}
-        >
-          Next
-        </Button>
+        <>
+          <Button
+            variant="shadow"
+            color="primary"
+            radius="full"
+            onPress={() => formik.setFieldValue('meta.currentStep', 4)}
+            isDisabled={isPast(values.appointment.date)}
+          >
+            Next
+          </Button>
+          <div>
+            {isPast(values.appointment.date) ? (
+              <Chip color="danger" variant="dot">
+                Slot not available
+              </Chip>
+            ) : (
+              <Chip color="success" variant="dot">
+                Available
+              </Chip>
+            )}
+          </div>
+        </>
       }
     >
       {values.appointment.doctor ? (
         slot ? (
-          <SlotsPreview config={slot} />
+          <SlotsPreview
+            config={slot}
+            onSlotSelect={(date) => {
+              setFieldValue('appointment.date', date);
+            }}
+          />
         ) : (
           <div className="flex h-full w-full items-center justify-center">
             <p className="text-sm text-default-500">No slots available</p>

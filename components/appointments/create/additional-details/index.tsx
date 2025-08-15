@@ -25,7 +25,7 @@ export default function CreateAppointmentAdditionalDetails() {
           radius="full"
           onPress={() => formik.setFieldValue('meta.showConfirmation', true)}
         >
-          Next
+          Confirm Appointment
         </Button>
       }
     >

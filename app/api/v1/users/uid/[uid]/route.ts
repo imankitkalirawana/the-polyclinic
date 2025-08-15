@@ -7,18 +7,22 @@ import { connectDB } from '@/lib/db';
 import User from '@/models/User';
 import { $FixMe } from '@/types';
 
+type Params = Promise<{
+  uid: string;
+}>;
+
 // get user by id from param
-export const GET = auth(async (request: $FixMe, context: $FixMe) => {
+export const GET = auth(async (request: $FixMe, { params }: { params: Params }) => {
   try {
     const allowedRoles = ['admin', 'doctor', 'receptionist', 'nurse', 'pharmacist'];
 
-    if (request.auth?.user?.uid !== context?.params?.uid) {
+    if (request.auth?.user?.uid !== (await params).uid) {
       if (!allowedRoles.includes(request.auth?.user?.role)) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
       }
     }
     await connectDB();
-    const uid = parseInt(context.params.uid);
+    const uid = parseInt((await params).uid);
     const user = await User.findOne({ uid });
     if (!user) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
@@ -34,10 +38,10 @@ export const GET = auth(async (request: $FixMe, context: $FixMe) => {
 });
 
 // update user by id from param
-export const PUT = auth(async (request: $FixMe, context: $FixMe) => {
+export const PUT = auth(async (request: $FixMe, { params }: { params: Params }) => {
   try {
     const allowedRoles = ['admin', 'doctor', 'receptionist'];
-    if (request.auth?.user?.uid !== context?.params?.uid) {
+    if (request.auth?.user?.uid !== (await params).uid) {
       if (!allowedRoles.includes(request.auth?.user?.role)) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
       }
@@ -45,7 +49,7 @@ export const PUT = auth(async (request: $FixMe, context: $FixMe) => {
     const data = await request.json();
 
     await connectDB();
-    const uid = parseInt(context.params.uid);
+    const uid = parseInt((await params).uid);
     let user = await User.findOne({ uid });
     if (!user) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
@@ -68,16 +72,16 @@ export const PUT = auth(async (request: $FixMe, context: $FixMe) => {
 });
 
 // delete user by id from param
-export const DELETE = auth(async (request: $FixMe, context: $FixMe) => {
+export const DELETE = auth(async (request: $FixMe, { params }: { params: Params }) => {
   try {
     const allowedRoles = ['admin', 'doctor', 'receptionist'];
-    if (request.auth?.user?.uid !== context?.params?.uid) {
+    if (request.auth?.user?.uid !== (await params).uid) {
       if (!allowedRoles.includes(request.auth?.user?.role)) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
       }
     }
     await connectDB();
-    const uid = parseInt(context.params.uid);
+    const uid = parseInt((await params).uid);
 
     const user = await User.findOne({ uid });
     if (!user) {
