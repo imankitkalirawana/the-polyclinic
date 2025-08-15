@@ -21,17 +21,6 @@ import {
 import { $FixMe } from '@/types';
 import { CreateUserType, UserType } from '@/types/user';
 
-/**
- * GET request hooks
- *
- * The following hooks handle fetching user data from the API:
- * - useSelf: Fetches the current authenticated user
- * - useLinkedUsers: Fetches users linked to the current user
- * - useUserWithUID: Fetches a specific user by UID
- * - useAllUsers: Fetches all users
- * - useAllDoctors: Fetches all doctors
- */
-
 export const useSelf = (): UseQueryResult<UserType> =>
   useQuery({
     queryKey: ['self'],
@@ -55,6 +44,13 @@ export const useLinkedUsers = (): UseQueryResult<UserType[]> =>
       throw new Error(res.message);
     },
   });
+
+/**
+ * React Query hook to fetch a user by their unique ID.
+ *
+ * @param {number | undefined} uid - The unique identifier of the user.
+ *   If `undefined`, the query will be disabled.
+ */
 
 export const useUserWithUID = (uid: number | undefined): UseQueryResult<UserType> =>
   useQuery({
@@ -80,13 +76,6 @@ export const useAllUsers = (): UseQueryResult<UserType[]> =>
       throw new Error(res.message);
     },
   });
-
-/**
- * POST request hooks
- *
- * The following hooks handle creating user data from the API:
- * - useCreateUser: Creates a new user
- */
 
 export const useCreateUser = (): UseMutationResult<
   ApiResponse<UserType>,
@@ -144,7 +133,6 @@ export const useUpdateUser = (): UseMutationResult<ApiResponse<UserType>, Error,
   });
 };
 
-// DELETE
 export const useDeleteUser = (): UseMutationResult<ApiResponse<UserType>, Error, number> => {
   const queryClient = useQueryClient();
   return useMutation({
