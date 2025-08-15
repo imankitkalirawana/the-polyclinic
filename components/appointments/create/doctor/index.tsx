@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Avatar, Button, Card, cn, Input, ScrollShadow } from '@heroui/react';
+import { Avatar, Button, Card, cn, Input, Kbd, ScrollShadow } from '@heroui/react';
 import { useFormikContext } from 'formik';
 
 import { CreateAppointmentFormValues } from '../types';
@@ -10,13 +10,14 @@ import { CreateAppointmentDoctorDetails } from './details';
 import Skeleton from '@/components/ui/skeleton';
 import { isSearchMatch } from '@/lib/utils';
 import { useAllDoctors } from '@/services/doctor';
+import { useKeyPress } from '@/hooks/useKeyPress';
 
 export default function DoctorSelection({ className }: { className?: string }) {
   const { data: doctors, isLoading: isDoctorsLoading } = useAllDoctors();
-  const formik = useFormikContext<CreateAppointmentFormValues>();
+  const { values, setFieldValue } = useFormikContext<CreateAppointmentFormValues>();
   const [search, setSearch] = useState('');
 
-  const { appointment } = formik.values;
+  const { appointment } = values;
 
   const filteredDoctors = useMemo(() => {
     return doctors?.filter(
@@ -38,6 +39,8 @@ export default function DoctorSelection({ className }: { className?: string }) {
     return appointment.type === 'follow-up';
   }, [appointment.type]);
 
+  useKeyPress(['Enter'], () => setFieldValue('meta.currentStep', 3), { capture: true });
+
   return (
     <CreateAppointmentContentContainer
       header={
@@ -49,23 +52,24 @@ export default function DoctorSelection({ className }: { className?: string }) {
       footer={
         <>
           <Button
+            isDisabled={!appointment.doctor}
             variant="shadow"
             color="primary"
             radius="full"
-            onPress={() => formik.setFieldValue('meta.currentStep', 3)}
-            isDisabled={!appointment.doctor}
+            onPress={() => setFieldValue('meta.currentStep', 3)}
+            endContent={<Kbd keys={['enter']} className="bg-transparent" />}
           >
             Next
           </Button>
           <Button
+            isDisabled={isDisabled}
             variant="light"
             color="primary"
             radius="full"
             onPress={() => {
-              formik.setFieldValue('appointment.doctor', undefined);
-              formik.setFieldValue('meta.currentStep', 3);
+              setFieldValue('appointment.doctor', undefined);
+              setFieldValue('meta.currentStep', 3);
             }}
-            isDisabled={isDisabled}
           >
             Skip
           </Button>
@@ -107,7 +111,7 @@ export default function DoctorSelection({ className }: { className?: string }) {
                     )}
                     onPress={() => {
                       if (!isDisabled) {
-                        formik.setFieldValue('appointment.doctor', doctor.uid);
+                        setFieldValue('appointment.doctor', doctor.uid);
                       }
                     }}
                   >

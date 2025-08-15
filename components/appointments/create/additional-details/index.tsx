@@ -1,14 +1,22 @@
-import { Button, Input, Select, SelectItem, Textarea } from '@heroui/react';
+import { Button, Input, Kbd, Select, SelectItem, Textarea } from '@heroui/react';
 import { useFormikContext } from 'formik';
 
 import { CreateAppointmentFormValues } from '../types';
 import CreateAppointmentContentContainer from '../ui/content-container';
 import CreateAppointmentContentHeader from '../ui/header';
+import { useKeyPress } from '@/hooks/useKeyPress';
 
 export default function CreateAppointmentAdditionalDetails() {
-  const formik = useFormikContext<CreateAppointmentFormValues>();
-  const { values, handleChange } = formik;
+  const { values, handleChange, setFieldValue } = useFormikContext<CreateAppointmentFormValues>();
   const { appointment } = values;
+
+  useKeyPress(
+    ['Enter'],
+    () => {
+      setFieldValue('meta.showConfirmation', true);
+    },
+    { capture: true }
+  );
 
   return (
     <CreateAppointmentContentContainer
@@ -23,7 +31,8 @@ export default function CreateAppointmentAdditionalDetails() {
           variant="shadow"
           color="primary"
           radius="full"
-          onPress={() => formik.setFieldValue('meta.showConfirmation', true)}
+          onPress={() => setFieldValue('meta.showConfirmation', true)}
+          endContent={<Kbd keys={['enter']} className="bg-transparent" />}
         >
           Confirm Appointment
         </Button>

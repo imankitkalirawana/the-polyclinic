@@ -1,6 +1,6 @@
 'use client';
 import { useMemo } from 'react';
-import { Button, RadioGroup } from '@heroui/react';
+import { Button, Kbd, RadioGroup } from '@heroui/react';
 import { useFormikContext } from 'formik';
 
 import { CreateAppointmentFormValues } from '../types';
@@ -11,6 +11,7 @@ import CreateAppointmentFollowUp from './follow-up';
 import CustomRadio from '@/components/ui/custom-radio';
 import { cn } from '@/lib/utils';
 import { type AppointmentType, appointmentTypes } from '@/types/appointment';
+import { useKeyPress } from '@/hooks/useKeyPress';
 
 export default function AppointmentType() {
   const { values, setFieldValue, isSubmitting } = useFormikContext<CreateAppointmentFormValues>();
@@ -23,6 +24,19 @@ export default function AppointmentType() {
     );
   }, [appointment.type, appointment.previousAppointment]);
 
+  useKeyPress(
+    ['Enter'],
+    () => {
+      if (appointment.type === 'follow-up' && appointment.previousAppointment) {
+        setFieldValue('meta.currentStep', 3);
+      } else if (appointment.type === 'consultation' || appointment.type === 'emergency') {
+        setFieldValue('meta.currentStep', 2);
+      }
+    },
+    {
+      capture: true,
+    }
+  );
   return (
     <CreateAppointmentContentContainer
       classNames={{
@@ -42,6 +56,7 @@ export default function AppointmentType() {
           radius="lg"
           className="btn btn-primary"
           isDisabled={isSubmitting || isNextButtonDisabled}
+          endContent={<Kbd keys={['enter']} className="bg-transparent" />}
           onPress={() => {
             if (appointment.type === 'follow-up') {
               setFieldValue('meta.currentStep', 3);

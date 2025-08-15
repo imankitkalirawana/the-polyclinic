@@ -1,5 +1,5 @@
 'use client';
-import { Button, Chip } from '@heroui/react';
+import { Button, Chip, Kbd } from '@heroui/react';
 import { format, isPast } from 'date-fns';
 import { useFormikContext } from 'formik';
 
@@ -10,11 +10,22 @@ import CreateAppointmentTimeSelection from './time';
 
 import { SlotsPreview } from '@/components/dashboard/doctors/doctor/slots/slots-preview';
 import { useSlotsByUID } from '@/services/slots';
+import { useKeyPress } from '@/hooks/useKeyPress';
 
 export default function DateSelectionContainer() {
-  const formik = useFormikContext<CreateAppointmentFormValues>();
-  const { values, setFieldValue } = formik;
+  const { values, setFieldValue } = useFormikContext<CreateAppointmentFormValues>();
+  const { appointment } = values;
   const { data: slot } = useSlotsByUID(values.appointment.doctor ?? 0);
+
+  useKeyPress(
+    ['Enter'],
+    () => {
+      if (appointment.date && !isPast(appointment.date)) {
+        setFieldValue('meta.currentStep', 4);
+      }
+    },
+    { capture: true }
+  );
 
   return (
     <CreateAppointmentContentContainer
@@ -31,13 +42,14 @@ export default function DateSelectionContainer() {
             variant="shadow"
             color="primary"
             radius="full"
-            onPress={() => formik.setFieldValue('meta.currentStep', 4)}
-            isDisabled={isPast(values.appointment.date)}
+            onPress={() => setFieldValue('meta.currentStep', 4)}
+            isDisabled={isPast(appointment.date)}
+            endContent={<Kbd keys={['enter']} className="bg-transparent" />}
           >
             Next
           </Button>
           <div>
-            {isPast(values.appointment.date) ? (
+            {isPast(appointment.date) ? (
               <Chip color="danger" variant="dot">
                 Slot not available
               </Chip>
@@ -50,10 +62,10 @@ export default function DateSelectionContainer() {
         </>
       }
     >
-      {values.appointment.doctor ? (
+      {appointment.doctor ? (
         slot ? (
           <SlotsPreview
-            selected={values.appointment.date}
+            selected={appointment.date}
             config={slot}
             onSlotSelect={(date) => {
               setFieldValue('appointment.date', date);
@@ -66,7 +78,7 @@ export default function DateSelectionContainer() {
         )
       ) : (
         <CreateAppointmentTimeSelection
-          date={values.appointment.date}
+          date={appointment.date}
           setDate={(date) => setFieldValue('appointment.date', date)}
         />
       )}

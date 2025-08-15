@@ -117,6 +117,7 @@ export default function AppointmentBookingConfirmation() {
             fullWidth
             variant="bordered"
             startContent={<Icon icon="solar:pen-line-duotone" />}
+            onPress={() => setFieldValue('meta.showConfirmation', false)}
           >
             Edit
           </Button>

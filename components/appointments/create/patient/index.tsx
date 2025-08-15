@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import { Avatar, Button, Card, Input, ScrollShadow } from '@heroui/react';
+
+import { Avatar, Button, Card, Input, Kbd, ScrollShadow } from '@heroui/react';
 import { cn } from '@heroui/react';
 import { useFormikContext } from 'formik';
 
@@ -13,6 +14,7 @@ import { CreateAppointmentPatientDetails } from './details';
 import Skeleton from '@/components/ui/skeleton';
 import { isSearchMatch } from '@/lib/utils';
 import { useLinkedUsers } from '@/services/user';
+import { useKeyPress } from '@/hooks/useKeyPress';
 
 function PatientsSkeleton() {
   return (
@@ -54,6 +56,18 @@ const PatientSelection = ({ className }: { className?: string }) => {
     return patients?.find((p) => p.uid === appointment.patient);
   }, [patients, appointment.patient]);
 
+  useKeyPress(
+    ['Enter'],
+    () => {
+      if (appointment.patient) {
+        formik.setFieldValue('meta.currentStep', 1);
+      }
+    },
+    {
+      capture: true,
+    }
+  );
+
   return (
     <CreateAppointmentContentContainer
       header={
@@ -69,6 +83,7 @@ const PatientSelection = ({ className }: { className?: string }) => {
           radius="full"
           onPress={() => formik.setFieldValue('meta.currentStep', 1)}
           isDisabled={!appointment.patient}
+          endContent={<Kbd keys={['enter']} className="bg-transparent" />}
         >
           Next
         </Button>

@@ -16,6 +16,7 @@ import { CreateAppointmentFormValues } from './types';
 
 import { useCreateAppointment } from '@/services/appointment';
 import { cn } from '@/lib/utils';
+import { useKeyPress } from '@/hooks/useKeyPress';
 
 const contentMap: Record<number, React.ReactNode> = {
   0: <PatientSelection />,
@@ -86,7 +87,13 @@ export default function CreateAppointment({ date, isModal }: { date?: Date; isMo
 }
 
 function MainContent() {
-  const { values } = useFormikContext<CreateAppointmentFormValues>();
+  const { values, setFieldValue } = useFormikContext<CreateAppointmentFormValues>();
+
+  useKeyPress(['Shift', 'Enter'], () => {
+    if (values.meta.currentStep > 0) {
+      setFieldValue('meta.currentStep', values.meta.currentStep - 1);
+    }
+  });
 
   return (
     <>
