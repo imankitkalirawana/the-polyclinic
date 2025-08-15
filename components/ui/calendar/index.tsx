@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { Modal, ModalBody, ModalContent } from '@heroui/react';
 import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs';
 
 import AppointmentDrawer from './ui/appointment-drawer';
@@ -12,7 +13,7 @@ import { YearView } from './views/year';
 import { CalendarHeader } from './header';
 import { views } from './types';
 
-import { CreateAppointment } from '@/components/appointments/create-legacy';
+import CreateAppointment from '@/components/appointments/create';
 import { AppointmentType } from '@/types/appointment';
 
 interface CalendarProps {
@@ -94,12 +95,19 @@ export function Calendar({ appointments }: CalendarProps) {
         <div className="h-[calc(100vh_-_120px)] flex-1">{renderView()}</div>
       </div>
       <AppointmentDrawer />
-      <CreateAppointment
-        open={showDialog}
+      <Modal
+        isOpen={showDialog}
+        size="full"
         onOpenChange={setShowDialog}
-        defaultSelectedDate={currentDate}
-        onClose={() => setShowDialog(false)}
-      />
+        backdrop="blur"
+        scrollBehavior="inside"
+      >
+        <ModalContent>
+          <ModalBody>
+            <CreateAppointment isModal date={currentDate} />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </>
   );
 }

@@ -8,8 +8,10 @@ import { useRouter } from 'nextjs-toploader/app';
 import { HeroUIProvider, Spinner, ToastProvider } from '@heroui/react';
 import { Toaster } from 'sonner';
 import { ErrorBoundary } from '@sentry/nextjs';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
+import { getQueryClient } from './get-query-client';
 
 import { ModalProvider } from '@/components/ui/global-modal';
 
@@ -27,21 +29,12 @@ export function Providers({
   session: Session | null;
 }) {
   const router = useRouter();
-
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: 60 * 1000,
-        refetchOnWindowFocus: false,
-        refetchOnMount: true,
-      },
-    },
-  });
+  const queryClient = getQueryClient();
 
   return (
-    <ErrorBoundary fallback={<div>Error</div>}>
-      <HeroUIProvider navigate={router.push}>
-        <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <ErrorBoundary fallback={<div>Error</div>}>
+        <HeroUIProvider navigate={router.push}>
           <ToastProvider
             toastProps={{
               variant: 'flat',
@@ -89,8 +82,8 @@ export function Providers({
             <ModalProvider>{children}</ModalProvider>
             <ReactQueryDevtools initialIsOpen={false} />
           </SessionProvider>
-        </QueryClientProvider>
-      </HeroUIProvider>
-    </ErrorBoundary>
+        </HeroUIProvider>
+      </ErrorBoundary>
+    </QueryClientProvider>
   );
 }

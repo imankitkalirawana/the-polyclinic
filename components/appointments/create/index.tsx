@@ -15,6 +15,7 @@ import { CreateAppointmentSidebar } from './sidebar';
 import { CreateAppointmentFormValues } from './types';
 
 import { useCreateAppointment } from '@/services/appointment';
+import { cn } from '@/lib/utils';
 
 const contentMap: Record<number, React.ReactNode> = {
   0: <PatientSelection />,
@@ -24,13 +25,13 @@ const contentMap: Record<number, React.ReactNode> = {
   4: <CreateAppointmentAdditionalDetails />,
 };
 
-export default function CreateAppointment() {
+export default function CreateAppointment({ date, isModal }: { date?: Date; isModal?: boolean }) {
   const createAppointment = useCreateAppointment();
 
   const formikConfig: FormikConfig<CreateAppointmentFormValues> = {
     initialValues: {
       appointment: {
-        date: new Date(new Date().setHours(9, 0, 0, 0)),
+        date: date ?? new Date(new Date().setHours(9, 0, 0, 0)),
         type: 'consultation',
         additionalInfo: {
           notes: 'sdfsd',
@@ -71,7 +72,7 @@ export default function CreateAppointment() {
     <Formik {...formikConfig}>
       {({ values, setFieldValue }) => {
         return (
-          <div className="flex h-[calc(100vh-3.75rem)]">
+          <div className={cn('flex h-[calc(100vh-3.75rem)]', isModal && 'h-screen')}>
             <CreateAppointmentSidebar
               currentStep={values.meta.currentStep}
               setCurrentStep={(step) => setFieldValue('meta.currentStep', step)}
