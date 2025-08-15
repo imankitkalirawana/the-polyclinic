@@ -35,15 +35,14 @@ export default function CreateAppointmentAdditionalDetails() {
           value={appointment.additionalInfo?.symptoms}
           placeholder='e.g. "Headache, Fever, etc."'
           className="col-span-2 sm:col-span-1"
-          name="additionalInfo.symptoms"
+          name="appointment.additionalInfo.symptoms"
           onChange={handleChange}
         />
         <Select
           label="Appointment Type"
-          // onChange={(e) => setData({ ...data, symptoms: e.target.value })}
           selectedKeys={[appointment.additionalInfo?.type]}
+          name="appointment.additionalInfo.type"
           onChange={handleChange}
-          name="additionalInfo.type"
           className="col-span-2 sm:col-span-1"
           disabledKeys={['online']}
         >
@@ -55,7 +54,7 @@ export default function CreateAppointmentAdditionalDetails() {
           label="Additional Notes"
           placeholder="Any additional notes for the doctor"
           className="col-span-2"
-          name="additionalInfo.notes"
+          name="appointment.additionalInfo.notes"
           value={appointment.additionalInfo?.notes}
           onChange={handleChange}
         />

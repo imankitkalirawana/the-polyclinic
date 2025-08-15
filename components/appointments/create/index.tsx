@@ -1,9 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useRouter } from 'nextjs-toploader/app';
-import { addToast, Button } from '@heroui/react';
-import { format } from 'date-fns';
+import { addToast } from '@heroui/react';
 import { Formik, FormikConfig, useFormikContext } from 'formik';
 
 import CreateAppointmentAdditionalDetails from './additional-details';
@@ -27,7 +25,6 @@ const contentMap: Record<number, React.ReactNode> = {
 };
 
 export default function CreateAppointment() {
-  const router = useRouter();
   const createAppointment = useCreateAppointment();
 
   const formikConfig: FormikConfig<CreateAppointmentFormValues> = {
@@ -36,7 +33,7 @@ export default function CreateAppointment() {
         date: new Date(new Date().setHours(9, 0, 0, 0)),
         type: 'consultation',
         additionalInfo: {
-          notes: '',
+          notes: 'sdfsd',
           type: 'online',
           symptoms: '',
         },
@@ -54,23 +51,6 @@ export default function CreateAppointment() {
     onSubmit: async ({ appointment }, { setFieldValue }) => {
       try {
         const { data } = await createAppointment.mutateAsync(appointment);
-        addToast({
-          title: 'Appointment created',
-          description: `Your appointment is scheduled for ${format(new Date(appointment.date), 'PPp')}`,
-          color: 'success',
-          endContent: (
-            <Button
-              size="sm"
-              variant="flat"
-              color="primary"
-              onPress={() => {
-                router.push(`/appointments/${data.aid}`);
-              }}
-            >
-              View
-            </Button>
-          ),
-        });
         setFieldValue('appointment.aid', data.aid);
         setFieldValue('meta.showConfirmation', false);
         setFieldValue('meta.showReceipt', true);
