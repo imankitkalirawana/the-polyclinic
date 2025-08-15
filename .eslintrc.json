@@ -11,8 +11,8 @@
     "unused-imports", // for unused imports
     "@typescript-eslint", // for typescript
     "import",
-    "prettier", // for prettier,
-    "simple-import-sort" // for import sorting
+    "prettier" // for prettier,
+    // "simple-import-sort" // for import sorting
   ],
   "parser": "@typescript-eslint/parser", // for typescript
   "parserOptions": {
@@ -45,27 +45,27 @@
       }
     ],
     "@typescript-eslint/no-explicit-any": "error", // This rule disallows the use of the `any` type.
-    "no-console": ["warn", { "allow": ["warn", "error"] }],
-    "simple-import-sort/imports": [
-      "warn",
-      {
-        "groups": [
-          ["^react$", "^next", "^@heroui", "^components", "^[a-z]", "^@\\w+"],
-          ["^types", "^store", "^services", "^util", "^lib", "^public"],
-          [
-            "^\\.\\.(?!/?$)",
-            "^\\.\\./?$",
-            "^\\./(?=.*/)(?!/?$)",
-            "^\\.(?!/?$)",
-            "^\\./?$",
-            "^\\.\\./?styles$",
-            "^\\.\\./?styles$",
-            "^\\./?styles$"
-          ],
-          // side effect imports like 'import "something"'
-          ["^\\u0000"]
-        ]
-      }
-    ]
+    "no-console": ["warn", { "allow": ["warn", "error"] }]
+    // "simple-import-sort/imports": [
+    //   "warn",
+    //   {
+    //     "groups": [
+    //       ["^react$", "^next", "^@heroui", "^components", "^[a-z]", "^@\\w+"],
+    //       ["^types", "^store", "^services", "^util", "^lib", "^public"],
+    //       [
+    //         "^\\.\\.(?!/?$)",
+    //         "^\\.\\./?$",
+    //         "^\\./(?=.*/)(?!/?$)",
+    //         "^\\.(?!/?$)",
+    //         "^\\./?$",
+    //         "^\\.\\./?styles$",
+    //         "^\\.\\./?styles$",
+    //         "^\\./?styles$"
+    //       ],
+    //       // side effect imports like 'import "something"'
+    //       ["^\\u0000"]
+    //     ]
+    //   }
+    // ]
   }
 }

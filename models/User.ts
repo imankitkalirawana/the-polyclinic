@@ -1,6 +1,5 @@
 import mongoose, { Model } from 'mongoose';
 import mongooseSequence from 'mongoose-sequence';
-
 import { auth } from '@/auth';
 import { UserType } from '@/types/user';
 
