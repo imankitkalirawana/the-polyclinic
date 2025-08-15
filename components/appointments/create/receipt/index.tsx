@@ -23,7 +23,8 @@ import { useDoctorWithUID } from '@/services/doctor';
 import { useUserWithUID } from '@/services/user';
 
 export default function AppointmentBookingConfirmation() {
-  const { values, setFieldValue } = useFormikContext<CreateAppointmentFormValues>();
+  const { values, setFieldValue, handleSubmit, isSubmitting } =
+    useFormikContext<CreateAppointmentFormValues>();
   const { appointment } = values;
 
   const { data: patient, isLoading: isPatientLoading } = useUserWithUID(appointment.patient);
@@ -87,19 +88,29 @@ export default function AppointmentBookingConfirmation() {
             )}
             <div className="flex w-full flex-col text-small">
               <p className="text-tiny text-default-500">Where</p>
-              <Link className="flex w-fit items-center gap-1 text-foreground" href="#" size="sm">
-                <p className="font-medium">Zoom</p>
+              <Link className="flex w-fit items-center gap-1 text-foreground" size="sm">
+                <p className="font-medium">Google Meet</p>
                 <Icon className="text-default-500" icon="mdi:open-in-new" width={14} />
               </Link>
             </div>
-            <div className="flex w-full flex-col text-small">
-              <p className="text-tiny text-default-500">Additional notes</p>
-              <span className="flex items-center gap-1">
-                <p className="font-medium">
-                  Let&apos;s talk about the latest updates of the project
-                </p>
-              </span>
-            </div>
+            {!!appointment.additionalInfo?.symptoms && (
+              <div className="flex w-full flex-col text-small">
+                <p className="text-tiny text-default-500">Symptoms</p>
+                <p className="font-medium">{appointment.additionalInfo?.symptoms}</p>
+              </div>
+            )}
+            {!!appointment.additionalInfo?.notes && (
+              <div className="flex w-full flex-col text-small">
+                <p className="text-tiny text-default-500">Additional notes</p>
+                <p className="font-medium">{appointment.additionalInfo?.notes}</p>
+              </div>
+            )}
+            {!!appointment.type && (
+              <div className="flex w-full flex-col text-small">
+                <p className="text-tiny text-default-500">Appointment Type</p>
+                <p className="font-medium capitalize">{appointment.type}</p>
+              </div>
+            )}
           </div>
           <Divider className="w-full bg-default-100" />
           <p className="text-center text-small text-default-500">
@@ -139,7 +150,13 @@ export default function AppointmentBookingConfirmation() {
           >
             Edit
           </Button>
-          <Button fullWidth variant="shadow" color="primary">
+          <Button
+            fullWidth
+            variant="shadow"
+            color="primary"
+            onPress={() => handleSubmit()}
+            isLoading={isSubmitting}
+          >
             Book Now
           </Button>
         </ModalFooter>

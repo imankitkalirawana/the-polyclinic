@@ -1,6 +1,9 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'nextjs-toploader/app';
+import { addToast, Button } from '@heroui/react';
+import { format } from 'date-fns';
 import { Formik, FormikConfig, useFormikContext } from 'formik';
 
 import CreateAppointmentAdditionalDetails from './additional-details';
@@ -12,6 +15,8 @@ import AppointmentBookingConfirmation from './receipt';
 import { CreateAppointmentSidebar } from './sidebar';
 import { CreateAppointmentFormValues } from './types';
 
+import { useCreateAppointment } from '@/services/appointment';
+
 const contentMap: Record<number, React.ReactNode> = {
   0: <PatientSelection />,
   1: <AppointmentType />,
@@ -21,6 +26,9 @@ const contentMap: Record<number, React.ReactNode> = {
 };
 
 export default function CreateAppointment() {
+  const router = useRouter();
+  const createAppointment = useCreateAppointment();
+
   const formikConfig: FormikConfig<CreateAppointmentFormValues> = {
     initialValues: {
       appointment: {
@@ -41,8 +49,37 @@ export default function CreateAppointment() {
         showConfirmation: false,
       },
     },
-    onSubmit: async (values) => {
-      console.log(values);
+    onSubmit: async ({ appointment }, { resetForm }) => {
+      try {
+        const { data } = await createAppointment.mutateAsync(appointment);
+        addToast({
+          title: 'Appointment created',
+          description: `Your appointment is scheduled for ${format(new Date(appointment.date), 'PPp')}`,
+          color: 'success',
+          endContent: (
+            <Button
+              size="sm"
+              variant="flat"
+              color="primary"
+              onPress={() => {
+                router.push(`/appointments/${data.aid}`);
+              }}
+            >
+              View
+            </Button>
+          ),
+        });
+        resetForm();
+      } catch (error) {
+        if (error instanceof Error) {
+          addToast({
+            title: 'Failed to create appointment',
+            description: `${error.message}`,
+            color: 'danger',
+          });
+        }
+        console.error(error);
+      }
     },
   };
 
