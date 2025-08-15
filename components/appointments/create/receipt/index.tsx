@@ -2,6 +2,7 @@
 
 import React from 'react';
 import {
+  addToast,
   Button,
   Chip,
   Divider,
@@ -22,9 +23,8 @@ import Skeleton from '@/components/ui/skeleton';
 import { useDoctorWithUID } from '@/services/doctor';
 import { useUserWithUID } from '@/services/user';
 
-export default function AppointmentBookingConfirmation() {
-  const { values, setFieldValue, handleSubmit, isSubmitting } =
-    useFormikContext<CreateAppointmentFormValues>();
+export default function AppointmentBookingReceipt() {
+  const { values, resetForm } = useFormikContext<CreateAppointmentFormValues>();
   const { appointment } = values;
 
   const { data: patient, isLoading: isPatientLoading } = useUserWithUID(appointment.patient);
@@ -35,18 +35,20 @@ export default function AppointmentBookingConfirmation() {
       isOpen
       backdrop="blur"
       scrollBehavior="inside"
-      onOpenChange={() => setFieldValue('meta.showConfirmation', false)}
+      onOpenChange={() => {
+        resetForm();
+      }}
     >
       <ModalContent>
         <ModalHeader className="flex-col items-center border-b border-divider">
           <Icon
-            className="mb-3 text-warning-500"
-            icon="solar:info-circle-bold-duotone"
+            className="mb-3 text-success-500"
+            icon="solar:check-circle-bold-duotone"
             width={56}
           />
-          <p className="mb-2 text-base font-medium">Schedule this Appointment?</p>
+          <p className="mb-2 text-base font-medium">This appointment is scheduled</p>
           <p className="text-center text-small font-normal text-default-500">
-            Please review the details below before confirming your appointment.
+            We sent a confirmation email to the patient and the doctor.
           </p>
         </ModalHeader>
         <ModalBody>
@@ -115,11 +117,21 @@ export default function AppointmentBookingConfirmation() {
           <Divider className="w-full bg-default-100" />
           <p className="text-center text-small text-default-500">
             Need to make a change?{' '}
-            <Link className="text-small text-default-800" href="#" size="sm" underline="always">
+            <Link
+              className="text-small text-default-800"
+              href={`/appointments/${appointment.aid}?action=reschedule`}
+              size="sm"
+              underline="always"
+            >
               Reschedule
             </Link>{' '}
             or{' '}
-            <Link className="text-small text-default-800" href="#" size="sm" underline="always">
+            <Link
+              className="text-small text-default-800"
+              href={`/appointments/${appointment.aid}?action=cancel`}
+              size="sm"
+              underline="always"
+            >
               Cancel
             </Link>
           </p>
@@ -146,18 +158,25 @@ export default function AppointmentBookingConfirmation() {
           <Button
             fullWidth
             variant="bordered"
-            startContent={<Icon icon="solar:pen-line-duotone" />}
+            startContent={<Icon icon="solar:cloud-download-bold-duotone" width={18} />}
+            onPress={() => {
+              addToast({
+                title: 'Downloading receipt',
+                description: 'Please wait while we download the receipt',
+                color: 'success',
+              });
+            }}
           >
-            Edit
+            Download Receipt
           </Button>
           <Button
             fullWidth
             variant="shadow"
             color="primary"
-            onPress={() => handleSubmit()}
-            isLoading={isSubmitting}
+            as={Link}
+            href={`/appointments/${appointment.aid}`}
           >
-            Book Now
+            View Appointment
           </Button>
         </ModalFooter>
       </ModalContent>

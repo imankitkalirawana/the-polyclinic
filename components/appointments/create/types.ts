@@ -1,6 +1,7 @@
 import { AppointmentType } from '@/types/appointment';
 
 export type CreateAppointmentType = {
+  aid?: number;
   date: Date;
   type: AppointmentType['type'];
   additionalInfo: AppointmentType['additionalInfo'];
@@ -13,6 +14,7 @@ export type CreateAppointmentType = {
 type CreateAppointmentMeta = {
   currentStep: number;
   showConfirmation: boolean;
+  showReceipt: boolean;
 };
 
 export type CreateAppointmentFormValues = {

@@ -8,10 +8,11 @@ import { Formik, FormikConfig, useFormikContext } from 'formik';
 
 import CreateAppointmentAdditionalDetails from './additional-details';
 import AppointmentType from './appointment-type';
+import AppointmentBookingConfirmation from './confirmation';
 import DateSelectionContainer from './date';
 import DoctorSelection from './doctor';
 import PatientSelection from './patient';
-import AppointmentBookingConfirmation from './receipt';
+import AppointmentBookingReceipt from './receipt';
 import { CreateAppointmentSidebar } from './sidebar';
 import { CreateAppointmentFormValues } from './types';
 
@@ -47,9 +48,10 @@ export default function CreateAppointment() {
       meta: {
         currentStep: 0,
         showConfirmation: false,
+        showReceipt: false,
       },
     },
-    onSubmit: async ({ appointment }, { resetForm }) => {
+    onSubmit: async ({ appointment }, { setFieldValue }) => {
       try {
         const { data } = await createAppointment.mutateAsync(appointment);
         addToast({
@@ -69,7 +71,9 @@ export default function CreateAppointment() {
             </Button>
           ),
         });
-        resetForm();
+        setFieldValue('appointment.aid', data.aid);
+        setFieldValue('meta.showConfirmation', false);
+        setFieldValue('meta.showReceipt', true);
       } catch (error) {
         if (error instanceof Error) {
           addToast({
@@ -107,6 +111,7 @@ function MainContent() {
     <>
       {contentMap[values.meta.currentStep]}
       {values.meta.showConfirmation && <AppointmentBookingConfirmation />}
+      {values.meta.showReceipt && <AppointmentBookingReceipt />}
     </>
   );
 }
