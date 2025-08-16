@@ -92,7 +92,7 @@ export const CreateAppointmentDoctorDetails = ({ doctor }: { doctor?: DoctorType
         {/* Contact Information */}
         <div>
           <h5 className="text-medium font-medium text-default-foreground">Contact Information</h5>
-          <div className="grid gap-3">
+          <div>
             <CellRenderer
               icon="solar:letter-bold-duotone"
               label="Email Address"
