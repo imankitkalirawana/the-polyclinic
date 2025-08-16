@@ -1,6 +1,7 @@
 'use client';
+
 import { Button, Chip, Kbd } from '@heroui/react';
-import { format, isPast } from 'date-fns';
+import { format, isPast, isValid } from 'date-fns';
 import { useFormikContext } from 'formik';
 
 import { CreateAppointmentFormValues } from '../types';
@@ -12,20 +13,109 @@ import { SlotsPreview } from '@/components/dashboard/doctors/doctor/slots/slots-
 import { useSlotsByUID } from '@/services/slots';
 import { useKeyPress } from '@/hooks/useKeyPress';
 
+function AvailabilityChip({ date }: { date: Date | undefined }) {
+  if (!date || !isValid(date)) {
+    return (
+      <Chip color="warning" variant="dot">
+        No date selected
+      </Chip>
+    );
+  }
+
+  if (isPast(date)) {
+    return (
+      <Chip color="danger" variant="dot">
+        Slot not available
+      </Chip>
+    );
+  }
+
+  return (
+    <Chip color="success" variant="dot">
+      Available
+    </Chip>
+  );
+}
+
+function DateDisplay({ date }: { date: Date | undefined }) {
+  if (!date || !isValid(date)) {
+    return <div className="text-sm text-default-500">No date selected</div>;
+  }
+
+  return <div className="text-sm font-medium">{format(date, 'PPPp')}</div>;
+}
+
+function EmptySlotState({ message }: { message: string }) {
+  return (
+    <div className="flex h-full w-full items-center justify-center">
+      <p className="text-sm text-default-500">{message}</p>
+    </div>
+  );
+}
+
+function SlotContent({
+  doctorId,
+  selectedDate,
+  onDateSelect,
+}: {
+  doctorId: number;
+  selectedDate: Date | undefined;
+  onDateSelect: (date: Date) => void;
+}) {
+  const { data: slot, isLoading: isSlotsLoading } = useSlotsByUID(doctorId);
+
+  if (isSlotsLoading) {
+    return <EmptySlotState message="Loading available slots..." />;
+  }
+
+  if (!slot) {
+    return <EmptySlotState message="No slots available for this doctor" />;
+  }
+
+  return <SlotsPreview selected={selectedDate} config={slot} onSlotSelect={onDateSelect} />;
+}
+
 export default function DateSelectionContainer() {
   const { values, setFieldValue } = useFormikContext<CreateAppointmentFormValues>();
   const { appointment } = values;
-  const { data: slot } = useSlotsByUID(values.appointment.doctor ?? 0);
 
+  const isDateValid = appointment.date && isValid(appointment.date);
+  const canProceed = isDateValid && !isPast(appointment.date);
+
+  const handleNext = () => {
+    setFieldValue('meta.currentStep', 4);
+  };
+
+  const handleDateSelect = (date: Date) => {
+    setFieldValue('appointment.date', date);
+  };
+
+  // Handle Enter key to proceed
   useKeyPress(
     ['Enter'],
     () => {
-      if (appointment.date && !isPast(appointment.date)) {
-        setFieldValue('meta.currentStep', 4);
+      if (canProceed) {
+        handleNext();
       }
     },
     { capture: true }
   );
+
+  const renderContent = () => {
+    // If doctor is selected, show doctor's available slots
+    if (appointment.doctor) {
+      return (
+        <SlotContent
+          doctorId={appointment.doctor}
+          selectedDate={appointment.date}
+          onDateSelect={handleDateSelect}
+        />
+      );
+    }
+
+    // If no doctor selected, show general time selection
+    return <CreateAppointmentTimeSelection date={appointment.date} setDate={handleDateSelect} />;
+  };
 
   return (
     <CreateAppointmentContentContainer
@@ -33,7 +123,7 @@ export default function DateSelectionContainer() {
         <CreateAppointmentContentHeader
           title="Date Selection"
           description="Select the date and time for the appointment"
-          endContent={<div>{format(values.appointment.date, 'PPPp')}</div>}
+          endContent={<DateDisplay date={appointment.date} />}
         />
       }
       footer={
@@ -42,46 +132,17 @@ export default function DateSelectionContainer() {
             variant="shadow"
             color="primary"
             radius="full"
-            onPress={() => setFieldValue('meta.currentStep', 4)}
-            isDisabled={isPast(appointment.date)}
+            onPress={handleNext}
+            isDisabled={!canProceed}
             endContent={<Kbd keys={['enter']} className="bg-transparent" />}
           >
             Next
           </Button>
-          <div>
-            {isPast(appointment.date) ? (
-              <Chip color="danger" variant="dot">
-                Slot not available
-              </Chip>
-            ) : (
-              <Chip color="success" variant="dot">
-                Available
-              </Chip>
-            )}
-          </div>
+          <AvailabilityChip date={appointment.date} />
         </>
       }
     >
-      {appointment.doctor ? (
-        slot ? (
-          <SlotsPreview
-            selected={appointment.date}
-            config={slot}
-            onSlotSelect={(date) => {
-              setFieldValue('appointment.date', date);
-            }}
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center">
-            <p className="text-sm text-default-500">No slots available</p>
-          </div>
-        )
-      ) : (
-        <CreateAppointmentTimeSelection
-          date={appointment.date}
-          setDate={(date) => setFieldValue('appointment.date', date)}
-        />
-      )}
+      {renderContent()}
     </CreateAppointmentContentContainer>
   );
 }

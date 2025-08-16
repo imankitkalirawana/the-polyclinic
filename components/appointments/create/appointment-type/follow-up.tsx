@@ -1,5 +1,5 @@
 import { useMemo, useState, useCallback } from 'react';
-import { Input, RadioGroup, ScrollShadow } from '@heroui/react';
+import { RadioGroup, ScrollShadow } from '@heroui/react';
 import { useFormikContext } from 'formik';
 
 import { CreateAppointmentFormValues } from '../types';
@@ -9,22 +9,30 @@ import CustomRadio from '@/components/ui/custom-radio';
 import Skeleton from '@/components/ui/skeleton';
 import { usePreviousAppointments } from '@/services/patient';
 import { AppointmentType } from '@/types/appointment';
+import { useDebounce } from '@/hooks/useDebounce';
+import Fuse from 'fuse.js';
+import { SearchInput } from '../ui';
 
 function PreviousAppointments({ appointments }: { appointments: AppointmentType[] }) {
   const { values, setFieldValue } = useFormikContext<CreateAppointmentFormValues>();
   const { appointment } = values;
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 500);
+
+  const fuse = useMemo(() => {
+    if (!appointments) return null;
+    return new Fuse(appointments, {
+      keys: ['patient.name', 'aid', 'doctor.name'],
+      threshold: 0.3,
+    });
+  }, [appointments]);
 
   const filteredAppointments = useMemo(() => {
-    if (!search) return appointments;
+    if (!appointments) return [];
+    if (!debouncedSearch.trim() || !fuse) return appointments;
 
-    const searchLower = search.toLowerCase();
-    return appointments.filter(
-      (appointment) =>
-        appointment.patient?.name?.toLowerCase().includes(searchLower) ||
-        appointment.aid.toString().includes(search)
-    );
-  }, [appointments, search]);
+    return fuse.search(debouncedSearch).map((result) => result.item);
+  }, [appointments, debouncedSearch, fuse]);
 
   const handleRadioChange = useCallback(
     (value: string) => {
@@ -42,12 +50,10 @@ function PreviousAppointments({ appointments }: { appointments: AppointmentType[
       <div className="flex flex-1 flex-col gap-2 overflow-hidden">
         <h3 className="text-sm text-default-500">Previous Appointments</h3>
 
-        <Input
-          placeholder="Search for an appointment"
-          radius="lg"
-          className="max-w-xs"
+        <SearchInput
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search by patient name or appointment ID"
+          onChange={setSearch}
         />
 
         {filteredAppointments.length > 0 ? (

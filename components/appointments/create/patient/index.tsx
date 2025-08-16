@@ -18,11 +18,13 @@ import {
   SelectionList,
   SelectionSkeleton,
 } from '../ui';
+import { useDebounce } from '@/hooks/useDebounce';
 
 const PatientSelection = ({ className }: { className?: string }) => {
   const { data: patients, isLoading: isPatientsLoading } = useAllPatients();
   const formik = useFormikContext<CreateAppointmentFormValues>();
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 500);
 
   const fuse = useMemo(() => {
     if (!patients) return null;
@@ -36,10 +38,10 @@ const PatientSelection = ({ className }: { className?: string }) => {
 
   const filteredPatients = useMemo(() => {
     if (!patients) return [];
-    if (!search.trim() || !fuse) return patients;
+    if (!debouncedSearch.trim() || !fuse) return patients;
 
-    return fuse.search(search).map((result) => result.item);
-  }, [patients, search, fuse]);
+    return fuse.search(debouncedSearch).map((result) => result.item);
+  }, [patients, debouncedSearch, fuse]);
 
   const selectedPatient = useMemo(() => {
     return patients?.find((p) => p.uid === appointment.patient);
