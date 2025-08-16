@@ -1,3 +1,48 @@
+# The Polyclinic
+
+A comprehensive healthcare management system built with Next.js, TypeScript, and modern web technologies.
+
+## Features
+
+### Appointment Management
+- **Infinite Query for Patients**: The appointment creation flow now uses infinite query to efficiently load patients. Instead of fetching all patients at once, the system loads them in pages of 20 patients each, with automatic loading when scrolling to the bottom.
+- **Real-time Search**: Patients can be searched by name, email, phone, or UID. The search is performed on the server-side and triggers new API calls with debounced input (500ms delay).
+- **Performance Optimization**: This implementation significantly improves performance when dealing with large numbers of patients by:
+  - Loading only necessary data initially
+  - Implementing server-side pagination
+  - Using intersection observer for smooth infinite scrolling
+  - Debouncing search requests to reduce API calls
+
+### Technical Implementation Details
+
+#### Backend Changes
+- Updated `/api/v1/patients/route.ts` to support pagination and search
+- Added query parameters: `page`, `limit`, and `search`
+- Implemented MongoDB aggregation for efficient searching across multiple fields
+- Added pagination metadata in API response
+
+#### Frontend Changes
+- Created `usePatientsInfiniteQuery` hook using `@tanstack/react-query`
+- Updated patient selection component to use infinite scroll
+- Implemented intersection observer for automatic loading
+- Added loading states and error handling
+- Removed client-side filtering in favor of server-side search
+
+#### API Response Format
+```typescript
+{
+  message: string;
+  data: UserType[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    hasNextPage: boolean;
+    totalPages: number;
+  };
+}
+```
+
 # Next.js Healthcare Management System (The Polyclnic)
 
 A comprehensive healthcare management system built with Next.js, featuring appointment scheduling, user management, and drug inventory tracking.

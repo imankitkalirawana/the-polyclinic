@@ -1,16 +1,15 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
-import { Button, Kbd } from '@heroui/react';
+import React, { useMemo, useState, useCallback, useRef } from 'react';
+import { Button, Kbd, Spinner } from '@heroui/react';
 import { cn } from '@heroui/react';
 import { useFormikContext } from 'formik';
-import Fuse from 'fuse.js';
 
 import { CreateAppointmentFormValues } from '../types';
 import { CreateAppointmentPatientDetails } from './details';
 
 import { useKeyPress } from '@/hooks/useKeyPress';
-import { useAllPatients } from '@/services/patient';
+import { usePatientsInfiniteQuery } from '@/services/patient';
 import {
   CreateAppointmentContentContainer,
   CreateAppointmentContentHeader,
@@ -21,31 +20,24 @@ import {
 import { useDebounce } from '@/hooks/useDebounce';
 
 const PatientSelection = ({ className }: { className?: string }) => {
-  const { data: patients, isLoading: isPatientsLoading } = useAllPatients();
   const formik = useFormikContext<CreateAppointmentFormValues>();
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
 
-  const fuse = useMemo(() => {
-    if (!patients) return null;
-    return new Fuse(patients, {
-      keys: ['name', 'email', 'phone', 'uid'],
-      threshold: 0.3,
-    });
-  }, [patients]);
+  const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage, isError, error } =
+    usePatientsInfiniteQuery(debouncedSearch);
+
+  // Flatten all pages data
+  const allPatients = useMemo(() => {
+    if (!data?.pages) return [];
+    return data.pages.flatMap((page) => page.data);
+  }, [data?.pages]);
 
   const { appointment } = formik.values;
 
-  const filteredPatients = useMemo(() => {
-    if (!patients) return [];
-    if (!debouncedSearch.trim() || !fuse) return patients;
-
-    return fuse.search(debouncedSearch).map((result) => result.item);
-  }, [patients, debouncedSearch, fuse]);
-
   const selectedPatient = useMemo(() => {
-    return patients?.find((p) => p.uid === appointment.patient);
-  }, [patients, appointment.patient]);
+    return allPatients.find((p) => p.uid === appointment.patient);
+  }, [allPatients, appointment.patient]);
 
   const handlePatientSelect = (patientId: string | number) => {
     formik.setFieldValue('appointment.patient', Number(patientId));
@@ -67,16 +59,45 @@ const PatientSelection = ({ className }: { className?: string }) => {
     { capture: true }
   );
 
+  // Intersection Observer for infinite scroll
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const lastPatientRef = useCallback(
+    (node: HTMLDivElement) => {
+      if (isLoading || isFetchingNextPage) return;
+
+      if (observerRef.current) observerRef.current.disconnect();
+
+      observerRef.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasNextPage) {
+          fetchNextPage();
+        }
+      });
+
+      if (node) observerRef.current.observe(node);
+    },
+    [isLoading, isFetchingNextPage, hasNextPage, fetchNextPage]
+  );
+
   const renderContent = () => {
-    if (isPatientsLoading) {
+    if (isLoading) {
       return <SelectionSkeleton className="flex flex-col gap-2" />;
     }
 
-    const patientItems = filteredPatients.map((patient) => ({
+    if (isError) {
+      return (
+        <div className="flex h-full flex-col items-center justify-center p-4 text-center">
+          <p className="mb-2 text-danger">Failed to load patients</p>
+          <p className="text-sm text-default-500">{error?.message}</p>
+        </div>
+      );
+    }
+
+    const patientItems = allPatients.map((patient, index) => ({
       id: patient.uid,
       image: patient.image,
       title: patient.name,
       subtitle: patient.email,
+      ref: index === allPatients.length - 1 ? lastPatientRef : undefined,
     }));
 
     return (
@@ -91,9 +112,18 @@ const PatientSelection = ({ className }: { className?: string }) => {
             items={patientItems}
             selectedId={appointment.patient}
             onSelect={handlePatientSelect}
-            emptyMessage="No patients found"
+            emptyMessage={
+              debouncedSearch.trim()
+                ? `No patients found for "${debouncedSearch}"`
+                : 'No patients found'
+            }
             containerClassName="h-full"
           />
+          {isFetchingNextPage && (
+            <div className="flex justify-center p-4">
+              <Spinner size="sm" />
+            </div>
+          )}
         </div>
       </>
     );

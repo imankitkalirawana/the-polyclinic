@@ -22,6 +22,12 @@ export const GET = auth(async (req: NextAuthRequest) => {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
+    // Get query parameters
+    const { searchParams } = new URL(req.url);
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '20');
+    const search = searchParams.get('search') || '';
+
     const queryMap: Record<UserRoleType, Record<string, unknown>> = {
       admin: {
         role: 'user',
@@ -38,12 +44,47 @@ export const GET = auth(async (req: NextAuthRequest) => {
       },
     };
 
+    // Add search functionality
+    let searchQuery = {};
+    if (search.trim()) {
+      searchQuery = {
+        $or: [
+          { name: { $regex: search, $options: 'i' } },
+          { email: { $regex: search, $options: 'i' } },
+          { phone: { $regex: search, $options: 'i' } },
+          { uid: { $regex: search, $options: 'i' } },
+        ],
+      };
+    }
+
     await connectDB();
-    const patients = await User.find(queryMap[role as UserRoleType]).select('-password');
+
+    // Combine base query with search query
+    const finalQuery = { ...queryMap[role as UserRoleType], ...searchQuery };
+
+    // Get total count for pagination
+    const total = await User.countDocuments(finalQuery);
+
+    // Calculate pagination
+    const skip = (page - 1) * limit;
+    const hasNextPage = skip + limit < total;
+
+    const patients = await User.find(finalQuery)
+      .select('-password')
+      .sort({ name: 1 })
+      .skip(skip)
+      .limit(limit);
 
     return NextResponse.json({
       message: 'Patients fetched successfully',
       data: patients,
+      pagination: {
+        page,
+        limit,
+        total,
+        hasNextPage,
+        totalPages: Math.ceil(total / limit),
+      },
     });
   } catch (error: unknown) {
     console.error(error);
