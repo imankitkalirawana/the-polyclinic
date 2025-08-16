@@ -22,7 +22,6 @@ export const GET = auth(async (req: NextAuthRequest) => {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get query parameters
     const { searchParams } = new URL(req.url);
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '20');
@@ -44,28 +43,26 @@ export const GET = auth(async (req: NextAuthRequest) => {
       },
     };
 
-    // Add search functionality
     let searchQuery = {};
     if (search.trim()) {
+      const isNumber = !isNaN(Number(search));
+
       searchQuery = {
         $or: [
+          { uid: isNumber ? Number(search) : undefined },
           { name: { $regex: search, $options: 'i' } },
           { email: { $regex: search, $options: 'i' } },
           { phone: { $regex: search, $options: 'i' } },
-          { uid: { $regex: search, $options: 'i' } },
         ],
       };
     }
 
     await connectDB();
 
-    // Combine base query with search query
     const finalQuery = { ...queryMap[role as UserRoleType], ...searchQuery };
 
-    // Get total count for pagination
     const total = await User.countDocuments(finalQuery);
 
-    // Calculate pagination
     const skip = (page - 1) * limit;
     const hasNextPage = skip + limit < total;
 

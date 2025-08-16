@@ -104,7 +104,7 @@ const PatientSelection = ({ className }: { className?: string }) => {
       <>
         <SearchInput
           value={search}
-          placeholder="Search by name, email, phone or UID"
+          placeholder="Search by name, email, phone, or UID"
           onChange={setSearch}
         />
         <div className="min-h-0 flex-1">
