@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import User from '@/models/User';
 import { auth } from '@/auth';
 import { UserType } from '@/types/user';
+import { connectDB } from '@/lib/db';
 
 export const GET = auth(async (req: NextAuthRequest) => {
   try {
@@ -37,6 +38,7 @@ export const GET = auth(async (req: NextAuthRequest) => {
       },
     };
 
+    await connectDB();
     const patients = await User.find(queryMap[role as UserRoleType]).select('-password');
 
     return NextResponse.json({

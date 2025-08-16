@@ -5,6 +5,7 @@ export const CreateAppointmentPatientDetails = ({ user }: { user?: UserType | nu
 
   return (
     <div>
+      <div>UID: #{user.uid}</div>
       <div>Name: {user.name}</div>
       <div>Email: {user.email}</div>
       <div>Phone: {user.phone}</div>

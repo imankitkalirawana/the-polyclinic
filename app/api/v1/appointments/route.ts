@@ -1,3 +1,4 @@
+import { getAppointmentsWithDetails } from './../../../../helpers/api/appointments/index';
 import { NextResponse } from 'next/server';
 import { NextAuthRequest } from 'next-auth';
 
@@ -32,71 +33,10 @@ export const GET = auth(async (request: NextAuthRequest) => {
       laboratorist: { $match: {} },
     };
 
-    const appointments = await Appointment.aggregate([
-      queryMap[role],
-      {
-        $lookup: {
-          from: 'users', // collection name
-          localField: 'doctor',
-          foreignField: 'uid', // doctor field matches user.uid
-          as: 'doctorDetails',
-        },
-      },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'patient',
-          foreignField: 'uid', // patient field matches user.uid
-          as: 'patientDetails',
-        },
-      },
-      {
-        $lookup: {
-          from: 'doctors', // doctors collection
-          localField: 'doctor', // doctor UID from appointment
-          foreignField: 'uid', // doctor UID in doctors collection
-          as: 'moreDoctorDetails',
-        },
-      },
-      {
-        $unwind: { path: '$doctorDetails', preserveNullAndEmptyArrays: true },
-      },
-      {
-        $unwind: { path: '$patientDetails', preserveNullAndEmptyArrays: false },
-      },
-      {
-        $unwind: { path: '$moreDoctorDetails', preserveNullAndEmptyArrays: true },
-      },
-      {
-        $project: {
-          date: 1,
-          type: 1,
-          status: 1,
-          additionalInfo: 1,
-          aid: 1,
-          doctor: {
-            name: '$doctorDetails.name',
-            email: '$doctorDetails.email',
-            uid: '$doctorDetails.uid',
-            phone: '$doctorDetails.phone',
-            image: '$doctorDetails.image',
-            seating: '$moreDoctorDetails.seating',
-          },
-          patient: {
-            name: '$patientDetails.name',
-            email: '$patientDetails.email',
-            uid: '$patientDetails.uid',
-            phone: '$patientDetails.phone',
-            image: '$patientDetails.image',
-            gender: '$patientDetails.gender',
-            age: '$patientDetails.age',
-          },
-          createdAt: 1,
-          updatedAt: 1,
-          updatedBy: 1,
-        },
-      },
-    ]);
+    const appointments = await getAppointmentsWithDetails({
+      query: queryMap[role],
+      isStage: true,
+    });
 
     return NextResponse.json(appointments, { status: 200 });
   } catch (error: unknown) {
