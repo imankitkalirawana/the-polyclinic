@@ -24,10 +24,10 @@ const PatientSelection = ({ className }: { className?: string }) => {
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
 
+  const queryResult = usePatientsInfiniteQuery(debouncedSearch);
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage, isError, error } =
-    usePatientsInfiniteQuery(debouncedSearch);
+    queryResult;
 
-  // Flatten all pages data
   const allPatients = useMemo(() => {
     if (!data?.pages) return [];
     return data.pages.flatMap((page) => page.data);
@@ -101,31 +101,24 @@ const PatientSelection = ({ className }: { className?: string }) => {
     }));
 
     return (
-      <>
-        <SearchInput
-          value={search}
-          placeholder="Search by name, email, phone, or UID"
-          onChange={setSearch}
+      <div className="min-h-0 flex-1">
+        <SelectionList
+          items={patientItems}
+          selectedId={appointment.patient}
+          onSelect={handlePatientSelect}
+          emptyMessage={
+            debouncedSearch.trim()
+              ? `No patients found for "${debouncedSearch}"`
+              : 'No patients found'
+          }
+          containerClassName="h-full"
         />
-        <div className="min-h-0 flex-1">
-          <SelectionList
-            items={patientItems}
-            selectedId={appointment.patient}
-            onSelect={handlePatientSelect}
-            emptyMessage={
-              debouncedSearch.trim()
-                ? `No patients found for "${debouncedSearch}"`
-                : 'No patients found'
-            }
-            containerClassName="h-full"
-          />
-          {isFetchingNextPage && (
-            <div className="flex justify-center p-4">
-              <Spinner size="sm" />
-            </div>
-          )}
-        </div>
-      </>
+        {isFetchingNextPage && (
+          <div className="flex justify-center p-4">
+            <Spinner size="sm" />
+          </div>
+        )}
+      </div>
     );
   };
 
@@ -161,7 +154,15 @@ const PatientSelection = ({ className }: { className?: string }) => {
       }
       endContent={selectedPatient && <CreateAppointmentPatientDetails user={selectedPatient} />}
     >
-      <div className={cn('flex h-full w-full flex-col', className)}>{renderContent()}</div>
+      <div className={cn('flex h-full w-full flex-col', className)}>
+        <SearchInput
+          key="patient-search-input"
+          value={search}
+          placeholder="Search by name, email, phone, or UID"
+          onChange={setSearch}
+        />
+        {renderContent()}
+      </div>
     </CreateAppointmentContentContainer>
   );
 };

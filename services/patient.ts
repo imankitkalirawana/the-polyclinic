@@ -21,7 +21,12 @@ export const usePatientsInfiniteQuery = (search: string = '') => {
   return useInfiniteQueryWithSearch({
     queryKey: ['patients-infinite'],
     queryFn: getPatientsWithPagination,
-    search,
+    search: search.trim(),
+    options: {
+      limit: 5,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      enabled: true,
+    },
   });
 };
 

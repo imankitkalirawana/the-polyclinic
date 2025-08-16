@@ -30,7 +30,7 @@ export default function SelectionCard({
       isDisabled={isDisabled}
       title={isDisabled ? disabledTitle : undefined}
       className={cn(
-        'flex h-full min-h-16 flex-row items-center justify-start gap-4 border-2 border-divider px-4 py-4 shadow-none',
+        'flex h-full min-h-16 w-full flex-row items-center justify-start gap-4 border-2 border-divider px-4 py-4 shadow-none',
         {
           'border-primary': isSelected,
         },
