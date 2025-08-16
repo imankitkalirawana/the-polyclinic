@@ -6,12 +6,13 @@ import { CreateAppointmentFormValues } from '../types';
 import CreateAppointmentSelectedPreviousAppointment from './appointment';
 
 import CustomRadio from '@/components/ui/custom-radio';
+import FollowUpSkeleton from '@/components/skeletons/appointments/follow-up-skeleton';
 import { castData } from '@/lib/utils';
 import { useAllAppointments } from '@/services/appointment';
 import { AppointmentType } from '@/types/appointment';
 
 export default function CreateAppointmentFollowUp() {
-  const { data } = useAllAppointments();
+  const { data, isLoading } = useAllAppointments();
   const appointments = castData<AppointmentType[]>(data) || [];
 
   const { values, setFieldValue } = useFormikContext<CreateAppointmentFormValues>();
@@ -28,6 +29,10 @@ export default function CreateAppointmentFollowUp() {
       ),
     [appointments, search]
   );
+
+  if (isLoading) {
+    return <FollowUpSkeleton />;
+  }
 
   return (
     <div className="flex h-full flex-col p-4">
