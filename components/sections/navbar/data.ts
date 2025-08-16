@@ -128,21 +128,6 @@ export const itemsMap: Record<UserType['role'], NavItem[]> = {
             },
           ],
         },
-        {
-          title: 'Admin Dashboard',
-          items: [
-            {
-              name: 'Stats',
-              href: '/dashboard/admin/stats',
-              icon: 'solar:graph-new-bold-duotone',
-            },
-            {
-              name: 'Settings',
-              href: '/dashboard/admin/settings',
-              icon: 'solar:settings-bold-duotone',
-            },
-          ],
-        },
       ],
     },
     {
@@ -180,6 +165,33 @@ export const itemsMap: Record<UserType['role'], NavItem[]> = {
     {
       name: 'Home',
       href: '/home',
+    },
+    {
+      name: 'Appointments',
+      href: '/appointments',
+      thumbnail: '/assets/navbar/appointments.png',
+      subItems: [
+        {
+          title: 'Appointments',
+          items: [
+            {
+              name: 'Create New',
+              href: '/appointments/create',
+              icon: 'solar:pen-new-round-bold-duotone',
+            },
+          ],
+        },
+        {
+          title: 'My Appointments',
+          items: [
+            {
+              name: 'All Appointments',
+              href: '/appointments',
+              icon: 'solar:clipboard-list-bold-duotone',
+            },
+          ],
+        },
+      ],
     },
   ],
   nurse: [

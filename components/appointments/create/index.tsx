@@ -90,7 +90,7 @@ function MainContent() {
   const { values, setFieldValue } = useFormikContext<CreateAppointmentFormValues>();
 
   useKeyPress(
-    ['Backspace'],
+    ['Control', 'Backspace'],
     () => {
       if (values.meta.currentStep > 0) {
         setFieldValue('meta.currentStep', values.meta.currentStep - 1);
