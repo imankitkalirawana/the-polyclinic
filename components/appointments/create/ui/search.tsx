@@ -2,8 +2,8 @@ import { Input } from '@heroui/react';
 
 export default function SearchInput({
   value,
-  onChange,
   placeholder = 'Search',
+  onChange,
 }: {
   value: string;
   onChange: (value: string) => void;

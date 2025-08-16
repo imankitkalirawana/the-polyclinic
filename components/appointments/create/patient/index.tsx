@@ -152,7 +152,7 @@ const PatientSelection = ({ className }: { className?: string }) => {
           </Button>
         </>
       }
-      endContent={selectedPatient && <CreateAppointmentPatientDetails user={selectedPatient} />}
+      endContent={<CreateAppointmentPatientDetails user={selectedPatient} />}
     >
       <div className={cn('flex h-full w-full flex-col', className)}>
         <SearchInput
