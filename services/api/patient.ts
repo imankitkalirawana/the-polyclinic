@@ -32,7 +32,49 @@ export async function getPatientsWithPagination(params: {
     ...(search && { search }),
   });
 
-  return await fetchData<PatientsResponse>(`/patients?${searchParams.toString()}`);
+  try {
+    const cookies = await import('next/headers').then((m) => m.cookies);
+    const axios = await import('axios').then((m) => m.default);
+    const { BASE_URL } = await import('./helper').then((m) => m);
+
+    const res = await axios({
+      url: `${BASE_URL}/patients?${searchParams.toString()}`,
+      method: 'GET',
+      headers: {
+        Cookie: cookies().toString(),
+      },
+    });
+
+    return {
+      success: true,
+      message: res.data?.message || 'Request successful',
+      data: {
+        data: res.data?.data || [],
+        pagination: res.data?.pagination || {
+          page: 1,
+          limit: 20,
+          total: 0,
+          hasNextPage: false,
+          totalPages: 0,
+        },
+      },
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error?.response?.data?.message || 'Request failed',
+      data: {
+        data: [],
+        pagination: {
+          page: 1,
+          limit: 20,
+          total: 0,
+          hasNextPage: false,
+          totalPages: 0,
+        },
+      },
+    };
+  }
 }
 
 export async function getPreviousAppointments(uid: number) {
