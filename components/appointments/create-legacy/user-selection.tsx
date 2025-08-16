@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Button, Card, CardBody, cn, Image, Input, Link, ScrollShadow } from '@heroui/react';
-import { useDebounce } from 'react-haiku';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 import NoResults from '../../ui/no-results';
@@ -9,6 +8,7 @@ import Skeleton from '../../ui/skeleton';
 import { CreateAppointmentType } from '@/components/appointments/create/types';
 import { DoctorType } from '@/types/doctor';
 import { UserType } from '@/types/user';
+import { useDebounce } from '@/hooks/useDebounce';
 
 const SizeMap = {
   sm: {

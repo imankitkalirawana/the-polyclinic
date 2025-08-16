@@ -27,7 +27,6 @@ import {
   Tooltip,
 } from '@heroui/react';
 import { SearchIcon } from '@heroui/shared-icons';
-import { useDebounce } from 'react-haiku';
 import { Icon } from '@iconify/react';
 
 import { isAll } from './helper';
@@ -35,6 +34,7 @@ import type { TableItem, TableProps, TableState } from './types';
 import { useMemoizedCallback } from './use-memoized-callback';
 
 import type { $FixMe } from '@/types';
+import { useDebounce } from '@/hooks/useDebounce';
 
 export function Table<T extends TableItem>({
   uniqueKey,

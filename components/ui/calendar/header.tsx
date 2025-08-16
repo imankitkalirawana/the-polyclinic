@@ -16,11 +16,11 @@ import {
   subYears,
 } from 'date-fns';
 import { parseAsStringEnum, useQueryState } from 'nuqs';
-import { useKeyPress } from 'react-haiku';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 import { allowedRolesToCreateAppointment } from './data';
 import { View, views as Views } from './types';
+import { useKeyPress } from '@/hooks/useKeyPress';
 
 interface CalendarHeaderProps {
   currentDate: Date;

@@ -51,6 +51,6 @@ export function toTitleCase(str: string) {
   return str.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
-export function isSearchMatch(term1: string, term2: string) {
-  return term1?.toLowerCase().includes(term2?.toLowerCase());
+export function isSearchMatch(haystack: string, needle: string) {
+  return haystack?.toLowerCase().trim().includes(needle?.toLowerCase().trim());
 }

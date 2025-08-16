@@ -15,13 +15,13 @@ import {
   Spacer,
   Tooltip,
 } from '@heroui/react';
-import { useLocalStorage } from 'react-haiku';
 import { Icon } from '@iconify/react';
 
 import Logo from '../ui/logo';
 
 import Sidebar from '@/components/dashboard/sidebar/sidebar';
 import { sectionItemsWithTeams } from '@/components/dashboard/sidebar/sidebar-items';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 export default function DashboardLayout({
   children,
