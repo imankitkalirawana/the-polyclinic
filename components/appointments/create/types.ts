@@ -15,6 +15,7 @@ type CreateAppointmentMeta = {
   currentStep: number;
   showConfirmation: boolean;
   showReceipt: boolean;
+  createNewPatient: boolean;
 };
 
 export type CreateAppointmentFormValues = {

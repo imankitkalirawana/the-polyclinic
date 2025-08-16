@@ -17,6 +17,7 @@ import { CreateAppointmentFormValues } from './types';
 import { useCreateAppointment } from '@/services/appointment';
 import { cn } from '@/lib/utils';
 import { useKeyPress } from '@/hooks/useKeyPress';
+import CreateAppointmentPatientNew from './patient/new';
 
 const contentMap: Record<number, React.ReactNode> = {
   0: <PatientSelection />,
@@ -48,6 +49,7 @@ export default function CreateAppointment({ date, isModal }: { date?: Date; isMo
         currentStep: 0,
         showConfirmation: false,
         showReceipt: false,
+        createNewPatient: false,
       },
     },
     onSubmit: async ({ appointment }, { setFieldValue }) => {
@@ -106,6 +108,7 @@ function MainContent() {
       {contentMap[values.meta.currentStep]}
       {values.meta.showConfirmation && <AppointmentBookingConfirmation />}
       {values.meta.showReceipt && <AppointmentBookingReceipt />}
+      {values.meta.createNewPatient && <CreateAppointmentPatientNew />}
     </>
   );
 }

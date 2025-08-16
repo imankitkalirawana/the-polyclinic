@@ -108,16 +108,26 @@ const PatientSelection = ({ className }: { className?: string }) => {
         />
       }
       footer={
-        <Button
-          variant="shadow"
-          color="primary"
-          radius="full"
-          onPress={handleNext}
-          isDisabled={!canProceed}
-          endContent={<Kbd keys={['enter']} className="bg-transparent" />}
-        >
-          Next
-        </Button>
+        <>
+          <Button
+            variant="shadow"
+            color="primary"
+            radius="full"
+            onPress={handleNext}
+            isDisabled={!canProceed}
+            endContent={<Kbd keys={['enter']} className="bg-transparent" />}
+          >
+            Next
+          </Button>
+          <Button
+            variant="light"
+            color="primary"
+            radius="full"
+            onPress={() => formik.setFieldValue('meta.createNewPatient', true)}
+          >
+            Create New Patient
+          </Button>
+        </>
       }
       endContent={selectedPatient && <CreateAppointmentPatientDetails user={selectedPatient} />}
     >
