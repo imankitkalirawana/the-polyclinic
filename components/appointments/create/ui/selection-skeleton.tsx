@@ -7,7 +7,7 @@ interface SelectionSkeletonProps {
 
 export default function SelectionSkeleton({ count = 3, className }: SelectionSkeletonProps) {
   return (
-    <div className={className}>
+    <div className={className} data-testid="selection-skeleton">
       {Array.from({ length: count }).map((_, index) => (
         <div
           key={`skeleton-${index}`}
