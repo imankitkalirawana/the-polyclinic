@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 export const POST = async function POST() {
   const allowedRoles = ['admin', 'doctor', 'receptionist'];
-  const userRole = 'user';
+  const userRole = 'patient';
   const id = 'abc';
   const paramid = 'ac';
   // @ts-expect-error - TODO: fix this

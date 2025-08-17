@@ -6,7 +6,6 @@ import { Providers } from './providers';
 
 import './globals.css';
 
-import { auth } from '@/auth';
 import Navbar from '@/components/sections/navbar';
 import { ThemeProvider } from '@/components/theme-provider';
 import { APP_INFO } from '@/lib/config';
@@ -30,12 +29,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
-
   return (
     <html lang="en" suppressHydrationWarning className="light">
       <body className={outfit.className}>
-        <Providers session={session}>
+        <Providers>
           <NuqsAdapter>
             <ThemeProvider attribute="class" defaultTheme="light">
               <Navbar />

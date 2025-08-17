@@ -10,8 +10,8 @@ import * as Yup from 'yup';
 import { AuthContextType, FlowType } from './types';
 
 import { verifyEmail } from '@/functions/server-actions/auth/verification';
-import { login, register, sendOTP, verifyOTP } from '@/lib/server-actions/auth';
 import { $FixMe } from '@/types';
+import { authClient } from '@/lib/auth-client';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -176,48 +176,50 @@ export const createAuthProvider = (flowType: FlowType) =>
           paginate(1);
         }
       } else if (values.page === 2) {
-        // Send OTP
-        const res = await sendOTP({ email: values.email });
-        if (!res.success) {
-          setFieldError('email', res.message);
-        } else {
+        // Send OTP using Better Auth
+        try {
+          await authClient.emailOtp.sendVerificationOtp({
+            email: values.email,
+            type: 'email-verification',
+          });
           addToast({
-            title: res.message,
+            title: 'OTP sent successfully',
             color: 'success',
           });
           paginate(1);
+        } catch (error) {
+          setFieldError('email', 'Failed to send OTP. Please try again.');
         }
       } else if (values.page === 3) {
-        // Verify OTP
-        const res = await verifyOTP({
-          email: values.email,
-          otp: parseInt(values.otp),
-        });
-        if (!res.success) {
-          setFieldError('otp', res.message);
-        } else {
+        // Verify OTP using Better Auth
+        try {
+          await authClient.emailOtp.verifyEmail({
+            email: values.email,
+            otp: values.otp,
+          });
           paginate(1);
+        } catch (error) {
+          setFieldError('otp', 'Invalid OTP. Please try again.');
         }
       } else if (values.page === 4) {
-        // Register user
-        const res = await register({
-          email: values.email,
-          password: values.password,
-          name: values.name,
-          dob: values.dob ?? undefined,
-          gender: values.gender,
-        });
-        if (res.success) {
-          await login({
+        // Register user using Better Auth
+        try {
+          await authClient.signUp.email({
             email: values.email,
             password: values.password,
+            name: values.name,
+            callbackURL: '/dashboard',
           });
-          window.location.href = '/';
-        } else {
+
           addToast({
-            title: res.message,
-            color: 'danger',
+            title: 'Registration successful',
+            description: 'Welcome to our platform!',
+            color: 'success',
           });
+
+          router.push('/dashboard');
+        } catch (error) {
+          setFieldError('password', 'Registration failed. Please try again.');
         }
       }
     };
@@ -235,15 +237,21 @@ export const createAuthProvider = (flowType: FlowType) =>
           paginate(1);
         }
       } else if (values.page === 2) {
-        const res = await login({
-          email: values.email,
-          password: values.password,
-        });
+        try {
+          await authClient.signIn.email({
+            email: values.email,
+            password: values.password,
+            callbackURL: '/dashboard',
+          });
 
-        if (res?.error) {
-          setFieldError('password', res.message);
-        } else {
-          window.location.href = '/dashboard';
+          addToast({
+            title: 'Login successful',
+            color: 'success',
+          });
+
+          router.push('/dashboard');
+        } catch (error) {
+          setFieldError('password', 'Invalid email or password');
         }
       }
     };
@@ -251,63 +259,48 @@ export const createAuthProvider = (flowType: FlowType) =>
     // Forgot password flow
     const handleForgotPasswordSubmit = async (values: $FixMe, { setFieldError }: $FixMe) => {
       if (values.page === 0) {
-        // Send OTP
-        const res = await sendOTP({
-          email: values.email,
-          type: 'forgot-password',
-        });
+        // Send OTP using Better Auth
+        try {
+          await authClient.emailOtp.sendVerificationOtp({
+            email: values.email,
+            type: 'forget-password',
+          });
 
-        if (!res.success) {
-          setFieldError('email', res.message);
-        } else {
           addToast({
-            title: res.message,
+            title: 'OTP sent successfully',
             color: 'success',
           });
           paginate(1);
+        } catch (error) {
+          setFieldError('email', 'Failed to send OTP. Please try again.');
         }
       } else if (values.page === 1) {
-        // Verify OTP
-        const res = await verifyOTP({
-          email: values.email,
-          otp: parseInt(values.otp),
-        });
-
-        if (!res.success) {
-          setFieldError('otp', res.message);
-        } else {
+        // Verify OTP using Better Auth
+        try {
+          await authClient.emailOtp.verifyEmail({
+            email: values.email,
+            otp: values.otp,
+          });
           paginate(1);
+        } catch (error) {
+          setFieldError('otp', 'Invalid OTP. Please try again.');
         }
       } else if (values.page === 2) {
-        // Reset password
-        // Since resetPassword function is not available, use fetch API directly
+        // Reset password using Better Auth
         try {
-          const res = await fetch('/api/auth/reset-password', {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              email: values.email,
-              password: values.newPassword,
-              otp: parseInt(values.otp),
-            }),
+          await authClient.resetPassword({
+            newPassword: values.newPassword,
+            token: values.otp,
           });
 
-          const data = await res.json();
-
           addToast({
-            title: data.message,
+            title: 'Password reset successful',
             description: 'You can now login with your new password.',
             color: 'success',
           });
           router.push(`/auth/login?email=${values.email}`);
-        } catch {
-          addToast({
-            title: 'An error occurred',
-            description: 'Please try again later.',
-            color: 'danger',
-          });
+        } catch (error) {
+          setFieldError('newPassword', 'Password reset failed. Please try again.');
         }
       }
     };

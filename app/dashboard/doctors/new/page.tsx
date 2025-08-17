@@ -1,5 +1,6 @@
 import { unauthorized } from 'next/navigation';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
+import { headers } from 'next/headers';
 
 import { auth } from '@/auth';
 import NewDoctor from '@/components/dashboard/doctors/new';
@@ -9,7 +10,9 @@ import { getAllUsers } from '@/services/api/user';
 const allowedRoles = ['admin'];
 
 export default async function Page() {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({

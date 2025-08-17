@@ -7,7 +7,7 @@ import Drug from '@/models/Drug';
 
 export const GET = auth(async (request: NextAuthRequest) => {
   try {
-    const allowedRoles = ['admin', 'receptionist', 'doctor', 'user'];
+    const allowedRoles = ['admin', 'receptionist', 'doctor', 'patient'];
 
     if (!allowedRoles.includes(request.auth?.user?.role ?? '')) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });

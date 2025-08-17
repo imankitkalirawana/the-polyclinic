@@ -13,7 +13,7 @@ export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
     const uid = parseInt(context.params.uid);
 
-    if (request.auth?.user?.role === 'user' && request.auth?.user?.uid !== uid) {
+    if (request.auth?.user?.role === 'patient' && request.auth?.user?.uid !== uid) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 

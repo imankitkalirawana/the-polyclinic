@@ -396,7 +396,7 @@ const AppointmentFooter = memo(({ appointment }: { appointment: AppointmentType 
   const { data: session } = useSession();
   const buttons = useAppointmentButtonsInDrawer({
     selected: appointment,
-    role: session?.user?.role || 'user',
+    role: session?.user?.role || 'patient',
   });
 
   return (

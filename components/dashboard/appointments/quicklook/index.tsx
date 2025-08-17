@@ -19,7 +19,7 @@ export function AppointmentQuickLook() {
 
   const buttons = useAppointmentButtons({
     appointment,
-    role: session?.user?.role || 'user',
+    role: session?.user?.role || 'patient',
   });
 
   const dropdown = useMemo<Array<Partial<DropdownItemProps<DropdownKeyType>>>>(

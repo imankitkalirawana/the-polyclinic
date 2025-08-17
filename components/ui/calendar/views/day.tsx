@@ -28,7 +28,7 @@ export function DayView({ appointments, currentDate, onTimeSlotClick }: DayViewP
   const { appointment, setIsTooltipOpen } = useAppointmentStore();
 
   const isAllowedToCreateAppointment = allowedRolesToCreateAppointment.includes(
-    session?.user?.role || 'user'
+    session?.user?.role || 'patient'
   );
 
   const displayHours = Array.from(

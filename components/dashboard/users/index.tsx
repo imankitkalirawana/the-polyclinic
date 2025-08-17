@@ -125,7 +125,7 @@ export default function Users() {
           { label: 'All', value: 'all' },
           { label: 'Admin', value: 'admin' },
           { label: 'Doctor', value: 'doctor' },
-          { label: 'Patient', value: 'user' },
+          { label: 'Patient', value: 'patient' },
           { label: 'Receptionist', value: 'receptionist' },
           { label: 'Nurse', value: 'nurse' },
         ],

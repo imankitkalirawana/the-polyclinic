@@ -3,7 +3,6 @@
 import React, { useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Session } from 'next-auth';
 import { signOut } from 'next-auth/react';
 import {
   Avatar,
@@ -22,13 +21,14 @@ import Logo from '../ui/logo';
 import Sidebar from '@/components/dashboard/sidebar/sidebar';
 import { sectionItemsWithTeams } from '@/components/dashboard/sidebar/sidebar-items';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { User } from 'better-auth';
 
 export default function DashboardLayout({
   children,
-  session,
+  sessionUser,
 }: {
   readonly children: React.ReactNode;
-  session: Session;
+  sessionUser: User;
 }) {
   const [isHidden, setIsHidden] = useLocalStorage('isDashboardSidebarHidden', true);
 
@@ -84,7 +84,7 @@ export default function DashboardLayout({
                 'justify-start text-foreground': !isHidden,
               })}
               startContent={
-                <Avatar src={session.user?.image} name={session.user?.name || ''} size="sm" />
+                <Avatar src={sessionUser.image || ''} name={sessionUser.name || ''} size="sm" />
               }
               variant="light"
               as={Link}

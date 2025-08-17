@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import mongooseSequence from 'mongoose-sequence';
 
-import { auth } from '@/auth';
+import { getCurrentUserEmail } from '@/lib/auth-helper';
 
 // @ts-expect-error - mongoose-sequence is not typed
 const AutoIncrement = mongooseSequence(mongoose);
@@ -49,16 +49,16 @@ const patientSchema = new mongoose.Schema(
 patientSchema.plugin(AutoIncrement, { inc_field: 'pid', start_seq: 1 });
 
 patientSchema.pre('save', async function (next) {
-  const session = await auth();
-  this.createdBy = session?.user?.email || 'system-admin@divinely.dev';
+  const userEmail = await getCurrentUserEmail();
+  this.createdBy = userEmail;
   next();
 });
 
 patientSchema.pre(['findOneAndUpdate', 'updateOne', 'updateMany'], async function (next) {
-  const session = await auth();
+  const userEmail = await getCurrentUserEmail();
   this.setUpdate({
     ...this.getUpdate(),
-    updatedBy: session?.user?.email || 'system-admin@divinely.dev',
+    updatedBy: userEmail,
   });
   next();
 });

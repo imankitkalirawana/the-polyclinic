@@ -10,9 +10,8 @@ import {
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import { sendOTP } from '@/lib/server-actions/auth';
 import { cn } from '@/lib/utils';
-import { $FixMe } from '@/types';
+import { authClient } from '@/lib/auth-client';
 
 // Input component with consistent styling for auth forms
 export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => (
@@ -156,18 +155,17 @@ export const OtpInput = forwardRef<
   const resendOtp = async () => {
     setIsResendingOtp(true);
     try {
-      // Cast type to any to work with our existing sendOTP function
-      const res = await sendOTP({ email, type: type as $FixMe });
-      if (res.success) {
-        addToast({
-          title: 'OTP resent',
-          description: 'Please check your email for the verification code',
-          color: 'success',
-        });
-      } else {
-        addToast({ title: res.message, color: 'danger' });
-      }
-    } catch {
+      await authClient.emailOtp.sendVerificationOtp({
+        email,
+        type: type === 'registration' ? 'email-verification' : 'forget-password',
+      });
+
+      addToast({
+        title: 'OTP resent',
+        description: 'Please check your email for the verification code',
+        color: 'success',
+      });
+    } catch (error) {
       addToast({
         title: 'Failed to resend OTP',
         description: 'Please try again later',

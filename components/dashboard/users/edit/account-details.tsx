@@ -110,15 +110,15 @@ export default function AccountDetails({ user }: { user: UserType }) {
             }
           }}
           onChange={(e) => {
-            if (allowedRoles.includes(session?.user?.role || 'user')) {
+            if (allowedRoles.includes(session?.user?.role || 'patient')) {
               formik.setFieldValue('email', e.target.value);
             }
           }}
           isInvalid={!!(formik.touched.email && formik.errors.email)}
           errorMessage={formik.touched.email && formik.errors.email}
-          isDisabled={!allowedRoles.includes(session?.user?.role || 'user')}
+          isDisabled={!allowedRoles.includes(session?.user?.role || 'patient')}
           description={
-            !allowedRoles.includes(session?.user?.role || 'user') && (
+            !allowedRoles.includes(session?.user?.role || 'patient') && (
               <>
                 Please go{session?.role} to{' '}
                 <Link
@@ -137,7 +137,7 @@ export default function AccountDetails({ user }: { user: UserType }) {
           placeholder="Enter phone number"
           name="phone"
           onChange={(e) => {
-            if (allowedRoles.includes(session?.user?.role || 'user')) {
+            if (allowedRoles.includes(session?.user?.role || 'patient')) {
               formik.setFieldValue('phone', e.target.value);
             }
           }}
@@ -147,9 +147,9 @@ export default function AccountDetails({ user }: { user: UserType }) {
               <span className="text-small text-default-400">+91</span>
             </div>
           }
-          isDisabled={!allowedRoles.includes(session?.user?.role || 'user')}
+          isDisabled={!allowedRoles.includes(session?.user?.role || 'patient')}
           description={
-            !allowedRoles.includes(session?.user?.role || 'user') && (
+            !allowedRoles.includes(session?.user?.role || 'patient') && (
               <>
                 Please go{session?.role} to{' '}
                 <Link

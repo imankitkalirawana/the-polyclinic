@@ -109,9 +109,9 @@ export default function AppointmentDetailsModal() {
       },
     },
     {
-      label: session?.user?.role === 'user' ? 'Cancel' : 'Decline',
+      label: session?.user?.role === 'patient' ? 'Cancel' : 'Decline',
       description:
-        session?.user?.role === 'user' ? 'Cancel the appointment' : 'Decline the appointment',
+        session?.user?.role === 'patient' ? 'Cancel the appointment' : 'Decline the appointment',
       icon: 'solar:close-circle-bold-duotone',
       key: 'cancel',
       color: 'danger',
@@ -374,7 +374,7 @@ export default function AppointmentDetailsModal() {
                       {dropdownItems
                         .filter(
                           (item) =>
-                            roleButton[session?.user?.role || 'user']?.includes(item.key) &&
+                            roleButton[session?.user?.role || 'patient']?.includes(item.key) &&
                             statusButton[formik.values.selected?.status || 'booked']?.includes(
                               item.key
                             )

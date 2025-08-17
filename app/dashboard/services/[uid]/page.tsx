@@ -1,4 +1,5 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
+import { headers } from 'next/headers';
 
 import { auth } from '@/auth';
 import ServiceViewItem from '@/components/dashboard/services/service-item';
@@ -14,7 +15,9 @@ interface Props {
 export default async function Page(props: Props) {
   const params = await props.params;
   const queryClient = new QueryClient();
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
   if (!session) {
     return null;

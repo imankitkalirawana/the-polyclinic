@@ -14,7 +14,7 @@ import { UserType } from '@/types/user';
 // get appointment by id from param
 export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
-    const allowedRoles = ['user', 'admin', 'doctor', 'receptionist'];
+    const allowedRoles = ['patient', 'admin', 'doctor', 'receptionist'];
     const role = request.auth?.user?.role;
 
     if (!role || !allowedRoles.includes(role)) {
@@ -35,7 +35,7 @@ export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
       receptionist: {
         $match: { aid },
       },
-      user: { $match: { aid, patient: request.auth?.user?.uid } },
+      patient: { $match: { aid, patient: request.auth?.user?.uid } },
       nurse: { $match: { aid } },
       pharmacist: { $match: { aid } },
       laboratorist: { $match: { aid } },
@@ -126,7 +126,7 @@ export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
 
 export const PATCH = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
-    const allowedRoles = ['user', 'admin', 'doctor', 'receptionist'];
+    const allowedRoles = ['patient', 'admin', 'doctor', 'receptionist'];
 
     const user = request.auth?.user;
 
@@ -144,8 +144,8 @@ export const PATCH = auth(async (request: NextAuthRequest, context: $FixMe) => {
       return NextResponse.json({ message: 'Appointment not found' }, { status: 404 });
     }
 
-    // if request role is use and doesn't match appointment patient email, return unauthorized
-    if (user?.role === 'user') {
+    // if request role is patient and doesn't match appointment patient email, return unauthorized
+    if (user?.role === 'patient') {
       if (user?.uid !== appointment?.patient) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
       }

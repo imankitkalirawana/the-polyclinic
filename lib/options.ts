@@ -8,12 +8,16 @@ export const UserRoles = [
     value: 'doctor',
   },
   {
-    label: 'Nurse',
-    value: 'nurse',
+    label: 'Patient',
+    value: 'patient',
   },
   {
     label: 'Receptionist',
     value: 'receptionist',
+  },
+  {
+    label: 'Nurse',
+    value: 'nurse',
   },
   {
     label: 'Pharmacist',
@@ -22,10 +26,6 @@ export const UserRoles = [
   {
     label: 'Laboratorist',
     value: 'laboratorist',
-  },
-  {
-    label: 'User',
-    value: 'user',
   },
 ];
 

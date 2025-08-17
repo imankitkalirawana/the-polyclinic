@@ -1,4 +1,5 @@
 import React from 'react';
+import { headers } from 'next/headers';
 
 import AsideRight from './aside/right';
 import AppointmentsTimeline from './appointments';
@@ -9,7 +10,9 @@ import { auth } from '@/auth';
 import { $FixMe } from '@/types';
 
 export default async function CompactView() {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
   return (
     <FormProvider session={session as $FixMe}>

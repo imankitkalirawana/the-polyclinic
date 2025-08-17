@@ -47,7 +47,7 @@ export default function NewUser() {
 
   const formik = useFormik({
     initialValues: {
-      role: 'user',
+      role: 'patient',
     } as CreateUserType,
     validationSchema: userValidationSchema,
     onSubmit: async (values) => {

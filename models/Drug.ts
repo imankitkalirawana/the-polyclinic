@@ -1,6 +1,6 @@
 import mongoose, { Model } from 'mongoose';
 
-import { auth } from '@/auth';
+import { getCurrentUserEmail } from '@/lib/auth-helper';
 import { DrugStatus, DrugType } from '@/types/drug';
 
 const drugSchema = new mongoose.Schema<DrugType>(
@@ -38,16 +38,16 @@ const drugSchema = new mongoose.Schema<DrugType>(
 );
 
 drugSchema.pre('save', async function (next) {
-  const session = await auth();
-  this.createdBy = session?.user?.email || 'system-admin@divinely.dev';
+  const userEmail = await getCurrentUserEmail();
+  this.createdBy = userEmail;
   next();
 });
 
 drugSchema.pre(['findOneAndUpdate', 'updateOne', 'updateMany'], async function (next) {
-  const session = await auth();
+  const userEmail = await getCurrentUserEmail();
   this.setUpdate({
     ...this.getUpdate(),
-    updatedBy: session?.user?.email || 'system-admin@divinely.dev',
+    updatedBy: userEmail,
   });
 
   next();

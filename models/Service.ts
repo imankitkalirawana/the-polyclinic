@@ -1,6 +1,6 @@
 import mongoose, { Model } from 'mongoose';
 
-import { auth } from '@/auth';
+import { getCurrentUserEmail } from '@/lib/auth-helper';
 import { ServiceStatus, ServiceType, ServiceTypes } from '@/types/service';
 
 const serviceSchema = new mongoose.Schema(
@@ -57,16 +57,16 @@ const serviceSchema = new mongoose.Schema(
 );
 
 serviceSchema.pre('save', async function (next) {
-  const session = await auth();
-  this.createdBy = session?.user?.email || 'system-admin@divinely.dev';
+  const userEmail = await getCurrentUserEmail();
+  this.createdBy = userEmail;
   next();
 });
 
 serviceSchema.pre(['findOneAndUpdate', 'updateOne', 'updateMany'], async function (next) {
-  const session = await auth();
+  const userEmail = await getCurrentUserEmail();
   this.setUpdate({
     ...this.getUpdate(),
-    updatedBy: session?.user?.email || 'system-admin@divinely.dev',
+    updatedBy: userEmail,
   });
   next();
 });

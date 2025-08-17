@@ -17,7 +17,7 @@ export const APPOINTMENT_BUTTON_CONFIGS: ButtonConfig[] = [
     position: 'left',
     visibilityRules: {
       statuses: ['booked', 'confirmed', 'in-progress'],
-      roles: ['user', 'doctor'],
+      roles: ['patient', 'doctor'],
     },
     action: {
       type: 'store-action',
@@ -35,7 +35,7 @@ export const APPOINTMENT_BUTTON_CONFIGS: ButtonConfig[] = [
     isIconOnly: true,
     visibilityRules: {
       statuses: ['booked', 'confirmed', 'in-progress', 'on-hold', 'overdue'],
-      roles: ['user', 'receptionist', 'admin'],
+      roles: ['patient', 'receptionist', 'admin'],
       custom: (appointment) => appointment.status !== 'in-progress',
     },
     action: {
@@ -78,7 +78,7 @@ export const APPOINTMENT_BUTTON_CONFIGS: ButtonConfig[] = [
     position: 'right',
     visibilityRules: {
       statuses: ['booked', 'confirmed', 'in-progress', 'on-hold', 'overdue'],
-      roles: ['user', 'doctor', 'receptionist', 'admin'],
+      roles: ['patient', 'doctor', 'receptionist', 'admin'],
       custom: (appointment) =>
         appointment.status === 'booked' ||
         appointment.status === 'confirmed' ||

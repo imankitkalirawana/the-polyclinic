@@ -7,7 +7,7 @@ import { UserType } from '@/types/user';
 // get all patients
 export const getAllPatients = async () => {
   await connectDB();
-  const users = await User.find({ role: 'user' }).select('-password').lean();
+  const users = await User.find({ role: 'patient' }).select('-password').lean();
   return users.map((user) => ({
     ...user,
     _id: user._id.toString(),

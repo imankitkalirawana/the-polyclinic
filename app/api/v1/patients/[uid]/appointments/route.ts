@@ -11,7 +11,7 @@ type Params = Promise<{
 export const GET = auth(async (req: NextAuthRequest, { params }: { params: Params }) => {
   const uid = Number((await params).uid);
 
-  const allowedRoles = ['admin', 'doctor', 'receptionist', 'user'];
+  const allowedRoles = ['admin', 'doctor', 'receptionist', 'patient'];
   const role = req.auth?.user?.role;
 
   if (!role || !allowedRoles.includes(role)) {

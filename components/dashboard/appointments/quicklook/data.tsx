@@ -202,7 +202,7 @@ export const useAppointmentButtons = ({
   role,
 }: {
   appointment: AppointmentType | null;
-  role: UserType['role'] | 'user';
+  role: UserType['role'] | 'patient';
 }) => {
   const { setAction } = useAppointmentStore();
 
@@ -228,7 +228,7 @@ export const useAppointmentButtons = ({
         appointment?.status === 'cancelled' ||
         appointment?.status === 'completed' ||
         appointment?.status === 'overdue' ||
-        !['user', 'doctor'].includes(role),
+        !['patient', 'doctor'].includes(role),
       color: 'default',
       variant: 'flat',
       position: 'left',
@@ -252,7 +252,7 @@ export const useAppointmentButtons = ({
       isHidden:
         appointment?.status === 'cancelled' ||
         appointment?.status === 'completed' ||
-        !['user', 'doctor', 'receptionist', 'admin'].includes(role),
+        !['patient', 'doctor', 'receptionist', 'admin'].includes(role),
       onPress: () => {
         if (appointment) {
           setAction('cancel');
@@ -290,7 +290,7 @@ export const useAppointmentButtons = ({
       position: 'right',
       isHidden:
         appointment?.status === 'completed' ||
-        !['user', 'doctor', 'receptionist', 'admin'].includes(role),
+        !['patient', 'doctor', 'receptionist', 'admin'].includes(role),
       onPress: () => {
         if (appointment) {
           setAction('reschedule');

@@ -94,7 +94,7 @@ export function WelcomeUser(user: UserType) {
 `;
 }
 
-export function OtpEmail(otp: number) {
+export function OtpEmail(otp: number | string) {
   return `<html lang="en">
         <head>
             <meta charset="UTF-8" />

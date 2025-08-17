@@ -50,7 +50,7 @@ export const GET = auth(async (request: NextAuthRequest) => {
 
 export const POST = auth(async (request: NextAuthRequest) => {
   try {
-    const allowedRoles = ['admin', 'doctor', 'receptionist', 'user'];
+    const allowedRoles = ['admin', 'doctor', 'receptionist', 'patient'];
     // @ts-ignore
     if (!allowedRoles.includes(request.auth?.user?.role)) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });

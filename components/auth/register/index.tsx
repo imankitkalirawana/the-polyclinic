@@ -44,10 +44,10 @@ const RegisterComponent: React.FC = () => {
             variant="bordered"
             startContent={<Icon icon="devicon:google" width={20} />}
             size="lg"
-            onPress={() => {
+            onPress={async () => {
               addToast({
                 title: 'Coming soon',
-                description: 'This feature is coming soon',
+                description: 'Google authentication will be available soon',
                 color: 'warning',
               });
             }}

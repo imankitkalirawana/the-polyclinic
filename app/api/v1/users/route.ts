@@ -16,9 +16,9 @@ export const GET = auth(async (req: NextAuthRequest) => {
     const email = req.auth.user.email;
     const role = req.auth.user.role;
 
-    const ALLOWED_ROLES = ['admin', 'receptionist', 'user'];
+    const ALLOWED_ROLES = ['admin', 'receptionist', 'patient'];
 
-    type UserRoleType = Extract<UserType['role'], 'admin' | 'receptionist' | 'user'>;
+    type UserRoleType = Extract<UserType['role'], 'admin' | 'receptionist' | 'patient'>;
 
     if (!ALLOWED_ROLES.includes(role)) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -27,11 +27,11 @@ export const GET = auth(async (req: NextAuthRequest) => {
     const queryMap: Record<UserRoleType, Record<string, unknown>> = {
       admin: {},
       receptionist: {
-        $or: [{ role: 'user' }, { role: 'receptionist' }, { role: 'doctor' }],
+        $or: [{ role: 'patient' }, { role: 'receptionist' }, { role: 'doctor' }],
       },
-      user: {
+      patient: {
         email,
-        role: 'user',
+        role: 'patient',
       },
     };
 

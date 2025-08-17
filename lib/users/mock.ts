@@ -23,7 +23,7 @@ export async function generateUsers({
       role:
         role ||
         faker.helpers.arrayElement([
-          'user',
+          'patient',
           'admin',
           'receptionist',
           'nurse',

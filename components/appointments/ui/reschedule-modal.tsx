@@ -37,7 +37,7 @@ export default function RescheduleAppointment() {
         url: `/api/v1/appointments/${appointment?.aid}`,
         method: 'PATCH',
         data: {
-          status: session?.user?.role === 'user' ? 'booked' : 'confirmed',
+          status: session?.user?.role === 'patient' ? 'booked' : 'confirmed',
           date: timing,
         },
       }),

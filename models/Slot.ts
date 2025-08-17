@@ -1,6 +1,6 @@
 import mongoose, { Model } from 'mongoose';
 
-import { auth } from '@/auth';
+import { getCurrentUserEmail } from '@/lib/auth-helper';
 import { Base } from '@/lib/interface';
 import { SlotConfig } from '@/types/slots';
 
@@ -21,16 +21,16 @@ const SlotSchema = new mongoose.Schema<SlotType>(
 );
 
 SlotSchema.pre('save', async function (next) {
-  const session = await auth();
-  this.createdBy = session?.user?.email || 'system-admin@divinely.dev';
+  const userEmail = await getCurrentUserEmail();
+  this.createdBy = userEmail;
   next();
 });
 
 SlotSchema.pre(['findOneAndUpdate', 'updateOne', 'updateMany'], async function (next) {
-  const session = await auth();
+  const userEmail = await getCurrentUserEmail();
   this.setUpdate({
     ...this.getUpdate(),
-    updatedBy: session?.user?.email || 'system-admin@divinely.dev',
+    updatedBy: userEmail,
   });
   next();
 });

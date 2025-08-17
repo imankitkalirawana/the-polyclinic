@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { usePathname } from 'next/navigation';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { signIn, signOut } from 'next-auth/react';
 import { useRouter } from 'nextjs-toploader/app';
 import {
   Avatar,
@@ -27,11 +27,12 @@ import { motion } from 'framer-motion';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 import ModeToggle from '../../mode-toggle';
-import { defaultItems, itemsMap } from './data';
+import { defaultItems } from './data';
+import { authClient } from '@/lib/auth-client';
 
 export default function Navbar() {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session } = authClient.useSession();
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [activeMenu, setActiveMenu] = React.useState<null | (typeof menuItems)[0]>(null);
@@ -56,7 +57,9 @@ export default function Navbar() {
     }, 500);
   };
 
-  const menuItems = session?.user?.role ? itemsMap[session?.user?.role || 'patient'] : defaultItems;
+  console.log(session);
+  // const menuItems = session?.user?.role ? itemsMap[session.user.role] : defaultItems;
+  const menuItems = defaultItems;
 
   if (isDisabled) return null;
 
@@ -122,7 +125,7 @@ export default function Navbar() {
                   as="button"
                   size="sm"
                   className="bg-primary-200 transition-transform"
-                  src={session.user?.image}
+                  src={session.user?.image || ''}
                   name={session.user?.name}
                 />
               </DropdownTrigger>

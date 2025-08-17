@@ -10,7 +10,6 @@ import { AuthStep } from '../types';
 import Auth from '..';
 
 import { APP_INFO } from '@/lib/config';
-import { googleLogin } from '@/lib/server-actions/auth';
 
 const LoginComponent: React.FC = () => {
   const { formik, paginate } = useLogin();
@@ -39,12 +38,11 @@ const LoginComponent: React.FC = () => {
             startContent={<Icon icon="devicon:google" width={20} />}
             size="lg"
             onPress={async () => {
-              // addToast({
-              //   title: 'Coming soon',
-              //   description: 'This feature is coming soon',
-              //   color: 'warning',
-              // });
-              await googleLogin();
+              addToast({
+                title: 'Coming soon',
+                description: 'Google authentication will be available soon',
+                color: 'warning',
+              });
             }}
           >
             Continue with Google
