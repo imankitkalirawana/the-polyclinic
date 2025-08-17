@@ -4,6 +4,7 @@ export interface NewPatientFormValues {
   phone: string;
   gender: string;
   dob: string;
+  age?: number;
   address: string;
   city: string;
   state: string;

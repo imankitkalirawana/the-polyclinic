@@ -3,6 +3,7 @@
 import { AppointmentType } from '@/types/appointment';
 import { fetchData, fetchDataWithPagination } from '.';
 import { UserType } from '@/types/user';
+import { NewPatientFormValues } from '@/types/patient';
 
 export async function getAllPatients() {
   return await fetchData<UserType[]>('/patients');
@@ -18,4 +19,11 @@ export async function getPatientsWithPagination(params: {
 
 export async function getPreviousAppointments(uid: number) {
   return await fetchData<AppointmentType[]>(`/patients/${uid}/appointments`);
+}
+
+export async function createPatient(patient: NewPatientFormValues) {
+  return await fetchData<UserType>('/patients', {
+    method: 'POST',
+    data: patient,
+  });
 }

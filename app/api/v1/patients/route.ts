@@ -91,3 +91,16 @@ export const GET = auth(async (req: NextAuthRequest) => {
     );
   }
 });
+
+export const POST = auth(async (req: NextAuthRequest) => {
+  try {
+    if (!req.auth?.user) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+    const data = await req.json();
+    const patient = await User.create(data);
+    return NextResponse.json({ message: 'Patient created successfully', data: patient });
+  } catch (error: unknown) {
+    console.error(error);
+  }
+});

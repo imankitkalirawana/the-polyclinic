@@ -24,6 +24,7 @@ import { Genders } from '@/lib/options';
 import { CreateAppointmentFormValues } from '../types';
 import { $FixMe } from '@/types';
 import { NewPatientFormValues } from '@/types/patient';
+import { useCreatePatient } from '@/services/patient';
 
 // Extended validation schema for new patient creation
 const newPatientValidationSchema = Yup.object().shape({
@@ -40,6 +41,7 @@ const newPatientValidationSchema = Yup.object().shape({
 
 export default function CreateAppointmentPatientNew() {
   const { setFieldValue } = useFormikContext<CreateAppointmentFormValues>();
+  const { mutateAsync } = useCreatePatient();
 
   const formik = useFormik<NewPatientFormValues>({
     initialValues: {
@@ -57,18 +59,12 @@ export default function CreateAppointmentPatientNew() {
     validationSchema: newPatientValidationSchema,
     onSubmit: async (values) => {
       try {
-        // Console log the form values as requested
-        console.log('New Patient Form Values:', values);
+        const res = await mutateAsync(values);
+        if (res.success) {
+          setFieldValue('appointment.patient', res.data.uid);
+        }
 
-        // Here you would typically make an API call to create the patient
-        // For now, we'll just simulate success and close the modal
-
-        // You can add the API call here:
-        // const newPatient = await createPatient(values);
-        // setFieldValue('appointment.patient', newPatient.uid);
-
-        // Close the modal
-        // setFieldValue('meta.createNewPatient', false);
+        setFieldValue('meta.createNewPatient', false);
 
         // Reset form
         formik.resetForm();
@@ -160,6 +156,7 @@ export default function CreateAppointmentPatientNew() {
                 />
 
                 <Select
+                  isRequired
                   disallowEmptySelection
                   label="Gender"
                   placeholder="Select gender"

@@ -1,9 +1,23 @@
-import { useQuery, UseQueryResult } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQuery,
+  UseMutationResult,
+  UseQueryResult,
+  useQueryClient,
+} from '@tanstack/react-query';
 
-import { getAllPatients, getPatientsWithPagination, getPreviousAppointments } from './api/patient';
+import {
+  createPatient,
+  getAllPatients,
+  getPatientsWithPagination,
+  getPreviousAppointments,
+} from './api/patient';
 import { useInfiniteQueryWithSearch } from './infinite-query';
 import { UserType } from '@/types/user';
 import { AppointmentType } from '@/types/appointment';
+import { NewPatientFormValues } from '@/types/patient';
+import { ApiResponse } from './api';
+import { addToast } from '@heroui/react';
 
 export const useAllPatients = (): UseQueryResult<UserType[]> =>
   useQuery({
@@ -42,3 +56,34 @@ export const usePreviousAppointments = (uid: number): UseQueryResult<Appointment
     },
     enabled: !!uid,
   });
+
+export const useCreatePatient = (): UseMutationResult<
+  ApiResponse<UserType>,
+  Error,
+  NewPatientFormValues
+> => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (patient: NewPatientFormValues) => {
+      const res = await createPatient(patient);
+      if (res.success) {
+        return res;
+      }
+      throw new Error(res.message);
+    },
+    onSuccess: (data: ApiResponse<UserType>) => {
+      addToast({
+        title: data.message,
+        color: 'success',
+      });
+      queryClient.invalidateQueries({ queryKey: ['patients'] });
+      queryClient.invalidateQueries({ queryKey: ['patients-infinite'] });
+    },
+    onError: (error: Error) => {
+      addToast({
+        title: error.message,
+        color: 'danger',
+      });
+    },
+  });
+};

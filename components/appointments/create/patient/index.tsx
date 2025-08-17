@@ -35,10 +35,6 @@ const PatientSelection = ({ className }: { className?: string }) => {
 
   const { appointment } = formik.values;
 
-  const selectedPatient = useMemo(() => {
-    return allPatients.find((p) => p.uid === appointment.patient);
-  }, [allPatients, appointment.patient]);
-
   const handlePatientSelect = (patientId: string | number) => {
     formik.setFieldValue('appointment.patient', Number(patientId));
   };
@@ -52,7 +48,7 @@ const PatientSelection = ({ className }: { className?: string }) => {
   useKeyPress(
     ['Enter'],
     () => {
-      if (canProceed) {
+      if (canProceed && !formik.values.meta.createNewPatient) {
         handleNext();
       }
     },
@@ -152,7 +148,7 @@ const PatientSelection = ({ className }: { className?: string }) => {
           </Button>
         </>
       }
-      endContent={<CreateAppointmentPatientDetails uid={selectedPatient?.uid ?? 0} />}
+      endContent={<CreateAppointmentPatientDetails uid={appointment.patient ?? 0} />}
     >
       <div className={cn('flex h-full w-full flex-col', className)}>
         <SearchInput
