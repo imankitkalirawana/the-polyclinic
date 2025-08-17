@@ -212,7 +212,7 @@ export const itemsMap: Record<UserType['role'], NavItem[]> = {
       href: '/home',
     },
   ],
-  user: [
+  patient: [
     {
       name: 'Home',
       href: '/home',

@@ -12,7 +12,7 @@ export const userRoles = [
   'receptionist',
   'pharmacist',
   'laboratorist',
-  'user',
+  'patient',
 ] as const;
 
 export interface UserType extends Base {

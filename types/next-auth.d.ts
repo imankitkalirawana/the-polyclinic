@@ -13,6 +13,7 @@ declare module 'next-auth' {
     role: UserType['role'];
     uid: number;
     image: string;
+    name: string;
   }
 }
 

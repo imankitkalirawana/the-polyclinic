@@ -29,9 +29,6 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import ModeToggle from '../../mode-toggle';
 import { defaultItems, itemsMap } from './data';
 
-import { avatars } from '@/lib/avatar';
-import { UserType } from '@/types/user';
-
 export default function Navbar() {
   const router = useRouter();
   const { data: session } = useSession();
@@ -59,9 +56,7 @@ export default function Navbar() {
     }, 500);
   };
 
-  const menuItems = session?.user?.role
-    ? itemsMap[session?.user?.role as UserType['role']]
-    : defaultItems;
+  const menuItems = session?.user?.role ? itemsMap[session?.user?.role || 'patient'] : defaultItems;
 
   if (isDisabled) return null;
 
@@ -120,15 +115,15 @@ export default function Navbar() {
 
       <NavbarContent justify="end">
         <NavbarItem className="ml-2 !flex gap-2">
-          {session ? (
+          {session?.user ? (
             <Dropdown size="sm" placement="bottom-end">
               <DropdownTrigger>
                 <Avatar
                   as="button"
                   size="sm"
                   className="bg-primary-200 transition-transform"
-                  src={session.user?.image || ''}
-                  fallback={avatars.memoji[2]}
+                  src={session.user?.image}
+                  name={session.user?.name}
                 />
               </DropdownTrigger>
               <DropdownMenu aria-label="Profile Actions" variant="flat">

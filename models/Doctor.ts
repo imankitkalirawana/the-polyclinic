@@ -4,11 +4,16 @@ import { auth } from '@/auth';
 
 const doctorSchema = new mongoose.Schema(
   {
-    uid: {
+    did: {
       type: Number,
-      required: true,
       unique: true,
     },
+    name: {
+      type: String,
+      required: true,
+    },
+    email: String,
+    phone: String,
     designation: String,
     department: String,
     experience: String,

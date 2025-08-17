@@ -3,7 +3,7 @@
 import { AuthError } from 'next-auth';
 import bcrypt from 'bcryptjs';
 
-import { connectDB } from '../db';
+import client, { connectDB } from '../db';
 import { sendHTMLEmail } from './email';
 
 import { signIn } from '@/auth';
@@ -12,7 +12,7 @@ import { APP_INFO } from '@/lib/config';
 import Otp from '@/models/Otp';
 import User from '@/models/User';
 import { OtpEmail, WelcomeUser } from '@/templates/email';
-import { Gender } from '@/types/user';
+import { Gender, UserType } from '@/types/user';
 
 export const sendOTP = async ({
   email,
@@ -170,4 +170,32 @@ export const login = async ({ email, password }: { email: string; password: stri
 
 export const googleLogin = async () => {
   await signIn('google');
+};
+
+export const fetchUserByRole = async (role: UserType['role'], uid: number) => {
+  await client.connect();
+  const db = client.db(process.env.MONGODB_DB_NAME);
+  const collectionMap = {
+    patient: {
+      collection: 'patients',
+      id: 'pid',
+    },
+    doctor: {
+      collection: 'doctors',
+      id: 'did',
+    },
+  };
+
+  if (Object.keys(collectionMap).includes(role)) {
+    const collectionInfo = collectionMap[role as keyof typeof collectionMap];
+    const user = await db
+      .collection(collectionInfo.collection)
+      .findOne({ [collectionInfo.id]: uid });
+    return user;
+  } else {
+    const user = await User.findOne({ uid });
+    return user;
+  }
+
+  await client.close();
 };
