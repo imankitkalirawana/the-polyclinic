@@ -1,15 +1,15 @@
 import { NextResponse } from 'next/server';
-import { NextAuthRequest } from 'next-auth';
 import bcrypt from 'bcryptjs';
 
 import { auth } from '@/auth';
+import { BetterAuthRequest } from '@/types/better-auth';
 import { API_ACTIONS } from '@/lib/config';
 import { connectDB } from '@/lib/db';
 import User from '@/models/User';
 import { $FixMe } from '@/types';
 
 // get user by id from param
-export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
+export const GET = auth(async (request: BetterAuthRequest, context: $FixMe) => {
   try {
     const uid = parseInt(context.params.uid);
 
@@ -33,7 +33,7 @@ export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
   }
 });
 
-export const PUT = auth(async (request: NextAuthRequest, context: $FixMe) => {
+export const PUT = auth(async (request: BetterAuthRequest, context: $FixMe) => {
   try {
     const allowedRoles = ['admin', 'receptionist'];
     // @ts-ignore
@@ -74,7 +74,7 @@ export const PUT = auth(async (request: NextAuthRequest, context: $FixMe) => {
 });
 
 // delete user by id from param
-export const DELETE = auth(async (request: NextAuthRequest, context: $FixMe) => {
+export const DELETE = auth(async (request: BetterAuthRequest, context: $FixMe) => {
   try {
     const allowedRoles = ['admin', 'receptionist'];
     // @ts-ignore

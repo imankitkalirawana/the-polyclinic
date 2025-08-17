@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
-import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
+import { BetterAuthRequest } from '@/types/better-auth';
 import { connectDB } from '@/lib/db';
 import Email from '@/models/Email';
 import { $FixMe } from '@/types';
 
-export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
+export const GET = auth(async (request: BetterAuthRequest, context: $FixMe) => {
   try {
     if (request.auth?.user?.role !== 'admin') {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -27,7 +27,7 @@ export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
   }
 });
 
-export const DELETE = auth(async (request: NextAuthRequest, context: $FixMe) => {
+export const DELETE = auth(async (request: BetterAuthRequest, context: $FixMe) => {
   try {
     if (request.auth?.user?.role !== 'admin') {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });

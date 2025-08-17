@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
-import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
+import { BetterAuthRequest } from '@/types/better-auth';
 import { connectDB } from '@/lib/db';
 import Drug from '@/models/Drug';
 import { $FixMe } from '@/types';
 
 // get drug by id from param
-export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
+export const GET = auth(async (request: BetterAuthRequest, context: $FixMe) => {
   try {
     const allowedRoles = ['admin', 'doctor', 'receptionist'];
     if (!allowedRoles.includes(request.auth?.user?.role ?? '')) {
@@ -31,7 +31,7 @@ export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
 });
 
 // update drug by did from param
-export const PUT = auth(async (request: NextAuthRequest, context: $FixMe) => {
+export const PUT = auth(async (request: BetterAuthRequest, context: $FixMe) => {
   try {
     const allowedRoles = ['admin', 'laboratorist'];
     if (!allowedRoles.includes(request.auth?.user?.role ?? '')) {
@@ -66,7 +66,7 @@ export const PUT = auth(async (request: NextAuthRequest, context: $FixMe) => {
 });
 
 // delete drug by did from param
-export const DELETE = auth(async (request: NextAuthRequest, context: $FixMe) => {
+export const DELETE = auth(async (request: BetterAuthRequest, context: $FixMe) => {
   try {
     const allowedRoles = ['admin', 'laboratorist'];
     if (!allowedRoles.includes(request.auth?.user?.role ?? '')) {

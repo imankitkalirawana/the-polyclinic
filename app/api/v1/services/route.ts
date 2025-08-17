@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
-import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
+import { BetterAuthRequest } from '@/types/better-auth';
 import { connectDB } from '@/lib/db';
 import Service from '@/models/Service';
 import { ServiceType } from '@/types/service';
 
-export const GET = auth(async (request: NextAuthRequest) => {
+export const GET = auth(async (request: BetterAuthRequest) => {
   try {
     if (!request.auth?.user) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -26,7 +26,7 @@ export const GET = auth(async (request: NextAuthRequest) => {
   }
 });
 
-export const POST = auth(async (request: NextAuthRequest) => {
+export const POST = auth(async (request: BetterAuthRequest) => {
   const allowedRoles = ['admin'];
   if (!allowedRoles.includes(request.auth?.user?.role ?? '')) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -50,7 +50,7 @@ export const POST = auth(async (request: NextAuthRequest) => {
   }
 });
 
-export const DELETE = auth(async (request: NextAuthRequest) => {
+export const DELETE = auth(async (request: BetterAuthRequest) => {
   const allowedRoles = ['admin'];
   if (!allowedRoles.includes(request.auth?.user?.role ?? '')) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });

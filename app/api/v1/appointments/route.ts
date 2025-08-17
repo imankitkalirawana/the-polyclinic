@@ -1,14 +1,14 @@
 import { getAppointmentsWithDetails } from './../../../../helpers/api/appointments/index';
 import { NextResponse } from 'next/server';
-import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
+import { BetterAuthRequest } from '@/types/better-auth';
 import { API_ACTIONS } from '@/lib/config';
 import { connectDB } from '@/lib/db';
 import Appointment from '@/models/Appointment';
 import { UserType } from '@/types/user';
 
-export const GET = auth(async (request: NextAuthRequest) => {
+export const GET = auth(async (request: BetterAuthRequest) => {
   try {
     await connectDB();
 
@@ -48,7 +48,7 @@ export const GET = auth(async (request: NextAuthRequest) => {
   }
 });
 
-export const POST = auth(async (request: NextAuthRequest) => {
+export const POST = auth(async (request: BetterAuthRequest) => {
   try {
     const allowedRoles = ['admin', 'doctor', 'receptionist', 'patient'];
     // @ts-ignore
@@ -80,7 +80,7 @@ export const POST = auth(async (request: NextAuthRequest) => {
   }
 });
 
-export const PATCH = auth(async (request: NextAuthRequest) => {
+export const PATCH = auth(async (request: BetterAuthRequest) => {
   try {
     const allowedRoles = ['admin', 'receptionist'];
     if (request.auth?.user && !allowedRoles.includes(request.auth?.user?.role)) {
@@ -104,7 +104,7 @@ export const PATCH = auth(async (request: NextAuthRequest) => {
   }
 });
 
-export const DELETE = auth(async (request: NextAuthRequest) => {
+export const DELETE = auth(async (request: BetterAuthRequest) => {
   try {
     const allowedRoles = ['admin', 'receptionist'];
     if (request.auth?.user && !allowedRoles.includes(request.auth?.user?.role)) {

@@ -1,18 +1,22 @@
-import { NextAuthRequest } from 'next-auth';
 import { NextResponse } from 'next/server';
-import User from '@/models/User';
+
 import { auth } from '@/auth';
+import User from '@/models/User';
 import { UserType } from '@/types/user';
 import { connectDB } from '@/lib/db';
 
-export const GET = auth(async (req: NextAuthRequest) => {
+export const GET = async (req: Request) => {
   try {
-    if (!req.auth?.user) {
+    const session = await auth.api.getSession({
+      headers: req.headers,
+    });
+
+    if (!session?.user) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    const email = req.auth.user.email;
-    const role = req.auth.user.role;
+    const email = session.user.email;
+    const role = session.user.role;
 
     const ALLOWED_ROLES = ['admin', 'receptionist', 'patient'];
 
@@ -90,11 +94,15 @@ export const GET = auth(async (req: NextAuthRequest) => {
       { status: 500 }
     );
   }
-});
+};
 
-export const POST = auth(async (req: NextAuthRequest) => {
+export const POST = async (req: Request) => {
   try {
-    if (!req.auth?.user) {
+    const session = await auth.api.getSession({
+      headers: req.headers,
+    });
+
+    if (!session?.user) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
     const data = await req.json();
@@ -103,4 +111,4 @@ export const POST = auth(async (req: NextAuthRequest) => {
   } catch (error: unknown) {
     console.error(error);
   }
-});
+};

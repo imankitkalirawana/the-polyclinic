@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
-import { NextAuthRequest } from 'next-auth';
 import bcrypt from 'bcryptjs';
 
 import { auth } from '@/auth';
+import { BetterAuthRequest } from '@/types/better-auth';
 import { connectDB } from '@/lib/db';
 import User from '@/models/User';
 
-export const PATCH = auth(async (request: NextAuthRequest) => {
+export const PATCH = auth(async (request: BetterAuthRequest) => {
   try {
     if (!request.auth?.user) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });

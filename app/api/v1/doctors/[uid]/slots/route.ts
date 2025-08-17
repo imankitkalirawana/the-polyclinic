@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
-import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
+import { BetterAuthRequest } from '@/types/better-auth';
 import { connectDB } from '@/lib/db';
 import Slot from '@/models/Slot';
 import { $FixMe } from '@/types';
 
-export const GET = auth(async (_request: NextAuthRequest, context: $FixMe) => {
+export const GET = auth(async (_request: BetterAuthRequest, context: $FixMe) => {
   try {
     const { uid } = await context.params;
 
@@ -23,7 +23,7 @@ export const GET = auth(async (_request: NextAuthRequest, context: $FixMe) => {
   }
 });
 
-export const POST = auth(async (request: NextAuthRequest, context: $FixMe) => {
+export const POST = auth(async (request: BetterAuthRequest, context: $FixMe) => {
   try {
     const { uid } = await context.params;
     const data = await request.json();

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
+import { BetterAuthRequest } from '@/types/better-auth';
 import { API_ACTIONS } from '@/lib/config';
 import { connectDB } from '@/lib/db';
 import { logActivity } from '@/lib/server-actions/activity-log';
@@ -12,7 +12,7 @@ import { Schema, Status } from '@/types/activity';
 import { UserType } from '@/types/user';
 
 // get appointment by id from param
-export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
+export const GET = auth(async (request: BetterAuthRequest, context: $FixMe) => {
   try {
     const allowedRoles = ['patient', 'admin', 'doctor', 'receptionist'];
     const role = request.auth?.user?.role;
@@ -124,7 +124,7 @@ export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
   }
 });
 
-export const PATCH = auth(async (request: NextAuthRequest, context: $FixMe) => {
+export const PATCH = auth(async (request: BetterAuthRequest, context: $FixMe) => {
   try {
     const allowedRoles = ['patient', 'admin', 'doctor', 'receptionist'];
 
@@ -194,7 +194,7 @@ export const PATCH = auth(async (request: NextAuthRequest, context: $FixMe) => {
   }
 });
 
-export const DELETE = auth(async (request: NextAuthRequest, context: $FixMe) => {
+export const DELETE = auth(async (request: BetterAuthRequest, context: $FixMe) => {
   try {
     const user = request.auth?.user;
     const allowedRoles = ['admin'];

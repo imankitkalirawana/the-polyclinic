@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
-import { NextAuthRequest } from 'next-auth';
 
 import { connectDB } from '@/lib/db';
+import { BetterAuthRequest } from '@/types/better-auth';
 import Appointment from '@/models/Appointment';
 
-export const POST = async function POST(req: NextAuthRequest) {
+export const POST = async function POST(req: BetterAuthRequest) {
   try {
     await connectDB();
     const data = await req.json();

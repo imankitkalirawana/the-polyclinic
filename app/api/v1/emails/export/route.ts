@@ -1,14 +1,14 @@
 import { NextResponse } from 'next/server';
-import { NextAuthRequest } from 'next-auth';
 import { format } from 'date-fns';
 import ExcelJS from 'exceljs';
 import { stripHtml } from 'string-strip-html'; // Install this package
 
 import { auth } from '@/auth';
+import { BetterAuthRequest } from '@/types/better-auth';
 import { connectDB } from '@/lib/db';
 import Email from '@/models/Email';
 
-export const GET = auth(async (request: NextAuthRequest) => {
+export const GET = auth(async (request: BetterAuthRequest) => {
   try {
     if (request.auth?.user?.role !== 'admin') {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });

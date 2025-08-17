@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
-import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
+import { BetterAuthRequest } from '@/types/better-auth';
 import { connectDB } from '@/lib/db';
 import Doctor from '@/models/Doctor';
 import { $FixMe } from '@/types';
 
-export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
+export const GET = auth(async (request: BetterAuthRequest, context: $FixMe) => {
   try {
     const allowedRoles = ['admin', 'doctor'];
 

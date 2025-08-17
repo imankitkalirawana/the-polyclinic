@@ -1,20 +1,27 @@
 import { NextResponse } from 'next/server';
-import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
+import { BetterAuthRequest } from '@/types/better-auth';
 import { API_ACTIONS } from '@/lib/config';
 import { connectDB } from '@/lib/db';
 import User from '@/models/User';
 import { UserType } from '@/types/user';
 
-export const GET = auth(async (req: NextAuthRequest) => {
+export const GET = async (req: Request) => {
+  const session = await auth.api.getSession({
+    headers: req.headers,
+  });
+
+  if (!session?.user) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  }
   try {
     if (!req.auth?.user) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    const email = req.auth.user.email;
-    const role = req.auth.user.role;
+    const email = session.user.email;
+    const role = session.user.role;
 
     const ALLOWED_ROLES = ['admin', 'receptionist', 'patient'];
 
@@ -48,9 +55,9 @@ export const GET = auth(async (req: NextAuthRequest) => {
       { status: 500 }
     );
   }
-});
+};
 
-export const POST = auth(async (request: NextAuthRequest) => {
+export const POST = auth(async (request: BetterAuthRequest) => {
   try {
     const allowedRoles = ['admin', 'receptionist'];
     if (!allowedRoles.includes(request.auth?.user?.role ?? '')) {
@@ -76,7 +83,7 @@ export const POST = auth(async (request: NextAuthRequest) => {
 });
 
 // Delete Users
-export const DELETE = auth(async (request: NextAuthRequest) => {
+export const DELETE = auth(async (request: BetterAuthRequest) => {
   try {
     const allowedRoles = ['admin', 'receptionist'];
     if (!allowedRoles.includes(request.auth?.user?.role ?? '')) {

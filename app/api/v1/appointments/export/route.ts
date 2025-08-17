@@ -1,14 +1,14 @@
 import { NextResponse } from 'next/server';
-import { NextAuthRequest } from 'next-auth';
 import { format } from 'date-fns';
 import ExcelJS from 'exceljs';
 
 import { auth } from '@/auth';
+import { BetterAuthRequest } from '@/types/better-auth';
 import { connectDB } from '@/lib/db';
 import Appointment from '@/models/Appointment';
 import { UserType } from '@/types/user';
 
-export const POST = auth(async (request: NextAuthRequest) => {
+export const POST = auth(async (request: BetterAuthRequest) => {
   try {
     const allowedRoles: UserType['role'][] = ['admin'];
     if (request.auth?.user && !allowedRoles.includes(request.auth?.user?.role)) {

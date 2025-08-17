@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
-import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
+import { BetterAuthRequest } from '@/types/better-auth';
 import { connectDB } from '@/lib/db';
 import Email from '@/models/Email';
 
-export const GET = auth(async (request: NextAuthRequest) => {
+export const GET = auth(async (request: BetterAuthRequest) => {
   try {
     const allowedRoles = ['admin'];
 
@@ -27,7 +27,7 @@ export const GET = auth(async (request: NextAuthRequest) => {
   }
 });
 
-export const POST = async function POST(request: NextAuthRequest) {
+export const POST = async function POST(request: BetterAuthRequest) {
   try {
     const data = await request.json();
 

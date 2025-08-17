@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
-import { NextAuthRequest } from 'next-auth';
 
 import { connectDB } from '@/lib/db';
+import { BetterAuthRequest } from '@/types/better-auth';
 import Newsletter from '@/models/Newsletter';
 import { $FixMe } from '@/types';
 
-export const DELETE = async function DELETE(_request: NextAuthRequest, context: $FixMe) {
+export const DELETE = async function DELETE(_request: BetterAuthRequest, context: $FixMe) {
   try {
     const { email } = await context.params;
     await connectDB();

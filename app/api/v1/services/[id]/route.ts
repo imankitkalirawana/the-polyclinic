@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
-import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
+import { BetterAuthRequest } from '@/types/better-auth';
 import { connectDB } from '@/lib/db';
 import Service from '@/models/Service';
 import { $FixMe } from '@/types';
 import { ServiceType } from '@/types/service';
 
-export const GET = async function GET(_request: NextAuthRequest, context: $FixMe) {
+export const GET = async function GET(_request: BetterAuthRequest, context: $FixMe) {
   try {
     const { id } = await context.params;
     await connectDB();
@@ -27,7 +27,7 @@ export const GET = async function GET(_request: NextAuthRequest, context: $FixMe
   }
 };
 
-export const PUT = auth(async (request: NextAuthRequest, context: $FixMe) => {
+export const PUT = auth(async (request: BetterAuthRequest, context: $FixMe) => {
   const allowedRoles = ['admin'];
   if (!allowedRoles.includes(request.auth?.user?.role ?? '')) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -53,7 +53,7 @@ export const PUT = auth(async (request: NextAuthRequest, context: $FixMe) => {
   }
 });
 
-export const DELETE = auth(async (request: NextAuthRequest, context: $FixMe) => {
+export const DELETE = auth(async (request: BetterAuthRequest, context: $FixMe) => {
   const allowedRoles = ['admin'];
   if (!allowedRoles.includes(request.auth?.user?.role ?? '')) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });

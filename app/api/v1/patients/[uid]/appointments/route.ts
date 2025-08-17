@@ -1,6 +1,7 @@
-import { NextAuthRequest } from 'next-auth';
 import { NextResponse } from 'next/server';
+
 import { auth } from '@/auth';
+import { BetterAuthRequest } from '@/types/better-auth';
 import { connectDB } from '@/lib/db';
 import { getAppointmentsWithDetails } from '@/helpers/api/appointments';
 
@@ -8,7 +9,7 @@ type Params = Promise<{
   uid: string;
 }>;
 
-export const GET = auth(async (req: NextAuthRequest, { params }: { params: Params }) => {
+export const GET = auth(async (req: BetterAuthRequest, { params }: { params: Params }) => {
   const uid = Number((await params).uid);
 
   const allowedRoles = ['admin', 'doctor', 'receptionist', 'patient'];

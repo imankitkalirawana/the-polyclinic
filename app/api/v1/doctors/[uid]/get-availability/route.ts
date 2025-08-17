@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
+import { BetterAuthRequest } from '@/types/better-auth';
 import { connectDB } from '@/lib/db';
 import Appointment from '@/models/Appointment';
 import Slot from '@/models/Slot';
@@ -125,7 +125,7 @@ async function processDateSlots(date: string, allAppointments: $FixMe[], slotsCo
   };
 }
 
-export const POST = auth(async (request: NextAuthRequest, context: $FixMe) => {
+export const POST = auth(async (request: BetterAuthRequest, context: $FixMe) => {
   try {
     await connectDB();
 
