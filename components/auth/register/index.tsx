@@ -1,224 +1,121 @@
 'use client';
 
-import React from 'react';
-import { addToast, Button, DatePicker, Link, Select, SelectItem } from '@heroui/react';
-import { useQueryState } from 'nuqs';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import { getLocalTimeZone, parseDate, today } from '@internationalized/date';
-import { I18nProvider } from '@react-aria/i18n';
+import { Button, Card, CardBody, CardHeader, Input } from '@heroui/react';
+import { useFormik } from 'formik';
+import { authClient } from '@/lib/auth-client';
 
-import { Input, OtpInput, PasswordInput } from '../form';
-import { RegisterProvider, useRegister } from '../store';
-import { AuthStep } from '../types';
-import Auth from '..';
-
-import { APP_INFO } from '@/lib/config';
-import { $FixMe } from '@/types';
-import { Gender, genders } from '@/types/user';
-
-const RegisterComponent: React.FC = () => {
-  const { formik, paginate } = useRegister();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_email, setEmail] = useQueryState('email');
-
-  const REGISTER_STEPS: Record<number, AuthStep> = {
-    0: {
-      title: 'Sign up in seconds',
-      description: `Use your email or another service to continue with ${APP_INFO.name}!`,
-      content: (
-        <>
-          <Button
-            fullWidth
-            variant="flat"
-            startContent={<Icon icon="solar:letter-bold-duotone" width={20} />}
-            size="lg"
-            color="primary"
-            onPress={() => {
-              paginate(1);
-            }}
-          >
-            Continue with Email
-          </Button>
-          <Button
-            fullWidth
-            variant="bordered"
-            startContent={<Icon icon="devicon:google" width={20} />}
-            size="lg"
-            onPress={async () => {
-              addToast({
-                title: 'Coming soon',
-                description: 'Google authentication will be available soon',
-                color: 'warning',
-              });
-            }}
-          >
-            Continue with Google
-          </Button>
-          <Button fullWidth variant="light" size="lg">
-            Continue another way
-          </Button>
-        </>
-      ),
-    },
-    1: {
-      title: 'Continue with email',
-      description: "We'll check if you have an account, and help create one if you don't.",
-      button: 'Continue',
-      content: (
-        <Input
-          name="email"
-          type="email"
-          label="Email"
-          placeholder="john.doe@example.com"
-          autoComplete="email"
-          autoFocus
-          isInvalid={!!(formik.touched.email && formik.errors.email)}
-          errorMessage={formik.errors.email?.toString()}
-          value={formik.values.email}
-          onChange={(e) => {
-            setEmail(e.target.value);
-            formik.setFieldValue('email', e.target.value);
-          }}
-        />
-      ),
-    },
-    2: {
-      title: 'Create your account',
-      description: `You're creating a ${APP_INFO.name} account with ${formik.values.email}.`,
-      button: 'Continue',
-      content: (
-        <>
-          <Input
-            label="Name"
-            placeholder="John Doe"
-            value={formik.values.name}
-            onValueChange={(value) => formik.setFieldValue('name', value)}
-            isInvalid={!!(formik.touched.name && formik.errors.name)}
-            errorMessage={formik.errors.name?.toString()}
-            autoFocus
-          />
-          <Select
-            label="Gender"
-            value={formik.values.gender}
-            selectedKeys={[formik.values.gender]}
-            onSelectionChange={(value) => {
-              const gender = Array.from(value)[0] as Gender;
-              formik.setFieldValue('gender', gender);
-            }}
-            disallowEmptySelection
-            isInvalid={!!(formik.touched.gender && formik.errors.gender)}
-            errorMessage={formik.errors.gender?.toString()}
-          >
-            {genders.map((gender) => (
-              <SelectItem key={gender}>
-                {gender.charAt(0).toUpperCase() + gender.slice(1)}
-              </SelectItem>
-            ))}
-          </Select>
-          <I18nProvider locale="en-IN">
-            <DatePicker
-              label="Date of Birth (Optional)"
-              // @ts-expect-error - TODO: fix this
-              value={formik.values.dob ? parseDate(formik.values.dob) : null}
-              onChange={(value) => {
-                const dob = new Date(value as $FixMe).toISOString().split('T')[0];
-                formik.setFieldValue('dob', dob);
-              }}
-              maxValue={today(getLocalTimeZone())}
-              showMonthAndYearPickers
-            />
-          </I18nProvider>
-        </>
-      ),
-    },
-    3: {
-      title: "You're almost signed up",
-      description: `Enter the code we sent to ${formik.values.email} to finish signing up.`,
-      button: 'Continue',
-      content: (
-        <OtpInput
-          email={formik.values.email}
-          label="OTP"
-          placeholder="Enter OTP"
-          value={formik.values.otp}
-          onValueChange={(value) => formik.setFieldValue('otp', value)}
-          isInvalid={!!(formik.touched.otp && formik.errors.otp)}
-          errorMessage={formik.errors.otp?.toString()}
-          autoFocus
-          onComplete={() => formik.handleSubmit()}
-        />
-      ),
-    },
-    4: {
-      title: 'One more step',
-      description: `Create a password to secure your account.`,
-      button: 'Sign up',
-      content: (
-        <>
-          <Input
-            name="email"
-            type="email"
-            label="Email"
-            placeholder="john.doe@example.com"
-            autoComplete="email"
-            value={formik.values.email}
-            className="sr-only"
-          />
-          <PasswordInput
-            autoFocus
-            isValidation
-            onValueChange={(value) => formik.setFieldValue('password', value)}
-            isInvalid={!!(formik.touched.password && formik.errors.password)}
-          />
-        </>
-      ),
-    },
-  };
-
-  const registerFooter =
-    formik.values.page === 0 ? (
-      <>
-        <div className="text-center text-small">
-          By continuing, you agree to {APP_INFO.name}&apos;s{' '}
-          <Link className="underline" href="/terms-of-use" size="sm">
-            Terms of Use
-          </Link>
-          . Read our{' '}
-          <Link className="underline" href="/privacy-policy" size="sm">
-            Privacy Policy
-          </Link>
-          .
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="h-px w-full bg-divider" />
-          <div className="text-small text-default-500">or</div>
-          <div className="h-px w-full bg-divider" />
-        </div>
-        <div className="text-center text-small">
-          Already have an account?&nbsp;
-          <Link href="/auth/login" size="sm">
-            Log In
-          </Link>
-        </div>
-      </>
-    ) : undefined;
-
-  return (
-    <Auth
-      flowType="register"
-      steps={REGISTER_STEPS}
-      formik={formik}
-      paginate={paginate}
-      footer={registerFooter}
-    />
-  );
-};
-
-// Wrapper with provider
 export default function Register() {
+  const formik = useFormik({
+    initialValues: {
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      otp: '',
+      step: 0,
+    },
+
+    onSubmit: async (values) => {
+      const { error } = await authClient.signUp.email({
+        email: values.email,
+        password: values.password,
+        name: values.name,
+        callbackURL: '/dashboard',
+      });
+    },
+  });
+
   return (
-    <RegisterProvider>
-      <RegisterComponent />
-    </RegisterProvider>
+    <div className="flex min-h-screen items-center justify-center p-4">
+      <Card className="w-full max-w-md">
+        <CardHeader className="flex flex-col gap-2 text-center">
+          <h1 className="text-2xl font-bold">Create Account</h1>
+          <p className="text-sm text-default-500">Sign up to get started</p>
+        </CardHeader>
+        <CardBody className="flex flex-col gap-6">
+          <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4">
+            <Input
+              type="text"
+              name="name"
+              label="Full Name"
+              placeholder="Enter your full name"
+              value={formik.values.name}
+              onChange={formik.handleChange}
+              isInvalid={formik.touched.name && !!formik.errors.name}
+              errorMessage={formik.touched.name && formik.errors.name}
+              autoFocus
+              radius="lg"
+            />
+
+            <Input
+              type="email"
+              name="email"
+              label="Email Address"
+              placeholder="Enter your email address"
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              isInvalid={formik.touched.email && !!formik.errors.email}
+              errorMessage={formik.touched.email && formik.errors.email}
+              radius="lg"
+            />
+
+            <Input
+              type="password"
+              name="password"
+              label="Password"
+              placeholder="Enter your password"
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              isInvalid={formik.touched.password && !!formik.errors.password}
+              errorMessage={formik.touched.password && formik.errors.password}
+              radius="lg"
+            />
+
+            <Input
+              type="password"
+              name="confirmPassword"
+              label="Confirm Password"
+              placeholder="Confirm your password"
+              value={formik.values.confirmPassword}
+              onChange={formik.handleChange}
+              isInvalid={formik.touched.confirmPassword && !!formik.errors.confirmPassword}
+              errorMessage={formik.touched.confirmPassword && formik.errors.confirmPassword}
+              radius="lg"
+            />
+            <Button
+              type="submit"
+              color="primary"
+              size="lg"
+              radius="lg"
+              isLoading={formik.isSubmitting}
+              fullWidth
+            >
+              Create Account
+            </Button>
+          </form>
+
+          {formik.values.step > 0 && (
+            <div className="text-center">
+              <Button
+                variant="light"
+                size="sm"
+                onPress={() => formik.setFieldValue('step', formik.values.step - 1)}
+              >
+                Back
+              </Button>
+            </div>
+          )}
+
+          <div className="text-center text-sm text-default-500">
+            <p>
+              Already have an account?{' '}
+              <a href="/auth/login" className="text-primary hover:underline">
+                Sign in
+              </a>
+            </p>
+          </div>
+        </CardBody>
+      </Card>
+    </div>
   );
 }

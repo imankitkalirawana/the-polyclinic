@@ -3,7 +3,7 @@ import { betterAuth } from 'better-auth';
 import { MongoClient } from 'mongodb';
 import { mongodbAdapter } from 'better-auth/adapters/mongodb';
 import { passkey } from 'better-auth/plugins/passkey';
-import { admin } from 'better-auth/plugins';
+import { admin, createAuthMiddleware } from 'better-auth/plugins';
 import { organization } from 'better-auth/plugins';
 import { emailOTP } from 'better-auth/plugins';
 import { nextCookies } from 'better-auth/next-js';
@@ -15,14 +15,8 @@ const client = new MongoClient(process.env.MONGODB_URI as string);
 const db = client.db();
 
 export const auth = betterAuth({
+  appName: APP_INFO.name,
   database: mongodbAdapter(db),
-  socialProviders: {
-    google: {
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    },
-  },
-
   user: {
     deleteUser: {
       enabled: true,
@@ -30,12 +24,35 @@ export const auth = betterAuth({
     additionalFields: {
       uid: {
         type: 'number',
-        required: true,
       },
     },
   },
   emailAndPassword: {
     enabled: true,
+    requireEmailVerification: true,
+    sendResetPassword: async ({ user, url: _url, token }, _request) => {
+      const MailOptions: MailOptions = {
+        to: user.email,
+        subject: `Reset your password - ${APP_INFO.name}`,
+        html: OtpEmail(token),
+      };
+      await sendHTMLEmail(MailOptions);
+    },
+    onPasswordReset: async ({ user }, _request) => {
+      console.log(`Password for user ${user.email} has been reset.`);
+    },
+  },
+  emailVerification: {
+    sendVerificationEmail: async ({ user, url, token: _token }, _request) => {
+      const MailOptions: MailOptions = {
+        to: user.email,
+        subject: `Verify your email address - ${APP_INFO.name}`,
+        html: OtpEmail(url),
+      };
+      sendHTMLEmail(MailOptions);
+    },
+    sendOnSignUp: true,
+    autoSignInAfterVerification: true,
   },
   plugins: [
     passkey(),
@@ -52,6 +69,33 @@ export const auth = betterAuth({
         Promise.all(emailTasks);
       },
     }),
+
     nextCookies(),
   ],
+  hooks: {
+    after: createAuthMiddleware(async (ctx) => {
+      console.log(
+        'ctxId',
+        ctx.context.generateId({
+          model: 'user',
+          size: 123,
+        })
+      );
+      if (ctx.path.startsWith('/sign-up')) {
+        const newSession = ctx.context.newSession;
+        if (newSession) {
+          const user = await db.collection('user').findOne({ email: newSession.user.email });
+          const previousId = await db.collection('counters').findOne({ id: 'uid' });
+          const nextId = previousId ? previousId.seq + 1 : 1;
+          if (user) {
+            await db.collection('user').updateOne({ uid: user.uid }, { $set: { uid: nextId } });
+            await db.collection('counters').updateOne({ id: 'uid' }, { $set: { seq: nextId } });
+          }
+        }
+      }
+    }),
+  },
+  telemetry: {
+    enabled: false,
+  },
 });

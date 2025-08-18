@@ -8,6 +8,7 @@ export const APP_INFO = {
   email: 'admin@divinely.dev',
   url: process.env.NEXTAUTH_URL || '',
   description: `The Polyclinic is a platform for booking appointments with doctors.`,
+  domain: 'divinely.dev',
 };
 
 export const rowOptions = [

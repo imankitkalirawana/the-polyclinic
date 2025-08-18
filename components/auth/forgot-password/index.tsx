@@ -1,108 +1,93 @@
 'use client';
 
 import React from 'react';
-import { Link } from '@heroui/react';
+import { Button, Card, CardBody, CardHeader, Input, Link } from '@heroui/react';
+import { useFormik } from 'formik';
+import { authClient } from '@/lib/auth-client';
 
-import { Input, OtpInput, PasswordInput } from '../form';
-import { ForgotPasswordProvider, useForgetPassword } from '../store';
-import { AuthStep } from '../types';
-import Auth from '..';
-
-import { APP_INFO } from '@/lib/config';
-
-const ForgotPasswordComponent: React.FC = () => {
-  const { formik, paginate } = useForgetPassword();
-
-  const FORGOT_PASSWORD_STEPS: Record<number, AuthStep> = {
-    0: {
-      title: 'Forgot your password?',
-      description: `Enter your email address and we'll send you a code to reset your password.`,
-      button: 'Send code',
-      content: (
-        <Input
-          name="email"
-          type="email"
-          label="Email"
-          placeholder="john.doe@example.com"
-          autoComplete="email"
-          autoFocus
-          isInvalid={!!(formik.touched.email && formik.errors.email)}
-          errorMessage={formik.errors.email?.toString()}
-          value={formik.values.email}
-          onChange={formik.handleChange}
-        />
-      ),
-    },
-    1: {
-      title: 'Check your email',
-      description: `We've sent a verification code to ${formik.values.email}. Enter it below to reset your password.`,
-      button: 'Verify code',
-      content: (
-        <OtpInput
-          email={formik.values.email}
-          type="forgot-password"
-          label="Verification code"
-          placeholder="Enter code"
-          value={formik.values.otp}
-          onValueChange={(value) => formik.setFieldValue('otp', value)}
-          isInvalid={!!(formik.touched.otp && formik.errors.otp)}
-          errorMessage={formik.errors.otp?.toString()}
-          autoFocus
-          onComplete={() => formik.handleSubmit()}
-        />
-      ),
-    },
-    2: {
-      title: 'Create new password',
-      description: `Create a new password for your ${APP_INFO.name} account.`,
-      button: 'Reset password',
-      content: (
-        <>
-          <PasswordInput
-            autoFocus
-            isValidation
-            label="New password"
-            onValueChange={(value) => formik.setFieldValue('newPassword', value)}
-            isInvalid={!!(formik.touched.newPassword && formik.errors.newPassword)}
-            errorMessage={formik.errors.newPassword?.toString()}
-          />
-
-          <PasswordInput
-            label="Confirm password"
-            onValueChange={(value) => formik.setFieldValue('confirmPassword', value)}
-            isInvalid={!!(formik.touched.confirmPassword && formik.errors.confirmPassword)}
-            errorMessage={formik.errors.confirmPassword?.toString()}
-          />
-        </>
-      ),
-    },
-  };
-
-  const forgotPasswordFooter = (
-    <div className="text-center text-small">
-      Remember your password?&nbsp;
-      <Link href={`/auth/login?email=${formik.values.email}`} size="sm">
-        Log In
-      </Link>
-    </div>
-  );
-
-  return (
-    <Auth
-      flowType="forgot-password"
-      steps={FORGOT_PASSWORD_STEPS}
-      formik={formik}
-      paginate={paginate}
-      footer={forgotPasswordFooter}
-    />
-  );
-};
-
-// Wrapper with provider
 export default function ForgotPassword() {
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+    },
+    validate: (values) => {
+      const errors: Record<string, string> = {};
+
+      if (!values.email) {
+        errors.email = 'Email is required';
+      } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
+        errors.email = 'Invalid email address';
+      }
+
+      return errors;
+    },
+    onSubmit: async (values) => {
+      try {
+        const { data, error } = await authClient.requestPasswordReset({
+          email: values.email,
+          redirectTo: `${window.location.origin}/auth/reset-password`,
+        });
+
+        if (error) {
+          console.error('Password reset request error:', error);
+          // Handle error - you might want to show this to the user
+        } else {
+          console.log('Password reset email sent:', data);
+          // Show success message to user
+        }
+      } catch (err) {
+        console.error('Password reset request failed:', err);
+      }
+    },
+  });
+
   return (
-    <ForgotPasswordProvider>
-      <ForgotPasswordComponent />
-    </ForgotPasswordProvider>
+    <div className="flex min-h-screen items-center justify-center p-4">
+      <Card className="w-full max-w-md">
+        <CardHeader className="flex flex-col gap-2 text-center">
+          <h1 className="text-2xl font-bold">Forgot Password?</h1>
+          <p className="text-sm text-default-500">
+            Enter your email address and we&apos;ll send you a link to reset your password
+          </p>
+        </CardHeader>
+        <CardBody className="flex flex-col gap-6">
+          <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4">
+            <Input
+              type="email"
+              name="email"
+              label="Email Address"
+              placeholder="Enter your email address"
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              isInvalid={formik.touched.email && !!formik.errors.email}
+              errorMessage={formik.touched.email && formik.errors.email}
+              autoFocus
+              radius="lg"
+            />
+
+            <Button
+              type="submit"
+              color="primary"
+              size="lg"
+              radius="lg"
+              isLoading={formik.isSubmitting}
+              fullWidth
+            >
+              Send Reset Link
+            </Button>
+          </form>
+
+          <div className="text-center text-sm text-default-500">
+            <p>
+              Remember your password?{' '}
+              <Link href="/auth/login" className="text-primary hover:underline">
+                Sign in
+              </Link>
+            </p>
+          </div>
+        </CardBody>
+      </Card>
+    </div>
   );
 }

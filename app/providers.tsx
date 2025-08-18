@@ -1,8 +1,6 @@
 'use client';
 
 import React from 'react';
-import { Session } from 'next-auth';
-import { SessionProvider } from 'next-auth/react';
 import NextTopLoader from 'nextjs-toploader';
 import { useRouter } from 'nextjs-toploader/app';
 import { HeroUIProvider, Spinner, ToastProvider } from '@heroui/react';
@@ -32,13 +30,7 @@ if (typeof window !== 'undefined') {
   window.__TANSTACK_QUERY_CLIENT__ = queryClient;
 }
 
-export function Providers({
-  children,
-  session,
-}: {
-  children: React.ReactNode;
-  session?: Session | null;
-}) {
+export function Providers({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   return (
@@ -81,16 +73,14 @@ export function Providers({
             closeButton
           />
 
-          <SessionProvider session={session}>
-            <NextTopLoader
-              height={5}
-              showSpinner={false}
-              shadow="false"
-              easing="ease"
-              color="hsl(var(--heroui-primary))"
-            />
-            <ModalProvider>{children}</ModalProvider>
-          </SessionProvider>
+          <NextTopLoader
+            height={5}
+            showSpinner={false}
+            shadow="false"
+            easing="ease"
+            color="hsl(var(--heroui-primary))"
+          />
+          <ModalProvider>{children}</ModalProvider>
         </HeroUIProvider>
       </ErrorBoundary>
     </QueryClientProvider>

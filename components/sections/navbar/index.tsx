@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { usePathname } from 'next/navigation';
-import { signIn, signOut } from 'next-auth/react';
 import { useRouter } from 'nextjs-toploader/app';
 import {
   Avatar,
@@ -57,7 +56,6 @@ export default function Navbar() {
     }, 500);
   };
 
-  console.log(session);
   // const menuItems = session?.user?.role ? itemsMap[session.user.role] : defaultItems;
   const menuItems = defaultItems;
 
@@ -149,13 +147,29 @@ export default function Navbar() {
                 <DropdownItem key="system">System</DropdownItem>
                 <DropdownItem key="configurations">Configurations</DropdownItem>
                 <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
-                <DropdownItem key="logout" onPress={() => signOut()} color="danger">
+                <DropdownItem
+                  key="logout"
+                  onPress={() =>
+                    authClient.signOut({
+                      fetchOptions: {
+                        onSuccess: () => {
+                          window.location.href = '/auth/login';
+                        },
+                      },
+                    })
+                  }
+                >
                   Log Out
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
           ) : (
-            <Button onPress={() => signIn()} radius="full" color="primary" size="sm">
+            <Button
+              onPress={() => (window.location.href = '/auth/login')}
+              radius="full"
+              color="primary"
+              size="sm"
+            >
               Sign In
             </Button>
           )}

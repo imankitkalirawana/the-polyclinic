@@ -60,6 +60,33 @@ Key Files:
 - `next.config.mjs`: Next.js configuration
 - `tailwind.config.ts`: Tailwind CSS configuration
 
+## Authentication
+
+The application uses Better Auth for authentication with email and password, including email verification with OTP. The authentication system includes:
+
+- **Email & Password Registration**: Users can create accounts using their email address and password
+- **Email Verification with OTP**: New users must verify their email address with a 6-digit OTP before registration is complete
+- **Password Reset**: Users can request password reset links via email
+- **Secure Login**: Users can sign in with their email and password
+
+### Authentication Flow
+
+1. **Registration Step 1**: Users fill out a registration form with their name, email, and password
+2. **Email Verification**: A 6-digit OTP is sent to the user's email address
+3. **Registration Step 2**: Users enter the OTP to verify their email and complete registration
+4. **Login**: Users can sign in with their verified email and password
+5. **Password Reset**: Users can request a password reset if they forget their password
+
+### Authentication Configuration
+
+The authentication is configured in `auth.ts` with the following features:
+
+- Email and password authentication enabled
+- Email verification with OTP before registration
+- Password reset functionality with email links
+- Secure password hashing using scrypt
+- Session management with cookies
+
 ## Usage Instructions
 
 ### Installation

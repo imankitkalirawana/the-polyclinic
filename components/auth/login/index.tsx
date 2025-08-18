@@ -1,158 +1,116 @@
 'use client';
 
 import React from 'react';
-import { addToast, Button, Link } from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
+import { addToast, Button, Card, CardBody, CardHeader, Input, Link } from '@heroui/react';
+import { useFormik } from 'formik';
+import { useRouter } from 'next/navigation';
+import { authClient } from '@/lib/auth-client';
 
-import { Input, PasswordInput } from '../form';
-import { LoginProvider, useLogin } from '../store';
-import { AuthStep } from '../types';
-import Auth from '..';
-
-import { APP_INFO } from '@/lib/config';
-
-const LoginComponent: React.FC = () => {
-  const { formik, paginate } = useLogin();
-
-  const LOGIN_STEPS: Record<number, AuthStep> = {
-    0: {
-      title: 'Log in to your account',
-      description: `Welcome back to ${APP_INFO.name}! Please choose a way to continue.`,
-      content: (
-        <>
-          <Button
-            fullWidth
-            variant="flat"
-            startContent={<Icon icon="solar:letter-bold-duotone" width={20} />}
-            size="lg"
-            color="primary"
-            onPress={() => {
-              paginate(1);
-            }}
-          >
-            Continue with Email
-          </Button>
-          <Button
-            fullWidth
-            variant="bordered"
-            startContent={<Icon icon="devicon:google" width={20} />}
-            size="lg"
-            onPress={async () => {
-              addToast({
-                title: 'Coming soon',
-                description: 'Google authentication will be available soon',
-                color: 'warning',
-              });
-            }}
-          >
-            Continue with Google
-          </Button>
-          <Button
-            fullWidth
-            variant="light"
-            size="lg"
-            onPress={() => {
-              addToast({
-                title: 'Coming soon',
-                description: 'This feature is coming soon',
-                color: 'warning',
-              });
-            }}
-          >
-            Continue another way
-          </Button>
-        </>
-      ),
-    },
-    1: {
-      title: 'Log in to your account',
-      description: `Welcome back to ${APP_INFO.name}! Please enter your email to continue.`,
-      button: 'Continue',
-      content: (
-        <Input
-          name="email"
-          type="email"
-          label="Email"
-          placeholder="john.doe@example.com"
-          autoComplete="email"
-          autoFocus
-          isInvalid={!!(formik.touched.email && formik.errors.email)}
-          errorMessage={formik.errors.email?.toString()}
-          value={formik.values.email}
-          onChange={formik.handleChange}
-        />
-      ),
-    },
-    2: {
-      title: 'Enter your password',
-      description: 'Enter your password to log in to your account.',
-      button: 'Log in',
-      content: (
-        <>
-          <Input
-            name="email"
-            type="email"
-            label="Email"
-            placeholder="john.doe@example.com"
-            autoComplete="email"
-            value={formik.values.email}
-            className="sr-only"
-          />
-          <PasswordInput
-            autoFocus
-            label="Password"
-            onValueChange={(value) => formik.setFieldValue('password', value)}
-            isInvalid={!!(formik.touched.password && formik.errors.password)}
-            errorMessage={formik.errors.password?.toString()}
-          />
-        </>
-      ),
-    },
-  };
-
-  const loginFooter = (
-    <>
-      {formik.values.page === 2 && (
-        <div className="flex items-center justify-between px-1 py-2">
-          <Link
-            className="text-small text-default-500 hover:underline"
-            href={`/auth/forgot-password?email=${formik.values.email}`}
-          >
-            Forgot password?
-          </Link>
-        </div>
-      )}
-
-      <div className="flex items-center gap-2">
-        <div className="h-px w-full bg-divider" />
-        <div className="text-small text-default-500">or</div>
-        <div className="h-px w-full bg-divider" />
-      </div>
-      <div className="text-center text-small">
-        Need to create an account?&nbsp;
-        <Link href={`/auth/register?email=${formik.values.email}`} size="sm">
-          Sign Up
-        </Link>
-      </div>
-    </>
-  );
-
-  return (
-    <Auth
-      flowType="login"
-      steps={LOGIN_STEPS}
-      formik={formik}
-      paginate={paginate}
-      footer={loginFooter}
-    />
-  );
-};
-
-// Wrapper with provider
 export default function Login() {
+  const router = useRouter();
+
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+    },
+
+    onSubmit: async (values) => {
+      const { error } = await authClient.signIn.email({
+        email: values.email,
+        password: values.password,
+        callbackURL: '/dashboard',
+      });
+      if (error) {
+        if (error.code === 'EMAIL_NOT_VERIFIED') {
+          await authClient.sendVerificationEmail({
+            email: values.email,
+            callbackURL: '/auth/login',
+          });
+          addToast({
+            title: 'Verification email sent',
+            description: 'Please check your email for verification',
+            color: 'success',
+          });
+        } else {
+          addToast({
+            description: error.message,
+            color: 'danger',
+          });
+        }
+      } else {
+        router.push('/dashboard');
+      }
+    },
+  });
+
   return (
-    <LoginProvider>
-      <LoginComponent />
-    </LoginProvider>
+    <div className="flex min-h-screen items-center justify-center p-4">
+      <Card className="w-full max-w-md">
+        <CardHeader className="flex flex-col gap-2 text-center">
+          <h1 className="text-2xl font-bold">Welcome Back</h1>
+          <p className="text-sm text-default-500">Sign in to your account</p>
+        </CardHeader>
+        <CardBody className="flex flex-col gap-6">
+          <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4">
+            <Input
+              type="email"
+              name="email"
+              label="Email Address"
+              placeholder="Enter your email address"
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              isInvalid={formik.touched.email && !!formik.errors.email}
+              errorMessage={formik.touched.email && formik.errors.email}
+              autoFocus
+              radius="lg"
+            />
+
+            <Input
+              type="password"
+              name="password"
+              label="Password"
+              placeholder="Enter your password"
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              isInvalid={formik.touched.password && !!formik.errors.password}
+              errorMessage={formik.touched.password && formik.errors.password}
+              radius="lg"
+            />
+
+            <div className="flex items-center justify-between px-1 py-2">
+              <Link
+                className="text-small text-default-500 hover:underline"
+                href="/auth/forgot-password"
+              >
+                Forgot password?
+              </Link>
+            </div>
+
+            <Button
+              type="submit"
+              color="primary"
+              size="lg"
+              radius="lg"
+              isLoading={formik.isSubmitting}
+              fullWidth
+            >
+              Sign In
+            </Button>
+          </form>
+
+          <div className="text-center text-sm text-default-500">
+            <p>
+              Don&apos;t have an account?{' '}
+              <Link href="/auth/register" className="text-primary hover:underline">
+                Sign up
+              </Link>
+            </p>
+          </div>
+        </CardBody>
+      </Card>
+    </div>
   );
 }

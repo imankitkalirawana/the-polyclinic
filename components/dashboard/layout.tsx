@@ -3,7 +3,6 @@
 import React, { useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { signOut } from 'next-auth/react';
 import {
   Avatar,
   BreadcrumbItem,
@@ -22,6 +21,7 @@ import Sidebar from '@/components/dashboard/sidebar/sidebar';
 import { sectionItemsWithTeams } from '@/components/dashboard/sidebar/sidebar-items';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { User } from 'better-auth';
+import { authClient } from '@/lib/auth-client';
 
 export default function DashboardLayout({
   children,
@@ -105,8 +105,13 @@ export default function DashboardLayout({
               variant="light"
               color="danger"
               onPress={async () => {
-                await signOut();
-                window.location.href = '/auth/login';
+                await authClient.signOut({
+                  fetchOptions: {
+                    onSuccess: () => {
+                      window.location.href = '/auth/login';
+                    },
+                  },
+                });
               }}
               isIconOnly={isHidden}
             >

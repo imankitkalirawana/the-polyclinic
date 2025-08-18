@@ -66,7 +66,7 @@ export const createAuthProvider = (flowType: FlowType) =>
               otherwise: (schema) => schema,
             }),
             email: Yup.string()
-              .email('Invalid email')
+              // .email('Invalid email')
               .when('page', {
                 is: 1,
                 then: (schema) => schema.required('Email is required'),
@@ -204,11 +204,9 @@ export const createAuthProvider = (flowType: FlowType) =>
       } else if (values.page === 4) {
         // Register user using Better Auth
         try {
-          await authClient.signUp.email({
-            email: values.email,
+          await authClient.signIn.phoneNumber({
+            phoneNumber: values.email,
             password: values.password,
-            name: values.name,
-            callbackURL: '/dashboard',
           });
 
           addToast({
