@@ -2,9 +2,7 @@
 
 import { NavItem } from './types';
 
-import { UserType } from '@/types/user';
-
-export const itemsMap: Record<UserType['role'], NavItem[]> = {
+export const itemsMap: Record<string, NavItem[]> = {
   admin: [
     {
       name: 'Home',

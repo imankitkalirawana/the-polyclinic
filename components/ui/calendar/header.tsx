@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { useSession } from 'next-auth/react';
 import { Button, Kbd, Select, SelectItem } from '@heroui/react';
 import {
   addDays,
@@ -21,6 +20,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { allowedRolesToCreateAppointment } from './data';
 import { View, views as Views } from './types';
 import { useKeyPress } from '@/hooks/useKeyPress';
+import { useSession } from '@/app/session-provider';
 
 interface CalendarHeaderProps {
   currentDate: Date;
@@ -43,7 +43,7 @@ export function CalendarHeader({
   onDateChange,
   onCreateAppointment,
 }: CalendarHeaderProps) {
-  const { data: session } = useSession();
+  const { user } = useSession();
   const [view, setView] = useQueryState('view', parseAsStringEnum(Views).withDefault('schedule'));
 
   useKeyPress(['m'], () => {
@@ -181,7 +181,7 @@ export function CalendarHeader({
             </SelectItem>
           )}
         </Select>
-        {allowedRolesToCreateAppointment.includes(session?.user?.role || 'patient') && (
+        {allowedRolesToCreateAppointment.includes(user?.role || 'patient') && (
           <Button
             size="sm"
             color="primary"

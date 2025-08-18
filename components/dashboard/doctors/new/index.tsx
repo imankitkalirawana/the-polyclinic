@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 import {
   Autocomplete,
   AutocompleteItem,
@@ -34,10 +33,11 @@ import { useCreateDoctor } from '@/services/doctor';
 import { useAllUsers } from '@/services/user';
 import { CreateDoctorType } from '@/types/doctor';
 import { UserType } from '@/types/user';
+import { useSession } from '@/app/session-provider';
 
 export default function NewDoctor() {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { user } = useSession();
   const createDoctor = useCreateDoctor();
   const [inputValue, setInputValue] = useState('');
 
@@ -195,7 +195,7 @@ export default function NewDoctor() {
                 isInvalid={!!(formik.touched.email && formik.errors.email)}
                 errorMessage={formik.touched.email && formik.errors.email}
                 endContent={
-                  session?.user?.role === 'admin' && (
+                  user?.role === 'admin' && (
                     <Tooltip content="Generate a random email">
                       <Button
                         isIconOnly
@@ -220,7 +220,7 @@ export default function NewDoctor() {
                 onChange={formik.handleChange}
                 isInvalid={!!(formik.touched.phone && formik.errors.phone)}
                 endContent={
-                  session?.user?.role === 'admin' && (
+                  user?.role === 'admin' && (
                     <Tooltip content="Generate a random phone number">
                       <Button
                         isIconOnly

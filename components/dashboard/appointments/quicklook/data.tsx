@@ -21,11 +21,10 @@ import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { avatars } from '@/lib/avatar';
 import { useAppointmentStore } from '@/store/appointment';
 import { ActionType, AppointmentType, DropdownKeyType } from '@/types/appointment';
-import { UserType } from '@/types/user';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
   doctor: ['cancel', 'reschedule', 'reminder', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
-  user: ['cancel', 'reschedule', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
+  patient: ['cancel', 'reschedule', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
   admin: 'all',
   nurse: ['cancel', 'reschedule'],
   receptionist: ['cancel', 'reschedule', 'reminder'],
@@ -202,7 +201,7 @@ export const useAppointmentButtons = ({
   role,
 }: {
   appointment: AppointmentType | null;
-  role: UserType['role'] | 'patient';
+  role: string;
 }) => {
   const { setAction } = useAppointmentStore();
 

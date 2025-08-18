@@ -1,18 +1,18 @@
 import { useState } from 'react';
-import { useSession } from 'next-auth/react';
 import { addToast } from '@heroui/react';
 import { format } from 'date-fns';
 import { CalendarDate, getLocalTimeZone, Time } from '@internationalized/date';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import DateTimePicker from '@/components/appointments/new/session/date-time-picker';
+import DateTimePicker from '@/components/ui/date-time-picker';
 import Modal from '@/components/ui/modal';
 import { apiRequest } from '@/lib/axios';
 import { TIMINGS } from '@/lib/config';
 import { useAppointmentStore } from '@/store/appointment';
+import { useSession } from '@/app/session-provider';
 
 export default function RescheduleAppointment() {
-  const { data: session } = useSession();
+  const { user } = useSession();
   const queryClient = useQueryClient();
 
   const { setAction, appointment, setAppointment } = useAppointmentStore();
@@ -37,7 +37,7 @@ export default function RescheduleAppointment() {
         url: `/api/v1/appointments/${appointment?.aid}`,
         method: 'PATCH',
         data: {
-          status: session?.user?.role === 'patient' ? 'booked' : 'confirmed',
+          status: user?.role === 'patient' ? 'booked' : 'confirmed',
           date: timing,
         },
       }),

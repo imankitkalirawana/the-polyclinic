@@ -1,6 +1,5 @@
 import React, { memo, useCallback, useMemo } from 'react';
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
 import {
   Button,
   ButtonGroup,
@@ -38,6 +37,7 @@ import { CLINIC_INFO } from '@/lib/config';
 import { useAppointmentWithAID } from '@/services/appointment';
 import { useAppointmentStore } from '@/store/appointment';
 import { AppointmentType } from '@/types/appointment';
+import { useSession } from '@/app/session-provider';
 
 const DRAWER_DELAY = 200;
 
@@ -393,10 +393,10 @@ AppointmentHeader.displayName = 'AppointmentHeader';
 // Shared footer component
 const AppointmentFooter = memo(({ appointment }: { appointment: AppointmentType }) => {
   const { action } = useAppointmentStore();
-  const { data: session } = useSession();
+  const { user } = useSession();
   const buttons = useAppointmentButtonsInDrawer({
     selected: appointment,
-    role: session?.user?.role || 'patient',
+    role: user?.role || 'patient',
   });
 
   return (

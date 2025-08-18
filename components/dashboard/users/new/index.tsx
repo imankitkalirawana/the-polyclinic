@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 import {
   Autocomplete,
   AutocompleteItem,
@@ -36,10 +35,11 @@ import {
 import { useCreateUser } from '@/services/user';
 import { $FixMe, CityProps, CountryProps, StateProps } from '@/types';
 import { CreateUserType, userRoles } from '@/types/user';
+import { useSession } from '@/app/session-provider';
 
 export default function NewUser() {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { user } = useSession();
   const createUser = useCreateUser();
 
   const { data: countriesData, isLoading: isCountriesLoading } = useAllCountries();
@@ -89,7 +89,7 @@ export default function NewUser() {
     >
       <CardHeader className="items-center justify-between px-4 pb-0 pt-4">
         <h1 className="text-large">Add New User</h1>
-        {session?.user?.role === 'admin' && (
+        {user?.role === 'admin' && (
           <Button
             startContent={<Icon icon="solar:magic-stick-3-bold-duotone" width={16} />}
             variant="flat"
@@ -121,7 +121,7 @@ export default function NewUser() {
             isInvalid={!!(formik.touched.email && formik.errors.email)}
             errorMessage={formik.touched.email && formik.errors.email}
             endContent={
-              session?.user?.role === 'admin' && (
+              user?.role === 'admin' && (
                 <Tooltip content="Generate a random email">
                   <Button
                     isIconOnly
@@ -146,7 +146,7 @@ export default function NewUser() {
             onChange={formik.handleChange}
             isInvalid={!!(formik.touched.phone && formik.errors.phone)}
             endContent={
-              session?.user?.role === 'admin' && (
+              user?.role === 'admin' && (
                 <Tooltip content="Generate a random phone number">
                   <Button
                     isIconOnly
@@ -184,7 +184,7 @@ export default function NewUser() {
           >
             {(item) => <SelectItem key={item.value}>{item.label}</SelectItem>}
           </Select>
-          {session?.user?.role === 'admin' && (
+          {user?.role === 'admin' && (
             <Select
               disallowEmptySelection
               label="Role"

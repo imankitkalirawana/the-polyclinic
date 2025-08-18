@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { signOut } from 'next-auth/react';
 import {
   addToast,
   Alert,
@@ -21,6 +20,7 @@ import * as Yup from 'yup';
 
 import { useSelf } from '@/services/user';
 import { UserType } from '@/types/user';
+import { authClient } from '@/lib/auth-client';
 
 export default function Profile() {
   const { data } = useSelf();
@@ -213,6 +213,8 @@ function PasswordForm({ email }: { email: string }) {
 }
 
 function DeleteAccountForm({ email }: { email: string }) {
+  const { signOut } = authClient;
+
   const deleteModal = useDisclosure();
 
   const formik = useFormik({
@@ -227,7 +229,13 @@ function DeleteAccountForm({ email }: { email: string }) {
       await axios
         .delete(`/api/v1/users/${email}`, { data: values })
         .then(async (res) => {
-          await signOut();
+          await signOut({
+            fetchOptions: {
+              onSuccess: () => {
+                window.location.href = '/';
+              },
+            },
+          });
           addToast({
             title: 'Success',
             description: res.data.message,

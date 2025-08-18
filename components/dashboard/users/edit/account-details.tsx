@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
 import {
   Avatar,
   Badge,
@@ -28,9 +27,10 @@ import { userValidationSchema } from '@/lib/validation';
 import { useUpdateUser } from '@/services/user';
 import { $FixMe } from '@/types';
 import { UserType } from '@/types/user';
+import { useSession } from '@/app/session-provider';
 
 export default function AccountDetails({ user }: { user: UserType }) {
-  const { data: session } = useSession();
+  const { user: session } = useSession();
   const updateUser = useUpdateUser();
 
   const formik = useFormik({
@@ -110,15 +110,15 @@ export default function AccountDetails({ user }: { user: UserType }) {
             }
           }}
           onChange={(e) => {
-            if (allowedRoles.includes(session?.user?.role || 'patient')) {
+            if (allowedRoles.includes(session?.role || 'patient')) {
               formik.setFieldValue('email', e.target.value);
             }
           }}
           isInvalid={!!(formik.touched.email && formik.errors.email)}
           errorMessage={formik.touched.email && formik.errors.email}
-          isDisabled={!allowedRoles.includes(session?.user?.role || 'patient')}
+          isDisabled={!allowedRoles.includes(session?.role || 'patient')}
           description={
-            !allowedRoles.includes(session?.user?.role || 'patient') && (
+            !allowedRoles.includes(session?.role || 'patient') && (
               <>
                 Please go{session?.role} to{' '}
                 <Link
@@ -137,7 +137,7 @@ export default function AccountDetails({ user }: { user: UserType }) {
           placeholder="Enter phone number"
           name="phone"
           onChange={(e) => {
-            if (allowedRoles.includes(session?.user?.role || 'patient')) {
+            if (allowedRoles.includes(session?.role || 'patient')) {
               formik.setFieldValue('phone', e.target.value);
             }
           }}
@@ -147,9 +147,9 @@ export default function AccountDetails({ user }: { user: UserType }) {
               <span className="text-small text-default-400">+91</span>
             </div>
           }
-          isDisabled={!allowedRoles.includes(session?.user?.role || 'patient')}
+          isDisabled={!allowedRoles.includes(session?.role || 'patient')}
           description={
-            !allowedRoles.includes(session?.user?.role || 'patient') && (
+            !allowedRoles.includes(session?.role || 'patient') && (
               <>
                 Please go{session?.role} to{' '}
                 <Link

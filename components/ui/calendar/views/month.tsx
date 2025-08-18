@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { useSession } from 'next-auth/react';
 import { Tooltip } from '@heroui/react';
 import {
   eachDayOfInterval,
@@ -25,6 +24,7 @@ import { TIMINGS } from '@/lib/config';
 import { cn } from '@/lib/utils';
 import { useAppointmentStore } from '@/store/appointment';
 import { AppointmentType } from '@/types/appointment';
+import { useSession } from '@/app/session-provider';
 
 interface MonthViewProps {
   appointments: AppointmentType[];
@@ -32,7 +32,7 @@ interface MonthViewProps {
 }
 
 export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
-  const { data: session } = useSession();
+  const { user } = useSession();
   const [currentDate, setCurrentDate] = useQueryState(
     'date',
     parseAsIsoDateTime.withDefault(new Date())
@@ -56,7 +56,7 @@ export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
     appointments.filter((apt) => isSameDay(new Date(apt.date), date));
 
   const isAllowedToCreateAppointment = allowedRolesToCreateAppointment.includes(
-    session?.user?.role || 'patient'
+    user?.role || 'patient'
   );
 
   return (

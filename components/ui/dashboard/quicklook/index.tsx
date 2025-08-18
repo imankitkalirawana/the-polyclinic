@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useCallback, useMemo } from 'react';
-import { useSession } from 'next-auth/react';
 import {
   Button,
   cn,
@@ -24,6 +23,7 @@ import AsyncButton from '@/components/ui/buttons/async-button';
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { Title } from '@/components/ui/typography/modal';
 import { $FixMe } from '@/types';
+import { useSession } from '@/app/session-provider';
 
 export default function QuickLook<T, A extends string = string, D extends string = string>({
   selectedItem,
@@ -36,8 +36,8 @@ export default function QuickLook<T, A extends string = string, D extends string
   sidebarContent,
   content,
 }: QuickLookProps<T, A, D>): React.ReactElement<$FixMe> {
-  const { data: session } = useSession();
-  const role = useMemo(() => session?.user?.role ?? 'patient', [session?.user?.role]);
+  const { user } = useSession();
+  const role = useMemo(() => user?.role ?? 'patient', [user?.role]);
 
   const item = useMemo(() => selectedItem || ({} as T), [selectedItem]);
   const availablePermissions = useMemo(() => {

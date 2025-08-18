@@ -26,7 +26,7 @@ import { motion } from 'framer-motion';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 import ModeToggle from '../../mode-toggle';
-import { defaultItems } from './data';
+import { defaultItems, itemsMap } from './data';
 import { authClient } from '@/lib/auth-client';
 import { useSession } from '@/app/session-provider';
 
@@ -57,8 +57,7 @@ export default function Navbar() {
     }, 500);
   };
 
-  // const menuItems = session?.user?.role ? itemsMap[session.user.role] : defaultItems;
-  const menuItems = defaultItems;
+  const menuItems = user?.role ? itemsMap[user.role] : defaultItems;
 
   if (isDisabled) return null;
 

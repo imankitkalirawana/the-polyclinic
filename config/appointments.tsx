@@ -5,7 +5,7 @@ import CancelDeleteAppointment from '@/components/appointments/ui/cancel-delete'
 import RescheduleAppointment from '@/components/appointments/ui/reschedule-modal';
 import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
 import { AppointmentType, ButtonConfig } from '@/types/appointment';
-import { UserType } from '@/types/user';
+import { $FixMe } from '@/types';
 
 export const APPOINTMENT_BUTTON_CONFIGS: ButtonConfig[] = [
   {
@@ -112,7 +112,7 @@ export const APPOINTMENT_BUTTON_CONFIGS: ButtonConfig[] = [
 export const isButtonVisible = (
   config: ButtonConfig,
   appointment: AppointmentType | null,
-  role: UserType['role']
+  role: string
 ): boolean => {
   if (!appointment) return false;
 
@@ -127,10 +127,10 @@ export const isButtonVisible = (
   const statusAllowed = statuses ? statuses.includes(appointment.status) : true;
 
   // Check if the user role is allowed
-  const roleAllowed = roles ? roles.includes(role) : true;
+  const roleAllowed = roles ? roles.includes(role as $FixMe) : true;
 
   // Check the custom rule
-  const customAllowed = typeof custom === 'function' ? custom(appointment, role) : true;
+  const customAllowed = typeof custom === 'function' ? custom(appointment, role as $FixMe) : true;
 
   return statusAllowed && roleAllowed && customAllowed;
 };
