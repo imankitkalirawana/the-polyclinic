@@ -28,10 +28,11 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import ModeToggle from '../../mode-toggle';
 import { defaultItems } from './data';
 import { authClient } from '@/lib/auth-client';
+import { useSession } from '@/app/session-provider';
 
 export default function Navbar() {
   const router = useRouter();
-  const { data: session } = authClient.useSession();
+  const { user } = useSession();
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [activeMenu, setActiveMenu] = React.useState<null | (typeof menuItems)[0]>(null);
@@ -116,21 +117,21 @@ export default function Navbar() {
 
       <NavbarContent justify="end">
         <NavbarItem className="ml-2 !flex gap-2">
-          {session?.user ? (
+          {user ? (
             <Dropdown size="sm" placement="bottom-end">
               <DropdownTrigger>
                 <Avatar
                   as="button"
                   size="sm"
                   className="bg-primary-200 transition-transform"
-                  src={session.user?.image || ''}
-                  name={session.user?.name}
+                  src={user?.image || ''}
+                  name={user?.name}
                 />
               </DropdownTrigger>
               <DropdownMenu aria-label="Profile Actions" variant="flat">
                 <DropdownItem key="profile" href="/profile" className="h-14 gap-2">
-                  <p className="font-semibold">{session.user?.name}</p>
-                  <p className="text-tiny capitalize text-default-500">{session.user?.role}</p>
+                  <p className="font-semibold">{user?.name}</p>
+                  <p className="text-tiny capitalize text-default-500">{user.role}</p>
                 </DropdownItem>
                 <DropdownItem key="dashboard" href="/dashboard">
                   My Dashboard

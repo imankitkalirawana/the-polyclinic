@@ -9,6 +9,8 @@ import './globals.css';
 import Navbar from '@/components/sections/navbar';
 import { ThemeProvider } from '@/components/theme-provider';
 import { APP_INFO } from '@/lib/config';
+import { SessionProvider } from './session-provider';
+import { getSession } from '@/auth/session';
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -29,17 +31,21 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getSession();
+
   return (
     <html lang="en" suppressHydrationWarning className="light">
       <body className={outfit.className}>
-        <Providers>
-          <NuqsAdapter>
-            <ThemeProvider attribute="class" defaultTheme="light">
-              <Navbar />
-              {children}
-            </ThemeProvider>
-          </NuqsAdapter>
-        </Providers>
+        <SessionProvider session={session?.session} user={session?.user}>
+          <Providers>
+            <NuqsAdapter>
+              <ThemeProvider attribute="class" defaultTheme="light">
+                <Navbar />
+                {children}
+              </ThemeProvider>
+            </NuqsAdapter>
+          </Providers>
+        </SessionProvider>
       </body>
     </html>
   );

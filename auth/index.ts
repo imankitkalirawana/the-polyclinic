@@ -3,13 +3,13 @@ import { betterAuth } from 'better-auth';
 import { MongoClient } from 'mongodb';
 import { mongodbAdapter } from 'better-auth/adapters/mongodb';
 import { passkey } from 'better-auth/plugins/passkey';
-import { admin, createAuthMiddleware } from 'better-auth/plugins';
+import { admin as adminPlugin, createAuthMiddleware } from 'better-auth/plugins';
 import { organization } from 'better-auth/plugins';
 import { emailOTP } from 'better-auth/plugins';
 import { nextCookies } from 'better-auth/next-js';
 import { OtpEmail } from '@/templates/email';
 import { APP_INFO } from '@/lib/config';
-import { sendHTMLEmail } from './lib/server-actions/email';
+import { sendHTMLEmail } from '../lib/server-actions/email';
 
 const client = new MongoClient(process.env.MONGODB_URI as string);
 const db = client.db();
@@ -24,6 +24,10 @@ export const auth = betterAuth({
     additionalFields: {
       uid: {
         type: 'number',
+      },
+      role: {
+        type: 'string',
+        default: 'patient',
       },
     },
   },
@@ -56,8 +60,13 @@ export const auth = betterAuth({
   },
   plugins: [
     passkey(),
-    admin(),
-    organization(),
+    adminPlugin({
+      defaultRole: 'patient',
+      adminRoles: ['admin', 'superadmin'],
+    }),
+    organization({
+      allowUserToCreateOrganization: async (user) => user.role === 'superadmin',
+    }),
     emailOTP({
       async sendVerificationOTP({ email, otp, type }) {
         const MailOptions: MailOptions = {
@@ -69,18 +78,10 @@ export const auth = betterAuth({
         Promise.all(emailTasks);
       },
     }),
-
-    nextCookies(),
+    nextCookies(), // make sure this is the last plugin in the array
   ],
   hooks: {
     after: createAuthMiddleware(async (ctx) => {
-      console.log(
-        'ctxId',
-        ctx.context.generateId({
-          model: 'user',
-          size: 123,
-        })
-      );
       if (ctx.path.startsWith('/sign-up')) {
         const newSession = ctx.context.newSession;
         if (newSession) {
