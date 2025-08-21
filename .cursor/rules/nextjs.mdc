@@ -1,0 +1,63 @@
+# Next.js App Router Guidelines
+
+## Project Structure
+
+- Follow the App Router structure as defined in [app/](mdc:app/) directory
+- Use the layout pattern with [app/layout.tsx](mdc:app/layout.tsx) as the root layout
+- Organize pages under appropriate directories (e.g., `app/dashboard/`, `app/appointments/`)
+- Use dynamic routes with `[param]` syntax for dynamic pages
+
+## Page Components
+
+- Use `page.tsx` files for route pages
+- Use `layout.tsx` files for shared layouts
+- Use `loading.tsx` for loading states
+- Use `error.tsx` for error boundaries
+- Use `not-found.tsx` for 404 pages
+
+## Server vs Client Components
+
+- Default to Server Components unless client-side interactivity is needed
+- Use `'use client'` directive only when necessary
+- Keep client components as small as possible
+- Use Server Actions for form submissions and data mutations
+
+## Data Fetching
+
+- Use Server Components for initial data fetching
+- Use React Query/TanStack Query for client-side data management
+- Implement proper loading and error states
+- Use Suspense boundaries for streaming
+
+## API Routes
+
+- Use App Router API routes in `app/api/` directory
+- Follow RESTful conventions for route naming
+- Use proper HTTP methods (GET, POST, PUT, DELETE)
+- Implement proper error handling and status codes
+
+## Authentication
+
+- Use NextAuth.js as configured in [auth.ts](mdc:auth.ts)
+- Protect routes using middleware
+- Use session data in Server Components when possible
+- Implement proper redirects for unauthenticated users
+
+## Styling
+
+- Use Tailwind CSS for styling
+- Use CSS modules for component-specific styles
+- Follow the theme system defined in [components/theme-provider.tsx](mdc:components/theme-provider.tsx)
+- Use responsive design patterns
+
+## Performance
+
+- Use Next.js Image component for optimized images
+- Implement proper caching strategies
+- Use dynamic imports for code splitting
+- Optimize bundle size with proper tree shaking
+  description:
+  globs:
+  alwaysApply: false
+
+---

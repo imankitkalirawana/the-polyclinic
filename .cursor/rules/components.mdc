@@ -1,0 +1,70 @@
+# React Component Guidelines
+
+## Component Organization
+
+- Organize components in the [components/](mdc:components/) directory
+- Use feature-based organization (e.g., `components/appointments/`, `components/dashboard/`)
+- Separate UI components in `components/ui/` for reusable elements
+- Use index files for clean imports
+
+## Component Structure
+
+- Use functional components with TypeScript
+- Define prop interfaces at the top of the file
+- Use proper naming conventions (PascalCase for components)
+- Keep components focused and single-purpose
+
+## State Management
+
+- Use React hooks for local state
+- Use Zustand for global state management as configured in [store/](mdc:store/)
+- Use React Query for server state management
+- Avoid prop drilling - use context when needed
+
+## Form Handling
+
+- Use Formik for complex forms as seen in the project
+- Use Zod for form validation
+- If Yup is used somewhere then replace it with Zod
+- Implement proper error handling and user feedback
+- Use controlled components for form inputs
+
+## UI Components
+
+- Use HeroUI components as the primary UI library
+- Follow the design system defined in [components/ui/](mdc:components/ui/)
+- Use consistent spacing, colors, and typography
+- Implement proper accessibility features
+
+## Data Display
+
+- Use TanStack Table for data tables as configured in [components/test/tanstack-table.tsx](mdc:components/test/tanstack-table.tsx)
+- Implement proper loading states and skeletons
+- Use proper data visualization with Recharts
+- Handle empty states gracefully
+
+## Event Handling
+
+- Use proper TypeScript event types
+- Implement proper error boundaries
+- Use async/await for asynchronous operations
+- Provide proper user feedback for actions
+
+## Performance
+
+- Use React.memo for expensive components
+- Implement proper key props for lists
+- Use useCallback and useMemo when appropriate
+- Avoid unnecessary re-renders
+
+## Accessibility
+
+- Use semantic HTML elements
+- Implement proper ARIA attributes
+- Ensure keyboard navigation works
+- Provide proper focus management
+  description:
+  globs:
+  alwaysApply: false
+
+---
