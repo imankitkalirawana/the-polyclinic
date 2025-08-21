@@ -39,7 +39,7 @@
 
 ## Service Layer
 
-- Use service functions in [services/](mdc:services/) directory
+- Use service functions in [functions/api/](mdc:functions/api/) directory
 - Separate business logic from route handlers
 - Implement proper error handling and logging
 - Use dependency injection patterns
