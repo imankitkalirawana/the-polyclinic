@@ -15,7 +15,7 @@ export default function FollowUpSkeleton() {
         
         {/* Appointment List */}
         <div className="space-y-2">
-          {Array.from({ length: 4 }).map((_, i) => (
+          {Array.from({ length: SKELETON_APPOINTMENT_COUNT }).map((_, i) => (
             <Card key={i} className="rounded-medium p-2">
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
