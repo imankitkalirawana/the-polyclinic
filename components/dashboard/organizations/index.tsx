@@ -92,8 +92,13 @@ export default function OrganizationsDashboard() {
                       />
                     )}
                     <div>
-                      <h3 className="text-lg font-semibold">{org.name}</h3>
-                      <p className="text-sm text-default-400">{org.domain}</p>
+                      <h3 className="text-lg font-semibold">
+                        {org.name}
+                        <span className="ml-1 text-xs font-normal italic text-default-400">
+                          (#{org.organizationId})
+                        </span>
+                      </h3>
+                      <p className="text-sm text-default-400">{org.domain} </p>
                       <p className="text-xs text-default-400">
                         Created: {formatDate(org.createdAt, 'dd/MM/yyyy')}
                       </p>

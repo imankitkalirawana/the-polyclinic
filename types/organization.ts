@@ -4,6 +4,7 @@ import { ValuesOf } from '@/lib/utils';
 export const organizationStatuses = ['active', 'inactive'] as const;
 
 export interface OrganizationType extends Base {
+  organizationId: string;
   name: string;
   domain: string;
   logoUrl: string | null;

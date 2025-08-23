@@ -1,9 +1,15 @@
 import mongoose, { Model } from 'mongoose';
 import { auth } from '@/auth';
 import { OrganizationType } from '@/types/organization';
+import { generateOrganizationId } from '@/helper/organizations';
 
 const organizationSchema = new mongoose.Schema(
   {
+    organizationId: {
+      type: String,
+      unique: true,
+      trim: true,
+    },
     name: {
       type: String,
       required: [true, 'Organization name is required'],
@@ -51,6 +57,7 @@ const organizationSchema = new mongoose.Schema(
 // Pre-save middleware to set createdBy
 organizationSchema.pre('save', async function (next) {
   const session = await auth();
+  this.organizationId = generateOrganizationId(this.domain);
   this.createdBy = session?.user?.email || 'system-admin@divinely.dev';
   next();
 });
