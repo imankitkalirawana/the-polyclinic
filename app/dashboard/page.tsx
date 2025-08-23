@@ -17,7 +17,7 @@ export default function Chat() {
     <div className="stretch mx-auto flex w-full max-w-md flex-col py-24">
       {messages.map((message) => (
         <div key={message.id} className="whitespace-pre-wrap">
-          {message.role === 'patient' ? 'Patient: ' : 'AI: '}
+          {message.role === 'user' ? 'User: ' : 'AI: '}
           {message.parts.map((part, i) => {
             switch (part.type) {
               case 'text':
