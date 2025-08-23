@@ -66,6 +66,21 @@ export const auth = betterAuth({
     }),
     organization({
       allowUserToCreateOrganization: async (user) => user.role === 'superadmin',
+      async sendInvitationEmail(data) {
+        const inviteLink = `${process.env.NEXT_PUBLIC_URL}/accept-invitation/${data.id}`;
+        sendHTMLEmail({
+          to: data.email,
+          subject: `Invitation to join ${data.organization.name}`,
+          html: OtpEmail(inviteLink),
+        });
+        // sendOrganizationInvitation({
+        //   email: data.email,
+        //   invitedByUsername: data.inviter.user.name,
+        //   invitedByEmail: data.inviter.user.email,
+        //   teamName: data.organization.name,
+        //   inviteLink,
+        // });
+      },
     }),
     emailOTP({
       async sendVerificationOTP({ email, otp, type }) {

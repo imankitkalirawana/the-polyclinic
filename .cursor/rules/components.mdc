@@ -24,8 +24,7 @@
 ## Form Handling
 
 - Use Formik for complex forms as seen in the project
-- Use Zod for form validation
-- If Yup is used somewhere then replace it with Zod
+- Use Yup for form validation
 - Implement proper error handling and user feedback
 - Use controlled components for form inputs
 
