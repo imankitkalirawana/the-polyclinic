@@ -69,7 +69,7 @@ organizationSchema.pre('save', async function (next) {
 });
 
 // Pre-update middleware to set updatedBy
-organizationSchema.pre(['findOneAndUpdate', 'updateOne', 'updateMany'], async function (next) {
+organizationSchema.pre(['findOneAndUpdate', 'updateOne'], async function (next) {
   const session = await auth();
   this.setUpdate({
     ...this.getUpdate(),
@@ -79,9 +79,8 @@ organizationSchema.pre(['findOneAndUpdate', 'updateOne', 'updateMany'], async fu
 });
 
 // Post delete middleware to delete database
-organizationSchema.pre('deleteOne', async function (next) {
+organizationSchema.pre(['deleteOne', 'findOneAndDelete'], async function (next) {
   const db = client.db(this.getQuery().organizationId);
-  console.log(this.getQuery());
   await db.dropDatabase();
   next();
 });
