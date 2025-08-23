@@ -18,6 +18,9 @@ export const GET = auth(async (request: NextAuthRequest) => {
 
     const role = request.auth?.user?.role;
     const queryMap: Record<UserType['role'], { $match: Record<string, unknown> }> = {
+      superadmin: {
+        $match: {},
+      },
       admin: {
         $match: {},
       },

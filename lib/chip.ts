@@ -49,6 +49,10 @@ export const chipColorMap: Record<
   },
 
   // for roles
+  superadmin: {
+    text: 'bg-red-500',
+    bg: 'bg-red-100',
+  },
   admin: {
     text: 'bg-red-500',
     bg: 'bg-red-100',

@@ -38,6 +38,7 @@ export default function UserCard({ uid }: { uid: number }) {
   }
 
   const actionButton: Record<UserType['role'], React.ReactNode> = {
+    superadmin: null,
     admin: null,
     receptionist: null,
     nurse: null,
