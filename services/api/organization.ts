@@ -117,7 +117,7 @@ export const useUpdateOrganization = () => {
         color: 'success',
       });
       queryClient.invalidateQueries({ queryKey: ['organizations'] });
-      queryClient.invalidateQueries({ queryKey: ['organizations', data._id] });
+      queryClient.invalidateQueries({ queryKey: ['organizations', data.organizationId] });
     },
     onError: (error) => {
       addToast({
@@ -159,7 +159,7 @@ export const useToggleOrganizationStatus = () => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['organizations'] });
-      queryClient.invalidateQueries({ queryKey: ['organizations', data._id] });
+      queryClient.invalidateQueries({ queryKey: ['organizations', data.organizationId] });
     },
   });
 };

@@ -28,7 +28,7 @@ export const GET = auth(async (request: NextAuthRequest, { params }: { params: P
     await connectDB();
     const { id } = await params;
 
-    const organization = await Organization.findById(id);
+    const organization = await Organization.findOne({ organizationId: id });
     if (!organization) {
       return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
     }
@@ -66,7 +66,7 @@ export const PUT = auth(async (request: NextAuthRequest, { params }: { params: P
     const data: UpdateOrganizationType = await request.json();
 
     // Check if organization exists
-    const existingOrganization = await Organization.findById(id);
+    const existingOrganization = await Organization.findOne({ organizationId: id });
     if (!existingOrganization) {
       return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
     }
@@ -75,7 +75,7 @@ export const PUT = auth(async (request: NextAuthRequest, { params }: { params: P
     if (data.domain && data.domain !== existingOrganization.domain) {
       const domainExists = await Organization.findOne({
         domain: data.domain.toLowerCase(),
-        _id: { $ne: id },
+        organizationId: { $ne: id },
       });
       if (domainExists) {
         return NextResponse.json(
@@ -85,8 +85,8 @@ export const PUT = auth(async (request: NextAuthRequest, { params }: { params: P
       }
     }
 
-    const updatedOrganization = await Organization.findByIdAndUpdate(
-      id,
+    const updatedOrganization = await Organization.findOneAndUpdate(
+      { organizationId: id },
       {
         ...data,
         ...(data.domain && { domain: data.domain.toLowerCase() }),
@@ -126,12 +126,12 @@ export const DELETE = auth(async (request: NextAuthRequest, { params }: { params
     await connectDB();
     const { id } = await params;
 
-    const organization = await Organization.findById(id);
+    const organization = await Organization.findOne({ organizationId: id });
     if (!organization) {
       return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
     }
 
-    await Organization.findByIdAndDelete(id);
+    await Organization.deleteOne({ organizationId: id });
 
     return NextResponse.json({
       message: 'Organization deleted successfully',

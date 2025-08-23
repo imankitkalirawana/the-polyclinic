@@ -62,7 +62,10 @@ export default function CreateEditModal({
           await createOrganization.mutateAsync(values);
         } else {
           if (organization) {
-            await updateOrganization.mutateAsync({ id: organization?._id, data: values });
+            await updateOrganization.mutateAsync({
+              id: organization?.organizationId,
+              data: values,
+            });
           }
         }
         onClose();

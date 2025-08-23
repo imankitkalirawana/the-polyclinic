@@ -134,7 +134,7 @@ export default function OrganizationsDashboard() {
                       color="danger"
                       variant="flat"
                       size="sm"
-                      onPress={() => handleDelete(org._id)}
+                      onPress={() => handleDelete(org.organizationId)}
                       isLoading={deleteOrganization.isPending}
                     >
                       Delete

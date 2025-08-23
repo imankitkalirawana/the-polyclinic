@@ -36,13 +36,13 @@ export const PATCH = auth(async (request: NextAuthRequest, { params }: { params:
       );
     }
 
-    const organization = await Organization.findById(id);
+    const organization = await Organization.findOne({ organizationId: id });
     if (!organization) {
       return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
     }
 
-    const updatedOrganization = await Organization.findByIdAndUpdate(
-      id,
+    const updatedOrganization = await Organization.findOneAndUpdate(
+      { organizationId: id },
       {
         status,
         updatedBy: request.auth.user.email,

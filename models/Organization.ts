@@ -2,6 +2,7 @@ import mongoose, { Model } from 'mongoose';
 import { auth } from '@/auth';
 import { OrganizationType } from '@/types/organization';
 import { generateOrganizationId } from '@/helper/organizations';
+import client from '@/lib/db';
 
 const organizationSchema = new mongoose.Schema(
   {
@@ -57,7 +58,12 @@ const organizationSchema = new mongoose.Schema(
 // Pre-save middleware to set createdBy
 organizationSchema.pre('save', async function (next) {
   const session = await auth();
-  this.organizationId = generateOrganizationId(this.domain);
+  const organizationId = generateOrganizationId(this.domain);
+  this.organizationId = organizationId;
+  // create database
+  const db = client.db(organizationId);
+  await db.createCollection('users');
+
   this.createdBy = session?.user?.email || 'system-admin@divinely.dev';
   next();
 });
@@ -69,6 +75,14 @@ organizationSchema.pre(['findOneAndUpdate', 'updateOne', 'updateMany'], async fu
     ...this.getUpdate(),
     updatedBy: session?.user?.email || 'system-admin@divinely.dev',
   });
+  next();
+});
+
+// Post delete middleware to delete database
+organizationSchema.pre('deleteOne', async function (next) {
+  const db = client.db(this.getQuery().organizationId);
+  console.log(this.getQuery());
+  await db.dropDatabase();
   next();
 });
 
