@@ -5,7 +5,6 @@ import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import Organization from '@/models/Organization';
 import { UpdateOrganizationType } from '@/types/organization';
-import { $FixMe } from '@/types';
 
 type Params = Promise<{
   id: string;
