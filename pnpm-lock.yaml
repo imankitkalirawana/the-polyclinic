@@ -123,6 +123,9 @@ importers:
       formik:
         specifier: ^2.4.6
         version: 2.4.6(react@19.1.0)
+      formik-validator-zod:
+        specifier: ^2.2.0
+        version: 2.2.0(formik@2.4.6(react@19.1.0))(zod@4.0.17)
       framer-motion:
         specifier: ^11.14.3
         version: 11.18.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -5202,6 +5205,12 @@ packages:
   form-data@4.0.2:
     resolution: {integrity: sha512-hGfm/slu0ZabnNt4oaRZ6uREyfCj6P4fT/n6A1rGV+Z0VdGXjfOhVUpkn6qVQONHGIFwmveGXyDs75+nr6FM8w==}
     engines: {node: '>= 6'}
+
+  formik-validator-zod@2.2.0:
+    resolution: {integrity: sha512-LSH3NvYZ4jyrvmeYUhIUuje1tScnsIwApqvD/c9Yh2Mdbe/dZvW3wJJA+qkpYRwfTkuByW5FSwVBLm556tZTGw==}
+    peerDependencies:
+      formik: ^2.2.9
+      zod: ^3.19.1
 
   formik@2.4.6:
     resolution: {integrity: sha512-A+2EI7U7aG296q2TLGvNapDNTZp1khVt5Vk0Q/fyfSROss0V/V6+txt2aJnwEos44IxTCW/LYAi/zgWzlevj+g==}
@@ -14978,6 +14987,12 @@ snapshots:
       combined-stream: 1.0.8
       es-set-tostringtag: 2.1.0
       mime-types: 2.1.35
+
+  formik-validator-zod@2.2.0(formik@2.4.6(react@19.1.0))(zod@4.0.17):
+    dependencies:
+      deepmerge: 4.3.1
+      formik: 2.4.6(react@19.1.0)
+      zod: 4.0.17
 
   formik@2.4.6(react@19.1.0):
     dependencies:

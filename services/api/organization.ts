@@ -6,6 +6,7 @@ import {
   CreateOrganizationType,
   UpdateOrganizationType,
 } from '@/types/organization';
+import { addToast } from '@heroui/react';
 
 const API_BASE = '/superadmin/organizations';
 
@@ -110,8 +111,20 @@ export const useUpdateOrganization = () => {
       throw new Error(response.message);
     },
     onSuccess: (data) => {
+      addToast({
+        title: 'Organization updated successfully',
+        description: 'Organization updated successfully',
+        color: 'success',
+      });
       queryClient.invalidateQueries({ queryKey: ['organizations'] });
       queryClient.invalidateQueries({ queryKey: ['organizations', data._id] });
+    },
+    onError: (error) => {
+      addToast({
+        title: 'Failed to update organization',
+        description: error instanceof Error ? error.message : 'Failed to update organization',
+        color: 'danger',
+      });
     },
   });
 };

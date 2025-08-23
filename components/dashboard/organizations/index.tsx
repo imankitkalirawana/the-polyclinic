@@ -1,85 +1,30 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  Button,
-  Card,
-  CardBody,
-  Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  Select,
-  SelectItem,
-  Chip,
-} from '@heroui/react';
+import { Button, Card, CardBody, Chip, useDisclosure } from '@heroui/react';
 import { OrganizationType } from '@/types/organization';
 import {
   useOrganizations,
-  useCreateOrganization,
-  useUpdateOrganization,
   useDeleteOrganization,
   useToggleOrganizationStatus,
 } from '@/services/api/organization';
 import { toast } from 'sonner';
 import { formatDate } from 'date-fns';
+import CreateEditModal from './create-edit';
 
 export default function OrganizationsDashboard() {
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const createModal = useDisclosure();
+  const editModal = useDisclosure();
   const [editingOrganization, setEditingOrganization] = useState<OrganizationType | null>(null);
-  const [formData, setFormData] = useState({
-    name: '',
-    domain: '',
-    logoUrl: '',
-    status: 'active' as 'active' | 'inactive',
-  });
 
-  // React Query hooks
   const { data: organizations = [], isLoading, error } = useOrganizations();
-  const createOrganization = useCreateOrganization();
-  const updateOrganization = useUpdateOrganization();
+
   const deleteOrganization = useDeleteOrganization();
   const toggleStatus = useToggleOrganizationStatus();
 
-  // Handle errors
   if (error) {
     toast.error('Failed to fetch organizations');
   }
-
-  // Create organization
-  const handleCreate = async () => {
-    try {
-      await createOrganization.mutateAsync(formData);
-      toast.success('Organization created successfully');
-      setIsCreateModalOpen(false);
-      setFormData({ name: '', domain: '', logoUrl: '', status: 'active' });
-    } catch (error) {
-      console.error('Error creating organization:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to create organization');
-    }
-  };
-
-  // Update organization
-  const handleUpdate = async () => {
-    if (!editingOrganization) return;
-
-    try {
-      await updateOrganization.mutateAsync({
-        id: editingOrganization._id,
-        data: formData,
-      });
-      toast.success('Organization updated successfully');
-      setIsEditModalOpen(false);
-      setEditingOrganization(null);
-      setFormData({ name: '', domain: '', logoUrl: '', status: 'active' });
-    } catch (error) {
-      console.error('Error updating organization:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to update organization');
-    }
-  };
 
   // Delete organization
   const handleDelete = async (id: string) => {
@@ -108,16 +53,6 @@ export default function OrganizationsDashboard() {
   };
 
   // Open edit modal
-  const openEditModal = (organization: OrganizationType) => {
-    setEditingOrganization(organization);
-    setFormData({
-      name: organization.name,
-      domain: organization.domain,
-      logoUrl: organization.logoUrl || '',
-      status: organization.status,
-    });
-    setIsEditModalOpen(true);
-  };
 
   if (isLoading) {
     return (
@@ -131,7 +66,7 @@ export default function OrganizationsDashboard() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Organizations</h1>
-        <Button color="primary" onPress={() => setIsCreateModalOpen(true)}>
+        <Button color="primary" onPress={() => createModal.onOpen()}>
           Create Organization
         </Button>
       </div>
@@ -180,7 +115,14 @@ export default function OrganizationsDashboard() {
                     >
                       {org.status === 'active' ? 'Deactivate' : 'Activate'}
                     </Button>
-                    <Button variant="flat" size="sm" onPress={() => openEditModal(org)}>
+                    <Button
+                      variant="flat"
+                      size="sm"
+                      onPress={() => {
+                        setEditingOrganization(org);
+                        editModal.onOpen();
+                      }}
+                    >
                       Edit
                     </Button>
                     <Button
@@ -200,125 +142,21 @@ export default function OrganizationsDashboard() {
         )}
       </div>
 
-      {/* Create Modal */}
-      <Modal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)} size="2xl">
-        <ModalContent>
-          <ModalHeader>Create New Organization</ModalHeader>
-          <ModalBody>
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm font-medium">Name</label>
-                <Input
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="Organization name"
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Domain</label>
-                <Input
-                  value={formData.domain}
-                  onChange={(e) => setFormData({ ...formData, domain: e.target.value })}
-                  placeholder="example.com"
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Logo URL</label>
-                <Input
-                  value={formData.logoUrl}
-                  onChange={(e) => setFormData({ ...formData, logoUrl: e.target.value })}
-                  placeholder="https://example.com/logo.png"
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Status</label>
-                <Select
-                  selectedKeys={[formData.status]}
-                  onSelectionChange={(keys) => {
-                    const status = Array.from(keys)[0] as 'active' | 'inactive';
-                    setFormData({ ...formData, status });
-                  }}
-                  className="mt-1"
-                >
-                  <SelectItem key="active">Active</SelectItem>
-                  <SelectItem key="inactive">Inactive</SelectItem>
-                </Select>
-              </div>
-            </div>
-          </ModalBody>
-          <ModalFooter>
-            <Button variant="flat" onPress={() => setIsCreateModalOpen(false)}>
-              Cancel
-            </Button>
-            <Button color="primary" onPress={handleCreate} isLoading={createOrganization.isPending}>
-              Create
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      {createModal.isOpen && (
+        <CreateEditModal isOpen={createModal.isOpen} onClose={createModal.onClose} mode="create" />
+      )}
 
-      {/* Edit Modal */}
-      <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} size="2xl">
-        <ModalContent>
-          <ModalHeader>Edit Organization</ModalHeader>
-          <ModalBody>
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm font-medium">Name</label>
-                <Input
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="Organization name"
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Domain</label>
-                <Input
-                  value={formData.domain}
-                  onChange={(e) => setFormData({ ...formData, domain: e.target.value })}
-                  placeholder="example.com"
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Logo URL</label>
-                <Input
-                  value={formData.logoUrl}
-                  onChange={(e) => setFormData({ ...formData, logoUrl: e.target.value })}
-                  placeholder="https://example.com/logo.png"
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Status</label>
-                <Select
-                  selectedKeys={[formData.status]}
-                  onSelectionChange={(keys) => {
-                    const status = Array.from(keys)[0] as 'active' | 'inactive';
-                    setFormData({ ...formData, status });
-                  }}
-                  className="mt-1"
-                >
-                  <SelectItem key="active">Active</SelectItem>
-                  <SelectItem key="inactive">Inactive</SelectItem>
-                </Select>
-              </div>
-            </div>
-          </ModalBody>
-          <ModalFooter>
-            <Button variant="flat" onPress={() => setIsEditModalOpen(false)}>
-              Cancel
-            </Button>
-            <Button color="primary" onPress={handleUpdate} isLoading={updateOrganization.isPending}>
-              Update
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      {editModal.isOpen && (
+        <CreateEditModal
+          isOpen={editModal.isOpen}
+          onClose={() => {
+            editModal.onClose();
+            setEditingOrganization(null);
+          }}
+          mode="edit"
+          organization={editingOrganization}
+        />
+      )}
     </div>
   );
 }
