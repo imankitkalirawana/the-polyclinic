@@ -1,10 +1,51 @@
----
-description: 
-globs: 
-alwaysApply: true
----
+# TypeScript Coding Standards
 
-# Your rule content
+## General Guidelines
 
-- Follow this typescript guide https://mkosir.github.io/typescript-style-guide/#naming
+- Follow the [TypeScript Style Guide](https://mkosir.github.io/typescript-style-guide/#naming)
+- Use TSDoc comments when documenting APIs, libraries, configurations or reusable code
+- Always use strict TypeScript configuration as defined in [tsconfig.json](mdc:tsconfig.json)
+- Use path aliases defined in tsconfig.json (e.g., `@/*` for root imports)
+
+## Naming Conventions
+
+- Use PascalCase for components, interfaces, and type definitions
+- Use camelCase for variables, functions, and properties
+- Use UPPER_SNAKE_CASE for constants
+- Use kebab-case for file names and URLs
+
+## Type Safety
+
+- Avoid using `any` type - use proper TypeScript types
+- Use `unknown` instead of `any` when the type is truly unknown
+- Prefer interfaces over types for object shapes
+- Use union types for variables that can have multiple types
+- Use optional properties (`?`) instead of union with `undefined`
+
+## Import/Export Patterns
+
+- Use named exports for utilities and components
+- Use default exports for pages and layouts
+- Group imports: React/Next.js, third-party libraries, internal modules, relative imports
+- Use absolute imports with `@/` prefix for internal modules
+
+## Component Patterns
+
+- Use functional components with TypeScript
+- Define proper prop interfaces for all components
+- Use React.FC type sparingly, prefer explicit return types
+- Use proper event handler types (e.g., `React.MouseEvent<HTMLButtonElement>`)
+
+## Error Handling
+
+- Use proper error types and interfaces
+- Implement proper error boundaries
+- Use try-catch blocks with proper typing
+
+## Configuration Files
+
+- Reference [lib/config.ts](mdc:lib/config.ts) for application constants
+- Use environment variables with proper typing
+- Define interfaces for configuration objects
+
 - Use TSDoc comments when documenting APIs, libraries, configurations or reusable code.
