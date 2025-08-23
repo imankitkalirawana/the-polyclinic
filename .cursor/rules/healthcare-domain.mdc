@@ -1,0 +1,78 @@
+# Healthcare Domain Guidelines
+
+## Data Privacy and Security
+
+- Follow HIPAA compliance guidelines for patient data
+- Implement proper data encryption for sensitive information
+- Use secure authentication and authorization
+- Implement audit trails for data access
+- Ensure proper data backup and recovery
+
+## Patient Data Management
+
+- Use proper data models for patient information as defined in [models/](mdc:models/)
+- Implement proper validation for medical data
+- Use secure storage for patient records
+- Implement proper data retention policies
+- Ensure data accuracy and integrity
+
+## Appointment System
+
+- Follow the appointment patterns defined in [components/appointments/](mdc:components/appointments/)
+- Implement proper scheduling logic
+- Handle appointment conflicts and cancellations
+- Use the configuration in [lib/config.ts](mdc:lib/config.ts) for timing settings
+- Implement proper reminder systems
+
+## Doctor Management
+
+- Use proper doctor data models and validation
+- Implement proper credential verification
+- Handle doctor availability and scheduling
+- Use the patterns in [components/dashboard/doctors/](mdc:components/dashboard/doctors/)
+- Implement proper doctor-patient relationships
+
+## Medical Records
+
+- Implement secure medical record storage
+- Use proper data validation for medical information
+- Implement proper access controls
+- Ensure data integrity and accuracy
+- Follow medical data standards
+
+## Billing and Payments
+
+- Implement secure payment processing
+- Use proper billing data models
+- Handle insurance information securely
+- Implement proper receipt generation
+- Use the payment configuration in [lib/config.ts](mdc:lib/config.ts)
+
+## Notifications and Communication
+
+- Implement secure patient communication
+- Use proper email templates for medical communications
+- Handle appointment reminders and confirmations
+- Implement proper notification preferences
+- Use the email service patterns in [services/api/email.ts](mdc:services/api/email.ts)
+
+## Compliance and Regulations
+
+- Follow healthcare industry standards
+- Implement proper consent management
+- Handle data subject rights (GDPR, etc.)
+- Implement proper incident reporting
+- Ensure regulatory compliance
+
+## User Experience
+
+- Design for accessibility and usability
+- Consider patients with disabilities
+- Implement proper error handling for medical data
+- Use clear and understandable language
+- Provide proper help and support systems
+  description:
+  globs:
+  alwaysApply: false
+
+---
