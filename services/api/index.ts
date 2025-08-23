@@ -39,7 +39,7 @@ export interface PaginatedApiResponse<T> {
 export async function fetchData<T>(
   endpoint: string,
   options: {
-    method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
+    method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
     data?: $FixMe;
     params?: $FixMe;
     baseUrl?: string;

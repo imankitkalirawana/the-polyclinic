@@ -20,7 +20,10 @@ import { Icon } from '@iconify/react';
 import Logo from '../ui/logo';
 
 import Sidebar from '@/components/dashboard/sidebar/sidebar';
-import { sectionItemsWithTeams } from '@/components/dashboard/sidebar/sidebar-items';
+import {
+  sectionItemsWithTeams,
+  filterSidebarItemsByRole,
+} from '@/components/dashboard/sidebar/sidebar-items';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 export default function DashboardLayout({
@@ -42,8 +45,11 @@ export default function DashboardLayout({
     return { label: segment, link: path };
   });
 
-  const sidebar = useMemo(
-    () => (
+  const sidebar = useMemo(() => {
+    // Filter sidebar items based on user role
+    const filteredItems = filterSidebarItemsByRole(sectionItemsWithTeams, session.user?.role || '');
+
+    return (
       <div
         className={cn(
           'relative flex h-full w-72 max-w-[288px] flex-1 flex-col !border-r-small border-divider transition-all duration-250 ease-in-out',
@@ -65,7 +71,7 @@ export default function DashboardLayout({
         <ScrollShadow hideScrollBar className="h-full max-h-full pl-2">
           <Sidebar
             defaultSelectedKey="dashboard"
-            items={sectionItemsWithTeams}
+            items={filteredItems}
             selectedKeys={[currentPath || 'dashboard']}
             isCompact={isHidden}
           />
@@ -115,9 +121,8 @@ export default function DashboardLayout({
           </Tooltip>
         </div>
       </div>
-    ),
-    [isHidden, currentPath]
-  );
+    );
+  }, [isHidden, currentPath, session.user?.role]);
 
   const header = useMemo(
     () => (

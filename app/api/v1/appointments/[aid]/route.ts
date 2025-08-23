@@ -14,7 +14,7 @@ import { UserType } from '@/types/user';
 // get appointment by id from param
 export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
-    const allowedRoles = ['user', 'admin', 'doctor', 'receptionist'];
+    const allowedRoles = ['user', 'admin', 'doctor', 'receptionist', 'superadmin'];
     const role = request.auth?.user?.role;
 
     if (!role || !allowedRoles.includes(role)) {
@@ -26,6 +26,9 @@ export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
     await connectDB();
 
     const queryMap: Record<UserType['role'], { $match: Record<string, unknown> }> = {
+      superadmin: {
+        $match: { aid },
+      },
       admin: {
         $match: { aid },
       },

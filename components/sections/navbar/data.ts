@@ -5,6 +5,12 @@ import { NavItem } from './types';
 import { UserType } from '@/types/user';
 
 export const itemsMap: Record<UserType['role'], NavItem[]> = {
+  superadmin: [
+    {
+      name: 'Home',
+      href: '/home',
+    },
+  ],
   admin: [
     {
       name: 'Home',
