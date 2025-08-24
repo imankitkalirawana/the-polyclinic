@@ -5,6 +5,7 @@ import {
 } from '@/types/organization';
 
 import { fetchData } from '.';
+import { UserType } from '@/types/user';
 
 const API_BASE = '/organizations';
 export const organizationApi = {
@@ -14,7 +15,10 @@ export const organizationApi = {
 
   // Get organization by ID
   async getById(id: string) {
-    return await fetchData<OrganizationType>(`${API_BASE}/${id}`);
+    return await fetchData<{
+      organization: OrganizationType;
+      users: UserType[];
+    }>(`${API_BASE}/${id}`);
   },
 
   // Create organization

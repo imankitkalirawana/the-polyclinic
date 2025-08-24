@@ -4,13 +4,15 @@ import mongoose from 'mongoose';
 
 const uri = process.env.MONGODB_URI || '';
 
-const connectDB = async () => {
+const connectDB = async (subDomain?: string | null) => {
   if (mongoose.connection.readyState === 1 || mongoose.connection.readyState === 2) {
     return;
   }
 
   try {
-    await mongoose.connect(uri);
+    await mongoose.connect(uri, {
+      dbName: subDomain || process.env.MONGODB_GLOBAL,
+    });
   } catch (error) {
     console.error('Error connecting to MongoDB:', error);
     throw error;

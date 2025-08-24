@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import { NextAuthRequest } from 'next-auth';
-
 import { auth } from '@/auth';
-import { connectDB } from '@/lib/db';
+import { getDB, connectDB } from '@/lib/db';
 import Organization from '@/models/Organization';
 import { UpdateOrganizationType } from '@/types/organization';
 
@@ -12,19 +11,16 @@ type Params = Promise<{
 
 // GET - Get organization by ID (superadmin only)
 export const GET = auth(async (request: NextAuthRequest, { params }: { params: Params }) => {
+  const allowedRoles = ['superadmin', 'ops'];
+
+  if (!request.auth?.user) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  }
+
+  if (!allowedRoles.includes(request.auth.user.role)) {
+    return NextResponse.json({ message: 'Forbidden: Access denied' }, { status: 403 });
+  }
   try {
-    if (!request.auth?.user) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
-
-    // Only superadmin can access this endpoint
-    if (request.auth.user.role !== 'superadmin') {
-      return NextResponse.json(
-        { message: 'Forbidden: Superadmin access required' },
-        { status: 403 }
-      );
-    }
-
     await connectDB();
     const { id } = await params;
 
@@ -33,9 +29,18 @@ export const GET = auth(async (request: NextAuthRequest, { params }: { params: P
       return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
     }
 
+    const db = await getDB(organization.organizationId);
+    const users = await db
+      .collection('user')
+      .find({}, { projection: { password: 0 } })
+      .toArray();
+
     return NextResponse.json({
       message: 'Organization fetched successfully',
-      data: organization,
+      data: {
+        organization,
+        users,
+      },
     });
   } catch (error: unknown) {
     console.error('Error fetching organization:', error);

@@ -1,7 +1,12 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { CreateOrganizationType, UpdateOrganizationType } from '@/types/organization';
+import { useMutation, useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query';
+import {
+  CreateOrganizationType,
+  OrganizationType,
+  UpdateOrganizationType,
+} from '@/types/organization';
 import { addToast } from '@heroui/react';
 import { organizationApi } from './api/organization';
+import { UserType } from '@/types/user';
 
 // React Query hooks
 export const useOrganizations = () => {
@@ -17,7 +22,12 @@ export const useOrganizations = () => {
   });
 };
 
-export const useOrganization = (id: string) => {
+export const useOrganization = (
+  id: string
+): UseQueryResult<{
+  organization: OrganizationType;
+  users: UserType[];
+}> => {
   return useQuery({
     queryKey: ['organizations', id],
     queryFn: async () => {
