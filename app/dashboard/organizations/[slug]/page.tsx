@@ -1,6 +1,6 @@
-import { auth } from '@/auth';
 import Organization from '@/components/dashboard/organizations/slug';
-import { headers } from 'next/headers';
+import { getFullOrganization } from '@/services/api/organization';
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 interface OrganizationPageProps {
   params: Promise<{
@@ -10,12 +10,16 @@ interface OrganizationPageProps {
 
 export default async function OrganizationPage({ params }: OrganizationPageProps) {
   const { slug } = await params;
+  const queryClient = new QueryClient();
 
-  const session = await auth.api.getSession({
-    headers: await headers(),
+  await queryClient.prefetchQuery({
+    queryKey: ['organization', slug],
+    queryFn: () => getFullOrganization({ organizationSlug: slug }),
   });
 
-  console.log('session', session);
-
-  return <Organization slug={slug} />;
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <Organization slug={slug} />
+    </HydrationBoundary>
+  );
 }
