@@ -1,25 +1,33 @@
 // utils/db.js
 import { MongoClient, ServerApiVersion } from 'mongodb';
-import mongoose from 'mongoose';
+import mongoose, { Connection } from 'mongoose';
 
 const uri = process.env.MONGODB_URI || '';
 
-const connectDB = async (subDomain?: string | null) => {
-  if (mongoose.connection.readyState === 1 || mongoose.connection.readyState === 2) {
-    return;
+const connections: Record<string, Connection> = {};
+
+export const connectDB = async (subDomain?: string | null) => {
+  const dbName = subDomain || process.env.MONGODB_GLOBAL || 'control-plane';
+
+  // Reuse if already connected
+  if (connections[dbName]) {
+    return connections[dbName];
   }
 
-  try {
-    await mongoose.connect(uri, {
-      dbName: subDomain || process.env.MONGODB_GLOBAL,
-    });
-  } catch (error) {
-    console.error('Error connecting to MongoDB:', error);
-    throw error;
+  if (!uri) {
+    throw new Error('MONGODB_URI is not set');
   }
+
+  // Create new connection if not exists
+  const conn = await mongoose
+    .createConnection(uri, {
+      dbName,
+    })
+    .asPromise();
+
+  connections[dbName] = conn;
+  return conn;
 };
-
-export { connectDB };
 
 const options = {
   serverApi: {

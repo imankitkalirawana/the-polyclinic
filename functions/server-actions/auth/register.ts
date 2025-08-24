@@ -1,30 +1,29 @@
 'use server';
 
-import { getSubdomain } from '@/auth/sub-domain';
-import client from '@/lib/db';
+import { getSubdomain, isOrganizationRegistered } from '@/auth/sub-domain';
+import { connectDB } from '@/lib/db';
 import bcrypt from 'bcryptjs';
+import { getUserModel } from '@/models/User';
 
 export default async function registerUser(data: {
   name: string;
   email: string;
   password?: string;
 }) {
-  await client.connect();
   const subDomain = await getSubdomain();
   if (!subDomain) return { error: 'Organization is required' };
 
-  const db = client.db(subDomain);
-  const collections = await db.listCollections().toArray();
-  if (collections.length === 0) {
-    return { error: 'Organization does not exist' };
-  }
+  const isRegistered = await isOrganizationRegistered(subDomain);
+  if (!isRegistered) return { error: 'Organization is not registered' };
+
+  const conn = await connectDB(subDomain);
+  const User = getUserModel(conn);
 
   const hashedPassword = await bcrypt.hash(data.password || '', 10);
-  const res = await db.collection('user').insertOne({
+  const res = await User.create({
     name: data.name,
     email: data.email,
     password: hashedPassword,
-    role: 'patient',
     organization: subDomain,
   });
 

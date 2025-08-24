@@ -1,4 +1,8 @@
+'use server';
+
 import { headers } from 'next/headers';
+import { connectDB } from '@/lib/db';
+import { getUserModel } from '@/models/User';
 
 /**
  * Extracts subdomain (tenant) from request headers.
@@ -20,4 +24,11 @@ export async function getSubdomain(): Promise<string | null> {
   }
 
   return null;
+}
+
+export async function isOrganizationRegistered(organization: string) {
+  const conn = await connectDB(organization);
+  const User = getUserModel(conn);
+  const user = await User.findOne({ organization });
+  return user ? true : false;
 }

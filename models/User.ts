@@ -1,4 +1,4 @@
-import mongoose, { Model } from 'mongoose';
+import mongoose, { Connection, Model } from 'mongoose';
 import mongooseSequence from 'mongoose-sequence';
 import { auth } from '@/auth';
 import { UserType } from '@/types/user';
@@ -8,6 +8,14 @@ const AutoIncrement = mongooseSequence(mongoose);
 
 const userSchema = new mongoose.Schema(
   {
+    uid: {
+      type: Number,
+      unique: true,
+    },
+    name: {
+      type: String,
+      required: [true, 'Name is required'],
+    },
     email: {
       type: String,
       unique: true,
@@ -17,17 +25,14 @@ const userSchema = new mongoose.Schema(
         'Email is invalid',
       ],
     },
-    date: String,
-    uid: {
-      type: Number,
-      unique: true,
+    organization: {
+      type: String,
     },
+    date: String,
+
     phone: String,
     password: String,
-    name: {
-      type: String,
-      required: [true, 'Name is required'],
-    },
+
     dob: String,
     gender: {
       type: String,
@@ -56,29 +61,6 @@ const userSchema = new mongoose.Schema(
       enum: ['active', 'inactive', 'blocked', 'deleted', 'unverified'],
       default: 'unverified',
     },
-    additionalInfo: {
-      type: {
-        type: String,
-        enum: ['consultation', 'test', 'medication', 'surgery'],
-        default: 'consultation',
-      },
-      notes: String,
-      symptoms: String,
-      description: String,
-      instructions: String,
-    },
-    country: {
-      type: String,
-      default: 'IN',
-    },
-    state: {
-      type: String,
-      default: 'MH',
-    },
-    city: String,
-    address: String,
-    zipcode: String,
-    passwordResetToken: String,
     updatedBy: {
       type: String,
       default: 'system-admin@divinely.dev',
@@ -86,9 +68,6 @@ const userSchema = new mongoose.Schema(
     createdBy: {
       type: String,
       default: 'system-admin@divinely.dev',
-    },
-    organization: {
-      type: String,
     },
   },
   {
@@ -117,3 +96,7 @@ userSchema.pre(['findOneAndUpdate', 'updateOne', 'updateMany'], async function (
 
 const User: Model<UserType> = mongoose.models.User || mongoose.model<UserType>('User', userSchema);
 export default User;
+
+export const getUserModel = (conn: Connection) => {
+  return conn.models.User || conn.model('user', userSchema);
+};
