@@ -7,6 +7,7 @@ const nextConfig = {
   experimental: {
     authInterrupts: true,
     webpackMemoryOptimizations: true,
+    allowedDevOrigins: ['http://lvh.me:3000', 'http://*.lvh.me:3000', 'http://localhost:3000'],
   },
 };
 

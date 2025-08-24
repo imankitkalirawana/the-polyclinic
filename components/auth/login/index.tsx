@@ -12,7 +12,7 @@ import Auth from '..';
 import { APP_INFO } from '@/lib/config';
 import { googleLogin } from '@/lib/server-actions/auth';
 
-const LoginComponent: React.FC = () => {
+const LoginComponent: React.FC<{ subdomain: string | null }> = ({ subdomain }) => {
   const { formik, paginate } = useLogin();
 
   const LOGIN_STEPS: Record<number, AuthStep> = {
@@ -125,17 +125,21 @@ const LoginComponent: React.FC = () => {
         </div>
       )}
 
-      <div className="flex items-center gap-2">
-        <div className="h-px w-full bg-divider" />
-        <div className="text-small text-default-500">or</div>
-        <div className="h-px w-full bg-divider" />
-      </div>
-      <div className="text-center text-small">
-        Need to create an account?&nbsp;
-        <Link href={`/auth/register?email=${formik.values.email}`} size="sm">
-          Sign Up
-        </Link>
-      </div>
+      {subdomain && (
+        <>
+          <div className="flex items-center gap-2">
+            <div className="h-px w-full bg-divider" />
+            <div className="text-small text-default-500">or</div>
+            <div className="h-px w-full bg-divider" />
+          </div>
+          <div className="text-center text-small">
+            Need to create an account?&nbsp;
+            <Link href={`/auth/register?email=${formik.values.email}`} size="sm">
+              Sign Up
+            </Link>
+          </div>
+        </>
+      )}
     </>
   );
 
@@ -151,10 +155,10 @@ const LoginComponent: React.FC = () => {
 };
 
 // Wrapper with provider
-export default function Login() {
+export default function Login({ subdomain }: { subdomain: string | null }) {
   return (
     <LoginProvider>
-      <LoginComponent />
+      <LoginComponent subdomain={subdomain} />
     </LoginProvider>
   );
 }
