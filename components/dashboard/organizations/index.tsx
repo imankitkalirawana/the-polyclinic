@@ -1,5 +1,14 @@
 'use client';
-import { Button, Card, CardBody, CardHeader, Avatar, Divider, useDisclosure } from '@heroui/react';
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Avatar,
+  Divider,
+  useDisclosure,
+  CardFooter,
+} from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { useDeleteOrganization, useListOrganizations } from '@/services/organization';
 import CreateEditModal from './create-edit';
@@ -70,7 +79,7 @@ function OrganizationCard({ organization }: { organization: Organization }) {
 
   return (
     <>
-      <Card isPressable as={Link} href={`/dashboard/organizations/${organization.slug}`}>
+      <Card>
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -107,30 +116,40 @@ function OrganizationCard({ organization }: { organization: Organization }) {
           </div>
 
           <Divider className="my-4" />
-
-          <div className="flex space-x-2">
-            <Button
-              size="sm"
-              variant="bordered"
-              color="primary"
-              onPress={() => {
-                editModal.onOpen();
-              }}
-              startContent={<Icon icon="mdi:pencil" className="h-4 w-4" />}
-            >
-              Edit
-            </Button>
-            <Button
-              size="sm"
-              variant="bordered"
-              color="danger"
-              isLoading={deleteOrganization.isPending}
-              onPress={() => deleteOrganization.mutate({ organizationId: organization.id })}
-            >
-              Delete
-            </Button>
-          </div>
         </CardBody>
+        <CardFooter className="justify-end space-x-2">
+          <Button
+            size="sm"
+            variant="bordered"
+            color="primary"
+            startContent={<Icon icon="mdi:eye" className="h-4 w-4" />}
+            as={Link}
+            href={`/dashboard/organizations/${organization.id}`}
+          >
+            View
+          </Button>
+
+          <Button
+            size="sm"
+            variant="bordered"
+            color="primary"
+            onPress={() => {
+              editModal.onOpen();
+            }}
+            startContent={<Icon icon="mdi:pencil" className="h-4 w-4" />}
+          >
+            Edit
+          </Button>
+          <Button
+            size="sm"
+            variant="bordered"
+            color="danger"
+            isLoading={deleteOrganization.isPending}
+            onPress={() => deleteOrganization.mutate({ organizationId: organization.id })}
+          >
+            Delete
+          </Button>
+        </CardFooter>
       </Card>
       {editModal.isOpen && (
         <CreateEditModal

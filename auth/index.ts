@@ -10,6 +10,7 @@ import { nextCookies } from 'better-auth/next-js';
 import { OtpEmail } from '@/templates/email';
 import { APP_INFO } from '@/lib/config';
 import { sendHTMLEmail } from '../lib/server-actions/email';
+import { member, admin, owner, ops } from './permission';
 
 const client = new MongoClient(process.env.MONGODB_URI as string);
 const db = client.db();
@@ -63,6 +64,12 @@ export const auth = betterAuth({
     adminPlugin({
       defaultRole: 'patient',
       adminRoles: ['admin', 'superadmin'],
+      roles: {
+        member,
+        admin,
+        owner,
+        ops,
+      },
     }),
     organization({
       allowUserToCreateOrganization: async (user) => user.role === 'superadmin',

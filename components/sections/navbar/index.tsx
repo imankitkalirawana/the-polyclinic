@@ -57,7 +57,9 @@ export default function Navbar() {
     }, 500);
   };
 
-  const menuItems = user?.role ? itemsMap[user.role] : defaultItems;
+  const menuItems = Object.keys(itemsMap).includes(user?.role || '')
+    ? itemsMap[user?.role as keyof typeof itemsMap]
+    : defaultItems;
 
   if (isDisabled) return null;
 

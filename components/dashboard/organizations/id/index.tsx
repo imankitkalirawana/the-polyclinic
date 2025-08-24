@@ -22,8 +22,9 @@ import {
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
 
-import { getFullOrganization } from '@/services/api/organization';
+import { getFullOrganization, OrganizationRole } from '@/services/api/organization';
 import DashboardDetailsSkeleton from '@/components/skeletons/dashboard-details-skeleton';
+import { useInviteMember, useListInvitations } from '@/services/organization';
 
 interface OrganizationProps {
   slug: string;
@@ -52,14 +53,20 @@ interface OrganizationData {
   teams: unknown;
 }
 
-export default function Organization({ slug }: OrganizationProps) {
+export default function Organization({ id }: { id: string }) {
+  const {
+    data: invitations,
+    isLoading: isInvitationsLoading,
+    error: isInvitationsError,
+  } = useListInvitations(id);
+  const { mutateAsync } = useInviteMember();
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [isRemoveMemberModalOpen, setIsRemoveMemberModalOpen] = useState(false);
   const [isManageMembersModalOpen, setIsManageMembersModalOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
   const [inviteForm, setInviteForm] = useState({
     email: '',
-    role: 'member',
+    role: 'member' as OrganizationRole,
   });
 
   const {
@@ -67,16 +74,19 @@ export default function Organization({ slug }: OrganizationProps) {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ['organization', slug],
+    queryKey: ['organization', id],
     queryFn: async () =>
       await getFullOrganization({
-        organizationSlug: slug,
+        organizationId: id,
       }),
   });
 
   const handleInviteMember = async () => {
-    // TODO: Implement invite member functionality
-    console.log('Inviting member:', inviteForm);
+    await mutateAsync({
+      email: inviteForm.email,
+      role: inviteForm.role,
+      organizationId: id,
+    });
     setIsInviteModalOpen(false);
     setInviteForm({ email: '', role: 'member' });
   };
@@ -235,12 +245,6 @@ export default function Organization({ slug }: OrganizationProps) {
 
       {/* Members Section */}
       <Card className="w-full">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold">Team Members</h2>
-            <span className="text-sm text-default-500">{orgData.members.length} members</span>
-          </div>
-        </CardHeader>
         <CardBody>
           <div className="space-y-4">
             {orgData.members.map((member) => (
@@ -323,7 +327,7 @@ export default function Organization({ slug }: OrganizationProps) {
                 selectedKeys={[inviteForm.role]}
                 onSelectionChange={(keys) => {
                   const selectedKey = Array.from(keys)[0] as string;
-                  setInviteForm({ ...inviteForm, role: selectedKey });
+                  setInviteForm({ ...inviteForm, role: selectedKey as OrganizationRole });
                 }}
               >
                 <SelectItem key="member">Member</SelectItem>

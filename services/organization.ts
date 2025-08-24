@@ -6,12 +6,18 @@ import {
   UseQueryResult,
 } from '@tanstack/react-query';
 import {
+  acceptInvitation,
+  addMember,
   createOrganization,
   deleteOrganization,
+  getInvitationById,
+  inviteMember,
+  listInvitations,
   listOrganizations,
+  OrganizationRole,
   updateOrganization,
 } from './api/organization';
-import { Organization } from 'better-auth/plugins';
+import { Invitation, Member, Organization } from 'better-auth/plugins';
 import { CreateOrganization, UpdateOrganization } from '@/types/organization';
 import { addToast } from '@heroui/react';
 
@@ -117,6 +123,131 @@ export const useDeleteOrganization = (): UseMutationResult<
         title: 'Error',
         description: error.message,
         color: 'danger',
+      });
+    },
+  });
+};
+
+export const useListInvitations = (organizationId?: string): UseQueryResult<Invitation[]> =>
+  useQuery({
+    queryKey: ['invitations', organizationId],
+    queryFn: async () => {
+      const data = await listInvitations(organizationId);
+      if (data) {
+        return data;
+      }
+      throw new Error('Failed to fetch invitations');
+    },
+  });
+
+export const useGetInvitationById = (
+  id: string,
+  organizationSlug: string
+): UseQueryResult<Invitation> =>
+  useQuery({
+    queryKey: ['invitation', id],
+    queryFn: async () => {
+      const data = await getInvitationById({ id, organizationSlug });
+      if (data.success) {
+        return data.data;
+      }
+      throw new Error('Failed to fetch invitation');
+    },
+  });
+
+export const useInviteMember = (): UseMutationResult<
+  Invitation,
+  Error,
+  { email: string; role: OrganizationRole; organizationId: string }
+> => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      email,
+      role,
+      organizationId,
+    }: {
+      email: string;
+      role: OrganizationRole;
+      organizationId: string;
+    }) => {
+      const invitedData = await inviteMember({ email, role, organizationId });
+      if (invitedData) {
+        return invitedData;
+      }
+      throw new Error('Failed to invite member');
+    },
+    onSuccess: (_, { organizationId }) => {
+      queryClient.invalidateQueries({ queryKey: ['invitations', organizationId] });
+      addToast({
+        title: 'Member invited',
+        color: 'success',
+      });
+    },
+    onError: (error) => {
+      addToast({
+        title: 'Error',
+        description: error.message,
+        color: 'danger',
+      });
+    },
+  });
+};
+
+export const useAcceptInvitation = (): UseMutationResult<
+  { invitation: Invitation; member: Member },
+  Error,
+  { invitationId: string }
+> => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ invitationId }: { invitationId: string }) => {
+      const acceptedData = await acceptInvitation({ invitationId });
+      if (acceptedData) {
+        return acceptedData;
+      }
+      throw new Error('Failed to accept invitation');
+    },
+    onSuccess: (_, { invitationId }) => {
+      queryClient.invalidateQueries({ queryKey: ['invitations', invitationId] });
+    },
+    onError: (error) => {
+      addToast({
+        title: 'Error',
+        description: error.message,
+        color: 'danger',
+      });
+    },
+  });
+};
+
+export const useAddMember = (): UseMutationResult<
+  Member,
+  Error,
+  { userId: string; role: OrganizationRole; organizationId: string }
+> => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      userId,
+      role,
+      organizationId,
+    }: {
+      userId: string;
+      role: OrganizationRole;
+      organizationId: string;
+    }) => {
+      const addedData = await addMember({ userId, role, organizationId });
+      if (addedData) {
+        return addedData;
+      }
+      throw new Error('Failed to add member');
+    },
+    onSuccess: (_, { organizationId }) => {
+      queryClient.invalidateQueries({ queryKey: ['invitations', organizationId] });
+      addToast({
+        title: 'Member added',
+        color: 'success',
       });
     },
   });
