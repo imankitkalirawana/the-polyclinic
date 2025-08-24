@@ -5,6 +5,7 @@ export function generateOrganizationId(domain?: string | null): string {
   // Extract main part of the domain (ignore subdomains and TLDs)
   const parts = domain.split('.');
   const orgName = parts.length > 2 ? parts[parts.length - 2] : parts[0];
+  return orgName;
 
   // Get last two digits of current year
   const year = new Date().getFullYear().toString().slice(-2);

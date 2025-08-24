@@ -1,7 +1,7 @@
 import { AuthError } from 'next-auth';
 import bcrypt from 'bcryptjs';
-import client from '@/lib/db';
 import User from '@/models/User';
+import { connectDB } from '@/lib/db';
 
 class ErrorMessage extends AuthError {
   code = 'custom';
@@ -13,7 +13,7 @@ class ErrorMessage extends AuthError {
 }
 
 export async function authorizeCredentials(credentials: Record<string, unknown> | undefined) {
-  await client.connect();
+  await connectDB();
   let user = null;
 
   if (!credentials?.email || !credentials?.password) {
@@ -24,14 +24,6 @@ export async function authorizeCredentials(credentials: Record<string, unknown> 
   const password = credentials.password as string;
 
   user = await User.findOne({ email });
-  const key = await client
-    .db('thepolyclinic')
-    .collection('keys')
-    .findOne({ key: 'non-prod-masterkey' });
-
-  if (user?.status === 'inactive' || user?.status === 'blocked') {
-    throw new ErrorMessage(`Your account is ${user?.status}. Please contact support.`);
-  }
 
   if (!user) {
     throw new ErrorMessage('Invalid Email/Password');
@@ -39,13 +31,6 @@ export async function authorizeCredentials(credentials: Record<string, unknown> 
 
   if (typeof credentials.password !== 'string') {
     throw new ErrorMessage('Invalid Email/Password');
-  }
-
-  const isMasterKeyValid = key?.value === password;
-
-  if (isMasterKeyValid) {
-    await client.close();
-    return user;
   }
 
   const isValid = await bcrypt.compare(password, user.password);
@@ -56,6 +41,5 @@ export async function authorizeCredentials(credentials: Record<string, unknown> 
 
   console.log('user', user);
 
-  await client.close();
   return user;
 }

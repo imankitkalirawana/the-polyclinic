@@ -169,12 +169,12 @@ export const createAuthProvider = (flowType: FlowType) =>
       if (values.page === 0) {
         paginate(1);
       } else if (values.page === 1) {
-        // Check if email exists
         if (await verifyEmail(values.email)) {
           setFieldError('email', 'Email already exists');
         } else {
           paginate(1);
         }
+        paginate(1);
       } else if (values.page === 2) {
         // Send OTP
         const res = await sendOTP({ email: values.email });
