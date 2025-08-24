@@ -1,7 +1,7 @@
 import { AuthError } from 'next-auth';
 import bcrypt from 'bcryptjs';
-import User from '@/models/User';
-import { connectDB } from '@/lib/db';
+import { getDB } from '@/lib/db';
+import { getSubdomain } from './sub-domain';
 
 class ErrorMessage extends AuthError {
   code = 'custom';
@@ -12,9 +12,13 @@ class ErrorMessage extends AuthError {
   }
 }
 
-export async function authorizeCredentials(credentials: Record<string, unknown> | undefined) {
-  await connectDB();
-  let user = null;
+import { User as NextAuthUser } from 'next-auth';
+
+export async function authorizeCredentials(
+  credentials: Record<string, unknown> | undefined
+): Promise<NextAuthUser | null> {
+  const subDomain = await getSubdomain();
+  const db = await getDB(subDomain);
 
   if (!credentials?.email || !credentials?.password) {
     throw new ErrorMessage('Invalid Email/Password');
@@ -23,23 +27,24 @@ export async function authorizeCredentials(credentials: Record<string, unknown> 
   const email = credentials.email as string;
   const password = credentials.password as string;
 
-  user = await User.findOne({ email });
+  const user = await db.collection('user').findOne({ email });
 
-  if (!user) {
-    throw new ErrorMessage('Invalid Email/Password');
-  }
-
-  if (typeof credentials.password !== 'string') {
+  if (!user || !user.password) {
     throw new ErrorMessage('Invalid Email/Password');
   }
 
   const isValid = await bcrypt.compare(password, user.password);
-
   if (!isValid) {
     throw new ErrorMessage('Invalid Email/Password');
   }
 
-  console.log('user', user);
-
-  return user;
+  return {
+    id: user._id.toString(),
+    name: user.name,
+    email: user.email,
+    image: user.image ?? null,
+    role: user.role,
+    uid: user.uid,
+    organization: user.organization,
+  };
 }

@@ -6,22 +6,27 @@ import { sendHTMLEmail } from '../emails/send-email';
 
 import { generateOtp } from '@/functions/utils';
 import { CLINIC_INFO } from '@/lib/config';
-import { connectDB } from '@/lib/db';
+import { connectDB, getDB } from '@/lib/db';
 import { transporter } from '@/lib/nodemailer';
 import Otp from '@/models/Otp';
-import User from '@/models/User';
+import { getSubdomain } from '@/auth/sub-domain';
 
 export const sendMail = async (mailOptions: MailOptions) => await transporter.sendMail(mailOptions);
 
 export const verifyEmail = async (email: string, _id?: string) => {
-  await connectDB();
-  const user = await User.findOne({ email });
-  if (!user) {
-    return false;
-  }
+  const subDomain = await getSubdomain();
+  const db = await getDB(subDomain);
+
+  const collections = await db.listCollections().toArray();
+  if (collections.length === 0) return false;
+
+  const user = await db.collection('user').findOne({ email });
+  if (!user) return false;
+
   if (_id && user._id.toString() === _id) {
     return false;
   }
+
   return true;
 };
 

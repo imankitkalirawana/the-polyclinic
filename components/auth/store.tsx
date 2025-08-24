@@ -155,10 +155,10 @@ export const createAuthProvider = (flowType: FlowType) =>
             return handleForgotPasswordSubmit(values, { setFieldError });
           default:
         }
-      } catch {
+      } catch (error) {
         addToast({
           title: 'An error occurred',
-          description: 'Please try again later.',
+          description: error instanceof Error ? error.message : 'Please try again later.',
           color: 'danger',
         });
       }

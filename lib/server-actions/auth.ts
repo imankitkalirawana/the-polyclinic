@@ -3,16 +3,15 @@
 import { AuthError } from 'next-auth';
 import bcrypt from 'bcryptjs';
 
-import { connectDB } from '../db';
+import { getDB } from '../db';
 import { sendHTMLEmail } from './email';
 
 import { signIn } from '@/auth';
 import { generateOtp } from '@/functions/utils';
 import { APP_INFO } from '@/lib/config';
-import Otp from '@/models/Otp';
-import User from '@/models/User';
-import { OtpEmail, WelcomeUser } from '@/templates/email';
+import { OtpEmail } from '@/templates/email';
 import { Gender } from '@/types/user';
+import { getSubdomain } from '@/auth/sub-domain';
 
 export const sendOTP = async ({
   email,
@@ -21,9 +20,11 @@ export const sendOTP = async ({
   email: string;
   type?: 'registration' | 'forgot-password';
 }): Promise<{ success: boolean; message: string }> => {
-  await connectDB();
+  const subDomain = await getSubdomain();
+  const db = await getDB(subDomain);
+
   if (type === 'forgot-password') {
-    const user = await User.findOne({ email }).select('+email +password');
+    const user = await db.collection('user').findOne({ email });
     if (!user) {
       return {
         success: false,
@@ -33,7 +34,7 @@ export const sendOTP = async ({
   }
 
   if (type === 'registration') {
-    const user = await User.findOne({ email }).select('+email');
+    const user = await db.collection('user').findOne({ email });
     if (user) {
       return {
         success: false,
@@ -42,12 +43,8 @@ export const sendOTP = async ({
     }
   }
 
-  console.log('email', email);
-
   const otp = generateOtp();
-  // TODO: Remove this
-  console.log('otp', otp);
-  const res = await Otp.findOne({ id: email });
+  const res = await db.collection('otp').findOne({ id: email });
 
   if (res) {
     if (res.otpCount >= 3) {
@@ -56,9 +53,11 @@ export const sendOTP = async ({
         message: 'Too many OTP requests',
       };
     }
-    await Otp.updateOne({ id: email }, { otp, otpCount: res.otpCount + 1 });
+    await db
+      .collection('otp')
+      .updateOne({ id: email }, { $set: { otp, otpCount: res.otpCount + 1 } });
   } else {
-    await Otp.create({ id: email, otp });
+    await db.collection('otp').insertOne({ id: email, otp, otpCount: 1 });
   }
 
   const emailTasks = [
@@ -84,8 +83,9 @@ export const verifyOTP = async ({
   email: string;
   otp: number;
 }): Promise<{ success: boolean; message: string }> => {
-  await connectDB();
-  const res = await Otp.findOne({ id: email, otp });
+  const subDomain = await getSubdomain();
+  const db = await getDB(subDomain);
+  const res = await db.collection('otp').findOne({ id: email, otp });
 
   if (!res) {
     return {
@@ -113,8 +113,9 @@ export const register = async ({
   dob?: string;
   gender: Gender;
 }): Promise<{ success: boolean; message: string }> => {
-  await connectDB();
-  const user = await User.findOne({ email }).select('+email');
+  const subDomain = await getSubdomain();
+  const db = await getDB(subDomain);
+  const user = await db.collection('user').findOne({ email });
   if (user) {
     return {
       success: false,
@@ -122,12 +123,14 @@ export const register = async ({
     };
   }
   const hashedPassword = await bcrypt.hash(password, 12);
-  const newUser = await User.create({
+  const newUser = await db.collection('user').insertOne({
     email,
     password: hashedPassword,
     name,
     dob,
     gender,
+    organization: subDomain,
+    role: 'patient',
   });
 
   if (!newUser) {
@@ -137,14 +140,14 @@ export const register = async ({
     };
   }
 
-  const emailTasks = [
-    sendHTMLEmail({
-      to: email,
-      subject: `Welcome to ${APP_INFO.name}`,
-      html: WelcomeUser(newUser),
-    }),
-  ];
-  Promise.all(emailTasks);
+  const dbUser = await db.collection('user').findOne({ _id: newUser.insertedId });
+
+  if (!dbUser) {
+    return {
+      success: false,
+      message: 'Failed to create your account',
+    };
+  }
 
   return {
     success: true,
