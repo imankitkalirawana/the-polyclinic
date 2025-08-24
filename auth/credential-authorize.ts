@@ -54,6 +54,8 @@ export async function authorizeCredentials(credentials: Record<string, unknown> 
     throw new ErrorMessage('Invalid Email/Password');
   }
 
+  console.log('user', user);
+
   await client.close();
   return user;
 }

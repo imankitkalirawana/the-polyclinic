@@ -87,6 +87,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: 'system-admin@divinely.dev',
     },
+    organization: {
+      type: String,
+    },
   },
   {
     timestamps: true,

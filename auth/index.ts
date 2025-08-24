@@ -31,6 +31,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.role = user.role;
         token.uid = user.uid;
         token.picture = user.image || '';
+        token.organization = user.organization;
       }
       return token;
     },
@@ -38,6 +39,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.user.role = token.role as UserType['role'];
       session.user.uid = token.uid as number;
       session.user.image = token.picture as string;
+      session.user.organization = token.organization as string;
       return session;
     },
   },

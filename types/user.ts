@@ -17,6 +17,7 @@ export const userRoles = [
 ] as const;
 
 export interface UserType extends Base {
+  organization: string;
   uid: number;
   email: string;
   date: string | Date;
