@@ -51,7 +51,7 @@ const organizationSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-    collection: 'organizations',
+    collection: 'organization',
   }
 );
 
@@ -62,7 +62,7 @@ organizationSchema.pre('save', async function (next) {
   this.organizationId = organizationId;
   // create database
   const db = client.db(organizationId);
-  await db.createCollection('users');
+  await db.createCollection('user');
 
   this.createdBy = session?.user?.email || 'system-admin@divinely.dev';
   next();

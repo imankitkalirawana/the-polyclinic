@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Button, Card, CardBody, Chip, useDisclosure } from '@heroui/react';
+import { Button, Card, CardBody, Switch, useDisclosure } from '@heroui/react';
 import { OrganizationType } from '@/types/organization';
 import {
   useOrganizations,
@@ -11,6 +11,8 @@ import {
 import { toast } from 'sonner';
 import { formatDate } from 'date-fns';
 import CreateEditModal from './create-edit';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import Link from 'next/link';
 
 export default function OrganizationsDashboard() {
   const createModal = useDisclosure();
@@ -105,20 +107,18 @@ export default function OrganizationsDashboard() {
                     </div>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Chip
-                      color={org.status === 'active' ? 'success' : 'danger'}
-                      variant="flat"
-                      className="capitalize"
-                    >
-                      {org.status}
-                    </Chip>
+                    <Switch
+                      isSelected={org.status === 'active'}
+                      onValueChange={() => handleToggleStatus(org.organizationId, org.status)}
+                    />
                     <Button
+                      isIconOnly
                       variant="flat"
                       size="sm"
-                      onPress={() => handleToggleStatus(org._id, org.status)}
-                      isLoading={toggleStatus.isPending}
+                      as={Link}
+                      href={`/dashboard/organizations/${org.organizationId}`}
                     >
-                      {org.status === 'active' ? 'Deactivate' : 'Activate'}
+                      <Icon icon="solar:settings-line-duotone" width={18} />
                     </Button>
                     <Button
                       variant="flat"
