@@ -1,15 +1,15 @@
 import { NextResponse } from 'next/server';
 import { NextAuthRequest } from 'next-auth';
 import { auth } from '@/auth';
-import { getDB, connectDB } from '@/lib/db';
-import Organization from '@/models/Organization';
+import { connectDB } from '@/lib/db';
+import { getOrganizationModel } from '@/models/Organization';
 import { UpdateOrganizationType } from '@/types/organization';
+import { getUserModel } from '@/models/User';
 
 type Params = Promise<{
   id: string;
 }>;
 
-// GET - Get organization by ID (superadmin only)
 export const GET = auth(async (request: NextAuthRequest, { params }: { params: Params }) => {
   const allowedRoles = ['superadmin', 'ops'];
 
@@ -21,19 +21,18 @@ export const GET = auth(async (request: NextAuthRequest, { params }: { params: P
     return NextResponse.json({ message: 'Forbidden: Access denied' }, { status: 403 });
   }
   try {
-    await connectDB();
+    const conn = await connectDB();
     const { id } = await params;
-
+    const Organization = getOrganizationModel(conn);
     const organization = await Organization.findOne({ organizationId: id });
     if (!organization) {
       return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
     }
 
-    const db = await getDB(organization.organizationId);
-    const users = await db
-      .collection('user')
-      .find({}, { projection: { password: 0 } })
-      .toArray();
+    const conn2 = await connectDB(organization.organizationId);
+
+    const User = getUserModel(conn2);
+    const users = await User.find();
 
     return NextResponse.json({
       message: 'Organization fetched successfully',
@@ -66,7 +65,8 @@ export const PUT = auth(async (request: NextAuthRequest, { params }: { params: P
       );
     }
 
-    await connectDB();
+    const conn = await connectDB();
+    const Organization = getOrganizationModel(conn);
     const { id } = await params;
     const data: UpdateOrganizationType = await request.json();
 
@@ -128,7 +128,8 @@ export const DELETE = auth(async (request: NextAuthRequest, { params }: { params
       );
     }
 
-    await connectDB();
+    const conn = await connectDB();
+    const Organization = getOrganizationModel(conn);
     const { id } = await params;
 
     const organization = await Organization.findOne({ organizationId: id });

@@ -1,12 +1,10 @@
 import { NextResponse } from 'next/server';
 import { NextAuthRequest } from 'next-auth';
-
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
-import Organization from '@/models/Organization';
+import { getOrganizationModel } from '@/models/Organization';
 import { CreateOrganizationType } from '@/types/organization';
 
-// GET - List all organizations (superadmin only)
 export const GET = auth(async (request: NextAuthRequest) => {
   try {
     if (!request.auth?.user) {
@@ -21,8 +19,8 @@ export const GET = auth(async (request: NextAuthRequest) => {
       );
     }
 
-    await connectDB();
-
+    const conn = await connectDB();
+    const Organization = getOrganizationModel(conn);
     const organizations = await Organization.find().sort({ createdAt: -1 });
 
     return NextResponse.json({
@@ -53,7 +51,8 @@ export const POST = auth(async (request: NextAuthRequest) => {
       );
     }
 
-    await connectDB();
+    const conn = await connectDB();
+    const Organization = getOrganizationModel(conn);
     const data: CreateOrganizationType = await request.json();
 
     // Validate required fields
@@ -77,7 +76,6 @@ export const POST = auth(async (request: NextAuthRequest) => {
     });
 
     await organization.save();
-
     return NextResponse.json(
       {
         message: 'Organization created successfully',

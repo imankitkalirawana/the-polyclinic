@@ -3,7 +3,7 @@ import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
-import Organization from '@/models/Organization';
+import { getOrganizationModel } from '@/models/Organization';
 
 type Params = Promise<{
   id: string;
@@ -24,7 +24,8 @@ export const PATCH = auth(async (request: NextAuthRequest, { params }: { params:
       );
     }
 
-    await connectDB();
+    const conn = await connectDB();
+    const Organization = getOrganizationModel(conn);
     const { id } = await params;
     const { status } = await request.json();
 

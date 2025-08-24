@@ -9,7 +9,6 @@ const connections: Record<string, Connection> = {};
 export const connectDB = async (subDomain?: string | null) => {
   const dbName = subDomain || process.env.MONGODB_GLOBAL || 'control-plane';
 
-  // Reuse if already connected
   if (connections[dbName]) {
     return connections[dbName];
   }
@@ -18,12 +17,13 @@ export const connectDB = async (subDomain?: string | null) => {
     throw new Error('MONGODB_URI is not set');
   }
 
-  // Create new connection if not exists
-  const conn = await mongoose
-    .createConnection(uri, {
-      dbName,
-    })
-    .asPromise();
+  const conn = mongoose.createConnection(uri, { dbName });
+
+  // Wait until connection is open
+  await new Promise<void>((resolve, reject) => {
+    conn.once('open', () => resolve());
+    conn.once('error', (err) => reject(err));
+  });
 
   connections[dbName] = conn;
   return conn;

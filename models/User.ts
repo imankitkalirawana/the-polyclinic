@@ -1,15 +1,12 @@
 import mongoose, { Connection, Model } from 'mongoose';
-import mongooseSequence from 'mongoose-sequence';
 import { auth } from '@/auth';
 import { UserType } from '@/types/user';
-
-// @ts-expect-error - mongoose-sequence is not typed
-const AutoIncrement = mongooseSequence(mongoose);
+import { generateUid } from './Counter';
 
 const userSchema = new mongoose.Schema(
   {
     uid: {
-      type: Number,
+      type: String,
       unique: true,
     },
     name: {
@@ -28,33 +25,15 @@ const userSchema = new mongoose.Schema(
     organization: {
       type: String,
     },
-    date: String,
-
     phone: String,
     password: String,
-
-    dob: String,
-    gender: {
-      type: String,
-      enum: ['male', 'female', 'other'],
-    },
     image: {
       type: String,
       default: 'https://cdn.jsdelivr.net/gh/alohe/avatars/png/memo_1.png',
     },
     role: {
       type: String,
-      enum: [
-        'superadmin',
-        'admin',
-        'doctor',
-        'nurse',
-        'receptionist',
-        'pharmacist',
-        'laboratorist',
-        'user',
-      ],
-      default: 'user',
+      default: 'patient',
     },
     status: {
       type: String,
@@ -63,7 +42,6 @@ const userSchema = new mongoose.Schema(
     },
     updatedBy: {
       type: String,
-      default: 'system-admin@divinely.dev',
     },
     createdBy: {
       type: String,
@@ -76,11 +54,9 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// @ts-expect-error - mongoose-sequence is not typed
-userSchema.plugin(AutoIncrement, { inc_field: 'uid', start_seq: 1000 });
-
 userSchema.pre('save', async function (next) {
   const session = await auth();
+  this.uid = await generateUid('uid', this.organization);
   this.createdBy = session?.user?.email || 'system-admin@divinely.dev';
   next();
 });

@@ -1,6 +1,5 @@
-import mongoose, { Model } from 'mongoose';
+import mongoose, { Connection } from 'mongoose';
 import { auth } from '@/auth';
-import { OrganizationType } from '@/types/organization';
 import { generateOrganizationId } from '@/helper/organizations';
 import client from '@/lib/db';
 
@@ -63,6 +62,7 @@ organizationSchema.pre('save', async function (next) {
   // create database
   const db = client.db(organizationId);
   await db.createCollection('user');
+  await client.close();
 
   this.createdBy = session?.user?.email || 'system-admin@divinely.dev';
   next();
@@ -85,7 +85,6 @@ organizationSchema.pre(['deleteOne', 'findOneAndDelete'], async function (next) 
   next();
 });
 
-const Organization: Model<OrganizationType> =
-  mongoose.models.Organization ||
-  mongoose.model<OrganizationType>('Organization', organizationSchema);
-export default Organization;
+export const getOrganizationModel = (conn: Connection) => {
+  return conn.models.Organization || conn.model('organization', organizationSchema);
+};
