@@ -12,7 +12,7 @@ import {
   SelectItem,
 } from '@heroui/react';
 import { OrganizationType } from '@/types/organization';
-import { useCreateOrganization, useUpdateOrganization } from '@/services/api/organization';
+import { useCreateOrganization, useUpdateOrganization } from '@/services/organization';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
