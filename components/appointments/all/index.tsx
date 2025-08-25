@@ -3,7 +3,7 @@
 import { Calendar } from '@/components/ui/calendar';
 import { castData } from '@/lib/utils';
 import { useAllAppointments } from '@/hooks/queries/client/appointment';
-import { AppointmentType } from '@/types/appointment';
+import { AppointmentType } from '@/types/client/appointment';
 
 export default function Appointments() {
   const { data } = useAllAppointments();

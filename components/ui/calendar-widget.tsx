@@ -10,7 +10,7 @@ import { getAppointmentStyles } from '../appointments/compact-view/appointments'
 import { useForm } from '../appointments/compact-view/context';
 
 import { cn } from '@/lib/utils';
-import { AppointmentType } from '@/types/appointment';
+import { AppointmentType } from '@/types/client/appointment';
 
 interface CalendarWidgetProps {
   className?: string;

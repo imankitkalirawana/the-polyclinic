@@ -1,7 +1,7 @@
 import { User } from '@heroui/react';
 
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
-import { UserType } from '@/types/control-plane';
+import { UserType } from '@/types/system/control-plane';
 
 export function ModalCellRenderer({ user }: { user: UserType }) {
   return (

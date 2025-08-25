@@ -1,6 +1,6 @@
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { cn } from '@/lib/utils';
-import { DoctorType } from '@/types/doctor';
+import { DoctorType } from '@/types/client/doctor';
 import { Avatar, Card, CardBody, CardHeader, Divider, Chip, ScrollShadow } from '@heroui/react';
 import { Icon } from '@iconify/react';
 

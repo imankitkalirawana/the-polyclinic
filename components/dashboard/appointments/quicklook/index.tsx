@@ -11,7 +11,7 @@ import QuickLook from '@/components/ui/dashboard/quicklook';
 import { DropdownItemProps } from '@/components/ui/dashboard/quicklook/types';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { useAppointmentStore } from '@/store/appointment';
-import { AppointmentType, DropdownKeyType } from '@/types/appointment';
+import { AppointmentType, DropdownKeyType } from '@/types/client/appointment';
 
 export function AppointmentQuickLook() {
   const { data: session } = useSession();

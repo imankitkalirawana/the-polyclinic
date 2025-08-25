@@ -5,8 +5,8 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { APPOINTMENT_BUTTON_CONFIGS, isButtonVisible } from '../config/appointments';
 
 import { useAppointmentStore } from '@/store/appointment';
-import { AppointmentType, ProcessedButton } from '@/types/appointment';
-import { UserType } from '@/types/control-plane';
+import { AppointmentType, ProcessedButton } from '@/types/client/appointment';
+import { UserType } from '@/types/system/control-plane';
 
 const useAppointmentButtonsInDrawer = ({
   selected,

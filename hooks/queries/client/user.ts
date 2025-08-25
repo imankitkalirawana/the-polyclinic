@@ -19,7 +19,7 @@ import {
   updateUser,
 } from '@/services/api/client/user';
 import { $FixMe } from '@/types';
-import { CreateUserType, SystemUserType } from '@/types/control-plane';
+import { CreateUserType, SystemUserType } from '@/types/system/control-plane';
 
 export const useSelf = (): UseQueryResult<SystemUserType> =>
   useQuery({

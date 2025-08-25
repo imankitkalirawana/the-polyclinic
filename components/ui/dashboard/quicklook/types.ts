@@ -3,7 +3,7 @@ import {
   DropdownItemProps as HeroDropdownItemProps,
 } from '@heroui/react';
 
-import { UserType } from '@/types/control-plane';
+import { UserType } from '@/types/system/control-plane';
 
 export type ActionType<T extends string> = T;
 export type DropdownKeyType<T extends string> = T;

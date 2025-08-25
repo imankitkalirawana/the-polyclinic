@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-import { EmailStatus, EmailType } from '@/types/email';
+import { EmailStatus, EmailType } from '@/types/client/email';
 
 const EmailSchema = new mongoose.Schema<EmailType>(
   {

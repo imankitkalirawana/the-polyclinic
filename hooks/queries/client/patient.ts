@@ -13,9 +13,9 @@ import {
   getPreviousAppointments,
 } from '../../../services/api/client/patient';
 import { useInfiniteQueryWithSearch } from './infinite-query';
-import { UserType } from '@/types/control-plane';
-import { AppointmentType } from '@/types/appointment';
-import { NewPatientFormValues } from '@/types/patient';
+import { UserType } from '@/types/system/control-plane';
+import { AppointmentType } from '@/types/client/appointment';
+import { NewPatientFormValues } from '@/types/client/patient';
 import { ApiResponse } from '../../../services/api';
 import { addToast } from '@heroui/react';
 

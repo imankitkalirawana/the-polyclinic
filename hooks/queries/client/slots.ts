@@ -10,7 +10,7 @@ import {
 import { getSlotsByUID, updateSlots } from '../../../services/api/client/slots';
 import { ApiResponse } from '../../../services/api';
 
-import { SlotConfig } from '@/types/slots';
+import { SlotConfig } from '@/types/client/slots';
 
 export const useSlotsByUID = (uid: number): UseQueryResult<SlotConfig> =>
   useQuery({

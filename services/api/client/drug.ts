@@ -2,7 +2,7 @@
 
 import { fetchData } from '..';
 
-import { DrugType } from '@/types/drug';
+import { DrugType } from '@/types/client/drug';
 
 export async function getAllDrugs() {
   return await fetchData<DrugType[]>('/drugs');

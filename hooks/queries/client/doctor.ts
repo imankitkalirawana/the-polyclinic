@@ -15,7 +15,7 @@ import {
 } from '../../../services/api/client/doctor';
 import { ApiResponse } from '../../../services/api';
 
-import { CreateDoctorType, DoctorType } from '@/types/doctor';
+import { CreateDoctorType, DoctorType } from '@/types/client/doctor';
 
 export const useAllDoctors = (): UseQueryResult<DoctorType[]> =>
   useQuery({

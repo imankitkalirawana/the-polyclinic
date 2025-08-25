@@ -22,7 +22,7 @@ import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 import { apiRequest } from '@/lib/axios';
 import { useAllAppointments } from '@/hooks/queries/client/appointment';
 import { useAppointmentStore } from '@/store/appointment';
-import { AppointmentType } from '@/types/appointment';
+import { AppointmentType } from '@/types/client/appointment';
 
 const INITIAL_VISIBLE_COLUMNS = ['aid', 'date', 'patient.name', 'doctor.name', 'status'];
 

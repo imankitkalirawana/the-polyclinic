@@ -18,7 +18,7 @@ import { Icon } from '@iconify/react';
 import { formatDate } from 'date-fns';
 import { useOrganization, useToggleOrganizationStatus } from '@/hooks/queries/system/organization';
 import { toast } from 'sonner';
-import { UserType } from '@/types/control-plane';
+import { UserType } from '@/types/system/control-plane';
 import EditOrganizationModal from './edit-modal';
 import AddUserModal from './add-user-modal';
 import EditUserModal from './edit-user-modal';

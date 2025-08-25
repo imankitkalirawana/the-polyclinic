@@ -18,7 +18,7 @@ import Loading from '@/app/loading';
 import { humanReadableDate, humanReadableTime } from '@/lib/utility';
 import { castData } from '@/lib/utils';
 import { useUserWithUID } from '@/hooks/queries/client/user';
-import { UserType } from '@/types/control-plane';
+import { UserType } from '@/types/system/control-plane';
 
 export default function UserCard({ uid }: { uid: number }) {
   const { data, isError, isLoading } = useUserWithUID(uid);

@@ -1,6 +1,6 @@
 import mongoose, { Connection, Model } from 'mongoose';
 import { auth } from '@/auth';
-import { UserType } from '@/types/control-plane';
+import { UserType } from '@/types/system/control-plane';
 import { generateUid } from './client/Counter';
 
 const userSchema = new mongoose.Schema(

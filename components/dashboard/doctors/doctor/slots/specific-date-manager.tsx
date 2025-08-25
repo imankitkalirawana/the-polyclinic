@@ -7,7 +7,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 
 import { getValidEndTimes, getValidStartTimes, timeToMinutes } from './util';
 
-import type { SlotConfig, SpecificDateAvailability, TimeSlot } from '@/types/slots';
+import type { SlotConfig, SpecificDateAvailability, TimeSlot } from '@/types/client/slots';
 
 interface SpecificDateManagerProps {
   formik: FormikProps<SlotConfig>;

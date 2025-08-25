@@ -12,7 +12,7 @@ import { verifyUID } from '@/functions/server-actions';
 import { ServiceStatuses, ServiceTypes } from '@/lib/interface';
 import { serviceValidationSchema } from '@/lib/validation';
 import { useCreateService } from '@/hooks/queries/client/service';
-import { ServiceType } from '@/types/service';
+import { ServiceType } from '@/types/client/service';
 
 export default function NewService() {
   const router = useRouter();

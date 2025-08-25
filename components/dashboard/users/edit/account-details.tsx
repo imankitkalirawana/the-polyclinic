@@ -27,7 +27,7 @@ import { Genders } from '@/lib/options';
 import { userValidationSchema } from '@/lib/validation';
 import { useUpdateUser } from '@/hooks/queries/client/user';
 import { $FixMe } from '@/types';
-import { UserType } from '@/types/control-plane';
+import { UserType } from '@/types/system/control-plane';
 
 export default function AccountDetails({ user }: { user: UserType }) {
   const { data: session } = useSession();

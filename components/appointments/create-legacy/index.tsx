@@ -38,8 +38,8 @@ import { useLinkedUsers, useUserWithUID } from '@/hooks/queries/client/user';
 import { useAppointmentStore } from '@/store/appointment';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { $FixMe } from '@/types';
-import { AppointmentType } from '@/types/appointment';
-import { UserType } from '@/types/control-plane';
+import { AppointmentType } from '@/types/client/appointment';
+import { UserType } from '@/types/system/control-plane';
 
 const KeyMap: Record<number, string> = {
   1: 'patient',

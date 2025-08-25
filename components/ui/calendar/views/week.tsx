@@ -24,7 +24,7 @@ import DateChip from '../ui/date-chip';
 import { TIMINGS } from '@/lib/config';
 import { cn } from '@/lib/utils';
 import { useAppointmentStore } from '@/store/appointment';
-import type { AppointmentType } from '@/types/appointment';
+import type { AppointmentType } from '@/types/client/appointment';
 
 interface WeekViewProps {
   appointments: AppointmentType[];

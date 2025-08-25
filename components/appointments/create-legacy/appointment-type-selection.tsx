@@ -4,7 +4,7 @@ import { Button, Input, RadioGroup, ScrollShadow } from '@heroui/react';
 import CustomRadio from '@/components/ui/custom-radio';
 import { castData } from '@/lib/utils';
 import { useAllAppointments } from '@/hooks/queries/client/appointment';
-import { AppointmentType, appointmentTypes } from '@/types/appointment';
+import { AppointmentType, appointmentTypes } from '@/types/client/appointment';
 
 export default function AppointmentTypeSelection({
   appointmentType,

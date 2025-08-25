@@ -2,7 +2,7 @@
 
 import { fetchData, fetchDataWithPagination } from '..';
 
-import { CreateDoctorType, DoctorType } from '@/types/doctor';
+import { CreateDoctorType, DoctorType } from '@/types/client/doctor';
 
 export async function getDoctors() {
   return await fetchData<DoctorType[]>('/doctors');

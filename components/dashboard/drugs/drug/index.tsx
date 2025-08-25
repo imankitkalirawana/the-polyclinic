@@ -7,7 +7,7 @@ import { format } from 'date-fns';
 
 import CellValue from '@/components/ui/cell-value';
 import { useDrugWithDid } from '@/hooks/queries/client/drug';
-import { DrugType } from '@/types/drug';
+import { DrugType } from '@/types/client/drug';
 
 export default function DrugCard({ did }: { did: number }) {
   const { data } = useDrugWithDid(did);

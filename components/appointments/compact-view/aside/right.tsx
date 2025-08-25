@@ -7,7 +7,7 @@ import PendingAppointments from './pending-appointments';
 
 import { castData } from '@/lib/utils';
 import { useAllAppointments } from '@/hooks/queries/client/appointment';
-import { AppointmentType } from '@/types/appointment';
+import { AppointmentType } from '@/types/client/appointment';
 
 export default function AsideRight() {
   const { data } = useAllAppointments();

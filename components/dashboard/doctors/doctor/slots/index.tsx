@@ -6,7 +6,7 @@ import { ConfigurationPanel } from './configuration-panel';
 import { SlotsPreview } from './slots-preview';
 
 import { useSlotsByUID, useUpdateSlots } from '@/hooks/queries/client/slots';
-import type { SlotConfig } from '@/types/slots';
+import type { SlotConfig } from '@/types/client/slots';
 
 const initialValues: SlotConfig = {
   title: '',

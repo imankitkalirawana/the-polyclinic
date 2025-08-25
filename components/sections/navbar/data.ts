@@ -2,7 +2,7 @@
 
 import { NavItem } from './types';
 
-import { UserType } from '@/types/control-plane';
+import { UserType } from '@/types/system/control-plane';
 
 export const itemsMap: Record<UserType['role'], NavItem[]> = {
   superadmin: [

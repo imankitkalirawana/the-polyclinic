@@ -1,5 +1,5 @@
 import { APP_INFO } from '@/lib/config';
-import { UserType } from '@/types/control-plane';
+import { UserType } from '@/types/system/control-plane';
 
 export function WelcomeUser(user: UserType) {
   return `

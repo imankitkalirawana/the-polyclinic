@@ -20,7 +20,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import { useSelf } from '@/hooks/queries/client/user';
-import { UserType } from '@/types/control-plane';
+import { UserType } from '@/types/system/control-plane';
 
 export default function Profile() {
   const { data } = useSelf();

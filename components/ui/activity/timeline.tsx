@@ -11,7 +11,7 @@ import ActivityNotFound from './not-found';
 
 import { apiRequest } from '@/lib/axios';
 import type { $FixMe } from '@/types';
-import { ActivityLogType, Schema } from '@/types/activity';
+import { ActivityLogType, Schema } from '@/types/client/activity';
 
 const isDate = (value: $FixMe) =>
   value instanceof Date || (typeof value === 'string' && !isNaN(Date.parse(value)));

@@ -5,7 +5,7 @@ import { create } from 'zustand';
 
 import { ActionType } from './types';
 
-import { UserType } from '@/types/control-plane';
+import { UserType } from '@/types/system/control-plane';
 
 interface UserStoreState {
   selected: UserType | null;

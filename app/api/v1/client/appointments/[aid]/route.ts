@@ -8,7 +8,7 @@ import { logActivity } from '@/lib/server-actions/activity-log';
 import { trackObjectChanges } from '@/lib/utility';
 import Appointment from '@/models/client/Appointment';
 import { $FixMe } from '@/types';
-import { Schema, Status } from '@/types/activity';
+import { Schema, Status } from '@/types/client/activity';
 import { OrganizationUserType } from '@/types/organization';
 
 // get appointment by id from param

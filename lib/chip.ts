@@ -1,7 +1,7 @@
-import { AppointmentType } from '@/types/appointment';
-import { DrugStatus } from '@/types/drug';
-import { ServiceStatus, ServiceTypes } from '@/types/service';
-import { UserType } from '@/types/control-plane';
+import { AppointmentType } from '@/types/client/appointment';
+import { DrugStatus } from '@/types/client/drug';
+import { ServiceStatus, ServiceTypes } from '@/types/client/service';
+import { UserType } from '@/types/system/control-plane';
 
 export type ChipColorType =
   | UserType['role']

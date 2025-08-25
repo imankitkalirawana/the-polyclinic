@@ -28,7 +28,7 @@ import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import NoResults from '@/components/ui/no-results';
 import { useAppointmentWithAID } from '@/hooks/queries/client/appointment';
 import { useAppointmentStore } from '@/store/appointment';
-import { AppointmentType } from '@/types/appointment';
+import { AppointmentType } from '@/types/client/appointment';
 
 export default function Appointment({ aid }: { aid: number }) {
   const { action, setAction, setAppointment } = useAppointmentStore();

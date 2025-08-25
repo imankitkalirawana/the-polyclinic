@@ -4,8 +4,8 @@ import { addToast } from '@heroui/react';
 import CancelDeleteAppointment from '@/components/appointments/ui/cancel-delete';
 import RescheduleAppointment from '@/components/appointments/ui/reschedule-modal';
 import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
-import { AppointmentType, ButtonConfig } from '@/types/appointment';
-import { UserType } from '@/types/control-plane';
+import { AppointmentType, ButtonConfig } from '@/types/client/appointment';
+import { UserType } from '@/types/system/control-plane';
 
 export const APPOINTMENT_BUTTON_CONFIGS: ButtonConfig[] = [
   {

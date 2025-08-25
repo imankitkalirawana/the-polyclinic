@@ -6,7 +6,7 @@ import { auth } from '@/auth';
 import { API_ACTIONS } from '@/lib/config';
 import { connectDB } from '@/lib/db';
 import Appointment from '@/models/client/Appointment';
-import { UserType } from '@/types/control-plane';
+import { UserType } from '@/types/system/control-plane';
 
 export const GET = auth(async (request: NextAuthRequest) => {
   try {

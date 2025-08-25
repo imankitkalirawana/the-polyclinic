@@ -20,8 +20,8 @@ import { ButtonProps, PermissionProps } from '@/components/ui/dashboard/quickloo
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { avatars } from '@/lib/avatar';
 import { useAppointmentStore } from '@/store/appointment';
-import { ActionType, AppointmentType, DropdownKeyType } from '@/types/appointment';
-import { UserType } from '@/types/control-plane';
+import { ActionType, AppointmentType, DropdownKeyType } from '@/types/client/appointment';
+import { UserType } from '@/types/system/control-plane';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
   doctor: ['cancel', 'reschedule', 'reminder', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],

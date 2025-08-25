@@ -13,7 +13,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 
 import CalendarWidget from '@/components/ui/calendar-widget';
 import { cn } from '@/lib/utils';
-import { AppointmentType } from '@/types/appointment';
+import { AppointmentType } from '@/types/client/appointment';
 
 const typeMap: Record<AppointmentType['type'], string> = {
   consultation: 'bg-sky-500',

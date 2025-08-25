@@ -10,7 +10,7 @@ import Loading from '@/app/loading';
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { castData } from '@/lib/utils';
 import { useDoctorWithUID } from '@/hooks/queries/client/doctor';
-import { DoctorType } from '@/types/doctor';
+import { DoctorType } from '@/types/client/doctor';
 
 type ListItem = {
   label: string;

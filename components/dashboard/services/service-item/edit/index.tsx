@@ -28,7 +28,7 @@ import { ServiceStatuses, ServiceTypes } from '@/lib/interface';
 import { castData } from '@/lib/utils';
 import { serviceValidationSchema } from '@/lib/validation';
 import { useServiceWithUID, useUpdateService } from '@/hooks/queries/client/service';
-import { ServiceType } from '@/types/service';
+import { ServiceType } from '@/types/client/service';
 
 export default function EditService({ uid }: { uid: string }) {
   const updateService = useUpdateService();

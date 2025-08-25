@@ -8,7 +8,7 @@ import { permissions } from './data';
 import QuickLook from '@/components/ui/dashboard/quicklook';
 import { ButtonProps, DropdownItemProps } from '@/components/ui/dashboard/quicklook/types';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
-import { ServiceType } from '@/types/service';
+import { ServiceType } from '@/types/client/service';
 
 export function ServiceQuickLook() {
   const { selected, setSelected, setAction, action } = useServiceStore();

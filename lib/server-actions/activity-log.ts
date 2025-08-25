@@ -3,7 +3,7 @@
 import { connectDB } from '../db';
 
 import ActivityLog from '@/models/client/Activity';
-import { ActivityLogType } from '@/types/activity';
+import { ActivityLogType } from '@/types/client/activity';
 
 export async function logActivity(
   activity: Omit<ActivityLogType, '_id' | 'createdAt' | 'updatedAt'>

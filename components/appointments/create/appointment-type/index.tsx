@@ -10,7 +10,7 @@ import CreateAppointmentFollowUp from './follow-up';
 
 import CustomRadio from '@/components/ui/custom-radio';
 import { cn } from '@/lib/utils';
-import { type AppointmentType, appointmentTypes } from '@/types/appointment';
+import { type AppointmentType, appointmentTypes } from '@/types/client/appointment';
 import { useKeyPress } from '@/hooks/useKeyPress';
 
 export default function AppointmentType() {

@@ -2,7 +2,7 @@
 
 import { fetchData } from '..';
 
-import { SlotConfig } from '@/types/slots';
+import { SlotConfig } from '@/types/client/slots';
 
 export const getSlotsByUID = async (uid: number) =>
   await fetchData<SlotConfig>(`/doctors/${uid}/slots`);

@@ -5,7 +5,7 @@ import { formatTime } from '../helper';
 import StatusRenderer from './status-renderer';
 
 import { useAppointmentStore } from '@/store/appointment';
-import { AppointmentType } from '@/types/appointment';
+import { AppointmentType } from '@/types/client/appointment';
 
 export default function AppointmentTriggerItem({ appointment }: { appointment: AppointmentType }) {
   const { setAppointment } = useAppointmentStore();

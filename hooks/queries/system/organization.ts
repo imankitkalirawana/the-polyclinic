@@ -5,10 +5,10 @@ import {
   OrganizationType,
   UpdateOrganizationType,
   UpdateOrganizationUser,
-} from '@/types/organization';
+} from '@/types/system/organization';
 import { addToast } from '@heroui/react';
 import { organizationApi } from '@/services/api/system/organization';
-import { OrganizationUserType } from '@/types/organization';
+import { OrganizationUserType } from '@/types/system/organization';
 
 // React Query hooks
 export const useOrganizations = () => {

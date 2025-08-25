@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 import { useAllUsers, useDeleteUser } from '@/hooks/queries/client/user';
-import { UserType } from '@/types/control-plane';
+import { UserType } from '@/types/system/control-plane';
 
 const INITIAL_VISIBLE_COLUMNS = ['image', 'uid', 'name', 'email', 'role', 'createdAt'];
 

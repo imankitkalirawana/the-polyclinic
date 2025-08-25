@@ -21,7 +21,7 @@ import AppointmentList from '../ui/appointment-list';
 
 import { cn } from '@/lib/utils';
 import { useAppointmentStore } from '@/store/appointment';
-import { AppointmentType } from '@/types/appointment';
+import { AppointmentType } from '@/types/client/appointment';
 
 interface YearViewProps {
   appointments: AppointmentType[];

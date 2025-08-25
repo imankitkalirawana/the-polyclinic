@@ -17,8 +17,8 @@ import {
 } from '@/lib/utility';
 import { castData } from '@/lib/utils';
 import { useServiceWithUID } from '@/hooks/queries/client/service';
-import { ServiceType } from '@/types/service';
-import { AuthUser } from '@/types/control-plane';
+import { ServiceType } from '@/types/client/service';
+import { AuthUser } from '@/types/system/control-plane';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   active: 'success',

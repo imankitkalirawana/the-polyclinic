@@ -2,7 +2,7 @@ import React from 'react';
 import { cn, Tooltip } from '@heroui/react';
 
 import { chipColorMap } from '@/lib/chip';
-import { AppointmentType } from '@/types/appointment';
+import { AppointmentType } from '@/types/client/appointment';
 
 export default function StatusRenderer({
   status,

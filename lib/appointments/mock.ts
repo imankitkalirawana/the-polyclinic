@@ -5,7 +5,7 @@ import { faker } from '@faker-js/faker';
 
 import { TIMINGS } from '../config';
 
-import { appointmentModes, AppointmentType, appointmentTypes } from '@/types/appointment';
+import { appointmentModes, AppointmentType, appointmentTypes } from '@/types/client/appointment';
 
 export async function generateAppointments({
   count,

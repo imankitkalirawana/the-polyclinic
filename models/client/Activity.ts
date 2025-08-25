@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-import { ActivityLogType, Status } from '@/types/activity';
+import { ActivityLogType, Status } from '@/types/client/activity';
 
 const ActivityLogSchema = new mongoose.Schema<ActivityLogType>(
   {

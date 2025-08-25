@@ -8,7 +8,7 @@ import { views } from '../types';
 import AppointmentTriggerItem from '../ui/appointment-trigger-item';
 import DateChip from '../ui/date-chip';
 
-import { AppointmentType } from '@/types/appointment';
+import { AppointmentType } from '@/types/client/appointment';
 
 interface ScheduleViewProps {
   appointments: AppointmentType[];

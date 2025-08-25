@@ -1,9 +1,9 @@
 'use server';
 
-import { AppointmentType } from '@/types/appointment';
+import { AppointmentType } from '@/types/client/appointment';
 import { fetchData, fetchDataWithPagination } from '..';
-import { UserType } from '@/types/control-plane';
-import { NewPatientFormValues } from '@/types/patient';
+import { UserType } from '@/types/system/control-plane';
+import { NewPatientFormValues } from '@/types/client/patient';
 
 export async function getAllPatients() {
   return await fetchData<UserType[]>('/patients');

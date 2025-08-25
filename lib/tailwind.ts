@@ -1,4 +1,4 @@
-import { AppointmentType } from '@/types/appointment';
+import { AppointmentType } from '@/types/client/appointment';
 
 type Color =
   | 'red'

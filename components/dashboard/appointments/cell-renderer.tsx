@@ -2,7 +2,7 @@ import { User } from '@heroui/react';
 import { format } from 'date-fns';
 
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
-import { AppointmentType } from '@/types/appointment';
+import { AppointmentType } from '@/types/client/appointment';
 
 export function ModalCellRenderer({ appointment }: { appointment: AppointmentType }) {
   return (

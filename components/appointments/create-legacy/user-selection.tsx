@@ -6,8 +6,8 @@ import NoResults from '../../ui/no-results';
 import Skeleton from '../../ui/skeleton';
 
 import { CreateAppointmentType } from '@/components/appointments/create/types';
-import { DoctorType } from '@/types/doctor';
-import { UserType } from '@/types/control-plane';
+import { DoctorType } from '@/types/client/doctor';
+import { UserType } from '@/types/system/control-plane';
 import { useDebounce } from '@/hooks/useDebounce';
 
 const SizeMap = {

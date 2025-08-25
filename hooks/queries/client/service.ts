@@ -16,7 +16,7 @@ import {
 } from '../../../services/api/client/service';
 import { ApiResponse } from '../../../services/api';
 
-import { ServiceType } from '@/types/service';
+import { ServiceType } from '@/types/client/service';
 
 export const useAllServices = (): UseQueryResult<ServiceType[]> =>
   useQuery({

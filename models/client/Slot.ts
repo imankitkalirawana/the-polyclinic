@@ -2,7 +2,7 @@ import mongoose, { Model } from 'mongoose';
 
 import { auth } from '@/auth';
 import { Base } from '@/lib/interface';
-import { SlotConfig } from '@/types/slots';
+import { SlotConfig } from '@/types/client/slots';
 
 interface SlotType extends Base, SlotConfig {}
 

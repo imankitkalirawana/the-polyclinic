@@ -2,7 +2,7 @@ import { NextAuthRequest } from 'next-auth';
 import { NextResponse } from 'next/server';
 import User from '@/models/User';
 import { auth } from '@/auth';
-import { UserType } from '@/types/control-plane';
+import { UserType } from '@/types/system/control-plane';
 import { connectDB } from '@/lib/db';
 
 export const GET = auth(async (req: NextAuthRequest) => {

@@ -1,10 +1,10 @@
 import { ButtonProps } from '@heroui/react';
 
-import type { $FixMe, Gender } from '.';
+import type { $FixMe, Gender } from '..';
 
 import { Base } from '@/lib/interface';
 import { ValuesOf } from '@/lib/utils';
-import { OrganizationUserType } from './organization';
+import { OrganizationUserType } from '../system/organization';
 
 export const appointmentTypes = [
   {

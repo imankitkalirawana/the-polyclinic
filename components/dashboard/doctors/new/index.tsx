@@ -32,8 +32,8 @@ import { Genders } from '@/lib/options';
 import { castData, generateEmail, generatePhoneNumber } from '@/lib/utils';
 import { useCreateDoctor } from '@/hooks/queries/client/doctor';
 import { useAllUsers } from '@/hooks/queries/client/user';
-import { CreateDoctorType } from '@/types/doctor';
-import { UserType } from '@/types/control-plane';
+import { CreateDoctorType } from '@/types/client/doctor';
+import { UserType } from '@/types/system/control-plane';
 
 export default function NewDoctor() {
   const router = useRouter();
