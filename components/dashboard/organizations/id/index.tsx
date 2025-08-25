@@ -18,7 +18,12 @@ import { Icon } from '@iconify/react';
 import { formatDate } from 'date-fns';
 import { useOrganization, useToggleOrganizationStatus } from '@/services/organization';
 import { toast } from 'sonner';
+import { UserType } from '@/types/user';
 import EditOrganizationModal from './edit-modal';
+import AddUserModal from './add-user-modal';
+import EditUserModal from './edit-user-modal';
+import DeleteUserModal from './delete-user-modal';
+import UserStatusToggle from './user-status-toggle';
 import { CellRenderer } from '@/components/ui/cell-renderer';
 
 export default function Organization({ id }: { id: string }) {
@@ -26,8 +31,12 @@ export default function Organization({ id }: { id: string }) {
   const { organization, users } = data || {};
   const toggleStatus = useToggleOrganizationStatus();
   const editModal = useDisclosure();
+  const addUserModal = useDisclosure();
+  const editUserModal = useDisclosure();
+  const deleteUserModal = useDisclosure();
 
   const [selectedTab, setSelectedTab] = useState('users');
+  const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
 
   if (isLoading) {
     return (
@@ -64,6 +73,16 @@ export default function Organization({ id }: { id: string }) {
     } catch (error) {
       toast.error('Failed to update organization status');
     }
+  };
+
+  const handleEditUser = (user: UserType) => {
+    setSelectedUser(user);
+    editUserModal.onOpen();
+  };
+
+  const handleDeleteUser = (user: UserType) => {
+    setSelectedUser(user);
+    deleteUserModal.onOpen();
   };
 
   const getStatusColor = (status: string) => {
@@ -118,6 +137,15 @@ export default function Organization({ id }: { id: string }) {
             </div>
           </div>
           <div className="flex items-center space-x-3">
+            <Button
+              color="primary"
+              variant="flat"
+              onPress={() => addUserModal.onOpen()}
+              size="sm"
+              startContent={<Icon icon="solar:user-plus-line-duotone" />}
+            >
+              Add User
+            </Button>
             <Button isIconOnly variant="flat" onPress={() => editModal.onOpen()} size="sm">
               <Icon icon="solar:pen-line-duotone" />
             </Button>
@@ -210,6 +238,17 @@ export default function Organization({ id }: { id: string }) {
           }
         >
           <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Organization Users</h3>
+              <Button
+                color="primary"
+                variant="flat"
+                onPress={() => addUserModal.onOpen()}
+                startContent={<Icon icon="solar:user-plus-line-duotone" />}
+              >
+                Add User
+              </Button>
+            </div>
             {users?.map((user) => (
               <Card key={user._id}>
                 <CardBody className="p-4">
@@ -226,6 +265,7 @@ export default function Organization({ id }: { id: string }) {
                           <Chip color={getStatusColor(user.status)} variant="flat" size="sm">
                             {user.status}
                           </Chip>
+                          <UserStatusToggle organization={organization} user={user} />
                         </div>
                       </div>
                     </div>
@@ -234,6 +274,7 @@ export default function Organization({ id }: { id: string }) {
                         isIconOnly
                         variant="flat"
                         size="sm"
+                        onPress={() => handleEditUser(user)}
                         startContent={<Icon icon="solar:pen-line-duotone" />}
                       />
                       <Button
@@ -247,6 +288,7 @@ export default function Organization({ id }: { id: string }) {
                         variant="flat"
                         size="sm"
                         color="danger"
+                        onPress={() => handleDeleteUser(user)}
                         startContent={<Icon icon="solar:trash-bin-trash-line-duotone" />}
                       />
                     </div>
@@ -355,6 +397,35 @@ export default function Organization({ id }: { id: string }) {
           isOpen={editModal.isOpen}
           onClose={editModal.onClose}
           organization={organization}
+        />
+      )}
+
+      {/* Add User Modal */}
+      {addUserModal.isOpen && (
+        <AddUserModal
+          isOpen={addUserModal.isOpen}
+          onClose={addUserModal.onClose}
+          organization={organization}
+        />
+      )}
+
+      {/* Edit User Modal */}
+      {editUserModal.isOpen && selectedUser && (
+        <EditUserModal
+          isOpen={editUserModal.isOpen}
+          onClose={editUserModal.onClose}
+          organization={organization}
+          user={selectedUser}
+        />
+      )}
+
+      {/* Delete User Modal */}
+      {deleteUserModal.isOpen && selectedUser && (
+        <DeleteUserModal
+          isOpen={deleteUserModal.isOpen}
+          onClose={deleteUserModal.onClose}
+          organization={organization}
+          user={selectedUser}
         />
       )}
     </div>

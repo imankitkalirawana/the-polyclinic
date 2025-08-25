@@ -1,6 +1,14 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type $FixMe = any;
 
+export type Base = {
+  _id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  createdBy: string;
+  updatedBy: string;
+};
+
 export interface CountryProps {
   id: number;
   name: string;

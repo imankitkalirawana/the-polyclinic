@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query';
 import {
   CreateOrganizationType,
+  CreateOrganizationUser,
   OrganizationType,
   UpdateOrganizationType,
 } from '@/types/organization';
@@ -123,5 +124,97 @@ export const useToggleOrganizationStatus = () => {
   });
 };
 
-// Legacy service for backward compatibility
-export const organizationService = organizationApi;
+export const useCreateOrganizationUser = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: CreateOrganizationUser }) => {
+      const response = await organizationApi.createUser(id, data);
+      if (response.success) {
+        return response.data;
+      }
+      throw new Error(response.message);
+    },
+    onSuccess: (data, variables) => {
+      addToast({
+        title: 'User created successfully',
+        description: 'User created successfully',
+        color: 'success',
+      });
+      queryClient.invalidateQueries({ queryKey: ['organizations', variables.id] });
+    },
+    onError: (error) => {
+      addToast({
+        title: 'Failed to create user',
+        description: error instanceof Error ? error.message : 'Failed to create user',
+        color: 'danger',
+      });
+    },
+  });
+};
+
+export const useUpdateOrganizationUser = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      organizationId,
+      userId,
+      data,
+    }: {
+      organizationId: string;
+      userId: string;
+      data: Partial<CreateOrganizationUser>;
+    }) => {
+      const response = await organizationApi.updateUser(organizationId, userId, data);
+      if (response.success) {
+        return response.data;
+      }
+      throw new Error(response.message);
+    },
+    onSuccess: (data, variables) => {
+      addToast({
+        title: 'User updated successfully',
+        description: 'User updated successfully',
+        color: 'success',
+      });
+      queryClient.invalidateQueries({ queryKey: ['organizations', variables.organizationId] });
+    },
+    onError: (error) => {
+      addToast({
+        title: 'Failed to update user',
+        description: error instanceof Error ? error.message : 'Failed to update user',
+        color: 'danger',
+      });
+    },
+  });
+};
+
+export const useDeleteOrganizationUser = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ organizationId, userId }: { organizationId: string; userId: string }) => {
+      const response = await organizationApi.deleteUser(organizationId, userId);
+      if (response.success) {
+        return response.data;
+      }
+      throw new Error(response.message);
+    },
+    onSuccess: (_, variables) => {
+      addToast({
+        title: 'User deleted successfully',
+        description: 'User deleted successfully',
+        color: 'success',
+      });
+      queryClient.invalidateQueries({ queryKey: ['organizations', variables.organizationId] });
+    },
+    onError: (error) => {
+      addToast({
+        title: 'Failed to delete user',
+        description: error instanceof Error ? error.message : 'Failed to delete user',
+        color: 'danger',
+      });
+    },
+  });
+};

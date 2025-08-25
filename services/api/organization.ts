@@ -1,6 +1,8 @@
 import {
   CreateOrganizationType,
+  CreateOrganizationUser,
   OrganizationType,
+  OrganizationUser,
   UpdateOrganizationType,
 } from '@/types/organization';
 
@@ -49,6 +51,27 @@ export const organizationApi = {
     return await fetchData<OrganizationType>(`${API_BASE}/${id}/status`, {
       method: 'PATCH',
       data: { status },
+    });
+  },
+
+  // user related
+  async createUser(id: string, user: CreateOrganizationUser) {
+    return await fetchData<OrganizationUser>(`${API_BASE}/${id}/create-user`, {
+      method: 'POST',
+      data: user,
+    });
+  },
+
+  async updateUser(organizationId: string, userId: string, user: Partial<CreateOrganizationUser>) {
+    return await fetchData<OrganizationUser>(`${API_BASE}/${organizationId}/users/${userId}`, {
+      method: 'PUT',
+      data: user,
+    });
+  },
+
+  async deleteUser(organizationId: string, userId: string) {
+    return await fetchData<void>(`${API_BASE}/${organizationId}/users/${userId}`, {
+      method: 'DELETE',
     });
   },
 };

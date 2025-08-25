@@ -20,3 +20,40 @@ export type CreateOrganizationType = Pick<
 export type UpdateOrganizationType = Partial<CreateOrganizationType>;
 
 export type OrganizationStatus = ValuesOf<typeof organizationStatuses>;
+
+export type OrganizationUserRole =
+  | 'admin'
+  | 'doctor'
+  | 'nurse'
+  | 'patient'
+  | 'receptionist'
+  | 'pharmacist';
+
+export type OrganizationUserStatus = 'active' | 'inactive';
+
+export type OrganizationUser = Base & {
+  uid: string;
+  name: string;
+  email: string;
+  organization: string;
+  phone: string;
+  image: string;
+  role: OrganizationUserRole;
+  status: OrganizationUserStatus;
+};
+
+export type CreateOrganizationUser = Partial<
+  Omit<
+    OrganizationUser,
+    | '_id'
+    | 'createdAt'
+    | 'updatedAt'
+    | 'createdBy'
+    | 'updatedBy'
+    | 'organization'
+    | 'status'
+    | 'uid'
+  >
+> & {
+  password?: string;
+};
