@@ -18,8 +18,11 @@ export const PATCH = auth(async (request: NextAuthRequest) => {
     if (!user) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
     }
+    if (!user.password) {
+      return NextResponse.json({ message: 'User has no password' }, { status: 400 });
+    }
     const isPasswordCorrect = await bcrypt.compare(currentPassword, user.password);
-    if (request.auth?.user?.role !== 'admin' && !isPasswordCorrect) {
+    if (request.auth?.user?.role !== 'superadmin' && !isPasswordCorrect) {
       return NextResponse.json({ message: 'Incorrect password' }, { status: 400 });
     }
     const hashedPassword = await bcrypt.hash(password, 12);

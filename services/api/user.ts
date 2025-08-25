@@ -2,7 +2,7 @@
 
 import { fetchData } from '.';
 
-import { CreateUserType, UserType } from '@/types/user';
+import { CreateUserType, UserType } from '@/types/control-plane';
 
 /**
  * GET APIs

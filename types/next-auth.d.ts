@@ -1,18 +1,18 @@
-import { UserType } from './user';
+import { UnifiedUserType } from '.';
 
 declare module 'next-auth' {
   interface Session {
-    uid: number;
+    uid: string;
     email: string;
     name: string;
     image: string;
-    role: UserType['role'];
+    role: UnifiedUserType['role'];
     organization: string;
   }
 
   interface User {
-    role: UserType['role'];
-    uid: number;
+    role: UnifiedUserType['role'];
+    uid: string;
     image: string;
     organization: string;
   }
@@ -20,8 +20,8 @@ declare module 'next-auth' {
 
 declare module 'next-auth/jwt' {
   interface JWT {
-    uid: number;
-    role: UserType['role'];
+    uid: string;
+    role: UnifiedUserType['role'];
     organization: string;
   }
 }

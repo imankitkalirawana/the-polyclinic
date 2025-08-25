@@ -9,15 +9,14 @@ import { trackObjectChanges } from '@/lib/utility';
 import Appointment from '@/models/Appointment';
 import { $FixMe } from '@/types';
 import { Schema, Status } from '@/types/activity';
-import { UserType } from '@/types/user';
+import { OrganizationUserType } from '@/types/organization';
 
 // get appointment by id from param
 export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
-    const allowedRoles = ['user', 'admin', 'doctor', 'receptionist', 'superadmin'];
     const role = request.auth?.user?.role;
 
-    if (!role || !allowedRoles.includes(role)) {
+    if (!role || !['admin', 'doctor'].includes(role)) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
@@ -25,27 +24,28 @@ export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
     const aid = Number(params.aid);
     await connectDB();
 
-    const queryMap: Record<UserType['role'], { $match: Record<string, unknown> }> = {
-      superadmin: {
-        $match: { aid },
-      },
+    const queryMap: Record<OrganizationUserType['role'], { $match: Record<string, unknown> }> = {
       admin: {
         $match: { aid },
       },
       doctor: {
-        $match: { aid, doctor: request.auth?.user?.uid },
+        $match: { aid },
+      },
+      nurse: {
+        $match: { aid },
+      },
+      patient: {
+        $match: { aid },
       },
       receptionist: {
         $match: { aid },
       },
-      user: { $match: { aid, patient: request.auth?.user?.uid } },
-      nurse: { $match: { aid } },
-      pharmacist: { $match: { aid } },
-      laboratorist: { $match: { aid } },
+      pharmacist: {
+        $match: { aid },
+      },
     };
-
     const appointments = await Appointment.aggregate([
-      queryMap[role],
+      queryMap[role as keyof typeof queryMap],
       {
         $lookup: {
           from: 'users',
@@ -129,7 +129,7 @@ export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
 
 export const PATCH = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
-    const allowedRoles = ['user', 'admin', 'doctor', 'receptionist'];
+    const allowedRoles = ['admin', 'doctor', 'nurse', 'patient', 'receptionist', 'pharmacist'];
 
     const user = request.auth?.user;
 
@@ -148,7 +148,7 @@ export const PATCH = auth(async (request: NextAuthRequest, context: $FixMe) => {
     }
 
     // if request role is use and doesn't match appointment patient email, return unauthorized
-    if (user?.role === 'user') {
+    if (user?.role === 'admin') {
       if (user?.uid !== appointment?.patient) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
       }
@@ -160,7 +160,6 @@ export const PATCH = auth(async (request: NextAuthRequest, context: $FixMe) => {
       }
     }
 
-    // if request role is doctor and doesn't match appointment doctor email, return unauthorized
     if (user?.role === 'doctor' && user?.uid !== appointment?.doctor) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
@@ -200,7 +199,7 @@ export const PATCH = auth(async (request: NextAuthRequest, context: $FixMe) => {
 export const DELETE = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
     const user = request.auth?.user;
-    const allowedRoles = ['admin'];
+    const allowedRoles = ['superadmin'];
     if (!allowedRoles.includes(user?.role ?? '')) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }

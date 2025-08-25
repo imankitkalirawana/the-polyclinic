@@ -1,16 +1,16 @@
-import { Base } from '@/lib/interface';
 import { ValuesOf } from '@/lib/utils';
+import { Base } from '.';
 
 export const organizationStatuses = ['active', 'inactive'] as const;
 
-export interface OrganizationType extends Base {
+export type OrganizationType = Base & {
   organizationId: string;
   name: string;
   domain: string;
   logoUrl: string | null;
   status: OrganizationStatus;
   subscriptionId: string | null;
-}
+};
 
 export type CreateOrganizationType = Pick<
   OrganizationType,
@@ -19,9 +19,9 @@ export type CreateOrganizationType = Pick<
 
 export type UpdateOrganizationType = Partial<CreateOrganizationType>;
 
-export type OrganizationStatus = ValuesOf<typeof organizationStatuses>;
+type OrganizationStatus = ValuesOf<typeof organizationStatuses>;
 
-export type OrganizationUserRole =
+type OrganizationUserRole =
   | 'admin'
   | 'doctor'
   | 'nurse'
@@ -29,9 +29,9 @@ export type OrganizationUserRole =
   | 'receptionist'
   | 'pharmacist';
 
-export type OrganizationUserStatus = 'active' | 'inactive';
+type OrganizationUserStatus = 'active' | 'inactive';
 
-export type OrganizationUser = Base & {
+export type OrganizationUserType = Base & {
   uid: string;
   name: string;
   email: string;
@@ -44,7 +44,7 @@ export type OrganizationUser = Base & {
 
 export type CreateOrganizationUser = Partial<
   Omit<
-    OrganizationUser,
+    OrganizationUserType,
     | '_id'
     | 'createdAt'
     | 'updatedAt'
@@ -54,6 +54,12 @@ export type CreateOrganizationUser = Partial<
     | 'status'
     | 'uid'
   >
+> & {
+  password?: string;
+};
+
+export type UpdateOrganizationUser = Partial<
+  Omit<OrganizationUserType, '_id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'updatedBy' | 'uid'>
 > & {
   password?: string;
 };

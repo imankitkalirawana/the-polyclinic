@@ -4,7 +4,7 @@ import { Icon } from '@iconify/react';
 import { useDeleteOrganizationUser } from '@/services/organization';
 import { toast } from 'sonner';
 import { OrganizationType } from '@/types/organization';
-import { UserType } from '@/types/user';
+import { UserType } from '@/types/control-plane';
 
 interface DeleteUserModalProps {
   isOpen: boolean;

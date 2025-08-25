@@ -4,10 +4,11 @@ import {
   CreateOrganizationUser,
   OrganizationType,
   UpdateOrganizationType,
+  UpdateOrganizationUser,
 } from '@/types/organization';
 import { addToast } from '@heroui/react';
 import { organizationApi } from './api/organization';
-import { UserType } from '@/types/user';
+import { OrganizationUserType } from '@/types/organization';
 
 // React Query hooks
 export const useOrganizations = () => {
@@ -27,7 +28,7 @@ export const useOrganization = (
   id: string
 ): UseQueryResult<{
   organization: OrganizationType;
-  users: UserType[];
+  users: OrganizationUserType[];
 }> => {
   return useQuery({
     queryKey: ['organizations', id],
@@ -164,7 +165,7 @@ export const useUpdateOrganizationUser = () => {
     }: {
       organizationId: string;
       userId: string;
-      data: Partial<CreateOrganizationUser>;
+      data: UpdateOrganizationUser;
     }) => {
       const response = await organizationApi.users.update(organizationId, userId, data);
       if (response.success) {

@@ -5,7 +5,7 @@ import CancelDeleteAppointment from '@/components/appointments/ui/cancel-delete'
 import RescheduleAppointment from '@/components/appointments/ui/reschedule-modal';
 import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
 import { AppointmentType, ButtonConfig } from '@/types/appointment';
-import { UserType } from '@/types/user';
+import { UserType } from '@/types/control-plane';
 
 export const APPOINTMENT_BUTTON_CONFIGS: ButtonConfig[] = [
   {

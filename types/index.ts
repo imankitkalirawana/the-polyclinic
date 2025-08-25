@@ -1,3 +1,8 @@
+import { GENDERS } from '@/constants';
+import { SystemUserType } from './control-plane';
+import { OrganizationUserType } from './organization';
+import { ValuesOf } from '@/lib/utils';
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type $FixMe = any;
 
@@ -8,6 +13,10 @@ export type Base = {
   createdBy: string;
   updatedBy: string;
 };
+
+export type UnifiedUserType = SystemUserType | OrganizationUserType;
+
+export type Gender = ValuesOf<typeof GENDERS>;
 
 export interface CountryProps {
   id: number;

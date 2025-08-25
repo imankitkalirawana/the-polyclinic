@@ -39,7 +39,7 @@ import { useAppointmentStore } from '@/store/appointment';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { $FixMe } from '@/types';
 import { AppointmentType } from '@/types/appointment';
-import { UserType } from '@/types/user';
+import { UserType } from '@/types/control-plane';
 
 const KeyMap: Record<number, string> = {
   1: 'patient',

@@ -19,9 +19,9 @@ import {
   updateUser,
 } from '@/services/api/user';
 import { $FixMe } from '@/types';
-import { CreateUserType, UserType } from '@/types/user';
+import { CreateUserType, SystemUserType } from '@/types/control-plane';
 
-export const useSelf = (): UseQueryResult<UserType> =>
+export const useSelf = (): UseQueryResult<SystemUserType> =>
   useQuery({
     queryKey: ['self'],
     queryFn: async () => {
@@ -33,7 +33,7 @@ export const useSelf = (): UseQueryResult<UserType> =>
     },
   });
 
-export const useLinkedUsers = (): UseQueryResult<UserType[]> =>
+export const useLinkedUsers = (): UseQueryResult<SystemUserType[]> =>
   useQuery({
     queryKey: ['linked-users'],
     queryFn: async () => {
@@ -52,7 +52,7 @@ export const useLinkedUsers = (): UseQueryResult<UserType[]> =>
  *   If `undefined`, the query will be disabled.
  */
 
-export const useUserWithUID = (uid: number | undefined): UseQueryResult<UserType> =>
+export const useUserWithUID = (uid: number | undefined): UseQueryResult<SystemUserType> =>
   useQuery({
     queryKey: ['user', uid],
     queryFn: async () => {
@@ -65,7 +65,7 @@ export const useUserWithUID = (uid: number | undefined): UseQueryResult<UserType
     enabled: !!uid,
   });
 
-export const useAllUsers = (): UseQueryResult<UserType[]> =>
+export const useAllUsers = (): UseQueryResult<SystemUserType[]> =>
   useQuery({
     queryKey: ['users'],
     queryFn: async () => {
@@ -78,7 +78,7 @@ export const useAllUsers = (): UseQueryResult<UserType[]> =>
   });
 
 export const useCreateUser = (): UseMutationResult<
-  ApiResponse<UserType>,
+  ApiResponse<SystemUserType>,
   Error,
   CreateUserType
 > => {
@@ -91,7 +91,7 @@ export const useCreateUser = (): UseMutationResult<
       }
       throw new Error(res.message);
     },
-    onSuccess: (data: ApiResponse<UserType>) => {
+    onSuccess: (data: ApiResponse<SystemUserType>) => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
       addToast({
         title: data.message,
@@ -107,10 +107,14 @@ export const useCreateUser = (): UseMutationResult<
   });
 };
 
-export const useUpdateUser = (): UseMutationResult<ApiResponse<UserType>, Error, UserType> => {
+export const useUpdateUser = (): UseMutationResult<
+  ApiResponse<SystemUserType>,
+  Error,
+  SystemUserType
+> => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (user: UserType) => {
+    mutationFn: async (user: SystemUserType) => {
       const res = await updateUser(user);
       if (res.success) {
         return res;
@@ -133,7 +137,7 @@ export const useUpdateUser = (): UseMutationResult<ApiResponse<UserType>, Error,
   });
 };
 
-export const useDeleteUser = (): UseMutationResult<ApiResponse<UserType>, Error, number> => {
+export const useDeleteUser = (): UseMutationResult<ApiResponse<SystemUserType>, Error, number> => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (uid: number) => {

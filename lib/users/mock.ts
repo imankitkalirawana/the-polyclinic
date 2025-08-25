@@ -2,7 +2,7 @@
 
 import { faker } from '@faker-js/faker';
 
-import { UserType } from '@/types/user';
+import { UserType } from '@/types/control-plane';
 
 export async function generateUsers({
   count,

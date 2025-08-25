@@ -140,9 +140,7 @@ export default function AddUserModal({ isOpen, onClose, organization }: AddUserM
                 }
               >
                 {userRoles.map((role) => (
-                  <SelectItem key={role.key} value={role.key}>
-                    {role.label}
-                  </SelectItem>
+                  <SelectItem key={role.key}>{role.label}</SelectItem>
                 ))}
               </Select>
 

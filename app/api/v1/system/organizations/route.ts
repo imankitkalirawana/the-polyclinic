@@ -6,19 +6,16 @@ import { getOrganizationModel } from '@/models/Organization';
 import { CreateOrganizationType } from '@/types/organization';
 
 export const GET = auth(async (request: NextAuthRequest) => {
+  const ALLOWED_ROLES = ['superadmin', 'ops', 'dev'];
+  if (!request.auth?.user) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  }
+
+  if (!ALLOWED_ROLES.includes(request.auth.user.role)) {
+    return NextResponse.json({ message: 'Forbidden: Access denied' }, { status: 403 });
+  }
+
   try {
-    if (!request.auth?.user) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
-
-    // Only superadmin can access this endpoint
-    if (request.auth.user.role !== 'superadmin') {
-      return NextResponse.json(
-        { message: 'Forbidden: Superadmin access required' },
-        { status: 403 }
-      );
-    }
-
     const conn = await connectDB();
     const Organization = getOrganizationModel(conn);
     const organizations = await Organization.find().sort({ createdAt: -1 });

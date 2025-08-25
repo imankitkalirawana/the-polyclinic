@@ -13,7 +13,7 @@ import {
   getPreviousAppointments,
 } from './api/patient';
 import { useInfiniteQueryWithSearch } from './infinite-query';
-import { UserType } from '@/types/user';
+import { UserType } from '@/types/control-plane';
 import { AppointmentType } from '@/types/appointment';
 import { NewPatientFormValues } from '@/types/patient';
 import { ApiResponse } from './api';

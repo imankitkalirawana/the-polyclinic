@@ -2,14 +2,14 @@ import {
   CreateOrganizationType,
   CreateOrganizationUser,
   OrganizationType,
-  OrganizationUser,
+  OrganizationUserType,
   UpdateOrganizationType,
 } from '@/types/organization';
 
 import { fetchData } from '.';
-import { UserType } from '@/types/user';
 
-const API_BASE = '/organizations';
+const API_BASE = '/system/organizations';
+
 export const organizationApi = {
   async getAll() {
     return await fetchData<OrganizationType[]>(API_BASE);
@@ -19,7 +19,7 @@ export const organizationApi = {
   async getById(organizationId: string) {
     return await fetchData<{
       organization: OrganizationType;
-      users: UserType[];
+      users: OrganizationUserType[];
     }>(`${API_BASE}/${organizationId}`);
   },
 
@@ -57,17 +57,20 @@ export const organizationApi = {
   // User related
   users: {
     async create(organizationId: string, user: CreateOrganizationUser) {
-      return await fetchData<OrganizationUser>(`${API_BASE}/${organizationId}/users`, {
+      return await fetchData<OrganizationUserType>(`${API_BASE}/${organizationId}/users`, {
         method: 'POST',
         data: user,
       });
     },
 
     async update(organizationId: string, userId: string, user: Partial<CreateOrganizationUser>) {
-      return await fetchData<OrganizationUser>(`${API_BASE}/${organizationId}/users/${userId}`, {
-        method: 'PUT',
-        data: user,
-      });
+      return await fetchData<OrganizationUserType>(
+        `${API_BASE}/${organizationId}/users/${userId}`,
+        {
+          method: 'PUT',
+          data: user,
+        }
+      );
     },
 
     async delete(organizationId: string, userId: string) {

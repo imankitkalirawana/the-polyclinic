@@ -33,7 +33,7 @@ import { castData, generateEmail, generatePhoneNumber } from '@/lib/utils';
 import { useCreateDoctor } from '@/services/doctor';
 import { useAllUsers } from '@/services/user';
 import { CreateDoctorType } from '@/types/doctor';
-import { UserType } from '@/types/user';
+import { UserType } from '@/types/control-plane';
 
 export default function NewDoctor() {
   const router = useRouter();

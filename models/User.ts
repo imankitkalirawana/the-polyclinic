@@ -1,6 +1,6 @@
 import mongoose, { Connection, Model } from 'mongoose';
 import { auth } from '@/auth';
-import { UserType } from '@/types/user';
+import { UserType } from '@/types/control-plane';
 import { generateUid } from './Counter';
 
 const userSchema = new mongoose.Schema(
@@ -39,8 +39,8 @@ const userSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['active', 'inactive', 'blocked', 'deleted', 'unverified'],
-      default: 'unverified',
+      enum: ['active', 'inactive', 'blocked'],
+      default: 'active',
     },
     updatedBy: {
       type: String,

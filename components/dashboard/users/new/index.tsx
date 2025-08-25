@@ -35,7 +35,7 @@ import {
 } from '@/services/external';
 import { useCreateUser } from '@/services/user';
 import { $FixMe, CityProps, CountryProps, StateProps } from '@/types';
-import { CreateUserType, userRoles } from '@/types/user';
+import { CreateUserType, userRoles } from '@/types/control-plane';
 
 export default function NewUser() {
   const router = useRouter();

@@ -15,7 +15,7 @@ import { Icon } from '@iconify/react';
 import { useUpdateOrganizationUser } from '@/services/organization';
 import { toast } from 'sonner';
 import { OrganizationType } from '@/types/organization';
-import { UserType } from '@/types/user';
+import { UserType } from '@/types/control-plane';
 
 interface EditUserModalProps {
   isOpen: boolean;
@@ -52,8 +52,8 @@ export default function EditUserModal({ isOpen, onClose, organization, user }: E
         name: user.name || '',
         email: user.email || '',
         phone: user.phone || '',
-        password: '', // Don't populate password
-        role: (user.role as any) || 'receptionist',
+        password: '',
+        role: user.role || 'receptionist',
         image: user.image || '',
       });
     }
@@ -157,9 +157,7 @@ export default function EditUserModal({ isOpen, onClose, organization, user }: E
                 }
               >
                 {userRoles.map((role) => (
-                  <SelectItem key={role.key} value={role.key}>
-                    {role.label}
-                  </SelectItem>
+                  <SelectItem key={role.key}>{role.label}</SelectItem>
                 ))}
               </Select>
 

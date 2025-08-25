@@ -21,7 +21,7 @@ import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { avatars } from '@/lib/avatar';
 import { useAppointmentStore } from '@/store/appointment';
 import { ActionType, AppointmentType, DropdownKeyType } from '@/types/appointment';
-import { UserType } from '@/types/user';
+import { UserType } from '@/types/control-plane';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
   doctor: ['cancel', 'reschedule', 'reminder', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],

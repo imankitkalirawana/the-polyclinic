@@ -1,10 +1,10 @@
 import { ButtonProps } from '@heroui/react';
 
-import type { $FixMe } from '.';
+import type { $FixMe, Gender } from '.';
 
 import { Base } from '@/lib/interface';
 import { ValuesOf } from '@/lib/utils';
-import { Gender, UserType } from '@/types/user';
+import { OrganizationUserType } from './organization';
 
 export const appointmentTypes = [
   {
@@ -103,8 +103,8 @@ export interface ButtonConfig {
   whileLoading?: string;
   visibilityRules: {
     statuses?: AppointmentType['status'][];
-    roles?: UserType['role'][];
-    custom?: (appointment: AppointmentType, role: UserType['role']) => boolean;
+    roles?: OrganizationUserType['role'][];
+    custom?: (appointment: AppointmentType, role: OrganizationUserType['role']) => boolean;
   };
   action: {
     type: 'store-action' | 'async-function' | 'navigation';

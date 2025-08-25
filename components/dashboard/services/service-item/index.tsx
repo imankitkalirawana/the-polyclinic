@@ -18,7 +18,7 @@ import {
 import { castData } from '@/lib/utils';
 import { useServiceWithUID } from '@/services/service';
 import { ServiceType } from '@/types/service';
-import { AuthUser } from '@/types/user';
+import { AuthUser } from '@/types/control-plane';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   active: 'success',
@@ -137,19 +137,20 @@ export default function ServiceViewItem({ uid, session }: { uid: string; session
             >
               Book Appointment
             </Button>
-            {session && session?.user?.role === 'admin' && (
-              <Tooltip content="Edit">
-                <Button
-                  isIconOnly
-                  className="text-default-600"
-                  variant="flat"
-                  as={Link}
-                  href={`/dashboard/services/${service.uniqueId}/edit`}
-                >
-                  <Icon icon="solar:pen-linear" width={16} />
-                </Button>
-              </Tooltip>
-            )}
+            {session.user?.role &&
+              ['superadmin', 'moderator', 'ops'].includes(session.user.role) && (
+                <Tooltip content="Edit">
+                  <Button
+                    isIconOnly
+                    className="text-default-600"
+                    variant="flat"
+                    as={Link}
+                    href={`/dashboard/services/${service.uniqueId}/edit`}
+                  >
+                    <Icon icon="solar:pen-linear" width={16} />
+                  </Button>
+                </Tooltip>
+              )}
           </div>
         </div>
       </div>

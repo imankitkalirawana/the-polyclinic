@@ -10,7 +10,7 @@ import { signIn } from '@/auth';
 import { generateOtp } from '@/functions/utils';
 import { APP_INFO } from '@/lib/config';
 import { OtpEmail } from '@/templates/email';
-import { Gender } from '@/types/user';
+import { Gender } from '@/types/control-plane';
 import { getSubdomain } from '@/auth/sub-domain';
 
 export const sendOTP = async ({

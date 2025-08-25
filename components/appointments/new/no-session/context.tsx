@@ -117,7 +117,7 @@ export function FormProvider({ children }: { children: React.ReactNode }) {
     const data = {
       name: `${formik.values.firstName} ${formik.values.lastName}`,
       dob: formik.values.dob,
-      id: formik.values.id,
+      email: formik.values.id,
       password: formik.values.password,
     };
     await registerUser(data)

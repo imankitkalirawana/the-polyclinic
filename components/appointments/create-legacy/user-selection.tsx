@@ -7,7 +7,7 @@ import Skeleton from '../../ui/skeleton';
 
 import { CreateAppointmentType } from '@/components/appointments/create/types';
 import { DoctorType } from '@/types/doctor';
-import { UserType } from '@/types/user';
+import { UserType } from '@/types/control-plane';
 import { useDebounce } from '@/hooks/useDebounce';
 
 const SizeMap = {

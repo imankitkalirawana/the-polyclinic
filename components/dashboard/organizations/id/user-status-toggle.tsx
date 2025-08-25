@@ -3,7 +3,7 @@ import { Switch } from '@heroui/react';
 import { useUpdateOrganizationUser } from '@/services/organization';
 import { toast } from 'sonner';
 import { OrganizationType } from '@/types/organization';
-import { UserType } from '@/types/user';
+import { UserType } from '@/types/control-plane';
 
 interface UserStatusToggleProps {
   organization: OrganizationType;

@@ -2,7 +2,7 @@
 
 import { AppointmentType } from '@/types/appointment';
 import { fetchData, fetchDataWithPagination } from '.';
-import { UserType } from '@/types/user';
+import { UserType } from '@/types/control-plane';
 import { NewPatientFormValues } from '@/types/patient';
 
 export async function getAllPatients() {

@@ -1,7 +1,7 @@
 import { AppointmentType } from '@/types/appointment';
 import { DrugStatus } from '@/types/drug';
 import { ServiceStatus, ServiceTypes } from '@/types/service';
-import { UserType } from '@/types/user';
+import { UserType } from '@/types/control-plane';
 
 export type ChipColorType =
   | UserType['role']

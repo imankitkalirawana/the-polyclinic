@@ -6,7 +6,7 @@ import { APPOINTMENT_BUTTON_CONFIGS, isButtonVisible } from '../config/appointme
 
 import { useAppointmentStore } from '@/store/appointment';
 import { AppointmentType, ProcessedButton } from '@/types/appointment';
-import { UserType } from '@/types/user';
+import { UserType } from '@/types/control-plane';
 
 const useAppointmentButtonsInDrawer = ({
   selected,
