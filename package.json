@@ -66,6 +66,7 @@
     "nextjs-toploader": "^3.7.15",
     "nodemailer": "^6.9.16",
     "nuqs": "^2.2.3",
+    "path-to-regexp": "^8.2.0",
     "prettier": "^3.5.3",
     "prettier-eslint": "^16.4.2",
     "prettier-eslint-cli": "^8.0.1",

@@ -1,37 +1,7 @@
 import { NextResponse } from 'next/server';
+import { withAuth } from '@/middleware/withAuth';
 import { NextAuthRequest } from 'next-auth';
 
-import { connectDB } from '@/lib/db';
-import Appointment from '@/models/Appointment';
-
-export const POST = async function POST(req: NextAuthRequest) {
-  try {
-    await connectDB();
-    const data = await req.json();
-
-    const { from, to } = data;
-
-    const start = new Date(from); // 2025-05-25T00:00:00Z
-    const end = new Date(to); // 2025-07-26T00:00:00Z
-    end.setDate(end.getDate() + 1); // 2025-07-27T00:00:00Z
-
-    const dateQuery = {
-      $gte: start,
-      $lt: end,
-    };
-
-    console.log('dateQuery', dateQuery);
-
-    const appointments = await Appointment.find({
-      date: dateQuery,
-    });
-
-    return NextResponse.json({ message: 'POST request', appointments });
-  } catch (error: unknown) {
-    console.error(error);
-    return NextResponse.json(
-      { message: error instanceof Error ? error.message : 'Internal Server Error' },
-      { status: 500 }
-    );
-  }
-};
+export const GET = withAuth(async (request: NextAuthRequest) => {
+  return NextResponse.json({ message: 'Hello, This is a test route!', user: request.auth?.user });
+});

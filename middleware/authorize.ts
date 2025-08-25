@@ -3,22 +3,27 @@ import { NextResponse } from 'next/server';
 import type { NextAuthRequest } from 'next-auth';
 import { permissionsConfig } from '@/lib/permissions/api';
 import { UnifiedUserType } from '@/types';
+import { match } from 'path-to-regexp';
 
 export async function authorize(request: NextAuthRequest) {
   const url = new URL(request.url);
   const pathname = url.pathname;
   const method = request.method as keyof (typeof permissionsConfig)[string];
 
-  const routeConfig = permissionsConfig[pathname];
+  // 🔍 Find the first matching route pattern
+  const matchedEntry = Object.entries(permissionsConfig).find(([pattern]) => {
+    const matcher = match(pattern, { decode: decodeURIComponent });
+    return matcher(pathname);
+  });
 
-  // ✅ Public route if no config at all
-  if (!routeConfig) return null;
+  if (!matchedEntry) return null; // ✅ public route if no pattern matched
 
-  // ✅ Public route if method not listed
+  const [_, routeConfig] = matchedEntry;
   const allowedRoles = routeConfig[method];
-  if (!allowedRoles) return null;
 
-  // 🔒 Requires auth if method has restrictions
+  if (!allowedRoles) return null; // ✅ public if method not listed
+
+  // 🔒 Requires auth if roles are defined
   const user = request.auth?.user;
   if (!user) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
