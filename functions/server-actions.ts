@@ -8,7 +8,7 @@ import { generateOtp } from './utils';
 
 import { connectDB } from '@/lib/db';
 import Otp from '@/models/Otp';
-import Service from '@/models/Service';
+import Service from '@/models/client/Service';
 import User from '@/models/User';
 
 export const sendSMS = async (phone: string, message: string) => {

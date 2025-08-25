@@ -3,7 +3,7 @@ import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
-import Service from '@/models/Service';
+import Service from '@/models/client/Service';
 import { ServiceType } from '@/types/service';
 
 export const GET = auth(async (request: NextAuthRequest) => {

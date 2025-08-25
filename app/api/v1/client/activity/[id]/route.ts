@@ -3,7 +3,7 @@ import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
-import ActivityLog from '@/models/Activity';
+import ActivityLog from '@/models/client/Activity';
 import { $FixMe } from '@/types';
 
 export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {

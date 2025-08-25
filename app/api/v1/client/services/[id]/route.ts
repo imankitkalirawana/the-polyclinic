@@ -3,7 +3,7 @@ import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
-import Service from '@/models/Service';
+import Service from '@/models/client/Service';
 import { $FixMe } from '@/types';
 import { ServiceType } from '@/types/service';
 

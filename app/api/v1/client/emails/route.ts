@@ -3,7 +3,7 @@ import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
-import Email from '@/models/Email';
+import Email from '@/models/client/Email';
 
 export const GET = auth(async (request: NextAuthRequest) => {
   try {

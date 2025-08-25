@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { NextAuthRequest } from 'next-auth';
 import { connectDB } from '@/lib/db';
-import { getOrganizationModel } from '@/models/Organization';
+import { getOrganizationModel } from '@/models/system/Organization';
 import { CreateOrganizationType } from '@/types/organization';
 import { withAuth } from '@/middleware/withAuth';
 

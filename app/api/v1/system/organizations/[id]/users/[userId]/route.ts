@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
-import { getOrganizationModel } from '@/models/Organization';
+import { getOrganizationModel } from '@/models/system/Organization';
 import { getUserModel } from '@/models/User';
 import { doesEmailExist } from '@/functions/server-actions/validations';
 

@@ -3,7 +3,7 @@ import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
-import Slot from '@/models/Slot';
+import Slot from '@/models/client/Slot';
 import { $FixMe } from '@/types';
 
 export const GET = auth(async (_request: NextAuthRequest, context: $FixMe) => {

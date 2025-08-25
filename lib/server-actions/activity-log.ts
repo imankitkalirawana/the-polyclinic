@@ -2,7 +2,7 @@
 
 import { connectDB } from '../db';
 
-import ActivityLog from '@/models/Activity';
+import ActivityLog from '@/models/client/Activity';
 import { ActivityLogType } from '@/types/activity';
 
 export async function logActivity(

@@ -1,7 +1,7 @@
 import mongoose, { Connection, Model } from 'mongoose';
 import { auth } from '@/auth';
 import { UserType } from '@/types/control-plane';
-import { generateUid } from './Counter';
+import { generateUid } from './client/Counter';
 
 const userSchema = new mongoose.Schema(
   {

@@ -3,7 +3,7 @@ import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
-import { getOrganizationModel } from '@/models/Organization';
+import { getOrganizationModel } from '@/models/system/Organization';
 
 type Params = Promise<{
   id: string;

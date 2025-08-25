@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { NextAuthRequest } from 'next-auth';
 
 import { connectDB } from '@/lib/db';
-import Newsletter from '@/models/Newsletter';
+import Newsletter from '@/models/client/Newsletter';
 import { $FixMe } from '@/types';
 
 export const DELETE = async function DELETE(_request: NextAuthRequest, context: $FixMe) {

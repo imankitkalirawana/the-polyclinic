@@ -3,8 +3,8 @@ import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
-import Appointment from '@/models/Appointment';
-import Slot from '@/models/Slot';
+import Appointment from '@/models/client/Appointment';
+import Slot from '@/models/client/Slot';
 import { $FixMe } from '@/types';
 
 // Helper function to get day name from date

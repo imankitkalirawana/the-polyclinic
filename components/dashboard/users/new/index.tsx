@@ -32,8 +32,8 @@ import {
   useAllCitiesByCountryAndState,
   useAllCountries,
   useAllStatesByCountry,
-} from '@/services/external';
-import { useCreateUser } from '@/services/user';
+} from '@/hooks/queries/system/external';
+import { useCreateUser } from '@/hooks/queries/client/user';
 import { $FixMe, CityProps, CountryProps, StateProps } from '@/types';
 import { CreateUserType, userRoles } from '@/types/control-plane';
 

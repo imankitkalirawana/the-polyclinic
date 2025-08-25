@@ -6,7 +6,7 @@ import { API_ACTIONS } from '@/lib/config';
 import { connectDB } from '@/lib/db';
 import { logActivity } from '@/lib/server-actions/activity-log';
 import { trackObjectChanges } from '@/lib/utility';
-import Appointment from '@/models/Appointment';
+import Appointment from '@/models/client/Appointment';
 import { $FixMe } from '@/types';
 import { Schema, Status } from '@/types/activity';
 import { OrganizationUserType } from '@/types/organization';

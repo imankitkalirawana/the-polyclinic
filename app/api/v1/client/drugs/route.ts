@@ -3,7 +3,7 @@ import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
-import Drug from '@/models/Drug';
+import Drug from '@/models/client/Drug';
 
 export const GET = auth(async (request: NextAuthRequest) => {
   try {

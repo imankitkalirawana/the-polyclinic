@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 import { connectDB } from '@/lib/db';
-import Appointment from '@/models/Appointment';
+import Appointment from '@/models/client/Appointment';
 
 export const POST = async function POST() {
   try {
