@@ -22,16 +22,7 @@
     },
     "target": "ES2017"
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "middleware/verifyToken.js",
-    "middleware/verifyAdmin.js",
-    "components/auth/register/data.tsx",
-    "app/api/route.js"
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "typeRoots": ["./node_modules/@types"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", ".next"]
 }

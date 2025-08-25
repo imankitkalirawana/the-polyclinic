@@ -6,6 +6,7 @@ import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import { getOrganizationModel } from '@/models/Organization';
 import { getUserModel } from '@/models/User';
+import { doesEmailExist } from '@/functions/server-actions/validations';
 
 type Params = Promise<{
   id: string;
@@ -20,6 +21,7 @@ export const PUT = auth(async (request: NextAuthRequest, { params }: { params: P
       return NextResponse.json({ message: 'Forbidden: Access denied' }, { status: 403 });
     }
 
+    // Connect to the main database
     const conn = await connectDB();
     const Organization = getOrganizationModel(conn);
     const { id, userId } = await params;
@@ -30,6 +32,7 @@ export const PUT = auth(async (request: NextAuthRequest, { params }: { params: P
       return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
     }
 
+    // Connect to the organization database
     const conn2 = await connectDB(id);
     const User = getUserModel(conn2);
 
@@ -44,9 +47,10 @@ export const PUT = auth(async (request: NextAuthRequest, { params }: { params: P
 
     // If email is being updated, check for uniqueness
     if (email && email !== existingUser.email) {
-      const emailExists = await User.findOne({
+      const emailExists = await doesEmailExist({
         email,
-        _id: { $ne: userId },
+        organizationId: id,
+        currentEmail: existingUser.email,
       });
       if (emailExists) {
         return NextResponse.json({ message: 'Email already exists' }, { status: 400 });

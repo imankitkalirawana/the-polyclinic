@@ -16,11 +16,11 @@ export const organizationApi = {
   },
 
   // Get organization by ID
-  async getById(id: string) {
+  async getById(organizationId: string) {
     return await fetchData<{
       organization: OrganizationType;
       users: UserType[];
-    }>(`${API_BASE}/${id}`);
+    }>(`${API_BASE}/${organizationId}`);
   },
 
   // Create organization
@@ -32,46 +32,48 @@ export const organizationApi = {
   },
 
   // Update organization
-  async update(id: string, organization: UpdateOrganizationType) {
-    return await fetchData<OrganizationType>(`${API_BASE}/${id}`, {
+  async update(organizationId: string, organization: UpdateOrganizationType) {
+    return await fetchData<OrganizationType>(`${API_BASE}/${organizationId}`, {
       method: 'PUT',
       data: organization,
     });
   },
 
   // Delete organization
-  async delete(id: string) {
-    return await fetchData<OrganizationType>(`${API_BASE}/${id}`, {
+  async delete(organizationId: string) {
+    return await fetchData<OrganizationType>(`${API_BASE}/${organizationId}`, {
       method: 'DELETE',
     });
   },
 
   // Toggle organization status
-  async toggleStatus(id: string, status: 'active' | 'inactive') {
-    return await fetchData<OrganizationType>(`${API_BASE}/${id}/status`, {
+  async toggleStatus(organizationId: string, status: 'active' | 'inactive') {
+    return await fetchData<OrganizationType>(`${API_BASE}/${organizationId}/status`, {
       method: 'PATCH',
       data: { status },
     });
   },
 
-  // user related
-  async createUser(id: string, user: CreateOrganizationUser) {
-    return await fetchData<OrganizationUser>(`${API_BASE}/${id}/create-user`, {
-      method: 'POST',
-      data: user,
-    });
-  },
+  // User related
+  users: {
+    async create(organizationId: string, user: CreateOrganizationUser) {
+      return await fetchData<OrganizationUser>(`${API_BASE}/${organizationId}/users`, {
+        method: 'POST',
+        data: user,
+      });
+    },
 
-  async updateUser(organizationId: string, userId: string, user: Partial<CreateOrganizationUser>) {
-    return await fetchData<OrganizationUser>(`${API_BASE}/${organizationId}/users/${userId}`, {
-      method: 'PUT',
-      data: user,
-    });
-  },
+    async update(organizationId: string, userId: string, user: Partial<CreateOrganizationUser>) {
+      return await fetchData<OrganizationUser>(`${API_BASE}/${organizationId}/users/${userId}`, {
+        method: 'PUT',
+        data: user,
+      });
+    },
 
-  async deleteUser(organizationId: string, userId: string) {
-    return await fetchData<void>(`${API_BASE}/${organizationId}/users/${userId}`, {
-      method: 'DELETE',
-    });
+    async delete(organizationId: string, userId: string) {
+      return await fetchData<void>(`${API_BASE}/${organizationId}/users/${userId}`, {
+        method: 'DELETE',
+      });
+    },
   },
 };

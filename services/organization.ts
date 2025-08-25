@@ -129,7 +129,7 @@ export const useCreateOrganizationUser = () => {
 
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: CreateOrganizationUser }) => {
-      const response = await organizationApi.createUser(id, data);
+      const response = await organizationApi.users.create(id, data);
       if (response.success) {
         return response.data;
       }
@@ -166,13 +166,13 @@ export const useUpdateOrganizationUser = () => {
       userId: string;
       data: Partial<CreateOrganizationUser>;
     }) => {
-      const response = await organizationApi.updateUser(organizationId, userId, data);
+      const response = await organizationApi.users.update(organizationId, userId, data);
       if (response.success) {
         return response.data;
       }
       throw new Error(response.message);
     },
-    onSuccess: (data, variables) => {
+    onSuccess: (_, variables) => {
       addToast({
         title: 'User updated successfully',
         description: 'User updated successfully',
@@ -195,7 +195,7 @@ export const useDeleteOrganizationUser = () => {
 
   return useMutation({
     mutationFn: async ({ organizationId, userId }: { organizationId: string; userId: string }) => {
-      const response = await organizationApi.deleteUser(organizationId, userId);
+      const response = await organizationApi.users.delete(organizationId, userId);
       if (response.success) {
         return response.data;
       }

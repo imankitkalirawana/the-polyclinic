@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { NextAuthRequest } from 'next-auth';
 import bcrypt from 'bcryptjs';
-
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import { getOrganizationModel } from '@/models/Organization';
@@ -28,12 +27,15 @@ export const POST = auth(async (request: NextAuthRequest, { params }: { params: 
       return NextResponse.json({ message: 'Email is required' }, { status: 400 });
     }
 
-    const conn2 = await connectDB(id);
-    const User = getUserModel(conn2);
+    // Check if organization exists
     const organization = await Organization.findOne({ organizationId: id });
     if (!organization) {
       return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
     }
+
+    // Connect to the organization database
+    const conn2 = await connectDB(id);
+    const User = getUserModel(conn2);
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
