@@ -12,8 +12,9 @@ import {
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { useUpdateOrganization } from '@/hooks/queries/system/organization';
-import { OrganizationType, UpdateOrganizationType } from '@/types/organization';
+import { OrganizationType } from '@/types/system/organization';
 import { toast } from 'sonner';
+import { $FixMe } from '@/types';
 
 interface EditOrganizationModalProps {
   isOpen: boolean;
@@ -27,7 +28,8 @@ export default function EditOrganizationModal({
   organization,
 }: EditOrganizationModalProps) {
   const updateOrganization = useUpdateOrganization();
-  const [formData, setFormData] = useState<UpdateOrganizationType>({
+  // TODO: Fix this type
+  const [formData, setFormData] = useState<$FixMe>({
     name: organization.name,
     domain: organization.domain,
     logoUrl: organization.logoUrl,
@@ -49,8 +51,8 @@ export default function EditOrganizationModal({
     }
   };
 
-  const handleInputChange = (field: keyof UpdateOrganizationType, value: string | boolean) => {
-    setFormData((prev) => ({
+  const handleInputChange = (field: keyof $FixMe, value: string | boolean) => {
+    setFormData((prev: $FixMe) => ({
       ...prev,
       [field]: value,
     }));

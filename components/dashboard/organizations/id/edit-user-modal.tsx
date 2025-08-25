@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Modal,
   ModalContent,
@@ -14,14 +14,14 @@ import {
 import { Icon } from '@iconify/react';
 import { useUpdateOrganizationUser } from '@/hooks/queries/system/organization';
 import { toast } from 'sonner';
-import { OrganizationType } from '@/types/organization';
-import { UserType } from '@/types/system/control-plane';
+import { OrganizationType, UpdateOrganizationUser } from '@/types/system/organization';
+import { OrganizationUserType } from '@/types/system/organization';
 
 interface EditUserModalProps {
   isOpen: boolean;
   onClose: () => void;
   organization: OrganizationType;
-  user: UserType;
+  user: OrganizationUserType;
 }
 
 const userRoles = [
@@ -45,20 +45,6 @@ export default function EditUserModal({ isOpen, onClose, organization, user }: E
 
   const updateUser = useUpdateOrganizationUser();
 
-  // Initialize form data when user changes
-  useEffect(() => {
-    if (user) {
-      setFormData({
-        name: user.name || '',
-        email: user.email || '',
-        phone: user.phone || '',
-        password: '',
-        role: user.role || 'receptionist',
-        image: user.image || '',
-      });
-    }
-  }, [user]);
-
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
@@ -68,7 +54,7 @@ export default function EditUserModal({ isOpen, onClose, organization, user }: E
 
     try {
       // Only send fields that have changed or are required
-      const updateData: any = {};
+      const updateData: UpdateOrganizationUser = {};
       if (formData.name !== user.name) updateData.name = formData.name;
       if (formData.email !== user.email) updateData.email = formData.email;
       if (formData.phone !== user.phone) updateData.phone = formData.phone;

@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, Card, CardBody, Switch, useDisclosure } from '@heroui/react';
-import { OrganizationType } from '@/types/organization';
+import { OrganizationType } from '@/types/system/organization';
 import {
   useOrganizations,
   useDeleteOrganization,

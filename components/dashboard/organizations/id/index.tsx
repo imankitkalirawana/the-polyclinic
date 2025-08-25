@@ -18,7 +18,7 @@ import { Icon } from '@iconify/react';
 import { formatDate } from 'date-fns';
 import { useOrganization, useToggleOrganizationStatus } from '@/hooks/queries/system/organization';
 import { toast } from 'sonner';
-import { UserType } from '@/types/system/control-plane';
+import { OrganizationUserType } from '@/types/system/organization';
 import EditOrganizationModal from './edit-modal';
 import AddUserModal from './add-user-modal';
 import EditUserModal from './edit-user-modal';
@@ -36,7 +36,7 @@ export default function Organization({ id }: { id: string }) {
   const deleteUserModal = useDisclosure();
 
   const [selectedTab, setSelectedTab] = useState('users');
-  const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
+  const [selectedUser, setSelectedUser] = useState<OrganizationUserType | null>(null);
 
   if (isLoading) {
     return (
@@ -75,12 +75,12 @@ export default function Organization({ id }: { id: string }) {
     }
   };
 
-  const handleEditUser = (user: UserType) => {
+  const handleEditUser = (user: OrganizationUserType) => {
     setSelectedUser(user);
     editUserModal.onOpen();
   };
 
-  const handleDeleteUser = (user: UserType) => {
+  const handleDeleteUser = (user: OrganizationUserType) => {
     setSelectedUser(user);
     deleteUserModal.onOpen();
   };
@@ -91,10 +91,6 @@ export default function Organization({ id }: { id: string }) {
         return 'success';
       case 'inactive':
         return 'default';
-      case 'blocked':
-        return 'danger';
-      case 'unverified':
-        return 'warning';
       default:
         return 'default';
     }
@@ -211,7 +207,7 @@ export default function Organization({ id }: { id: string }) {
             />
             <CellRenderer
               label="Blocked Users"
-              value={users?.filter((user) => user.status === 'blocked').length || 0}
+              value={users?.filter((user) => user.status === 'inactive').length || 0}
               icon="solar:user-block-line-duotone"
               classNames={{
                 icon: 'text-red-500 bg-red-100',

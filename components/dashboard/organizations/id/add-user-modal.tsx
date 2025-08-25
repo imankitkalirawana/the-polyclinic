@@ -14,7 +14,7 @@ import {
 import { Icon } from '@iconify/react';
 import { useCreateOrganizationUser } from '@/hooks/queries/system/organization';
 import { toast } from 'sonner';
-import { OrganizationType } from '@/types/organization';
+import { OrganizationType } from '@/types/system/organization';
 
 interface AddUserModalProps {
   isOpen: boolean;

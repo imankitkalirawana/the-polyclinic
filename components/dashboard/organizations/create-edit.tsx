@@ -11,7 +11,7 @@ import {
   Select,
   SelectItem,
 } from '@heroui/react';
-import { OrganizationType } from '@/types/organization';
+import { OrganizationType } from '@/types/system/organization';
 import { useCreateOrganization, useUpdateOrganization } from '@/hooks/queries/system/organization';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
