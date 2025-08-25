@@ -12,6 +12,8 @@ import { AuthContextType, FlowType } from './types';
 import { verifyEmail } from '@/functions/server-actions/auth/verification';
 import { login, register, sendOTP, verifyOTP } from '@/lib/server-actions/auth';
 import { $FixMe } from '@/types';
+import { useSubdomain } from '@/hooks/useSubDomain';
+import { isOrganizationActive } from '@/lib/server-actions/validation';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -20,6 +22,7 @@ export const createAuthProvider = (flowType: FlowType) =>
   function AuthProvider({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const [email] = useQueryState('email');
+    const subdomain = useSubdomain();
 
     // Initial values based on flow type
     const getInitialValues = () => {
@@ -169,12 +172,16 @@ export const createAuthProvider = (flowType: FlowType) =>
       if (values.page === 0) {
         paginate(1);
       } else if (values.page === 1) {
+        const isOrgActive = await isOrganizationActive(subdomain ?? '');
+        if (!isOrgActive) {
+          setFieldError('email', 'Organization is not active, please contact support');
+          return;
+        }
         if (await verifyEmail(values.email)) {
           setFieldError('email', 'Email already exists');
         } else {
           paginate(1);
         }
-        paginate(1);
       } else if (values.page === 2) {
         // Send OTP
         const res = await sendOTP({ email: values.email });

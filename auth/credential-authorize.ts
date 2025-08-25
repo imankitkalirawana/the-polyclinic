@@ -1,7 +1,10 @@
 import { AuthError } from 'next-auth';
 import bcrypt from 'bcryptjs';
-import { getDB } from '@/lib/db';
+import { connectDB } from '@/lib/db';
 import { getSubdomain } from './sub-domain';
+import { getUserModel } from '@/models/User';
+import { User as NextAuthUser } from 'next-auth';
+import { isOrganizationActive } from '@/lib/server-actions/validation';
 
 class ErrorMessage extends AuthError {
   code = 'custom';
@@ -12,39 +15,69 @@ class ErrorMessage extends AuthError {
   }
 }
 
-import { User as NextAuthUser } from 'next-auth';
-
 export async function authorizeCredentials(
   credentials: Record<string, unknown> | undefined
 ): Promise<NextAuthUser | null> {
-  const subDomain = await getSubdomain();
-  const db = await getDB(subDomain);
-
   if (!credentials?.email || !credentials?.password) {
     throw new ErrorMessage('Invalid Email/Password');
   }
 
-  const email = credentials.email as string;
-  const password = credentials.password as string;
+  const subDomain = await getSubdomain();
 
-  const user = await db.collection('user').findOne({ email });
+  if (subDomain) {
+    const isOrgActive = await isOrganizationActive(subDomain);
+    if (!isOrgActive) {
+      throw new ErrorMessage('Organization is not active, please contact support');
+    }
 
-  if (!user || !user.password) {
-    throw new ErrorMessage('Invalid Email/Password');
+    const conn = await connectDB(subDomain);
+    const User = getUserModel(conn);
+
+    const user = await User.findOne({ email: credentials.email });
+    if (!user) {
+      throw new ErrorMessage('User not found');
+    }
+
+    const isValid = await bcrypt.compare(credentials.password as string, user.password);
+    if (!isValid) {
+      throw new ErrorMessage('Invalid Email/Password');
+    }
+
+    return {
+      id: user._id.toString(),
+      name: user.name,
+      email: user.email,
+      image: user.image ?? null,
+      role: user.role,
+      uid: user.uid,
+      organization: user.organization,
+    };
+  } else {
+    const conn = await connectDB();
+    const User = getUserModel(conn);
+
+    if (!credentials?.email || !credentials?.password) {
+      throw new ErrorMessage('Invalid Email/Password');
+    }
+
+    const email = credentials.email as string;
+    const password = credentials.password as string;
+
+    const user = await User.findOne({ email });
+
+    const isValid = await bcrypt.compare(password, user.password);
+    if (!isValid) {
+      throw new ErrorMessage('Invalid Email/Password');
+    }
+
+    return {
+      id: user._id.toString(),
+      name: user.name,
+      email: user.email,
+      image: user.image ?? null,
+      role: user.role,
+      uid: user.uid,
+      organization: user.organization,
+    };
   }
-
-  const isValid = await bcrypt.compare(password, user.password);
-  if (!isValid) {
-    throw new ErrorMessage('Invalid Email/Password');
-  }
-
-  return {
-    id: user._id.toString(),
-    name: user.name,
-    email: user.email,
-    image: user.image ?? null,
-    role: user.role,
-    uid: user.uid,
-    organization: user.organization,
-  };
 }

@@ -13,8 +13,8 @@ import { AuthStep } from '../types';
 import Auth from '..';
 
 import { APP_INFO } from '@/lib/config';
-import { $FixMe } from '@/types';
-import { Gender, genders } from '@/types/system/control-plane';
+import { $FixMe, Gender } from '@/types';
+import { GENDERS } from '@/constants';
 
 const RegisterComponent: React.FC = () => {
   const { formik, paginate } = useRegister();
@@ -109,7 +109,7 @@ const RegisterComponent: React.FC = () => {
             isInvalid={!!(formik.touched.gender && formik.errors.gender)}
             errorMessage={formik.errors.gender?.toString()}
           >
-            {genders.map((gender) => (
+            {GENDERS.map((gender) => (
               <SelectItem key={gender}>
                 {gender.charAt(0).toUpperCase() + gender.slice(1)}
               </SelectItem>

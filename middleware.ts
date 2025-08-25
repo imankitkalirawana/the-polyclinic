@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const RESERVED_SUBDOMAINS = ['www', 'app', 'api'];
+const RESERVED_SUBDOMAINS = ['www', 'app', 'api', 'polyclinic'];
 
 export function middleware(req: NextRequest) {
   const url = req.nextUrl;
