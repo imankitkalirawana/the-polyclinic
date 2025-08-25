@@ -9,7 +9,7 @@ import { CreateAppointmentFormValues } from '../types';
 import { CreateAppointmentPatientDetails } from './details';
 
 import { useKeyPress } from '@/hooks/useKeyPress';
-import { usePatientsInfiniteQuery } from '@/services/patient';
+import { usePatientsInfiniteQuery } from '@/hooks/queries/client/patient';
 import {
   CreateAppointmentContentContainer,
   CreateAppointmentContentHeader,

@@ -6,7 +6,7 @@ import Calendar from './calendar';
 import PendingAppointments from './pending-appointments';
 
 import { castData } from '@/lib/utils';
-import { useAllAppointments } from '@/services/appointment';
+import { useAllAppointments } from '@/hooks/queries/client/appointment';
 import { AppointmentType } from '@/types/appointment';
 
 export default function AsideRight() {

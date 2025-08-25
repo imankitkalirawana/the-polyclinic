@@ -1,7 +1,7 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 import Email from '@/components/dashboard/emails/email';
-import { getEmailWithID } from '@/services/api/email';
+import { getEmailWithID } from '@/services/api/client/email';
 
 interface Props {
   params: Promise<{

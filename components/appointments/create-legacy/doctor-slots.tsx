@@ -4,7 +4,7 @@ import { Button, Modal, ModalBody, ModalContent } from '@heroui/react';
 import { useAppointmentDate } from './store';
 
 import { SlotsPreview } from '@/components/dashboard/doctors/doctor/slots/slots-preview';
-import { useSlotsByUID } from '@/services/slots';
+import { useSlotsByUID } from '@/hooks/queries/client/slots';
 
 export default function DoctorSlots({ selectedDoctor }: { selectedDoctor: number }) {
   const [isOpen, setIsOpen] = useState(false);

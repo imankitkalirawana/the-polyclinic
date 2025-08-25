@@ -4,7 +4,7 @@ import DoctorSlots from './doctor-slots';
 import { useAppointmentDate } from './store';
 import UserSelection from './user-selection';
 
-import { useAllDoctors } from '@/services/doctor';
+import { useAllDoctors } from '@/hooks/queries/client/doctor';
 import { $FixMe } from '@/types';
 
 export default function DoctorSelection({

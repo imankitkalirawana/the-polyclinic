@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 import { CLINIC_INFO } from '@/lib/config';
-import { useAllServices, useDeleteService } from '@/services/service';
+import { useAllServices, useDeleteService } from '@/hooks/queries/client/service';
 import { ServiceType } from '@/types/service';
 
 const INITIAL_VISIBLE_COLUMNS = [

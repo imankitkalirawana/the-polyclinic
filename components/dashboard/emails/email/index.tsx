@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 import Loading from '@/app/loading';
 import NoResults from '@/components/ui/no-results';
 import { castData } from '@/lib/utils';
-import { useEmailWithID } from '@/services/email';
+import { useEmailWithID } from '@/hooks/queries/client/email';
 import { EmailType } from '@/types/email';
 
 export default function Email({ id }: { id: string }) {

@@ -30,8 +30,8 @@ import CustomRadio from '@/components/ui/custom-radio';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { Genders } from '@/lib/options';
 import { castData, generateEmail, generatePhoneNumber } from '@/lib/utils';
-import { useCreateDoctor } from '@/services/doctor';
-import { useAllUsers } from '@/services/user';
+import { useCreateDoctor } from '@/hooks/queries/client/doctor';
+import { useAllUsers } from '@/hooks/queries/client/user';
 import { CreateDoctorType } from '@/types/doctor';
 import { UserType } from '@/types/control-plane';
 

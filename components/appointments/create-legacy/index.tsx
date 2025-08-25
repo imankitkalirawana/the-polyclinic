@@ -33,8 +33,8 @@ import { CreateAppointmentType } from '@/components/appointments/create/types';
 import UserSelection from '@/components/appointments/create-legacy/user-selection';
 import Skeleton from '@/components/ui/skeleton';
 import { castData } from '@/lib/utils';
-import { useAllAppointments, useCreateAppointment } from '@/services/appointment';
-import { useLinkedUsers, useUserWithUID } from '@/services/user';
+import { useAllAppointments, useCreateAppointment } from '@/hooks/queries/client/appointment';
+import { useLinkedUsers, useUserWithUID } from '@/hooks/queries/client/user';
 import { useAppointmentStore } from '@/store/appointment';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { $FixMe } from '@/types';

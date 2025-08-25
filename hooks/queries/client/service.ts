@@ -13,8 +13,8 @@ import {
   getAllServices,
   getServiceWithUID,
   updateService,
-} from './api/service';
-import { ApiResponse } from './api';
+} from '../../../services/api/client/service';
+import { ApiResponse } from '../../../services/api';
 
 import { ServiceType } from '@/types/service';
 

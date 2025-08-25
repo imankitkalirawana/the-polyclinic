@@ -1,7 +1,7 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 import { AppointmentScheduler } from '@/components/dashboard/doctors/doctor/slots';
-import { getSlotsByUID } from '@/services/api/slots';
+import { getSlotsByUID } from '@/services/api/client/slots';
 
 interface DoctorSlotsPageProps {
   params: Promise<{ uid: string }>;

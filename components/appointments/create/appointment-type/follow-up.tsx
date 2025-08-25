@@ -7,7 +7,7 @@ import CreateAppointmentSelectedPreviousAppointment from './appointment';
 
 import CustomRadio from '@/components/ui/custom-radio';
 import Skeleton from '@/components/ui/skeleton';
-import { usePreviousAppointments } from '@/services/patient';
+import { usePreviousAppointments } from '@/hooks/queries/client/patient';
 import { AppointmentType } from '@/types/appointment';
 import { useDebounce } from '@/hooks/useDebounce';
 import Fuse from 'fuse.js';

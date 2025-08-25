@@ -24,7 +24,7 @@ import { Genders } from '@/lib/options';
 import { CreateAppointmentFormValues } from '../types';
 import { $FixMe } from '@/types';
 import { NewPatientFormValues } from '@/types/patient';
-import { useCreatePatient } from '@/services/patient';
+import { useCreatePatient } from '@/hooks/queries/client/patient';
 
 // Extended validation schema for new patient creation
 const newPatientValidationSchema = Yup.object().shape({

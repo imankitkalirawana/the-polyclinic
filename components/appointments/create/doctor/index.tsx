@@ -6,7 +6,7 @@ import Fuse from 'fuse.js';
 import { CreateAppointmentFormValues } from '../types';
 import { CreateAppointmentDoctorDetails } from './details';
 
-import { useAllDoctors } from '@/services/doctor';
+import { useAllDoctors } from '@/hooks/queries/client/doctor';
 import { useKeyPress } from '@/hooks/useKeyPress';
 import {
   CreateAppointmentContentContainer,

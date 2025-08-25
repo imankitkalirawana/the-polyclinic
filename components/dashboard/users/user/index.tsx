@@ -17,7 +17,7 @@ import CellValue from '../../../ui/cell-value';
 import Loading from '@/app/loading';
 import { humanReadableDate, humanReadableTime } from '@/lib/utility';
 import { castData } from '@/lib/utils';
-import { useUserWithUID } from '@/services/user';
+import { useUserWithUID } from '@/hooks/queries/client/user';
 import { UserType } from '@/types/control-plane';
 
 export default function UserCard({ uid }: { uid: number }) {

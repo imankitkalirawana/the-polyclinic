@@ -16,7 +16,7 @@ import {
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { formatDate } from 'date-fns';
-import { useOrganization, useToggleOrganizationStatus } from '@/services/organization';
+import { useOrganization, useToggleOrganizationStatus } from '@/hooks/queries/system/organization';
 import { toast } from 'sonner';
 import { UserType } from '@/types/control-plane';
 import EditOrganizationModal from './edit-modal';

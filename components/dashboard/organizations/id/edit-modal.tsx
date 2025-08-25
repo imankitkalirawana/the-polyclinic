@@ -11,7 +11,7 @@ import {
   Switch,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
-import { useUpdateOrganization } from '@/services/organization';
+import { useUpdateOrganization } from '@/hooks/queries/system/organization';
 import { OrganizationType, UpdateOrganizationType } from '@/types/organization';
 import { toast } from 'sonner';
 

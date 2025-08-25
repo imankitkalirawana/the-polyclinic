@@ -11,12 +11,12 @@ import {
   getAllPatients,
   getPatientsWithPagination,
   getPreviousAppointments,
-} from './api/patient';
+} from '../../../services/api/client/patient';
 import { useInfiniteQueryWithSearch } from './infinite-query';
 import { UserType } from '@/types/control-plane';
 import { AppointmentType } from '@/types/appointment';
 import { NewPatientFormValues } from '@/types/patient';
-import { ApiResponse } from './api';
+import { ApiResponse } from '../../../services/api';
 import { addToast } from '@heroui/react';
 
 export const useAllPatients = (): UseQueryResult<UserType[]> =>

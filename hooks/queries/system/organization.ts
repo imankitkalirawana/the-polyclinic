@@ -7,7 +7,7 @@ import {
   UpdateOrganizationUser,
 } from '@/types/organization';
 import { addToast } from '@heroui/react';
-import { organizationApi } from './api/organization';
+import { organizationApi } from '@/services/api/system/organization';
 import { OrganizationUserType } from '@/types/organization';
 
 // React Query hooks

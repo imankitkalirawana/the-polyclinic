@@ -7,8 +7,8 @@ import {
   UseQueryResult,
 } from '@tanstack/react-query';
 
-import { getSlotsByUID, updateSlots } from './api/slots';
-import { ApiResponse } from './api';
+import { getSlotsByUID, updateSlots } from '../../../services/api/client/slots';
+import { ApiResponse } from '../../../services/api';
 
 import { SlotConfig } from '@/types/slots';
 

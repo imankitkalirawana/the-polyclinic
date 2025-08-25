@@ -35,7 +35,7 @@ import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import useAppointmentButtonsInDrawer from '@/hooks/useAppointmentButton';
 import { useIsMobile } from '@/hooks/useMobile';
 import { CLINIC_INFO } from '@/lib/config';
-import { useAppointmentWithAID } from '@/services/appointment';
+import { useAppointmentWithAID } from '@/hooks/queries/client/appointment';
 import { useAppointmentStore } from '@/store/appointment';
 import { AppointmentType } from '@/types/appointment';
 

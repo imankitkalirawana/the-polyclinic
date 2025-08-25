@@ -1,7 +1,7 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 import Services from '@/components/dashboard/services';
-import { getAllServices } from '@/services/api/service';
+import { getAllServices } from '@/services/api/client/service';
 
 export default async function Page() {
   const queryClient = new QueryClient();

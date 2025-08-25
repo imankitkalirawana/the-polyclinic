@@ -1,6 +1,6 @@
 'use server';
 
-import { fetchData } from '.';
+import { fetchData } from '..';
 
 import { SlotConfig } from '@/types/slots';
 

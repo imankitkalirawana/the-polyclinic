@@ -12,7 +12,7 @@ import {
   SelectItem,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
-import { useCreateOrganizationUser } from '@/services/organization';
+import { useCreateOrganizationUser } from '@/hooks/queries/system/organization';
 import { toast } from 'sonner';
 import { OrganizationType } from '@/types/organization';
 

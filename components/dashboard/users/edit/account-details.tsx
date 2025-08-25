@@ -25,7 +25,7 @@ import { I18nProvider } from '@react-aria/i18n';
 import { verifyEmail } from '@/functions/server-actions';
 import { Genders } from '@/lib/options';
 import { userValidationSchema } from '@/lib/validation';
-import { useUpdateUser } from '@/services/user';
+import { useUpdateUser } from '@/hooks/queries/client/user';
 import { $FixMe } from '@/types';
 import { UserType } from '@/types/control-plane';
 

@@ -7,7 +7,7 @@ import {
   UseQueryResult,
 } from '@tanstack/react-query';
 
-import { ApiResponse } from './api';
+import { ApiResponse } from '../../../services/api';
 
 import {
   createUser,
@@ -17,7 +17,7 @@ import {
   getSelf,
   getUserWithUID,
   updateUser,
-} from '@/services/api/user';
+} from '@/services/api/client/user';
 import { $FixMe } from '@/types';
 import { CreateUserType, SystemUserType } from '@/types/control-plane';
 

@@ -20,8 +20,8 @@ import { Icon } from '@iconify/react';
 import { CreateAppointmentFormValues } from '../types';
 
 import Skeleton from '@/components/ui/skeleton';
-import { useDoctorWithUID } from '@/services/doctor';
-import { useUserWithUID } from '@/services/user';
+import { useDoctorWithUID } from '@/hooks/queries/client/doctor';
+import { useUserWithUID } from '@/hooks/queries/client/user';
 
 export default function AppointmentBookingReceipt() {
   const { values, resetForm } = useFormikContext<CreateAppointmentFormValues>();

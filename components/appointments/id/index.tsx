@@ -26,7 +26,7 @@ import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import NoResults from '@/components/ui/no-results';
-import { useAppointmentWithAID } from '@/services/appointment';
+import { useAppointmentWithAID } from '@/hooks/queries/client/appointment';
 import { useAppointmentStore } from '@/store/appointment';
 import { AppointmentType } from '@/types/appointment';
 

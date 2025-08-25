@@ -14,7 +14,7 @@ import AppointmentBookingReceipt from './receipt';
 import { CreateAppointmentSidebar } from './sidebar';
 import { CreateAppointmentFormValues } from './types';
 
-import { useCreateAppointment } from '@/services/appointment';
+import { useCreateAppointment } from '@/hooks/queries/client/appointment';
 import { cn } from '@/lib/utils';
 import { useKeyPress } from '@/hooks/useKeyPress';
 import CreateAppointmentPatientNew from './patient/new';

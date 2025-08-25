@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 import { castData } from '@/lib/utils';
-import { useAllDoctors, useDeleteDoctor } from '@/services/doctor';
+import { useAllDoctors, useDeleteDoctor } from '@/hooks/queries/client/doctor';
 import { DoctorType } from '@/types/doctor';
 
 const INITIAL_VISIBLE_COLUMNS = [

@@ -6,7 +6,7 @@ import { Button, Card, CardBody, CardHeader, ScrollShadow } from '@heroui/react'
 import { format } from 'date-fns';
 
 import CellValue from '@/components/ui/cell-value';
-import { useDrugWithDid } from '@/services/drug';
+import { useDrugWithDid } from '@/hooks/queries/client/drug';
 import { DrugType } from '@/types/drug';
 
 export default function DrugCard({ did }: { did: number }) {

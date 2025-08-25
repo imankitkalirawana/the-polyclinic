@@ -1,7 +1,7 @@
 'use server';
 
 import { AppointmentType } from '@/types/appointment';
-import { fetchData, fetchDataWithPagination } from '.';
+import { fetchData, fetchDataWithPagination } from '..';
 import { UserType } from '@/types/control-plane';
 import { NewPatientFormValues } from '@/types/patient';
 

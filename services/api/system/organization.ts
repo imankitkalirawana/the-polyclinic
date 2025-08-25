@@ -6,7 +6,7 @@ import {
   UpdateOrganizationType,
 } from '@/types/organization';
 
-import { fetchData } from '.';
+import { fetchData } from '..';
 
 const API_BASE = '/system/organizations';
 

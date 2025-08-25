@@ -16,7 +16,7 @@ import {
   humanReadableTime,
 } from '@/lib/utility';
 import { castData } from '@/lib/utils';
-import { useServiceWithUID } from '@/services/service';
+import { useServiceWithUID } from '@/hooks/queries/client/service';
 import { ServiceType } from '@/types/service';
 import { AuthUser } from '@/types/control-plane';
 

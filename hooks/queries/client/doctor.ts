@@ -7,8 +7,13 @@ import {
   UseQueryResult,
 } from '@tanstack/react-query';
 
-import { createDoctor, deleteDoctor, getDoctor, getDoctors } from './api/doctor';
-import { ApiResponse } from './api';
+import {
+  createDoctor,
+  deleteDoctor,
+  getDoctor,
+  getDoctors,
+} from '../../../services/api/client/doctor';
+import { ApiResponse } from '../../../services/api';
 
 import { CreateDoctorType, DoctorType } from '@/types/doctor';
 

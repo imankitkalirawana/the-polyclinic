@@ -1,6 +1,6 @@
 'use server';
 
-import { fetchData } from '.';
+import { fetchData } from '..';
 
 import { CreateAppointmentType } from '@/components/appointments/create/types';
 import { AppointmentType } from '@/types/appointment';

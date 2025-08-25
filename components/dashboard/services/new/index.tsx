@@ -11,7 +11,7 @@ import ReactQuill from '@/components/ui/react-quill';
 import { verifyUID } from '@/functions/server-actions';
 import { ServiceStatuses, ServiceTypes } from '@/lib/interface';
 import { serviceValidationSchema } from '@/lib/validation';
-import { useCreateService } from '@/services/service';
+import { useCreateService } from '@/hooks/queries/client/service';
 import { ServiceType } from '@/types/service';
 
 export default function NewService() {

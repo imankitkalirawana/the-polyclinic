@@ -27,7 +27,7 @@ import { verifyUID } from '@/functions/server-actions';
 import { ServiceStatuses, ServiceTypes } from '@/lib/interface';
 import { castData } from '@/lib/utils';
 import { serviceValidationSchema } from '@/lib/validation';
-import { useServiceWithUID, useUpdateService } from '@/services/service';
+import { useServiceWithUID, useUpdateService } from '@/hooks/queries/client/service';
 import { ServiceType } from '@/types/service';
 
 export default function EditService({ uid }: { uid: string }) {

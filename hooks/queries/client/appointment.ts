@@ -7,7 +7,7 @@ import {
 } from '@tanstack/react-query';
 
 import { createAppointment, getAllAppointments, getAppointmentWithAID } from './api/appointment';
-import { ApiResponse } from './api';
+import { ApiResponse } from '../../../services/api';
 
 import { CreateAppointmentType } from '@/components/appointments/create/types';
 import { AppointmentType } from '@/types/appointment';

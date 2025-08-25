@@ -8,7 +8,7 @@ import AccountDetails from './account-details';
 import NotificationsSettings from './notifications-settings';
 import SecuritySettings from './security-settings';
 
-import { useUserWithUID } from '@/services/user';
+import { useUserWithUID } from '@/hooks/queries/client/user';
 
 export default function EditUser({ uid }: { uid: number }) {
   const [tab, setTab] = useQueryState('tab', {

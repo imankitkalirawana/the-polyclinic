@@ -1,5 +1,5 @@
 import OrganizationsDashboard from '@/components/dashboard/organizations';
-import { organizationApi } from '@/services/api/organization';
+import { organizationApi } from '@/services/api/system/organization';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 export default async function OrganizationsPage() {

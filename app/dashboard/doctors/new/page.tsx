@@ -3,8 +3,8 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 
 import { auth } from '@/auth';
 import NewDoctor from '@/components/dashboard/doctors/new';
-import { getAllCountries } from '@/services/api/external';
-import { getAllUsers } from '@/services/api/user';
+import { getAllCountries } from '@/services/api/system/external';
+import { getAllUsers } from '@/services/api/client/user';
 
 const allowedRoles = ['admin'];
 

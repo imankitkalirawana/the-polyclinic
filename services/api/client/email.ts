@@ -1,6 +1,6 @@
 'use server';
 
-import { fetchData } from '.';
+import { fetchData } from '..';
 
 import { EmailType } from '@/types/email';
 

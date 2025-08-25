@@ -17,7 +17,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 
 import NoResults from '@/components/ui/no-results';
 import { drugValidationSchema } from '@/lib/validation';
-import { useDrugWithDid, useUpdateDrug } from '@/services/drug';
+import { useDrugWithDid, useUpdateDrug } from '@/hooks/queries/client/drug';
 import { DrugType } from '@/types/drug';
 
 export default function EditDrug({ did }: { did: number }) {
