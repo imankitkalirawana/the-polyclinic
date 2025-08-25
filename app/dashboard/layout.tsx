@@ -14,11 +14,5 @@ export default async function Layout({
     redirect('/auth/login');
   }
 
-  const allowedRoles = ['superadmin', 'ops', 'dev'];
-
-  if (!allowedRoles.includes(session.user.role)) {
-    redirect('/');
-  }
-
   return <>{session && <DashboardLayout session={session}>{children}</DashboardLayout>}</>;
 }

@@ -20,10 +20,7 @@ import { Icon } from '@iconify/react';
 import Logo from '../ui/logo';
 
 import Sidebar from '@/components/dashboard/sidebar/sidebar';
-import {
-  sectionItemsWithTeams,
-  filterSidebarItemsByRole,
-} from '@/components/dashboard/sidebar/sidebar-items';
+import { getSidebarItems } from '@/components/dashboard/sidebar/sidebar-items';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 export default function DashboardLayout({
@@ -47,7 +44,7 @@ export default function DashboardLayout({
 
   const sidebar = useMemo(() => {
     // Filter sidebar items based on user role
-    const filteredItems = filterSidebarItemsByRole(sectionItemsWithTeams, session.user?.role || '');
+    const filteredItems = getSidebarItems(session.user?.role);
 
     return (
       <div
@@ -111,8 +108,11 @@ export default function DashboardLayout({
               variant="light"
               color="danger"
               onPress={async () => {
-                await signOut();
-                window.location.href = '/auth/login';
+                await signOut({
+                  redirect: true,
+                }).then(() => {
+                  window.location.href = '/auth/login';
+                });
               }}
               isIconOnly={isHidden}
             >

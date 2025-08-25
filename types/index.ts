@@ -16,6 +16,8 @@ export type Base = {
 
 export type UnifiedUserType = SystemUserType | OrganizationUserType;
 
+export type UnifiedUserRole = SystemUserType['role'] | OrganizationUserType['role'];
+
 export type Gender = ValuesOf<typeof GENDERS>;
 
 export interface CountryProps {

@@ -1,5 +1,5 @@
 import { ValuesOf } from '@/lib/utils';
-import { Base } from '.';
+import { Base } from '@/types';
 
 export const organizationStatuses = ['active', 'inactive'] as const;
 
