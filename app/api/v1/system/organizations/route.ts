@@ -1,20 +1,11 @@
 import { NextResponse } from 'next/server';
 import { NextAuthRequest } from 'next-auth';
-import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import { getOrganizationModel } from '@/models/Organization';
 import { CreateOrganizationType } from '@/types/organization';
+import { withAuth } from '@/middleware/withAuth';
 
-export const GET = auth(async (request: NextAuthRequest) => {
-  const ALLOWED_ROLES = ['superadmin', 'ops', 'dev'];
-  if (!request.auth?.user) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-  }
-
-  if (!ALLOWED_ROLES.includes(request.auth.user.role)) {
-    return NextResponse.json({ message: 'Forbidden: Access denied' }, { status: 403 });
-  }
-
+export const GET = withAuth(async () => {
   try {
     const conn = await connectDB();
     const Organization = getOrganizationModel(conn);
@@ -33,21 +24,8 @@ export const GET = auth(async (request: NextAuthRequest) => {
   }
 });
 
-// POST - Create new organization (superadmin only)
-export const POST = auth(async (request: NextAuthRequest) => {
+export const POST = withAuth(async (request: NextAuthRequest) => {
   try {
-    if (!request.auth?.user) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
-
-    // Only superadmin can access this endpoint
-    if (request.auth.user.role !== 'superadmin') {
-      return NextResponse.json(
-        { message: 'Forbidden: Superadmin access required' },
-        { status: 403 }
-      );
-    }
-
     const conn = await connectDB();
     const Organization = getOrganizationModel(conn);
     const data: CreateOrganizationType = await request.json();
@@ -69,7 +47,7 @@ export const POST = auth(async (request: NextAuthRequest) => {
     const organization = new Organization({
       ...data,
       domain: data.domain.toLowerCase(),
-      createdBy: request.auth.user.email,
+      createdBy: request.auth?.user?.email,
     });
 
     await organization.save();

@@ -1,9 +1,19 @@
 import { PermissionConfig } from './types';
 
+const BASE_PATH = '/api/v1/system/organizations';
+
 export const organizationPermissions: PermissionConfig = {
-  '/api/v1/organizations': {
+  [BASE_PATH]: {
     GET: ['superadmin', 'moderator', 'ops'],
     POST: ['superadmin', 'moderator'],
     DELETE: ['superadmin'],
+  },
+  [`${BASE_PATH}/:id`]: {
+    GET: ['superadmin', 'moderator', 'ops'],
+    PUT: ['superadmin', 'moderator'],
+    DELETE: ['superadmin'],
+  },
+  [`${BASE_PATH}/:id/status`]: {
+    PATCH: ['superadmin'],
   },
 };

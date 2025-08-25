@@ -1,25 +1,16 @@
 import { NextResponse } from 'next/server';
 import { NextAuthRequest } from 'next-auth';
-import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import { getOrganizationModel } from '@/models/Organization';
 import { UpdateOrganizationType } from '@/types/organization';
 import { getUserModel } from '@/models/User';
+import { withAuth } from '@/middleware/withAuth';
 
 type Params = Promise<{
   id: string;
 }>;
 
-export const GET = auth(async (request: NextAuthRequest, { params }: { params: Params }) => {
-  const allowedRoles = ['superadmin', 'ops'];
-
-  if (!request.auth?.user) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-  }
-
-  if (!allowedRoles.includes(request.auth.user.role)) {
-    return NextResponse.json({ message: 'Forbidden: Access denied' }, { status: 403 });
-  }
+export const GET = withAuth(async (_request: NextAuthRequest, { params }: { params: Params }) => {
   try {
     const conn = await connectDB();
     const { id } = await params;
@@ -50,21 +41,8 @@ export const GET = auth(async (request: NextAuthRequest, { params }: { params: P
   }
 });
 
-// PUT - Update organization (superadmin only)
-export const PUT = auth(async (request: NextAuthRequest, { params }: { params: Params }) => {
+export const PUT = withAuth(async (request: NextAuthRequest, { params }: { params: Params }) => {
   try {
-    if (!request.auth?.user) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
-
-    // Only superadmin can access this endpoint
-    if (request.auth.user.role !== 'superadmin') {
-      return NextResponse.json(
-        { message: 'Forbidden: Superadmin access required' },
-        { status: 403 }
-      );
-    }
-
     const conn = await connectDB();
     const Organization = getOrganizationModel(conn);
     const { id } = await params;
@@ -95,7 +73,7 @@ export const PUT = auth(async (request: NextAuthRequest, { params }: { params: P
       {
         ...data,
         ...(data.domain && { domain: data.domain.toLowerCase() }),
-        updatedBy: request.auth.user.email,
+        updatedBy: request.auth?.user?.email,
       },
       { new: true, runValidators: true }
     );
@@ -113,40 +91,29 @@ export const PUT = auth(async (request: NextAuthRequest, { params }: { params: P
   }
 });
 
-// DELETE - Delete organization (superadmin only)
-export const DELETE = auth(async (request: NextAuthRequest, { params }: { params: Params }) => {
-  try {
-    if (!request.auth?.user) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
+export const DELETE = withAuth(
+  async (_request: NextAuthRequest, { params }: { params: Params }) => {
+    try {
+      const conn = await connectDB();
+      const Organization = getOrganizationModel(conn);
+      const { id } = await params;
 
-    // Only superadmin can access this endpoint
-    if (request.auth.user.role !== 'superadmin') {
+      const organization = await Organization.findOne({ organizationId: id });
+      if (!organization) {
+        return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
+      }
+
+      await Organization.deleteOne({ organizationId: id });
+
+      return NextResponse.json({
+        message: 'Organization deleted successfully',
+      });
+    } catch (error: unknown) {
+      console.error('Error deleting organization:', error);
       return NextResponse.json(
-        { message: 'Forbidden: Superadmin access required' },
-        { status: 403 }
+        { message: error instanceof Error ? error.message : 'Internal Server Error' },
+        { status: 500 }
       );
     }
-
-    const conn = await connectDB();
-    const Organization = getOrganizationModel(conn);
-    const { id } = await params;
-
-    const organization = await Organization.findOne({ organizationId: id });
-    if (!organization) {
-      return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
-    }
-
-    await Organization.deleteOne({ organizationId: id });
-
-    return NextResponse.json({
-      message: 'Organization deleted successfully',
-    });
-  } catch (error: unknown) {
-    console.error('Error deleting organization:', error);
-    return NextResponse.json(
-      { message: error instanceof Error ? error.message : 'Internal Server Error' },
-      { status: 500 }
-    );
   }
-});
+);
