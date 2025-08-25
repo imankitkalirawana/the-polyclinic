@@ -1,24 +1,30 @@
 import { NextResponse } from 'next/server';
 import { NextAuthRequest } from 'next-auth';
 import bcrypt from 'bcryptjs';
-import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
-import { getOrganizationModel } from '@/models/system/Organization';
 import { getUserModel } from '@/models/User';
+import { withAuth } from '@/middleware/withAuth';
+import { validateOrganizationId } from '@/lib/server-actions/validation';
 
 type Params = Promise<{
   id: string;
 }>;
 
-export const POST = auth(async (request: NextAuthRequest, { params }: { params: Params }) => {
-  try {
-    const allowedRoles = ['superadmin', 'admin', 'ops', 'dev'];
-    if (request.auth?.user && !allowedRoles.includes(request.auth.user.role)) {
-      return NextResponse.json({ message: 'Forbidden: Access denied' }, { status: 403 });
-    }
+export const GET = withAuth(async (_request: NextAuthRequest, { params }: { params: Params }) => {
+  const { id } = await params;
+  const doesOrganizationExist = await validateOrganizationId(id);
+  if (!doesOrganizationExist) {
+    return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
+  }
 
-    const conn = await connectDB();
-    const Organization = getOrganizationModel(conn);
+  const conn = await connectDB(id);
+  const User = getUserModel(conn);
+  const users = await User.find({ organization: id });
+  return NextResponse.json({ data: users });
+});
+
+export const POST = withAuth(async (request: NextAuthRequest, { params }: { params: Params }) => {
+  try {
     const { id } = await params;
     const body = await request.json();
     const { email, password, ...rest } = body;
@@ -27,15 +33,13 @@ export const POST = auth(async (request: NextAuthRequest, { params }: { params: 
       return NextResponse.json({ message: 'Email is required' }, { status: 400 });
     }
 
-    // Check if organization exists
-    const organization = await Organization.findOne({ organizationId: id });
-    if (!organization) {
+    const doesOrganizationExist = await validateOrganizationId(id);
+    if (!doesOrganizationExist) {
       return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
     }
 
-    // Connect to the organization database
-    const conn2 = await connectDB(id);
-    const User = getUserModel(conn2);
+    const conn = await connectDB(id);
+    const User = getUserModel(conn);
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {

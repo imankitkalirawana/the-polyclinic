@@ -56,6 +56,10 @@ export const organizationApi = {
 
   // User related
   users: {
+    async getAll(organizationId: string) {
+      return await fetchData<OrganizationUserType[]>(`${API_BASE}/${organizationId}/users`);
+    },
+
     async create(organizationId: string, user: CreateOrganizationUser) {
       return await fetchData<OrganizationUserType>(`${API_BASE}/${organizationId}/users`, {
         method: 'POST',

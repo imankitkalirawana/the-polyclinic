@@ -1,29 +1,17 @@
 import { NextResponse } from 'next/server';
 import { NextAuthRequest } from 'next-auth';
 
-import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import { getOrganizationModel } from '@/models/system/Organization';
+import { withAuth } from '@/middleware/withAuth';
 
 type Params = Promise<{
   id: string;
 }>;
 
 // PATCH - Toggle organization status (superadmin only)
-export const PATCH = auth(async (request: NextAuthRequest, { params }: { params: Params }) => {
+export const PATCH = withAuth(async (request: NextAuthRequest, { params }: { params: Params }) => {
   try {
-    if (!request.auth?.user) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
-
-    // Only superadmin can access this endpoint
-    if (request.auth.user.role !== 'superadmin') {
-      return NextResponse.json(
-        { message: 'Forbidden: Superadmin access required' },
-        { status: 403 }
-      );
-    }
-
     const conn = await connectDB();
     const Organization = getOrganizationModel(conn);
     const { id } = await params;
@@ -46,7 +34,7 @@ export const PATCH = auth(async (request: NextAuthRequest, { params }: { params:
       { organizationId: id },
       {
         status,
-        updatedBy: request.auth.user.email,
+        updatedBy: request.auth?.user?.email,
       },
       { new: true }
     );
