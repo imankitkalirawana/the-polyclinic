@@ -47,3 +47,5 @@ export interface CityProps {
   id: number;
   name: string;
 }
+
+export type VerificationType = 'register' | 'reset-password' | 'verify-email';
