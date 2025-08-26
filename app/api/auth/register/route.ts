@@ -1,49 +1,43 @@
-import { getUserModel } from '@/models/User';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
 import { getSubdomain } from '@/auth/sub-domain';
-import { verify, JwtPayload } from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
+import { AuthService } from '@/services/auth';
+import { registrationSchema, validateRequest } from '@/services/auth/validation';
 
-interface CustomJwtPayload extends JwtPayload {
-  email: string;
-  otp: string;
-  type: 'register' | 'reset-password' | 'verify-email';
-}
-
-export const POST = async (req: Request) => {
-  const subdomain = await getSubdomain();
-  if (!subdomain) {
-    return NextResponse.json({ error: 'Organization not found' }, { status: 400 });
-  }
-
+export const POST = async (req: NextRequest) => {
   try {
+    // Get subdomain
+    const subdomain = await getSubdomain();
+    if (!subdomain) {
+      return NextResponse.json({ message: 'Organization not found' }, { status: 400 });
+    }
+
+    // Parse and validate request body
+    const body = await req.json();
+    const validation = validateRequest(registrationSchema, body);
+
+    if (!validation.success) {
+      return NextResponse.json({ message: 'Invalid request data' }, { status: 400 });
+    }
+
+    const { email, password, token, otp } = validation.data;
+
+    // Connect to database
     const conn = await connectDB(subdomain);
-    const User = getUserModel(conn);
 
-    const { email, password, token, otp } = await req.json();
+    // Use AuthService to register user
+    const result = await AuthService.registerUser(conn, email, password, token, otp, subdomain);
 
-    if (!token || !otp) {
-      return NextResponse.json({ error: 'Token and OTP are required' }, { status: 400 });
+    if (!result.success) {
+      return NextResponse.json(
+        { message: result.message || 'Failed to register user' },
+        { status: 400 }
+      );
     }
 
-    const decoded = verify(token, process.env.NEXTAUTH_SECRET!) as CustomJwtPayload;
-
-    if (!decoded) {
-      return NextResponse.json({ error: 'Invalid token' }, { status: 400 });
-    }
-
-    if (decoded.email !== email || decoded.type !== 'register' || decoded.otp !== otp) {
-      return NextResponse.json({ error: 'Invalid token or OTP' }, { status: 400 });
-    }
-
-    // hash password before saving
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({ email, password: hashedPassword });
-
-    return NextResponse.json(user);
+    return NextResponse.json({ message: result.message || 'User registered successfully' });
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('Registration error:', error);
+    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
 };

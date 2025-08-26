@@ -95,13 +95,19 @@ export function WelcomeUser(user: UnifiedUserType) {
 `;
 }
 
-export function OtpEmail({ otp, type = 'register' }: { otp: number; type: VerificationType }) {
+export function OtpEmail({
+  otp,
+  type = 'register',
+}: {
+  otp: number | string;
+  type: VerificationType;
+}) {
   const TYPE_MAP: Record<
     VerificationType,
     {
       title: string;
       description: string;
-      code: number;
+      code: number | string;
     }
   > = {
     register: {

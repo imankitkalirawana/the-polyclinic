@@ -21,7 +21,7 @@ const verificationSchema = new mongoose.Schema(
       type: Number,
       default: 1,
     },
-    createdAt: {
+    updatedAt: {
       type: Date,
       default: Date.now,
       expires: 600,

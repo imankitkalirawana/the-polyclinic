@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
 import { getSubdomain } from '@/auth/sub-domain';
 import { AuthService } from '@/services/auth/auth-service';
-import { verifyOTPSchema, validateRequest } from '@/services/auth/validation';
+import { resetPasswordSchema, validateRequest } from '@/services/auth/validation';
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -14,33 +14,30 @@ export const POST = async (req: NextRequest) => {
 
     // Parse and validate request body
     const body = await req.json();
-    const validation = validateRequest(verifyOTPSchema, body);
+    const validation = validateRequest(resetPasswordSchema, body);
 
     if (!validation.success) {
       return NextResponse.json({ message: 'Invalid request data' }, { status: 400 });
     }
 
-    const { email, otp, type } = validation.data;
+    const { email, password, token, otp } = validation.data;
 
     // Connect to database
     const conn = await connectDB(subdomain);
 
-    // Use AuthService to verify OTP
-    const result = await AuthService.verifyOTP(conn, email, otp, type);
+    // Use AuthService to reset password
+    const result = await AuthService.resetPassword(conn, email, password, token, otp, subdomain);
 
     if (!result.success) {
       return NextResponse.json(
-        { message: result.message || 'Failed to verify OTP' },
+        { message: result.message || 'Failed to reset password' },
         { status: 400 }
       );
     }
 
-    return NextResponse.json({ message: result.message || 'OTP verified successfully' });
+    return NextResponse.json({ message: result.message || 'Password reset successfully' });
   } catch (error) {
-    console.error('Verify OTP error:', error);
-    return NextResponse.json(
-      { message: error instanceof Error ? error.message : 'Internal server error' },
-      { status: 500 }
-    );
+    console.error('Reset password error:', error);
+    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
 };
