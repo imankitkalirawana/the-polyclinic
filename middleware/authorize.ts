@@ -16,12 +16,18 @@ export async function authorize(request: NextAuthRequest) {
     return matcher(pathname);
   });
 
-  if (!matchedEntry) return null; // ✅ public route if no pattern matched
+  if (!matchedEntry) {
+    // ❌ No matching route in config → deny access
+    return NextResponse.json({ message: 'Forbidden: Route not allowed' }, { status: 403 });
+  }
 
   const [_, routeConfig] = matchedEntry;
   const allowedRoles = routeConfig[method];
 
-  if (!allowedRoles) return null; // ✅ public if method not listed
+  if (!allowedRoles) {
+    // ❌ If method not listed → deny access
+    return NextResponse.json({ message: 'Forbidden: Method not allowed' }, { status: 403 });
+  }
 
   // 🔒 Requires auth if roles are defined
   const user = request.auth?.user;

@@ -19,21 +19,6 @@ export const createOrganizationSchema = z.object({
   logoUrl: z.url('Logo URL must be a valid URL').optional().or(z.literal('')),
 });
 
-export const updateOrganizationSchema = z.object({
-  organizationId: z.string().min(1, 'Organization ID is required'),
-  name: z.string().min(1, 'Name is required').optional(),
-  domain: z.string().min(1, 'Domain is required').optional(),
-  logoUrl: z.string().optional(),
+export const updateOrganizationSchema = createOrganizationSchema.partial().extend({
   status: z.enum(organizationStatuses).optional(),
 });
-
-export const updateOrganizationStatusSchema = z.object({
-  organizationId: z.string().min(1, 'Organization ID is required'),
-  status: z.enum(organizationStatuses),
-});
-
-export const deleteOrganizationSchema = z.object({
-  organizationId: z.string().min(1, 'Organization ID is required'),
-});
-
-export type CreateOrganizationType = z.infer<typeof createOrganizationSchema>;

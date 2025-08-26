@@ -1,5 +1,10 @@
 import { ValuesOf } from '@/lib/utils';
+import {
+  createOrganizationSchema,
+  updateOrganizationSchema,
+} from '@/services/client/organization/validation';
 import { Base } from '@/types';
+import { z } from 'zod';
 
 export const organizationStatuses = ['active', 'inactive'] as const;
 
@@ -11,13 +16,6 @@ export type OrganizationType = Base & {
   status: OrganizationStatus;
   subscriptionId: string | null;
 };
-
-export type CreateOrganizationType = Pick<
-  OrganizationType,
-  'name' | 'domain' | 'logoUrl' | 'status'
->;
-
-export type UpdateOrganizationType = Partial<CreateOrganizationType>;
 
 export type OrganizationStatus = ValuesOf<typeof organizationStatuses>;
 
@@ -63,3 +61,7 @@ export type UpdateOrganizationUser = Partial<
 > & {
   password?: string;
 };
+
+// from zod validation
+export type CreateOrganizationType = z.infer<typeof createOrganizationSchema>;
+export type UpdateOrganizationType = z.infer<typeof updateOrganizationSchema>;
