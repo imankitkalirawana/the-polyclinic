@@ -3,8 +3,8 @@ import { NextAuthRequest } from 'next-auth';
 import { connectDB } from '@/lib/db';
 import { getOrganizationModel } from '@/models/system/Organization';
 import { UpdateOrganizationType } from '@/types/system/organization';
-import { getUserModel } from '@/models/User';
 import { withAuth } from '@/middleware/withAuth';
+import { OrganizationService } from '@/services/client/organization/service';
 
 type Params = Promise<{
   id: string;
@@ -13,23 +13,18 @@ type Params = Promise<{
 export const GET = withAuth(async (_request: NextAuthRequest, { params }: { params: Params }) => {
   try {
     const conn = await connectDB();
+
     const { id } = await params;
-    const Organization = getOrganizationModel(conn);
-    const organization = await Organization.findOne({ organizationId: id });
-    if (!organization) {
-      return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
+    const result = await OrganizationService.getFullOrganization(conn, id);
+    if (!result.success) {
+      return NextResponse.json({ message: result.message }, { status: result.code });
     }
-
-    const conn2 = await connectDB(organization.organizationId);
-
-    const User = getUserModel(conn2);
-    const users = await User.find();
 
     return NextResponse.json({
       message: 'Organization fetched successfully',
       data: {
-        organization,
-        users,
+        organization: result.data?.organization || null,
+        users: result.data?.users || [],
       },
     });
   } catch (error: unknown) {

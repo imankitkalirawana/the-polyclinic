@@ -1,23 +1,25 @@
 import { NextResponse } from 'next/server';
 import { NextAuthRequest } from 'next-auth';
 import { connectDB } from '@/lib/db';
-import { getOrganizationModel } from '@/models/system/Organization';
 import { withAuth } from '@/middleware/withAuth';
 import { validateRequest } from '@/services';
 import { createOrganizationSchema } from '@/services/client/organization/validation';
+import { OrganizationService } from '@/services/client/organization/service';
 
 export const GET = withAuth(async () => {
   try {
     const conn = await connectDB();
-    const Organization = getOrganizationModel(conn);
-    const organizations = await Organization.find().sort({ createdAt: -1 });
+    const result = await OrganizationService.getOrganizations(conn);
+
+    if (!result.success) {
+      return NextResponse.json({ message: result.message }, { status: result.code });
+    }
 
     return NextResponse.json({
       message: 'Organizations fetched successfully',
-      data: organizations,
+      data: result.data,
     });
   } catch (error: unknown) {
-    console.error('Error fetching organizations:', error);
     return NextResponse.json(
       { message: error instanceof Error ? error.message : 'Internal Server Error' },
       { status: 500 }
@@ -28,8 +30,6 @@ export const GET = withAuth(async () => {
 export const POST = withAuth(async (request: NextAuthRequest) => {
   try {
     const conn = await connectDB();
-    const Organization = getOrganizationModel(conn);
-
     const body = await request.json();
 
     const validation = validateRequest(createOrganizationSchema, body);
@@ -41,34 +41,20 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
       );
     }
 
-    const existingOrganization = await Organization.findOne({
-      domain: validation.data.domain,
-    });
+    const result = await OrganizationService.createOrganization(conn, validation.data);
 
-    if (existingOrganization) {
-      return NextResponse.json(
-        { message: 'Organization with this domain already exists' },
-        { status: 409 }
-      );
+    if (!result.success) {
+      return NextResponse.json({ message: result.message }, { status: result.code });
     }
-
-    const organization = new Organization({
-      ...validation.data,
-      domain: validation.data.domain,
-      createdBy: request.auth?.user?.email,
-    });
-
-    await organization.save();
 
     return NextResponse.json(
       {
         message: 'Organization created successfully',
-        data: organization,
+        data: result.data,
       },
       { status: 201 }
     );
   } catch (error: unknown) {
-    console.error('Error creating organization:', error);
     return NextResponse.json(
       { message: error instanceof Error ? error.message : 'Internal Server Error' },
       { status: 500 }

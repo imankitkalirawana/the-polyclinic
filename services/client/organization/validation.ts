@@ -35,3 +35,5 @@ export const updateOrganizationStatusSchema = z.object({
 export const deleteOrganizationSchema = z.object({
   organizationId: z.string().min(1, 'Organization ID is required'),
 });
+
+export type CreateOrganizationType = z.infer<typeof createOrganizationSchema>;

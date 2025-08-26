@@ -12,7 +12,6 @@ export {
   verifyOTPSchema,
   resetPasswordSchema,
   loginSchema,
-  validateRequest,
   type EmailRequest,
   type OTPRequest,
   type RegistrationRequest,
@@ -24,4 +23,4 @@ export {
 
 // Types
 export type { OTPTokenPayload } from './otp-manager';
-export type { AuthResult } from './auth-service';
+export { validateRequest } from '@/services';
