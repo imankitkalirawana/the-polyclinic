@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
 import { getSubdomain } from '@/auth/sub-domain';
 import { AuthService } from '@/services/auth/auth-service';
-import { resetPasswordSchema, validateRequest } from '@/services/auth/validation';
+import { resetPasswordSchema } from '@/services/auth/validation';
+import { validateRequest } from '@/services';
 
 export const POST = async (req: NextRequest) => {
   try {

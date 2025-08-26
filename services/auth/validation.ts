@@ -65,22 +65,3 @@ export type SendOTPRequest = z.infer<typeof sendOTPSchema>;
 export type VerifyOTPRequest = z.infer<typeof verifyOTPSchema>;
 export type ResetPasswordRequest = z.infer<typeof resetPasswordSchema>;
 export type LoginRequest = z.infer<typeof loginSchema>;
-
-/**
- * Validate request data against a schema
- */
-export function validateRequest<T>(
-  schema: z.ZodSchema<T>,
-  data: unknown
-): { success: true; data: T } | { success: false; errors: string[] } {
-  try {
-    const validatedData = schema.parse(data);
-    return { success: true, data: validatedData };
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      const errors = error.issues.map((issue) => issue.message);
-      return { success: false, errors };
-    }
-    return { success: false, errors: ['Validation failed'] };
-  }
-}

@@ -2,8 +2,9 @@ import { NextResponse } from 'next/server';
 import { NextAuthRequest } from 'next-auth';
 import { connectDB } from '@/lib/db';
 import { getOrganizationModel } from '@/models/system/Organization';
-import { CreateOrganizationType } from '@/types/system/organization';
 import { withAuth } from '@/middleware/withAuth';
+import { validateRequest } from '@/services';
+import { createOrganizationSchema } from '@/services/client/organization/validation';
 
 export const GET = withAuth(async () => {
   try {
@@ -28,15 +29,22 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
   try {
     const conn = await connectDB();
     const Organization = getOrganizationModel(conn);
-    const data: CreateOrganizationType = await request.json();
 
-    // Validate required fields
-    if (!data.name || !data.domain) {
-      return NextResponse.json({ message: 'Name and domain are required' }, { status: 400 });
+    const body = await request.json();
+
+    const validation = validateRequest(createOrganizationSchema, body);
+
+    if (!validation.success) {
+      return NextResponse.json(
+        { message: 'Invalid request data', errors: validation.errors },
+        { status: 400 }
+      );
     }
 
-    // Check if domain already exists
-    const existingOrganization = await Organization.findOne({ domain: data.domain.toLowerCase() });
+    const existingOrganization = await Organization.findOne({
+      domain: validation.data.domain,
+    });
+
     if (existingOrganization) {
       return NextResponse.json(
         { message: 'Organization with this domain already exists' },
@@ -45,12 +53,13 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
     }
 
     const organization = new Organization({
-      ...data,
-      domain: data.domain.toLowerCase(),
+      ...validation.data,
+      domain: validation.data.domain,
       createdBy: request.auth?.user?.email,
     });
 
     await organization.save();
+
     return NextResponse.json(
       {
         message: 'Organization created successfully',

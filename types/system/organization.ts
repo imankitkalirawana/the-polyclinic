@@ -19,9 +19,9 @@ export type CreateOrganizationType = Pick<
 
 export type UpdateOrganizationType = Partial<CreateOrganizationType>;
 
-type OrganizationStatus = ValuesOf<typeof organizationStatuses>;
+export type OrganizationStatus = ValuesOf<typeof organizationStatuses>;
 
-type OrganizationUserRole =
+export type OrganizationUserRole =
   | 'admin'
   | 'doctor'
   | 'nurse'

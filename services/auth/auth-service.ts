@@ -3,12 +3,8 @@ import bcrypt from 'bcryptjs';
 import { getUserModel } from '@/models/User';
 import { OTPManager } from './otp-manager';
 import { AuthEmailService } from './email-service';
-
-export interface AuthResult<T = unknown> {
-  success: boolean;
-  data?: T;
-  message?: string;
-}
+import { ServiceResult } from '..';
+import { OrganizationUserRole } from '@/types/system/organization';
 
 export class AuthService {
   /**
@@ -19,7 +15,7 @@ export class AuthService {
     email: string,
     type: 'register' | 'reset-password' | 'verify-email',
     subdomain: string
-  ): Promise<AuthResult> {
+  ): Promise<ServiceResult<{ email: string }>> {
     try {
       // Check if user exists for reset-password
       if (type === 'reset-password') {
@@ -88,7 +84,7 @@ export class AuthService {
     email: string,
     otp: string,
     type: 'register' | 'reset-password' | 'verify-email'
-  ): Promise<AuthResult<{ token: string; email: string; type: string }>> {
+  ): Promise<ServiceResult<{ token: string; email: string; type: string }>> {
     try {
       // Verify OTP
       const verifyResult = await OTPManager.verifyOTP(conn, email, otp, type);
@@ -127,7 +123,15 @@ export class AuthService {
     token: string,
     otp: string,
     subdomain: string
-  ): Promise<AuthResult> {
+  ): Promise<
+    ServiceResult<{
+      email: string;
+      name: string;
+      role: OrganizationUserRole;
+      uid: string;
+      organization: string;
+    }>
+  > {
     try {
       // Verify OTP token
       const decodedToken = OTPManager.verifyOTPToken(token);
@@ -178,7 +182,6 @@ export class AuthService {
 
       // Return user data (excluding password)
       const userResponse = {
-        id: user._id,
         email: user.email,
         name: user.name,
         role: user.role,
@@ -210,7 +213,7 @@ export class AuthService {
     token: string,
     otp: string,
     subdomain: string
-  ): Promise<AuthResult> {
+  ): Promise<ServiceResult> {
     try {
       // Verify OTP token
       const decodedToken = OTPManager.verifyOTPToken(token);
