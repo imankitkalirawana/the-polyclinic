@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Card, CardBody, Switch, useDisclosure } from '@heroui/react';
+import { Button, Card, CardBody, Spinner, Switch, useDisclosure } from '@heroui/react';
 import { OrganizationType } from '@/types/system/organization';
 import {
   useOrganizations,
@@ -65,27 +65,12 @@ function OrganizationCard({ org }: { org: OrganizationType }) {
   // Toggle status
   const handleToggleStatus = async (id: string, currentStatus: string) => {
     const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
-
-    try {
-      await toggleStatus.mutateAsync({ id, status: newStatus as 'active' | 'inactive' });
-      toast.success(
-        `Organization ${newStatus === 'active' ? 'activated' : 'deactivated'} successfully`
-      );
-    } catch (error) {
-      console.error('Error updating status:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to update status');
-    }
+    await toggleStatus.mutateAsync({ id, status: newStatus as 'active' | 'inactive' });
   };
 
   // Delete organization
   const handleDelete = async (id: string) => {
-    try {
-      await deleteOrganization.mutateAsync(id);
-      toast.success('Organization deleted successfully');
-    } catch (error) {
-      console.error('Error deleting organization:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to delete organization');
-    }
+    await deleteOrganization.mutateAsync(id);
   };
 
   return (
@@ -119,6 +104,7 @@ function OrganizationCard({ org }: { org: OrganizationType }) {
                 isReadOnly={toggleStatus.isPending}
                 isSelected={org.status === 'active'}
                 onValueChange={() => handleToggleStatus(org.organizationId, org.status)}
+                thumbIcon={toggleStatus.isPending ? <Spinner size="sm" /> : undefined}
               />
               <Button
                 isIconOnly

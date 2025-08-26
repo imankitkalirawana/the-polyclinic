@@ -103,6 +103,17 @@ export const useDeleteOrganization = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['organizations'] });
+      addToast({
+        title: 'Organization deleted successfully',
+        color: 'success',
+      });
+    },
+    onError: (error) => {
+      addToast({
+        title: 'Failed to delete organization',
+        description: error instanceof Error ? error.message : 'Failed to delete organization',
+        color: 'danger',
+      });
     },
   });
 };
@@ -121,6 +132,18 @@ export const useToggleOrganizationStatus = () => {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['organizations'] });
       queryClient.invalidateQueries({ queryKey: ['organizations', data.organizationId] });
+      addToast({
+        title: `Organization ${status === 'active' ? 'activated' : 'deactivated'} successfully`,
+        color: 'success',
+      });
+    },
+    onError: (error) => {
+      addToast({
+        title: 'Failed to toggle organization status',
+        description:
+          error instanceof Error ? error.message : 'Failed to toggle organization status',
+        color: 'danger',
+      });
     },
   });
 };

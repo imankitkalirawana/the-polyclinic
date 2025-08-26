@@ -56,7 +56,6 @@ export function Providers({
                 wrapper: '!z-[100]',
               },
             }}
-            placement="top-center"
           />
           <Toaster
             icons={{

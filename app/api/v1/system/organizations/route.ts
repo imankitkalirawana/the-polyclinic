@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { NextAuthRequest } from 'next-auth';
 import { connectDB } from '@/lib/db';
 import { getOrganizationModel } from '@/models/system/Organization';
-import { CreateOrganizationType } from '@/types/organization';
+import { CreateOrganizationType } from '@/types/system/organization';
 import { withAuth } from '@/middleware/withAuth';
 
 export const GET = withAuth(async () => {
