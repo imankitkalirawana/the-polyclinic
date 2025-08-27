@@ -20,7 +20,7 @@ export const registrationSchema = z
     email: z.email({ error: 'Invalid email format' }),
     password: z.string().min(8, { error: 'Password must be at least 8 characters' }),
     subdomain: z.string().min(1, { error: 'Organization/subdomain is required for registration' }),
-    token: z.string().optional(),
+    token: z.jwt({ message: 'Invalid token' }).optional(),
     otp: z
       .string()
       .length(6, { error: 'OTP must be 6 digits' })
