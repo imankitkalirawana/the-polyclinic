@@ -11,7 +11,7 @@ const verificationSchema = new mongoose.Schema(
       ],
       unique: true,
     },
-    otp: Number,
+    otp: String,
     type: {
       type: String,
       enum: ['register', 'reset-password', 'verify-email'],

@@ -11,6 +11,7 @@ export const organizationPermissions: PermissionConfig = {
   [`${BASE_PATH}/:id`]: {
     GET: ['superadmin', 'moderator', 'ops'],
     PUT: ['superadmin', 'moderator'],
+    PATCH: ['superadmin', 'moderator'],
     DELETE: ['superadmin'],
   },
   [`${BASE_PATH}/:id/status`]: {

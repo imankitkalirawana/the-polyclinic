@@ -18,7 +18,7 @@ export const POST = async (req: NextRequest) => {
     const validation = validateRequest(registrationSchema, body);
 
     if (!validation.success) {
-      return NextResponse.json({ message: 'Invalid request data' }, { status: 400 });
+      return NextResponse.json({ message: validation.errors }, { status: 400 });
     }
 
     const { email, password, token, otp } = validation.data;

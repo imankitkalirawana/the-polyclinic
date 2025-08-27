@@ -15,13 +15,13 @@ export const otpSchema = z.object({
 
 // Registration validation schema
 export const registrationSchema = z.object({
-  email: z.email('Invalid email format'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-  token: z.string().min(1, 'Token is required'),
+  email: z.email({ error: 'Invalid email format' }),
+  password: z.string().min(8, { error: 'Password must be at least 8 characters' }),
+  token: z.jwt({ error: 'Invalid token' }),
   otp: z
     .string()
-    .length(6, 'OTP must be 6 digits')
-    .regex(/^\d{6}$/, 'OTP must contain only digits'),
+    .length(6, { error: 'OTP must be 6 digits' })
+    .regex(/^\d{6}$/, { error: 'OTP must contain only digits' }),
 });
 
 // Send OTP validation schema
