@@ -24,6 +24,13 @@ export const isOrganizationActive = async (id: string) => {
   return organization?.status === 'active';
 };
 
+export const getOrganization = async (subdomain: string) => {
+  const conn = await connectDB();
+  const Organization = getOrganizationModel(conn);
+  const organization = await Organization.findOne({ organizationId: subdomain }).lean();
+  return organization;
+};
+
 // validate user in organization
 export const validateUserInOrganization = async (userId: string, organizationId: string) => {
   // check if organization exists

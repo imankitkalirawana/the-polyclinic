@@ -2,19 +2,25 @@ import { sendHTMLEmail } from '@/lib/server-actions/email';
 import { OtpEmail } from '@/templates/email';
 import { toTitleCase } from '@/lib/utils';
 import { OTPTokenPayload } from './otp-manager';
+import { APP_INFO } from '@/lib/config';
 
 export class AuthEmailService {
   /**
    * Send OTP email for authentication
    */
-  static async sendOTPEmail(
-    email: string,
-    otp: string,
-    type: OTPTokenPayload['type'],
-    subdomain: string
-  ): Promise<{ success: boolean; message?: string }> {
+  static async sendOTPEmail({
+    email,
+    otp,
+    type,
+    subdomain,
+  }: {
+    email: string;
+    otp: string;
+    type: OTPTokenPayload['type'];
+    subdomain?: string | null;
+  }): Promise<{ success: boolean; message?: string }> {
     try {
-      const subject = this.getEmailSubject(type, subdomain);
+      const subject = this.getEmailSubject(type, subdomain || APP_INFO.name);
 
       await sendHTMLEmail({
         to: email,

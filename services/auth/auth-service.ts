@@ -19,7 +19,7 @@ export class AuthService {
     conn: Connection;
     email: string;
     type: 'register' | 'reset-password' | 'verify-email';
-    subdomain?: string;
+    subdomain?: string | null;
   }): Promise<ServiceResult<{ email: string }>> {
     try {
       // For registration, subdomain is required
@@ -65,10 +65,7 @@ export class AuthService {
         };
       }
 
-      // Send OTP email
-      if (subdomain) {
-        Promise.all([AuthEmailService.sendOTPEmail(email, otp, type, subdomain)]);
-      }
+      Promise.all([AuthEmailService.sendOTPEmail({ email, otp, type, subdomain })]);
 
       return {
         success: true,

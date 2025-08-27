@@ -33,7 +33,6 @@ export const registrationSchema = z
 export const sendOTPSchema = z.object({
   email: z.email('Invalid email format'),
   type: z.enum(['register', 'reset-password', 'verify-email']).default('register'),
-  subdomain: z.string().optional(), // Optional for password reset, required for registration
 });
 
 // Verify OTP validation schema
