@@ -3,8 +3,8 @@ import { NextAuthRequest } from 'next-auth';
 import { connectDB } from '@/lib/db';
 import { withAuth } from '@/middleware/withAuth';
 import { validateRequest } from '@/services';
-import { createOrganizationSchema } from '@/services/system/organization/validation';
-import { OrganizationService } from '@/services/system/organization/service';
+import { createOrganizationSchema } from '@/services/organization/validation';
+import { OrganizationService } from '@/services/organization/service';
 
 export const GET = withAuth(async () => {
   try {

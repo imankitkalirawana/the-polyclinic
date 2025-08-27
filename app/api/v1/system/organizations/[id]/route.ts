@@ -2,9 +2,9 @@ import { NextResponse } from 'next/server';
 import { NextAuthRequest } from 'next-auth';
 import { connectDB } from '@/lib/db';
 import { withAuth } from '@/middleware/withAuth';
-import { OrganizationService } from '@/services/system/organization/service';
+import { OrganizationService } from '@/services/organization/service';
 import { validateRequest } from '@/services';
-import { updateOrganizationSchema } from '@/services/system/organization/validation';
+import { updateOrganizationSchema } from '@/services/organization/validation';
 
 type Params = Promise<{
   id: string;
