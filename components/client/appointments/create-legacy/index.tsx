@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'nextjs-toploader/app';
 import {
   Accordion,
@@ -29,8 +29,8 @@ import DoYouKnowDoctorSelection from './do-you-know-doctor-selection';
 import DoctorSelection from './doctor-selection';
 import { useAppointmentDate } from './store';
 
-import { CreateAppointmentType } from '@/components/appointments/create/types';
-import UserSelection from '@/components/appointments/create-legacy/user-selection';
+import { CreateAppointmentType } from '@/components/client/appointments/create/types';
+import UserSelection from '@/components/client/appointments/create-legacy/user-selection';
 import Skeleton from '@/components/ui/skeleton';
 import { castData } from '@/lib/utils';
 import { useAllAppointments, useCreateAppointment } from '@/hooks/queries/client/appointment';
@@ -39,7 +39,7 @@ import { useAppointmentStore } from '@/store/appointment';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { $FixMe } from '@/types';
 import { AppointmentType } from '@/types/client/appointment';
-import { UserType } from '@/types/system/control-plane';
+import { OrganizationUserType } from '@/types/system/organization';
 
 const KeyMap: Record<number, string> = {
   1: 'patient',
@@ -136,10 +136,13 @@ export function CreateAppointment({
   //   setAppointment('time', getNextAvailableTimeSlot(selectedDate || defaultSelectedDate));
   // }, [selectedDate, defaultSelectedDate]);
 
-  const selectedPatient = useMemo(
-    () => linkedUsers?.find((user) => user.uid === appointment.patient),
-    [linkedUsers, appointment.patient]
-  );
+  // TODO: Fix this after type is updated
+  // const selectedPatient = useMemo(
+  //   () => linkedUsers?.find((user) => user.uid === appointment.patient),
+  //   [linkedUsers, appointment.patient]
+  // );
+
+  const selectedPatient = {} as $FixMe;
 
   return (
     <Modal
@@ -172,7 +175,7 @@ export function CreateAppointment({
                   subtitle={currentStep === 1 ? null : selectedPatient?.email}
                   onPress={() => {
                     setCurrentStep(1);
-                    setAppointment('patient', {} as UserType);
+                    setAppointment('patient', {} as OrganizationUserType);
                   }}
                 />
               }
@@ -219,7 +222,8 @@ export function CreateAppointment({
                 onContinue={() => {
                   if (appointment.type === 'follow-up' && appointment.previousAppointment) {
                     const previousAppointment = appointments?.find(
-                      (apt) => apt.aid === appointment.previousAppointment
+                      // TODO: Fix this after type is updated
+                      (apt) => apt.aid.toString() === appointment.previousAppointment
                     );
                     if (previousAppointment) {
                       setAppointment('doctor', previousAppointment.doctor);
@@ -336,7 +340,7 @@ export function CreateAppointment({
   );
 }
 
-function DoctorSelectionTitle({ doctor }: { doctor?: number }) {
+function DoctorSelectionTitle({ doctor }: { doctor?: string }) {
   const { data: doctorData, isLoading } = useUserWithUID(doctor);
   return doctor ? (
     isLoading ? (

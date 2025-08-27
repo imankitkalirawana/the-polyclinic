@@ -5,7 +5,7 @@ import ExcelJS from 'exceljs';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
-import User from '@/models/User';
+import { getUserModel } from '@/models/User';
 
 export const POST = auth(async (request: NextAuthRequest) => {
   try {
@@ -17,7 +17,8 @@ export const POST = auth(async (request: NextAuthRequest) => {
 
     let users;
 
-    await connectDB();
+    const conn = await connectDB();
+    const User = getUserModel(conn);
 
     if (ids.length > 0) {
       users = await User.find({ uid: { $in: ids } })

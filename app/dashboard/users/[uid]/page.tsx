@@ -5,7 +5,7 @@ import { getUserWithUID } from '@/services/api/client/user';
 
 interface Props {
   params: Promise<{
-    uid: number;
+    uid: string;
   }>;
 }
 

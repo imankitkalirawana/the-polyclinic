@@ -2,17 +2,13 @@ import { NextResponse } from 'next/server';
 import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
-import { connectDB } from '@/lib/db';
 import Doctor from '@/models/client/Doctor';
-import User from '@/models/User';
 
 export const GET = auth(async (request: NextAuthRequest) => {
   try {
     if (!request.auth?.user) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
-
-    await connectDB();
 
     const doctors = await Doctor.aggregate([
       {
@@ -45,52 +41,6 @@ export const GET = auth(async (request: NextAuthRequest) => {
     return NextResponse.json({
       message: 'Doctors fetched successfully',
       data: doctors,
-    });
-  } catch (error: unknown) {
-    console.error(error);
-    return NextResponse.json(
-      { message: error instanceof Error ? error.message : 'Internal Server Error' },
-      { status: 500 }
-    );
-  }
-});
-
-export const POST = auth(async (request: NextAuthRequest) => {
-  try {
-    if (!request.auth?.user) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
-
-    const data = await request.json();
-
-    const { uid, creation_type } = data;
-
-    if (creation_type === 'existing' && !uid) {
-      return NextResponse.json({ message: 'UID is required' }, { status: 400 });
-    }
-
-    await connectDB();
-
-    if (creation_type === 'existing') {
-      const user = await User.findOneAndUpdate({ uid }, { role: 'doctor' });
-
-      if (!user) {
-        return NextResponse.json({ message: 'User not found' }, { status: 404 });
-      }
-    } else {
-      // if creation_type is new then create a new user then create a new doctor
-      const user = await User.create({
-        ...data,
-        role: 'doctor',
-      });
-      data.uid = user.uid;
-    }
-
-    const doctor = await Doctor.create(data);
-
-    return NextResponse.json({
-      message: 'Doctor created successfully',
-      data: doctor,
     });
   } catch (error: unknown) {
     console.error(error);

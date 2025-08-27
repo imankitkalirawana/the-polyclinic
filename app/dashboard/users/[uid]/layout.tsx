@@ -3,7 +3,7 @@ import { HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { getUserWithUID } from '@/services/api/client/user';
 
 export default async function Layout(props: {
-  params: Promise<{ uid: number }>;
+  params: Promise<{ uid: string }>;
   children: React.ReactNode;
 }) {
   const params = await props.params;

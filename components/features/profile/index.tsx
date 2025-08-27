@@ -20,12 +20,12 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import { useSelf } from '@/hooks/queries/client/user';
-import { UserType } from '@/types/system/control-plane';
+import { UnifiedUserType } from '@/types';
 
 export default function Profile() {
   const { data } = useSelf();
 
-  const self: UserType = data || ({} as UserType);
+  const self: UnifiedUserType = data || ({} as UnifiedUserType);
 
   const formik = useFormik({
     initialValues: {

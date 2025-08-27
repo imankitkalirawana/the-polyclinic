@@ -1,55 +1,55 @@
 'use server';
+// TODO: Remove this once the types are updated
+import { $FixMe } from '@/types';
 
 import { fetchData } from '..';
-
-import { CreateUserType, UserType } from '@/types/system/control-plane';
 
 /**
  * GET APIs
  */
 
 export async function getAllUsers() {
-  return await fetchData<UserType[]>('/users');
+  return await fetchData<$FixMe[]>('/users');
 }
 
-export async function getUserWithUID(uid: number | undefined) {
-  return await fetchData<UserType>(`/users/uid/${uid}`);
+export async function getUserWithUID(uid: string | undefined) {
+  return await fetchData<$FixMe>(`/users/uid/${uid}`);
 }
 
 export async function getSelf() {
-  return await fetchData<UserType>('/users/self');
+  return await fetchData<$FixMe>('/users/self');
 }
 
 export async function getLinkedUsers() {
-  return await fetchData<UserType[]>('/users/linked');
+  return await fetchData<$FixMe[]>('/users/linked');
 }
 
-export async function getUsersByRole(role: UserType['role']) {
-  return await fetchData<UserType[]>(`/users/role/${role}`);
+export async function getUsersByRole(role: $FixMe['role']) {
+  return await fetchData<$FixMe[]>(`/users/role/${role}`);
 }
 
 /**
  * GET APIs
  */
 
-export async function createUser(user: CreateUserType) {
-  return await fetchData<UserType>('/users', {
+export async function createUser(user: $FixMe) {
+  return await fetchData<$FixMe>('/users', {
     method: 'POST',
     data: user,
   });
 }
 
 // PUT
-export async function updateUser(user: UserType) {
-  return await fetchData<UserType>(`/users/${user.uid}`, {
+export async function updateUser(user: $FixMe) {
+  return await fetchData<$FixMe>(`/users/${user.uid}`, {
     method: 'PUT',
     data: user,
   });
 }
 
 // DELETE
-export async function deleteUser(uid: number) {
-  return await fetchData<UserType>(`/users/${uid}`, {
+export async function deleteUser(uid: string) {
+  return await fetchData<$FixMe>(`/users/${uid}`, {
     method: 'DELETE',
   });
 }

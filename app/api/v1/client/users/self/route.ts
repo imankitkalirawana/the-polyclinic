@@ -3,11 +3,12 @@ import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
-import User from '@/models/User';
+import { getUserModel } from '@/models/User';
 
 export const GET = auth(async (request: NextAuthRequest) => {
   try {
-    await connectDB();
+    const conn = await connectDB();
+    const User = getUserModel(conn);
     const user = await User.findOne({
       email: request.auth?.email,
     }).select('-password');

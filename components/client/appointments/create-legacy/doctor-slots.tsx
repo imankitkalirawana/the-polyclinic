@@ -6,7 +6,7 @@ import { useAppointmentDate } from './store';
 import { SlotsPreview } from '@/components/dashboard/doctors/doctor/slots/slots-preview';
 import { useSlotsByUID } from '@/hooks/queries/client/slots';
 
-export default function DoctorSlots({ selectedDoctor }: { selectedDoctor: number }) {
+export default function DoctorSlots({ selectedDoctor }: { selectedDoctor: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const { data: slots, isLoading: isSlotsLoading } = useSlotsByUID(selectedDoctor);
 

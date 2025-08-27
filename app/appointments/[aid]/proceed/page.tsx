@@ -1,11 +1,11 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
-import Appointment from '@/components/appointments/id';
-import { getAppointmentWithAID } from '@/services/api/appointment';
+import Appointment from '@/components/client/appointments/id';
+import { getAppointmentWithAID } from '@/services/api/client/appointment';
 
 interface Props {
   params: Promise<{
-    aid: number;
+    aid: string;
   }>;
 }
 

@@ -33,7 +33,7 @@ import { castData, generateEmail, generatePhoneNumber } from '@/lib/utils';
 import { useCreateDoctor } from '@/hooks/queries/client/doctor';
 import { useAllUsers } from '@/hooks/queries/client/user';
 import { CreateDoctorType } from '@/types/client/doctor';
-import { UserType } from '@/types/system/control-plane';
+import { OrganizationUserType } from '@/types/system/organization';
 
 export default function NewDoctor() {
   const router = useRouter();
@@ -42,7 +42,7 @@ export default function NewDoctor() {
   const [inputValue, setInputValue] = useState('');
 
   const { data: usersData, isLoading: isUsersLoading } = useAllUsers();
-  const users = castData<UserType[]>(usersData) || [];
+  const users = castData<OrganizationUserType[]>(usersData) || [];
 
   // Filter users based on input value
   const filteredUsers =
@@ -147,11 +147,6 @@ export default function NewDoctor() {
               }}
               onInputChange={setInputValue}
               selectedKey={formik.values.uid}
-              description={
-                formik.values.uid
-                  ? `UID: #${users.find((user) => user.uid == formik.values.uid)?.uid}`
-                  : null
-              }
             >
               {(user) => (
                 <AutocompleteItem

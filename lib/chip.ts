@@ -1,11 +1,11 @@
+import { UnifiedUserRole, UnifiedUserType } from '@/types';
 import { AppointmentType } from '@/types/client/appointment';
 import { DrugStatus } from '@/types/client/drug';
 import { ServiceStatus, ServiceTypes } from '@/types/client/service';
-import { UserType } from '@/types/system/control-plane';
 
 export type ChipColorType =
-  | UserType['role']
-  | UserType['status']
+  | UnifiedUserRole
+  | UnifiedUserType['status']
   | ServiceStatus
   | ServiceTypes
   | DrugStatus
@@ -31,14 +31,6 @@ export const chipColorMap: Record<
     text: 'bg-pink-500',
     bg: 'bg-pink-100',
   },
-  deleted: {
-    text: 'bg-red-500',
-    bg: 'bg-red-100',
-  },
-  unverified: {
-    text: 'bg-yellow-500',
-    bg: 'bg-yellow-100',
-  },
   available: {
     text: 'bg-green-500',
     bg: 'bg-green-100',
@@ -50,6 +42,14 @@ export const chipColorMap: Record<
 
   // for roles
   superadmin: {
+    text: 'bg-red-500',
+    bg: 'bg-red-100',
+  },
+  moderator: {
+    text: 'bg-red-500',
+    bg: 'bg-red-100',
+  },
+  ops: {
     text: 'bg-red-500',
     bg: 'bg-red-100',
   },
@@ -113,11 +113,7 @@ export const chipColorMap: Record<
     text: 'bg-yellow-500',
     bg: 'bg-yellow-100',
   },
-  laboratorist: {
-    text: 'bg-indigo-500',
-    bg: 'bg-indigo-100',
-  },
-  user: {
+  patient: {
     text: 'bg-emerald-500',
     bg: 'bg-emerald-100',
   },

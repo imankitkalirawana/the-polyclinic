@@ -2,7 +2,7 @@ import EditUser from '@/components/dashboard/users/edit';
 
 interface Props {
   params: Promise<{
-    uid: number;
+    uid: string;
   }>;
 }
 

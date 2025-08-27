@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 import { useAllUsers, useDeleteUser } from '@/hooks/queries/client/user';
-import { UserType } from '@/types/system/control-plane';
+import { UnifiedUserType } from '@/types';
 
 const INITIAL_VISIBLE_COLUMNS = ['image', 'uid', 'name', 'email', 'role', 'createdAt'];
 
@@ -30,7 +30,7 @@ export default function Users() {
 
   const { data, isLoading, isError, error } = useAllUsers();
 
-  const handleDelete = async (uid: number) => {
+  const handleDelete = async (uid: string) => {
     toast.promise(deleteUser.mutateAsync(uid), {
       loading: `Deleting user ${uid}`,
       success: (data) => data.message,
@@ -39,7 +39,7 @@ export default function Users() {
   };
 
   // Define columns with render functions
-  const columns: ColumnDef<UserType>[] = useMemo(
+  const columns: ColumnDef<UnifiedUserType>[] = useMemo(
     () => [
       {
         name: 'User ID',
@@ -116,7 +116,7 @@ export default function Users() {
   );
 
   // Define filters
-  const filters: FilterDef<UserType>[] = useMemo(
+  const filters: FilterDef<UnifiedUserType>[] = useMemo(
     () => [
       {
         name: 'Role',
@@ -239,7 +239,7 @@ export default function Users() {
     </DropdownMenu>
   );
 
-  let users: UserType[] = [];
+  let users: UnifiedUserType[] = [];
   if (data) {
     users = data;
   }

@@ -12,18 +12,16 @@ export default function DoctorSelection({
   setAppointment,
   onContinue,
 }: {
-  selectedDoctor?: number;
+  selectedDoctor?: string;
   setAppointment: (key: string, value: $FixMe) => void;
   onContinue: () => void;
 }) {
   const { data: doctors, isLoading: isDoctorsLoading } = useAllDoctors();
   const { selectedDate, setSelectedDate } = useAppointmentDate();
 
-  const handleDoctorChange = (uid: number) => {
+  const handleDoctorChange = (uid: string) => {
     setAppointment('doctor', uid);
   };
-
-  console.log(selectedDoctor);
 
   return (
     <div>

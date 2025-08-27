@@ -2,13 +2,11 @@ import { useState } from 'react';
 import { Button, Card, CardBody, cn, Image, Input, Link, ScrollShadow } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import NoResults from '../../ui/no-results';
-import Skeleton from '../../ui/skeleton';
+import NoResults from '@/components/ui/no-results';
+import Skeleton from '@/components/ui/skeleton';
 
-import { CreateAppointmentType } from '@/components/appointments/create/types';
-import { DoctorType } from '@/types/client/doctor';
-import { UserType } from '@/types/system/control-plane';
 import { useDebounce } from '@/hooks/useDebounce';
+import { $FixMe } from '@/types';
 
 const SizeMap = {
   sm: {
@@ -37,11 +35,13 @@ export default function UserSelection({
   onSelectionChange,
 }: {
   id: string;
-  users: (UserType | DoctorType)[];
+  // TODO: Fix this after type is updated
+  users: $FixMe[];
   isLoading?: boolean;
-  selectedUser: CreateAppointmentType['patient'] | CreateAppointmentType['doctor'];
+  // TODO: Fix this after type is updated
+  selectedUser: $FixMe;
   size?: 'sm' | 'md' | 'lg';
-  onSelectionChange: (uid: number) => void;
+  onSelectionChange: (uid: string) => void;
 }) {
   const [query, setQuery] = useState('');
   const debounce = useDebounce(query, 500);
@@ -106,6 +106,8 @@ export default function UserSelection({
                         'border-medium border-primary-400': user.uid === selectedUser,
                       }
                     )}
+                    // TODO: Fix this after type is updated
+                    // @ts-ignore
                     onPress={() => onSelectionChange(user.uid)}
                   >
                     <CardBody className="group relative items-center justify-center gap-4 overflow-hidden p-6 hover:bg-default-50">

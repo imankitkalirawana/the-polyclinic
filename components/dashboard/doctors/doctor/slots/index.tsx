@@ -53,7 +53,7 @@ const initialValues: SlotConfig = {
   timezone: 'GMT+05:30',
 };
 
-export function AppointmentScheduler({ uid }: { uid: number }) {
+export function AppointmentScheduler({ uid }: { uid: string }) {
   const updateSlots = useUpdateSlots(uid);
   const { data: slots } = useSlotsByUID(uid);
 

@@ -7,11 +7,6 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import registerUser from '@/functions/server-actions/auth/register';
-import {
-  sendMailWithOTP,
-  verifyEmail,
-  verifyOTP,
-} from '@/functions/server-actions/auth/verification';
 
 const validationSchema = Yup.object({
   firstName: Yup.string()
@@ -76,15 +71,7 @@ export function FormProvider({ children }: { children: React.ReactNode }) {
           formik.setFieldError('otp', 'Enter a valid OTP');
           return;
         }
-        await verifyOTP(values.id, parseInt(values.otp))
-          .then(async () => {
-            await handleRegister();
-            formik.setValues({ ...values, step: 3 });
-          })
-          .catch(() => {
-            formik.setFieldError('otp', 'Invalid OTP');
-          });
-        return;
+        // TODO: Verify OTP
       }
       if (values.step === 3) {
         await handleRegister();
@@ -94,20 +81,7 @@ export function FormProvider({ children }: { children: React.ReactNode }) {
 
   const handeVerification = async () => {
     if (formik.values.id?.includes('@')) {
-      await verifyEmail(formik.values.id).then(async (res) => {
-        if (res) {
-          formik.setFieldError('id', 'Email already exists');
-        } else {
-          formik.setFieldError('id', '');
-          await sendMailWithOTP(formik.values.id)
-            .then(() => {
-              formik.setValues({ ...formik.values, step: 2 });
-            })
-            .catch((err) => {
-              formik.setFieldError('id', err.message);
-            });
-        }
-      });
+      // TODO: Verify Email
     } else {
       formik.setFieldError('id', 'Phone number not supported yet, use email instead.');
     }

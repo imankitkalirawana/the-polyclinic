@@ -3,12 +3,11 @@ import { ScrollShadow } from '@heroui/react';
 import { format } from 'date-fns';
 
 import CalendarTime from './calendar-time';
-
 import {
   generateTimeSlots,
   getDateTime,
   getTimeSlot,
-} from '@/components/appointments/create-legacy/helper';
+} from '@/components/client/appointments/create-legacy/helper';
 
 const timeSlots = generateTimeSlots();
 

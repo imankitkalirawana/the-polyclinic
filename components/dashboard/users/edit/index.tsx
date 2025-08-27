@@ -10,7 +10,7 @@ import SecuritySettings from './security-settings';
 
 import { useUserWithUID } from '@/hooks/queries/client/user';
 
-export default function EditUser({ uid }: { uid: number }) {
+export default function EditUser({ uid }: { uid: string }) {
   const [tab, setTab] = useQueryState('tab', {
     defaultValue: 'account',
   });

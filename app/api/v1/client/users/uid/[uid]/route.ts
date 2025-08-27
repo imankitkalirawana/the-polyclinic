@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 import { auth } from '@/auth';
 import { API_ACTIONS } from '@/lib/config';
 import { connectDB } from '@/lib/db';
-import User from '@/models/User';
+import { getUserModel } from '@/models/User';
 import { $FixMe } from '@/types';
 
 type Params = Promise<{
@@ -21,7 +21,8 @@ export const GET = auth(async (request: $FixMe, { params }: { params: Params }) 
         return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
       }
     }
-    await connectDB();
+    const conn = await connectDB();
+    const User = getUserModel(conn);
     const uid = parseInt((await params).uid);
     const user = await User.findOne({ uid });
     if (!user) {
@@ -48,7 +49,8 @@ export const PUT = auth(async (request: $FixMe, { params }: { params: Params }) 
     }
     const data = await request.json();
 
-    await connectDB();
+    const conn = await connectDB();
+    const User = getUserModel(conn);
     const uid = parseInt((await params).uid);
     let user = await User.findOne({ uid });
     if (!user) {
@@ -80,7 +82,8 @@ export const DELETE = auth(async (request: $FixMe, { params }: { params: Params 
         return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
       }
     }
-    await connectDB();
+    const conn = await connectDB();
+    const User = getUserModel(conn);
     const uid = parseInt((await params).uid);
 
     const user = await User.findOne({ uid });

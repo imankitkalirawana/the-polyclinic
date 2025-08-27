@@ -3,7 +3,7 @@ import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
-import User from '@/models/User';
+import { getUserModel } from '@/models/User';
 
 export const GET = auth(async (request: NextAuthRequest) => {
   try {
@@ -13,13 +13,13 @@ export const GET = auth(async (request: NextAuthRequest) => {
 
     const { email } = request.auth?.user;
 
-    await connectDB();
+    const conn = await connectDB();
+    const User = getUserModel(conn);
+
     const user = await User.findOne({ email }).select('phone').lean();
     if (!user) return NextResponse.json({ message: 'User not found' }, { status: 404 });
 
-    const users = await User.find(user?.phone ? { phone: user.phone } : { email }).select(
-      '-password'
-    );
+    const users = await User.find({ email }).select('-password');
 
     return NextResponse.json(users);
   } catch (error) {

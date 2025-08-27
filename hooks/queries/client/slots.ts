@@ -12,7 +12,7 @@ import { ApiResponse } from '../../../services/api';
 
 import { SlotConfig } from '@/types/client/slots';
 
-export const useSlotsByUID = (uid: number): UseQueryResult<SlotConfig> =>
+export const useSlotsByUID = (uid: string): UseQueryResult<SlotConfig> =>
   useQuery({
     queryKey: ['slots', uid],
     queryFn: async () => {
@@ -26,7 +26,7 @@ export const useSlotsByUID = (uid: number): UseQueryResult<SlotConfig> =>
   });
 
 export const useUpdateSlots = (
-  uid: number
+  uid: string
 ): UseMutationResult<ApiResponse<SlotConfig>, Error, SlotConfig> => {
   const queryClient = useQueryClient();
   return useMutation({

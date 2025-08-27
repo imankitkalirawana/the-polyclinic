@@ -35,8 +35,8 @@ const PatientSelection = ({ className }: { className?: string }) => {
 
   const { appointment } = formik.values;
 
-  const handlePatientSelect = (patientId: string | number) => {
-    formik.setFieldValue('appointment.patient', Number(patientId));
+  const handlePatientSelect = (patientId: string) => {
+    formik.setFieldValue('appointment.patient', patientId);
   };
 
   const handleNext = () => {
@@ -148,7 +148,7 @@ const PatientSelection = ({ className }: { className?: string }) => {
           </Button>
         </>
       }
-      endContent={<CreateAppointmentPatientDetails uid={appointment.patient ?? 0} />}
+      endContent={<CreateAppointmentPatientDetails uid={appointment.patient ?? ''} />}
     >
       <div className={cn('flex h-full w-full flex-col', className)}>
         <SearchInput

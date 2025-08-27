@@ -14,22 +14,18 @@ import {
   DatePicker,
   Form,
   Input,
-  Select,
-  SelectItem,
 } from '@heroui/react';
 import { useFormik } from 'formik';
 import { Icon } from '@iconify/react';
 import { getLocalTimeZone, today } from '@internationalized/date';
 import { I18nProvider } from '@react-aria/i18n';
 
-import { verifyEmail } from '@/functions/server-actions';
-import { Genders } from '@/lib/options';
 import { userValidationSchema } from '@/lib/validation';
 import { useUpdateUser } from '@/hooks/queries/client/user';
 import { $FixMe } from '@/types';
-import { UserType } from '@/types/system/control-plane';
+import { SystemUserType } from '@/types/system/control-plane';
 
-export default function AccountDetails({ user }: { user: UserType }) {
+export default function AccountDetails({ user }: { user: SystemUserType }) {
   const { data: session } = useSession();
   const updateUser = useUpdateUser();
 
@@ -105,9 +101,7 @@ export default function AccountDetails({ user }: { user: UserType }) {
           name="email"
           value={formik.values.email}
           onBlur={async () => {
-            if (await verifyEmail(formik.values.email, formik.values.uid)) {
-              formik.setFieldError('email', 'Email already exists');
-            }
+            // TODO: Implement email verification
           }}
           onChange={(e) => {
             if (allowedRoles.includes(session?.user?.role || 'user')) {
@@ -165,18 +159,6 @@ export default function AccountDetails({ user }: { user: UserType }) {
           isInvalid={!!(formik.touched.phone && formik.errors.phone)}
           errorMessage={formik.touched.phone && formik.errors.phone}
         />
-        <Select
-          label="Gender"
-          placeholder="Select Gender"
-          selectedKeys={[formik.values.gender]}
-          name="gender"
-          onChange={formik.handleChange}
-          isInvalid={!!(formik.touched.gender && formik.errors.gender)}
-          errorMessage={formik.touched.gender && formik.errors.gender}
-          items={Genders}
-        >
-          {(item) => <SelectItem key={item.value}>{item.label}</SelectItem>}
-        </Select>
 
         {/* DOB */}
         <I18nProvider locale="en-IN">
@@ -196,26 +178,6 @@ export default function AccountDetails({ user }: { user: UserType }) {
             showMonthAndYearPickers
           />
         </I18nProvider>
-
-        <Input
-          label="Address"
-          placeholder="Enter address"
-          value={formik.values.address}
-          onChange={formik.handleChange}
-          name="address"
-          isInvalid={!!(formik.touched.address && formik.errors.address)}
-          errorMessage={formik.touched.address && formik.errors.address}
-        />
-        {/* Zip Code */}
-        <Input
-          label="Zip Code"
-          placeholder="Enter zip code"
-          value={formik.values.zipcode}
-          onChange={formik.handleChange}
-          name="zipcode"
-          isInvalid={!!(formik.touched.zipcode && formik.errors.zipcode)}
-          errorMessage={formik.touched.zipcode && formik.errors.zipcode}
-        />
       </CardBody>
 
       <CardFooter className="mt-4 justify-end gap-2">

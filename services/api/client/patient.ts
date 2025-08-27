@@ -1,12 +1,13 @@
 'use server';
 
+// TODO: Remove this once the types are updated
+import { $FixMe } from '@/types';
 import { AppointmentType } from '@/types/client/appointment';
 import { fetchData, fetchDataWithPagination } from '..';
-import { UserType } from '@/types/system/control-plane';
 import { NewPatientFormValues } from '@/types/client/patient';
 
 export async function getAllPatients() {
-  return await fetchData<UserType[]>('/patients');
+  return await fetchData<$FixMe[]>('/patients');
 }
 
 export async function getPatientsWithPagination(params: {
@@ -14,15 +15,15 @@ export async function getPatientsWithPagination(params: {
   limit?: number;
   search?: string;
 }) {
-  return await fetchDataWithPagination<UserType>('/patients', params);
+  return await fetchDataWithPagination<$FixMe>('/patients', params);
 }
 
-export async function getPreviousAppointments(uid: number) {
+export async function getPreviousAppointments(uid: string) {
   return await fetchData<AppointmentType[]>(`/patients/${uid}/appointments`);
 }
 
 export async function createPatient(patient: NewPatientFormValues) {
-  return await fetchData<UserType>('/patients', {
+  return await fetchData<$FixMe>('/patients', {
     method: 'POST',
     data: patient,
   });

@@ -11,7 +11,7 @@ export default function CreateAppointmentSelectedPreviousAppointment() {
   const { values } = useFormikContext<CreateAppointmentFormValues>();
   const { appointment } = values;
 
-  const { data } = useAppointmentWithAID(appointment.previousAppointment ?? 0);
+  const { data } = useAppointmentWithAID(appointment.previousAppointment ?? '');
   const previousAppointment = castData<AppointmentType>(data);
 
   return (

@@ -13,9 +13,12 @@ import {
   ScrollShadow,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
+import { $FixMe } from '@/types';
 
-export const CreateAppointmentPatientDetails = ({ uid }: { uid: number }) => {
-  const { data: user, isLoading, isError } = useUserWithUID(uid);
+export const CreateAppointmentPatientDetails = ({ uid }: { uid: string }) => {
+  // TODO: Fix this once the user details are fetched from the backend
+  const { isLoading, isError } = useUserWithUID(uid);
+  const user = {} as $FixMe;
 
   if (isLoading)
     return (
@@ -133,7 +136,6 @@ export const CreateAppointmentPatientDetails = ({ uid }: { uid: number }) => {
           </div>
         </div>
 
-        {/* Personal Information */}
         {(user.dob || user.gender) && (
           <>
             <Divider />

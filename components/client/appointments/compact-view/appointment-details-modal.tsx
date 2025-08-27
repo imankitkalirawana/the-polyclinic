@@ -109,9 +109,9 @@ export default function AppointmentDetailsModal() {
       },
     },
     {
-      label: session?.user?.role === 'user' ? 'Cancel' : 'Decline',
+      label: session?.user?.role === 'patient' ? 'Cancel' : 'Decline',
       description:
-        session?.user?.role === 'user' ? 'Cancel the appointment' : 'Decline the appointment',
+        session?.user?.role === 'patient' ? 'Cancel the appointment' : 'Decline the appointment',
       icon: 'solar:close-circle-bold-duotone',
       key: 'cancel',
       color: 'danger',

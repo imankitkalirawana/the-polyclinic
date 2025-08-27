@@ -1,13 +1,8 @@
 'use server';
 
-import User, { getUserModel } from '@/models/User';
+import { getUserModel } from '@/models/User';
 import { connectDB } from '../db';
 import { getOrganizationModel } from '@/models/system/Organization';
-
-export const validateEmail = async (email: string) => {
-  const user = await User.findOne({ email });
-  return !!user;
-};
 
 // validate organization id
 export const validateOrganizationId = async (id: string) => {

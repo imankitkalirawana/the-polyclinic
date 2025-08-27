@@ -11,15 +11,16 @@ import {
   getAllPatients,
   getPatientsWithPagination,
   getPreviousAppointments,
-} from '../../../services/api/client/patient';
+} from '@/services/api/client/patient';
 import { useInfiniteQueryWithSearch } from './infinite-query';
-import { UserType } from '@/types/system/control-plane';
+// TODO: Remove this once the types are updated
+import { $FixMe } from '@/types';
 import { AppointmentType } from '@/types/client/appointment';
 import { NewPatientFormValues } from '@/types/client/patient';
 import { ApiResponse } from '../../../services/api';
 import { addToast } from '@heroui/react';
 
-export const useAllPatients = (): UseQueryResult<UserType[]> =>
+export const useAllPatients = (): UseQueryResult<$FixMe[]> =>
   useQuery({
     queryKey: ['patients'],
     queryFn: async () => {
@@ -44,7 +45,7 @@ export const usePatientsInfiniteQuery = (search: string = '') => {
   });
 };
 
-export const usePreviousAppointments = (uid: number): UseQueryResult<AppointmentType[]> =>
+export const usePreviousAppointments = (uid: string): UseQueryResult<AppointmentType[]> =>
   useQuery({
     queryKey: ['previous-appointments', uid],
     queryFn: async () => {
@@ -58,7 +59,7 @@ export const usePreviousAppointments = (uid: number): UseQueryResult<Appointment
   });
 
 export const useCreatePatient = (): UseMutationResult<
-  ApiResponse<UserType>,
+  ApiResponse<$FixMe>,
   Error,
   NewPatientFormValues
 > => {
@@ -71,7 +72,7 @@ export const useCreatePatient = (): UseMutationResult<
       }
       throw new Error(res.message);
     },
-    onSuccess: (data: ApiResponse<UserType>) => {
+    onSuccess: (data: ApiResponse<$FixMe>) => {
       addToast({
         title: data.message,
         color: 'success',

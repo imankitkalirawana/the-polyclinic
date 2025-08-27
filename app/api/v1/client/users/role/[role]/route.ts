@@ -3,8 +3,9 @@ import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
-import User from '@/models/User';
+import { getUserModel } from '@/models/User';
 import { $FixMe } from '@/types';
+import { OrganizationUserRole } from '@/types/system/organization';
 
 export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
@@ -20,9 +21,10 @@ export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
     //   admin: [],
     // };
 
-    await connectDB();
+    const conn = await connectDB();
+    const User = getUserModel(conn);
 
-    const users = await User.find({ role }).select('-password');
+    const users = await User.find({ role: role as OrganizationUserRole }).select('-password');
 
     return NextResponse.json(users);
   } catch (error: unknown) {

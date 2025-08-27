@@ -1,9 +1,9 @@
 import { NextAuthRequest } from 'next-auth';
 import { NextResponse } from 'next/server';
-import User from '@/models/User';
 import { auth } from '@/auth';
-import { UserType } from '@/types/system/control-plane';
 import { connectDB } from '@/lib/db';
+import { getUserModel } from '@/models/User';
+import { OrganizationUserRole } from '@/types/system/organization';
 
 export const GET = auth(async (req: NextAuthRequest) => {
   try {
@@ -14,9 +14,9 @@ export const GET = auth(async (req: NextAuthRequest) => {
     const email = req.auth.user.email;
     const role = req.auth.user.role;
 
-    const ALLOWED_ROLES = ['admin', 'receptionist', 'user'];
+    const ALLOWED_ROLES = ['admin', 'receptionist', 'patient'];
 
-    type UserRoleType = Extract<UserType['role'], 'admin' | 'receptionist' | 'user'>;
+    type UserRoleType = Extract<OrganizationUserRole, 'admin' | 'receptionist' | 'patient'>;
 
     if (!ALLOWED_ROLES.includes(role)) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -36,7 +36,7 @@ export const GET = auth(async (req: NextAuthRequest) => {
         role: 'user',
         status: { $in: ['active', 'unverified'] },
       },
-      user: {
+      patient: {
         email,
         role: 'user',
         status: { $in: ['active', 'unverified'] },
@@ -57,7 +57,8 @@ export const GET = auth(async (req: NextAuthRequest) => {
       };
     }
 
-    await connectDB();
+    const conn = await connectDB();
+    const User = getUserModel(conn);
 
     const finalQuery = { ...queryMap[role as UserRoleType], ...searchQuery };
 
@@ -94,6 +95,9 @@ export const GET = auth(async (req: NextAuthRequest) => {
 
 export const POST = auth(async (req: NextAuthRequest) => {
   try {
+    const conn = await connectDB();
+    const User = getUserModel(conn);
+
     if (!req.auth?.user) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }

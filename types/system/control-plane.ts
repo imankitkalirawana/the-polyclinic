@@ -1,6 +1,6 @@
 import { Base } from '@/lib/interface';
 import { ValuesOf } from '@/lib/utils';
-import { OrganizationUserType } from './organization';
+import { UnifiedUserRole } from '..';
 
 export const systemUserStatuses = ['active', 'inactive', 'blocked'] as const;
 export const systemUserRoles = ['superadmin', 'moderator', 'ops'] as const;
@@ -20,7 +20,7 @@ export interface AuthUser {
   user?: {
     name: string;
     email: string;
-    role: SystemUserType['role'] | OrganizationUserType['role'];
+    role: UnifiedUserRole;
     id: string;
     uid: string;
     image: string;

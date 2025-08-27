@@ -1,4 +1,3 @@
-import { getAppointmentsWithDetails } from './../../../../helpers/api/appointments/index';
 import { NextResponse } from 'next/server';
 import { NextAuthRequest } from 'next-auth';
 
@@ -6,7 +5,8 @@ import { auth } from '@/auth';
 import { API_ACTIONS } from '@/lib/config';
 import { connectDB } from '@/lib/db';
 import Appointment from '@/models/client/Appointment';
-import { UserType } from '@/types/system/control-plane';
+import { OrganizationUserRole } from '@/types/system/organization';
+import { getAppointmentsWithDetails } from '@/helpers/client/appointments';
 
 export const GET = auth(async (request: NextAuthRequest) => {
   try {
@@ -17,10 +17,7 @@ export const GET = auth(async (request: NextAuthRequest) => {
     }
 
     const role = request.auth?.user?.role;
-    const queryMap: Record<UserType['role'], { $match: Record<string, unknown> }> = {
-      superadmin: {
-        $match: {},
-      },
+    const queryMap: Record<OrganizationUserRole, { $match: Record<string, unknown> }> = {
       admin: {
         $match: {},
       },
@@ -30,14 +27,13 @@ export const GET = auth(async (request: NextAuthRequest) => {
       receptionist: {
         $match: {},
       },
-      user: { $match: { patient: request.auth?.user?.uid } },
+      patient: { $match: { patient: request.auth?.user?.uid } },
       nurse: { $match: {} },
       pharmacist: { $match: {} },
-      laboratorist: { $match: {} },
     };
 
     const appointments = await getAppointmentsWithDetails({
-      query: queryMap[role],
+      query: queryMap[role as OrganizationUserRole],
       isStage: true,
     });
 

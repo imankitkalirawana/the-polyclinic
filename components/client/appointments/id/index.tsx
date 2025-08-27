@@ -19,8 +19,8 @@ import { format } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 import Loading from '@/app/loading';
-import CancelDeleteAppointment from '@/components/appointments/ui/cancel-delete';
-import RescheduleAppointment from '@/components/appointments/ui/reschedule-modal'; // Ensure this path is correct
+import CancelDeleteAppointment from '@/components/client/appointments/ui/cancel-delete';
+import RescheduleAppointment from '@/components/client/appointments/ui/reschedule-modal'; // Ensure this path is correct
 import ActivityTimeline from '@/components/ui/activity/timeline';
 import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
 import { CellRenderer } from '@/components/ui/cell-renderer';
@@ -30,7 +30,7 @@ import { useAppointmentWithAID } from '@/hooks/queries/client/appointment';
 import { useAppointmentStore } from '@/store/appointment';
 import { AppointmentType } from '@/types/client/appointment';
 
-export default function Appointment({ aid }: { aid: number }) {
+export default function Appointment({ aid }: { aid: string }) {
   const { action, setAction, setAppointment } = useAppointmentStore();
   const { data, isLoading, isError, error } = useAppointmentWithAID(aid);
 

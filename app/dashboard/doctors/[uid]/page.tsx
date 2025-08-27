@@ -11,7 +11,7 @@ interface Props {
 
 export default async function DashboardDoctorPage(props: Props) {
   const params = await props.params;
-  const uid = Number(params.uid);
+  const uid = params.uid;
 
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({

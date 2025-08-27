@@ -106,7 +106,7 @@ MeetDirections.displayName = 'MeetDirections';
 // Extracted shared content component
 const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType }) => {
   const { data: previousAppointment, isLoading } = useAppointmentWithAID(
-    appointment?.previousAppointment || 0
+    appointment?.previousAppointment || ''
   );
 
   const patientDescription = useMemo(() => {

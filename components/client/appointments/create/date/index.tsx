@@ -58,7 +58,7 @@ function SlotContent({
   selectedDate,
   onDateSelect,
 }: {
-  doctorId: number;
+  doctorId: string;
   selectedDate: Date | undefined;
   onDateSelect: (date: Date) => void;
 }) {

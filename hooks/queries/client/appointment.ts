@@ -28,7 +28,7 @@ export const useAllAppointments = (): UseQueryResult<AppointmentType[]> =>
     },
   });
 
-export const useAppointmentWithAID = (aid: number): UseQueryResult<AppointmentType> =>
+export const useAppointmentWithAID = (aid: string): UseQueryResult<AppointmentType> =>
   useQuery({
     queryKey: ['appointment', aid],
     queryFn: async () => {

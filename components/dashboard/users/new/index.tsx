@@ -35,7 +35,7 @@ import {
 } from '@/hooks/queries/system/external';
 import { useCreateUser } from '@/hooks/queries/client/user';
 import { $FixMe, CityProps, CountryProps, StateProps } from '@/types';
-import { CreateUserType, userRoles } from '@/types/system/control-plane';
+import { organizationUserRoles } from '@/types/system/organization';
 
 export default function NewUser() {
   const router = useRouter();
@@ -45,12 +45,24 @@ export default function NewUser() {
   const { data: countriesData, isLoading: isCountriesLoading } = useAllCountries();
   const countries: CountryProps[] = countriesData || [];
 
+  // TODO: Define the create user type
   const formik = useFormik({
     initialValues: {
-      role: 'user',
-    } as CreateUserType,
+      name: '',
+      email: '',
+      phone: '',
+      gender: '',
+      dob: '',
+      country: '',
+      state: '',
+      city: '',
+      address: '',
+      zipcode: '',
+      role: 'patient',
+    },
     validationSchema: userValidationSchema,
     onSubmit: async (values) => {
+      //  @ts-ignore - TODO: Define the create user type
       await createUser.mutateAsync(values).then(() => {
         router.push('/dashboard/users');
       });
@@ -109,7 +121,7 @@ export default function NewUser() {
             value={formik.values.name}
             onChange={formik.handleChange}
             isInvalid={!!(formik.touched.name && formik.errors.name)}
-            errorMessage={formik.touched.name && formik.errors.name}
+            errorMessage={formik.errors.name}
           />
           <Input
             isRequired
@@ -194,7 +206,7 @@ export default function NewUser() {
               onChange={formik.handleChange}
               isInvalid={!!(formik.touched.role && formik.errors.role)}
               errorMessage={formik.touched.role && formik.errors.role}
-              items={userRoles.map((role) => ({
+              items={organizationUserRoles.map((role) => ({
                 label: toCapitalCase(role),
                 value: role,
               }))}

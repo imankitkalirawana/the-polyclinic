@@ -1,11 +1,11 @@
 import React from 'react';
 import { addToast } from '@heroui/react';
 
-import CancelDeleteAppointment from '@/components/appointments/ui/cancel-delete';
-import RescheduleAppointment from '@/components/appointments/ui/reschedule-modal';
 import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
 import { AppointmentType, ButtonConfig } from '@/types/client/appointment';
-import { UserType } from '@/types/system/control-plane';
+import { $FixMe } from '@/types';
+import CancelDeleteAppointment from '@/components/client/appointments/ui/cancel-delete';
+import RescheduleAppointment from '@/components/client/appointments/ui/reschedule-modal';
 
 export const APPOINTMENT_BUTTON_CONFIGS: ButtonConfig[] = [
   {
@@ -17,7 +17,7 @@ export const APPOINTMENT_BUTTON_CONFIGS: ButtonConfig[] = [
     position: 'left',
     visibilityRules: {
       statuses: ['booked', 'confirmed', 'in-progress'],
-      roles: ['user', 'doctor'],
+      roles: ['patient', 'doctor'],
     },
     action: {
       type: 'store-action',
@@ -35,7 +35,7 @@ export const APPOINTMENT_BUTTON_CONFIGS: ButtonConfig[] = [
     isIconOnly: true,
     visibilityRules: {
       statuses: ['booked', 'confirmed', 'in-progress', 'on-hold', 'overdue'],
-      roles: ['user', 'receptionist', 'admin'],
+      roles: ['patient', 'receptionist', 'admin'],
       custom: (appointment) => appointment.status !== 'in-progress',
     },
     action: {
@@ -78,7 +78,7 @@ export const APPOINTMENT_BUTTON_CONFIGS: ButtonConfig[] = [
     position: 'right',
     visibilityRules: {
       statuses: ['booked', 'confirmed', 'in-progress', 'on-hold', 'overdue'],
-      roles: ['user', 'doctor', 'receptionist', 'admin'],
+      roles: ['patient', 'doctor', 'receptionist', 'admin'],
       custom: (appointment) =>
         appointment.status === 'booked' ||
         appointment.status === 'confirmed' ||
@@ -112,7 +112,7 @@ export const APPOINTMENT_BUTTON_CONFIGS: ButtonConfig[] = [
 export const isButtonVisible = (
   config: ButtonConfig,
   appointment: AppointmentType | null,
-  role: UserType['role']
+  role: $FixMe['role']
 ): boolean => {
   if (!appointment) return false;
 

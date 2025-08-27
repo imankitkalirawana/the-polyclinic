@@ -1,7 +1,7 @@
 import { unauthorized } from 'next/navigation';
 
 import { auth } from '@/auth';
-import CreateAppointment from '@/components/appointments/create';
+import CreateAppointment from '@/components/client/appointments/create';
 
 export default async function CreateAppointmentPage() {
   const session = await auth();

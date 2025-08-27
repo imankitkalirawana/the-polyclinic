@@ -9,7 +9,7 @@ interface DoctorSlotsPageProps {
 
 export default async function DoctorSlotsPage(props: DoctorSlotsPageProps) {
   const params = await props.params;
-  const uid = Number(params.uid);
+  const uid = params.uid;
 
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({

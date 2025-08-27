@@ -6,7 +6,7 @@ import { useRouter } from 'nextjs-toploader/app';
 import { Button, DropdownItem, DropdownMenu, Selection, Tooltip } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import CancelDeleteAppointments from '../../appointments/ui/bulk-cancel-delete';
+import CancelDeleteAppointments from '@/components/client/appointments/ui/bulk-cancel-delete';
 import { AppointmentQuickLook } from './quicklook';
 
 import { Table } from '@/components/ui/data-table';

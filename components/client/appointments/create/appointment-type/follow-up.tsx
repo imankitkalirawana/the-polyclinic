@@ -91,7 +91,7 @@ export default function CreateAppointmentFollowUp() {
   const { values } = useFormikContext<CreateAppointmentFormValues>();
   const { appointment } = values;
 
-  const { data: appointments, isLoading } = usePreviousAppointments(appointment.patient ?? 0);
+  const { data: appointments, isLoading } = usePreviousAppointments(appointment.patient ?? '');
 
   if (isLoading) {
     return (

@@ -2,14 +2,14 @@ import { Avatar, Card } from '@heroui/react';
 import { cn } from '@heroui/react';
 
 interface SelectionCardProps {
-  id: string | number;
+  id: string;
   image?: string;
   title: string;
   subtitle?: string;
   isSelected: boolean;
   isDisabled?: boolean;
   disabledTitle?: string;
-  onSelect: (id: string | number) => void;
+  onSelect: (id: string) => void;
   className?: string;
 }
 

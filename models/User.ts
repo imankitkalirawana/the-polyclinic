@@ -1,5 +1,4 @@
-import { UnifiedUserRole } from '@/types';
-import mongoose, { Connection, Model } from 'mongoose';
+import mongoose, { Connection } from 'mongoose';
 import { auth } from '@/auth';
 import { generateUid } from './client/Counter';
 
@@ -71,10 +70,6 @@ userSchema.pre(['findOneAndUpdate', 'updateOne', 'updateMany'], async function (
   });
   next();
 });
-
-const User: Model<UnifiedUserRole> =
-  mongoose.models.User || mongoose.model<UnifiedUserRole>('User', userSchema);
-export default User;
 
 export const getUserModel = (conn: Connection) => {
   return conn.models.User || conn.model('user', userSchema);

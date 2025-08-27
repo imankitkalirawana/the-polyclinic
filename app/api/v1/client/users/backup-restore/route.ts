@@ -3,7 +3,7 @@ import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
-import User from '@/models/User';
+import { getUserModel } from '@/models/User';
 import { $FixMe } from '@/types';
 
 export const GET = auth(async (request: NextAuthRequest) => {
@@ -12,7 +12,9 @@ export const GET = auth(async (request: NextAuthRequest) => {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    await connectDB();
+    const conn = await connectDB();
+    const User = getUserModel(conn);
+
     const users = await User.find().lean(); // Fetch all users
 
     const json = JSON.stringify(users, null, 2);
@@ -51,7 +53,8 @@ export const POST = auth(async (request: $FixMe) => {
     const text = await file.text();
     const users = JSON.parse(text);
 
-    await connectDB();
+    const conn = await connectDB();
+    const User = getUserModel(conn);
 
     if (fresh) await User.deleteMany({});
 

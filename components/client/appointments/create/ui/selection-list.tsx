@@ -5,7 +5,7 @@ import { RefObject } from 'react';
 import SelectionCard from './selection-card';
 
 interface SelectionItem {
-  id: string | number;
+  id: string;
   image?: string;
   title: string;
   subtitle?: string;
@@ -14,8 +14,8 @@ interface SelectionItem {
 
 interface SelectionListProps {
   items: SelectionItem[];
-  selectedId?: string | number;
-  onSelect: (id: string | number) => void;
+  selectedId?: string;
+  onSelect: (id: string) => void;
   isDisabled?: boolean;
   disabledTitle?: string;
   emptyMessage?: string;

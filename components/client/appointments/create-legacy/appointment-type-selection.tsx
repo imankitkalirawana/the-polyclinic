@@ -14,9 +14,9 @@ export default function AppointmentTypeSelection({
   onContinue,
 }: {
   appointmentType: AppointmentType['type'];
-  previousAppointment?: AppointmentType['aid'];
+  previousAppointment?: string;
   setAppointmentType: (type: AppointmentType['type']) => void;
-  setPreviousAppointment?: (aid?: AppointmentType['aid']) => void;
+  setPreviousAppointment?: (aid?: string) => void;
   onContinue: () => void;
 }) {
   const { data } = useAllAppointments();
@@ -70,7 +70,7 @@ export default function AppointmentTypeSelection({
                   as={ScrollShadow}
                   orientation="horizontal"
                   value={previousAppointment?.toString()}
-                  onValueChange={(value) => setPreviousAppointment?.(parseInt(value))}
+                  onValueChange={(value) => setPreviousAppointment?.(value)}
                 >
                   {filteredAppointments.map((appointment) => (
                     <CustomRadio
@@ -114,7 +114,7 @@ export function AppointmentTypeSelectionTitle({
   previousAppointment,
 }: {
   appointmentType: AppointmentType['type'];
-  previousAppointment?: AppointmentType['aid'];
+  previousAppointment?: string;
 }) {
   return (
     <h3 className="text-2xl font-semibold">

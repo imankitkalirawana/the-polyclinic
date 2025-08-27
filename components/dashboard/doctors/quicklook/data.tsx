@@ -18,7 +18,7 @@ import { DoctorType } from '@/types/client/doctor';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
   doctor: ['cancel', 'reschedule', 'reminder', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
-  user: ['cancel', 'reschedule', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
+  patient: ['cancel', 'reschedule', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
   admin: 'all',
   nurse: ['cancel', 'reschedule'],
   receptionist: ['cancel', 'reschedule', 'reminder'],

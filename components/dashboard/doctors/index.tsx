@@ -39,7 +39,7 @@ export default function Doctors() {
 
   const { data, isLoading, isError, error } = useAllDoctors();
 
-  const handleDelete = async (uid: number) => {
+  const handleDelete = async (uid: string) => {
     toast.promise(deleteDoctor.mutateAsync(uid), {
       loading: `Deleting doctor ${uid}`,
       success: (data) => data.message,

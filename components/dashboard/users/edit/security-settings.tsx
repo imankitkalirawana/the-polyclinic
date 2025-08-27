@@ -28,20 +28,14 @@ import { Icon } from '@iconify/react';
 import CellWrapper from './cell-wrapper';
 import SwitchCell from './switch-cell';
 
-import {
-  changePassword,
-  sendMailWithOTP,
-  verifyEmail,
-  verifyOTP,
-} from '@/functions/server-actions';
 import { UserRoles } from '@/lib/options';
-import { UserType } from '@/types/system/control-plane';
+import { SystemUserType } from '@/types/system/control-plane';
 
 export default function SecuritySettings({
   user,
   refetch,
 }: {
-  user: UserType;
+  user: SystemUserType;
   refetch: () => void;
 }) {
   const editEmailModal = useDisclosure();
@@ -77,54 +71,7 @@ export default function SecuritySettings({
         emailFormik.setFieldError('email', 'Please enter a different email.');
         return;
       }
-      if (values.isSent) {
-        await verifyOTP(values?.email as string, parseInt(values.otp))
-          .then(async () => {
-            await axios
-              .put(`/api/v1/users/uid/${user?.uid}`, {
-                email: values.email,
-              })
-              .then(() => {
-                refetch();
-                addToast({
-                  title: 'Email updated successfully',
-                  color: 'success',
-                });
-                editEmailModal.onClose();
-              })
-              .catch((err) => {
-                addToast({
-                  title: 'Error',
-                  description: err.message,
-                  color: 'danger',
-                });
-              });
-          })
-          .catch((err) => {
-            emailFormik.setFieldError('otp', err.message);
-          });
-      } else {
-        if (await verifyEmail(values.email as string, user?.uid)) {
-          emailFormik.setFieldError('email', 'Email already exists.');
-          return;
-        }
-        await sendMailWithOTP(values?.email as string, mailOptions)
-          .then(() => {
-            emailFormik.setFieldValue('isSent', true);
-            addToast({
-              title: 'OTP sent successfully',
-              color: 'success',
-            });
-          })
-          .catch((err) => {
-            addToast({
-              title: 'Error',
-              description: err.message,
-              color: 'danger',
-            });
-            console.error(err);
-          });
-      }
+      //  TODO: Implement verify OTP
     },
   });
 
@@ -142,24 +89,8 @@ export default function SecuritySettings({
         .oneOf([Yup.ref('password'), null], 'Passwords must match.')
         .required('Please confirm your password.'),
     }),
-    onSubmit: async (values) => {
-      await changePassword(user?._id as string, values.password)
-        .then(() => {
-          refetch();
-          addToast({
-            title: 'Password updated successfully',
-            color: 'success',
-          });
-          editPasswordModal.onClose();
-          passwordFormik.resetForm();
-        })
-        .catch((err) => {
-          addToast({
-            title: 'Error',
-            description: err.message,
-            color: 'danger',
-          });
-        });
+    onSubmit: async () => {
+      // TODO: Implement password change
     },
   });
 
@@ -223,7 +154,7 @@ export default function SecuritySettings({
         .then(() => {
           refetch();
           addToast({
-            title: `Account ${user.status === 'deleted' ? 'recovered' : 'deleted'} successfully.`,
+            title: `Account ${user.status === 'blocked' ? 'recovered' : 'deleted'} successfully.`,
             color: 'success',
           });
           deleteModal.onClose();
@@ -382,18 +313,18 @@ export default function SecuritySettings({
           {/* Delete Account */}
           <CellWrapper>
             <div>
-              <p>{user.status === 'deleted' ? 'Recover' : 'Delete'} Account</p>
+              <p>{user.status === 'blocked' ? 'Recover' : 'Delete'} Account</p>
               <p className="text-small text-default-500">
-                {user.status === 'deleted' ? 'Recover' : 'Delete'} your account and all your data.
+                {user.status === 'blocked' ? 'Recover' : 'Delete'} your account and all your data.
               </p>
             </div>
             <Button
-              color={user.status === 'deleted' ? 'success' : 'danger'}
+              color={user.status === 'blocked' ? 'success' : 'danger'}
               radius="full"
               variant="flat"
               onPress={deleteModal.onOpen}
             >
-              {user.status === 'deleted' ? 'Recover' : 'Delete'}
+              {user.status === 'blocked' ? 'Recover' : 'Delete'}
             </Button>
           </CellWrapper>
         </CardBody>
@@ -423,23 +354,7 @@ export default function SecuritySettings({
               isDisabled={emailFormik.isSubmitting}
               isLoading={emailFormik.values.isResending}
               onPress={async () => {
-                emailFormik.setFieldValue('isResending', true);
-                await sendMailWithOTP(emailFormik.values.email as string, mailOptions)
-                  .then(() => {
-                    addToast({
-                      title: 'OTP sent successfully',
-                      color: 'success',
-                    });
-                  })
-                  .catch((err) => {
-                    addToast({
-                      title: 'Error',
-                      description: err.message,
-                      color: 'danger',
-                    });
-                    console.error(err);
-                  });
-                emailFormik.setFieldValue('isResending', false);
+                // TODO: Implement resend OTP
               }}
             >
               Resend OTP
@@ -566,7 +481,7 @@ export default function SecuritySettings({
 
       <EditModal
         header={{
-          title: user.status === 'deleted' ? 'Recover' : 'Delete',
+          title: user.status === 'blocked' ? 'Recover' : 'Delete',
           subtitle: (
             <>
               Enter the email address <strong>{user.email}</strong> to continue:
@@ -576,13 +491,13 @@ export default function SecuritySettings({
         editEmailModal={deleteModal}
         button={
           <Button
-            color={user.status === 'deleted' ? 'success' : 'danger'}
+            color={user.status === 'blocked' ? 'success' : 'danger'}
             fullWidth
             onPress={() => deleteFormik.handleSubmit()}
             isLoading={deleteFormik.isSubmitting}
             isDisabled={deleteFormik.values.email !== user.email}
           >
-            {user.status === 'deleted' ? 'Recover Account' : 'Delete Account'}
+            {user.status === 'blocked' ? 'Recover Account' : 'Delete Account'}
           </Button>
         }
         content={

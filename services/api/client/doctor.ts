@@ -16,7 +16,7 @@ export async function getDoctorsWithPagination(params: {
   return await fetchDataWithPagination<DoctorType>('/doctors', params);
 }
 
-export async function getDoctor(uid: number) {
+export async function getDoctor(uid: string) {
   return await fetchData<DoctorType>(`/doctors/${uid}`);
 }
 
@@ -27,14 +27,14 @@ export async function createDoctor(doctor: CreateDoctorType) {
   });
 }
 
-export async function updateDoctor(uid: number, data: Partial<DoctorType>) {
+export async function updateDoctor(uid: string, data: Partial<DoctorType>) {
   return await fetchData<DoctorType>(`/doctors/${uid}`, {
     method: 'PUT',
     data,
   });
 }
 
-export async function deleteDoctor(uid: number) {
+export async function deleteDoctor(uid: string) {
   return await fetchData<DoctorType>(`/doctors/${uid}`, {
     method: 'DELETE',
   });

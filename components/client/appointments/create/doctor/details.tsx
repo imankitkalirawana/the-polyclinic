@@ -186,7 +186,7 @@ export const CreateAppointmentDoctorDetails = ({ doctor }: { doctor?: DoctorType
         )}
 
         {/* Practice Information */}
-        {(doctor.seating || doctor.patients) && (
+        {doctor.seating && (
           <>
             <Divider />
             <div>
@@ -201,17 +201,6 @@ export const CreateAppointmentDoctorDetails = ({ doctor }: { doctor?: DoctorType
                     value={doctor.seating}
                     classNames={{
                       icon: 'text-indigo-500 bg-indigo-100',
-                    }}
-                  />
-                )}
-
-                {doctor.patients && (
-                  <CellRenderer
-                    icon="solar:users-group-two-rounded-bold-duotone"
-                    label="Total Patients"
-                    value={doctor.patients.toString()}
-                    classNames={{
-                      icon: 'text-cyan-500 bg-cyan-100',
                     }}
                   />
                 )}

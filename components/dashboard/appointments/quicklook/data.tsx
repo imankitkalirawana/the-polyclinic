@@ -12,8 +12,6 @@ import {
 import { format } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import CancelDeleteAppointment from '@/components/appointments/ui/cancel-delete';
-import RescheduleAppointment from '@/components/appointments/ui/reschedule-modal';
 import ActivityTimeline from '@/components/ui/activity/timeline';
 import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
 import { ButtonProps, PermissionProps } from '@/components/ui/dashboard/quicklook/types';
@@ -21,11 +19,13 @@ import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { avatars } from '@/lib/avatar';
 import { useAppointmentStore } from '@/store/appointment';
 import { ActionType, AppointmentType, DropdownKeyType } from '@/types/client/appointment';
-import { UserType } from '@/types/system/control-plane';
+import { OrganizationUserRole } from '@/types/system/organization';
+import CancelDeleteAppointment from '@/components/client/appointments/ui/cancel-delete';
+import RescheduleAppointment from '@/components/client/appointments/ui/reschedule-modal';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
   doctor: ['cancel', 'reschedule', 'reminder', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
-  user: ['cancel', 'reschedule', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
+  patient: ['cancel', 'reschedule', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
   admin: 'all',
   nurse: ['cancel', 'reschedule'],
   receptionist: ['cancel', 'reschedule', 'reminder'],
@@ -202,7 +202,7 @@ export const useAppointmentButtons = ({
   role,
 }: {
   appointment: AppointmentType | null;
-  role: UserType['role'] | 'user';
+  role: OrganizationUserRole;
 }) => {
   const { setAction } = useAppointmentStore();
 

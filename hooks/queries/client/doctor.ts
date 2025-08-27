@@ -29,7 +29,7 @@ export const useAllDoctors = (): UseQueryResult<DoctorType[]> =>
     },
   });
 
-export const useDoctorWithUID = (uid: number): UseQueryResult<DoctorType> =>
+export const useDoctorWithUID = (uid: string): UseQueryResult<DoctorType> =>
   useQuery({
     queryKey: ['doctor', uid],
     queryFn: async () => {
@@ -72,10 +72,10 @@ export const useCreateDoctor = (): UseMutationResult<
   });
 };
 
-export const useDeleteDoctor = (): UseMutationResult<ApiResponse<DoctorType>, Error, number> => {
+export const useDeleteDoctor = (): UseMutationResult<ApiResponse<DoctorType>, Error, string> => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (uid: number) => {
+    mutationFn: async (uid: string) => {
       const res = await deleteDoctor(uid);
       if (res.success) {
         return res;
@@ -83,7 +83,6 @@ export const useDeleteDoctor = (): UseMutationResult<ApiResponse<DoctorType>, Er
       throw new Error(res.message);
     },
     onSuccess: () => {
-      console.log('invalidating doctors');
       queryClient.invalidateQueries({ queryKey: ['doctors'] });
     },
   });

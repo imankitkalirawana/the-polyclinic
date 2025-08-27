@@ -2,10 +2,22 @@
 
 import { NavItem } from './types';
 
-import { UserType } from '@/types/system/control-plane';
+import { UnifiedUserRole } from '@/types';
 
-export const itemsMap: Record<UserType['role'], NavItem[]> = {
+export const itemsMap: Record<UnifiedUserRole, NavItem[]> = {
   superadmin: [
+    {
+      name: 'Home',
+      href: '/home',
+    },
+  ],
+  moderator: [
+    {
+      name: 'Home',
+      href: '/home',
+    },
+  ],
+  ops: [
     {
       name: 'Home',
       href: '/home',
@@ -212,13 +224,7 @@ export const itemsMap: Record<UserType['role'], NavItem[]> = {
       href: '/home',
     },
   ],
-  laboratorist: [
-    {
-      name: 'Home',
-      href: '/home',
-    },
-  ],
-  user: [
+  patient: [
     {
       name: 'Home',
       href: '/home',

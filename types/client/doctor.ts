@@ -1,7 +1,7 @@
 import { Base } from '@/lib/interface';
 
 export interface DoctorType extends Base {
-  uid: number;
+  uid: string;
   name: string;
   email: string;
   phone: string;
@@ -12,7 +12,6 @@ export interface DoctorType extends Base {
   department?: string;
   experience?: string;
   education?: string;
-  patients?: number;
   biography?: string;
   shortbio?: string;
   seating?: string;

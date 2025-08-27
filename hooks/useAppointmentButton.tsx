@@ -6,14 +6,15 @@ import { APPOINTMENT_BUTTON_CONFIGS, isButtonVisible } from '../config/appointme
 
 import { useAppointmentStore } from '@/store/appointment';
 import { AppointmentType, ProcessedButton } from '@/types/client/appointment';
-import { UserType } from '@/types/system/control-plane';
+// TODO: Remove this once the types are updated
+import { $FixMe } from '@/types';
 
 const useAppointmentButtonsInDrawer = ({
   selected,
   role,
 }: {
   selected: AppointmentType | null;
-  role: UserType['role'];
+  role: $FixMe['role'];
 }) => {
   const { setAction } = useAppointmentStore();
   const router = useRouter();

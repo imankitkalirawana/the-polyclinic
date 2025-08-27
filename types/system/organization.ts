@@ -7,7 +7,14 @@ import { Base } from '@/types';
 import { z } from 'zod';
 
 export const organizationStatuses = ['active', 'inactive'] as const;
-
+export const organizationUserRoles = [
+  'admin',
+  'doctor',
+  'nurse',
+  'patient',
+  'receptionist',
+  'pharmacist',
+] as const;
 export type OrganizationType = Base & {
   organizationId: string;
   name: string;

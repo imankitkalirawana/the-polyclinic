@@ -108,7 +108,7 @@ const listItems: ListItem[] = [
   },
 ];
 
-export default function DashboardDoctor({ uid }: { uid: number }) {
+export default function DashboardDoctor({ uid }: { uid: string }) {
   const { data, isError, isLoading } = useDoctorWithUID(uid);
 
   const doctor = castData<DoctorType>(data);

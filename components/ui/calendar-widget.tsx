@@ -6,8 +6,8 @@ import { format } from 'date-fns';
 import { motion, useAnimation } from 'framer-motion';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import { getAppointmentStyles } from '../appointments/compact-view/appointments';
-import { useForm } from '../appointments/compact-view/context';
+import { getAppointmentStyles } from '@/components/client/appointments/compact-view/appointments';
+import { useForm } from '@/components/client/appointments/compact-view/context';
 
 import { cn } from '@/lib/utils';
 import { AppointmentType } from '@/types/client/appointment';

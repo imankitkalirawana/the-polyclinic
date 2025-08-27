@@ -5,9 +5,9 @@ export type CreateAppointmentType = {
   date: Date;
   type: AppointmentType['type'];
   additionalInfo: AppointmentType['additionalInfo'];
-  patient?: number;
-  doctor?: number;
-  previousAppointment?: number;
+  patient?: string;
+  doctor?: string;
+  previousAppointment?: string;
   knowYourDoctor?: boolean;
 };
 

@@ -1,17 +1,16 @@
 'use server';
 
+// TODO: Remove this once the types are updated
+import { $FixMe } from '@/types';
 import { fetchData } from '..';
 
-import { CreateAppointmentType } from '@/components/appointments/create/types';
-import { AppointmentType } from '@/types/client/appointment';
+export const getAllAppointments = async () => await fetchData<$FixMe[]>('/appointments');
 
-export const getAllAppointments = async () => await fetchData<AppointmentType[]>('/appointments');
+export const getAppointmentWithAID = async (aid: string) =>
+  await fetchData<$FixMe>(`/appointments/${aid}`);
 
-export const getAppointmentWithAID = async (aid: number) =>
-  await fetchData<AppointmentType>(`/appointments/${aid}`);
-
-export const createAppointment = async (appointment: CreateAppointmentType) =>
-  await fetchData<AppointmentType>('/appointments', {
+export const createAppointment = async (appointment: $FixMe) =>
+  await fetchData<$FixMe>('/appointments', {
     method: 'POST',
     data: appointment,
   });

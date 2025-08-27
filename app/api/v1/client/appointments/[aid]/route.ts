@@ -9,7 +9,7 @@ import { trackObjectChanges } from '@/lib/utility';
 import Appointment from '@/models/client/Appointment';
 import { $FixMe } from '@/types';
 import { Schema, Status } from '@/types/client/activity';
-import { OrganizationUserType } from '@/types/organization';
+import { OrganizationUserRole } from '@/types/system/organization';
 
 // get appointment by id from param
 export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
@@ -24,7 +24,7 @@ export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
     const aid = Number(params.aid);
     await connectDB();
 
-    const queryMap: Record<OrganizationUserType['role'], { $match: Record<string, unknown> }> = {
+    const queryMap: Record<OrganizationUserRole, { $match: Record<string, unknown> }> = {
       admin: {
         $match: { aid },
       },

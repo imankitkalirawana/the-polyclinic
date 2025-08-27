@@ -52,7 +52,7 @@ export const useLinkedUsers = (): UseQueryResult<SystemUserType[]> =>
  *   If `undefined`, the query will be disabled.
  */
 
-export const useUserWithUID = (uid: number | undefined): UseQueryResult<SystemUserType> =>
+export const useUserWithUID = (uid: string | undefined): UseQueryResult<SystemUserType> =>
   useQuery({
     queryKey: ['user', uid],
     queryFn: async () => {
@@ -137,10 +137,10 @@ export const useUpdateUser = (): UseMutationResult<
   });
 };
 
-export const useDeleteUser = (): UseMutationResult<ApiResponse<SystemUserType>, Error, number> => {
+export const useDeleteUser = (): UseMutationResult<ApiResponse<SystemUserType>, Error, string> => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (uid: number) => {
+    mutationFn: async (uid: string) => {
       const res = await deleteUser(uid);
       if (res.success) {
         return res;

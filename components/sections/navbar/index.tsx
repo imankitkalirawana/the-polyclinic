@@ -26,7 +26,7 @@ import {
 import { motion } from 'framer-motion';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import ModeToggle from '../../mode-toggle';
+import ModeToggle from '@/components/mode-toggle';
 import { defaultItems, itemsMap } from './data';
 
 import { useSubdomain } from '@/hooks/useSubDomain';
@@ -60,7 +60,7 @@ export default function Navbar() {
     }, 500);
   };
 
-  const role = session?.user?.role || 'user';
+  const role = session?.user?.role || 'patient';
 
   const menuItems = Object.keys(itemsMap).includes(role) ? itemsMap[role] : defaultItems;
 

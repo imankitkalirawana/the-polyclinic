@@ -5,13 +5,13 @@ import { create } from 'zustand';
 
 import { ActionType } from './types';
 
-import { UserType } from '@/types/system/control-plane';
+import { UnifiedUserType } from '@/types';
 
 interface UserStoreState {
-  selected: UserType | null;
+  selected: UnifiedUserType | null;
   action: ActionType | null;
   keys: Selection | undefined;
-  setSelected: (selected: UserType | null) => void;
+  setSelected: (selected: UnifiedUserType | null) => void;
   setAction: (action: ActionType | null) => void;
   setKeys: (keys: Selection) => void;
   resetState: () => void;

@@ -73,7 +73,7 @@ export interface AppointmentType extends Base {
   progress?: number;
   data?: Record<string, string>;
   type: AType['value'];
-  previousAppointment?: number;
+  previousAppointment?: string;
 }
 
 export type AppointmentMode = ValuesOf<typeof appointmentModes>;

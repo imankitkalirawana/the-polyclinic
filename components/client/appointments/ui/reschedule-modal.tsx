@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import { CalendarDate, getLocalTimeZone, Time } from '@internationalized/date';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import DateTimePicker from '@/components/appointments/new/session/date-time-picker';
+import DateTimePicker from '@/components/client/appointments/new/session/date-time-picker';
 import Modal from '@/components/ui/modal';
 import { apiRequest } from '@/lib/axios';
 import { TIMINGS } from '@/lib/config';
@@ -37,7 +37,7 @@ export default function RescheduleAppointment() {
         url: `/api/v1/appointments/${appointment?.aid}`,
         method: 'PATCH',
         data: {
-          status: session?.user?.role === 'user' ? 'booked' : 'confirmed',
+          status: session?.user?.role === 'patient' ? 'booked' : 'confirmed',
           date: timing,
         },
       }),

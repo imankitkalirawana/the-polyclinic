@@ -23,7 +23,6 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import Loading from '@/app/loading';
 import NoResults from '@/components/ui/no-results';
 import QuillInput from '@/components/ui/quill-input';
-import { verifyUID } from '@/functions/server-actions';
 import { ServiceStatuses, ServiceTypes } from '@/lib/interface';
 import { castData } from '@/lib/utils';
 import { serviceValidationSchema } from '@/lib/validation';
@@ -171,12 +170,7 @@ export default function EditService({ uid }: { uid: string }) {
                 formik.handleChange(e);
               }}
               onBlur={async () => {
-                const uid = formik.values.uniqueId;
-                if (await verifyUID(uid, service?._id)) {
-                  formik.setErrors({
-                    uniqueId: 'This Unique ID is already taken',
-                  });
-                }
+                // TODO: Implement unique ID verification
               }}
               startContent={
                 <div className="pointer-events-none flex items-center">

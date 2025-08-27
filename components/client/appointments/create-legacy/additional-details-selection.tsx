@@ -3,7 +3,7 @@
 import { Button, Input, Select, SelectItem, Textarea } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import { CreateAppointmentType } from '@/components/appointments/create/types';
+import { CreateAppointmentType } from '@/components/client/appointments/create/types';
 
 export default function AdditionalDetailsSelection({
   appointment,
