@@ -1,7 +1,7 @@
 import mongoose, { Connection } from 'mongoose';
 import { auth } from '@/auth';
 import { generateOrganizationId } from '@/helpers/organizations';
-import client from '@/lib/db';
+import client, { getDB } from '@/lib/db';
 
 const organizationSchema = new mongoose.Schema(
   {
@@ -80,7 +80,7 @@ organizationSchema.pre(['findOneAndUpdate', 'updateOne'], async function (next) 
 
 // Post delete middleware to delete database
 organizationSchema.pre(['deleteOne', 'findOneAndDelete'], async function (next) {
-  const db = client.db(this.getQuery().organizationId);
+  const db = await getDB(this.getQuery().organizationId);
   await db.dropDatabase();
   next();
 });

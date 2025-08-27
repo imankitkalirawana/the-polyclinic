@@ -1,11 +1,15 @@
 import { NextResponse } from 'next/server';
 import { NextAuthRequest } from 'next-auth';
-import bcrypt from 'bcryptjs';
 
 import { connectDB } from '@/lib/db';
-import { getUserModel } from '@/models/User';
 import { withAuth } from '@/middleware/withAuth';
-import { validateUserInOrganization } from '@/lib/server-actions/validation';
+import {
+  validateOrganizationId,
+  validateUserInOrganization,
+} from '@/lib/server-actions/validation';
+import { OrganizationService } from '@/services/organization/service';
+import { updateOrganizationUserSchema } from '@/services/organization/validation';
+import { validateRequest } from '@/services';
 
 type Params = Promise<{
   id: string;
@@ -15,54 +19,54 @@ type Params = Promise<{
 export const GET = withAuth(async (_request: NextAuthRequest, { params }: { params: Params }) => {
   const { id, userId } = await params;
 
+  const doesOrganizationExist = await validateOrganizationId(id);
+  if (!doesOrganizationExist) {
+    return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
+  }
+
   const doesUserExist = await validateUserInOrganization(id, userId);
   if (!doesUserExist) {
     return NextResponse.json({ message: 'User not found' }, { status: 404 });
   }
 
   const conn = await connectDB(id);
-  const User = getUserModel(conn);
-  const user = await User.findOne({ uid: userId });
-  return NextResponse.json({ data: user });
+  const result = await OrganizationService.getOrganizationUser(conn, id, userId);
+  if (!result.success) {
+    return NextResponse.json({ message: result.message }, { status: result.code });
+  }
+
+  return NextResponse.json({ data: result.data });
 });
 
 export const PUT = withAuth(async (request: NextAuthRequest, { params }: { params: Params }) => {
+  const { id, userId } = await params;
   try {
-    const { id, userId } = await params;
-
-    const doesUserExist = await validateUserInOrganization(id, userId);
-    if (!doesUserExist) {
-      return NextResponse.json({ message: 'User not found' }, { status: 404 });
+    const doesOrganizationExist = await validateOrganizationId(id);
+    if (!doesOrganizationExist) {
+      return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
     }
 
     const conn = await connectDB(id);
-    const User = getUserModel(conn);
-
     const body = await request.json();
-    const { email, password, ...rest } = body;
-
-    // Hash password if provided
-    let hashedPassword;
-    if (password) {
-      hashedPassword = await bcrypt.hash(password, 10);
+    const validation = validateRequest(updateOrganizationUserSchema, body);
+    if (!validation.success) {
+      return NextResponse.json(
+        { message: 'Invalid request data', errors: validation.errors },
+        { status: 400 }
+      );
     }
 
-    // Update user
-    const updatedUser = await User.findOneAndUpdate(
-      { uid: userId },
-      {
-        ...rest,
-        ...(email && { email }),
-        ...(hashedPassword && { password: hashedPassword }),
-        updatedBy: request.auth?.user?.email,
-      },
-      { new: true, runValidators: true }
+    const result = await OrganizationService.updateOrganizationUser(
+      conn,
+      id,
+      userId,
+      validation.data
     );
+    if (!result.success) {
+      return NextResponse.json({ message: result.message }, { status: result.code });
+    }
 
-    return NextResponse.json({
-      message: 'User updated successfully',
-      data: updatedUser,
-    });
+    return NextResponse.json({ message: result.message, data: result.data });
   } catch (error) {
     console.error('Error updating user:', error);
     return NextResponse.json(
@@ -74,31 +78,19 @@ export const PUT = withAuth(async (request: NextAuthRequest, { params }: { param
 
 export const DELETE = withAuth(
   async (_request: NextAuthRequest, { params }: { params: Params }) => {
-    try {
-      const { id, userId } = await params;
-      const doesUserExist = await validateUserInOrganization(id, userId);
-      if (!doesUserExist) {
-        return NextResponse.json({ message: 'User not found' }, { status: 404 });
-      }
+    const { id, userId } = await params;
 
-      const conn = await connectDB(id);
-      const User = getUserModel(conn);
-      const existingUser = await User.findOne({ uid: userId });
-      if (!existingUser) {
-        return NextResponse.json({ message: 'User not found' }, { status: 404 });
-      }
-
-      await User.findOneAndDelete({ uid: userId });
-
-      return NextResponse.json({
-        message: 'User deleted successfully',
-      });
-    } catch (error) {
-      console.error('Error deleting user:', error);
-      return NextResponse.json(
-        { message: error instanceof Error ? error.message : 'Internal Server Error' },
-        { status: 500 }
-      );
+    const doesOrganizationExist = await validateOrganizationId(id);
+    if (!doesOrganizationExist) {
+      return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
     }
+
+    const conn = await connectDB(id);
+    const result = await OrganizationService.deleteOrganizationUser(conn, id, userId);
+    if (!result.success) {
+      return NextResponse.json({ message: result.message }, { status: result.code });
+    }
+
+    return NextResponse.json({ message: result.message });
   }
 );

@@ -1,5 +1,5 @@
 // utils/db.js
-import { MongoClient, ServerApiVersion } from 'mongodb';
+import { Db, MongoClient, ServerApiVersion } from 'mongodb';
 import mongoose, { Connection } from 'mongoose';
 
 const uri = process.env.MONGODB_URI || '';
@@ -179,7 +179,7 @@ if (process.env.NODE_ENV === 'development') {
 // separate module, the client can be shared across functions.
 export default client;
 
-export async function getDB(subDomain?: string | null) {
+export async function getDB(subDomain?: string | null): Promise<Db> {
   await client.connect();
   return client.db(subDomain || process.env.MONGODB_GLOBAL);
 }

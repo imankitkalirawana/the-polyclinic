@@ -22,4 +22,9 @@ export const organizationPermissions: PermissionConfig = {
     POST: ['superadmin', 'moderator'],
     DELETE: ['superadmin', 'moderator', 'ops'],
   },
+  [`${BASE_PATH}/:id/users/:userId`]: {
+    GET: ['superadmin', 'moderator', 'ops'],
+    POST: ['superadmin', 'moderator'],
+    DELETE: ['superadmin', 'moderator', 'ops'],
+  },
 };

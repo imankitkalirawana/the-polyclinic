@@ -15,6 +15,8 @@ export const organizationUserRoles = [
   'receptionist',
   'pharmacist',
 ] as const;
+export const organizationUserStatuses = ['active', 'inactive'] as const;
+
 export type OrganizationType = Base & {
   organizationId: string;
   name: string;
