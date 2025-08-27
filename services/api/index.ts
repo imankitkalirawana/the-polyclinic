@@ -6,7 +6,7 @@ import { BASE_URL } from './client/helper';
 
 import type { $FixMe } from '@/types';
 
-export interface ApiResponse<T> {
+export interface ApiResponse<T = unknown> {
   success: boolean;
   data: T;
   message: string;
@@ -37,7 +37,7 @@ export interface PaginatedApiResponse<T> {
   errors?: string[];
 }
 
-export async function fetchData<T>(
+export async function fetchData<T = unknown>(
   endpoint: string,
   options: {
     method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';

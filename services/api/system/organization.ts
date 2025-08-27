@@ -33,7 +33,7 @@ export const organizationApi = {
 
   // Update organization
   async update(organizationId: string, organization: UpdateOrganizationType) {
-    return await fetchData<OrganizationType>(`${API_BASE}/${organizationId}`, {
+    return await fetchData<unknown>(`${API_BASE}/${organizationId}`, {
       method: 'PUT',
       data: organization,
     });

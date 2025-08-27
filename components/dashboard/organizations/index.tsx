@@ -5,7 +5,7 @@ import { OrganizationType } from '@/types/system/organization';
 import {
   useOrganizations,
   useDeleteOrganization,
-  useToggleOrganizationStatus,
+  useUpdateOrganization,
 } from '@/hooks/queries/system/organization';
 import { toast } from 'sonner';
 import { formatDate } from 'date-fns';
@@ -60,12 +60,12 @@ export default function OrganizationsDashboard() {
 
 function OrganizationCard({ org }: { org: OrganizationType }) {
   const editModal = useDisclosure();
-  const toggleStatus = useToggleOrganizationStatus();
+  const toggleStatus = useUpdateOrganization();
   const deleteOrganization = useDeleteOrganization();
   // Toggle status
   const handleToggleStatus = async (id: string, currentStatus: string) => {
     const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
-    await toggleStatus.mutateAsync({ id, status: newStatus as 'active' | 'inactive' });
+    await toggleStatus.mutateAsync({ id, data: { status: newStatus } });
   };
 
   // Delete organization

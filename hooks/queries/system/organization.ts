@@ -1,4 +1,10 @@
-import { useMutation, useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query';
+import {
+  useMutation,
+  UseMutationResult,
+  useQuery,
+  useQueryClient,
+  UseQueryResult,
+} from '@tanstack/react-query';
 import {
   CreateOrganizationType,
   CreateOrganizationUser,
@@ -60,9 +66,12 @@ export const useCreateOrganization = () => {
   });
 };
 
-export const useUpdateOrganization = () => {
+export const useUpdateOrganization = (): UseMutationResult<
+  unknown,
+  Error,
+  { id: string; data: UpdateOrganizationType }
+> => {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: UpdateOrganizationType }) => {
       const response = await organizationApi.update(id, data);
@@ -71,14 +80,14 @@ export const useUpdateOrganization = () => {
       }
       throw new Error(response.message);
     },
-    onSuccess: (data) => {
+    onSuccess: (_, variables) => {
       addToast({
         title: 'Organization updated successfully',
         description: 'Organization updated successfully',
         color: 'success',
       });
       queryClient.invalidateQueries({ queryKey: ['organizations'] });
-      queryClient.invalidateQueries({ queryKey: ['organizations', data.organizationId] });
+      queryClient.invalidateQueries({ queryKey: ['organizations', variables.id] });
     },
     onError: (error) => {
       addToast({
@@ -112,36 +121,6 @@ export const useDeleteOrganization = () => {
       addToast({
         title: 'Failed to delete organization',
         description: error instanceof Error ? error.message : 'Failed to delete organization',
-        color: 'danger',
-      });
-    },
-  });
-};
-
-export const useToggleOrganizationStatus = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({ id, status }: { id: string; status: 'active' | 'inactive' }) => {
-      const response = await organizationApi.toggleStatus(id, status);
-      if (response.success) {
-        return response.data;
-      }
-      throw new Error(response.message);
-    },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['organizations'] });
-      queryClient.invalidateQueries({ queryKey: ['organizations', data.organizationId] });
-      addToast({
-        title: `Organization ${status === 'active' ? 'activated' : 'deactivated'} successfully`,
-        color: 'success',
-      });
-    },
-    onError: (error) => {
-      addToast({
-        title: 'Failed to toggle organization status',
-        description:
-          error instanceof Error ? error.message : 'Failed to toggle organization status',
         color: 'danger',
       });
     },

@@ -16,7 +16,7 @@ import {
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { formatDate } from 'date-fns';
-import { useOrganization, useToggleOrganizationStatus } from '@/hooks/queries/system/organization';
+import { useOrganization, useUpdateOrganization } from '@/hooks/queries/system/organization';
 import { toast } from 'sonner';
 import { OrganizationUserType } from '@/types/system/organization';
 import EditOrganizationModal from './edit-modal';
@@ -29,7 +29,7 @@ import { CellRenderer } from '@/components/ui/cell-renderer';
 export default function Organization({ id }: { id: string }) {
   const { data, isLoading, error } = useOrganization(id);
   const { organization, users } = data || {};
-  const toggleStatus = useToggleOrganizationStatus();
+  const toggleStatus = useUpdateOrganization();
   const editModal = useDisclosure();
   const addUserModal = useDisclosure();
   const editUserModal = useDisclosure();
@@ -66,7 +66,10 @@ export default function Organization({ id }: { id: string }) {
   const handleToggleStatus = async () => {
     const newStatus = organization.status === 'active' ? 'inactive' : 'active';
     try {
-      await toggleStatus.mutateAsync({ id: organization.organizationId, status: newStatus });
+      await toggleStatus.mutateAsync({
+        id: organization.organizationId,
+        data: { status: newStatus },
+      });
       toast.success(
         `Organization ${newStatus === 'active' ? 'activated' : 'deactivated'} successfully`
       );

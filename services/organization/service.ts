@@ -141,7 +141,11 @@ export class OrganizationService {
         return { success: false, message: 'Failed to update organization', code: 500 };
       }
 
-      return { success: true, message: 'Organization updated successfully' };
+      return {
+        success: true,
+        message: 'Organization updated successfully',
+        data: updatedOrganization,
+      };
     } catch (error) {
       return {
         success: false,
