@@ -8,7 +8,6 @@ import DataTable from './data-table';
 import { CircleChartCard } from './graph';
 
 import Loading from '@/app/loading';
-import PriceDisplay from '@/components/helper/display-price';
 import NoResults from '@/components/ui/no-results';
 import {
   convertMinutesToHoursAndMinutes,
@@ -70,7 +69,7 @@ export default function ServiceViewItem({ uid, session }: { uid: string; session
           <h2 className="sr-only">Service information</h2>
 
           <div className="text-xl font-medium tracking-tight">
-            <PriceDisplay price={service.price} />
+            <p>Price: {service.price}</p>
           </div>
 
           <div className="mt-6 flex flex-col gap-1">

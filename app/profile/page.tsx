@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
-import Profile from '@/components/profile';
+import Profile from '@/components/features/profile';
 import { getSelf } from '@/services/api/client/user';
 
 export const metadata: Metadata = {

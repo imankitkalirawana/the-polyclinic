@@ -2,7 +2,7 @@ import { ValuesOf } from '@/lib/utils';
 import {
   createOrganizationSchema,
   updateOrganizationSchema,
-} from '@/services/client/organization/validation';
+} from '@/services/system/organization/validation';
 import { Base } from '@/types';
 import { z } from 'zod';
 
