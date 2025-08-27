@@ -9,7 +9,10 @@ import {
 } from '@/types/system/organization';
 import { getUserModel } from '@/models/User';
 import { connectDB } from '@/lib/db';
-import { CreateOrganizationUserRequest, UpdateOrganizationUserRequest } from './validation';
+import {
+  CreateOrganizationUserRequest,
+  UpdateOrganizationUserRequest,
+} from '@/types/system/organization';
 import bcrypt from 'bcryptjs';
 
 export class OrganizationService {

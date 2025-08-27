@@ -62,6 +62,16 @@ export const useCreateOrganization = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['organizations'] });
+      addToast({
+        title: 'Organization created successfully',
+        color: 'success',
+      });
+    },
+    onError: (error) => {
+      addToast({
+        title: error instanceof Error ? error.message : 'Failed to create organization',
+        color: 'danger',
+      });
     },
   });
 };
@@ -83,7 +93,6 @@ export const useUpdateOrganization = (): UseMutationResult<
     onSuccess: (_, variables) => {
       addToast({
         title: 'Organization updated successfully',
-        description: 'Organization updated successfully',
         color: 'success',
       });
       queryClient.invalidateQueries({ queryKey: ['organizations'] });
@@ -91,8 +100,7 @@ export const useUpdateOrganization = (): UseMutationResult<
     },
     onError: (error) => {
       addToast({
-        title: 'Failed to update organization',
-        description: error instanceof Error ? error.message : 'Failed to update organization',
+        title: error instanceof Error ? error.message : 'Failed to update organization',
         color: 'danger',
       });
     },
@@ -119,8 +127,7 @@ export const useDeleteOrganization = () => {
     },
     onError: (error) => {
       addToast({
-        title: 'Failed to delete organization',
-        description: error instanceof Error ? error.message : 'Failed to delete organization',
+        title: error instanceof Error ? error.message : 'Failed to delete organization',
         color: 'danger',
       });
     },

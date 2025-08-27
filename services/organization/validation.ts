@@ -53,13 +53,3 @@ export const updateOrganizationUserSchema = createOrganizationUserSchema.partial
     .enum(organizationUserStatuses, { error: 'User can be either active or inactive' })
     .optional(),
 });
-
-// TYPES
-
-export type CreateOrganizationRequest = z.infer<typeof createOrganizationSchema>;
-export type UpdateOrganizationRequest = z.infer<typeof updateOrganizationSchema>;
-
-// Organization User
-
-export type CreateOrganizationUserRequest = z.infer<typeof createOrganizationUserSchema>;
-export type UpdateOrganizationUserRequest = z.infer<typeof updateOrganizationUserSchema>;

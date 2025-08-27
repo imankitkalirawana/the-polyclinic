@@ -1,7 +1,9 @@
 import { ValuesOf } from '@/lib/utils';
 import {
   createOrganizationSchema,
+  createOrganizationUserSchema,
   updateOrganizationSchema,
+  updateOrganizationUserSchema,
 } from '@/services/organization/validation';
 import { Base } from '@/types';
 import { z } from 'zod';
@@ -74,3 +76,6 @@ export type UpdateOrganizationUser = Partial<
 // from zod validation
 export type CreateOrganizationType = z.infer<typeof createOrganizationSchema>;
 export type UpdateOrganizationType = z.infer<typeof updateOrganizationSchema>;
+
+export type CreateOrganizationUserRequest = z.infer<typeof createOrganizationUserSchema>;
+export type UpdateOrganizationUserRequest = z.infer<typeof updateOrganizationUserSchema>;

@@ -17,7 +17,6 @@ import {
 import { Icon } from '@iconify/react';
 import { formatDate } from 'date-fns';
 import { useOrganization, useUpdateOrganization } from '@/hooks/queries/system/organization';
-import { toast } from 'sonner';
 import { OrganizationUserType } from '@/types/system/organization';
 import EditOrganizationModal from './edit-modal';
 import AddUserModal from './add-user-modal';
@@ -65,17 +64,10 @@ export default function Organization({ id }: { id: string }) {
 
   const handleToggleStatus = async () => {
     const newStatus = organization.status === 'active' ? 'inactive' : 'active';
-    try {
-      await toggleStatus.mutateAsync({
-        id: organization.organizationId,
-        data: { status: newStatus },
-      });
-      toast.success(
-        `Organization ${newStatus === 'active' ? 'activated' : 'deactivated'} successfully`
-      );
-    } catch (error) {
-      toast.error('Failed to update organization status');
-    }
+    await toggleStatus.mutateAsync({
+      id: organization.organizationId,
+      data: { status: newStatus },
+    });
   };
 
   const handleEditUser = (user: OrganizationUserType) => {
