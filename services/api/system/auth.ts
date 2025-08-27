@@ -1,5 +1,10 @@
 import { fetchData } from '..';
-import { RegistrationRequest, SendOTPRequest, VerifyOTPRequest } from '@/services/auth';
+import {
+  RegistrationRequest,
+  ResetPasswordRequest,
+  SendOTPRequest,
+  VerifyOTPRequest,
+} from '@/services/auth';
 import { RegistrationResponse, VerifyOTPResponse } from './types';
 
 export class AuthApi {
@@ -13,14 +18,6 @@ export class AuthApi {
     });
   }
 
-  static async verifyEmail(email: string) {
-    return await fetchData('/verify-email', {
-      baseUrl: this.baseUrl,
-      method: 'POST',
-      data: { email },
-    });
-  }
-
   static async verifyOTP(data: VerifyOTPRequest) {
     return await fetchData<VerifyOTPResponse>('/verify-otp', {
       baseUrl: this.baseUrl,
@@ -31,6 +28,14 @@ export class AuthApi {
 
   static async registerUser(data: RegistrationRequest) {
     return await fetchData<RegistrationResponse>('/register', {
+      baseUrl: this.baseUrl,
+      method: 'POST',
+      data,
+    });
+  }
+
+  static async resetPassword(data: ResetPasswordRequest) {
+    return await fetchData('/reset-password', {
       baseUrl: this.baseUrl,
       method: 'POST',
       data,

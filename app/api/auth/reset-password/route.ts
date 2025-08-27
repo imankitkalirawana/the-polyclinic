@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
-import { getSubdomain } from '@/auth/sub-domain';
 import { AuthService } from '@/services/auth/auth-service';
 import { resetPasswordSchema } from '@/services/auth/validation';
 import { validateRequest } from '@/services';
@@ -12,17 +11,18 @@ export const POST = async (req: NextRequest) => {
     const validation = validateRequest(resetPasswordSchema, body);
 
     if (!validation.success) {
-      return NextResponse.json({ message: 'Invalid request data' }, { status: 400 });
+      return NextResponse.json(
+        { message: 'Invalid request data', errors: validation.errors },
+        { status: 400 }
+      );
     }
 
-    const { email, password, token, otp, subdomain: requestSubdomain } = validation.data;
+    const { email, password, token, otp, subdomain } = validation.data;
 
     // Get subdomain from request or fallback to organization subdomain
-    const orgSubdomain = await getSubdomain();
-    const subdomain = requestSubdomain || orgSubdomain || undefined;
 
     // Connect to database - use default connection if no subdomain
-    const conn = subdomain ? await connectDB(subdomain) : await connectDB();
+    const conn = await connectDB(subdomain);
 
     // Use AuthService to reset password
     const result = await AuthService.resetPassword({
@@ -31,7 +31,7 @@ export const POST = async (req: NextRequest) => {
       password,
       token,
       otp,
-      subdomain: requestSubdomain || subdomain || 'default',
+      subdomain,
     });
 
     if (!result.success) {

@@ -95,10 +95,10 @@ export class AuthEmailService {
    */
   static async sendPasswordResetConfirmation(
     email: string,
-    subdomain: string
+    subdomain?: string | null
   ): Promise<{ success: boolean; message?: string }> {
     try {
-      const organizationName = toTitleCase(subdomain);
+      const organizationName = toTitleCase(subdomain || '');
 
       await sendHTMLEmail({
         to: email,

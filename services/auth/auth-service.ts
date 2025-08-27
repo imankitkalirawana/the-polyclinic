@@ -246,7 +246,7 @@ export class AuthService {
     password: string;
     token?: string;
     otp?: string;
-    subdomain: string;
+    subdomain?: string | null;
   }): Promise<ServiceResult> {
     try {
       // Check if user exists
