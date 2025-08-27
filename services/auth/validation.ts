@@ -19,6 +19,7 @@ export const registrationSchema = z
     name: z.string({ error: 'Name is required' }).min(1, { error: 'Name cannot be empty' }),
     email: z.email({ error: 'Invalid email format' }),
     password: z.string().min(8, { error: 'Password must be at least 8 characters' }),
+    subdomain: z.string().min(1, { error: 'Organization/subdomain is required for registration' }),
     token: z.string().optional(),
     otp: z
       .string()
@@ -32,6 +33,7 @@ export const registrationSchema = z
 export const sendOTPSchema = z.object({
   email: z.email('Invalid email format'),
   type: z.enum(['register', 'reset-password', 'verify-email']).default('register'),
+  subdomain: z.string().optional(), // Optional for password reset, required for registration
 });
 
 // Verify OTP validation schema
@@ -43,6 +45,7 @@ export const verifyOTPSchema = z.object({
     .refine((val) => val.length === 6, 'OTP must be 6 digits')
     .refine((val) => /^\d{6}$/.test(val), 'OTP must contain only digits'),
   type: z.enum(['register', 'reset-password', 'verify-email']),
+  subdomain: z.string().optional(), // Optional for password reset, required for registration
 });
 
 // Reset password validation schema
@@ -56,6 +59,7 @@ export const resetPasswordSchema = z
       .length(6, 'OTP must be 6 digits')
       .regex(/^\d{6}$/, 'OTP must contain only digits')
       .optional(),
+    subdomain: z.string().optional(), // Optional for password reset
   })
   .refine((data) => data.token || data.otp, { message: 'Either token or OTP is required' });
 

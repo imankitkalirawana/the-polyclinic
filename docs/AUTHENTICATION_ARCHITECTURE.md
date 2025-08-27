@@ -54,7 +54,8 @@ This document describes the secure and synchronized authentication system implem
   ```json
   {
     "email": "user@example.com",
-    "type": "register" | "reset-password" | "verify-email"
+    "type": "register" | "reset-password" | "verify-email",
+    "subdomain": "organization-name" // Required for registration, optional for others
   }
   ```
 - **Response**:
@@ -74,7 +75,8 @@ This document describes the secure and synchronized authentication system implem
   {
     "email": "user@example.com",
     "otp": "123456",
-    "type": "register" | "reset-password" | "verify-email"
+    "type": "register" | "reset-password" | "verify-email",
+    "subdomain": "organization-name" // Required for registration, optional for others
   }
   ```
 - **Response**:
@@ -96,10 +98,12 @@ This document describes the secure and synchronized authentication system implem
 - **Request Body**:
   ```json
   {
+    "name": "User Name",
     "email": "user@example.com",
     "password": "securepassword123",
-    "token": "jwt_token_from_verify_otp",
-    "otp": "123456"
+    "subdomain": "organization-name", // Required for registration
+    "token": "jwt_token_from_verify_otp", // Optional: either token or OTP
+    "otp": "123456" // Optional: either token or OTP
   }
   ```
 - **Response**:
@@ -126,8 +130,9 @@ This document describes the secure and synchronized authentication system implem
   {
     "email": "user@example.com",
     "password": "newsecurepassword123",
-    "token": "jwt_token_from_verify_otp",
-    "otp": "123456"
+    "token": "jwt_token_from_verify_otp", // Optional: either token or OTP
+    "otp": "123456", // Optional: either token or OTP
+    "subdomain": "organization-name" // Optional for password reset
   }
   ```
 - **Response**:
@@ -141,7 +146,14 @@ This document describes the secure and synchronized authentication system implem
 
 ## Security Features
 
-### 1. OTP Security
+### 1. Organization/Subdomain Requirements
+
+- **Registration**: **REQUIRES** subdomain/organization - users can only register within an existing organization
+- **Password Reset**: **OPTIONAL** subdomain - can reset password without organization context (uses default database connection)
+- **OTP Verification**: **OPTIONAL** subdomain - can verify OTP without organization context (uses default database connection)
+- **Security**: Prevents unauthorized user creation outside of organizational boundaries while allowing password recovery
+
+### 2. OTP Security
 
 - **6-digit numeric OTPs** with cryptographically secure generation
 - **10-minute expiration** for all OTPs

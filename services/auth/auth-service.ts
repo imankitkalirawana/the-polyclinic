@@ -10,13 +10,26 @@ export class AuthService {
   /**
    * Send OTP for authentication
    */
-  static async sendOTP(
-    conn: Connection,
-    email: string,
-    type: 'register' | 'reset-password' | 'verify-email',
-    subdomain: string
-  ): Promise<ServiceResult<{ email: string }>> {
+  static async sendOTP({
+    conn,
+    email,
+    type,
+    subdomain,
+  }: {
+    conn: Connection;
+    email: string;
+    type: 'register' | 'reset-password' | 'verify-email';
+    subdomain?: string;
+  }): Promise<ServiceResult<{ email: string }>> {
     try {
+      // For registration, subdomain is required
+      if (type === 'register' && !subdomain) {
+        return {
+          success: false,
+          message: 'Organization/subdomain is required for registration',
+        };
+      }
+
       // Check if user exists for reset-password
       if (type === 'reset-password') {
         const User = getUserModel(conn);
@@ -53,7 +66,9 @@ export class AuthService {
       }
 
       // Send OTP email
-      Promise.all([AuthEmailService.sendOTPEmail(email, otp, type, subdomain)]);
+      if (subdomain) {
+        Promise.all([AuthEmailService.sendOTPEmail(email, otp, type, subdomain)]);
+      }
 
       return {
         success: true,
@@ -72,12 +87,17 @@ export class AuthService {
   /**
    * Verify OTP and generate token
    */
-  static async verifyOTP(
-    conn: Connection,
-    email: string,
-    otp: string,
-    type: 'register' | 'reset-password' | 'verify-email'
-  ): Promise<ServiceResult<{ token: string; email: string; type: string }>> {
+  static async verifyOTP({
+    conn,
+    email,
+    otp,
+    type,
+  }: {
+    conn: Connection;
+    email: string;
+    otp: string;
+    type: 'register' | 'reset-password' | 'verify-email';
+  }): Promise<ServiceResult<{ token: string; email: string; type: string }>> {
     try {
       // Verify OTP
       const verifyResult = await OTPManager.verifyOTP(conn, email, otp, type);

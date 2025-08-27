@@ -7,12 +7,6 @@ import { validateRequest } from '@/services';
 
 export const POST = async (req: NextRequest) => {
   try {
-    // Get subdomain
-    const subdomain = await getSubdomain();
-    if (!subdomain) {
-      return NextResponse.json({ message: 'Organization not found' }, { status: 400 });
-    }
-
     // Parse and validate request body
     const body = await req.json();
     const validation = validateRequest(verifyOTPSchema, body);
@@ -21,13 +15,30 @@ export const POST = async (req: NextRequest) => {
       return NextResponse.json({ message: 'Invalid request data' }, { status: 400 });
     }
 
-    const { email, otp, type } = validation.data;
+    const { email, otp, type, subdomain: requestSubdomain } = validation.data;
 
-    // Connect to database
-    const conn = await connectDB(subdomain);
+    // For registration, subdomain is required
+    if (type === 'register' && !requestSubdomain) {
+      return NextResponse.json(
+        { message: 'Organization/subdomain is required for registration' },
+        { status: 400 }
+      );
+    }
+
+    // Get subdomain from request or fallback to organization subdomain
+    const orgSubdomain = await getSubdomain();
+    const subdomain = requestSubdomain || orgSubdomain || undefined;
+
+    // Connect to database - use default connection for password reset if no subdomain
+    const conn = subdomain ? await connectDB(subdomain) : await connectDB();
 
     // Use AuthService to verify OTP
-    const result = await AuthService.verifyOTP(conn, email, otp, type);
+    const result = await AuthService.verifyOTP({
+      conn,
+      email,
+      otp,
+      type,
+    });
 
     if (!result.success) {
       return NextResponse.json(

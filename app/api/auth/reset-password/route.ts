@@ -7,12 +7,6 @@ import { validateRequest } from '@/services';
 
 export const POST = async (req: NextRequest) => {
   try {
-    // Get subdomain
-    const subdomain = await getSubdomain();
-    if (!subdomain) {
-      return NextResponse.json({ message: 'Organization not found' }, { status: 400 });
-    }
-
     // Parse and validate request body
     const body = await req.json();
     const validation = validateRequest(resetPasswordSchema, body);
@@ -21,10 +15,14 @@ export const POST = async (req: NextRequest) => {
       return NextResponse.json({ message: 'Invalid request data' }, { status: 400 });
     }
 
-    const { email, password, token, otp } = validation.data;
+    const { email, password, token, otp, subdomain: requestSubdomain } = validation.data;
 
-    // Connect to database
-    const conn = await connectDB(subdomain);
+    // Get subdomain from request or fallback to organization subdomain
+    const orgSubdomain = await getSubdomain();
+    const subdomain = requestSubdomain || orgSubdomain || undefined;
+
+    // Connect to database - use default connection if no subdomain
+    const conn = subdomain ? await connectDB(subdomain) : await connectDB();
 
     // Use AuthService to reset password
     const result = await AuthService.resetPassword({
@@ -33,7 +31,7 @@ export const POST = async (req: NextRequest) => {
       password,
       token,
       otp,
-      subdomain,
+      subdomain: requestSubdomain || subdomain || 'default',
     });
 
     if (!result.success) {
