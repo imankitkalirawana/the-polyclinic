@@ -149,8 +149,9 @@ export default function Organization({ id }: { id: string }) {
               isIconOnly
               variant="flat"
               as="a"
-              href={`http://${organization.domain}`}
               target="_blank"
+              // TODO: fix this hardcoded url
+              href={`http://${organization.organizationId}.lvh.me:3000`}
               size="sm"
             >
               <Icon icon="solar:arrow-right-up-linear" />

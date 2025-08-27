@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
-import { getSubdomain } from '@/auth/sub-domain';
 import { AuthService } from '@/services/auth/auth-service';
 import { sendOTPSchema } from '@/services/auth/validation';
 import { validateRequest } from '@/services';
 
 export const POST = async (req: NextRequest) => {
   try {
-    const subdomain = await getSubdomain();
     const body = await req.json();
     const validation = validateRequest(sendOTPSchema, body);
 
@@ -18,7 +16,7 @@ export const POST = async (req: NextRequest) => {
       );
     }
 
-    const { email, type } = validation.data;
+    const { email, type, subdomain } = validation.data;
 
     if (type === 'register' && !subdomain) {
       return NextResponse.json(

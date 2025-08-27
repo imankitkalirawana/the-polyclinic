@@ -1,18 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
-import { getSubdomain } from '@/auth/sub-domain';
 import { AuthService, registrationSchema } from '@/services/auth';
 import { validateRequest } from '@/services';
 
 export const POST = async (req: NextRequest) => {
   try {
-    // Get subdomain
-    const subdomain = await getSubdomain();
-    if (!subdomain) {
-      return NextResponse.json({ message: 'Organization not found' }, { status: 400 });
-    }
-
-    // Parse and validate request body
     const body = await req.json();
     const validation = validateRequest(registrationSchema, body);
 
@@ -20,13 +12,11 @@ export const POST = async (req: NextRequest) => {
       return NextResponse.json({ message: validation.errors }, { status: 400 });
     }
 
-    const { name, email, password, token, otp } = validation.data;
+    const { name, email, password, token, otp, subdomain } = validation.data;
 
-    // Connect to database
     const conn = await connectDB(subdomain);
 
-    // Use AuthService to register user
-    const result = await AuthService.registerUser({
+    const { success, message, data } = await AuthService.registerUser({
       conn,
       name,
       email,
@@ -36,14 +26,11 @@ export const POST = async (req: NextRequest) => {
       otp,
     });
 
-    if (!result.success) {
-      return NextResponse.json(
-        { message: result.message || 'Failed to register user' },
-        { status: 400 }
-      );
+    if (!success) {
+      return NextResponse.json({ message }, { status: 400 });
     }
 
-    return NextResponse.json({ message: result.message || 'User registered successfully' });
+    return NextResponse.json({ message, data });
   } catch (error) {
     console.error('Registration error:', error);
     return NextResponse.json(

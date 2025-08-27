@@ -30,6 +30,7 @@ import ModeToggle from '../../mode-toggle';
 import { defaultItems, itemsMap } from './data';
 
 import { useSubdomain } from '@/hooks/useSubDomain';
+import { APP_INFO } from '@/lib/config';
 
 export default function Navbar() {
   const router = useRouter();
@@ -77,15 +78,15 @@ export default function Navbar() {
       }}
       height="56px"
       isMenuOpen={!!(isMenuOpen || activeMenu)}
-      // isMenuOpen={true}
       onMenuOpenChange={setIsMenuOpen}
       maxWidth="2xl"
     >
       <NavbarMenuToggle className="text-default-400 md:hidden" />
 
       <NavbarBrand>
-        <Link className="ml-2 font-medium text-foreground" href="/">
-          The Polyclinic
+        <Link className="ml-2 text-large font-medium text-foreground" href="/">
+          {APP_INFO.name}
+          <span className="ml-1 text-tiny uppercase text-primary">{subdomain}</span>
         </Link>
       </NavbarBrand>
 

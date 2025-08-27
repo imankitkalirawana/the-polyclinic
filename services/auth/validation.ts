@@ -33,6 +33,7 @@ export const registrationSchema = z
 export const sendOTPSchema = z.object({
   email: z.email('Invalid email format'),
   type: z.enum(['register', 'reset-password', 'verify-email']).default('register'),
+  subdomain: z.string().optional().nullable(),
 });
 
 // Verify OTP validation schema
@@ -44,7 +45,7 @@ export const verifyOTPSchema = z.object({
     .refine((val) => val.length === 6, 'OTP must be 6 digits')
     .refine((val) => /^\d{6}$/.test(val), 'OTP must contain only digits'),
   type: z.enum(['register', 'reset-password', 'verify-email']),
-  subdomain: z.string().optional(), // Optional for password reset, required for registration
+  subdomain: z.string().optional().nullable(),
 });
 
 // Reset password validation schema

@@ -1,5 +1,4 @@
 'use server';
-
 import { cookies } from 'next/headers';
 import axios from 'axios';
 
@@ -11,6 +10,7 @@ export interface ApiResponse<T> {
   success: boolean;
   data: T;
   message: string;
+  errors?: string[];
 }
 
 export interface PaginationParams {
@@ -33,7 +33,8 @@ export interface PaginationResponse<T> {
 export interface PaginatedApiResponse<T> {
   success: boolean;
   data: PaginationResponse<T>;
-  message: string;
+  message?: string;
+  errors?: string[];
 }
 
 export async function fetchData<T>(
@@ -49,8 +50,10 @@ export async function fetchData<T>(
   try {
     const { method = 'GET', data, params, baseUrl, headers } = options;
 
+    const url = `${baseUrl || BASE_URL}${endpoint}`;
+
     const res = await axios({
-      url: `${baseUrl || BASE_URL}${endpoint}`,
+      url,
       method,
       data,
       params,
@@ -70,6 +73,7 @@ export async function fetchData<T>(
       success: false,
       message: error?.response?.data?.message || 'Request failed',
       data: [] as T,
+      errors: error?.response?.data?.errors,
     };
   }
 }

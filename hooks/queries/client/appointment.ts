@@ -6,11 +6,15 @@ import {
   UseQueryResult,
 } from '@tanstack/react-query';
 
-import { createAppointment, getAllAppointments, getAppointmentWithAID } from './api/appointment';
-import { ApiResponse } from '../../../services/api';
+import { ApiResponse } from '@/services/api';
+import {
+  createAppointment,
+  getAllAppointments,
+  getAppointmentWithAID,
+} from '@/services/api/client/appointment';
 
-import { CreateAppointmentType } from '@/components/appointments/create/types';
 import { AppointmentType } from '@/types/client/appointment';
+import { CreateAppointmentType } from '@/components/client/appointments/create/types';
 
 export const useAllAppointments = (): UseQueryResult<AppointmentType[]> =>
   useQuery({

@@ -223,7 +223,6 @@ export class AuthService {
         message: 'Registration successful',
       };
     } catch (error) {
-      console.error('Registration error:', error);
       return {
         success: false,
         message: error instanceof Error ? error.message : 'Internal server error',

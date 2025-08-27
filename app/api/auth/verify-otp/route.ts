@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
-import { getSubdomain } from '@/auth/sub-domain';
 import { AuthService } from '@/services/auth/auth-service';
 import { verifyOTPSchema } from '@/services/auth/validation';
 import { validateRequest } from '@/services';
 
 export const POST = async (req: NextRequest) => {
   try {
-    // Parse and validate request body
     const body = await req.json();
     const validation = validateRequest(verifyOTPSchema, body);
 
@@ -15,39 +13,29 @@ export const POST = async (req: NextRequest) => {
       return NextResponse.json({ message: 'Invalid request data' }, { status: 400 });
     }
 
-    const { email, otp, type, subdomain: requestSubdomain } = validation.data;
+    const { email, otp, type, subdomain } = validation.data;
 
-    // For registration, subdomain is required
-    if (type === 'register' && !requestSubdomain) {
+    if (type === 'register' && !subdomain) {
       return NextResponse.json(
         { message: 'Organization/subdomain is required for registration' },
         { status: 400 }
       );
     }
 
-    // Get subdomain from request or fallback to organization subdomain
-    const orgSubdomain = await getSubdomain();
-    const subdomain = requestSubdomain || orgSubdomain || undefined;
+    const conn = await connectDB(subdomain);
 
-    // Connect to database - use default connection for password reset if no subdomain
-    const conn = subdomain ? await connectDB(subdomain) : await connectDB();
-
-    // Use AuthService to verify OTP
-    const result = await AuthService.verifyOTP({
+    const { success, message, data } = await AuthService.verifyOTP({
       conn,
       email,
       otp,
       type,
     });
 
-    if (!result.success) {
-      return NextResponse.json(
-        { message: result.message || 'Failed to verify OTP' },
-        { status: 400 }
-      );
+    if (!success) {
+      return NextResponse.json({ message }, { status: 400 });
     }
 
-    return NextResponse.json({ message: result.message || 'OTP verified successfully' });
+    return NextResponse.json({ message, data });
   } catch (error) {
     console.error('Verify OTP error:', error);
     return NextResponse.json(

@@ -116,7 +116,6 @@ export class OTPManager {
         };
       }
 
-      // Clean up the verification record
       await Verification.deleteOne({ email, type });
 
       return { success: true };

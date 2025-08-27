@@ -10,9 +10,9 @@ import {
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import { sendOTP } from '@/lib/server-actions/auth';
 import { cn } from '@/lib/utils';
 import { $FixMe } from '@/types';
+import { AuthApi } from '@/services/api/system/auth';
 
 // Input component with consistent styling for auth forms
 export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => (
@@ -156,8 +156,7 @@ export const OtpInput = forwardRef<
   const resendOtp = async () => {
     setIsResendingOtp(true);
     try {
-      // Cast type to any to work with our existing sendOTP function
-      const res = await sendOTP({ email, type: type as $FixMe });
+      const res = await AuthApi.sendOTP({ email, type: type as $FixMe });
       if (res.success) {
         addToast({
           title: 'OTP resent',
@@ -180,7 +179,7 @@ export const OtpInput = forwardRef<
 
   return (
     <div className="mb-2 flex flex-col items-center justify-center">
-      <InputOtp ref={ref} radius="lg" length={4} name="otp" {...props} />
+      <InputOtp ref={ref} radius="lg" length={6} name="otp" {...props} />
       <div className="flex flex-col items-center justify-between px-1 py-2 text-small text-default-500">
         <p>Didn&apos;t receive the code?</p>
         <Button
