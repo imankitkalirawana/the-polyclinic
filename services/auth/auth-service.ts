@@ -53,14 +53,7 @@ export class AuthService {
       }
 
       // Send OTP email
-      const emailResult = await AuthEmailService.sendOTPEmail(email, otp, type, subdomain);
-
-      if (!emailResult.success) {
-        return {
-          success: false,
-          message: emailResult.message,
-        };
-      }
+      Promise.all([AuthEmailService.sendOTPEmail(email, otp, type, subdomain)]);
 
       return {
         success: true,
@@ -116,14 +109,23 @@ export class AuthService {
   /**
    * Register new user
    */
-  static async registerUser(
-    conn: Connection,
-    email: string,
-    password: string,
-    token: string,
-    otp: string,
-    subdomain: string
-  ): Promise<
+  static async registerUser({
+    conn,
+    name,
+    email,
+    password,
+    subdomain,
+    token,
+    otp,
+  }: {
+    conn: Connection;
+    name: string;
+    email: string;
+    password: string;
+    subdomain: string;
+    token?: string;
+    otp?: string;
+  }): Promise<
     ServiceResult<{
       email: string;
       name: string;
@@ -133,28 +135,6 @@ export class AuthService {
     }>
   > {
     try {
-      // Verify OTP token
-      const decodedToken = OTPManager.verifyOTPToken(token);
-
-      if (!decodedToken) {
-        return {
-          success: false,
-          message: 'Invalid or expired token',
-        };
-      }
-
-      // Validate token data
-      if (
-        decodedToken.email !== email ||
-        decodedToken.type !== 'register' ||
-        decodedToken.otp !== otp
-      ) {
-        return {
-          success: false,
-          message: 'Invalid token or OTP',
-        };
-      }
-
       // Check if user already exists
       const User = getUserModel(conn);
       const existingUser = await User.findOne({ email });
@@ -165,20 +145,51 @@ export class AuthService {
         };
       }
 
+      // Validate authentication method
+      if (token) {
+        // Token-based registration
+        const decodedToken = OTPManager.verifyOTPToken(token);
+        if (!decodedToken) {
+          return {
+            success: false,
+            message: 'Invalid or expired token',
+          };
+        }
+        if (decodedToken.email !== email || decodedToken.type !== 'register') {
+          return {
+            success: false,
+            message: 'Invalid token',
+          };
+        }
+      } else if (otp) {
+        // OTP-based registration
+        const verification = await OTPManager.verifyOTP(conn, email, otp, 'register');
+        if (!verification.success) {
+          return {
+            success: false,
+            message: verification.message || 'Invalid OTP',
+          };
+        }
+      } else {
+        return {
+          success: false,
+          message: 'Either token or OTP is required',
+        };
+      }
+
       // Hash password
-      const hashedPassword = await bcrypt.hash(password, 12);
+      const hashedPassword = await bcrypt.hash(password, 10);
 
       // Create user
       const user = await User.create({
+        name,
         email,
         password: hashedPassword,
         organization: subdomain,
-        role: 'user', // Default role
-        uid: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       });
 
       // Send welcome email
-      await AuthEmailService.sendWelcomeEmail(email, user.name || email, subdomain);
+      Promise.all([AuthEmailService.sendWelcomeEmail(email, user.name || email, subdomain)]);
 
       // Return user data (excluding password)
       const userResponse = {
@@ -198,7 +209,7 @@ export class AuthService {
       console.error('Registration error:', error);
       return {
         success: false,
-        message: 'Internal server error',
+        message: error instanceof Error ? error.message : 'Internal server error',
       };
     }
   }
@@ -206,37 +217,22 @@ export class AuthService {
   /**
    * Reset user password
    */
-  static async resetPassword(
-    conn: Connection,
-    email: string,
-    password: string,
-    token: string,
-    otp: string,
-    subdomain: string
-  ): Promise<ServiceResult> {
+  static async resetPassword({
+    conn,
+    email,
+    password,
+    token,
+    otp,
+    subdomain,
+  }: {
+    conn: Connection;
+    email: string;
+    password: string;
+    token?: string;
+    otp?: string;
+    subdomain: string;
+  }): Promise<ServiceResult> {
     try {
-      // Verify OTP token
-      const decodedToken = OTPManager.verifyOTPToken(token);
-
-      if (!decodedToken) {
-        return {
-          success: false,
-          message: 'Invalid or expired token',
-        };
-      }
-
-      // Validate token data
-      if (
-        decodedToken.email !== email ||
-        decodedToken.type !== 'reset-password' ||
-        decodedToken.otp !== otp
-      ) {
-        return {
-          success: false,
-          message: 'Invalid token or OTP',
-        };
-      }
-
       // Check if user exists
       const User = getUserModel(conn);
       const user = await User.findOne({ email });
@@ -247,6 +243,38 @@ export class AuthService {
         };
       }
 
+      // Validate authentication method
+      if (token) {
+        // Token-based password reset
+        const decodedToken = OTPManager.verifyOTPToken(token);
+        if (!decodedToken) {
+          return {
+            success: false,
+            message: 'Invalid or expired token',
+          };
+        }
+        if (decodedToken.email !== email || decodedToken.type !== 'reset-password') {
+          return {
+            success: false,
+            message: 'Invalid token',
+          };
+        }
+      } else if (otp) {
+        // OTP-based password reset
+        const verification = await OTPManager.verifyOTP(conn, email, otp, 'reset-password');
+        if (!verification.success) {
+          return {
+            success: false,
+            message: verification.message || 'Invalid OTP',
+          };
+        }
+      } else {
+        return {
+          success: false,
+          message: 'Either token or OTP is required',
+        };
+      }
+
       // Hash new password
       const hashedPassword = await bcrypt.hash(password, 12);
 
@@ -254,7 +282,7 @@ export class AuthService {
       await User.updateOne({ email }, { $set: { password: hashedPassword } });
 
       // Send password reset confirmation email
-      await AuthEmailService.sendPasswordResetConfirmation(email, subdomain);
+      Promise.all([AuthEmailService.sendPasswordResetConfirmation(email, subdomain)]);
 
       return {
         success: true,

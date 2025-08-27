@@ -14,15 +14,19 @@ export const otpSchema = z.object({
 });
 
 // Registration validation schema
-export const registrationSchema = z.object({
-  email: z.email({ error: 'Invalid email format' }),
-  password: z.string().min(8, { error: 'Password must be at least 8 characters' }),
-  token: z.jwt({ error: 'Invalid token' }),
-  otp: z
-    .string()
-    .length(6, { error: 'OTP must be 6 digits' })
-    .regex(/^\d{6}$/, { error: 'OTP must contain only digits' }),
-});
+export const registrationSchema = z
+  .object({
+    name: z.string({ error: 'Name is required' }).min(1, { error: 'Name cannot be empty' }),
+    email: z.email({ error: 'Invalid email format' }),
+    password: z.string().min(8, { error: 'Password must be at least 8 characters' }),
+    token: z.string().optional(),
+    otp: z
+      .string()
+      .length(6, { error: 'OTP must be 6 digits' })
+      .regex(/^\d{6}$/, { error: 'OTP must contain only digits' })
+      .optional(),
+  })
+  .refine((data) => data.token || data.otp, { message: 'Either token or OTP is required' });
 
 // Send OTP validation schema
 export const sendOTPSchema = z.object({
@@ -42,15 +46,18 @@ export const verifyOTPSchema = z.object({
 });
 
 // Reset password validation schema
-export const resetPasswordSchema = z.object({
-  email: z.email('Invalid email format'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-  token: z.string().min(1, 'Token is required'),
-  otp: z
-    .string()
-    .length(6, 'OTP must be 6 digits')
-    .regex(/^\d{6}$/, 'OTP must contain only digits'),
-});
+export const resetPasswordSchema = z
+  .object({
+    email: z.email('Invalid email format'),
+    password: z.string().min(8, 'Password must be at least 8 characters'),
+    token: z.string().optional(),
+    otp: z
+      .string()
+      .length(6, 'OTP must be 6 digits')
+      .regex(/^\d{6}$/, 'OTP must contain only digits')
+      .optional(),
+  })
+  .refine((data) => data.token || data.otp, { message: 'Either token or OTP is required' });
 
 // Login validation schema
 export const loginSchema = z.object({

@@ -19,6 +19,7 @@ export const generateUid = async (id: string, dbName?: string | null) => {
   if (!id) {
     throw new Error('Id is required');
   }
+
   const conn = await connectDB(dbName);
   const Counter = getCounterModel(conn);
   const counter = await Counter.findOneAndUpdate(
@@ -26,5 +27,5 @@ export const generateUid = async (id: string, dbName?: string | null) => {
     { $inc: { seq: 1 } },
     { new: true, upsert: true }
   );
-  return `${dbName}-${counter.seq}`;
+  return dbName ? `${dbName}-${counter.seq}` : `${counter.seq}`;
 };

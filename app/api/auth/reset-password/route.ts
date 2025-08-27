@@ -27,7 +27,14 @@ export const POST = async (req: NextRequest) => {
     const conn = await connectDB(subdomain);
 
     // Use AuthService to reset password
-    const result = await AuthService.resetPassword(conn, email, password, token, otp, subdomain);
+    const result = await AuthService.resetPassword({
+      conn,
+      email,
+      password,
+      token,
+      otp,
+      subdomain,
+    });
 
     if (!result.success) {
       return NextResponse.json(

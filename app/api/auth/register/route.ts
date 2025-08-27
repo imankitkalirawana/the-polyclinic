@@ -21,13 +21,21 @@ export const POST = async (req: NextRequest) => {
       return NextResponse.json({ message: validation.errors }, { status: 400 });
     }
 
-    const { email, password, token, otp } = validation.data;
+    const { name, email, password, token, otp } = validation.data;
 
     // Connect to database
     const conn = await connectDB(subdomain);
 
     // Use AuthService to register user
-    const result = await AuthService.registerUser(conn, email, password, token, otp, subdomain);
+    const result = await AuthService.registerUser({
+      conn,
+      name,
+      email,
+      password,
+      subdomain,
+      token,
+      otp,
+    });
 
     if (!result.success) {
       return NextResponse.json(
