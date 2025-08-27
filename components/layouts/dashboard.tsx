@@ -20,8 +20,8 @@ import { Icon } from '@iconify/react';
 import Logo from '../ui/logo';
 
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { getSidebarItems } from '@/components/features/dashboard/sidebar/sidebar-items';
-import Sidebar from '@/components/features/dashboard/sidebar/sidebar';
+import { getSidebarItems } from '@/components/dashboard/sidebar/sidebar-items';
+import Sidebar from '@/components/dashboard/sidebar/sidebar';
 
 export default function DashboardLayout({
   children,

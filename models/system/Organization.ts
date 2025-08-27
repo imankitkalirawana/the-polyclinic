@@ -1,6 +1,6 @@
 import mongoose, { Connection } from 'mongoose';
 import { auth } from '@/auth';
-import { generateOrganizationId } from '@/helper/system/organizations';
+import { generateOrganizationId } from '@/helpers/organizations';
 import client from '@/lib/db';
 
 const organizationSchema = new mongoose.Schema(
