@@ -11,16 +11,14 @@ import {
   Tab,
   Spinner,
   useDisclosure,
+  ScrollShadow,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
-import { formatDate } from 'date-fns';
 import { useOrganization, useUpdateOrganization } from '@/hooks/queries/system/organization';
 import { OrganizationUserType } from '@/types/system/organization';
-import AddUserModal from './add-user-modal';
-import EditUserModal from './edit-user-modal';
+import UserModal from './create-edit-user';
 import DeleteUserModal from './delete-user-modal';
 import UserStatusToggle from './user-status-toggle';
-import { CellRenderer } from '@/components/ui/cell-renderer';
 import CreateEditOrganizationModal from '../create-edit';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 
@@ -29,12 +27,12 @@ export default function Organization({ id }: { id: string }) {
   const { organization, users } = data || {};
   const toggleStatus = useUpdateOrganization();
   const editModal = useDisclosure();
-  const addUserModal = useDisclosure();
-  const editUserModal = useDisclosure();
+  const userModal = useDisclosure();
   const deleteUserModal = useDisclosure();
 
   const [selectedTab, setSelectedTab] = useState('users');
   const [selectedUser, setSelectedUser] = useState<OrganizationUserType | null>(null);
+  const [userModalMode, setUserModalMode] = useState<'create' | 'edit'>('create');
 
   if (isLoading) {
     return (
@@ -71,7 +69,8 @@ export default function Organization({ id }: { id: string }) {
 
   const handleEditUser = (user: OrganizationUserType) => {
     setSelectedUser(user);
-    editUserModal.onOpen();
+    setUserModalMode('edit');
+    userModal.onOpen();
   };
 
   const handleDeleteUser = (user: OrganizationUserType) => {
@@ -79,10 +78,16 @@ export default function Organization({ id }: { id: string }) {
     deleteUserModal.onOpen();
   };
 
+  const handleAddUser = () => {
+    setSelectedUser(null);
+    setUserModalMode('create');
+    userModal.onOpen();
+  };
+
   return (
-    <div className="space-y-4">
-      <Card>
-        <CardHeader className="flex items-center justify-between">
+    <>
+      <Card className="shadow-none">
+        <CardHeader className="flex items-center justify-between p-0">
           <div className="flex items-center space-x-2">
             <Avatar
               src={organization.logoUrl || ''}
@@ -100,7 +105,7 @@ export default function Organization({ id }: { id: string }) {
             <Button
               color="primary"
               variant="flat"
-              onPress={() => addUserModal.onOpen()}
+              onPress={handleAddUser}
               size="sm"
               startContent={<Icon icon="solar:user-plus-line-duotone" />}
             >
@@ -128,143 +133,99 @@ export default function Organization({ id }: { id: string }) {
             />
           </div>
         </CardHeader>
-        <CardBody>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            <CellRenderer
-              label="Subscription ID"
-              value={organization.subscriptionId || 'No subscription'}
-              icon="solar:card-2-bold-duotone"
-              classNames={{
-                icon: 'text-red-500 bg-rose-100',
-              }}
-            />
-
-            <CellRenderer
-              label="Created"
-              value={formatDate(organization.createdAt, 'PPP')}
-              icon="solar:calendar-line-duotone"
-              classNames={{
-                icon: 'text-blue-500 bg-blue-100',
-              }}
-            />
-            <CellRenderer
-              label="Last Updated"
-              value={formatDate(organization.updatedAt, 'PPP')}
-              icon="solar:calendar-line-duotone"
-              classNames={{
-                icon: 'text-green-500 bg-green-100',
-              }}
-            />
-            <CellRenderer
-              label="Total Users"
-              value={users?.length || 0}
-              icon="solar:users-group-rounded-line-duotone"
-              classNames={{
-                icon: 'text-teal-500 bg-teal-100',
-              }}
-            />
-            <CellRenderer
-              label="Active Users"
-              value={users?.filter((user) => user.status === 'active').length || 0}
-              icon="solar:user-check-line-duotone"
-              classNames={{
-                icon: 'text-amber-500 bg-amber-100',
-              }}
-            />
-            <CellRenderer
-              label="Blocked Users"
-              value={users?.filter((user) => user.status === 'inactive').length || 0}
-              icon="solar:user-block-line-duotone"
-              classNames={{
-                icon: 'text-red-500 bg-red-100',
-              }}
-            />
-          </div>
+        <CardBody className="p-0">
+          <Tabs
+            selectedKey={selectedTab}
+            onSelectionChange={(key) => setSelectedTab(key as string)}
+            className="w-full"
+            classNames={{
+              panel: '!mt-0',
+            }}
+          >
+            <Tab
+              key="users"
+              title={
+                <div className="flex items-center gap-2">
+                  <Icon icon="solar:users-group-rounded-line-duotone" />
+                  <span>Users ({users?.length || 0})</span>
+                </div>
+              }
+            >
+              <div className="flex h-full flex-col">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold">Organization Users</h3>
+                  <Button
+                    color="primary"
+                    variant="flat"
+                    onPress={handleAddUser}
+                    startContent={<Icon icon="solar:user-plus-line-duotone" />}
+                  >
+                    Add User
+                  </Button>
+                </div>
+                <ScrollShadow
+                  hideScrollBar
+                  className="max-h-[60vh] flex-1 space-y-2 overflow-y-auto p-2"
+                >
+                  {users?.map((user) => (
+                    <Card key={user.uid}>
+                      <CardBody className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-4">
+                            <Avatar src={user.image} name={user.name} size="lg" />
+                            <div>
+                              <h4 className="font-semibold">{user.name}</h4>
+                              <p className="text-sm text-default-400">{user.email}</p>
+                              <div className="mt-1 flex items-center space-x-2">
+                                {renderChip({
+                                  item: user.role,
+                                })}
+                                {renderChip({
+                                  item: user.status,
+                                })}
+                                {user.role !== 'admin' && (
+                                  <UserStatusToggle organization={organization} user={user} />
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Button
+                              isIconOnly
+                              variant="flat"
+                              size="sm"
+                              onPress={() => handleEditUser(user)}
+                              startContent={<Icon icon="solar:pen-line-duotone" />}
+                            />
+                            <Button
+                              isIconOnly
+                              variant="flat"
+                              size="sm"
+                              startContent={<Icon icon="solar:eye-line-duotone" />}
+                            />
+                            {user.role !== 'admin' && (
+                              <Button
+                                isIconOnly
+                                variant="flat"
+                                size="sm"
+                                color="danger"
+                                onPress={() => handleDeleteUser(user)}
+                                startContent={<Icon icon="solar:trash-bin-trash-line-duotone" />}
+                              />
+                            )}
+                          </div>
+                        </div>
+                      </CardBody>
+                    </Card>
+                  ))}
+                </ScrollShadow>
+              </div>
+            </Tab>
+          </Tabs>
         </CardBody>
       </Card>
 
       {/* Tabs */}
-
-      <Tabs
-        selectedKey={selectedTab}
-        onSelectionChange={(key) => setSelectedTab(key as string)}
-        className="w-full"
-      >
-        <Tab
-          key="users"
-          title={
-            <div className="flex items-center gap-2">
-              <Icon icon="solar:users-group-rounded-line-duotone" />
-              <span>Users ({users?.length || 0})</span>
-            </div>
-          }
-        >
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">Organization Users</h3>
-              <Button
-                color="primary"
-                variant="flat"
-                onPress={() => addUserModal.onOpen()}
-                startContent={<Icon icon="solar:user-plus-line-duotone" />}
-              >
-                Add User
-              </Button>
-            </div>
-            {users?.map((user) => (
-              <Card key={user.uid}>
-                <CardBody className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <Avatar src={user.image} name={user.name} size="lg" />
-                      <div>
-                        <h4 className="font-semibold">{user.name}</h4>
-                        <p className="text-sm text-default-400">{user.email}</p>
-                        <div className="mt-1 flex items-center space-x-2">
-                          {renderChip({
-                            item: user.role,
-                          })}
-                          {renderChip({
-                            item: user.status,
-                          })}
-                          {user.role !== 'admin' && (
-                            <UserStatusToggle organization={organization} user={user} />
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Button
-                        isIconOnly
-                        variant="flat"
-                        size="sm"
-                        onPress={() => handleEditUser(user)}
-                        startContent={<Icon icon="solar:pen-line-duotone" />}
-                      />
-                      <Button
-                        isIconOnly
-                        variant="flat"
-                        size="sm"
-                        startContent={<Icon icon="solar:eye-line-duotone" />}
-                      />
-                      {user.role !== 'admin' && (
-                        <Button
-                          isIconOnly
-                          variant="flat"
-                          size="sm"
-                          color="danger"
-                          onPress={() => handleDeleteUser(user)}
-                          startContent={<Icon icon="solar:trash-bin-trash-line-duotone" />}
-                        />
-                      )}
-                    </div>
-                  </div>
-                </CardBody>
-              </Card>
-            ))}
-          </div>
-        </Tab>
-      </Tabs>
 
       {/* Edit Organization Modal */}
       {editModal.isOpen && (
@@ -276,22 +237,14 @@ export default function Organization({ id }: { id: string }) {
         />
       )}
 
-      {/* Add User Modal */}
-      {addUserModal.isOpen && (
-        <AddUserModal
-          isOpen={addUserModal.isOpen}
-          onClose={addUserModal.onClose}
+      {/* User Modal (Create/Edit) */}
+      {userModal.isOpen && (
+        <UserModal
+          isOpen={userModal.isOpen}
+          onClose={userModal.onClose}
           organization={organization}
-        />
-      )}
-
-      {/* Edit User Modal */}
-      {editUserModal.isOpen && selectedUser && (
-        <EditUserModal
-          isOpen={editUserModal.isOpen}
-          onClose={editUserModal.onClose}
-          organization={organization}
-          user={selectedUser}
+          mode={userModalMode}
+          user={userModalMode === 'edit' ? selectedUser || undefined : undefined}
         />
       )}
 
@@ -304,6 +257,6 @@ export default function Organization({ id }: { id: string }) {
           user={selectedUser}
         />
       )}
-    </div>
+    </>
   );
 }

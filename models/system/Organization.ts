@@ -1,7 +1,7 @@
 import mongoose, { Connection } from 'mongoose';
 import { auth } from '@/auth';
 import { generateOrganizationId } from '@/helpers/organizations';
-import client, { getDB } from '@/lib/db';
+import client, { getDB } from '@/lib/mongodb';
 
 const organizationSchema = new mongoose.Schema(
   {
