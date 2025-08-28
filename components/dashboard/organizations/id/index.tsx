@@ -165,7 +165,7 @@ export default function Organization({ id }: { id: string }) {
                 </div>
                 <ScrollShadow
                   hideScrollBar
-                  className="max-h-[60vh] flex-1 space-y-2 overflow-y-auto p-2"
+                  className="max-h-[70vh] flex-1 space-y-2 overflow-y-auto p-2"
                 >
                   {users?.map((user) => (
                     <Card key={user.uid}>

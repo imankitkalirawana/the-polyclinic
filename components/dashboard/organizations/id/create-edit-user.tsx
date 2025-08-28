@@ -157,7 +157,6 @@ export default function UserModal({ isOpen, onClose, organization, mode, user }:
                 placeholder="Enter phone number"
                 value={values.phone || ''}
                 onChange={handleChange}
-                isRequired={!isEdit}
                 startContent={<Icon icon="solar:phone-bold-duotone" className="text-default-400" />}
                 isInvalid={touched.phone && !!errors.phone}
                 errorMessage={errors.phone}
