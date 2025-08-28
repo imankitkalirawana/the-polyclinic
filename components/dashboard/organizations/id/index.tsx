@@ -6,11 +6,9 @@ import {
   CardHeader,
   Button,
   Switch,
-  Chip,
   Avatar,
   Tabs,
   Tab,
-  Divider,
   Spinner,
   useDisclosure,
 } from '@heroui/react';
@@ -18,12 +16,13 @@ import { Icon } from '@iconify/react';
 import { formatDate } from 'date-fns';
 import { useOrganization, useUpdateOrganization } from '@/hooks/queries/system/organization';
 import { OrganizationUserType } from '@/types/system/organization';
-import EditOrganizationModal from './edit-modal';
 import AddUserModal from './add-user-modal';
 import EditUserModal from './edit-user-modal';
 import DeleteUserModal from './delete-user-modal';
 import UserStatusToggle from './user-status-toggle';
 import { CellRenderer } from '@/components/ui/cell-renderer';
+import CreateEditOrganizationModal from '../create-edit';
+import { renderChip } from '@/components/ui/data-table/cell-renderers';
 
 export default function Organization({ id }: { id: string }) {
   const { data, isLoading, error } = useOrganization(id);
@@ -80,36 +79,6 @@ export default function Organization({ id }: { id: string }) {
     deleteUserModal.onOpen();
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'active':
-        return 'success';
-      case 'inactive':
-        return 'default';
-      default:
-        return 'default';
-    }
-  };
-
-  const getRoleColor = (role: string) => {
-    switch (role) {
-      case 'admin':
-        return 'danger';
-      case 'doctor':
-        return 'primary';
-      case 'nurse':
-        return 'secondary';
-      case 'receptionist':
-        return 'success';
-      case 'pharmacist':
-        return 'warning';
-      case 'laboratorist':
-        return 'secondary';
-      default:
-        return 'default';
-    }
-  };
-
   return (
     <div className="space-y-4">
       <Card>
@@ -152,9 +121,10 @@ export default function Organization({ id }: { id: string }) {
               <Icon icon="solar:arrow-right-up-linear" />
             </Button>
             <Switch
+              isReadOnly={toggleStatus.isPending}
               isSelected={organization.status === 'active'}
               onValueChange={handleToggleStatus}
-              isReadOnly={toggleStatus.isPending}
+              thumbIcon={toggleStatus.isPending ? <Spinner size="sm" /> : undefined}
             />
           </div>
         </CardHeader>
@@ -229,7 +199,7 @@ export default function Organization({ id }: { id: string }) {
             </div>
           }
         >
-          <div className="space-y-4">
+          <div className="space-y-2">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">Organization Users</h3>
               <Button
@@ -242,7 +212,7 @@ export default function Organization({ id }: { id: string }) {
               </Button>
             </div>
             {users?.map((user) => (
-              <Card key={user._id}>
+              <Card key={user.uid}>
                 <CardBody className="p-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
@@ -251,13 +221,15 @@ export default function Organization({ id }: { id: string }) {
                         <h4 className="font-semibold">{user.name}</h4>
                         <p className="text-sm text-default-400">{user.email}</p>
                         <div className="mt-1 flex items-center space-x-2">
-                          <Chip color={getRoleColor(user.role)} variant="flat" size="sm">
-                            {user.role}
-                          </Chip>
-                          <Chip color={getStatusColor(user.status)} variant="flat" size="sm">
-                            {user.status}
-                          </Chip>
-                          <UserStatusToggle organization={organization} user={user} />
+                          {renderChip({
+                            item: user.role,
+                          })}
+                          {renderChip({
+                            item: user.status,
+                          })}
+                          {user.role !== 'admin' && (
+                            <UserStatusToggle organization={organization} user={user} />
+                          )}
                         </div>
                       </div>
                     </div>
@@ -275,14 +247,16 @@ export default function Organization({ id }: { id: string }) {
                         size="sm"
                         startContent={<Icon icon="solar:eye-line-duotone" />}
                       />
-                      <Button
-                        isIconOnly
-                        variant="flat"
-                        size="sm"
-                        color="danger"
-                        onPress={() => handleDeleteUser(user)}
-                        startContent={<Icon icon="solar:trash-bin-trash-line-duotone" />}
-                      />
+                      {user.role !== 'admin' && (
+                        <Button
+                          isIconOnly
+                          variant="flat"
+                          size="sm"
+                          color="danger"
+                          onPress={() => handleDeleteUser(user)}
+                          startContent={<Icon icon="solar:trash-bin-trash-line-duotone" />}
+                        />
+                      )}
                     </div>
                   </div>
                 </CardBody>
@@ -290,104 +264,14 @@ export default function Organization({ id }: { id: string }) {
             ))}
           </div>
         </Tab>
-
-        <Tab
-          key="settings"
-          title={
-            <div className="flex items-center space-x-2">
-              <Icon icon="solar:settings-line-duotone" />
-              <span>Settings</span>
-            </div>
-          }
-        >
-          <div className="p-6">
-            <h3 className="mb-4 text-lg font-semibold">Organization Settings</h3>
-            <div className="space-y-6">
-              <div>
-                <h4 className="mb-3 font-medium">General Information</h4>
-                <div className="space-y-3">
-                  <div>
-                    <label className="text-sm text-default-400">Organization Name</label>
-                    <p className="font-medium">{organization.name}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm text-default-400">Domain</label>
-                    <p className="font-medium">{organization.domain}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm text-default-400">Status</label>
-                    <div className="flex items-center space-x-2">
-                      <Chip color={getStatusColor(organization.status)}>{organization.status}</Chip>
-                      <Switch
-                        isSelected={organization.status === 'active'}
-                        onValueChange={handleToggleStatus}
-                        isReadOnly={toggleStatus.isPending}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <Divider />
-
-              <div>
-                <h4 className="mb-3 font-medium">Subscription & Billing</h4>
-                <div className="space-y-3">
-                  <div>
-                    <label className="text-sm text-default-400">Subscription ID</label>
-                    <p className="font-medium">
-                      {organization.subscriptionId || 'No active subscription'}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="text-sm text-default-400">Plan</label>
-                    <p className="font-medium">Professional Plan</p>
-                  </div>
-                  <div>
-                    <label className="text-sm text-default-400">Next Billing</label>
-                    <p className="font-medium">December 15, 2024</p>
-                  </div>
-                </div>
-              </div>
-
-              <Divider />
-
-              <div>
-                <h4 className="mb-3 font-medium">Security & Access</h4>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <label className="text-sm text-default-400">Two-Factor Authentication</label>
-                      <p className="text-xs text-default-400">Require 2FA for all users</p>
-                    </div>
-                    <Switch defaultSelected />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <label className="text-sm text-default-400">Session Timeout</label>
-                      <p className="text-xs text-default-400">Auto-logout after inactivity</p>
-                    </div>
-                    <Switch defaultSelected />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <label className="text-sm text-default-400">IP Restrictions</label>
-                      <p className="text-xs text-default-400">Limit access to specific IPs</p>
-                    </div>
-                    <Switch />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Tab>
       </Tabs>
 
       {/* Edit Organization Modal */}
       {editModal.isOpen && (
-        <EditOrganizationModal
+        <CreateEditOrganizationModal
           isOpen={editModal.isOpen}
           onClose={editModal.onClose}
+          mode="edit"
           organization={organization}
         />
       )}

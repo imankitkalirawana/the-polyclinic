@@ -1,5 +1,4 @@
 'use client';
-import { useState } from 'react';
 import {
   Modal,
   ModalContent,
@@ -13,9 +12,15 @@ import {
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { useUpdateOrganizationUser } from '@/hooks/queries/system/organization';
-import { toast } from 'sonner';
-import { OrganizationType, UpdateOrganizationUser } from '@/types/system/organization';
+import {
+  OrganizationType,
+  organizationUserRoles,
+  UpdateOrganizationUser,
+} from '@/types/system/organization';
 import { OrganizationUserType } from '@/types/system/organization';
+import { useFormik } from 'formik';
+import { updateOrganizationUserSchema } from '@/services/organization/validation';
+import { toTitleCase, withZodSchema } from '@/lib/utils';
 
 interface EditUserModalProps {
   isOpen: boolean;
@@ -24,135 +29,144 @@ interface EditUserModalProps {
   user: OrganizationUserType;
 }
 
-const userRoles = [
-  { key: 'admin', label: 'Admin' },
-  { key: 'doctor', label: 'Doctor' },
-  { key: 'nurse', label: 'Nurse' },
-  { key: 'patient', label: 'Patient' },
-  { key: 'receptionist', label: 'Receptionist' },
-  { key: 'pharmacist', label: 'Pharmacist' },
-];
-
 export default function EditUserModal({ isOpen, onClose, organization, user }: EditUserModalProps) {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    password: '',
-    role: 'receptionist' as const,
-    image: '',
-  });
-
   const updateUser = useUpdateOrganizationUser();
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
+  const { values, handleSubmit, handleChange, setFieldValue, isSubmitting, errors, touched } =
+    useFormik<UpdateOrganizationUser>({
+      initialValues: {
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        image: user.image,
+        role: user.role,
+        status: user.status,
+      },
+      validate: withZodSchema(updateOrganizationUserSchema),
+      onSubmit: async (values) => {
+        await updateUser.mutateAsync({
+          organizationId: organization.organizationId,
+          userId: user.uid,
+          data: values,
+        });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    try {
-      // Only send fields that have changed or are required
-      const updateData: UpdateOrganizationUser = {};
-      if (formData.name !== user.name) updateData.name = formData.name;
-      if (formData.email !== user.email) updateData.email = formData.email;
-      if (formData.phone !== user.phone) updateData.phone = formData.phone;
-      if (formData.role !== user.role) updateData.role = formData.role;
-      if (formData.image !== user.image) updateData.image = formData.image;
-      if (formData.password) updateData.password = formData.password;
-
-      await updateUser.mutateAsync({
-        organizationId: organization.organizationId,
-        userId: user._id,
-        data: updateData,
-      });
-
-      toast.success('User updated successfully');
-      onClose();
-    } catch (error) {
-      // Error handling is done in the mutation hook
-    }
-  };
-
-  const isFormValid = formData.name && formData.email && formData.phone;
+        onClose();
+      },
+    });
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="2xl" scrollBehavior="inside">
+    <Modal
+      hideCloseButton
+      isOpen={isOpen}
+      onClose={onClose}
+      size="2xl"
+      scrollBehavior="inside"
+      backdrop="blur"
+    >
       <ModalContent>
-        <form onSubmit={handleSubmit}>
+        {/* TODO: Fix this layout causing `scrollBehavior` to not work */}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit();
+          }}
+          className="overflow-y-auto"
+        >
           <ModalHeader className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
-              <Icon icon="solar:pen-line-duotone" className="h-5 w-5" />
+              <Icon icon="solar:pen-bold-duotone" className="h-5 w-5" />
               <span>Edit User</span>
             </div>
-            <p className="text-sm text-default-400">Update user information for {user.name}</p>
+            <p className="text-sm font-normal text-default-400">
+              Update user information for {user.name}
+            </p>
           </ModalHeader>
 
           <ModalBody>
             <div className="space-y-4">
               <Input
+                isRequired
+                name="name"
                 label="Full Name"
                 placeholder="Enter full name"
-                value={formData.name}
-                onChange={(e) => handleInputChange('name', e.target.value)}
-                isRequired
-                startContent={<Icon icon="solar:user-line-duotone" className="text-default-400" />}
+                value={values.name}
+                onChange={handleChange}
+                startContent={<Icon icon="solar:user-bold-duotone" className="text-default-400" />}
+                isInvalid={touched.name && !!errors.name}
+                errorMessage={errors.name}
               />
 
               <Input
+                name="email"
                 label="Email"
                 type="email"
                 placeholder="Enter email address"
-                value={formData.email}
-                onChange={(e) => handleInputChange('email', e.target.value)}
+                value={values.email}
+                onChange={handleChange}
                 isRequired
                 startContent={
-                  <Icon icon="solar:letter-line-duotone" className="text-default-400" />
+                  <Icon icon="solar:letter-bold-duotone" className="text-default-400" />
                 }
+                isInvalid={touched.email && !!errors.email}
+                errorMessage={errors.email}
               />
 
               <Input
+                name="phone"
                 label="Phone Number"
                 placeholder="Enter phone number"
-                value={formData.phone}
-                onChange={(e) => handleInputChange('phone', e.target.value)}
-                isRequired
-                startContent={<Icon icon="solar:phone-line-duotone" className="text-default-400" />}
+                value={values.phone}
+                onChange={handleChange}
+                startContent={<Icon icon="solar:phone-bold-duotone" className="text-default-400" />}
+                isInvalid={touched.phone && !!errors.phone}
+                errorMessage={errors.phone}
               />
 
               <Input
+                name="password"
                 label="New Password (leave blank to keep current)"
                 type="password"
                 placeholder="Enter new password"
-                value={formData.password}
-                onChange={(e) => handleInputChange('password', e.target.value)}
+                value={values.password}
+                onChange={handleChange}
                 startContent={
-                  <Icon icon="solar:lock-password-line-duotone" className="text-default-400" />
+                  <Icon icon="solar:lock-password-bold-duotone" className="text-default-400" />
                 }
+                isInvalid={touched.password && !!errors.password}
+                errorMessage={errors.password}
               />
 
               <Select
+                name="role"
                 label="Role"
                 placeholder="Select user role"
-                selectedKeys={[formData.role]}
-                onChange={(e) => handleInputChange('role', e.target.value)}
+                selectedKeys={[values.role || '']}
+                onChange={(e) => setFieldValue('role', e.target.value)}
                 isRequired
                 startContent={
-                  <Icon icon="solar:user-id-line-duotone" className="text-default-400" />
+                  <Icon icon="solar:user-id-bold-duotone" className="text-default-400" />
                 }
+                isInvalid={touched.role && !!errors.role}
+                errorMessage={errors.role}
               >
-                {userRoles.map((role) => (
-                  <SelectItem key={role.key}>{role.label}</SelectItem>
+                {organizationUserRoles.map((role) => (
+                  <SelectItem key={role} textValue={toTitleCase(role)}>
+                    {toTitleCase(role)}
+                  </SelectItem>
                 ))}
               </Select>
 
               <Input
+                name="image"
                 label="Profile Image URL"
                 placeholder="Enter profile image URL (optional)"
-                value={formData.image}
-                onChange={(e) => handleInputChange('image', e.target.value)}
-                startContent={<Icon icon="solar:image-line-duotone" className="text-default-400" />}
+                value={values.image}
+                onChange={(e) => setFieldValue('image', e.target.value)}
+                startContent={
+                  <Icon icon="solar:gallery-circle-bold-duotone" className="text-default-400" />
+                }
+                isInvalid={touched.image && !!errors.image}
+                errorMessage={errors.image}
               />
             </div>
           </ModalBody>
@@ -161,12 +175,7 @@ export default function EditUserModal({ isOpen, onClose, organization, user }: E
             <Button variant="flat" onPress={onClose}>
               Cancel
             </Button>
-            <Button
-              color="primary"
-              type="submit"
-              isLoading={updateUser.isPending}
-              isDisabled={!isFormValid}
-            >
+            <Button color="primary" type="submit" isLoading={isSubmitting}>
               Update User
             </Button>
           </ModalFooter>

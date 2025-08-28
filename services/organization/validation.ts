@@ -36,16 +36,23 @@ export const createOrganizationUserSchema = z.object({
   phone: z
     .string({ error: 'Phone is required' })
     .trim()
-    .min(1, { error: 'Phone cannot be empty' })
-    .regex(/^[6-9]\d{9}$/, { error: 'Invalid phone number' })
-    .optional(),
+    .optional()
+    .refine((phone) => {
+      if (phone) {
+        return z
+          .string()
+          .regex(/^[6-9]\d{9}$/, { error: 'Invalid phone number' })
+          .safeParse(phone).success;
+      }
+      return true;
+    }),
   image: z.url({ error: 'Image URL must be a valid URL' }).optional().or(z.literal('')),
   password: z
     .string({ error: 'Password is required' })
     .trim()
     .min(8, { error: 'Password must be at least 8 characters long' })
     .optional(),
-  role: z.enum(organizationUserRoles, { error: 'Role is required' }).default('patient').optional(),
+  role: z.enum(organizationUserRoles, { error: 'Invalid role' }),
 });
 
 export const updateOrganizationUserSchema = createOrganizationUserSchema.partial().extend({

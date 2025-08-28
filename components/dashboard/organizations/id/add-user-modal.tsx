@@ -1,5 +1,4 @@
 'use client';
-import { useState } from 'react';
 import {
   Modal,
   ModalContent,
@@ -10,11 +9,18 @@ import {
   Input,
   Select,
   SelectItem,
+  ScrollShadow,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { useCreateOrganizationUser } from '@/hooks/queries/system/organization';
-import { toast } from 'sonner';
-import { OrganizationType } from '@/types/system/organization';
+import {
+  OrganizationType,
+  organizationUserRoles,
+  CreateOrganizationUser,
+} from '@/types/system/organization';
+import { toTitleCase, withZodSchema } from '@/lib/utils';
+import { useFormik } from 'formik';
+import { createOrganizationUserSchema } from '@/services/organization/validation';
 
 interface AddUserModalProps {
   isOpen: boolean;
@@ -22,152 +28,144 @@ interface AddUserModalProps {
   organization: OrganizationType;
 }
 
-const userRoles = [
-  { key: 'admin', label: 'Admin' },
-  { key: 'doctor', label: 'Doctor' },
-  { key: 'nurse', label: 'Nurse' },
-  { key: 'patient', label: 'Patient' },
-  { key: 'receptionist', label: 'Receptionist' },
-  { key: 'pharmacist', label: 'Pharmacist' },
-];
-
 export default function AddUserModal({ isOpen, onClose, organization }: AddUserModalProps) {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    password: '',
-    role: 'receptionist' as const,
-    image: '',
-  });
-
   const createUser = useCreateOrganizationUser();
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    try {
-      await createUser.mutateAsync({
-        id: organization.organizationId,
-        data: formData,
-      });
-
-      toast.success('User added successfully to organization');
-      onClose();
-      setFormData({
+  const { values, handleChange, isSubmitting, errors, touched, handleSubmit } =
+    useFormik<CreateOrganizationUser>({
+      initialValues: {
         name: '',
         email: '',
         phone: '',
         password: '',
-        role: 'receptionist',
+        role: 'patient',
         image: '',
-      });
-    } catch (error) {
-      // Error handling is done in the mutation hook
-    }
-  };
-
-  const isFormValid = formData.name && formData.email && formData.phone && formData.password;
+      },
+      validate: withZodSchema(createOrganizationUserSchema),
+      onSubmit: async (values) => {
+        await createUser.mutateAsync({
+          id: organization.organizationId,
+          data: values,
+        });
+      },
+    });
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="2xl" scrollBehavior="inside">
+    <Modal
+      hideCloseButton
+      isOpen={isOpen}
+      onClose={onClose}
+      size="2xl"
+      scrollBehavior="inside"
+      backdrop="blur"
+    >
       <ModalContent>
-        <form onSubmit={handleSubmit}>
-          <ModalHeader className="flex flex-col gap-1">
-            <div className="flex items-center gap-2">
-              <Icon icon="solar:user-plus-line-duotone" className="h-5 w-5" />
-              <span>Add User to Organization</span>
-            </div>
-            <p className="text-sm text-default-400">Add a new user to {organization.name}</p>
-          </ModalHeader>
+        <ModalHeader className="flex flex-col gap-1">
+          <div className="flex items-center gap-2">
+            <Icon icon="solar:user-plus-bold-duotone" className="h-5 w-5" />
+            <span>Add User to Organization</span>
+          </div>
+          <p className="text-sm font-normal text-default-400">
+            Add a new user to {organization.name}
+          </p>
+        </ModalHeader>
 
-          <ModalBody>
-            <div className="space-y-4">
-              <Input
-                label="Full Name"
-                placeholder="Enter full name"
-                value={formData.name}
-                onChange={(e) => handleInputChange('name', e.target.value)}
-                isRequired
-                startContent={<Icon icon="solar:user-line-duotone" className="text-default-400" />}
-              />
+        <ModalBody as={ScrollShadow}>
+          <div className="space-y-4">
+            <Input
+              isRequired
+              label="Full Name"
+              name="name"
+              placeholder="Enter full name"
+              value={values.name}
+              onChange={handleChange}
+              startContent={<Icon icon="solar:user-bold-duotone" className="text-default-400" />}
+              isInvalid={touched.name && !!errors.name}
+              errorMessage={errors.name}
+            />
 
-              <Input
-                label="Email"
-                type="email"
-                placeholder="Enter email address"
-                value={formData.email}
-                onChange={(e) => handleInputChange('email', e.target.value)}
-                isRequired
-                startContent={
-                  <Icon icon="solar:letter-line-duotone" className="text-default-400" />
-                }
-              />
+            <Input
+              isRequired
+              label="Email"
+              name="email"
+              type="email"
+              placeholder="Enter email address"
+              value={values.email}
+              onChange={handleChange}
+              startContent={<Icon icon="solar:letter-bold-duotone" className="text-default-400" />}
+              isInvalid={touched.email && !!errors.email}
+              errorMessage={errors.email}
+            />
 
-              <Input
-                label="Phone Number"
-                placeholder="Enter phone number"
-                value={formData.phone}
-                onChange={(e) => handleInputChange('phone', e.target.value)}
-                isRequired
-                startContent={<Icon icon="solar:phone-line-duotone" className="text-default-400" />}
-              />
+            <Input
+              label="Phone Number"
+              name="phone"
+              placeholder="Enter phone number"
+              value={values.phone}
+              onChange={handleChange}
+              isRequired
+              startContent={<Icon icon="solar:phone-bold-duotone" className="text-default-400" />}
+              isInvalid={touched.phone && !!errors.phone}
+              errorMessage={errors.phone}
+            />
 
-              <Input
-                label="Password"
-                type="password"
-                placeholder="Enter password"
-                value={formData.password}
-                onChange={(e) => handleInputChange('password', e.target.value)}
-                isRequired
-                startContent={
-                  <Icon icon="solar:lock-password-line-duotone" className="text-default-400" />
-                }
-              />
+            <Input
+              label="Password"
+              name="password"
+              type="password"
+              placeholder="Enter password"
+              value={values.password}
+              onChange={handleChange}
+              isRequired
+              isInvalid={touched.password && !!errors.password}
+              errorMessage={errors.password}
+            />
 
-              <Select
-                label="Role"
-                placeholder="Select user role"
-                selectedKeys={[formData.role]}
-                onChange={(e) => handleInputChange('role', e.target.value)}
-                isRequired
-                startContent={
-                  <Icon icon="solar:user-id-line-duotone" className="text-default-400" />
-                }
-              >
-                {userRoles.map((role) => (
-                  <SelectItem key={role.key}>{role.label}</SelectItem>
-                ))}
-              </Select>
-
-              <Input
-                label="Profile Image URL"
-                placeholder="Enter profile image URL (optional)"
-                value={formData.image}
-                onChange={(e) => handleInputChange('image', e.target.value)}
-                startContent={<Icon icon="solar:image-line-duotone" className="text-default-400" />}
-              />
-            </div>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button variant="flat" onPress={onClose}>
-              Cancel
-            </Button>
-            <Button
-              color="primary"
-              type="submit"
-              isLoading={createUser.isPending}
-              isDisabled={!isFormValid}
+            <Select
+              isRequired
+              disallowEmptySelection
+              label="Role"
+              name="role"
+              placeholder="Select user role"
+              selectedKeys={[values.role]}
+              onChange={handleChange}
+              startContent={<Icon icon="solar:user-id-bold-duotone" className="text-default-400" />}
+              isInvalid={touched.role && !!errors.role}
+              errorMessage={errors.role}
             >
-              Add User
-            </Button>
-          </ModalFooter>
-        </form>
+              {organizationUserRoles.map((role) => (
+                <SelectItem key={role} textValue={toTitleCase(role)}>
+                  {toTitleCase(role)}
+                </SelectItem>
+              ))}
+            </Select>
+
+            <Input
+              label="Profile Image URL"
+              name="image"
+              placeholder="Enter profile image URL (optional)"
+              value={values.image}
+              onChange={handleChange}
+              startContent={<Icon icon="solar:image-bold-duotone" className="text-default-400" />}
+              isInvalid={touched.image && !!errors.image}
+              errorMessage={errors.image}
+            />
+          </div>
+        </ModalBody>
+
+        <ModalFooter>
+          <Button type="button" variant="flat" onPress={onClose}>
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            color="primary"
+            isLoading={isSubmitting}
+            onPress={() => handleSubmit()}
+          >
+            Add User
+          </Button>
+        </ModalFooter>
       </ModalContent>
     </Modal>
   );

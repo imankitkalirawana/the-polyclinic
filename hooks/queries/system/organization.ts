@@ -185,7 +185,6 @@ export const useUpdateOrganizationUser = () => {
     onSuccess: (_, variables) => {
       addToast({
         title: 'User updated successfully',
-        description: 'User updated successfully',
         color: 'success',
       });
       queryClient.invalidateQueries({ queryKey: ['organizations', variables.organizationId] });

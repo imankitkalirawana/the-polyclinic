@@ -9,7 +9,7 @@ import {
 } from '@/hooks/queries/system/organization';
 import { toast } from 'sonner';
 import { formatDate } from 'date-fns';
-import CreateEditModal from './create-edit';
+import CreateEditOrganizationModal from './create-edit';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import Link from 'next/link';
 
@@ -52,7 +52,11 @@ export default function OrganizationsDashboard() {
       </div>
 
       {createModal.isOpen && (
-        <CreateEditModal isOpen={createModal.isOpen} onClose={createModal.onClose} mode="create" />
+        <CreateEditOrganizationModal
+          isOpen={createModal.isOpen}
+          onClose={createModal.onClose}
+          mode="create"
+        />
       )}
     </div>
   );
@@ -148,7 +152,7 @@ function OrganizationCard({ org }: { org: OrganizationType }) {
         </CardBody>
       </Card>
       {editModal.isOpen && (
-        <CreateEditModal
+        <CreateEditOrganizationModal
           isOpen={editModal.isOpen}
           onClose={() => {
             editModal.onClose();

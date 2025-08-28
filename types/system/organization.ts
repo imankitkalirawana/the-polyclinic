@@ -51,31 +51,9 @@ export type OrganizationUserType = Base & {
   status: OrganizationUserStatus;
 };
 
-export type CreateOrganizationUser = Partial<
-  Omit<
-    OrganizationUserType,
-    | '_id'
-    | 'createdAt'
-    | 'updatedAt'
-    | 'createdBy'
-    | 'updatedBy'
-    | 'organization'
-    | 'status'
-    | 'uid'
-  >
-> & {
-  password?: string;
-};
-
-export type UpdateOrganizationUser = Partial<
-  Omit<OrganizationUserType, '_id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'updatedBy' | 'uid'>
-> & {
-  password?: string;
-};
-
 // from zod validation
 export type CreateOrganizationType = z.infer<typeof createOrganizationSchema>;
 export type UpdateOrganizationType = z.infer<typeof updateOrganizationSchema>;
 
-export type CreateOrganizationUserRequest = z.infer<typeof createOrganizationUserSchema>;
-export type UpdateOrganizationUserRequest = z.infer<typeof updateOrganizationUserSchema>;
+export type CreateOrganizationUser = z.infer<typeof createOrganizationUserSchema>;
+export type UpdateOrganizationUser = z.infer<typeof updateOrganizationUserSchema>;

@@ -3,16 +3,14 @@ import { Connection } from 'mongoose';
 import { getOrganizationModel } from '@/models/system/Organization';
 import {
   CreateOrganizationType,
+  CreateOrganizationUser,
   OrganizationType,
   OrganizationUserType,
   UpdateOrganizationType,
+  UpdateOrganizationUser,
 } from '@/types/system/organization';
 import { getUserModel } from '@/models/User';
 import { connectDB } from '@/lib/db';
-import {
-  CreateOrganizationUserRequest,
-  UpdateOrganizationUserRequest,
-} from '@/types/system/organization';
 import bcrypt from 'bcryptjs';
 
 export class OrganizationService {
@@ -233,7 +231,7 @@ export class OrganizationService {
   static async createOrganizationUser(
     conn: Connection,
     organizationId: string,
-    data: CreateOrganizationUserRequest
+    data: CreateOrganizationUser
   ): Promise<ServiceResult> {
     try {
       const { email, password, ...rest } = data;
@@ -270,7 +268,7 @@ export class OrganizationService {
     conn: Connection,
     organizationId: string,
     userId: string,
-    data: UpdateOrganizationUserRequest
+    data: UpdateOrganizationUser
   ): Promise<ServiceResult> {
     try {
       const { email, password, ...rest } = data;
