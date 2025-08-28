@@ -52,7 +52,6 @@
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
     "formik": "^2.4.6",
-    "formik-validator-zod": "^2.2.0",
     "framer-motion": "^11.14.3",
     "fuse.js": "^7.1.0",
     "husky": "^9.1.7",
