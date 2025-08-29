@@ -5,6 +5,7 @@ import { withAuth } from '@/middleware/withAuth';
 import { OrganizationService } from '@/services/organization/service';
 import { validateRequest } from '@/services';
 import { updateOrganizationSchema } from '@/services/organization/validation';
+import { validateOrganizationId } from '@/lib/server-actions/validation';
 
 type Params = Promise<{
   id: string;
@@ -39,6 +40,11 @@ export const GET = withAuth(async (_request: NextAuthRequest, { params }: { para
 export const PUT = withAuth(async (request: NextAuthRequest, { params }: { params: Params }) => {
   const { id } = await params;
   try {
+    const doesOrganizationExist = await validateOrganizationId(id);
+    if (!doesOrganizationExist) {
+      return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
+    }
+
     const conn = await connectDB();
     const body = await request.json();
 
@@ -69,12 +75,14 @@ export const PUT = withAuth(async (request: NextAuthRequest, { params }: { param
 export const DELETE = withAuth(
   async (_request: NextAuthRequest, { params }: { params: Params }) => {
     try {
-      const conn = await connectDB();
       const { id } = await params;
 
-      if (!id) {
-        return NextResponse.json({ message: 'Organization ID is required' }, { status: 400 });
+      const doesOrganizationExist = await validateOrganizationId(id);
+      if (!doesOrganizationExist) {
+        return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
       }
+
+      const conn = await connectDB();
 
       const result = await OrganizationService.deleteOrganization(conn, id);
       if (!result.success) {
