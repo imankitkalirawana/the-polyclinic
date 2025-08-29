@@ -5,6 +5,7 @@ import axios from 'axios';
 import { BASE_URL } from './client/helper';
 
 import type { $FixMe } from '@/types';
+import { getSubdomain } from '@/auth/sub-domain';
 
 export interface ApiResponse<T = unknown> {
   success: boolean;
@@ -50,7 +51,27 @@ export async function fetchData<T = unknown>(
   try {
     const { method = 'GET', data, params, baseUrl, headers } = options;
 
-    const url = `${baseUrl || BASE_URL}${endpoint}`;
+    let url: string;
+
+    if (baseUrl) {
+      // ✅ if baseUrl is provided, use it directly
+      url = `${baseUrl}${endpoint}`;
+    } else {
+      const subdomain = await getSubdomain(); // e.g. "clinic"
+
+      const parsed = new URL(BASE_URL);
+
+      if (subdomain) {
+        const [_host, ...rest] = parsed.hostname.split('.');
+        if (rest.length > 0) {
+          parsed.hostname = `${subdomain}.${rest.join('.')}`;
+        } else {
+          parsed.hostname = `${subdomain}.${parsed.hostname}`;
+        }
+      }
+
+      url = `${parsed.origin}${parsed.pathname}${endpoint}`;
+    }
 
     const res = await axios({
       url,
