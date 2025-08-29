@@ -228,12 +228,7 @@ export default function UserModal({ isOpen, onClose, organization, mode, user }:
           <Button variant="flat" onPress={onClose}>
             Cancel
           </Button>
-          <Button
-            color="primary"
-            type="submit"
-            isLoading={isSubmitting}
-            onPress={() => handleSubmit()}
-          >
+          <Button color="primary" isLoading={isSubmitting} onPress={() => handleSubmit()}>
             {isEdit ? 'Update User' : 'Add User'}
           </Button>
         </ModalFooter>
