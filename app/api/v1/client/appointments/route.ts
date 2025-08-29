@@ -1,20 +1,16 @@
 import { NextResponse } from 'next/server';
 import { NextAuthRequest } from 'next-auth';
 
-import { auth } from '@/auth';
 import { API_ACTIONS } from '@/lib/config';
 import { connectDB } from '@/lib/db';
 import Appointment from '@/models/client/Appointment';
 import { OrganizationUserRole } from '@/types/system/organization';
 import { getAppointmentsWithDetails } from '@/helpers/client/appointments';
+import { withAuth } from '@/middleware/withAuth';
 
-export const GET = auth(async (request: NextAuthRequest) => {
+export const GET = withAuth(async (request: NextAuthRequest) => {
   try {
     await connectDB();
-
-    if (!request.auth?.user) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
 
     const role = request.auth?.user?.role;
     const queryMap: Record<OrganizationUserRole, { $match: Record<string, unknown> }> = {
@@ -47,14 +43,8 @@ export const GET = auth(async (request: NextAuthRequest) => {
   }
 });
 
-export const POST = auth(async (request: NextAuthRequest) => {
+export const POST = withAuth(async (request: NextAuthRequest) => {
   try {
-    const allowedRoles = ['admin', 'doctor', 'receptionist', 'user'];
-    // @ts-ignore
-    if (!allowedRoles.includes(request.auth?.user?.role)) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
-
     await connectDB();
     const data = await request.json();
 
@@ -79,13 +69,8 @@ export const POST = auth(async (request: NextAuthRequest) => {
   }
 });
 
-export const PATCH = auth(async (request: NextAuthRequest) => {
+export const PATCH = withAuth(async (request: NextAuthRequest) => {
   try {
-    const allowedRoles = ['admin', 'receptionist'];
-    if (request.auth?.user && !allowedRoles.includes(request.auth?.user?.role)) {
-      return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
-    }
-
     await connectDB();
     const { ids } = await request.json();
 
@@ -103,13 +88,8 @@ export const PATCH = auth(async (request: NextAuthRequest) => {
   }
 });
 
-export const DELETE = auth(async (request: NextAuthRequest) => {
+export const DELETE = withAuth(async (request: NextAuthRequest) => {
   try {
-    const allowedRoles = ['admin', 'receptionist'];
-    if (request.auth?.user && !allowedRoles.includes(request.auth?.user?.role)) {
-      return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
-    }
-
     await connectDB();
     const { ids } = await request.json();
 

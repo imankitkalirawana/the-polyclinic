@@ -11,7 +11,7 @@ import {
   createAppointment,
   getAllAppointments,
   getAppointmentWithAID,
-} from '@/services/api/client/appointment';
+} from '@/services/client/appointment/api';
 
 import { AppointmentType } from '@/types/client/appointment';
 import { CreateAppointmentType } from '@/components/client/appointments/create/types';

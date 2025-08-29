@@ -23,7 +23,7 @@ const appointmentSchema = new mongoose.Schema(
       ref: 'Doctor',
     },
     additionalInfo: {
-      type: {
+      mode: {
         type: String,
         enum: ['online', 'offline'],
         default: 'offline',
