@@ -1,5 +1,5 @@
 'use client';
-
+// TODO: move this to somewhere else
 import { addToast } from '@heroui/react';
 
 import { printAppointmentReceipt } from '@/functions/server-actions/receipt';

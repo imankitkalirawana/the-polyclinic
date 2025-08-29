@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { useRouter } from 'nextjs-toploader/app';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import { APPOINTMENT_BUTTON_CONFIGS, isButtonVisible } from '../config/appointments';
+import { APPOINTMENT_BUTTON_CONFIGS, isButtonVisible } from '../services/client/appointment/config';
 
 import { useAppointmentStore } from '@/store/appointment';
 import { ProcessedButton } from '@/types/client/appointment';

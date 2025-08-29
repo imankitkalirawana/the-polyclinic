@@ -14,7 +14,7 @@ import Auth from '..';
 
 import { APP_INFO } from '@/lib/config';
 import { $FixMe, Gender } from '@/types';
-import { GENDERS } from '@/constants';
+import { GENDERS } from '@/lib/constants';
 
 const RegisterComponent: React.FC = () => {
   const { formik, paginate } = useRegister();

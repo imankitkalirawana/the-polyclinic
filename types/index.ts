@@ -1,4 +1,4 @@
-import { GENDERS } from '@/constants';
+import { GENDERS } from '@/lib/constants';
 import { SystemUserType } from './system/control-plane';
 import { OrganizationUserType } from './system/organization';
 import { ValuesOf } from '@/lib/utils';
