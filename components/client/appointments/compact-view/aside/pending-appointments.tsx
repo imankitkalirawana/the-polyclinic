@@ -8,7 +8,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { Subtitle } from '../appointment-details-modal';
 import { useForm } from '../context';
 
-import { AppointmentType } from '@/types/client/appointment';
+import { AppointmentType } from '@/services/client/appointment';
 
 export default function PendingAppointments({ appointments }: { appointments: AppointmentType[] }) {
   const { refetch } = useForm();

@@ -103,10 +103,10 @@ export default function DateSelectionContainer() {
 
   const renderContent = () => {
     // If doctor is selected, show doctor's available slots
-    if (appointment.doctor) {
+    if (appointment.doctorId) {
       return (
         <SlotContent
-          doctorId={appointment.doctor}
+          doctorId={appointment.doctorId}
           selectedDate={appointment.date}
           onDateSelect={handleDateSelect}
         />

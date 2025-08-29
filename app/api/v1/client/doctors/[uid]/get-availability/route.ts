@@ -3,7 +3,7 @@ import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
-import Appointment from '@/models/client/Appointment';
+import Appointment from '@/services/client/appointment/model';
 import Slot from '@/models/client/Slot';
 import { $FixMe } from '@/types';
 

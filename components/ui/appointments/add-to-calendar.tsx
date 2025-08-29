@@ -21,7 +21,7 @@ import {
   handleAddToCalendar,
 } from '@/lib/client-functions';
 import { EventType } from '@/lib/interface';
-import { AppointmentType } from '@/types/client/appointment';
+import { AppointmentType } from '@/services/client/appointment';
 
 type ActionType = 'google' | 'outlook' | 'download';
 

@@ -26,8 +26,8 @@ import { useUserWithUID } from '@/hooks/queries/client/user';
 export default function AppointmentBookingReceipt() {
   const { values, resetForm } = useFormikContext<CreateAppointmentFormValues>();
   const { appointment } = values;
-  const { data: patient, isLoading: isPatientLoading } = useUserWithUID(appointment.patient);
-  const { data: doctor, isLoading: isDoctorLoading } = useDoctorWithUID(appointment.doctor ?? '');
+  const { data: patient, isLoading: isPatientLoading } = useUserWithUID(appointment.patientId);
+  const { data: doctor, isLoading: isDoctorLoading } = useDoctorWithUID(appointment.doctorId ?? '');
 
   return (
     <Modal
@@ -67,7 +67,7 @@ export default function AppointmentBookingReceipt() {
                 {format(appointment.date, 'h:mm a')}
               </p>
             </div>
-            {!!appointment.doctor && (
+            {!!appointment.doctorId && (
               <div className="flex w-full flex-col text-small">
                 <p className="text-tiny text-default-500">Doctor</p>
                 {isDoctorLoading ? (
@@ -118,7 +118,7 @@ export default function AppointmentBookingReceipt() {
             Need to make a change?{' '}
             <Link
               className="text-small text-default-800"
-              href={`/appointments/${appointment.aid}?action=reschedule`}
+              // TODO: Add redirect URL here
               size="sm"
               underline="always"
             >
@@ -127,7 +127,7 @@ export default function AppointmentBookingReceipt() {
             or{' '}
             <Link
               className="text-small text-default-800"
-              href={`/appointments/${appointment.aid}?action=cancel`}
+              // TODO: Add redirect URL here
               size="sm"
               underline="always"
             >
@@ -173,7 +173,7 @@ export default function AppointmentBookingReceipt() {
             variant="shadow"
             color="primary"
             as={Link}
-            href={`/appointments/${appointment.aid}`}
+            // TODO: Add redirect URL here
           >
             View Appointment
           </Button>

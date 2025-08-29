@@ -49,7 +49,7 @@ export default function CreateAppointmentAdditionalDetails() {
         />
         <Select
           label="Appointment Type"
-          selectedKeys={[appointment.additionalInfo?.type]}
+          selectedKeys={[appointment.additionalInfo?.mode]}
           name="appointment.additionalInfo.type"
           onChange={handleChange}
           className="col-span-2 sm:col-span-1"

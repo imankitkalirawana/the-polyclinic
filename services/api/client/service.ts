@@ -1,6 +1,6 @@
 'use server';
 
-import { fetchData } from '..';
+import { fetchData } from '../../fetch';
 
 import { ServiceType } from '@/types/client/service';
 

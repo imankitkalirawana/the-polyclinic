@@ -15,10 +15,10 @@ import {
 import { useInfiniteQueryWithSearch } from './infinite-query';
 // TODO: Remove this once the types are updated
 import { $FixMe } from '@/types';
-import { AppointmentType } from '@/types/client/appointment';
 import { NewPatientFormValues } from '@/types/client/patient';
-import { ApiResponse } from '../../../services/api';
+import { ApiResponse } from '@/services/fetch';
 import { addToast } from '@heroui/react';
+import { AppointmentType } from '@/services/client/appointment';
 
 export const useAllPatients = (): UseQueryResult<$FixMe[]> =>
   useQuery({

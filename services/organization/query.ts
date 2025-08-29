@@ -13,15 +13,15 @@ import {
   UpdateOrganizationUser,
 } from '@/types/system/organization';
 import { addToast } from '@heroui/react';
-import { organizationApi } from '@/services/api/system/organization';
 import { OrganizationUserType } from '@/types/system/organization';
+import { OrganizationApi } from './api';
 
 // React Query hooks
 export const useOrganizations = () => {
   return useQuery({
     queryKey: ['organizations'],
     queryFn: async () => {
-      const response = await organizationApi.getAll();
+      const response = await OrganizationApi.getAll();
       if (response.success) {
         return response.data;
       }
@@ -39,7 +39,7 @@ export const useOrganization = (
   return useQuery({
     queryKey: ['organizations', id],
     queryFn: async () => {
-      const response = await organizationApi.getById(id);
+      const response = await OrganizationApi.getById(id);
       if (response.success) {
         return response.data;
       }
@@ -54,7 +54,7 @@ export const useCreateOrganization = () => {
 
   return useMutation({
     mutationFn: async (data: CreateOrganizationType) => {
-      const response = await organizationApi.create(data);
+      const response = await OrganizationApi.create(data);
       if (response.success) {
         return response.data;
       }
@@ -84,7 +84,7 @@ export const useUpdateOrganization = (): UseMutationResult<
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: UpdateOrganizationType }) => {
-      const response = await organizationApi.update(id, data);
+      const response = await OrganizationApi.update(id, data);
       if (response.success) {
         return response.data;
       }
@@ -112,7 +112,7 @@ export const useDeleteOrganization = () => {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      const response = await organizationApi.delete(id);
+      const response = await OrganizationApi.delete(id);
       if (response.success) {
         return response.data;
       }
@@ -139,7 +139,7 @@ export const useCreateOrganizationUser = () => {
 
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: CreateOrganizationUser }) => {
-      const response = await organizationApi.users.create(id, data);
+      const response = await OrganizationApi.createUser(id, data);
       if (response.success) {
         return response.data;
       }
@@ -176,7 +176,7 @@ export const useUpdateOrganizationUser = () => {
       userId: string;
       data: UpdateOrganizationUser;
     }) => {
-      const response = await organizationApi.users.update(organizationId, userId, data);
+      const response = await OrganizationApi.updateUser(organizationId, userId, data);
       if (response.success) {
         return response.data;
       }
@@ -204,7 +204,7 @@ export const useDeleteOrganizationUser = () => {
 
   return useMutation({
     mutationFn: async ({ organizationId, userId }: { organizationId: string; userId: string }) => {
-      const response = await organizationApi.users.delete(organizationId, userId);
+      const response = await OrganizationApi.deleteUser(organizationId, userId);
       if (response.success) {
         return response.data;
       }

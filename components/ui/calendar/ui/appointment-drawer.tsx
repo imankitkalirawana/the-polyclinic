@@ -35,9 +35,9 @@ import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import useAppointmentButtonsInDrawer from '@/hooks/useAppointmentButton';
 import { useIsMobile } from '@/hooks/useMobile';
 import { CLINIC_INFO } from '@/lib/config';
-import { useAppointmentWithAID } from '@/hooks/queries/client/appointment';
+import { useAppointmentWithAID } from '@/services/client/appointment/query';
 import { useAppointmentStore } from '@/store/appointment';
-import { AppointmentType } from '@/types/client/appointment';
+import { AppointmentType } from '@/services/client/appointment';
 
 const DRAWER_DELAY = 200;
 

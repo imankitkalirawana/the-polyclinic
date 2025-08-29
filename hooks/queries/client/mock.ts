@@ -3,9 +3,12 @@
 import { addDays, subDays } from 'date-fns';
 import { faker } from '@faker-js/faker';
 
-import { TIMINGS } from '../config';
-
-import { appointmentModes, AppointmentType, appointmentTypes } from '@/types/client/appointment';
+import { TIMINGS } from '../../../lib/config';
+import {
+  APPOINTMENT_MODES,
+  APPOINTMENT_TYPES,
+  AppointmentType,
+} from '@/services/client/appointment';
 
 export async function generateAppointments({
   count,
@@ -71,11 +74,11 @@ export async function generateAppointments({
       additionalInfo: {
         notes: faker.lorem.paragraph(),
         symptoms: faker.lorem.sentence(),
-        type: faker.helpers.arrayElement(appointmentModes),
+        type: faker.helpers.arrayElement(APPOINTMENT_MODES),
         description: faker.lorem.paragraph(),
         instructions: faker.lorem.lines(3),
       },
-      type: faker.helpers.arrayElement(appointmentTypes).value,
+      type: faker.helpers.arrayElement(APPOINTMENT_TYPES).value,
       progress: faker.number.int({ min: 0, max: 100 }),
       data: Object.fromEntries(
         Array.from({ length: faker.number.int({ min: 2, max: 5 }) }).map(() => [

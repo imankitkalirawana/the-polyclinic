@@ -26,9 +26,9 @@ import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import NoResults from '@/components/ui/no-results';
-import { useAppointmentWithAID } from '@/hooks/queries/client/appointment';
+import { useAppointmentWithAID } from '@/services/client/appointment/query';
 import { useAppointmentStore } from '@/store/appointment';
-import { AppointmentType } from '@/types/client/appointment';
+import { AppointmentType } from '@/services/client/appointment';
 
 export default function Appointment({ aid }: { aid: string }) {
   const { action, setAction, setAppointment } = useAppointmentStore();

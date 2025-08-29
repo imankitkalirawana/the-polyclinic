@@ -6,21 +6,17 @@ import {
   UseQueryResult,
 } from '@tanstack/react-query';
 
-import { ApiResponse } from '@/services/api';
-import {
-  createAppointment,
-  getAllAppointments,
-  getAppointmentWithAID,
-} from '@/services/client/appointment/api';
+import { ApiResponse } from '@/services/fetch';
+import { AppointmentApi } from '@/services/client/appointment/api';
 
-import { AppointmentType } from '@/types/client/appointment';
-import { CreateAppointmentType } from '@/components/client/appointments/create/types';
+import { AppointmentType, CreateAppointmentType } from './types';
+import { addToast } from '@heroui/react';
 
 export const useAllAppointments = (): UseQueryResult<AppointmentType[]> =>
   useQuery({
     queryKey: ['appointments'],
     queryFn: async () => {
-      const res = await getAllAppointments();
+      const res = await AppointmentApi.getAll();
       if (res.success) {
         return res.data;
       }
@@ -32,7 +28,7 @@ export const useAppointmentWithAID = (aid: string): UseQueryResult<AppointmentTy
   useQuery({
     queryKey: ['appointment', aid],
     queryFn: async () => {
-      const res = await getAppointmentWithAID(aid);
+      const res = await AppointmentApi.getById(aid);
       if (res.success) {
         return res.data;
       }
@@ -51,7 +47,7 @@ export const useCreateAppointment = (): UseMutationResult<
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (appointment: CreateAppointmentType) => {
-      const res = await createAppointment(appointment);
+      const res = await AppointmentApi.create(appointment);
       if (res.success) {
         return res;
       }
@@ -59,6 +55,11 @@ export const useCreateAppointment = (): UseMutationResult<
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      addToast({
+        title: 'Appointment created',
+        description: 'Your appointment has been successfully scheduled.',
+        color: 'success',
+      });
     },
   });
 };

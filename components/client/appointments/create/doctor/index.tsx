@@ -41,8 +41,8 @@ export default function DoctorSelection({ className }: { className?: string }) {
   }, [doctors, debouncedSearch, fuse]);
 
   const doctor = useMemo(() => {
-    return doctors?.find((d) => d.uid === appointment.doctor);
-  }, [doctors, appointment.doctor]);
+    return doctors?.find((d) => d.uid === appointment.doctorId);
+  }, [doctors, appointment.doctorId]);
 
   const isDisabled = useMemo(() => {
     return appointment.type === 'follow-up';
@@ -61,7 +61,7 @@ export default function DoctorSelection({ className }: { className?: string }) {
       footer={
         <>
           <Button
-            isDisabled={!appointment.doctor}
+            isDisabled={!appointment.doctorId}
             variant="shadow"
             color="primary"
             radius="full"
@@ -107,7 +107,7 @@ export default function DoctorSelection({ className }: { className?: string }) {
                     subtitle: doctor.designation,
                   })) || []
                 }
-                selectedId={appointment.doctor}
+                selectedId={appointment.doctorId}
                 onSelect={(doctorId) => {
                   if (!isDisabled) {
                     setFieldValue('appointment.doctor', Number(doctorId));

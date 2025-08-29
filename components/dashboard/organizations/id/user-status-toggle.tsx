@@ -1,6 +1,6 @@
 'use client';
 import { Switch } from '@heroui/react';
-import { useUpdateOrganizationUser } from '@/hooks/queries/system/organization';
+import { useUpdateOrganizationUser } from '@/services/organization/query';
 import { OrganizationType } from '@/types/system/organization';
 import { OrganizationUserType } from '@/types/system/organization';
 

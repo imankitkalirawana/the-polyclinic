@@ -1,14 +1,14 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 import Appointments from '@/components/client/appointments/all';
-import { getAllAppointments } from '@/services/client/appointment/api';
+import { AppointmentApi } from '@/services/client/appointment';
 
 export default async function AppointmentsPage() {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ['appointments'],
     queryFn: async () => {
-      const res = await getAllAppointments();
+      const res = await AppointmentApi.getAll();
       if (res.success) {
         return res.data;
       }

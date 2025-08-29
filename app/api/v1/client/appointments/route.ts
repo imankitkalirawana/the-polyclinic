@@ -3,7 +3,7 @@ import { NextAuthRequest } from 'next-auth';
 
 import { API_ACTIONS } from '@/lib/config';
 import { connectDB } from '@/lib/db';
-import Appointment from '@/models/client/Appointment';
+import Appointment from '@/services/client/appointment/model';
 import { OrganizationUserRole } from '@/types/system/organization';
 import { getAppointmentsWithDetails } from '@/helpers/client/appointments';
 import { withAuth } from '@/middleware/withAuth';

@@ -1,4 +1,4 @@
-import { fetchData } from '..';
+import { fetchData } from '../../fetch';
 import {
   RegistrationRequest,
   ResetPasswordRequest,

@@ -7,7 +7,7 @@ import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import Modal from '@/components/ui/modal';
 import { apiRequest } from '@/lib/axios';
 import { useAppointmentStore } from '@/store/appointment';
-import { AppointmentType } from '@/types/client/appointment';
+import { AppointmentType } from '@/services/client/appointment';
 
 export default function CancelDeleteAppointments({
   appointments,

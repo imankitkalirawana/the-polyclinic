@@ -5,7 +5,7 @@ import ExcelJS from 'exceljs';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
-import Appointment from '@/models/client/Appointment';
+import Appointment from '@/services/client/appointment/model';
 
 export const POST = auth(async (request: NextAuthRequest) => {
   try {

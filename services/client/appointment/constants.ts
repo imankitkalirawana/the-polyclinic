@@ -19,3 +19,13 @@ export const APPOINTMENT_TYPES = [
 ] as const;
 
 export const APPOINTMENT_MODES = ['online', 'offline'] as const;
+
+export const APPOINTMENT_STATUSES = [
+  'booked',
+  'confirmed',
+  'in-progress',
+  'completed',
+  'cancelled',
+  'overdue',
+  'on-hold',
+] as const;

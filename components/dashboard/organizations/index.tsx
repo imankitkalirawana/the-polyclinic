@@ -6,7 +6,7 @@ import {
   useOrganizations,
   useDeleteOrganization,
   useUpdateOrganization,
-} from '@/hooks/queries/system/organization';
+} from '@/services/organization/query';
 import { toast } from 'sonner';
 import { formatDate } from 'date-fns';
 import CreateEditOrganizationModal from './create-edit';

@@ -10,7 +10,7 @@ import CreateAppointmentFollowUp from './follow-up';
 
 import CustomRadio from '@/components/ui/custom-radio';
 import { cn } from '@/lib/utils';
-import { type AppointmentType, appointmentTypes } from '@/types/client/appointment';
+import { APPOINTMENT_TYPES, type AppointmentType } from '@/services/client/appointment';
 import { useKeyPress } from '@/hooks/useKeyPress';
 
 export default function AppointmentType() {
@@ -79,7 +79,7 @@ export default function AppointmentType() {
           setFieldValue('appointment.doctor', undefined);
         }}
       >
-        {appointmentTypes.map((type) => (
+        {APPOINTMENT_TYPES.map((type) => (
           <CustomRadio
             key={type.value}
             value={type.value}

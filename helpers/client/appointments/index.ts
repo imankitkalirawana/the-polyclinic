@@ -1,4 +1,4 @@
-import Appointment from '@/models/client/Appointment';
+import Appointment from '@/services/client/appointment/model';
 import { PipelineStage } from 'mongoose';
 
 type AppointmentAggregationOptions = {

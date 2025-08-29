@@ -302,6 +302,7 @@ export default function AppointmentDetailsModal() {
                               <div className="flex flex-wrap gap-2 text-[15px] text-default-400">
                                 {formik.values.selected?.additionalInfo.symptoms
                                   .split(',')
+                                  // @ts-ignore
                                   .map((symptom, index) => (
                                     <Chip
                                       key={index}

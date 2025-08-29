@@ -3,7 +3,7 @@
 import puppeteer from 'puppeteer';
 
 import { connectDB } from '@/lib/db';
-import Appointment from '@/models/client/Appointment';
+import Appointment from '@/services/client/appointment/model';
 import { Receipt } from '@/utils/receipt-template/receipt';
 
 export const printAppointmentReceipt = async (aid: number) => {

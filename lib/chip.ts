@@ -1,5 +1,5 @@
+import { AppointmentType } from '@/services/client/appointment';
 import { UnifiedUserRole, UnifiedUserType } from '@/types';
-import { AppointmentType } from '@/types/client/appointment';
 import { DrugStatus } from '@/types/client/drug';
 import { ServiceStatus, ServiceTypes } from '@/types/client/service';
 

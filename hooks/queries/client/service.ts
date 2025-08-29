@@ -14,7 +14,7 @@ import {
   getServiceWithUID,
   updateService,
 } from '../../../services/api/client/service';
-import { ApiResponse } from '../../../services/api';
+import { ApiResponse } from '../../../services/fetch';
 
 import { ServiceType } from '@/types/client/service';
 

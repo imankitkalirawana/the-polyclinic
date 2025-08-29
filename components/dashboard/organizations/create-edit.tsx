@@ -10,7 +10,7 @@ import {
   ModalHeader,
 } from '@heroui/react';
 import { CreateOrganizationType, OrganizationType } from '@/types/system/organization';
-import { useCreateOrganization, useUpdateOrganization } from '@/hooks/queries/system/organization';
+import { useCreateOrganization, useUpdateOrganization } from '@/services/organization/query';
 import { useFormik } from 'formik';
 import { withZodSchema } from '@/lib/utils';
 import { createOrganizationSchema } from '@/services/organization/validation';

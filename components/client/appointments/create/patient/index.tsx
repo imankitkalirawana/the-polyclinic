@@ -43,7 +43,7 @@ const PatientSelection = ({ className }: { className?: string }) => {
     formik.setFieldValue('meta.currentStep', 1);
   };
 
-  const canProceed = !!appointment.patient;
+  const canProceed = !!appointment.patientId;
 
   useKeyPress(
     ['Enter'],
@@ -100,7 +100,7 @@ const PatientSelection = ({ className }: { className?: string }) => {
       <div className="min-h-0 flex-1">
         <SelectionList
           items={patientItems}
-          selectedId={appointment.patient}
+          selectedId={appointment.patientId}
           onSelect={handlePatientSelect}
           emptyMessage={
             debouncedSearch.trim()
@@ -148,7 +148,7 @@ const PatientSelection = ({ className }: { className?: string }) => {
           </Button>
         </>
       }
-      endContent={<CreateAppointmentPatientDetails uid={appointment.patient ?? ''} />}
+      endContent={<CreateAppointmentPatientDetails uid={appointment.patientId ?? ''} />}
     >
       <div className={cn('flex h-full w-full flex-col', className)}>
         <SearchInput

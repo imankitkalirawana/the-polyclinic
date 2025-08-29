@@ -20,9 +20,9 @@ import {
 import { convertSelectionToKeys } from '@/components/ui/data-table/helper';
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 import { apiRequest } from '@/lib/axios';
-import { useAllAppointments } from '@/hooks/queries/client/appointment';
+import { useAllAppointments } from '@/services/client/appointment/query';
 import { useAppointmentStore } from '@/store/appointment';
-import { AppointmentType } from '@/types/client/appointment';
+import { AppointmentType } from '@/services/client/appointment';
 
 const INITIAL_VISIBLE_COLUMNS = ['aid', 'date', 'patient.name', 'doctor.name', 'status'];
 

@@ -4,8 +4,8 @@ import { useFormikContext } from 'formik';
 import { CreateAppointmentFormValues } from '../types';
 
 import { castData } from '@/lib/utils';
-import { useAppointmentWithAID } from '@/hooks/queries/client/appointment';
-import { AppointmentType } from '@/types/client/appointment';
+import { useAppointmentWithAID } from '@/services/client/appointment/query';
+import { AppointmentType } from '@/services/client/appointment';
 
 export default function CreateAppointmentSelectedPreviousAppointment() {
   const { values } = useFormikContext<CreateAppointmentFormValues>();

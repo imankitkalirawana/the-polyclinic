@@ -8,7 +8,7 @@ import CreateAppointmentSelectedPreviousAppointment from './appointment';
 import CustomRadio from '@/components/ui/custom-radio';
 import Skeleton from '@/components/ui/skeleton';
 import { usePreviousAppointments } from '@/hooks/queries/client/patient';
-import { AppointmentType } from '@/types/client/appointment';
+import { AppointmentType } from '@/services/client/appointment';
 import { useDebounce } from '@/hooks/useDebounce';
 import Fuse from 'fuse.js';
 import { SearchInput } from '../ui';
@@ -91,7 +91,7 @@ export default function CreateAppointmentFollowUp() {
   const { values } = useFormikContext<CreateAppointmentFormValues>();
   const { appointment } = values;
 
-  const { data: appointments, isLoading } = usePreviousAppointments(appointment.patient ?? '');
+  const { data: appointments, isLoading } = usePreviousAppointments(appointment.patientId ?? '');
 
   if (isLoading) {
     return (

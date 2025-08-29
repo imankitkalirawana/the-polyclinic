@@ -8,7 +8,7 @@ import {
 } from '@tanstack/react-query';
 
 import { getAllDrugs, getDrugWithDid, updateDrug } from '../../../services/api/client/drug';
-import { ApiResponse } from '../../../services/api';
+import { ApiResponse } from '../../../services/fetch';
 
 import { DrugType } from '@/types/client/drug';
 

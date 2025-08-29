@@ -7,7 +7,7 @@ import {
   UseQueryResult,
 } from '@tanstack/react-query';
 
-import { ApiResponse } from '../../../services/api';
+import { ApiResponse } from '../../../services/fetch';
 
 import {
   createUser,

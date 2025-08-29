@@ -15,7 +15,7 @@ import { Icon } from '@iconify/react';
 import {
   useCreateOrganizationUser,
   useUpdateOrganizationUser,
-} from '@/hooks/queries/system/organization';
+} from '@/services/organization/query';
 import {
   OrganizationType,
   organizationUserRoles,

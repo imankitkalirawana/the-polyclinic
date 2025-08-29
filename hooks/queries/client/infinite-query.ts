@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
-import { PaginationResponse, PaginatedApiResponse } from '../../../services/api';
+import { PaginationResponse, PaginatedApiResponse } from '../../../services/fetch';
 
 const defaultOptions = {
   limit: 20,

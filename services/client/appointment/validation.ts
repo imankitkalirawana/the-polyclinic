@@ -18,4 +18,5 @@ export const appointmentSchema = z.object({
     description: z.string().max(1000).optional(),
     instructions: z.string().max(1000).optional(),
   }),
+  previousAppointment: z.string().optional(),
 });

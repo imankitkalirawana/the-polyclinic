@@ -2,7 +2,7 @@
 import { cookies } from 'next/headers';
 import axios from 'axios';
 
-import { BASE_URL } from './client/helper';
+import { BASE_URL } from './api/client/helper';
 
 import type { $FixMe } from '@/types';
 import { getSubdomain } from '@/auth/sub-domain';

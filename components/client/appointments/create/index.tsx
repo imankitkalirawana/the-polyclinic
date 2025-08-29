@@ -14,7 +14,7 @@ import AppointmentBookingReceipt from './receipt';
 import { CreateAppointmentSidebar } from './sidebar';
 import { CreateAppointmentFormValues } from './types';
 
-import { useCreateAppointment } from '@/hooks/queries/client/appointment';
+import { useCreateAppointment } from '@/services/client/appointment/query';
 import { cn } from '@/lib/utils';
 import { useKeyPress } from '@/hooks/useKeyPress';
 import CreateAppointmentPatientNew from './patient/new';
@@ -37,19 +37,18 @@ export default function CreateAppointment({ date, isModal }: { date?: Date; isMo
         type: 'consultation',
         additionalInfo: {
           notes: '',
-          type: 'online',
+          mode: 'online',
           symptoms: '',
         },
-        patient: undefined,
-        doctor: undefined,
-        previousAppointment: undefined,
-        knowYourDoctor: false,
+        patientId: '',
+        doctorId: '',
       },
       meta: {
         currentStep: 0,
         showConfirmation: false,
         showReceipt: false,
         createNewPatient: false,
+        knowYourDoctor: false,
       },
     },
     onSubmit: async ({ appointment }, { setFieldValue }) => {

@@ -5,9 +5,10 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { APPOINTMENT_BUTTON_CONFIGS, isButtonVisible } from '../config/appointments';
 
 import { useAppointmentStore } from '@/store/appointment';
-import { AppointmentType, ProcessedButton } from '@/types/client/appointment';
+import { ProcessedButton } from '@/types/client/appointment';
 // TODO: Remove this once the types are updated
 import { $FixMe } from '@/types';
+import { AppointmentType } from '@/services/client/appointment';
 
 const useAppointmentButtonsInDrawer = ({
   selected,

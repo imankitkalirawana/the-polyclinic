@@ -2,8 +2,8 @@
 
 import { Calendar } from '@/components/ui/calendar';
 import { castData } from '@/lib/utils';
-import { useAllAppointments } from '@/hooks/queries/client/appointment';
-import { AppointmentType } from '@/types/client/appointment';
+import { AppointmentType } from '@/services/client/appointment';
+import { useAllAppointments } from '@/services/client/appointment';
 
 export default function Appointments() {
   const { data } = useAllAppointments();

@@ -2,7 +2,7 @@
 // TODO: Remove this once the types are updated
 import { $FixMe } from '@/types';
 
-import { fetchData } from '..';
+import { fetchData } from '../../fetch';
 
 /**
  * GET APIs

@@ -1,21 +1,11 @@
-import { AppointmentType } from '@/types/client/appointment';
-
-export type CreateAppointmentType = {
-  aid?: number;
-  date: Date;
-  type: AppointmentType['type'];
-  additionalInfo: AppointmentType['additionalInfo'];
-  patient?: string;
-  doctor?: string;
-  previousAppointment?: string;
-  knowYourDoctor?: boolean;
-};
+import { CreateAppointmentType } from '@/services/client/appointment';
 
 type CreateAppointmentMeta = {
   currentStep: number;
   showConfirmation: boolean;
   showReceipt: boolean;
   createNewPatient: boolean;
+  knowYourDoctor: boolean;
 };
 
 export type CreateAppointmentFormValues = {

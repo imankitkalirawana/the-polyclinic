@@ -13,7 +13,7 @@ import {
   getDoctor,
   getDoctors,
 } from '../../../services/api/client/doctor';
-import { ApiResponse } from '../../../services/api';
+import { ApiResponse } from '../../../services/fetch';
 
 import { CreateDoctorType, DoctorType } from '@/types/client/doctor';
 

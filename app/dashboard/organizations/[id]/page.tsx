@@ -1,6 +1,6 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
-import { organizationApi } from '@/services/api/system/organization';
 import Organization from '@/components/dashboard/organizations/id';
+import { OrganizationApi } from '@/services/organization';
 
 interface OrganizationPageProps {
   params: Promise<{
@@ -14,7 +14,7 @@ export default async function OrganizationPage({ params }: OrganizationPageProps
   await queryClient.prefetchQuery({
     queryKey: ['organizations', id],
     queryFn: async () => {
-      const res = await organizationApi.getById(id);
+      const res = await OrganizationApi.getById(id);
       if (res.success) {
         return res.data;
       }

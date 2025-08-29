@@ -1,10 +1,10 @@
+// TODO: Remove this file after moving to @/services
 import { ButtonProps } from '@heroui/react';
 
 import type { $FixMe, Gender } from '..';
 
-import { Base } from '@/lib/interface';
-import { ValuesOf } from '@/lib/utils';
 import { OrganizationUserType } from '../system/organization';
+import { AppointmentType } from '@/services/client/appointment';
 
 export const appointmentTypes = [
   {
@@ -28,16 +28,6 @@ export const appointmentTypes = [
 
 export const appointmentModes = ['online', 'offline'] as const;
 
-export const appointmentStatuses = [
-  'booked',
-  'confirmed',
-  'in-progress',
-  'completed',
-  'cancelled',
-  'overdue',
-  'on-hold',
-] as const;
-
 export interface PatientInfo {
   uid: number;
   name: string;
@@ -56,29 +46,6 @@ export interface DoctorInfo {
   seating?: string;
   image?: string;
 }
-
-export interface AppointmentType extends Base {
-  aid: number;
-  date: string | Date;
-  patient: PatientInfo;
-  doctor?: DoctorInfo;
-  status: AppointmentStatus;
-  additionalInfo: {
-    notes?: string;
-    symptoms?: string;
-    type: AppointmentMode;
-    description?: string;
-    instructions?: string;
-  };
-  progress?: number;
-  data?: Record<string, string>;
-  type: AType['value'];
-  previousAppointment?: string;
-}
-
-export type AppointmentMode = ValuesOf<typeof appointmentModes>;
-export type AType = ValuesOf<typeof appointmentTypes>;
-export type AppointmentStatus = ValuesOf<typeof appointmentStatuses>;
 
 export type ActionType =
   | 'reschedule'

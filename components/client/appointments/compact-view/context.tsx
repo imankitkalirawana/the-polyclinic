@@ -5,8 +5,8 @@ import { useFormik } from 'formik';
 
 import { ActionType } from './appointment-details-modal';
 
-import { useAllAppointments } from '@/hooks/queries/client/appointment';
-import { AppointmentType } from '@/types/client/appointment';
+import { useAllAppointments } from '@/services/client/appointment/query';
+import { AppointmentType } from '@/services/client/appointment';
 import { AuthUser } from '@/types/system/control-plane';
 
 interface FormType {

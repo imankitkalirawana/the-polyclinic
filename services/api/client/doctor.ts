@@ -1,6 +1,6 @@
 'use server';
 
-import { fetchData, fetchDataWithPagination } from '..';
+import { fetchData, fetchDataWithPagination } from '../../fetch';
 
 import { CreateDoctorType, DoctorType } from '@/types/client/doctor';
 

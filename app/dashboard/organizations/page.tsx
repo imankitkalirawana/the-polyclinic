@@ -1,5 +1,5 @@
 import OrganizationsDashboard from '@/components/dashboard/organizations';
-import { organizationApi } from '@/services/api/system/organization';
+import { OrganizationApi } from '@/services/organization';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 export default async function OrganizationsPage() {
@@ -7,7 +7,7 @@ export default async function OrganizationsPage() {
   await queryClient.prefetchQuery({
     queryKey: ['organizations'],
     queryFn: async () => {
-      const res = await organizationApi.getAll();
+      const res = await OrganizationApi.getAll();
       if (res.success) {
         return res.data;
       }

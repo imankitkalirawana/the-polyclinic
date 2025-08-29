@@ -8,8 +8,8 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import Skeleton from '@/components/ui/skeleton';
 import { castData } from '@/lib/utils';
-import { useAllAppointments } from '@/hooks/queries/client/appointment';
-import { AppointmentType } from '@/types/client/appointment';
+import { useAllAppointments } from '@/services/client/appointment/query';
+import { AppointmentType } from '@/services/client/appointment';
 
 const APPOINTMENTS_PER_PAGE = 6;
 
