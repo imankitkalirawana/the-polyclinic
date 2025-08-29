@@ -133,14 +133,11 @@ export default function Organization({ id }: { id: string }) {
             />
           </div>
         </CardHeader>
-        <CardBody className="p-0">
+        <CardBody className="p-0 pt-2">
           <Tabs
             selectedKey={selectedTab}
             onSelectionChange={(key) => setSelectedTab(key as string)}
             className="w-full"
-            classNames={{
-              panel: '!mt-0',
-            }}
           >
             <Tab
               key="users"
@@ -151,75 +148,62 @@ export default function Organization({ id }: { id: string }) {
                 </div>
               }
             >
-              <div className="flex h-full flex-col">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">Organization Users</h3>
-                  <Button
-                    color="primary"
-                    variant="flat"
-                    onPress={handleAddUser}
-                    startContent={<Icon icon="solar:user-plus-line-duotone" />}
-                  >
-                    Add User
-                  </Button>
-                </div>
-                <ScrollShadow
-                  hideScrollBar
-                  className="max-h-[70vh] flex-1 space-y-2 overflow-y-auto p-2"
-                >
-                  {users?.map((user) => (
-                    <Card key={user.uid}>
-                      <CardBody className="p-4">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-4">
-                            <Avatar src={user.image} name={user.name} size="lg" />
-                            <div>
-                              <h4 className="font-semibold">{user.name}</h4>
-                              <p className="text-sm text-default-400">{user.email}</p>
-                              <div className="mt-1 flex items-center space-x-2">
-                                {renderChip({
-                                  item: user.role,
-                                })}
-                                {renderChip({
-                                  item: user.status,
-                                })}
-                                {user.role !== 'admin' && (
-                                  <UserStatusToggle organization={organization} user={user} />
-                                )}
-                              </div>
+              <ScrollShadow
+                hideScrollBar
+                className="max-h-[70vh] flex-1 space-y-2 overflow-y-auto p-2 pb-4"
+              >
+                {users?.map((user) => (
+                  <Card key={user.uid}>
+                    <CardBody className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                          <Avatar src={user.image} name={user.name} size="lg" />
+                          <div>
+                            <h4 className="font-semibold">{user.name}</h4>
+                            <p className="text-sm text-default-400">{user.email}</p>
+                            <div className="mt-1 flex items-center space-x-2">
+                              {renderChip({
+                                item: user.role,
+                              })}
+                              {renderChip({
+                                item: user.status,
+                              })}
+                              {user.role !== 'admin' && (
+                                <UserStatusToggle organization={organization} user={user} />
+                              )}
                             </div>
                           </div>
-                          <div className="flex items-center space-x-2">
-                            <Button
-                              isIconOnly
-                              variant="flat"
-                              size="sm"
-                              onPress={() => handleEditUser(user)}
-                              startContent={<Icon icon="solar:pen-line-duotone" />}
-                            />
-                            <Button
-                              isIconOnly
-                              variant="flat"
-                              size="sm"
-                              startContent={<Icon icon="solar:eye-line-duotone" />}
-                            />
-                            {user.role !== 'admin' && (
-                              <Button
-                                isIconOnly
-                                variant="flat"
-                                size="sm"
-                                color="danger"
-                                onPress={() => handleDeleteUser(user)}
-                                startContent={<Icon icon="solar:trash-bin-trash-line-duotone" />}
-                              />
-                            )}
-                          </div>
                         </div>
-                      </CardBody>
-                    </Card>
-                  ))}
-                </ScrollShadow>
-              </div>
+                        <div className="flex items-center space-x-2">
+                          <Button
+                            isIconOnly
+                            variant="flat"
+                            size="sm"
+                            onPress={() => handleEditUser(user)}
+                            startContent={<Icon icon="solar:pen-line-duotone" />}
+                          />
+                          <Button
+                            isIconOnly
+                            variant="flat"
+                            size="sm"
+                            startContent={<Icon icon="solar:eye-line-duotone" />}
+                          />
+                          {user.role !== 'admin' && (
+                            <Button
+                              isIconOnly
+                              variant="flat"
+                              size="sm"
+                              color="danger"
+                              onPress={() => handleDeleteUser(user)}
+                              startContent={<Icon icon="solar:trash-bin-trash-line-duotone" />}
+                            />
+                          )}
+                        </div>
+                      </div>
+                    </CardBody>
+                  </Card>
+                ))}
+              </ScrollShadow>
             </Tab>
           </Tabs>
         </CardBody>
