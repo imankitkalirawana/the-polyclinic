@@ -2,7 +2,7 @@ import { NextAuthRequest } from 'next-auth';
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
-import { getAppointmentsWithDetails } from '@/helpers/client/appointments';
+import { getAppointmentsWithDetails } from '@/services/client/appointment';
 
 type Params = Promise<{
   uid: string;

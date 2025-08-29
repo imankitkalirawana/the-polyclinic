@@ -5,7 +5,7 @@ import { API_ACTIONS } from '@/lib/config';
 import { connectDB } from '@/lib/db';
 import Appointment from '@/services/client/appointment/model';
 import { OrganizationUserRole } from '@/types/system/organization';
-import { getAppointmentsWithDetails } from '@/helpers/client/appointments';
+import { getAppointmentsWithDetails } from '@/services/client/appointment';
 import { withAuth } from '@/middleware/withAuth';
 
 export const GET = withAuth(async (request: NextAuthRequest) => {
