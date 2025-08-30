@@ -2,7 +2,7 @@
 
 import { AuthError } from 'next-auth';
 import { signIn } from '@/auth';
-import { getUserModel } from '@/models/User';
+import { getUserModel } from '@/services/common/user/model';
 import { connectDB } from '../db';
 import { getSubdomain } from '@/auth/sub-domain';
 

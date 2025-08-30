@@ -3,7 +3,7 @@ import { NextAuthRequest } from 'next-auth';
 import { auth } from '@/auth';
 import { API_ACTIONS } from '@/lib/config';
 import { connectDB } from '@/lib/db';
-import { getUserModel } from '@/models/User';
+import { getUserModel } from '@/services/common/user/model';
 import { withAuth } from '@/middleware/withAuth';
 import { UserService } from '@/services/common/user/service';
 import { getSubdomain } from '@/auth/sub-domain';

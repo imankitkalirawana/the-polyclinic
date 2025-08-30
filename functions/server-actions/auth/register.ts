@@ -3,7 +3,7 @@
 import { getSubdomain, isOrganizationRegistered } from '@/auth/sub-domain';
 import { connectDB } from '@/lib/db';
 import bcrypt from 'bcryptjs';
-import { getUserModel } from '@/models/User';
+import { getUserModel } from '@/services/common/user/model';
 
 export default async function registerUser(data: {
   name: string;

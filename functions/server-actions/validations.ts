@@ -1,7 +1,7 @@
 'use server';
 
 import { connectDB } from '@/lib/db';
-import { getUserModel } from '@/models/User';
+import { getUserModel } from '@/services/common/user/model';
 
 // validate email
 export const doesEmailExist = async ({

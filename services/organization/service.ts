@@ -2,7 +2,7 @@ import { ServiceResult } from '@/services';
 import { Connection } from 'mongoose';
 import { getOrganizationModel } from './model';
 import { CreateOrganizationType, OrganizationType, UpdateOrganizationType } from './types';
-import { getUserModel } from '@/models/User';
+import { getUserModel } from '@/services/common/user/model';
 import { connectDB } from '@/lib/db';
 import bcrypt from 'bcryptjs';
 import { CreateUser, OrganizationUser, UpdateUser } from '../common/user';

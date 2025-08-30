@@ -2,7 +2,7 @@ import { NextAuthRequest } from 'next-auth';
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
-import { getUserModel } from '@/models/User';
+import { getUserModel } from '@/services/common/user/model';
 import { OrganizationUser } from '@/services/common/user';
 
 export const GET = auth(async (req: NextAuthRequest) => {

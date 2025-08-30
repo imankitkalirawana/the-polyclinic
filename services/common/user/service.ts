@@ -1,6 +1,6 @@
 import { ServiceResult } from '@/services';
 import { Connection } from 'mongoose';
-import { getUserModel } from '@/models/User';
+import { getUserModel } from '@/services/common/user/model';
 import { SystemUser, UnifiedUser, CreateUser } from './types';
 import { SYSTEM_USER_ROLE } from './constants';
 import bcrypt from 'bcryptjs';

@@ -1,6 +1,6 @@
 'use server';
 
-import { getUserModel } from '@/models/User';
+import { getUserModel } from '@/services/common/user/model';
 import { connectDB } from '../db';
 import { getOrganizationModel } from '@/services/organization/model';
 

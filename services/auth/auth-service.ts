@@ -1,6 +1,6 @@
 import { Connection } from 'mongoose';
 import bcrypt from 'bcryptjs';
-import { getUserModel } from '@/models/User';
+import { getUserModel } from '@/services/common/user/model';
 import { OTPManager } from './otp-manager';
 import { AuthEmailService } from './email-service';
 import { ServiceResult } from '..';

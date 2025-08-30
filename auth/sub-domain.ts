@@ -2,7 +2,7 @@
 
 import { headers } from 'next/headers';
 import { connectDB } from '@/lib/db';
-import { getUserModel } from '@/models/User';
+import { getUserModel } from '@/services/common/user/model';
 
 /**
  * Extracts subdomain (tenant) from request headers.

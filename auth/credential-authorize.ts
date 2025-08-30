@@ -2,7 +2,7 @@ import { AuthError } from 'next-auth';
 import bcrypt from 'bcryptjs';
 import { connectDB } from '@/lib/db';
 import { getSubdomain } from './sub-domain';
-import { getUserModel } from '@/models/User';
+import { getUserModel } from '@/services/common/user/model';
 import { User as NextAuthUser } from 'next-auth';
 import { isOrganizationActive } from '@/lib/server-actions/validation';
 
