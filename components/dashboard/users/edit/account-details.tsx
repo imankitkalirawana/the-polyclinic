@@ -21,19 +21,19 @@ import { getLocalTimeZone, today } from '@internationalized/date';
 import { I18nProvider } from '@react-aria/i18n';
 
 import { userValidationSchema } from '@/lib/validation';
-import { useUpdateUser } from '@/hooks/queries/client/user';
+import { useUpdateUser } from '@/services/common/user/query';
 import { $FixMe } from '@/types';
-import { SystemUser } from '@/services/common/user';
+import { UnifiedUser } from '@/services/common/user';
 
-export default function AccountDetails({ user }: { user: SystemUser }) {
+export default function AccountDetails({ user }: { user: UnifiedUser }) {
   const { data: session } = useSession();
   const updateUser = useUpdateUser();
 
-  const formik = useFormik({
+  const formik = useFormik<UnifiedUser>({
     initialValues: user,
     validationSchema: userValidationSchema,
     onSubmit: async (values) => {
-      await updateUser.mutateAsync(values);
+      await updateUser.mutateAsync({ uid: user.uid, data: values });
     },
   });
 

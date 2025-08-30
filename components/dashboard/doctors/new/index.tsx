@@ -31,7 +31,7 @@ import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { Genders } from '@/lib/options';
 import { castData, generateEmail, generatePhoneNumber } from '@/lib/utils';
 import { useCreateDoctor } from '@/hooks/queries/client/doctor';
-import { useAllUsers } from '@/hooks/queries/client/user';
+import { useAllUsers } from '@/services/common/user/query';
 import { CreateDoctorType } from '@/types/client/doctor';
 import { OrganizationUser } from '@/services/common/user';
 

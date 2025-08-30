@@ -9,7 +9,7 @@ import CellValue from '@/components/ui/cell-value';
 import Loading from '@/app/loading';
 import { humanReadableDate, humanReadableTime } from '@/lib/utility';
 import { castData } from '@/lib/utils';
-import { useUserWithUID } from '@/hooks/queries/client/user';
+import { useUserWithUID } from '@/services/common/user/query';
 import { OrganizationUser, UnifiedUser } from '@/services/common/user';
 
 export default function UserCard({ uid }: { uid: string }) {

@@ -4,7 +4,7 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 import { auth } from '@/auth';
 import NewDoctor from '@/components/dashboard/doctors/new';
 import { getAllCountries } from '@/services/api/system/external';
-import { getAllUsers } from '@/services/api/client/user';
+import { User } from '@/services/common/user';
 
 const allowedRoles = ['admin'];
 
@@ -15,7 +15,7 @@ export default async function Page() {
   await queryClient.prefetchQuery({
     queryKey: ['users'],
     queryFn: async () => {
-      const res = await getAllUsers();
+      const res = await User.getAll();
       if (res.success) {
         return res.data;
       }

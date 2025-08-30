@@ -28,7 +28,7 @@ export const generateUid = async (id: string, dbName?: string | null) => {
     { $inc: { seq: 1 } },
     { new: true, upsert: true }
   );
-  return dbName ? `${dbName}-${counter.seq}` : `${counter.seq}`;
+  return dbName ? `${dbName.toUpperCase()}-${counter.seq}` : `${counter.seq}`;
 };
 
 export const generateAid = async (aid: string) => {

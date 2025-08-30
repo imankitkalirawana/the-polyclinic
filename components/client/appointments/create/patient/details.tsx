@@ -1,7 +1,7 @@
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { cn } from '@/lib/utils';
-import { useUserWithUID } from '@/hooks/queries/client/user';
+import { useUserWithUID } from '@/services/common/user/query';
 import {
   Avatar,
   Card,

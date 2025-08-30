@@ -7,19 +7,22 @@ import {
   UseQueryResult,
 } from '@tanstack/react-query';
 
-import { ApiResponse } from '../../../services/fetch';
+import { ApiResponse } from '../../fetch';
 
-import {
-  createUser,
-  deleteUser,
-  getAllUsers,
-  getLinkedUsers,
-  getSelf,
-  getUserWithUID,
-  updateUser,
-} from '@/services/api/client/user';
-import { $FixMe } from '@/types';
-import { CreateUser, SystemUser } from '@/services/common/user';
+import { getLinkedUsers, getSelf, getUserWithUID } from '@/services/api/client/user';
+import { CreateUser, SystemUser, UnifiedUser, UpdateUser, User } from '@/services/common/user';
+
+export const useAllUsers = (): UseQueryResult<UnifiedUser[]> =>
+  useQuery({
+    queryKey: ['users'],
+    queryFn: async () => {
+      const res = await User.getAll();
+      if (res.success) {
+        return res.data;
+      }
+      throw new Error(res.message);
+    },
+  });
 
 export const useSelf = (): UseQueryResult<SystemUser> =>
   useQuery({
@@ -65,29 +68,17 @@ export const useUserWithUID = (uid: string | undefined): UseQueryResult<SystemUs
     enabled: !!uid,
   });
 
-export const useAllUsers = (): UseQueryResult<SystemUser[]> =>
-  useQuery({
-    queryKey: ['users'],
-    queryFn: async () => {
-      const res = await getAllUsers();
-      if (res.success) {
-        return res.data;
-      }
-      throw new Error(res.message);
-    },
-  });
-
-export const useCreateUser = (): UseMutationResult<ApiResponse<SystemUser>, Error, CreateUser> => {
+export const useCreateUser = (): UseMutationResult<ApiResponse<UnifiedUser>, Error, CreateUser> => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (user: CreateUser) => {
-      const res = await createUser(user);
+      const res = await User.create(user);
       if (res.success) {
         return res;
       }
       throw new Error(res.message);
     },
-    onSuccess: (data: ApiResponse<SystemUser>) => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
       addToast({
         title: data.message,
@@ -103,24 +94,28 @@ export const useCreateUser = (): UseMutationResult<ApiResponse<SystemUser>, Erro
   });
 };
 
-export const useUpdateUser = (): UseMutationResult<ApiResponse<SystemUser>, Error, SystemUser> => {
+export const useUpdateUser = (): UseMutationResult<
+  ApiResponse<UnifiedUser>,
+  Error,
+  { uid: string; data: UpdateUser }
+> => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (user: SystemUser) => {
-      const res = await updateUser(user);
+    mutationFn: async ({ uid, data }: { uid: string; data: UpdateUser }) => {
+      const res = await User.update(uid, data);
       if (res.success) {
         return res;
       }
       throw new Error(res.message);
     },
-    onSuccess: (data: $FixMe) => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
       addToast({
         title: data.message,
         color: 'success',
       });
     },
-    onError: (error: $FixMe) => {
+    onError: (error) => {
       addToast({
         title: error.message,
         color: 'danger',
@@ -129,11 +124,11 @@ export const useUpdateUser = (): UseMutationResult<ApiResponse<SystemUser>, Erro
   });
 };
 
-export const useDeleteUser = (): UseMutationResult<ApiResponse<SystemUser>, Error, string> => {
+export const useDeleteUser = (): UseMutationResult<ApiResponse, Error, string> => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (uid: string) => {
-      const res = await deleteUser(uid);
+      const res = await User.delete(uid);
       if (res.success) {
         return res;
       }

@@ -33,7 +33,7 @@ import {
   useAllCountries,
   useAllStatesByCountry,
 } from '@/hooks/queries/system/external';
-import { useCreateUser } from '@/hooks/queries/client/user';
+import { useCreateUser } from '@/services/common/user/query';
 import { $FixMe, CityProps, CountryProps, StateProps } from '@/types';
 import { ORGANIZATION_USER_ROLES } from '@/services/common/user';
 

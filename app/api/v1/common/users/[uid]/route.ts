@@ -1,26 +1,47 @@
 import { NextResponse } from 'next/server';
 import { NextAuthRequest } from 'next-auth';
-import bcrypt from 'bcryptjs';
 
-import { auth } from '@/auth';
-import { API_ACTIONS } from '@/lib/config';
 import { connectDB } from '@/lib/db';
-import { getUserModel } from '@/models/User';
-import { $FixMe } from '@/types';
+import { withAuth } from '@/middleware/withAuth';
+import { UserService } from '@/services/common/user/service';
+import { getSubdomain } from '@/auth/sub-domain';
+import { validateRequest } from '@/services';
+import { updateUserSchema } from '@/services/common/user';
+import { SERVER_ERROR_MESSAGE } from '@/lib/constants';
+
+type Params = Promise<{
+  uid: string;
+}>;
 
 // get user by id from param
-export const GET = auth(async (_request: NextAuthRequest, context: $FixMe) => {
+export const GET = withAuth(async (request: NextAuthRequest, { params }: { params: Params }) => {
   try {
-    const uid = parseInt(context.params.uid);
+    const { uid } = await params;
+    const requesterRole = request.auth?.user?.role;
+    const requesterUid = request.auth?.user?.uid;
 
-    const conn = await connectDB();
-    const User = getUserModel(conn);
-
-    const user = await User.findOne({ uid });
-    if (!user) {
-      return NextResponse.json({ message: 'User not found' }, { status: 404 });
+    if (!requesterRole || !requesterUid) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
-    return NextResponse.json(user);
+
+    const subdomain = await getSubdomain();
+    const conn = await connectDB(subdomain);
+
+    const result = await UserService.getUserByUid({
+      conn,
+      uid,
+      requesterRole,
+      requesterUid,
+    });
+
+    if (!result.success) {
+      return NextResponse.json({ message: result.message }, { status: 404 });
+    }
+
+    return NextResponse.json({
+      message: result.message,
+      data: result.data,
+    });
   } catch (error: unknown) {
     console.error(error);
     return NextResponse.json(
@@ -30,37 +51,47 @@ export const GET = auth(async (_request: NextAuthRequest, context: $FixMe) => {
   }
 });
 
-export const PUT = auth(async (request: NextAuthRequest, context: $FixMe) => {
+// update user by id from param
+export const PUT = withAuth(async (request: NextAuthRequest, { params }: { params: Params }) => {
   try {
-    const allowedRoles = ['admin', 'receptionist'];
-    // @ts-ignore
-    if (request.auth?.user?.uid !== context?.params?.uid) {
-      if (!allowedRoles.includes(request.auth?.user?.role ?? '')) {
-        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-      }
+    const { uid } = await params;
+    const updaterRole = request.auth?.user?.role;
+    const updaterUid = request.auth?.user?.uid;
+
+    if (!updaterRole || !updaterUid) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    const data = await request.json();
+    const body = await request.json();
+    const subdomain = await getSubdomain();
 
-    const conn = await connectDB();
-    const User = getUserModel(conn);
+    // Validate request data using updateUserSchema
+    const validation = validateRequest(updateUserSchema, { ...body, organization: subdomain });
 
-    const { uid } = context.params;
-
-    let user = await User.findOne({ uid });
-    if (!user) {
-      return NextResponse.json({ message: 'User not found' }, { status: 404 });
+    if (!validation.success) {
+      return NextResponse.json(
+        { message: 'Invalid request data', errors: validation.errors },
+        { status: 400 }
+      );
     }
-    user.updatedBy = request.auth?.user?.email ?? '';
-    if (data.password) {
-      user.password = await bcrypt.hash(data.password, 10);
-    }
-    user = await User.findOneAndUpdate({ uid }, data, {
-      new: true,
+
+    const conn = await connectDB(subdomain);
+
+    const result = await UserService.updateUser({
+      conn,
+      uid,
+      data: validation.data,
+      updaterRole,
+      updaterUid,
     });
+
+    if (!result.success) {
+      return NextResponse.json({ message: result.message }, { status: 400 });
+    }
+
     return NextResponse.json({
-      message: 'User updated successfully',
-      data: user,
+      message: result.message,
+      data: result.data,
     });
   } catch (error: unknown) {
     console.error(error);
@@ -72,33 +103,35 @@ export const PUT = auth(async (request: NextAuthRequest, context: $FixMe) => {
 });
 
 // delete user by id from param
-export const DELETE = auth(async (request: NextAuthRequest, context: $FixMe) => {
+export const DELETE = withAuth(async (request: NextAuthRequest, { params }: { params: Params }) => {
   try {
-    const allowedRoles = ['admin', 'receptionist'];
-    // @ts-ignore
-    if (request.auth?.user?.uid !== context?.params?.uid) {
-      if (!allowedRoles.includes(request.auth?.user?.role ?? '')) {
-        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-      }
-    }
-    const conn = await connectDB();
-    const User = getUserModel(conn);
+    const { uid } = await params;
+    const deleterRole = request.auth?.user?.role;
 
-    const uid = parseInt(context.params.uid);
-
-    const user = await User.findOne({ uid });
-    if (!user) {
-      return NextResponse.json({ message: 'User not found' }, { status: 404 });
+    if (!deleterRole) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    API_ACTIONS.isDelete && (await User.findOneAndDelete({ uid }));
+    const subdomain = await getSubdomain();
+    const conn = await connectDB(subdomain);
+
+    const result = await UserService.deleteUser({
+      conn,
+      uid,
+      deleterRole,
+    });
+
+    if (!result.success) {
+      return NextResponse.json({ message: result.message }, { status: 400 });
+    }
+
     return NextResponse.json({
-      message: `${user.name} was deleted successfully`,
+      message: result.message,
     });
   } catch (error: unknown) {
     console.error(error);
     return NextResponse.json(
-      { message: error instanceof Error ? error.message : 'Internal Server Error' },
+      { message: error instanceof Error ? error.message : SERVER_ERROR_MESSAGE },
       { status: 500 }
     );
   }

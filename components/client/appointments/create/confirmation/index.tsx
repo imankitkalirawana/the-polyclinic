@@ -19,7 +19,7 @@ import { CreateAppointmentFormValues } from '../types';
 
 import Skeleton from '@/components/ui/skeleton';
 import { useDoctorWithUID } from '@/hooks/queries/client/doctor';
-import { useUserWithUID } from '@/hooks/queries/client/user';
+import { useUserWithUID } from '@/services/common/user/query';
 
 export default function AppointmentBookingConfirmation() {
   const { values, setFieldValue, handleSubmit, isSubmitting } =

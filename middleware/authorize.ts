@@ -3,7 +3,6 @@ import { NextResponse } from 'next/server';
 import type { NextAuthRequest } from 'next-auth';
 import { permissionsConfig } from '@/lib/permissions/api';
 import { match } from 'path-to-regexp';
-import { UnifiedUser } from '@/services/common/user';
 
 export async function authorize(request: NextAuthRequest) {
   const url = new URL(request.url);
@@ -18,7 +17,10 @@ export async function authorize(request: NextAuthRequest) {
 
   if (!matchedEntry) {
     // ❌ No matching route in config → deny access
-    return NextResponse.json({ message: 'Forbidden: Route not allowed' }, { status: 403 });
+    return NextResponse.json(
+      { message: "Lost? This route isn't even on the map 🗺️🚫" },
+      { status: 403 }
+    );
   }
 
   const [_, routeConfig] = matchedEntry;
@@ -26,17 +28,26 @@ export async function authorize(request: NextAuthRequest) {
 
   if (!allowedRoles) {
     // ❌ If method not listed → deny access
-    return NextResponse.json({ message: 'Forbidden: Method not allowed' }, { status: 403 });
+    return NextResponse.json(
+      { message: `Nice try using ${method}. But nope, that trick won't work here 🪄❌` },
+      { status: 403 }
+    );
   }
 
   // 🔒 Requires auth if roles are defined
   const user = request.auth?.user;
   if (!user) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json(
+      { message: "Who goes there? 🕵️ You're not logged in, buddy." },
+      { status: 401 }
+    );
   }
 
-  if (!allowedRoles.includes(user.role as UnifiedUser['role'])) {
-    return NextResponse.json({ message: 'Forbidden: Access denied' }, { status: 403 });
+  if (!allowedRoles.includes(user.role)) {
+    return NextResponse.json(
+      { message: "Access denied. This is a VIP lounge and you aren't on the list 🚷🥂" },
+      { status: 403 }
+    );
   }
 
   return null; // ✅ authorized

@@ -7,6 +7,9 @@ import { getUserModel } from '@/models/User';
 import { withAuth } from '@/middleware/withAuth';
 import { UserService } from '@/services/common/user/service';
 import { getSubdomain } from '@/auth/sub-domain';
+import { validateRequest } from '@/services';
+import { createUserSchema } from '@/services/common/user';
+import { validateOrganizationId } from '@/lib/server-actions/validation';
 
 export const GET = withAuth(async (req: NextAuthRequest) => {
   try {
@@ -27,6 +30,10 @@ export const GET = withAuth(async (req: NextAuthRequest) => {
 
     const result = await UserService.getUsers({ conn, role, uid });
 
+    if (!result.success) {
+      return NextResponse.json({ message: result.message }, { status: 403 });
+    }
+
     return NextResponse.json({
       message: 'Users fetched successfully',
       data: result.data,
@@ -42,23 +49,48 @@ export const GET = withAuth(async (req: NextAuthRequest) => {
 
 export const POST = auth(async (request: NextAuthRequest) => {
   try {
-    const allowedRoles = ['admin', 'receptionist'];
-    if (!allowedRoles.includes(request.auth?.user?.role ?? '')) {
+    const subdomain = await getSubdomain();
+    const userRole = request.auth?.user?.role;
+
+    if (!userRole) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    await connectDB();
-    const data = await request.json();
+    const doesOrganizationExist = await validateOrganizationId(subdomain);
+    if (!doesOrganizationExist && ['admin', 'receptionist'].includes(userRole)) {
+      return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
+    }
 
-    const conn = await connectDB();
-    const User = getUserModel(conn);
+    const body = await request.json();
 
-    const user = new User(data);
-    await user.save();
-    return NextResponse.json({
-      message: 'User created successfully',
-      data: user,
+    const validation = validateRequest(createUserSchema, { ...body, organization: subdomain });
+
+    if (!validation.success) {
+      return NextResponse.json(
+        { message: 'Invalid request data', errors: validation.errors },
+        { status: 400 }
+      );
+    }
+
+    const conn = await connectDB(subdomain);
+
+    const result = await UserService.createUser({
+      conn,
+      data: validation.data,
+      creatorRole: userRole,
     });
+
+    if (!result.success) {
+      return NextResponse.json({ message: result.message }, { status: 400 });
+    }
+
+    return NextResponse.json(
+      {
+        message: result.message,
+        data: result.data,
+      },
+      { status: 201 }
+    );
   } catch (error: unknown) {
     console.error(error);
     return NextResponse.json(
@@ -71,11 +103,6 @@ export const POST = auth(async (request: NextAuthRequest) => {
 // Delete Users
 export const DELETE = auth(async (request: NextAuthRequest) => {
   try {
-    const allowedRoles = ['admin', 'receptionist'];
-    if (!allowedRoles.includes(request.auth?.user?.role ?? '')) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
-
     const conn = await connectDB();
     const User = getUserModel(conn);
 

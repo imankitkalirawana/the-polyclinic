@@ -19,7 +19,7 @@ import axios from 'axios';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-import { useSelf } from '@/hooks/queries/client/user';
+import { useSelf } from '@/services/common/user/query';
 import { UnifiedUser } from '@/services/common/user';
 
 export default function Profile() {

@@ -2,17 +2,9 @@
 // TODO: Remove this once the types are updated
 import { $FixMe } from '@/types';
 
-import { fetchData } from '../../fetch';
+import { fetchData } from '@/services/fetch';
 
-/**
- * GET APIs
- */
-
-export async function getAllUsers() {
-  return await fetchData<$FixMe[]>('/users');
-}
-
-export async function getUserWithUID(uid: string | undefined) {
+export async function getUserWithUID(uid?: string) {
   return await fetchData<$FixMe>(`/users/uid/${uid}`);
 }
 
@@ -26,17 +18,6 @@ export async function getLinkedUsers() {
 
 export async function getUsersByRole(role: $FixMe['role']) {
   return await fetchData<$FixMe[]>(`/users/role/${role}`);
-}
-
-/**
- * GET APIs
- */
-
-export async function createUser(user: $FixMe) {
-  return await fetchData<$FixMe>('/users', {
-    method: 'POST',
-    data: user,
-  });
 }
 
 // PUT
