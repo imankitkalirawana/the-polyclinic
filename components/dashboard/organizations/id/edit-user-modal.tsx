@@ -12,10 +12,6 @@ import {
   ScrollShadow,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
-import {
-  useCreateOrganizationUser,
-  useUpdateOrganizationUser,
-} from '@/services/organization/query';
 import { OrganizationType } from '@/services/organization/types';
 import {
   CreateUser,
@@ -28,6 +24,7 @@ import {
 import { useFormik } from 'formik';
 
 import { toTitleCase, withZodSchema } from '@/lib/utils';
+import { useCreateUser, useUpdateUser } from '@/services/common/user/query';
 
 interface UserModalProps {
   isOpen: boolean;
@@ -38,8 +35,8 @@ interface UserModalProps {
 }
 
 export default function UserModal({ isOpen, onClose, organization, mode, user }: UserModalProps) {
-  const createUser = useCreateOrganizationUser();
-  const updateUser = useUpdateOrganizationUser();
+  const createUser = useCreateUser();
+  const updateUser = useUpdateUser();
 
   const isEdit = mode === 'edit';
 
@@ -51,13 +48,11 @@ export default function UserModal({ isOpen, onClose, organization, mode, user }:
       password: '',
       role: 'patient' as const,
       image: '',
+      organization: organization.organizationId,
     },
     validate: withZodSchema(createUserSchema),
     onSubmit: async (values) => {
-      await createUser.mutateAsync({
-        id: organization.organizationId,
-        data: values,
-      });
+      await createUser.mutateAsync(values);
       onClose();
     },
   });
@@ -76,8 +71,7 @@ export default function UserModal({ isOpen, onClose, organization, mode, user }:
     onSubmit: async (values) => {
       if (user) {
         await updateUser.mutateAsync({
-          organizationId: organization.organizationId,
-          userId: user.uid,
+          uid: user.uid,
           data: values,
         });
       }
