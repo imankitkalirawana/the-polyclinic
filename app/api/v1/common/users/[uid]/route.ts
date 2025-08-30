@@ -54,7 +54,6 @@ export const PUT = auth(async (request: NextAuthRequest, context: $FixMe) => {
     user.updatedBy = request.auth?.user?.email ?? '';
     if (data.password) {
       user.password = await bcrypt.hash(data.password, 10);
-      console;
     }
     user = await User.findOneAndUpdate({ uid }, data, {
       new: true,

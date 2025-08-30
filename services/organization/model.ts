@@ -62,7 +62,6 @@ organizationSchema.pre('save', async function (next) {
   // create database
   const db = client.db(organizationId);
   await db.createCollection('user');
-  await client.close();
 
   this.createdBy = session?.user?.email || 'system-admin@divinely.dev';
   next();
