@@ -5,9 +5,10 @@ import { auth } from '@/auth';
 import { API_ACTIONS } from '@/lib/config';
 import { connectDB } from '@/lib/db';
 import { getUserModel } from '@/models/User';
-import { OrganizationUserRole } from '@/types/system/organization';
+import { OrganizationUserRole } from '@/services/organization/types';
+import { withAuth } from '@/middleware/withAuth';
 
-export const GET = auth(async (req: NextAuthRequest) => {
+export const GET = withAuth(async (req: NextAuthRequest) => {
   try {
     if (!req.auth?.user) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });

@@ -1,6 +1,6 @@
 import { GENDERS } from '@/lib/constants';
 import { SystemUserType } from './system/control-plane';
-import { OrganizationUserType } from './system/organization';
+import { OrganizationUserType } from '../services/organization/types';
 import { ValuesOf } from '@/lib/utils';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { NextAuthRequest } from 'next-auth';
 import { connectDB } from '@/lib/db';
-import { OrganizationUserRole } from '@/types/system/organization';
+import { OrganizationUserRole } from '@/services/organization/types';
 import { withAuth } from '@/middleware/withAuth';
 import { getSubdomain } from '@/auth/sub-domain';
 import { AppointmentService, createAppointmentSchema } from '@/services/client/appointment';

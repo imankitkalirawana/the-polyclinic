@@ -1,8 +1,8 @@
 'use client';
 import { Switch } from '@heroui/react';
 import { useUpdateOrganizationUser } from '@/services/organization/query';
-import { OrganizationType } from '@/types/system/organization';
-import { OrganizationUserType } from '@/types/system/organization';
+import { OrganizationType } from '@/services/organization/types';
+import { OrganizationUserType } from '@/services/organization/types';
 
 interface UserStatusToggleProps {
   organization: OrganizationType;

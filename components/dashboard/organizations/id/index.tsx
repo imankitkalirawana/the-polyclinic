@@ -15,7 +15,7 @@ import {
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { useOrganization, useUpdateOrganization } from '@/services/organization/query';
-import { OrganizationUserType } from '@/types/system/organization';
+import { OrganizationUserType } from '@/services/organization/types';
 import UserModal from './create-edit-user';
 import DeleteUserModal from './delete-user-modal';
 import UserStatusToggle from './user-status-toggle';

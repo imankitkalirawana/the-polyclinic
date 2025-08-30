@@ -3,8 +3,8 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from
 import { Icon } from '@iconify/react';
 import { useDeleteOrganizationUser } from '@/services/organization/query';
 import { toast } from 'sonner';
-import { OrganizationType } from '@/types/system/organization';
-import { OrganizationUserType } from '@/types/system/organization';
+import { OrganizationType } from '@/services/organization/types';
+import { OrganizationUserType } from '@/services/organization/types';
 
 interface DeleteUserModalProps {
   isOpen: boolean;

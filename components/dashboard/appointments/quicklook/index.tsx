@@ -12,7 +12,7 @@ import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { useAppointmentStore } from '@/store/appointment';
 import { DropdownKeyType } from '@/types/client/appointment';
 import CancelDeleteAppointment from '@/components/client/appointments/ui/cancel-delete';
-import { OrganizationUserRole } from '@/types/system/organization';
+import { OrganizationUserRole } from '@/services/organization/types';
 import { AppointmentType } from '@/services/client/appointment';
 
 export function AppointmentQuickLook() {

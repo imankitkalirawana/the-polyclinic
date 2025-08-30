@@ -4,21 +4,15 @@ import {
   createOrganizationUserSchema,
   updateOrganizationSchema,
   updateOrganizationUserSchema,
-} from '@/services/organization/validation';
+} from './validation';
 
 import { Base } from '@/types';
 import { z } from 'zod';
-
-export const organizationStatuses = ['active', 'inactive'] as const;
-export const organizationUserRoles = [
-  'admin',
-  'doctor',
-  'nurse',
-  'patient',
-  'receptionist',
-  'pharmacist',
-] as const;
-export const organizationUserStatuses = ['active', 'inactive'] as const;
+import {
+  ORGANIZATION_STATUSES,
+  ORGANIZATION_USER_ROLES,
+  ORGANIZATION_USER_STATUSES,
+} from './constants';
 
 export type OrganizationType = Base & {
   organizationId: string;
@@ -29,28 +23,19 @@ export type OrganizationType = Base & {
   subscriptionId: string | null;
 };
 
-export type OrganizationStatus = ValuesOf<typeof organizationStatuses>;
-
-export type OrganizationUserRole =
-  | 'admin'
-  | 'doctor'
-  | 'nurse'
-  | 'patient'
-  | 'receptionist'
-  | 'pharmacist';
-
-type OrganizationUserStatus = 'active' | 'inactive';
-
 export type OrganizationUserType = Base & {
   uid: string;
   name: string;
   email: string;
-  organization: string;
   phone: string;
   image: string;
   role: OrganizationUserRole;
   status: OrganizationUserStatus;
 };
+
+export type OrganizationStatus = ValuesOf<typeof ORGANIZATION_STATUSES>;
+export type OrganizationUserRole = ValuesOf<typeof ORGANIZATION_USER_ROLES>;
+export type OrganizationUserStatus = ValuesOf<typeof ORGANIZATION_USER_STATUSES>;
 
 // from zod validation
 export type CreateOrganizationType = z.infer<typeof createOrganizationSchema>;

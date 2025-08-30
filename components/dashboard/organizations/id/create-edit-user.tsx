@@ -21,8 +21,8 @@ import {
   organizationUserRoles,
   CreateOrganizationUser,
   UpdateOrganizationUser,
-} from '@/types/system/organization';
-import { OrganizationUserType } from '@/types/system/organization';
+} from '@/services/organization/types';
+import { OrganizationUserType } from '@/services/organization/types';
 import { useFormik } from 'formik';
 import {
   createOrganizationUserSchema,

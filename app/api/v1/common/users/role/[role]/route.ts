@@ -5,7 +5,7 @@ import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import { getUserModel } from '@/models/User';
 import { $FixMe } from '@/types';
-import { OrganizationUserRole } from '@/types/system/organization';
+import { OrganizationUserRole } from '@/services/organization/types';
 
 export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {

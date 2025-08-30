@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import { getUserModel } from '@/models/User';
-import { OrganizationUserRole } from '@/types/system/organization';
+import { OrganizationUserRole } from '@/services/organization/types';
 
 export const GET = auth(async (req: NextAuthRequest) => {
   try {

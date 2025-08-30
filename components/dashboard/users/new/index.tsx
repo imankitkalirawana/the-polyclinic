@@ -35,7 +35,7 @@ import {
 } from '@/hooks/queries/system/external';
 import { useCreateUser } from '@/hooks/queries/client/user';
 import { $FixMe, CityProps, CountryProps, StateProps } from '@/types';
-import { organizationUserRoles } from '@/types/system/organization';
+import { organizationUserRoles } from '@/services/organization/types';
 
 export default function NewUser() {
   const router = useRouter();

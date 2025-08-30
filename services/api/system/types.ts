@@ -1,4 +1,4 @@
-import { OrganizationUserRole } from '@/types/system/organization';
+import { OrganizationUserRole } from '@/services/organization/types';
 
 export interface VerifyOTPResponse {
   token: string;

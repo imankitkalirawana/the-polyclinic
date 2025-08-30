@@ -3,7 +3,7 @@ import { ButtonProps } from '@heroui/react';
 
 import type { $FixMe } from '..';
 
-import { OrganizationUserType } from '../system/organization';
+import { OrganizationUserType } from '../../services/organization/types';
 import { AppointmentType } from '@/services/client/appointment';
 
 export type ActionType =

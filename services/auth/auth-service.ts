@@ -4,7 +4,7 @@ import { getUserModel } from '@/models/User';
 import { OTPManager } from './otp-manager';
 import { AuthEmailService } from './email-service';
 import { ServiceResult } from '..';
-import { OrganizationUserRole } from '@/types/system/organization';
+import { OrganizationUserRole } from '@/services/organization/types';
 
 export class AuthService {
   /**

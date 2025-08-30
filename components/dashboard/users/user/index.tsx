@@ -11,7 +11,7 @@ import { humanReadableDate, humanReadableTime } from '@/lib/utility';
 import { castData } from '@/lib/utils';
 import { useUserWithUID } from '@/hooks/queries/client/user';
 import { UnifiedUserType } from '@/types';
-import { OrganizationUserRole } from '@/types/system/organization';
+import { OrganizationUserRole } from '@/services/organization/types';
 
 export default function UserCard({ uid }: { uid: string }) {
   const { data, isError, isLoading } = useUserWithUID(uid);

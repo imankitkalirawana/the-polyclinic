@@ -2,7 +2,7 @@ import {
   organizationStatuses,
   organizationUserRoles,
   organizationUserStatuses,
-} from '@/types/system/organization';
+} from '@/services/organization/types';
 import { z } from 'zod';
 
 export const createOrganizationSchema = z.object({

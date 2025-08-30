@@ -1,6 +1,6 @@
 import { ServiceResult } from '@/services';
 import { Connection } from 'mongoose';
-import { getOrganizationModel } from '@/models/system/Organization';
+import { getOrganizationModel } from './model';
 import {
   CreateOrganizationType,
   CreateOrganizationUser,
@@ -8,7 +8,7 @@ import {
   OrganizationUserType,
   UpdateOrganizationType,
   UpdateOrganizationUser,
-} from '@/types/system/organization';
+} from './types';
 import { getUserModel } from '@/models/User';
 import { connectDB } from '@/lib/db';
 import bcrypt from 'bcryptjs';

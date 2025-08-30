@@ -4,7 +4,7 @@ import {
   OrganizationType,
   OrganizationUserType,
   UpdateOrganizationType,
-} from '@/types/system/organization';
+} from './types';
 
 import { fetchData } from '@/services/fetch';
 

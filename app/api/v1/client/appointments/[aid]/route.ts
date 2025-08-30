@@ -6,7 +6,7 @@ import { logActivity } from '@/lib/server-actions/activity-log';
 import { trackObjectChanges } from '@/lib/utility';
 import { $FixMe } from '@/types';
 import { Schema, Status } from '@/types/client/activity';
-import { OrganizationUserRole } from '@/types/system/organization';
+import { OrganizationUserRole } from '@/services/organization/types';
 import { withAuth } from '@/middleware/withAuth';
 import { getSubdomain } from '@/auth/sub-domain';
 import { getAppointmentModel } from '@/services/client/appointment';
