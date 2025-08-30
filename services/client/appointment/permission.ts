@@ -1,4 +1,4 @@
-import { PermissionConfig } from '../types';
+import { PermissionConfig } from '@/lib/permissions/api/types';
 
 const BASE_PATH = '/api/v1/client/appointments';
 

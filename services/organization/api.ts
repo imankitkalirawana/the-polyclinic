@@ -3,11 +3,10 @@ import { CreateOrganizationType, OrganizationType, UpdateOrganizationType } from
 
 import { fetchData } from '@/services/fetch';
 
-const API_BASE = '/system/organizations';
-
 export class OrganizationApi {
+  private static readonly API_BASE = '/system/organizations';
   static async getAll() {
-    return await fetchData<OrganizationType[]>(API_BASE);
+    return await fetchData<OrganizationType[]>(this.API_BASE);
   }
 
   // Get organization by ID
@@ -15,12 +14,12 @@ export class OrganizationApi {
     return await fetchData<{
       organization: OrganizationType;
       users: OrganizationUser[];
-    }>(`${API_BASE}/${organizationId}`);
+    }>(`${this.API_BASE}/${organizationId}`);
   }
 
   // Create organization
   static async create(organization: CreateOrganizationType) {
-    return await fetchData<OrganizationType>(API_BASE, {
+    return await fetchData<OrganizationType>(this.API_BASE, {
       method: 'POST',
       data: organization,
     });
@@ -28,7 +27,7 @@ export class OrganizationApi {
 
   // Update organization
   static async update(organizationId: string, organization: UpdateOrganizationType) {
-    return await fetchData<unknown>(`${API_BASE}/${organizationId}`, {
+    return await fetchData<unknown>(`${this.API_BASE}/${organizationId}`, {
       method: 'PUT',
       data: organization,
     });
@@ -36,14 +35,14 @@ export class OrganizationApi {
 
   // Delete organization
   static async delete(organizationId: string) {
-    return await fetchData<OrganizationType>(`${API_BASE}/${organizationId}`, {
+    return await fetchData<OrganizationType>(`${this.API_BASE}/${organizationId}`, {
       method: 'DELETE',
     });
   }
 
   // Toggle organization status
   static async toggleStatus(organizationId: string, status: 'active' | 'inactive') {
-    return await fetchData<OrganizationType>(`${API_BASE}/${organizationId}/status`, {
+    return await fetchData<OrganizationType>(`${this.API_BASE}/${organizationId}/status`, {
       method: 'PATCH',
       data: { status },
     });
@@ -51,25 +50,25 @@ export class OrganizationApi {
 
   // User related
   static async getAllUser(organizationId: string) {
-    return await fetchData<OrganizationUser[]>(`${API_BASE}/${organizationId}/users`);
+    return await fetchData<OrganizationUser[]>(`${this.API_BASE}/${organizationId}/users`);
   }
 
   static async createUser(organizationId: string, user: CreateUser) {
-    return await fetchData<OrganizationUser>(`${API_BASE}/${organizationId}/users`, {
+    return await fetchData<OrganizationUser>(`${this.API_BASE}/${organizationId}/users`, {
       method: 'POST',
       data: user,
     });
   }
 
   static async updateUser(organizationId: string, userId: string, user: Partial<CreateUser>) {
-    return await fetchData<OrganizationUser>(`${API_BASE}/${organizationId}/users/${userId}`, {
+    return await fetchData<OrganizationUser>(`${this.API_BASE}/${organizationId}/users/${userId}`, {
       method: 'PUT',
       data: user,
     });
   }
 
   static async deleteUser(organizationId: string, userId: string) {
-    return await fetchData<void>(`${API_BASE}/${organizationId}/users/${userId}`, {
+    return await fetchData<void>(`${this.API_BASE}/${organizationId}/users/${userId}`, {
       method: 'DELETE',
     });
   }

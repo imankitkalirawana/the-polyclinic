@@ -1,49 +1,35 @@
 import { NextResponse } from 'next/server';
 import { NextAuthRequest } from 'next-auth';
-
 import { auth } from '@/auth';
 import { API_ACTIONS } from '@/lib/config';
 import { connectDB } from '@/lib/db';
 import { getUserModel } from '@/models/User';
 import { withAuth } from '@/middleware/withAuth';
-import { OrganizationUser } from '@/services/common/user';
+import { UserService } from '@/services/common/user/service';
+import { getSubdomain } from '@/auth/sub-domain';
 
 export const GET = withAuth(async (req: NextAuthRequest) => {
   try {
-    if (!req.auth?.user) {
+    const uid = req.auth?.user?.uid;
+    const role = req.auth?.user?.role;
+
+    if (!role || !uid) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    const email = req.auth.user.email;
-    const role = req.auth.user.role;
+    const urlDomain = await getSubdomain();
 
-    const ALLOWED_ROLES = ['admin', 'receptionist', 'patient'];
+    // also get subdomain from params
+    const { searchParams } = req.nextUrl;
+    const subdomain = searchParams.get('subdomain') || urlDomain;
 
-    type UserRoleType = Extract<OrganizationUser['role'], 'admin' | 'receptionist' | 'patient'>;
+    const conn = await connectDB(subdomain);
 
-    if (!ALLOWED_ROLES.includes(role)) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
-
-    const conn = await connectDB();
-    const User = getUserModel(conn);
-
-    const queryMap: Record<UserRoleType, Record<string, unknown>> = {
-      admin: {},
-      receptionist: {
-        $or: [{ role: 'user' }, { role: 'receptionist' }, { role: 'doctor' }],
-      },
-      patient: {
-        email,
-        role: 'user',
-      },
-    };
-
-    const patients = await User.find(queryMap[role as UserRoleType]).select('-password');
+    const result = await UserService.getUsers({ conn, role, uid });
 
     return NextResponse.json({
-      message: 'Patients fetched successfully',
-      data: patients,
+      message: 'Users fetched successfully',
+      data: result.data,
     });
   } catch (error: unknown) {
     console.error(error);

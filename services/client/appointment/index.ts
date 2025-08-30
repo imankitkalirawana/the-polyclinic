@@ -6,3 +6,4 @@ export * from './query';
 export * from './operations';
 export * from './service';
 export * from './model';
+export * from './permission';

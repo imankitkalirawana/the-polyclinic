@@ -16,28 +16,29 @@ export interface AuthUser {
   expires?: string;
 }
 
-export type UnifiedUser = SystemUser | OrganizationUser;
-
-export type SystemUser = Base & {
+type UserBase = Base & {
   uid: string;
   email: string;
   name: string;
-  role: SystemUserRole;
   status: UserStatus;
   phone?: string;
   image?: string;
-  password?: string;
 };
 
-export type OrganizationUser = Base & {
-  uid: string;
-  name: string;
-  email: string;
-  phone: string;
-  image: string;
-  role: OrganizationUserRole;
-  status: UserStatus;
+// Specific user types
+export type SystemUser = UserBase & {
+  kind: 'system';
+  role: SystemUserRole;
 };
+
+export type OrganizationUser = UserBase & {
+  kind: 'organization';
+  role: OrganizationUserRole;
+  organization: string;
+};
+
+// Unified user type
+export type UnifiedUser = SystemUser | OrganizationUser;
 
 export type UserStatus = ValuesOf<typeof USER_STATUSES>;
 type SystemUserRole = ValuesOf<typeof SYSTEM_USER_ROLE>;
