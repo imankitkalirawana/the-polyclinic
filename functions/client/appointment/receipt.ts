@@ -2,14 +2,20 @@
 // TODO: move this to somewhere else
 import { addToast } from '@heroui/react';
 
-import { printAppointmentReceipt } from '@/functions/server-actions/receipt';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { $FixMe } from '@/types';
+
+// TODO:  dummy function to fetch appointment receipt
+const fetchAppointmentReceipt = async () => {
+  return {
+    pdf: 'base64-encoded-pdf-string',
+  };
+};
 
 export const downloadAppointmentReceipt = async (aid: number) => {
   try {
     if (!aid) throw new Error('Invalid appointment ID');
-    const res = await printAppointmentReceipt(aid);
+    const res = await fetchAppointmentReceipt();
     if (!res || !res.pdf) throw new Error('Invalid PDF response');
 
     const pdfBlob = new Blob([Uint8Array.from(atob(res.pdf), (c) => c.charCodeAt(0))], {

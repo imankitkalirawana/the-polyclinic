@@ -3,16 +3,24 @@ import { NextAuthRequest } from 'next-auth';
 import { format } from 'date-fns';
 import ExcelJS from 'exceljs';
 
-import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
-import Appointment from '@/services/client/appointment/model';
+import { withAuth } from '@/middleware/withAuth';
+import { getSubdomain } from '@/auth/sub-domain';
+import { validateOrganizationId } from '@/lib/server-actions/validation';
+import { getAppointmentModel } from '@/services/client/appointment';
 
-export const POST = auth(async (request: NextAuthRequest) => {
+export const POST = withAuth(async (request: NextAuthRequest) => {
   try {
-    const allowedRoles = ['admin'];
-    if (request.auth?.user && !allowedRoles.includes(request.auth?.user?.role)) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    const subdomain = await getSubdomain();
+
+    const doesOrganizationExist = await validateOrganizationId(subdomain);
+
+    if (!doesOrganizationExist) {
+      return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
     }
+
+    const conn = await connectDB(subdomain);
+    const Appointment = getAppointmentModel(conn);
 
     const { keys } = await request.json();
 

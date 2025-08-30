@@ -1,11 +1,16 @@
 import { NextResponse } from 'next/server';
 
 import { connectDB } from '@/lib/db';
-import Appointment from '@/services/client/appointment/model';
+import { getSubdomain } from '@/auth/sub-domain';
+import { getAppointmentModel } from '@/services/client/appointment';
 
 export const POST = async function POST() {
   try {
-    await connectDB();
+    const subdomain = await getSubdomain();
+
+    const conn = await connectDB(subdomain);
+
+    const Appointment = getAppointmentModel(conn);
 
     const now = new Date();
 

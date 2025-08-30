@@ -1,26 +1,22 @@
 import { NextAuthRequest } from 'next-auth';
 import { NextResponse } from 'next/server';
-import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import { getAppointmentsWithDetails } from '@/services/client/appointment';
+import { withAuth } from '@/middleware/withAuth';
+import { getSubdomain } from '@/auth/sub-domain';
 
 type Params = Promise<{
   uid: string;
 }>;
 
-export const GET = auth(async (req: NextAuthRequest, { params }: { params: Params }) => {
+export const GET = withAuth(async (req: NextAuthRequest, { params }: { params: Params }) => {
   const uid = Number((await params).uid);
 
-  const allowedRoles = ['admin', 'doctor', 'receptionist', 'user'];
-  const role = req.auth?.user?.role;
-
-  if (!role || !allowedRoles.includes(role)) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-  }
-
   try {
-    await connectDB();
+    const subdomain = await getSubdomain();
+    const conn = await connectDB(subdomain);
     const appointments = await getAppointmentsWithDetails({
+      conn,
       query: { patient: uid },
     });
 

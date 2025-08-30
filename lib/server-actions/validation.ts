@@ -5,7 +5,10 @@ import { connectDB } from '../db';
 import { getOrganizationModel } from '@/models/system/Organization';
 
 // validate organization id
-export const validateOrganizationId = async (id: string) => {
+export const validateOrganizationId = async (id?: string | null) => {
+  if (!id) {
+    return false;
+  }
   const conn = await connectDB();
   const Organization = getOrganizationModel(conn);
   const organization = await Organization.findOne({ organizationId: id });

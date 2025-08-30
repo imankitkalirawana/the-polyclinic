@@ -1,28 +1,26 @@
 import { NextResponse } from 'next/server';
 import { NextAuthRequest } from 'next-auth';
-
-import { auth } from '@/auth';
 import { API_ACTIONS } from '@/lib/config';
 import { connectDB } from '@/lib/db';
 import { logActivity } from '@/lib/server-actions/activity-log';
 import { trackObjectChanges } from '@/lib/utility';
-import Appointment from '@/services/client/appointment/model';
 import { $FixMe } from '@/types';
 import { Schema, Status } from '@/types/client/activity';
 import { OrganizationUserRole } from '@/types/system/organization';
+import { withAuth } from '@/middleware/withAuth';
+import { getSubdomain } from '@/auth/sub-domain';
+import { getAppointmentModel } from '@/services/client/appointment';
+import { validateOrganizationId } from '@/lib/server-actions/validation';
 
 // get appointment by id from param
-export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
+export const GET = withAuth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
-    const role = request.auth?.user?.role;
-
-    if (!role || !['admin', 'doctor'].includes(role)) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
-
     const params = await context.params;
     const aid = Number(params.aid);
-    await connectDB();
+    const role = request.auth?.user?.role;
+    const subdomain = await getSubdomain();
+    const conn = await connectDB(subdomain);
+    const Appointment = getAppointmentModel(conn);
 
     const queryMap: Record<OrganizationUserRole, { $match: Record<string, unknown> }> = {
       admin: {
@@ -127,19 +125,22 @@ export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
   }
 });
 
-export const PATCH = auth(async (request: NextAuthRequest, context: $FixMe) => {
+export const PATCH = withAuth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
-    const allowedRoles = ['admin', 'doctor', 'nurse', 'patient', 'receptionist', 'pharmacist'];
-
     const user = request.auth?.user;
+    const params = await context.params;
+    const aid = Number(params.aid);
+    const data = await request.json();
+    const subdomain = await getSubdomain();
 
-    if (!allowedRoles.includes(user?.role ?? '')) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    const doesOrganizationExist = await validateOrganizationId(subdomain);
+
+    if (!doesOrganizationExist) {
+      return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
     }
 
-    const { aid } = await context.params;
-    const data = await request.json();
-    await connectDB();
+    const conn = await connectDB(subdomain);
+    const Appointment = getAppointmentModel(conn);
 
     const appointment = await Appointment.findOne({ aid });
 
@@ -196,16 +197,21 @@ export const PATCH = auth(async (request: NextAuthRequest, context: $FixMe) => {
   }
 });
 
-export const DELETE = auth(async (request: NextAuthRequest, context: $FixMe) => {
+export const DELETE = withAuth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
     const user = request.auth?.user;
-    const allowedRoles = ['superadmin'];
-    if (!allowedRoles.includes(user?.role ?? '')) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    const params = await context.params;
+    const aid = Number(params.aid);
+    const subdomain = await getSubdomain();
+
+    const doesOrganizationExist = await validateOrganizationId(subdomain);
+
+    if (!doesOrganizationExist) {
+      return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
     }
 
-    const { aid } = await context.params;
-    await connectDB();
+    const conn = await connectDB(subdomain);
+    const Appointment = getAppointmentModel(conn);
 
     // delete appointment
     if (API_ACTIONS.isDelete) {

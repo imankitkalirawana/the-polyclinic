@@ -19,8 +19,6 @@ export const POST = async (req: NextRequest) => {
 
     const { email, password, token, otp, subdomain } = validation.data;
 
-    // Get subdomain from request or fallback to organization subdomain
-
     // Connect to database - use default connection if no subdomain
     const conn = await connectDB(subdomain);
 
