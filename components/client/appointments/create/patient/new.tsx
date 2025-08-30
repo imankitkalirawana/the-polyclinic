@@ -23,7 +23,7 @@ import { useFormikContext } from 'formik';
 import { Genders } from '@/lib/options';
 import { CreateAppointmentFormValues } from '../types';
 import { $FixMe } from '@/types';
-import { NewPatientFormValues } from '@/types/client/patient';
+import { NewPatientFormValues } from '@/services/client/patient/types';
 import { useCreatePatient } from '@/hooks/queries/client/patient';
 
 // Extended validation schema for new patient creation

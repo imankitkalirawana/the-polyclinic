@@ -41,11 +41,9 @@ export const createUserSchema = z
 
     organization: z.string().trim().optional().or(z.literal('')).nullable(),
 
-    role: z
-      .enum(UNIFIED_USER_ROLES, {
-        error: 'Invalid role selected.',
-      })
-      .optional(),
+    role: z.enum(UNIFIED_USER_ROLES, {
+      error: 'Invalid role selected.',
+    }),
   })
   .refine(
     (data) => {

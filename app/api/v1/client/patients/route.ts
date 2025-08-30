@@ -1,89 +1,15 @@
 import { NextAuthRequest } from 'next-auth';
 import { NextResponse } from 'next/server';
-import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import { getUserModel } from '@/services/common/user/model';
-import { OrganizationUser } from '@/services/common/user';
+import { withAuth } from '@/middleware/withAuth';
+import { getSubdomain } from '@/auth/sub-domain';
+import { validateOrganizationId } from '@/lib/server-actions/validation';
+import { validateRequest } from '@/services';
+import { createPatientSchema } from '@/services/client/patient/validation';
 
-export const GET = auth(async (req: NextAuthRequest) => {
+export const GET = withAuth(async (_req: NextAuthRequest) => {
   try {
-    if (!req.auth?.user) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
-
-    const email = req.auth.user.email;
-    const role = req.auth.user.role;
-
-    const ALLOWED_ROLES = ['admin', 'receptionist', 'patient'];
-
-    type UserRoleType = Extract<OrganizationUser['role'], 'admin' | 'receptionist' | 'patient'>;
-
-    if (!ALLOWED_ROLES.includes(role)) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
-
-    const { searchParams } = new URL(req.url);
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '20');
-    const search = searchParams.get('search') || '';
-
-    const queryMap: Record<UserRoleType, Record<string, unknown>> = {
-      admin: {
-        role: 'user',
-        status: { $in: ['active', 'unverified'] },
-      },
-      receptionist: {
-        role: 'user',
-        status: { $in: ['active', 'unverified'] },
-      },
-      patient: {
-        email,
-        role: 'user',
-        status: { $in: ['active', 'unverified'] },
-      },
-    };
-
-    let searchQuery = {};
-    if (search.trim()) {
-      const isNumber = !isNaN(Number(search));
-
-      searchQuery = {
-        $or: [
-          { uid: isNumber ? Number(search) : undefined },
-          { name: { $regex: search, $options: 'i' } },
-          { email: { $regex: search, $options: 'i' } },
-          { phone: { $regex: search, $options: 'i' } },
-        ],
-      };
-    }
-
-    const conn = await connectDB();
-    const User = getUserModel(conn);
-
-    const finalQuery = { ...queryMap[role as UserRoleType], ...searchQuery };
-
-    const total = await User.countDocuments(finalQuery);
-
-    const skip = (page - 1) * limit;
-    const hasNextPage = skip + limit < total;
-
-    const patients = await User.find(finalQuery)
-      .select('-password')
-      .sort({ name: 1 })
-      .skip(skip)
-      .limit(limit);
-
-    return NextResponse.json({
-      message: 'Patients fetched successfully',
-      data: patients,
-      pagination: {
-        page,
-        limit,
-        total,
-        hasNextPage,
-        totalPages: Math.ceil(total / limit),
-      },
-    });
   } catch (error: unknown) {
     console.error(error);
     return NextResponse.json(
@@ -93,8 +19,24 @@ export const GET = auth(async (req: NextAuthRequest) => {
   }
 });
 
-export const POST = auth(async (req: NextAuthRequest) => {
+export const POST = withAuth(async (req: NextAuthRequest) => {
   try {
+    const body = await req.json();
+    const subdomain = (await getSubdomain()) || body.organization;
+
+    const doesOrganizationExist = await validateOrganizationId(subdomain);
+    if (!doesOrganizationExist) {
+      return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
+    }
+
+    const validation = validateRequest(createPatientSchema, body);
+    if (!validation.success) {
+      return NextResponse.json(
+        { message: 'Invalid request', errors: validation.errors },
+        { status: 400 }
+      );
+    }
+
     const conn = await connectDB();
     const User = getUserModel(conn);
 

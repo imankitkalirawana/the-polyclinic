@@ -15,7 +15,7 @@ import {
 import { useInfiniteQueryWithSearch } from './infinite-query';
 // TODO: Remove this once the types are updated
 import { $FixMe } from '@/types';
-import { NewPatientFormValues } from '@/types/client/patient';
+import { NewPatientFormValues } from '@/services/client/patient/types';
 import { ApiResponse } from '@/services/fetch';
 import { addToast } from '@heroui/react';
 import { AppointmentType } from '@/services/client/appointment';

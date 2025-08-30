@@ -3,7 +3,7 @@
 // TODO: Remove this once the types are updated
 import { $FixMe } from '@/types';
 import { fetchData, fetchDataWithPagination } from '../../fetch';
-import { NewPatientFormValues } from '@/types/client/patient';
+import { NewPatientFormValues } from '@/services/client/patient/types';
 import { AppointmentType } from '@/services/client/appointment';
 
 export async function getAllPatients() {

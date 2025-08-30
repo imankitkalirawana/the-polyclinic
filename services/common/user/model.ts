@@ -1,6 +1,7 @@
 import mongoose, { Connection } from 'mongoose';
 import { auth } from '@/auth';
 import { generateUid } from '@/models/client/Counter';
+import { UNIFIED_USER_ROLES, USER_STATUSES } from './constants';
 
 const userSchema = new mongoose.Schema(
   {
@@ -34,11 +35,11 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      default: 'patient',
+      enum: UNIFIED_USER_ROLES,
     },
     status: {
       type: String,
-      enum: ['active', 'inactive', 'blocked'],
+      enum: USER_STATUSES,
       default: 'active',
     },
     updatedBy: {
@@ -72,5 +73,5 @@ userSchema.pre(['findOneAndUpdate', 'updateOne', 'updateMany'], async function (
 });
 
 export const getUserModel = (conn: Connection) => {
-  return conn.models.User || conn.model('user', userSchema);
+  return conn.models.user || conn.model('user', userSchema);
 };

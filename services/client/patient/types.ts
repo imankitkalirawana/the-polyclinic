@@ -1,3 +1,7 @@
+import { z } from 'zod';
+import { createPatientSchema } from './validation';
+
+// TODO: Remove this
 export interface NewPatientFormValues {
   name: string;
   email: string;
@@ -11,3 +15,5 @@ export interface NewPatientFormValues {
   country: string;
   zipcode: string;
 }
+
+export type CreatePatient = z.infer<typeof createPatientSchema>;
