@@ -5,16 +5,10 @@ import {
   useQueryClient,
   UseQueryResult,
 } from '@tanstack/react-query';
-import {
-  CreateOrganizationType,
-  CreateOrganizationUser,
-  OrganizationType,
-  UpdateOrganizationType,
-  UpdateOrganizationUser,
-  OrganizationUserType,
-} from './types';
+import { CreateOrganizationType, OrganizationType, UpdateOrganizationType } from './types';
 import { addToast } from '@heroui/react';
 import { OrganizationApi } from './api';
+import { CreateUser, OrganizationUser, UpdateUser } from '../common/user';
 
 // React Query hooks
 export const useOrganizations = () => {
@@ -34,7 +28,7 @@ export const useOrganization = (
   id: string
 ): UseQueryResult<{
   organization: OrganizationType;
-  users: OrganizationUserType[];
+  users: OrganizationUser[];
 }> => {
   return useQuery({
     queryKey: ['organizations', id],
@@ -138,7 +132,7 @@ export const useCreateOrganizationUser = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: CreateOrganizationUser }) => {
+    mutationFn: async ({ id, data }: { id: string; data: CreateUser }) => {
       const response = await OrganizationApi.createUser(id, data);
       if (response.success) {
         return response.data;
@@ -174,7 +168,7 @@ export const useUpdateOrganizationUser = () => {
     }: {
       organizationId: string;
       userId: string;
-      data: UpdateOrganizationUser;
+      data: UpdateUser;
     }) => {
       const response = await OrganizationApi.updateUser(organizationId, userId, data);
       if (response.success) {

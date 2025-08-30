@@ -1,4 +1,4 @@
-import { OrganizationUserRole } from '@/services/organization/types';
+import { OrganizationUser } from '@/services/common/user';
 
 export interface VerifyOTPResponse {
   token: string;
@@ -9,7 +9,7 @@ export interface VerifyOTPResponse {
 export interface RegistrationResponse {
   email: string;
   name: string;
-  role: OrganizationUserRole;
+  role: OrganizationUser['role'];
   uid: string;
   organization: string;
 }

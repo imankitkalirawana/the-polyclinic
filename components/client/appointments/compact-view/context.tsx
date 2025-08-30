@@ -7,7 +7,7 @@ import { ActionType } from './appointment-details-modal';
 
 import { useAllAppointments } from '@/services/client/appointment/query';
 import { AppointmentType } from '@/services/client/appointment';
-import { AuthUser } from '@/types/system/control-plane';
+import { AuthUser } from '@/services/common/user';
 
 interface FormType {
   selected: AppointmentType | null;

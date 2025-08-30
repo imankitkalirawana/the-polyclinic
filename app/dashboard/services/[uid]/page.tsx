@@ -3,7 +3,7 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 import { auth } from '@/auth';
 import ServiceViewItem from '@/components/dashboard/services/service-item';
 import { getServiceWithUID } from '@/services/api/client/service';
-import { AuthUser } from '@/types/system/control-plane';
+import { AuthUser } from '@/services/common/user';
 
 interface Props {
   params: Promise<{
@@ -34,6 +34,7 @@ export default async function Page(props: Props) {
   return (
     <div className="h-full w-full px-2">
       <HydrationBoundary state={dehydrate(queryClient)}>
+        {/* TODO: Fix this type */}
         <ServiceViewItem uid={params.uid} session={session as AuthUser} />
       </HydrationBoundary>
     </div>

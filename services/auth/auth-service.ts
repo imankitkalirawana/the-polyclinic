@@ -4,7 +4,7 @@ import { getUserModel } from '@/models/User';
 import { OTPManager } from './otp-manager';
 import { AuthEmailService } from './email-service';
 import { ServiceResult } from '..';
-import { OrganizationUserRole } from '@/services/organization/types';
+import { OrganizationUser } from '../common/user';
 
 export class AuthService {
   /**
@@ -146,7 +146,7 @@ export class AuthService {
     ServiceResult<{
       email: string;
       name: string;
-      role: OrganizationUserRole;
+      role: OrganizationUser['role'];
       uid: string;
       organization: string;
     }>

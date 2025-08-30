@@ -33,7 +33,7 @@ import { castData, generateEmail, generatePhoneNumber } from '@/lib/utils';
 import { useCreateDoctor } from '@/hooks/queries/client/doctor';
 import { useAllUsers } from '@/hooks/queries/client/user';
 import { CreateDoctorType } from '@/types/client/doctor';
-import { OrganizationUserType } from '@/services/organization/types';
+import { OrganizationUser } from '@/services/common/user';
 
 export default function NewDoctor() {
   const router = useRouter();
@@ -42,7 +42,7 @@ export default function NewDoctor() {
   const [inputValue, setInputValue] = useState('');
 
   const { data: usersData, isLoading: isUsersLoading } = useAllUsers();
-  const users = castData<OrganizationUserType[]>(usersData) || [];
+  const users = castData<OrganizationUser[]>(usersData) || [];
 
   // Filter users based on input value
   const filteredUsers =

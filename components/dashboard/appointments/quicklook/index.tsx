@@ -12,8 +12,8 @@ import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { useAppointmentStore } from '@/store/appointment';
 import { DropdownKeyType } from '@/types/client/appointment';
 import CancelDeleteAppointment from '@/components/client/appointments/ui/cancel-delete';
-import { OrganizationUserRole } from '@/services/organization/types';
 import { AppointmentType } from '@/services/client/appointment';
+import { OrganizationUser } from '@/services/common/user';
 
 export function AppointmentQuickLook() {
   const { data: session } = useSession();
@@ -21,7 +21,7 @@ export function AppointmentQuickLook() {
 
   const buttons = useAppointmentButtons({
     appointment,
-    role: (session?.user?.role || 'patient') as OrganizationUserRole,
+    role: (session?.user?.role || 'patient') as OrganizationUser['role'],
   });
 
   const dropdown = useMemo<Array<Partial<DropdownItemProps<DropdownKeyType>>>>(

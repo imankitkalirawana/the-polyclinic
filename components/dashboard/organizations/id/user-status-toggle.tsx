@@ -2,11 +2,11 @@
 import { Switch } from '@heroui/react';
 import { useUpdateOrganizationUser } from '@/services/organization/query';
 import { OrganizationType } from '@/services/organization/types';
-import { OrganizationUserType } from '@/services/organization/types';
+import { OrganizationUser } from '@/services/common/user';
 
 interface UserStatusToggleProps {
   organization: OrganizationType;
-  user: OrganizationUserType;
+  user: OrganizationUser;
 }
 
 export default function UserStatusToggle({ organization, user }: UserStatusToggleProps) {

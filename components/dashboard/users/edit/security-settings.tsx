@@ -29,13 +29,13 @@ import CellWrapper from './cell-wrapper';
 import SwitchCell from './switch-cell';
 
 import { UserRoles } from '@/lib/options';
-import { SystemUserType } from '@/types/system/control-plane';
+import { SystemUser } from '@/services/common/user';
 
 export default function SecuritySettings({
   user,
   refetch,
 }: {
-  user: SystemUserType;
+  user: SystemUser;
   refetch: () => void;
 }) {
   const editEmailModal = useDisclosure();

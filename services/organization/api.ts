@@ -1,10 +1,5 @@
-import {
-  CreateOrganizationType,
-  CreateOrganizationUser,
-  OrganizationType,
-  OrganizationUserType,
-  UpdateOrganizationType,
-} from './types';
+import { CreateUser, OrganizationUser } from '../common/user';
+import { CreateOrganizationType, OrganizationType, UpdateOrganizationType } from './types';
 
 import { fetchData } from '@/services/fetch';
 
@@ -19,7 +14,7 @@ export class OrganizationApi {
   static async getById(organizationId: string) {
     return await fetchData<{
       organization: OrganizationType;
-      users: OrganizationUserType[];
+      users: OrganizationUser[];
     }>(`${API_BASE}/${organizationId}`);
   }
 
@@ -56,22 +51,18 @@ export class OrganizationApi {
 
   // User related
   static async getAllUser(organizationId: string) {
-    return await fetchData<OrganizationUserType[]>(`${API_BASE}/${organizationId}/users`);
+    return await fetchData<OrganizationUser[]>(`${API_BASE}/${organizationId}/users`);
   }
 
-  static async createUser(organizationId: string, user: CreateOrganizationUser) {
-    return await fetchData<OrganizationUserType>(`${API_BASE}/${organizationId}/users`, {
+  static async createUser(organizationId: string, user: CreateUser) {
+    return await fetchData<OrganizationUser>(`${API_BASE}/${organizationId}/users`, {
       method: 'POST',
       data: user,
     });
   }
 
-  static async updateUser(
-    organizationId: string,
-    userId: string,
-    user: Partial<CreateOrganizationUser>
-  ) {
-    return await fetchData<OrganizationUserType>(`${API_BASE}/${organizationId}/users/${userId}`, {
+  static async updateUser(organizationId: string, userId: string, user: Partial<CreateUser>) {
+    return await fetchData<OrganizationUser>(`${API_BASE}/${organizationId}/users/${userId}`, {
       method: 'PUT',
       data: user,
     });

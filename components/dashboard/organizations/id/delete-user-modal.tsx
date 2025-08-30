@@ -4,13 +4,13 @@ import { Icon } from '@iconify/react';
 import { useDeleteOrganizationUser } from '@/services/organization/query';
 import { toast } from 'sonner';
 import { OrganizationType } from '@/services/organization/types';
-import { OrganizationUserType } from '@/services/organization/types';
+import { OrganizationUser } from '@/services/common/user';
 
 interface DeleteUserModalProps {
   isOpen: boolean;
   onClose: () => void;
   organization: OrganizationType;
-  user: OrganizationUserType;
+  user: OrganizationUser;
 }
 
 export default function DeleteUserModal({

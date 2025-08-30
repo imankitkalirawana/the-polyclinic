@@ -5,8 +5,8 @@ import { auth } from '@/auth';
 import { API_ACTIONS } from '@/lib/config';
 import { connectDB } from '@/lib/db';
 import { getUserModel } from '@/models/User';
-import { OrganizationUserRole } from '@/services/organization/types';
 import { withAuth } from '@/middleware/withAuth';
+import { OrganizationUser } from '@/services/common/user';
 
 export const GET = withAuth(async (req: NextAuthRequest) => {
   try {
@@ -19,7 +19,7 @@ export const GET = withAuth(async (req: NextAuthRequest) => {
 
     const ALLOWED_ROLES = ['admin', 'receptionist', 'patient'];
 
-    type UserRoleType = Extract<OrganizationUserRole, 'admin' | 'receptionist' | 'patient'>;
+    type UserRoleType = Extract<OrganizationUser['role'], 'admin' | 'receptionist' | 'patient'>;
 
     if (!ALLOWED_ROLES.includes(role)) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });

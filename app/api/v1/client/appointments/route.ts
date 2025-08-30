@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
 import { NextAuthRequest } from 'next-auth';
 import { connectDB } from '@/lib/db';
-import { OrganizationUserRole } from '@/services/organization/types';
 import { withAuth } from '@/middleware/withAuth';
 import { getSubdomain } from '@/auth/sub-domain';
 import { AppointmentService, createAppointmentSchema } from '@/services/client/appointment';
 import { validateRequest } from '@/services';
 import { validateOrganizationId } from '@/lib/server-actions/validation';
+import { OrganizationUser } from '@/services/common/user';
 
 export const GET = withAuth(async (request: NextAuthRequest) => {
   try {
@@ -20,7 +20,7 @@ export const GET = withAuth(async (request: NextAuthRequest) => {
     const conn = await connectDB(subdomain);
 
     const role = request.auth?.user?.role;
-    const queryMap: Record<OrganizationUserRole, { $match: Record<string, unknown> }> = {
+    const queryMap: Record<OrganizationUser['role'], { $match: Record<string, unknown> }> = {
       admin: {
         $match: {},
       },
@@ -35,7 +35,10 @@ export const GET = withAuth(async (request: NextAuthRequest) => {
       pharmacist: { $match: {} },
     };
 
-    const result = await AppointmentService.getAll(conn, queryMap[role as OrganizationUserRole]);
+    const result = await AppointmentService.getAll(
+      conn,
+      queryMap[role as OrganizationUser['role']]
+    );
 
     return NextResponse.json(result.data);
   } catch (error: unknown) {

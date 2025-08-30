@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 import { useAllUsers, useDeleteUser } from '@/hooks/queries/client/user';
-import { UnifiedUserType } from '@/types';
+import { UnifiedUser } from '@/services/common/user';
 
 const INITIAL_VISIBLE_COLUMNS = ['image', 'uid', 'name', 'email', 'role', 'createdAt'];
 
@@ -39,7 +39,7 @@ export default function Users() {
   };
 
   // Define columns with render functions
-  const columns: ColumnDef<UnifiedUserType>[] = useMemo(
+  const columns: ColumnDef<UnifiedUser>[] = useMemo(
     () => [
       {
         name: 'User ID',
@@ -116,7 +116,7 @@ export default function Users() {
   );
 
   // Define filters
-  const filters: FilterDef<UnifiedUserType>[] = useMemo(
+  const filters: FilterDef<UnifiedUser>[] = useMemo(
     () => [
       {
         name: 'Role',
@@ -239,7 +239,7 @@ export default function Users() {
     </DropdownMenu>
   );
 
-  let users: UnifiedUserType[] = [];
+  let users: UnifiedUser[] = [];
   if (data) {
     users = data;
   }

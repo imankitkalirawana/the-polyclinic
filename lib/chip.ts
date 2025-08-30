@@ -1,11 +1,11 @@
 import { AppointmentType } from '@/services/client/appointment';
-import { UnifiedUserRole, UnifiedUserType } from '@/types';
+import { UnifiedUser } from '@/services/common/user';
 import { DrugStatus } from '@/types/client/drug';
 import { ServiceStatus, ServiceTypes } from '@/types/client/service';
 
 export type ChipColorType =
-  | UnifiedUserRole
-  | UnifiedUserType['status']
+  | UnifiedUser['role']
+  | UnifiedUser['status']
   | ServiceStatus
   | ServiceTypes
   | DrugStatus

@@ -2,8 +2,8 @@
 import { NextResponse } from 'next/server';
 import type { NextAuthRequest } from 'next-auth';
 import { permissionsConfig } from '@/lib/permissions/api';
-import { UnifiedUserType } from '@/types';
 import { match } from 'path-to-regexp';
+import { UnifiedUser } from '@/services/common/user';
 
 export async function authorize(request: NextAuthRequest) {
   const url = new URL(request.url);
@@ -35,7 +35,7 @@ export async function authorize(request: NextAuthRequest) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
-  if (!allowedRoles.includes(user.role as UnifiedUserType['role'])) {
+  if (!allowedRoles.includes(user.role as UnifiedUser['role'])) {
     return NextResponse.json({ message: 'Forbidden: Access denied' }, { status: 403 });
   }
 

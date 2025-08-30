@@ -16,7 +16,7 @@ import { ActionType, DropdownKeyType } from '../types';
 
 import { PermissionProps } from '@/components/ui/dashboard/quicklook/types';
 import { avatars } from '@/lib/avatar';
-import { UnifiedUserType } from '@/types';
+import { UnifiedUser } from '@/services/common/user';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
   doctor: ['cancel', 'reschedule', 'reminder', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
@@ -25,7 +25,7 @@ export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
   nurse: ['cancel', 'reschedule'],
   receptionist: ['cancel', 'reschedule', 'reminder'],
 };
-export const sidebarContent = (user: UnifiedUserType) => (
+export const sidebarContent = (user: UnifiedUser) => (
   <>
     <div className="flex flex-col items-center gap-2 p-4">
       <Avatar

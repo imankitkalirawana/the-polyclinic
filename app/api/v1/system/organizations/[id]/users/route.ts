@@ -4,8 +4,8 @@ import { connectDB } from '@/lib/db';
 import { withAuth } from '@/middleware/withAuth';
 import { validateOrganizationId } from '@/lib/server-actions/validation';
 import { validateRequest } from '@/services';
-import { createOrganizationUserSchema } from '@/services/organization/validation';
 import { OrganizationService } from '@/services/organization/service';
+import { createUserSchema } from '@/services/common/user';
 
 type Params = Promise<{
   id: string;
@@ -38,7 +38,7 @@ export const POST = withAuth(async (request: NextAuthRequest, { params }: { para
 
     const body = await request.json();
 
-    const validation = validateRequest(createOrganizationUserSchema, body);
+    const validation = validateRequest(createUserSchema, body);
 
     if (!validation.success) {
       return NextResponse.json(

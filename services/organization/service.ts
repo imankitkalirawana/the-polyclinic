@@ -1,17 +1,11 @@
 import { ServiceResult } from '@/services';
 import { Connection } from 'mongoose';
 import { getOrganizationModel } from './model';
-import {
-  CreateOrganizationType,
-  CreateOrganizationUser,
-  OrganizationType,
-  OrganizationUserType,
-  UpdateOrganizationType,
-  UpdateOrganizationUser,
-} from './types';
+import { CreateOrganizationType, OrganizationType, UpdateOrganizationType } from './types';
 import { getUserModel } from '@/models/User';
 import { connectDB } from '@/lib/db';
 import bcrypt from 'bcryptjs';
+import { CreateUser, OrganizationUser, UpdateUser } from '../common/user';
 
 export class OrganizationService {
   static async getOrganizations(conn: Connection): Promise<ServiceResult<OrganizationType[]>> {
@@ -73,9 +67,7 @@ export class OrganizationService {
     }
   }
 
-  static async getOrganizationUsers(
-    conn: Connection
-  ): Promise<ServiceResult<OrganizationUserType[]>> {
+  static async getOrganizationUsers(conn: Connection): Promise<ServiceResult<OrganizationUser[]>> {
     try {
       const User = getUserModel(conn);
       const users = await User.find().select('-password');
@@ -93,7 +85,7 @@ export class OrganizationService {
   static async getFullOrganization(
     conn: Connection,
     organizationId: string
-  ): Promise<ServiceResult<{ organization: OrganizationType; users: OrganizationUserType[] }>> {
+  ): Promise<ServiceResult<{ organization: OrganizationType; users: OrganizationUser[] }>> {
     try {
       const Organization = getOrganizationModel(conn);
       const organization = await Organization.findOne({ organizationId });
@@ -187,7 +179,7 @@ export class OrganizationService {
     conn: Connection,
     organizationId: string,
     userId: string
-  ): Promise<ServiceResult<OrganizationUserType>> {
+  ): Promise<ServiceResult<OrganizationUser>> {
     try {
       const User = getUserModel(conn);
       const user = await User.findOne({ organization: organizationId, uid: userId });
@@ -209,7 +201,7 @@ export class OrganizationService {
   static async getOrganizationUserById(
     conn: Connection,
     userId: string
-  ): Promise<ServiceResult<OrganizationUserType>> {
+  ): Promise<ServiceResult<OrganizationUser>> {
     try {
       const User = getUserModel(conn);
       const user = await User.findOne({ uid: userId }).select('-password');
@@ -231,7 +223,7 @@ export class OrganizationService {
   static async createOrganizationUser(
     conn: Connection,
     organizationId: string,
-    data: CreateOrganizationUser
+    data: CreateUser
   ): Promise<ServiceResult> {
     try {
       const { email, password, ...rest } = data;
@@ -268,7 +260,7 @@ export class OrganizationService {
     conn: Connection,
     organizationId: string,
     userId: string,
-    data: UpdateOrganizationUser
+    data: UpdateUser
   ): Promise<ServiceResult> {
     try {
       const { email, password, ...rest } = data;

@@ -16,18 +16,17 @@ import {
   useCreateOrganizationUser,
   useUpdateOrganizationUser,
 } from '@/services/organization/query';
+import { OrganizationType } from '@/services/organization/types';
 import {
-  OrganizationType,
-  organizationUserRoles,
-  CreateOrganizationUser,
-  UpdateOrganizationUser,
-} from '@/services/organization/types';
-import { OrganizationUserType } from '@/services/organization/types';
+  CreateUser,
+  createUserSchema,
+  ORGANIZATION_USER_ROLES,
+  OrganizationUser,
+  UpdateUser,
+  updateUserSchema,
+} from '@/services/common/user';
 import { useFormik } from 'formik';
-import {
-  createOrganizationUserSchema,
-  updateOrganizationUserSchema,
-} from '@/services/organization/validation';
+
 import { toTitleCase, withZodSchema } from '@/lib/utils';
 
 interface UserModalProps {
@@ -35,7 +34,7 @@ interface UserModalProps {
   onClose: () => void;
   organization: OrganizationType;
   mode: 'create' | 'edit';
-  user?: OrganizationUserType;
+  user?: OrganizationUser;
 }
 
 export default function UserModal({ isOpen, onClose, organization, mode, user }: UserModalProps) {
@@ -44,7 +43,7 @@ export default function UserModal({ isOpen, onClose, organization, mode, user }:
 
   const isEdit = mode === 'edit';
 
-  const createFormik = useFormik<CreateOrganizationUser>({
+  const createFormik = useFormik<CreateUser>({
     initialValues: {
       name: '',
       email: '',
@@ -53,7 +52,7 @@ export default function UserModal({ isOpen, onClose, organization, mode, user }:
       role: 'patient' as const,
       image: '',
     },
-    validate: withZodSchema(createOrganizationUserSchema),
+    validate: withZodSchema(createUserSchema),
     onSubmit: async (values) => {
       await createUser.mutateAsync({
         id: organization.organizationId,
@@ -63,7 +62,7 @@ export default function UserModal({ isOpen, onClose, organization, mode, user }:
     },
   });
 
-  const editFormik = useFormik<UpdateOrganizationUser>({
+  const editFormik = useFormik<UpdateUser>({
     initialValues: {
       name: user?.name || '',
       email: user?.email || '',
@@ -73,7 +72,7 @@ export default function UserModal({ isOpen, onClose, organization, mode, user }:
       status: user?.status || 'active',
       password: '',
     },
-    validate: withZodSchema(updateOrganizationUserSchema),
+    validate: withZodSchema(updateUserSchema),
     onSubmit: async (values) => {
       if (user) {
         await updateUser.mutateAsync({
@@ -192,7 +191,7 @@ export default function UserModal({ isOpen, onClose, organization, mode, user }:
                 isInvalid={touched.role && !!errors.role}
                 errorMessage={errors.role}
               >
-                {organizationUserRoles.map((role) => (
+                {ORGANIZATION_USER_ROLES.map((role) => (
                   <SelectItem key={role} textValue={toTitleCase(role)}>
                     {toTitleCase(role)}
                   </SelectItem>
@@ -204,7 +203,7 @@ export default function UserModal({ isOpen, onClose, organization, mode, user }:
                   name="status"
                   label="Status"
                   placeholder="Select user status"
-                  selectedKeys={[(editFormik.values as UpdateOrganizationUser).status || '']}
+                  selectedKeys={[editFormik.values.status || '']}
                   onChange={(e) => editFormik.setFieldValue('status', e.target.value)}
                   startContent={
                     <Icon icon="solar:shield-check-bold-duotone" className="text-default-400" />

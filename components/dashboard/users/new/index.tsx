@@ -35,7 +35,7 @@ import {
 } from '@/hooks/queries/system/external';
 import { useCreateUser } from '@/hooks/queries/client/user';
 import { $FixMe, CityProps, CountryProps, StateProps } from '@/types';
-import { organizationUserRoles } from '@/services/organization/types';
+import { ORGANIZATION_USER_ROLES } from '@/services/common/user';
 
 export default function NewUser() {
   const router = useRouter();
@@ -206,7 +206,7 @@ export default function NewUser() {
               onChange={formik.handleChange}
               isInvalid={!!(formik.touched.role && formik.errors.role)}
               errorMessage={formik.touched.role && formik.errors.role}
-              items={organizationUserRoles.map((role) => ({
+              items={ORGANIZATION_USER_ROLES.map((role) => ({
                 label: toCapitalCase(role),
                 value: role,
               }))}

@@ -4,14 +4,13 @@ import * as Yup from 'yup';
 import { create } from 'zustand';
 
 import { ActionType } from './types';
-
-import { UnifiedUserType } from '@/types';
+import { UnifiedUser } from '@/services/common/user';
 
 interface UserStoreState {
-  selected: UnifiedUserType | null;
+  selected: UnifiedUser | null;
   action: ActionType | null;
   keys: Selection | undefined;
-  setSelected: (selected: UnifiedUserType | null) => void;
+  setSelected: (selected: UnifiedUser | null) => void;
   setAction: (action: ActionType | null) => void;
   setKeys: (keys: Selection) => void;
   resetState: () => void;

@@ -1,6 +1,4 @@
 import { GENDERS } from '@/lib/constants';
-import { SystemUserType } from './system/control-plane';
-import { OrganizationUserType } from '../services/organization/types';
 import { ValuesOf } from '@/lib/utils';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -13,10 +11,6 @@ export type Base = {
   createdBy: string;
   updatedBy: string;
 };
-
-export type UnifiedUserType = SystemUserType | OrganizationUserType;
-
-export type UnifiedUserRole = SystemUserType['role'] | OrganizationUserType['role'];
 
 export type Gender = ValuesOf<typeof GENDERS>;
 

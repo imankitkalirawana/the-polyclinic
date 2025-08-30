@@ -3,8 +3,8 @@ import { ButtonProps } from '@heroui/react';
 
 import type { $FixMe } from '..';
 
-import { OrganizationUserType } from '../../services/organization/types';
 import { AppointmentType } from '@/services/client/appointment';
+import { OrganizationUser } from '@/services/common/user';
 
 export type ActionType =
   | 'reschedule'
@@ -29,8 +29,8 @@ export interface ButtonConfig {
   whileLoading?: string;
   visibilityRules: {
     statuses?: AppointmentType['status'][];
-    roles?: OrganizationUserType['role'][];
-    custom?: (appointment: AppointmentType, role: OrganizationUserType['role']) => boolean;
+    roles?: OrganizationUser['role'][];
+    custom?: (appointment: AppointmentType, role: OrganizationUser['role']) => boolean;
   };
   action: {
     type: 'store-action' | 'async-function' | 'navigation';

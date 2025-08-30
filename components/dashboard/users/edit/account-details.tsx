@@ -23,9 +23,9 @@ import { I18nProvider } from '@react-aria/i18n';
 import { userValidationSchema } from '@/lib/validation';
 import { useUpdateUser } from '@/hooks/queries/client/user';
 import { $FixMe } from '@/types';
-import { SystemUserType } from '@/types/system/control-plane';
+import { SystemUser } from '@/services/common/user';
 
-export default function AccountDetails({ user }: { user: SystemUserType }) {
+export default function AccountDetails({ user }: { user: SystemUser }) {
   const { data: session } = useSession();
   const updateUser = useUpdateUser();
 

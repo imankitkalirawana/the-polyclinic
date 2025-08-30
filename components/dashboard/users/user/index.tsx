@@ -10,13 +10,12 @@ import Loading from '@/app/loading';
 import { humanReadableDate, humanReadableTime } from '@/lib/utility';
 import { castData } from '@/lib/utils';
 import { useUserWithUID } from '@/hooks/queries/client/user';
-import { UnifiedUserType } from '@/types';
-import { OrganizationUserRole } from '@/services/organization/types';
+import { OrganizationUser, UnifiedUser } from '@/services/common/user';
 
 export default function UserCard({ uid }: { uid: string }) {
   const { data, isError, isLoading } = useUserWithUID(uid);
 
-  const user = castData<UnifiedUserType>(data);
+  const user = castData<UnifiedUser>(data);
 
   if (isError) {
     return <p>Error fetching user data</p>;
@@ -30,7 +29,7 @@ export default function UserCard({ uid }: { uid: string }) {
     return <p>User not found</p>;
   }
 
-  const actionButton: Record<OrganizationUserRole, React.ReactNode> = {
+  const actionButton: Record<OrganizationUser['role'], React.ReactNode> = {
     admin: null,
     receptionist: null,
     nurse: null,
@@ -75,7 +74,7 @@ export default function UserCard({ uid }: { uid: string }) {
         </ScrollShadow>
       </CardBody>
       <CardFooter className="justify-end">
-        {actionButton[user.role as OrganizationUserRole]}
+        {actionButton[user.role as OrganizationUser['role']]}
       </CardFooter>
     </Card>
   );

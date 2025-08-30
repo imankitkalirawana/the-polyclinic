@@ -5,7 +5,7 @@ import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import { getUserModel } from '@/models/User';
 import { $FixMe } from '@/types';
-import { OrganizationUserRole } from '@/services/organization/types';
+import { OrganizationUser } from '@/services/common/user';
 
 export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
   try {
@@ -24,7 +24,7 @@ export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
     const conn = await connectDB();
     const User = getUserModel(conn);
 
-    const users = await User.find({ role: role as OrganizationUserRole }).select('-password');
+    const users = await User.find({ role: role as OrganizationUser['role'] }).select('-password');
 
     return NextResponse.json(users);
   } catch (error: unknown) {

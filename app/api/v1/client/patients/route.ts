@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import { getUserModel } from '@/models/User';
-import { OrganizationUserRole } from '@/services/organization/types';
+import { OrganizationUser } from '@/services/common/user';
 
 export const GET = auth(async (req: NextAuthRequest) => {
   try {
@@ -16,7 +16,7 @@ export const GET = auth(async (req: NextAuthRequest) => {
 
     const ALLOWED_ROLES = ['admin', 'receptionist', 'patient'];
 
-    type UserRoleType = Extract<OrganizationUserRole, 'admin' | 'receptionist' | 'patient'>;
+    type UserRoleType = Extract<OrganizationUser['role'], 'admin' | 'receptionist' | 'patient'>;
 
     if (!ALLOWED_ROLES.includes(role)) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });

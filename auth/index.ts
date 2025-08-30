@@ -3,7 +3,7 @@ import credentials from 'next-auth/providers/credentials';
 import Google from 'next-auth/providers/google';
 
 import { authorizeCredentials } from './credential-authorize';
-import { UnifiedUserRole } from '@/types';
+import { UnifiedUser } from '@/services/common/user';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -35,7 +35,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return token;
     },
     session({ session, token }) {
-      session.user.role = token.role as UnifiedUserRole;
+      session.user.role = token.role as UnifiedUser['role'];
       session.user.uid = token.uid as string;
       session.user.image = token.picture as string;
       session.user.organization = token.organization as string;

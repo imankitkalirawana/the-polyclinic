@@ -8,8 +8,8 @@ import {
   validateUserInOrganization,
 } from '@/lib/server-actions/validation';
 import { OrganizationService } from '@/services/organization/service';
-import { updateOrganizationUserSchema } from '@/services/organization/validation';
 import { validateRequest } from '@/services';
+import { updateUserSchema } from '@/services/common/user';
 
 type Params = Promise<{
   id: string;
@@ -48,7 +48,7 @@ export const PUT = withAuth(async (request: NextAuthRequest, { params }: { param
 
     const conn = await connectDB(id);
     const body = await request.json();
-    const validation = validateRequest(updateOrganizationUserSchema, body);
+    const validation = validateRequest(updateUserSchema, body);
     if (!validation.success) {
       return NextResponse.json(
         { message: 'Invalid request data', errors: validation.errors },

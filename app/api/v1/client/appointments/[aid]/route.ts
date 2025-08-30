@@ -6,11 +6,11 @@ import { logActivity } from '@/lib/server-actions/activity-log';
 import { trackObjectChanges } from '@/lib/utility';
 import { $FixMe } from '@/types';
 import { Schema, Status } from '@/types/client/activity';
-import { OrganizationUserRole } from '@/services/organization/types';
 import { withAuth } from '@/middleware/withAuth';
 import { getSubdomain } from '@/auth/sub-domain';
 import { getAppointmentModel } from '@/services/client/appointment';
 import { validateOrganizationId } from '@/lib/server-actions/validation';
+import { OrganizationUser } from '@/services/common/user';
 
 // get appointment by id from param
 export const GET = withAuth(async (request: NextAuthRequest, context: $FixMe) => {
@@ -22,7 +22,7 @@ export const GET = withAuth(async (request: NextAuthRequest, context: $FixMe) =>
     const conn = await connectDB(subdomain);
     const Appointment = getAppointmentModel(conn);
 
-    const queryMap: Record<OrganizationUserRole, { $match: Record<string, unknown> }> = {
+    const queryMap: Record<OrganizationUser['role'], { $match: Record<string, unknown> }> = {
       admin: {
         $match: { aid },
       },

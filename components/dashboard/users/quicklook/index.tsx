@@ -9,7 +9,7 @@ import { permissions, sidebarContent } from './data';
 import QuickLook from '@/components/ui/dashboard/quicklook';
 import { ButtonProps, DropdownItemProps } from '@/components/ui/dashboard/quicklook/types';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
-import { UnifiedUserType } from '@/types';
+import { UnifiedUser } from '@/services/common/user';
 
 export function UserQuickLook() {
   const { selected, setSelected, setAction, action } = useUserStore();
@@ -96,7 +96,7 @@ export function UserQuickLook() {
     [selected]
   );
 
-  const content = (user: UnifiedUserType) => [
+  const content = (user: UnifiedUser) => [
     {
       label: 'User ID',
       value: () => user.uid,

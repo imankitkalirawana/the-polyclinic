@@ -1,4 +1,4 @@
-import { UnifiedUserRole } from '@/types';
+import { UnifiedUser } from '@/services/common/user';
 import { type SidebarItem } from './sidebar';
 
 import ModeToggle from '@/components/mode-toggle';
@@ -98,7 +98,7 @@ export const sectionItems: SidebarItem[] = [
 ];
 
 // Function to filter sidebar items based on user role
-export const getSidebarItems = (userRole?: UnifiedUserRole | null): SidebarItem[] => {
+export const getSidebarItems = (userRole?: UnifiedUser['role'] | null): SidebarItem[] => {
   if (!userRole) {
     return [];
   }

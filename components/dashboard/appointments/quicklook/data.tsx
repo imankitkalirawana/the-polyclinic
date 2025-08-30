@@ -19,10 +19,10 @@ import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { avatars } from '@/lib/avatar';
 import { useAppointmentStore } from '@/store/appointment';
 import { ActionType, DropdownKeyType } from '@/types/client/appointment';
-import { OrganizationUserRole } from '@/services/organization/types';
 import CancelDeleteAppointment from '@/components/client/appointments/ui/cancel-delete';
 import RescheduleAppointment from '@/components/client/appointments/ui/reschedule-modal';
 import { AppointmentType } from '@/services/client/appointment';
+import { OrganizationUser } from '@/services/common/user';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
   doctor: ['cancel', 'reschedule', 'reminder', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
@@ -203,7 +203,7 @@ export const useAppointmentButtons = ({
   role,
 }: {
   appointment: AppointmentType | null;
-  role: OrganizationUserRole;
+  role: OrganizationUser['role'];
 }) => {
   const { setAction } = useAppointmentStore();
 

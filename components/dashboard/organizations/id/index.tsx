@@ -15,7 +15,7 @@ import {
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { useOrganization, useUpdateOrganization } from '@/services/organization/query';
-import { OrganizationUserType } from '@/services/organization/types';
+import { OrganizationUser } from '@/services/common/user';
 import UserModal from './create-edit-user';
 import DeleteUserModal from './delete-user-modal';
 import UserStatusToggle from './user-status-toggle';
@@ -31,7 +31,7 @@ export default function Organization({ id }: { id: string }) {
   const deleteUserModal = useDisclosure();
 
   const [selectedTab, setSelectedTab] = useState('users');
-  const [selectedUser, setSelectedUser] = useState<OrganizationUserType | null>(null);
+  const [selectedUser, setSelectedUser] = useState<OrganizationUser | null>(null);
   const [userModalMode, setUserModalMode] = useState<'create' | 'edit'>('create');
 
   if (isLoading) {
@@ -67,13 +67,13 @@ export default function Organization({ id }: { id: string }) {
     });
   };
 
-  const handleEditUser = (user: OrganizationUserType) => {
+  const handleEditUser = (user: OrganizationUser) => {
     setSelectedUser(user);
     setUserModalMode('edit');
     userModal.onOpen();
   };
 
-  const handleDeleteUser = (user: OrganizationUserType) => {
+  const handleDeleteUser = (user: OrganizationUser) => {
     setSelectedUser(user);
     deleteUserModal.onOpen();
   };

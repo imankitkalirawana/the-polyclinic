@@ -1,10 +1,9 @@
 // role based navbar
 
+import { UnifiedUser } from '@/services/common/user';
 import { NavItem } from './types';
 
-import { UnifiedUserRole } from '@/types';
-
-export const itemsMap: Record<UnifiedUserRole, NavItem[]> = {
+export const itemsMap: Record<UnifiedUser['role'], NavItem[]> = {
   superadmin: [
     {
       name: 'Home',
