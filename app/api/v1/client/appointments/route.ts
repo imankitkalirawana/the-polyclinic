@@ -69,7 +69,7 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
   }
 });
 
-export const PATCH = withAuth(async (request: NextAuthRequest) => {
+export const PATCH = withAuth(async (_request: NextAuthRequest) => {
   try {
     await connectDB();
     // const { ids } = await request.json();
