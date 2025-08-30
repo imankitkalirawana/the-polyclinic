@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { appointmentSchema } from '@/services/client/appointment/validation';
+import { createAppointmentSchema } from '@/services/client/appointment/validation';
 import { Base, Gender } from '@/types';
 import { ValuesOf } from '@/lib/utils';
 import { APPOINTMENT_MODES, APPOINTMENT_STATUSES, APPOINTMENT_TYPES } from './constants';
@@ -47,4 +47,4 @@ export type AppointmentMode = ValuesOf<typeof APPOINTMENT_MODES>;
 export type AppointmentTypes = ValuesOf<typeof APPOINTMENT_TYPES>[`value`];
 
 // Zod
-export type CreateAppointmentType = z.infer<typeof appointmentSchema>;
+export type CreateAppointmentType = z.infer<typeof createAppointmentSchema>;

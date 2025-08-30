@@ -1,26 +1,21 @@
-import mongoose from 'mongoose';
-import mongooseSequence from 'mongoose-sequence';
+import mongoose, { Connection } from 'mongoose';
 
 import { auth } from '@/auth';
-
-// @ts-expect-error - mongoose-sequence is not typed
-const AutoIncrement = mongooseSequence(mongoose);
+import { generateAid } from '@/models/client/Counter';
 
 const appointmentSchema = new mongoose.Schema(
   {
     aid: {
-      type: Number,
+      type: String,
       unique: true,
     },
     date: Date,
-    patient: {
-      type: Number,
-      ref: 'User',
+    patientId: {
+      type: String,
       required: true,
     },
-    doctor: {
-      type: Number,
-      ref: 'Doctor',
+    doctorId: {
+      type: String,
     },
     additionalInfo: {
       mode: {
@@ -60,11 +55,13 @@ const appointmentSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    collection: 'appointment',
   }
 );
 
 appointmentSchema.pre('save', async function (next) {
   const session = await auth();
+  this.aid = await generateAid('aid');
   this.createdBy = session?.user?.email || 'system-admin@divinely.dev';
   next();
 });
@@ -79,9 +76,6 @@ appointmentSchema.pre(['findOneAndUpdate', 'updateOne', 'updateMany'], async fun
   next();
 });
 
-// @ts-expect-error - mongoose-sequence is not typed
-appointmentSchema.plugin(AutoIncrement, { inc_field: 'aid', start_seq: 1000 });
-
-const Appointment = mongoose.models.Appointment || mongoose.model('Appointment', appointmentSchema);
-
-export default Appointment;
+export const getAppointmentModel = (conn: Connection) => {
+  return conn.models.appointment || conn.model('appointment', appointmentSchema);
+};

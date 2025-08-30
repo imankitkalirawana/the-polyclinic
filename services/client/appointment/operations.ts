@@ -1,17 +1,20 @@
-import Appointment from '@/services/client/appointment/model';
-import { PipelineStage } from 'mongoose';
+import { PipelineStage, Connection } from 'mongoose';
+import { getAppointmentModel } from './model';
 
 type AppointmentAggregationOptions = {
+  conn: Connection;
   query?: Record<string, unknown> | PipelineStage;
   projectExtra?: Record<string, unknown>;
   isStage?: boolean;
 };
 
 export const getAppointmentsWithDetails = async ({
+  conn,
   query = {},
   projectExtra = {},
   isStage = false,
 }: AppointmentAggregationOptions) => {
+  const Appointment = getAppointmentModel(conn);
   const pipeline: PipelineStage[] = [];
 
   if (isStage) {
@@ -23,30 +26,30 @@ export const getAppointmentsWithDetails = async ({
   pipeline.push(
     {
       $lookup: {
-        from: 'users',
-        localField: 'doctor',
+        from: 'user',
+        localField: 'doctorId',
         foreignField: 'uid',
-        as: 'doctorDetails',
+        as: 'doctor',
       },
     },
     {
       $lookup: {
-        from: 'users',
-        localField: 'patient',
+        from: 'user',
+        localField: 'patientId',
         foreignField: 'uid',
-        as: 'patientDetails',
+        as: 'patient',
       },
     },
     {
       $lookup: {
-        from: 'doctors',
-        localField: 'doctor',
+        from: 'doctor',
+        localField: 'doctorId',
         foreignField: 'uid',
         as: 'moreDoctorDetails',
       },
     },
-    { $unwind: { path: '$doctorDetails', preserveNullAndEmptyArrays: true } },
-    { $unwind: { path: '$patientDetails', preserveNullAndEmptyArrays: false } },
+    { $unwind: { path: '$doctor', preserveNullAndEmptyArrays: true } },
+    { $unwind: { path: '$patient', preserveNullAndEmptyArrays: false } },
     { $unwind: { path: '$moreDoctorDetails', preserveNullAndEmptyArrays: true } },
     {
       $project: {
@@ -59,21 +62,21 @@ export const getAppointmentsWithDetails = async ({
         updatedAt: 1,
         updatedBy: 1,
         doctor: {
-          name: '$doctorDetails.name',
-          email: '$doctorDetails.email',
-          uid: '$doctorDetails.uid',
-          phone: '$doctorDetails.phone',
-          image: '$doctorDetails.image',
+          name: '$doctor.name',
+          email: '$doctor.email',
+          uid: '$doctor.uid',
+          phone: '$doctor.phone',
+          image: '$doctor.image',
           seating: '$moreDoctorDetails.seating',
         },
         patient: {
-          name: '$patientDetails.name',
-          email: '$patientDetails.email',
-          uid: '$patientDetails.uid',
-          phone: '$patientDetails.phone',
-          image: '$patientDetails.image',
-          gender: '$patientDetails.gender',
-          age: '$patientDetails.age',
+          name: '$patient.name',
+          email: '$patient.email',
+          uid: '$patient.uid',
+          phone: '$patient.phone',
+          image: '$patient.image',
+          gender: '$patient.gender',
+          age: '$patient.age',
         },
         ...projectExtra,
       },

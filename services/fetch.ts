@@ -62,12 +62,8 @@ export async function fetchData<T = unknown>(
       const parsed = new URL(BASE_URL);
 
       if (subdomain) {
-        const [_host, ...rest] = parsed.hostname.split('.');
-        if (rest.length > 0) {
-          parsed.hostname = `${subdomain}.${rest.join('.')}`;
-        } else {
-          parsed.hostname = `${subdomain}.${parsed.hostname}`;
-        }
+        // ✅ Always prepend subdomain to full hostname
+        parsed.hostname = `${subdomain}.${parsed.hostname}`;
       }
 
       url = `${parsed.origin}${parsed.pathname}${endpoint}`;

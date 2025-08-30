@@ -1,3 +1,4 @@
+import { getSubdomain } from '@/auth/sub-domain';
 import { connectDB } from '@/lib/db';
 import mongoose, { Connection } from 'mongoose';
 
@@ -28,4 +29,21 @@ export const generateUid = async (id: string, dbName?: string | null) => {
     { new: true, upsert: true }
   );
   return dbName ? `${dbName}-${counter.seq}` : `${counter.seq}`;
+};
+
+export const generateAid = async (aid: string) => {
+  if (!aid) {
+    throw new Error('Aid is required');
+  }
+
+  const subdomain = await getSubdomain();
+
+  const conn = await connectDB(subdomain);
+  const Counter = getCounterModel(conn);
+  const counter = await Counter.findOneAndUpdate(
+    { _id: aid },
+    { $inc: { seq: 1 } },
+    { new: true, upsert: true }
+  );
+  return `APT-${counter.seq}`;
 };

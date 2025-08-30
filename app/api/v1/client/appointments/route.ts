@@ -1,16 +1,18 @@
 import { NextResponse } from 'next/server';
 import { NextAuthRequest } from 'next-auth';
 
-import { API_ACTIONS } from '@/lib/config';
 import { connectDB } from '@/lib/db';
-import Appointment from '@/services/client/appointment/model';
 import { OrganizationUserRole } from '@/types/system/organization';
-import { getAppointmentsWithDetails } from '@/services/client/appointment';
 import { withAuth } from '@/middleware/withAuth';
+import { getSubdomain } from '@/auth/sub-domain';
+import { AppointmentService, createAppointmentSchema } from '@/services/client/appointment';
+import { validateRequest } from '@/services';
 
 export const GET = withAuth(async (request: NextAuthRequest) => {
   try {
-    await connectDB();
+    const subdomain = await getSubdomain();
+
+    const conn = await connectDB(subdomain);
 
     const role = request.auth?.user?.role;
     const queryMap: Record<OrganizationUserRole, { $match: Record<string, unknown> }> = {
@@ -28,12 +30,9 @@ export const GET = withAuth(async (request: NextAuthRequest) => {
       pharmacist: { $match: {} },
     };
 
-    const appointments = await getAppointmentsWithDetails({
-      query: queryMap[role as OrganizationUserRole],
-      isStage: true,
-    });
+    const result = await AppointmentService.getAll(conn, queryMap[role as OrganizationUserRole]);
 
-    return NextResponse.json(appointments, { status: 200 });
+    return NextResponse.json(result.data);
   } catch (error: unknown) {
     console.error(error);
     return NextResponse.json(
@@ -45,21 +44,22 @@ export const GET = withAuth(async (request: NextAuthRequest) => {
 
 export const POST = withAuth(async (request: NextAuthRequest) => {
   try {
-    await connectDB();
-    const data = await request.json();
+    const subdomain = await getSubdomain();
+    const conn = await connectDB(subdomain);
+    const body = await request.json();
 
-    const appointment = new Appointment(data);
-    await appointment.save();
+    const validation = validateRequest(createAppointmentSchema, body);
 
-    // try {
-    //   if (APPOINTMENT.isGoogleCalendar) {
-    //     Promise.all([axios.request(config)]);
-    //   }
-    // } catch (error) {
-    //   console.error('Error in sending appointment to n8n:', error);
-    // }
+    if (!validation.success) {
+      return NextResponse.json(
+        { message: 'Invalid request data', errors: validation.errors },
+        { status: 400 }
+      );
+    }
 
-    return NextResponse.json(appointment);
+    const result = await AppointmentService.create(conn, body);
+
+    return NextResponse.json({ message: result.message, data: result.data });
   } catch (error: unknown) {
     console.error('API Error:', error);
     return NextResponse.json(
@@ -72,11 +72,11 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
 export const PATCH = withAuth(async (request: NextAuthRequest) => {
   try {
     await connectDB();
-    const { ids } = await request.json();
+    // const { ids } = await request.json();
 
-    await Appointment.updateMany(ids[0] === -1 ? {} : { aid: { $in: ids } }, {
-      $set: { status: 'cancelled' },
-    });
+    // await Appointment.updateMany(ids[0] === -1 ? {} : { aid: { $in: ids } }, {
+    //   $set: { status: 'cancelled' },
+    // });
 
     return NextResponse.json({ message: 'Appointments cancelled' }, { status: 200 });
   } catch (error: unknown) {
@@ -100,8 +100,8 @@ export const DELETE = withAuth(async (request: NextAuthRequest) => {
       );
     }
 
-    API_ACTIONS.isDelete &&
-      (await Appointment.deleteMany(ids[0] === -1 ? {} : { aid: { $in: ids } }));
+    // API_ACTIONS.isDelete &&
+    //   (await Appointment.deleteMany(ids[0] === -1 ? {} : { aid: { $in: ids } }));
 
     return NextResponse.json(
       {

@@ -96,7 +96,7 @@ export const renderChip = ({
     size={size}
     startContent={<span className={cn('size-2 rounded-full', chipColorMap[item]?.text)} />}
   >
-    <span className="capitalize text-default-800">{item.split('-').join(' ')}</span>
+    <span className="capitalize text-default-800">{item?.split('-').join(' ')}</span>
   </Chip>
 );
 

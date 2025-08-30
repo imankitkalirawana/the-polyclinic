@@ -32,6 +32,8 @@ export default function Appointments() {
   const { appointment, setAppointment, keys, setKeys, action, setAction } = useAppointmentStore();
   const { data, isLoading } = useAllAppointments();
 
+  // Removed debug log for production
+
   const appointments: AppointmentType[] = useMemo(() => data || [], [data]);
 
   // Define columns with render functions
