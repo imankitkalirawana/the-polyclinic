@@ -22,9 +22,10 @@ export class User {
     });
   }
 
-  static async delete(uid: string) {
+  static async delete(uid: string, organization?: string | null) {
     return await fetchData(`${this.API_BASE}/${uid}`, {
       method: 'DELETE',
+      data: { organization },
     });
   }
 }

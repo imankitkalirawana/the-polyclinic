@@ -1,4 +1,4 @@
-import { CreateUser, OrganizationUser } from '../common/user';
+import { OrganizationUser } from '../common/user';
 import { CreateOrganizationType, OrganizationType, UpdateOrganizationType } from './types';
 
 import { fetchData } from '@/services/fetch';
@@ -45,31 +45,6 @@ export class OrganizationApi {
     return await fetchData<OrganizationType>(`${this.API_BASE}/${organizationId}/status`, {
       method: 'PATCH',
       data: { status },
-    });
-  }
-
-  // User related
-  static async getAllUser(organizationId: string) {
-    return await fetchData<OrganizationUser[]>(`${this.API_BASE}/${organizationId}/users`);
-  }
-
-  static async createUser(organizationId: string, user: CreateUser) {
-    return await fetchData<OrganizationUser>(`${this.API_BASE}/${organizationId}/users`, {
-      method: 'POST',
-      data: user,
-    });
-  }
-
-  static async updateUser(organizationId: string, userId: string, user: Partial<CreateUser>) {
-    return await fetchData<OrganizationUser>(`${this.API_BASE}/${organizationId}/users/${userId}`, {
-      method: 'PUT',
-      data: user,
-    });
-  }
-
-  static async deleteUser(organizationId: string, userId: string) {
-    return await fetchData<void>(`${this.API_BASE}/${organizationId}/users/${userId}`, {
-      method: 'DELETE',
     });
   }
 }

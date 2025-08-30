@@ -24,7 +24,10 @@ export const GET = withAuth(async (request: NextAuthRequest, { params }: { param
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    const subdomain = await getSubdomain();
+    const urlDomain = await getSubdomain();
+    const { searchParams } = request.nextUrl;
+
+    const subdomain = searchParams.get('subdomain') || urlDomain;
     const conn = await connectDB(subdomain);
 
     const result = await UserService.getUserByUid({
@@ -57,13 +60,15 @@ export const PUT = withAuth(async (request: NextAuthRequest, { params }: { param
     const { uid } = await params;
     const updaterRole = request.auth?.user?.role;
     const updaterUid = request.auth?.user?.uid;
+    const urlDomain = await getSubdomain();
 
     if (!updaterRole || !updaterUid) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json();
-    const subdomain = await getSubdomain();
+
+    const subdomain = body.organization || urlDomain;
 
     // Validate request data using updateUserSchema
     const validation = validateRequest(updateUserSchema, { ...body, organization: subdomain });
@@ -107,12 +112,14 @@ export const DELETE = withAuth(async (request: NextAuthRequest, { params }: { pa
   try {
     const { uid } = await params;
     const deleterRole = request.auth?.user?.role;
+    const urlDomain = await getSubdomain();
+    const body = await request.json();
 
     if (!deleterRole) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    const subdomain = await getSubdomain();
+    const subdomain = body.organization || urlDomain;
     const conn = await connectDB(subdomain);
 
     const result = await UserService.deleteUser({

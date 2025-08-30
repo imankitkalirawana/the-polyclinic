@@ -31,11 +31,7 @@ export default function Users() {
   const { data, isLoading, isError, error } = useAllUsers();
 
   const handleDelete = async (uid: string) => {
-    toast.promise(deleteUser.mutateAsync(uid), {
-      loading: `Deleting user ${uid}`,
-      success: (data) => data.message,
-      error: (error) => error.message,
-    });
+    await deleteUser.mutateAsync({ uid });
   };
 
   // Define columns with render functions

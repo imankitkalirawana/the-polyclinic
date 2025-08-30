@@ -1,10 +1,9 @@
 'use client';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from '@heroui/react';
 import { Icon } from '@iconify/react';
-import { useDeleteOrganizationUser } from '@/services/organization/query';
-import { toast } from 'sonner';
 import { OrganizationType } from '@/services/organization/types';
 import { OrganizationUser } from '@/services/common/user';
+import { useDeleteUser } from '@/services/common/user/query';
 
 interface DeleteUserModalProps {
   isOpen: boolean;
@@ -19,20 +18,11 @@ export default function DeleteUserModal({
   organization,
   user,
 }: DeleteUserModalProps) {
-  const deleteUser = useDeleteOrganizationUser();
+  const deleteUser = useDeleteUser();
 
   const handleDelete = async () => {
-    try {
-      await deleteUser.mutateAsync({
-        organizationId: organization.organizationId,
-        userId: user._id,
-      });
-
-      toast.success('User deleted successfully');
-      onClose();
-    } catch (error) {
-      // Error handling is done in the mutation hook
-    }
+    await deleteUser.mutateAsync({ uid: user.uid, organization: organization.organizationId });
+    onClose();
   };
 
   return (

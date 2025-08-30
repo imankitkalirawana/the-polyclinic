@@ -76,18 +76,24 @@ export const useCreateUser = (): UseMutationResult<ApiResponse<UnifiedUser>, Err
       if (res.success) {
         return res;
       }
-      throw new Error(res.message);
+      const error = new Error();
+      error.name = res.message;
+      error.message = res.errors?.join(', ') || res.message;
+      throw error;
     },
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
+      queryClient.invalidateQueries({ queryKey: ['organizations', variables.organization] });
+
       addToast({
         title: data.message,
         color: 'success',
       });
     },
-    onError: (error: Error) => {
+    onError: (error) => {
       addToast({
-        title: error.message,
+        title: error.name,
+        description: error.message,
         color: 'danger',
       });
     },
@@ -108,8 +114,9 @@ export const useUpdateUser = (): UseMutationResult<
       }
       throw new Error(res.message);
     },
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
+      queryClient.invalidateQueries({ queryKey: ['organizations', variables.data.organization] });
       addToast({
         title: data.message,
         color: 'success',
@@ -124,18 +131,36 @@ export const useUpdateUser = (): UseMutationResult<
   });
 };
 
-export const useDeleteUser = (): UseMutationResult<ApiResponse, Error, string> => {
+export const useDeleteUser = (): UseMutationResult<
+  ApiResponse,
+  Error,
+  {
+    uid: string;
+    organization?: string | null;
+  }
+> => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (uid: string) => {
-      const res = await User.delete(uid);
+    mutationFn: async ({ uid, organization }) => {
+      const res = await User.delete(uid, organization);
       if (res.success) {
         return res;
       }
       throw new Error(res.message);
     },
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
+      queryClient.invalidateQueries({ queryKey: ['organizations', variables.organization] });
+      addToast({
+        title: 'User deleted successfully',
+        color: 'success',
+      });
+    },
+    onError: (error) => {
+      addToast({
+        title: error.message,
+        color: 'danger',
+      });
     },
   });
 };

@@ -49,19 +49,21 @@ export const GET = withAuth(async (req: NextAuthRequest) => {
 
 export const POST = auth(async (request: NextAuthRequest) => {
   try {
-    const subdomain = await getSubdomain();
+    const urlDomain = await getSubdomain();
     const userRole = request.auth?.user?.role;
 
     if (!userRole) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
+    const body = await request.json();
+
+    const subdomain = body.organization || urlDomain;
+
     const doesOrganizationExist = await validateOrganizationId(subdomain);
     if (!doesOrganizationExist && ['admin', 'receptionist'].includes(userRole)) {
       return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
     }
-
-    const body = await request.json();
 
     const validation = validateRequest(createUserSchema, { ...body, organization: subdomain });
 
@@ -103,20 +105,22 @@ export const POST = auth(async (request: NextAuthRequest) => {
 // Delete Users
 export const DELETE = auth(async (request: NextAuthRequest) => {
   try {
-    const conn = await connectDB();
+    const urlDomain = await getSubdomain();
+    const body = await request.json();
+
+    const subdomain = body.organization || urlDomain;
+    const conn = await connectDB(subdomain);
     const User = getUserModel(conn);
 
-    const { ids } = await request.json();
-
     if (API_ACTIONS.isDelete) {
-      const res = await User.deleteMany({ uid: { $in: ids } });
+      const res = await User.deleteMany({ uid: { $in: body.ids } });
       return NextResponse.json({
         message: `${res.deletedCount} Users deleted successfully`,
       });
     }
 
     return NextResponse.json({
-      message: `${ids.length} Users deleted successfully`,
+      message: `${body.ids.length} Users deleted successfully`,
     });
   } catch (error: unknown) {
     console.error(error);

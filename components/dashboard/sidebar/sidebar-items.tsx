@@ -29,7 +29,7 @@ export const sectionItems: SidebarItem[] = [
         href: '/dashboard/users',
         icon: 'solar:users-group-rounded-bold-duotone',
         title: 'Users',
-        roles: ['admin', 'receptionist'],
+        roles: ['superadmin', 'moderator', 'ops', 'admin', 'receptionist'],
       },
       {
         key: 'doctors',

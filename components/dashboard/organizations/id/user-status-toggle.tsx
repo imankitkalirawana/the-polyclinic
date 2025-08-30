@@ -1,8 +1,8 @@
 'use client';
-import { Switch } from '@heroui/react';
-import { useUpdateOrganizationUser } from '@/services/organization/query';
+import { Spinner, Switch } from '@heroui/react';
 import { OrganizationType } from '@/services/organization/types';
 import { OrganizationUser } from '@/services/common/user';
+import { useUpdateUser } from '@/services/common/user/query';
 
 interface UserStatusToggleProps {
   organization: OrganizationType;
@@ -10,13 +10,13 @@ interface UserStatusToggleProps {
 }
 
 export default function UserStatusToggle({ organization, user }: UserStatusToggleProps) {
-  const updateUser = useUpdateOrganizationUser();
+  const updateUser = useUpdateUser();
 
   const handleStatusToggle = async (isActive: boolean) => {
     await updateUser.mutateAsync({
-      organizationId: organization.organizationId,
-      userId: user.uid,
+      uid: user.uid,
       data: {
+        organization: organization.organizationId,
         status: isActive ? 'active' : 'inactive',
       },
     });
@@ -27,6 +27,7 @@ export default function UserStatusToggle({ organization, user }: UserStatusToggl
       isSelected={user.status === 'active'}
       onValueChange={handleStatusToggle}
       isReadOnly={updateUser.isPending}
+      thumbIcon={updateUser.isPending ? <Spinner size="sm" /> : undefined}
       size="sm"
       color="success"
     />
