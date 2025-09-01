@@ -43,9 +43,9 @@ export const GET = auth(async (request: NextAuthRequest) => {
         duration: `${Math.floor(service.duration / 60) > 0 ? `${Math.floor(service.duration / 60)}hr` : ''}${service.duration % 60 ? ` ${service.duration % 60}min` : ''}`,
         description: service.description,
         summary: service.summary,
-        createdAt: format(new Date(service.createdAt), 'PPPp'),
+        createdAt: service.createdAt ? format(new Date(service.createdAt), 'PPPp') : 'Invalid Date',
         createdBy: service.createdBy,
-        updatedAt: format(new Date(service.updatedAt), 'PPPp'),
+        updatedAt: service.updatedAt ? format(new Date(service.updatedAt), 'PPPp') : 'Invalid Date',
         updatedBy: service.updatedBy,
       });
     });

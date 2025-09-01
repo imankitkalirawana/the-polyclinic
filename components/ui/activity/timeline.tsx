@@ -5,6 +5,7 @@ import { Avatar, ScrollShadow } from '@heroui/react';
 import { format, isToday, isYesterday } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useQuery } from '@tanstack/react-query';
+import { safeFormat, isValidDate } from '@/lib/date-utils';
 
 import ActivityLoading from './loading';
 import ActivityNotFound from './not-found';
@@ -90,11 +91,15 @@ function ActivityTimelineItem({ activity }: { activity: ActivityLogType }) {
 
       <div>
         <div className="text-tiny text-default-400">
-          {isToday(new Date(activity?.createdAt))
-            ? `Today ${format(new Date(activity?.createdAt), 'HH:mm a')}`
-            : isYesterday(new Date(activity?.createdAt))
-              ? `Yesterday ${format(new Date(activity?.createdAt), 'HH:mm a')}`
-              : format(new Date(activity?.createdAt), 'dd/MM/yyyy')}
+          {isValidDate(activity?.createdAt) ? (
+            isToday(new Date(activity.createdAt))
+              ? `Today ${safeFormat(activity.createdAt, 'HH:mm a')}`
+              : isYesterday(new Date(activity.createdAt))
+                ? `Yesterday ${safeFormat(activity.createdAt, 'HH:mm a')}`
+                : safeFormat(activity.createdAt, 'dd/MM/yyyy')
+          ) : (
+            'Unknown date'
+          )}
         </div>
         <h3 className="mb-1 text-small font-medium text-default-800">{activity.title}</h3>
 
@@ -106,14 +111,14 @@ function ActivityTimelineItem({ activity }: { activity: ActivityLogType }) {
                 <div className="line-clamp-1 hover:line-clamp-none">
                   <span className="capitalize">{field.split('.').join(' ')}</span> :{' '}
                   <span className="capitalize text-danger-300 line-through">
-                    {isDate(activity.metadata?.diff?.[field]?.old)
-                      ? format(new Date(activity.metadata?.diff?.[field]?.old), 'PPp')
+                    {isDate(activity.metadata?.diff?.[field]?.old) && isValidDate(activity.metadata?.diff?.[field]?.old)
+                      ? safeFormat(activity.metadata?.diff?.[field]?.old, 'PPp')
                       : activity.metadata?.diff?.[field]?.old}
                   </span>{' '}
                   &rarr;{' '}
                   <span className="capitalize text-success-300">
-                    {isDate(activity.metadata?.diff?.[field]?.new)
-                      ? format(new Date(activity.metadata?.diff?.[field]?.new), 'PPp')
+                    {isDate(activity.metadata?.diff?.[field]?.new) && isValidDate(activity.metadata?.diff?.[field]?.new)
+                      ? safeFormat(activity.metadata?.diff?.[field]?.new, 'PPp')
                       : activity.metadata?.diff?.[field]?.new}
                   </span>
                 </div>

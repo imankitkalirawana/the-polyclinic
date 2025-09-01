@@ -59,10 +59,10 @@ export const POST = auth(async (request: NextAuthRequest) => {
         doctorName: appointment.doctor?.name,
         doctorEmail: appointment.doctor?.email,
         doctorSeating: appointment.doctor?.seating,
-        date: format(new Date(appointment.date), 'PPPp'),
-        createdAt: format(new Date(appointment.createdAt), 'PPPp'),
+        date: appointment.date ? format(new Date(appointment.date), 'PPPp') : 'Invalid Date',
+        createdAt: appointment.createdAt ? format(new Date(appointment.createdAt), 'PPPp') : 'Invalid Date',
         createdBy: appointment.createdBy,
-        updatedAt: format(new Date(appointment.updatedAt), 'PPPp'),
+        updatedAt: appointment.updatedAt ? format(new Date(appointment.updatedAt), 'PPPp') : 'Invalid Date',
         updatedBy: appointment.updatedBy,
       });
     });

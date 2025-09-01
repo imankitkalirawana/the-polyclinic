@@ -15,6 +15,7 @@ import {
   User,
 } from '@heroui/react';
 import { format } from 'date-fns';
+import { safeFormat, isValidDate } from '@/lib/date-utils';
 import type React from 'react';
 import { Icon } from '@iconify/react';
 
@@ -58,15 +59,21 @@ export const renderUser = ({
 );
 
 export const renderDate = ({ date, isTime = false }: { date: Date | string; isTime?: boolean }) => {
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  if (!isValidDate(date)) {
+    return (
+      <div className="flex flex-col">
+        <p className="text-nowrap text-small text-danger">Invalid Date</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col">
       <p className="text-nowrap text-small capitalize text-default-foreground">
-        {format(dateObj, 'PP')}
+        {safeFormat(date, 'PP')}
       </p>
       {isTime && (
-        <p className="text-nowrap text-tiny capitalize text-default-500">{format(dateObj, 'p')}</p>
+        <p className="text-nowrap text-tiny capitalize text-default-500">{safeFormat(date, 'p')}</p>
       )}
     </div>
   );

@@ -106,13 +106,13 @@ export function RescheduledAppointment(appointment: AppointmentType, previousDat
                 <div style="text-align: center;">
                     <p style="font-size: 16px; color: #6b7280; margin: 0;">Previous Date</p>
                     <p style="font-size: 18px; color: #F31260; margin: 8px 0 0; font-weight: 500;">${format(previousDate, 'PP')}</p>
-                    <p style="font-size: 16px; color: #F31260; margin: 4px 0 0;">${format(new Date(previousDate), 'p')}</p>
+                    <p style="font-size: 16px; color: #F31260; margin: 4px 0 0;">${previousDate ? format(new Date(previousDate), 'p') : 'Invalid time'}</p>
                 </div>
                 <div style="font-size: 24px; color: #73CD7D;">→</div>
                 <div style="text-align: center;">
                     <p style="font-size: 16px; color: #6b7280; margin: 0;">New Date</p>
                     <p style="font-size: 18px; color: #73CD7D; margin: 8px 0 0; font-weight: 500;">${format(appointment.date, 'PP')}</p>
-                    <p style="font-size: 16px; color: #73CD7D; margin: 4px 0 0;">${format(new Date(appointment.date), 'p')}</p>
+                    <p style="font-size: 16px; color: #73CD7D; margin: 4px 0 0;">${appointment.date ? format(new Date(appointment.date), 'p') : 'Invalid time'}</p>
                 </div>
             </div>
             

@@ -37,9 +37,9 @@ export const GET = auth(async (request: NextAuthRequest) => {
         from: email.from,
         subject: email.subject,
         message: stripHtml(email.message).result,
-        createdAt: format(new Date(email.createdAt), 'PPPp'),
+        createdAt: email.createdAt ? format(new Date(email.createdAt), 'PPPp') : 'Invalid Date',
         createdBy: email.createdBy,
-        updatedAt: format(new Date(email.updatedAt), 'PPPp'),
+        updatedAt: email.updatedAt ? format(new Date(email.updatedAt), 'PPPp') : 'Invalid Date',
         updatedBy: email.updatedBy,
       });
     });
