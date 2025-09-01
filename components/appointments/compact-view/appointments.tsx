@@ -115,6 +115,9 @@ export default function AppointmentsTimeline() {
 
   const convertISOTimetoTime = (dateStr: string) => {
     const d = new Date(dateStr);
+    if (isNaN(d.getTime())) {
+      return 'Invalid Time';
+    }
     const hours = d.getHours();
     const minutes = d.getMinutes();
     return `${hours}:${minutes.toString().padStart(2, '0')}`;

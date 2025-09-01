@@ -25,6 +25,7 @@ import {
   User,
 } from '@heroui/react';
 import { format } from 'date-fns';
+import { safeFormat, isValidDate } from '@/lib/date-utils';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 import StatusRenderer from './status-renderer';
@@ -217,7 +218,7 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
                     item: previousAppointment?.status,
                   })}
                   <span className="text-tiny text-default-500">
-                    {format(new Date(previousAppointment?.date || ''), 'EEEE, MMMM d · hh:mm a')}
+                    {safeFormat(previousAppointment?.date, 'EEEE, MMMM d · hh:mm a', 'No previous appointment')}
                   </span>
                 </div>
               )
@@ -317,7 +318,7 @@ AppointmentContent.displayName = 'AppointmentContent';
 const AppointmentHeader = memo(
   ({ appointment, onClose }: { appointment: AppointmentType; onClose: () => void }) => {
     const formattedDate = useMemo(
-      () => format(new Date(appointment.date), 'EEEE, MMMM d · hh:mm a'),
+      () => safeFormat(appointment.date, 'EEEE, MMMM d · hh:mm a'),
       [appointment.date]
     );
 

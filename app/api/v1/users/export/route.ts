@@ -54,9 +54,9 @@ export const POST = auth(async (request: NextAuthRequest) => {
         status: user.status,
         gender: user.gender,
         dob: user.dob,
-        createdAt: format(new Date(user.createdAt), 'PPPp'),
+        createdAt: user.createdAt ? format(new Date(user.createdAt), 'PPPp') : 'Invalid Date',
         createdBy: user.createdBy,
-        updatedAt: format(new Date(user.updatedAt), 'PPPp'),
+        updatedAt: user.updatedAt ? format(new Date(user.updatedAt), 'PPPp') : 'Invalid Date',
         updatedBy: user.updatedBy,
       });
     });

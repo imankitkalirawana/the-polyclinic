@@ -1,5 +1,33 @@
 import type { $FixMe } from '@/types';
 
+// Safe date validation utility
+export const isValidDate = (date: unknown): date is Date | string => {
+  if (!date) return false;
+  const dateObj = new Date(date as string | Date);
+  return !isNaN(dateObj.getTime());
+};
+
+// Safe date formatting utility
+export const safeFormatDate = (date: unknown, formatter: (validDate: Date) => string, fallback = 'Invalid Date'): string => {
+  if (!isValidDate(date)) return fallback;
+  try {
+    return formatter(new Date(date));
+  } catch {
+    return fallback;
+  }
+};
+
+// Safe wrapper for date-fns format function
+export const safeDateFormat = (date: unknown, formatStr: string, fallback = 'Invalid Date'): string => {
+  if (!isValidDate(date)) return fallback;
+  try {
+    const { format } = require('date-fns');
+    return format(new Date(date), formatStr);
+  } catch {
+    return fallback;
+  }
+};
+
 export const formatPrice = (price: number) =>
   new Intl.NumberFormat('en-IN', {
     style: 'currency',
@@ -17,15 +45,24 @@ export const humanReadableDate = (date: string | Date, format: 'full' | 'day-mon
       ? { day: 'numeric', month: 'short' }
       : { day: 'numeric', month: 'short', year: 'numeric' };
 
-  return new Date(date).toLocaleDateString('en-US', options);
+  const dateObj = new Date(date);
+  if (isNaN(dateObj.getTime())) {
+    return 'Invalid Date';
+  }
+  return dateObj.toLocaleDateString('en-US', options);
 };
 
 // TODO: be removed after migration
-export const humanReadableTime = (date: string | Date) =>
-  new Date(date).toLocaleTimeString('en-US', {
+export const humanReadableTime = (date: string | Date) => {
+  const dateObj = new Date(date);
+  if (isNaN(dateObj.getTime())) {
+    return 'Invalid Time';
+  }
+  return dateObj.toLocaleTimeString('en-US', {
     hour: 'numeric',
     minute: '2-digit',
   });
+};
 
 export function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);

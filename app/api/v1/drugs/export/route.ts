@@ -44,9 +44,9 @@ export const GET = auth(async (request: NextAuthRequest) => {
         strength: drug.strength || '-',
         stock: drug.stock || '-',
         price: drug?.price?.toLocaleString('en-IN') || '-',
-        createdAt: format(new Date(drug.createdAt), 'PPPp'),
+        createdAt: drug.createdAt ? format(new Date(drug.createdAt), 'PPPp') : 'Invalid Date',
         createdBy: drug.createdBy,
-        updatedAt: format(new Date(drug.updatedAt), 'PPPp'),
+        updatedAt: drug.updatedAt ? format(new Date(drug.updatedAt), 'PPPp') : 'Invalid Date',
         updatedBy: drug.updatedBy,
       });
     });
