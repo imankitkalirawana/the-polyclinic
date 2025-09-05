@@ -1,8 +1,8 @@
-import { connectDB } from '@/lib/db';
+import { getSubdomain } from '@/auth/sub-domain';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const conn = await connectDB();
+  const subdomain = await getSubdomain();
 
-  return NextResponse.json({ message: conn.name });
+  return NextResponse.json({ message: 'Hello', subdomain });
 }

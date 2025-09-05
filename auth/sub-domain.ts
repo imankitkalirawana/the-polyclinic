@@ -3,6 +3,7 @@
 import { headers } from 'next/headers';
 import { connectDB } from '@/lib/db';
 import { getUserModel } from '@/services/common/user/model';
+import { rootDomain } from '@/lib/utils';
 
 /**
  * Extracts subdomain (tenant) from request headers.
@@ -18,12 +19,16 @@ export async function getSubdomain(): Promise<string | null> {
   const host = headersList.get('host') || '';
   const hostname = host.split(':')[0]; // remove port
 
-  const parts = hostname.split('.');
-  if (parts.length > 2) {
-    return parts[0]; // return "fortis"
-  }
+  // Production environment
+  const rootDomainFormatted = rootDomain.split(':')[0];
 
-  return null;
+  // Regular subdomain detection
+  const isSubdomain =
+    hostname !== rootDomainFormatted &&
+    hostname !== `www.${rootDomainFormatted}` &&
+    hostname.endsWith(`.${rootDomainFormatted}`);
+
+  return isSubdomain ? hostname.replace(`.${rootDomainFormatted}`, '') : null;
 }
 
 export async function isOrganizationRegistered(organization: string) {

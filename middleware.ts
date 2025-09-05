@@ -1,27 +1,73 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
+import { rootDomain } from '@/lib/utils';
 
-const RESERVED_SUBDOMAINS = ['www', 'app', 'api', 'polyclinic'];
-
-export function middleware(req: NextRequest) {
-  const url = req.nextUrl;
-  const host = req.headers.get('host') || '';
+export function extractSubdomain(request: NextRequest): string | null {
+  const url = request.url;
+  const host = request.headers.get('host') || '';
   const hostname = host.split(':')[0];
 
-  const parts = hostname.split('.');
-  let subdomain: string | null = null;
+  // Local development environment
+  if (url.includes('lvh.me') || url.includes('localhost')) {
+    // Try to extract subdomain from the full URL
+    const fullUrlMatch = url.match(/http:\/\/([^.]+)\.lvh.me/);
+    if (fullUrlMatch && fullUrlMatch[1]) {
+      return fullUrlMatch[1];
+    }
 
-  if (parts.length > 2) {
-    subdomain = parts[0];
+    // Fallback to host header approach
+    if (hostname.includes('.lvh.me')) {
+      return hostname.split('.')[0];
+    }
+
+    return null;
   }
 
-  if (url.pathname.startsWith('/auth/register') && !subdomain) {
-    return NextResponse.redirect(new URL('/auth/login', req.url));
+  // Production environment
+  const rootDomainFormatted = rootDomain.split(':')[0];
+
+  // Handle preview deployment URLs (tenant---branch-name.vercel.app)
+  if (hostname.includes('---') && hostname.endsWith('.lvh.me')) {
+    const parts = hostname.split('---');
+    return parts.length > 0 ? parts[0] : null;
   }
 
-  if (subdomain && !RESERVED_SUBDOMAINS.includes(subdomain)) {
-    req.headers.set('x-subdomain', subdomain);
+  // Regular subdomain detection
+  const isSubdomain =
+    hostname !== rootDomainFormatted &&
+    hostname !== `www.${rootDomainFormatted}` &&
+    hostname.endsWith(`.${rootDomainFormatted}`);
+
+  return isSubdomain ? hostname.replace(`.${rootDomainFormatted}`, '') : null;
+}
+
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const subdomain = extractSubdomain(request);
+
+  if (subdomain) {
+    // Block access to admin page from subdomains
+    if (pathname.startsWith('/admin')) {
+      return NextResponse.redirect(new URL('/', request.url));
+    }
+
+    // For the root path on a subdomain, rewrite to the subdomain page
+    if (pathname === '/') {
+      return NextResponse.rewrite(new URL(`/s/${subdomain}`, request.url));
+    }
   }
 
+  // On the root domain, allow normal access
   return NextResponse.next();
 }
+
+export const config = {
+  matcher: [
+    /*
+     * Match all paths except for:
+     * 1. /api routes
+     * 2. /_next (Next.js internals)
+     * 3. all root files inside /public (e.g. /favicon.ico)
+     */
+    '/((?!api|_next|[\\w-]+\\.\\w+).*)',
+  ],
+};

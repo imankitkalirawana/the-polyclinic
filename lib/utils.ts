@@ -3,6 +3,9 @@ import { twMerge } from 'tailwind-merge';
 import { faker } from '@faker-js/faker';
 import { z } from 'zod';
 
+export const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+export const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'lvh.me:3000';
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
