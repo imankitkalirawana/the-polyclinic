@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { excludedSubdomains } from '@/lib/utils';
 
 const subdomains = ['fortis', 'clinic'];
 
@@ -8,7 +9,7 @@ export default async function SubdomainPage({
   params: Promise<{ subdomain: string }>;
 }) {
   const { subdomain } = await params;
-  if (!subdomains.includes(subdomain)) {
+  if (!subdomains.includes(subdomain) || excludedSubdomains.includes(subdomain)) {
     notFound();
   }
 
