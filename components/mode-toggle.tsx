@@ -13,8 +13,8 @@ export default function ModeToggle() {
   return (
     mounted && (
       <Switch
-        checked={theme === 'dark'}
-        onSelect={(checked) => setTheme(checked ? 'dark' : 'light')}
+        isSelected={theme === 'dark'}
+        onValueChange={(isSelected) => setTheme(isSelected ? 'dark' : 'light')}
       />
     )
   );

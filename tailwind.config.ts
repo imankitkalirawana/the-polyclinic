@@ -142,18 +142,6 @@ const config = {
             dividerWeight: '1px',
           },
           colors: {
-            default: {
-              '50': '#121414',
-              '100': '#1e2223',
-              '200': '#2a2f31',
-              '300': '#363d3f',
-              '400': '#63696a',
-              '500': '#909495',
-              '600': '#bec0c1',
-              '700': '#ebecec',
-              foreground: '#fff',
-              DEFAULT: '#2a2f31',
-            },
             primary: {
               50: '#FAFDFB',
               100: '#F5FCF7',
@@ -206,24 +194,6 @@ const config = {
               foreground: '#fff',
               DEFAULT: '#bb391a',
             },
-            background: '#1D1E20',
-            content2: {
-              DEFAULT: '#292929',
-              foreground: '#fff',
-            },
-            content1: {
-              DEFAULT: '#2D2D2D',
-              foreground: '#000',
-            },
-            content3: {
-              DEFAULT: '#676767',
-              foreground: '#fff',
-            },
-            content4: {
-              DEFAULT: '#727272',
-              foreground: '#fff',
-            },
-            divider: '#2A2F31',
           },
         },
       },

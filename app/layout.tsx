@@ -8,7 +8,6 @@ import './globals.css';
 
 import { auth } from '@/auth';
 import Navbar from '@/components/sections/navbar';
-import { ThemeProvider } from '@/components/theme-provider';
 import { APP_INFO } from '@/lib/config';
 
 const outfit = Outfit({
@@ -33,14 +32,12 @@ export default async function RootLayout({
   const session = await auth();
 
   return (
-    <html lang="en" suppressHydrationWarning className="light">
-      <body className={outfit.className}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={outfit.className} suppressHydrationWarning>
         <Providers session={session}>
           <NuqsAdapter>
-            <ThemeProvider attribute="class" defaultTheme="light">
-              <Navbar />
-              {children}
-            </ThemeProvider>
+            <Navbar />
+            {children}
           </NuqsAdapter>
         </Providers>
       </body>

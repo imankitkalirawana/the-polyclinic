@@ -1,7 +1,7 @@
 import { UnifiedUser } from '@/services/common/user';
 import { type SidebarItem } from './sidebar';
 
-import ModeToggle from '@/components/mode-toggle';
+import { ThemeSwitcher } from '@/components/theme-switcher';
 
 // Extend SidebarItem to include roles
 
@@ -91,7 +91,7 @@ export const sectionItems: SidebarItem[] = [
         href: undefined,
         icon: 'solar:moon-fog-bold-duotone',
         title: 'Dark Mode',
-        endContent: <ModeToggle />,
+        endContent: <ThemeSwitcher />,
       },
     ],
   },
