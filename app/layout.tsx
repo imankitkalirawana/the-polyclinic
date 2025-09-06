@@ -9,6 +9,8 @@ import './globals.css';
 import { auth } from '@/auth';
 import Navbar from '@/components/sections/navbar';
 import { APP_INFO } from '@/lib/config';
+import { getSubdomain } from '@/auth/sub-domain';
+import { toTitleCase } from '@/lib/utils';
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -16,13 +18,18 @@ const outfit = Outfit({
   variable: '--font-outfit',
 });
 
-export const metadata: Metadata = {
-  title: {
-    template: `%s - ${APP_INFO.name}`,
-    default: APP_INFO.name,
-  },
-  description: APP_INFO.description,
-};
+export async function generateMetadata() {
+  const subdomain = toTitleCase((await getSubdomain()) || '');
+  if (subdomain) {
+    return {
+      title: {
+        template: `%s - ${subdomain} - ${APP_INFO.name}`,
+        default: `${subdomain} - ${APP_INFO.name}`,
+      },
+    };
+  }
+  return { title: { default: APP_INFO.name } };
+}
 
 export default async function RootLayout({
   children,

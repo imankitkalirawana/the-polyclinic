@@ -132,8 +132,7 @@ const config = {
               foreground: '#fff',
               DEFAULT: '#f24821',
             },
-            // background: '#E0F5E8',
-            foreground: '#07170E',
+
             divider: '#E5E7EB',
           },
         },
