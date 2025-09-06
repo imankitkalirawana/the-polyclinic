@@ -4,7 +4,6 @@ import * as React from 'react';
 import {
   Calendar,
   CalendarProps,
-  DateValue,
   TimeInput,
   TimeInputProps,
   TimeInputValue,
@@ -36,13 +35,11 @@ export default function DateTimePicker({
       <Calendar
         {...dateProps}
         aria-label="Date (Min Date Value)"
-        // @ts-expect-error - TODO: fix this
-        defaultValue={today(getLocalTimeZone()) as unknown as DateValue}
+        defaultValue={today(getLocalTimeZone())}
         minValue={today(getLocalTimeZone())}
         maxValue={today(getLocalTimeZone()).add({
           days: TIMINGS.booking.maximum,
         })}
-        // @ts-expect-error - TODO: fix this
         value={date}
         onChange={(selectedDate) => onDateChange?.(selectedDate as CalendarDate)}
         isInvalid={disabledDates[0].map((d) => d.compare(date!)).includes(0)}

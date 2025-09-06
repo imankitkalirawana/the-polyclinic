@@ -19,7 +19,7 @@ import {
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 import { castData } from '@/lib/utils';
 import { useAllDoctors, useDeleteDoctor } from '@/hooks/queries/client/doctor';
-import { DoctorType } from '@/types/client/doctor';
+import { DoctorType } from '@/services/client/doctor';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'image',

@@ -1,8 +1,8 @@
-'use server';
+import { $FixMe } from '@/types';
+('use server');
 
+import { DoctorType } from '@/services/client/doctor';
 import { fetchData, fetchDataWithPagination } from '../../fetch';
-
-import { CreateDoctorType, DoctorType } from '@/types/client/doctor';
 
 export async function getDoctors() {
   return await fetchData<DoctorType[]>('/doctors');
@@ -20,7 +20,7 @@ export async function getDoctor(uid: string) {
   return await fetchData<DoctorType>(`/doctors/${uid}`);
 }
 
-export async function createDoctor(doctor: CreateDoctorType) {
+export async function createDoctor(doctor: $FixMe) {
   return await fetchData<DoctorType>('/doctors', {
     method: 'POST',
     data: doctor,

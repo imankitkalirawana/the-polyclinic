@@ -1,6 +1,5 @@
 import { CellRenderer } from '@/components/ui/cell-renderer';
-import { cn } from '@/lib/utils';
-import { DoctorType } from '@/types/client/doctor';
+import { DoctorType } from '@/services/client/doctor';
 import { Avatar, Card, CardBody, CardHeader, Divider, Chip, ScrollShadow } from '@heroui/react';
 import { Icon } from '@iconify/react';
 
@@ -14,8 +13,8 @@ export const CreateAppointmentDoctorDetails = ({ doctor }: { doctor?: DoctorType
               <Icon icon="solar:stethoscope-bold-duotone" className="h-6 w-6 text-default-400" />
             </div>
             <div>
-              <p className="text-medium font-medium text-default-foreground">Select a doctor</p>
-              <p className="text-small text-default-400">Choose a doctor to view their details</p>
+              <p className="font-medium text-default-foreground text-medium">Select a doctor</p>
+              <p className="text-default-400 text-small">Choose a doctor to view their details</p>
             </div>
           </div>
         </CardBody>
@@ -31,8 +30,8 @@ export const CreateAppointmentDoctorDetails = ({ doctor }: { doctor?: DoctorType
               <Icon icon="solar:stethoscope-bold" className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h3 className="text-large font-semibold text-default-foreground">Doctor Details</h3>
-              <p className="text-small text-default-400">
+              <h3 className="font-semibold text-default-foreground text-large">Doctor Details</h3>
+              <p className="text-default-400 text-small">
                 Professional information and contact details
               </p>
             </div>
@@ -61,8 +60,8 @@ export const CreateAppointmentDoctorDetails = ({ doctor }: { doctor?: DoctorType
           />
           <div className="flex flex-1 flex-col gap-2">
             <div>
-              <h4 className="text-large font-medium">{doctor.name}</h4>
-              <p className="text-small text-default-400">{doctor.email}</p>
+              <h4 className="font-medium text-large">{doctor.name}</h4>
+              <p className="text-default-400 text-small">{doctor.email}</p>
             </div>
             <div className="flex flex-wrap gap-2">
               {doctor.designation && (
@@ -91,7 +90,7 @@ export const CreateAppointmentDoctorDetails = ({ doctor }: { doctor?: DoctorType
 
         {/* Contact Information */}
         <div>
-          <h5 className="text-medium font-medium text-default-foreground">Contact Information</h5>
+          <h5 className="font-medium text-default-foreground text-medium">Contact Information</h5>
           <div>
             <CellRenderer
               icon="solar:letter-bold-duotone"
@@ -119,7 +118,7 @@ export const CreateAppointmentDoctorDetails = ({ doctor }: { doctor?: DoctorType
           <>
             <Divider />
             <div className="space-y-2">
-              <h5 className="text-medium font-medium text-default-foreground">
+              <h5 className="font-medium text-default-foreground text-medium">
                 Professional Information
               </h5>
               <div className="grid gap-3">
@@ -160,37 +159,12 @@ export const CreateAppointmentDoctorDetails = ({ doctor }: { doctor?: DoctorType
           </>
         )}
 
-        {/* Personal Information */}
-        {doctor.gender && (
-          <>
-            <Divider />
-            <div className="space-y-2">
-              <h5 className="text-medium font-medium text-default-foreground">
-                Personal Information
-              </h5>
-              <div className="grid gap-3">
-                <CellRenderer
-                  icon="solar:users-group-rounded-bold-duotone"
-                  label="Gender"
-                  value={doctor.gender}
-                  classNames={{
-                    icon: cn('text-purple-500 bg-purple-100', {
-                      'text-blue-500 bg-blue-100': doctor.gender === 'male',
-                      'text-pink-500 bg-pink-100': doctor.gender === 'female',
-                    }),
-                  }}
-                />
-              </div>
-            </div>
-          </>
-        )}
-
         {/* Practice Information */}
         {doctor.seating && (
           <>
             <Divider />
             <div>
-              <h5 className="text-medium font-medium text-default-foreground">
+              <h5 className="font-medium text-default-foreground text-medium">
                 Practice Information
               </h5>
               <div className="space-y-3">
@@ -210,43 +184,25 @@ export const CreateAppointmentDoctorDetails = ({ doctor }: { doctor?: DoctorType
         )}
 
         {/* Biography */}
-        {(doctor.biography || doctor.shortbio) && (
+        {doctor.biography && (
           <>
             <Divider />
-            <div>
-              <h5 className="text-medium font-medium text-default-foreground">About</h5>
-              <div className="space-y-3">
-                {doctor.shortbio && (
-                  <CellRenderer
-                    icon="solar:document-text-bold-duotone"
-                    label="Short Bio"
-                    value={doctor.shortbio}
-                    classNames={{
-                      icon: 'text-violet-500 bg-violet-100',
-                    }}
-                  />
-                )}
 
-                {doctor.biography && (
-                  <div className="rounded-lg bg-default-50 p-3">
-                    <div className="flex items-start gap-3">
-                      <div className="rounded-full bg-amber-50 p-2">
-                        <Icon
-                          icon="solar:document-bold-duotone"
-                          className="h-4 w-4 text-amber-500"
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-small font-medium text-default-600">Biography</p>
-                        <p className="text-medium leading-relaxed text-default-foreground">
-                          {doctor.biography}
-                        </p>
-                      </div>
-                    </div>
+            {doctor.biography && (
+              <div className="rounded-lg bg-default-50 p-3">
+                <div className="flex items-start gap-3">
+                  <div className="rounded-full bg-amber-50 p-2">
+                    <Icon icon="solar:document-bold-duotone" className="h-4 w-4 text-amber-500" />
                   </div>
-                )}
+                  <div className="flex-1">
+                    <p className="font-medium text-default-600 text-small">Biography</p>
+                    <p className="leading-relaxed text-default-foreground text-medium">
+                      {doctor.biography}
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
+            )}
           </>
         )}
       </CardBody>

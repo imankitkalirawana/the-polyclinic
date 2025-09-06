@@ -76,10 +76,10 @@ export default function AccountDetails({ user }: { user: UnifiedUser }) {
           </Badge>
           <div className="flex flex-col items-start justify-center">
             <p className="font-medium">{user.name}</p>
-            <span className="text-small text-default-500">{user.role}</span>
+            <span className="text-default-500 text-small">{user.role}</span>
           </div>
         </div>
-        <p className="sr-only text-small text-default-400">
+        <p className="sr-only text-default-400 text-small">
           The photo will be used for your profile, and will be visible to other users of the
           platform.
         </p>
@@ -138,7 +138,7 @@ export default function AccountDetails({ user }: { user: UnifiedUser }) {
           value={formik.values.phone}
           startContent={
             <div className="pointer-events-none flex items-center">
-              <span className="text-small text-default-400">+91</span>
+              <span className="text-default-400 text-small">+91</span>
             </div>
           }
           isDisabled={!allowedRoles.includes(session?.user?.role || 'user')}
@@ -166,14 +166,11 @@ export default function AccountDetails({ user }: { user: UnifiedUser }) {
             label="DOB (DD-MM-YYYY)"
             onChange={(date) => {
               const dob =
-                // @ts-expect-error - date is not typed
                 date instanceof Date
-                  ? // @ts-expect-error - date is not typed
-                    date.toISOString().split('T')[0]
+                  ? date.toISOString().split('T')[0]
                   : new Date(date as $FixMe).toISOString().split('T')[0];
               formik.setFieldValue('dob', dob);
             }}
-            // value={}
             maxValue={today(getLocalTimeZone())}
             showMonthAndYearPickers
           />

@@ -10,7 +10,7 @@ import Loading from '@/app/loading';
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { castData } from '@/lib/utils';
 import { useDoctorWithUID } from '@/hooks/queries/client/doctor';
-import { DoctorType } from '@/types/client/doctor';
+import { DoctorType } from '@/services/client/doctor';
 
 type ListItem = {
   label: string;
@@ -18,14 +18,12 @@ type ListItem = {
     DoctorType,
     | 'email'
     | 'phone'
-    | 'gender'
     | 'specialization'
     | 'department'
     | 'designation'
     | 'experience'
     | 'education'
     | 'biography'
-    | 'shortbio'
   >;
   icon: string;
   classNames?: {
@@ -50,14 +48,7 @@ const listItems: ListItem[] = [
       icon: 'bg-blue-100 text-blue-500',
     },
   },
-  {
-    label: 'Gender',
-    value: 'gender',
-    icon: 'solar:women-bold-duotone',
-    classNames: {
-      icon: 'bg-pink-100 text-pink-500',
-    },
-  },
+
   {
     label: 'Specialization',
     value: 'specialization',
@@ -90,14 +81,7 @@ const listItems: ListItem[] = [
       icon: 'bg-indigo-100 text-indigo-500',
     },
   },
-  {
-    label: 'Short Bio',
-    value: 'shortbio',
-    icon: 'solar:book-bold-duotone',
-    classNames: {
-      icon: 'bg-orange-100 text-orange-500',
-    },
-  },
+
   {
     label: 'Biography',
     value: 'biography',
@@ -203,7 +187,7 @@ export default function DashboardDoctor({ uid }: { uid: string }) {
               </div>
               <p className="text-2xl font-medium text-default-500">100</p>
             </div>
-            <p className="text-tiny text-default-500">
+            <p className="text-default-500 text-tiny">
               <span className="text-success">3.5%</span> Have increased from yesterday
             </p>
           </div>
@@ -217,7 +201,7 @@ export default function DashboardDoctor({ uid }: { uid: string }) {
               </div>
               <p className="text-2xl font-medium text-default-500">100</p>
             </div>
-            <p className="text-tiny text-default-500">
+            <p className="text-default-500 text-tiny">
               <span className="text-success">1.5%</span> Have increased from yesterday
             </p>
           </div>
@@ -233,7 +217,7 @@ export default function DashboardDoctor({ uid }: { uid: string }) {
                 4.5<span className="text-base text-default-400">/5.0</span>
               </p>
             </div>
-            <p className="text-tiny text-default-500">Based on 120 reviews from patients.</p>
+            <p className="text-default-500 text-tiny">Based on 120 reviews from patients.</p>
           </div>
         </Card>
         <Appointments />

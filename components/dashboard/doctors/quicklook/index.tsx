@@ -8,7 +8,7 @@ import { permissions, sidebarContent } from './data';
 
 import QuickLook from '@/components/ui/dashboard/quicklook';
 import { ButtonProps, DropdownItemProps } from '@/components/ui/dashboard/quicklook/types';
-import { DoctorType } from '@/types/client/doctor';
+import { DoctorType } from '@/services/client/doctor';
 
 export function UserQuickLook() {
   const { selected, setSelected, setAction, action } = useDoctorStore();

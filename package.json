@@ -25,7 +25,7 @@
     "@google/generative-ai": "^0.24.1",
     "@heroui/react": "^2.8.3",
     "@iconify/react": "^5.0.2",
-    "@internationalized/date": "^3.8.1",
+    "@internationalized/date": "^3.9.0",
     "@react-aria/i18n": "^3.12.8",
     "@react-types/shared": "^3.29.0",
     "@sentry/nextjs": "^9.40.0",

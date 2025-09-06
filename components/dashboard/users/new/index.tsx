@@ -9,7 +9,6 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
-  DatePicker,
   Form,
   Input,
   NumberInput,
@@ -22,14 +21,11 @@ import {
 import { useFormik } from 'formik';
 import { faker } from '@faker-js/faker';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { getLocalTimeZone, parseDate, today } from '@internationalized/date';
-import { I18nProvider } from '@react-aria/i18n';
 
 import { Genders } from '@/lib/options';
 import { generateEmail, generatePhoneNumber, toCapitalCase } from '@/lib/utils';
 
 import { useCreateUser } from '@/services/common/user/query';
-import { $FixMe } from '@/types';
 import {
   CreateUser,
   createUserSchema,
@@ -88,8 +84,6 @@ export default function NewUser({ organization }: { organization?: string | null
     },
   });
 
-  console.log(formik.values);
-
   const handleAutofill = () => {
     const name = faker.person.fullName();
     formik.setFieldValue('name', name);
@@ -113,7 +107,7 @@ export default function NewUser({ organization }: { organization?: string | null
       <CardHeader className="items-center justify-between px-4 pb-0 pt-4">
         <div>
           <h1 className="text-large">Add New User</h1>
-          <p className="text-tiny text-default-500">
+          <p className="text-default-500 text-tiny">
             Fields with <span className="text-red-500">*</span> are required
           </p>
         </div>
@@ -215,7 +209,7 @@ export default function NewUser({ organization }: { organization?: string | null
             value={formik.values.phone}
             startContent={
               <div className="pointer-events-none flex items-center">
-                <span className="text-small text-default-400">+91</span>
+                <span className="text-default-400 text-small">+91</span>
               </div>
             }
           />

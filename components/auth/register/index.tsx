@@ -118,7 +118,6 @@ const RegisterComponent: React.FC = () => {
           <I18nProvider locale="en-IN">
             <DatePicker
               label="Date of Birth (Optional)"
-              // @ts-expect-error - TODO: fix this
               value={formik.values.dob ? parseDate(formik.values.dob) : null}
               onChange={(value) => {
                 const dob = new Date(value as $FixMe).toISOString().split('T')[0];
@@ -191,7 +190,7 @@ const RegisterComponent: React.FC = () => {
         </div>
         <div className="flex items-center gap-2">
           <div className="h-px w-full bg-divider" />
-          <div className="text-small text-default-500">or</div>
+          <div className="text-default-500 text-small">or</div>
           <div className="h-px w-full bg-divider" />
         </div>
         <div className="text-center text-small">

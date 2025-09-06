@@ -32,8 +32,8 @@ import { Genders } from '@/lib/options';
 import { castData, generateEmail, generatePhoneNumber } from '@/lib/utils';
 import { useCreateDoctor } from '@/hooks/queries/client/doctor';
 import { useAllUsers } from '@/services/common/user/query';
-import { CreateDoctorType } from '@/types/client/doctor';
 import { OrganizationUser } from '@/services/common/user';
+import { $FixMe } from '@/types';
 
 export default function NewDoctor() {
   const router = useRouter();
@@ -58,7 +58,7 @@ export default function NewDoctor() {
   const formik = useFormik({
     initialValues: {
       creation_type: 'new',
-    } as CreateDoctorType,
+    } as $FixMe,
     // validationSchema: doctorValidationSchema,
     onSubmit: async (values) => {
       await createDoctor.mutateAsync(values).then(() => {
@@ -102,10 +102,10 @@ export default function NewDoctor() {
           </Badge>
           <div className="flex flex-col items-start justify-center">
             <p className="font-medium">{formik.values.name}</p>
-            <span className="text-small text-default-500">{formik.values.email}</span>
+            <span className="text-default-500 text-small">{formik.values.email}</span>
           </div>
         </div>
-        <p className="sr-only text-small text-default-400">
+        <p className="sr-only text-default-400 text-small">
           The photo will be used for your profile, and will be visible to other users of the
           platform.
         </p>
@@ -162,7 +162,7 @@ export default function NewDoctor() {
                     <Avatar alt={user.name} className="flex-shrink-0" size="sm" src={user.image} />
                     <div className="flex flex-col">
                       <span className="text-small">{user.name}</span>
-                      <span className="text-tiny text-default-400">{user.email}</span>
+                      <span className="text-default-400 text-tiny">{user.email}</span>
                     </div>
                   </div>
                 </AutocompleteItem>
@@ -178,7 +178,6 @@ export default function NewDoctor() {
                 value={formik.values.name}
                 onChange={formik.handleChange}
                 isInvalid={!!(formik.touched.name && formik.errors.name)}
-                errorMessage={formik.touched.name && formik.errors.name}
               />
               <Input
                 isRequired
@@ -188,7 +187,6 @@ export default function NewDoctor() {
                 value={formik.values.email}
                 onChange={formik.handleChange}
                 isInvalid={!!(formik.touched.email && formik.errors.email)}
-                errorMessage={formik.touched.email && formik.errors.email}
                 endContent={
                   session?.user?.role === 'admin' && (
                     <Tooltip content="Generate a random email">
@@ -231,11 +229,10 @@ export default function NewDoctor() {
                     </Tooltip>
                   )
                 }
-                errorMessage={formik.touched.phone && formik.errors.phone}
                 value={formik.values.phone}
                 startContent={
                   <div className="pointer-events-none flex items-center">
-                    <span className="text-small text-default-400">+91</span>
+                    <span className="text-default-400 text-small">+91</span>
                   </div>
                 }
               />
@@ -247,7 +244,6 @@ export default function NewDoctor() {
                 name="gender"
                 onChange={formik.handleChange}
                 isInvalid={!!(formik.touched.gender && formik.errors.gender)}
-                errorMessage={formik.touched.gender && formik.errors.gender}
                 items={Genders}
                 disallowEmptySelection
               >

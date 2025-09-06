@@ -1,3 +1,4 @@
+import { $FixMe } from '@/types';
 import { addToast } from '@heroui/react';
 import {
   useMutation,
@@ -14,8 +15,7 @@ import {
   getDoctors,
 } from '../../../services/api/client/doctor';
 import { ApiResponse } from '../../../services/fetch';
-
-import { CreateDoctorType, DoctorType } from '@/types/client/doctor';
+import { DoctorType } from '@/services/client/doctor';
 
 export const useAllDoctors = (): UseQueryResult<DoctorType[]> =>
   useQuery({
@@ -42,14 +42,10 @@ export const useDoctorWithUID = (uid: string): UseQueryResult<DoctorType> =>
     enabled: !!uid,
   });
 
-export const useCreateDoctor = (): UseMutationResult<
-  ApiResponse<DoctorType>,
-  Error,
-  CreateDoctorType
-> => {
+export const useCreateDoctor = (): UseMutationResult<ApiResponse<DoctorType>, Error, $FixMe> => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (doctor: CreateDoctorType) => {
+    mutationFn: async (doctor: $FixMe) => {
       const res = await createDoctor(doctor);
       if (res.success) {
         return res;

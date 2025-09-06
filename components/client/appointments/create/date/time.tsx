@@ -25,7 +25,6 @@ export default function CreateAppointmentTimeSelection({
         maxValue={today(getLocalTimeZone()).add({
           days: TIMINGS.booking.maximum,
         })}
-        // @ts-expect-error - TODO: fix this
         value={new CalendarDate(date.getFullYear(), date.getMonth() + 1, date.getDate())}
         onChange={(selectedDate: CalendarDate) => {
           // Preserve the current time when changing the date
