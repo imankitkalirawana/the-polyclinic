@@ -32,7 +32,6 @@ const userSchema = new mongoose.Schema(
     password: String,
     image: {
       type: String,
-      default: getGravatar('system-admin@divinely.dev'),
     },
     role: {
       type: String,
