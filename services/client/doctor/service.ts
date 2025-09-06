@@ -1,15 +1,13 @@
-import { Connection } from 'mongoose';
-import { getPatientModel } from '@/services/client/patient/model';
-import { getUserModel } from '@/services/common/user/model';
 import { ServiceResult } from '@/services';
-import { Patient } from './types';
+import { Connection } from 'mongoose';
+import { getDoctorModel } from './model';
+import { DoctorType } from './types';
 
-export class PatientService {
-  static async getAll({ conn }: { conn: Connection }): Promise<ServiceResult<Patient[]>> {
+export class DoctorService {
+  static async getAll({ conn }: { conn: Connection }): Promise<ServiceResult<DoctorType[]>> {
     try {
-      const Patient = getPatientModel(conn);
-
-      const patients = await Patient.aggregate([
+      const Doctor = getDoctorModel(conn);
+      const doctors = await Doctor.aggregate([
         {
           $lookup: {
             from: 'user',
@@ -27,9 +25,14 @@ export class PatientService {
             name: '$user.name',
             email: '$user.email',
             phone: '$user.phone',
-            address: 1,
-            age: 1,
-            gender: 1,
+            image: '$user.image',
+            specialization: 1,
+            designation: 1,
+            department: 1,
+            experience: 1,
+            education: 1,
+            biography: 1,
+            seating: 1,
             createdAt: '$user.createdAt',
             createdBy: '$user.createdBy',
             updatedAt: '$user.updatedAt',
@@ -37,15 +40,11 @@ export class PatientService {
           },
         },
       ]);
-
-      return {
-        success: true,
-        data: patients,
-      };
+      return { success: true, data: doctors };
     } catch (error) {
       return {
         success: false,
-        message: error instanceof Error ? error.message : 'Failed to fetch patients',
+        message: error instanceof Error ? error.message : 'Failed to fetch doctors',
       };
     }
   }
