@@ -7,9 +7,31 @@ import { getSubdomain } from '@/auth/sub-domain';
 import { validateOrganizationId } from '@/lib/server-actions/validation';
 import { validateRequest } from '@/services';
 import { createPatientSchema } from '@/services/client/patient/validation';
+import { PatientService } from '@/services/client/patient/service';
 
 export const GET = withAuth(async (_req: NextAuthRequest) => {
   try {
+    const subdomain = await getSubdomain();
+    if (!subdomain) {
+      return NextResponse.json({ message: 'Subdomain not found' }, { status: 400 });
+    }
+
+    const doesOrganizationExist = await validateOrganizationId(subdomain);
+    if (!doesOrganizationExist) {
+      return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
+    }
+
+    const conn = await connectDB(subdomain);
+    const result = await PatientService.getAll({ conn });
+
+    if (!result.success) {
+      return NextResponse.json(
+        { message: result.message || 'Failed to fetch patients' },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({ data: result.data });
   } catch (error: unknown) {
     console.error(error);
     return NextResponse.json(

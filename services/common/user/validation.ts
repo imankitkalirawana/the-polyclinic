@@ -14,7 +14,7 @@ export const createUserSchema = z
       .trim()
       .min(1, { error: 'Name cannot be empty.' }),
 
-    email: z.string({ error: 'Invalid email address.' }).email().trim(),
+    email: z.email({ error: 'Invalid email address.' }).trim(),
 
     phone: z
       .string({ error: 'Invalid phone number.' })
@@ -44,9 +44,14 @@ export const createUserSchema = z
     }),
 
     // Patient fields
-    age: z.number().int().positive().max(120).optional().nullable(),
+    age: z
+      .number()
+      .int()
+      .positive()
+      .max(120, { error: 'Age cannot exceed 120.' })
+      .optional()
+      .nullable(),
     address: z.string().max(200).optional().nullable().or(z.literal('')),
-    dob: z.string().optional().nullable().or(z.literal('')),
 
     // Doctor fields
     specialization: z.string().max(200).optional().nullable().or(z.literal('')),

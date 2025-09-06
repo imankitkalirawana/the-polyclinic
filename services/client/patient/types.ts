@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { createPatientSchema } from './validation';
-import { Gender } from '@/types';
+import { Base, Gender } from '@/types';
 
 // TODO: Remove this
 export interface NewPatientFormValues {
@@ -8,7 +8,16 @@ export interface NewPatientFormValues {
   email: string;
   phone: string;
   gender: Gender;
-  dob: string;
+  age?: number;
+  address?: string;
+}
+
+export interface Patient extends Base {
+  uid: string;
+  name: string;
+  email: string;
+  phone: string;
+  gender: Gender;
   age?: number;
   address: string;
 }

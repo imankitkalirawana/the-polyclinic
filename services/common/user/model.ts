@@ -79,5 +79,5 @@ userSchema.pre(['findOneAndUpdate', 'updateOne'], async function (next) {
 });
 
 export const getUserModel = (conn: Connection) => {
-  return conn.models.user || conn.model('user', userSchema);
+  return conn.models.user || conn.model('User', userSchema);
 };

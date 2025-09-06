@@ -12,6 +12,7 @@ import {
   DatePicker,
   Form,
   Input,
+  NumberInput,
   ScrollShadow,
   Select,
   SelectItem,
@@ -77,22 +78,8 @@ export default function NewUser({ organization }: { organization?: string | null
     initialValues: {
       name: '',
       email: '',
-      phone: '',
-      password: '',
       role: organization ? 'patient' : 'ops',
       organization,
-      address: '',
-      dob: '',
-      gender: '',
-      age: 0,
-      specialization: '',
-      experience: 0,
-      department: '',
-      designation: '',
-      seating: '',
-      education: '',
-      biography: '',
-      shortbio: '',
     },
     validate: withZodSchema(createUserSchema),
     onSubmit: async (values) => {
@@ -100,6 +87,8 @@ export default function NewUser({ organization }: { organization?: string | null
       router.push('/dashboard/users');
     },
   });
+
+  console.log(formik.values);
 
   const handleAutofill = () => {
     const name = faker.person.fullName();
@@ -251,20 +240,17 @@ export default function NewUser({ organization }: { organization?: string | null
                 {(item) => <SelectItem key={item.value}>{item.label}</SelectItem>}
               </Select>
 
-              <I18nProvider locale="en-IN">
-                <DatePicker
-                  name="dob"
-                  label="Date of Birth"
-                  // @ts-expect-error - value is not typed
-                  value={formik.values.dob ? parseDate(formik.values.dob) : null}
-                  onChange={(value) => {
-                    const dob = new Date(value as $FixMe).toISOString().split('T')[0];
-                    formik.setFieldValue('dob', dob);
-                  }}
-                  maxValue={today(getLocalTimeZone())}
-                  showMonthAndYearPickers
-                />
-              </I18nProvider>
+              <NumberInput
+                label="Age"
+                placeholder="Enter age"
+                value={formik.values.age || 0}
+                onChange={(value) =>
+                  formik.setFieldValue('age', parseInt(value.toString()) || undefined)
+                }
+                name="age"
+                isInvalid={!!(formik.touched.age && formik.errors.age)}
+                errorMessage={formik.touched.age && formik.errors.age}
+              />
 
               <Input
                 label="Address"
@@ -335,7 +321,13 @@ export default function NewUser({ organization }: { organization?: string | null
       </CardBody>
 
       <CardFooter className="mt-4 justify-end gap-2">
-        <Button color="primary" radius="full" isLoading={formik.isSubmitting} type="submit">
+        <Button
+          color="primary"
+          radius="full"
+          isLoading={formik.isSubmitting}
+          onPress={() => formik.handleSubmit()}
+          type="submit"
+        >
           Create User
         </Button>
       </CardFooter>
