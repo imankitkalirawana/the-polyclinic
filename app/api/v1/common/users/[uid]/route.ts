@@ -17,12 +17,6 @@ type Params = Promise<{
 export const GET = withAuth(async (request: NextAuthRequest, { params }: { params: Params }) => {
   try {
     const { uid } = await params;
-    const requesterRole = request.auth?.user?.role;
-    const requesterUid = request.auth?.user?.uid;
-
-    if (!requesterRole || !requesterUid) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
 
     const urlDomain = await getSubdomain();
     const { searchParams } = request.nextUrl;
@@ -33,8 +27,6 @@ export const GET = withAuth(async (request: NextAuthRequest, { params }: { param
     const result = await UserService.getUserByUid({
       conn,
       uid,
-      requesterRole,
-      requesterUid,
     });
 
     if (!result.success) {

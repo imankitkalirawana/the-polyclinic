@@ -8,6 +8,13 @@ export class User {
     return await fetchData<UnifiedUser[]>(this.API_BASE);
   }
 
+  static async getByUID(uid?: string | null) {
+    if (!uid) {
+      return { success: false, message: 'UID is required', data: null };
+    }
+    return await fetchData<UnifiedUser>(`${this.API_BASE}/${uid}`);
+  }
+
   static async create(data: CreateUser) {
     return await fetchData<UnifiedUser>(this.API_BASE, {
       method: 'POST',

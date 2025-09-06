@@ -50,7 +50,7 @@ export default function UserCard({ uid }: { uid: string }) {
       <CardHeader className="justify-between px-0">
         <div className="no-scrollbar flex flex-col items-start">
           <p className="text-large">Personal Details</p>
-          <p className="text-small text-default-500">Manage your personal details</p>
+          <p className="text-default-500 text-small">Manage your personal details</p>
         </div>
         <Button as={Link} href={`/dashboard/users/${user.uid}/edit`}>
           Edit

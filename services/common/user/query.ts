@@ -9,7 +9,7 @@ import {
 
 import { ApiResponse } from '../../fetch';
 
-import { getLinkedUsers, getSelf, getUserWithUID } from '@/services/api/client/user';
+import { getLinkedUsers, getSelf } from '@/services/api/client/user';
 import { CreateUser, SystemUser, UnifiedUser, UpdateUser, User } from '@/services/common/user';
 
 export const useAllUsers = (): UseQueryResult<UnifiedUser[]> =>
@@ -55,11 +55,11 @@ export const useLinkedUsers = (): UseQueryResult<SystemUser[]> =>
  *   If `undefined`, the query will be disabled.
  */
 
-export const useUserWithUID = (uid: string | undefined): UseQueryResult<SystemUser> =>
+export const useUserWithUID = (uid: string | undefined): UseQueryResult<UnifiedUser | null> =>
   useQuery({
     queryKey: ['user', uid],
     queryFn: async () => {
-      const res = await getUserWithUID(uid);
+      const res = await User.getByUID(uid);
       if (res.success) {
         return res.data;
       }

@@ -2,10 +2,8 @@ import { $FixMe } from '@/types';
 import { ServiceResult } from '@/services';
 import { Connection } from 'mongoose';
 import { getUserModel } from '@/services/common/user/model';
-import { SystemUser, UnifiedUser, CreateUser } from './types';
-import { SYSTEM_USER_ROLE } from './constants';
+import { UnifiedUser, CreateUser } from './types';
 import bcrypt from 'bcryptjs';
-import { rolePermissions } from './permission';
 import { SERVER_ERROR_MESSAGE } from '@/lib/constants';
 import { getPatientModel } from '@/services/client/patient/model';
 import { getDoctorModel } from '@/services/client/doctor/model';
@@ -14,62 +12,19 @@ export class UserService {
   static async getUserByUid({
     conn,
     uid,
-    requesterRole,
-    requesterUid,
   }: {
     conn: Connection;
     uid: string;
-    requesterRole: UnifiedUser['role'];
-    requesterUid: string | null;
-  }): Promise<ServiceResult<UnifiedUser>> {
+  }): Promise<ServiceResult> {
     try {
-      const isPrimaryDb = conn.db?.databaseName === process.env.MONGODB_GLOBAL;
-
-      if (isPrimaryDb && !SYSTEM_USER_ROLE.includes(requesterRole as SystemUser['role'])) {
-        return {
-          success: false,
-          message: 'Access denied. System user privileges required.',
-        };
-      }
-
       const User = getUserModel(conn);
-
-      // Find user by uid
       const user = await User.findOne({ uid }).select('-password');
 
       if (!user) {
-        return {
-          success: false,
-          message: 'User not found.',
-        };
+        return { success: false, message: 'User not found' };
       }
 
-      // Permission checks for organization database
-      if (!isPrimaryDb) {
-        const allowedRoles = rolePermissions[requesterRole];
-
-        // Check if requester can view this user's role
-        if (!allowedRoles.includes(user.role)) {
-          return {
-            success: false,
-            message: `Access denied. Insufficient permissions to view users with ${user.role} role.`,
-          };
-        }
-
-        // Patients can only view themselves
-        if (requesterRole === 'patient' && user.uid !== requesterUid) {
-          return {
-            success: false,
-            message: 'Access denied. Patients can only view their own profile.',
-          };
-        }
-      }
-
-      return {
-        success: true,
-        message: 'User retrieved successfully.',
-        data: user,
-      };
+      return { success: true, data: user };
     } catch (error) {
       console.error(error);
       return {
@@ -258,28 +213,6 @@ export class UserService {
 
       if (!updatedUser) {
         return { success: false, message: 'Failed to update user' };
-      }
-
-      if (user.role === 'patient') {
-        const Patient = getPatientModel(conn);
-        const patient = await Patient.findOneAndUpdate(
-          { uid },
-          { $set: { ...rest } },
-          { new: true }
-        );
-
-        if (!patient) {
-          return { success: false, message: 'Failed to update patient' };
-        }
-      }
-
-      if (user.role === 'doctor') {
-        const Doctor = getDoctorModel(conn);
-        const doctor = await Doctor.findOneAndUpdate({ uid }, { $set: { ...rest } }, { new: true });
-
-        if (!doctor) {
-          return { success: false, message: 'Failed to update doctor' };
-        }
       }
 
       return { success: true, message: 'User updated successfully', data: updatedUser };

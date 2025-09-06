@@ -50,7 +50,7 @@ export class DoctorService {
     uid,
   }: {
     conn: Connection;
-    uid: number;
+    uid: string;
   }): Promise<ServiceResult<DoctorType | null>> {
     try {
       const Doctor = getDoctorModel(conn);

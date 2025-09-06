@@ -4,10 +4,6 @@ import { $FixMe } from '@/types';
 
 import { fetchData } from '@/services/fetch';
 
-export async function getUserWithUID(uid?: string) {
-  return await fetchData<$FixMe>(`/users/uid/${uid}`);
-}
-
 export async function getSelf() {
   return await fetchData<$FixMe>('/users/self');
 }
