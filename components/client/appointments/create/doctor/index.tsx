@@ -6,7 +6,6 @@ import Fuse from 'fuse.js';
 import { CreateAppointmentFormValues } from '../types';
 import { CreateAppointmentDoctorDetails } from './details';
 
-import { useAllDoctors } from '@/hooks/queries/client/doctor';
 import { useKeyPress } from '@/hooks/useKeyPress';
 import {
   CreateAppointmentContentContainer,
@@ -16,6 +15,7 @@ import {
   SelectionSkeleton,
 } from '../ui';
 import { useDebounce } from '@/hooks/useDebounce';
+import { useAllDoctors } from '@/services/client/doctor/query';
 
 export default function DoctorSelection({ className }: { className?: string }) {
   const { data: doctors, isLoading: isDoctorsLoading } = useAllDoctors();

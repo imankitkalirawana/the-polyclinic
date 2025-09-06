@@ -9,8 +9,8 @@ import Appointments from './appointments';
 import Loading from '@/app/loading';
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { castData } from '@/lib/utils';
-import { useDoctorWithUID } from '@/hooks/queries/client/doctor';
 import { DoctorType } from '@/services/client/doctor';
+import { useDoctorByUID } from '@/services/client/doctor/query';
 
 type ListItem = {
   label: string;
@@ -93,7 +93,7 @@ const listItems: ListItem[] = [
 ];
 
 export default function DashboardDoctor({ uid }: { uid: string }) {
-  const { data, isError, isLoading } = useDoctorWithUID(uid);
+  const { data, isError, isLoading } = useDoctorByUID(uid);
 
   const doctor = castData<DoctorType>(data);
 

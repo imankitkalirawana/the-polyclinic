@@ -150,6 +150,8 @@ export const useDeleteUser = (): UseMutationResult<
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
+      queryClient.invalidateQueries({ queryKey: ['doctors'] });
+      queryClient.invalidateQueries({ queryKey: ['patients'] });
       queryClient.invalidateQueries({ queryKey: ['organizations', variables.organization] });
       addToast({
         title: 'User deleted successfully',

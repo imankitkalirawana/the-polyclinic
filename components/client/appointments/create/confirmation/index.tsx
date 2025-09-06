@@ -18,8 +18,8 @@ import { Icon } from '@iconify/react';
 import { CreateAppointmentFormValues } from '../types';
 
 import Skeleton from '@/components/ui/skeleton';
-import { useDoctorWithUID } from '@/hooks/queries/client/doctor';
 import { useUserWithUID } from '@/services/common/user/query';
+import { useDoctorByUID } from '@/services/client/doctor/query';
 
 export default function AppointmentBookingConfirmation() {
   const { values, setFieldValue, handleSubmit, isSubmitting } =
@@ -27,7 +27,7 @@ export default function AppointmentBookingConfirmation() {
   const { appointment } = values;
 
   const { data: patient, isLoading: isPatientLoading } = useUserWithUID(appointment.patientId);
-  const { data: doctor, isLoading: isDoctorLoading } = useDoctorWithUID(appointment.doctorId ?? '');
+  const { data: doctor, isLoading: isDoctorLoading } = useDoctorByUID(appointment.doctorId);
 
   return (
     <Modal
@@ -44,14 +44,14 @@ export default function AppointmentBookingConfirmation() {
             width={56}
           />
           <p className="mb-2 text-base font-medium">Schedule this Appointment?</p>
-          <p className="text-center text-small font-normal text-default-500">
+          <p className="text-center font-normal text-default-500 text-small">
             Please review the details below before confirming your appointment.
           </p>
         </ModalHeader>
         <ModalBody>
           <div className="flex w-full flex-col items-start gap-2">
             <div className="flex w-full flex-col text-small">
-              <p className="text-tiny text-default-500">Patient Name</p>
+              <p className="text-default-500 text-tiny">Patient Name</p>
               {isPatientLoading ? (
                 <Skeleton className="h-4 w-24" />
               ) : (
@@ -59,7 +59,7 @@ export default function AppointmentBookingConfirmation() {
               )}
             </div>
             <div className="flex w-full flex-col text-small">
-              <p className="text-tiny text-default-500">When</p>
+              <p className="text-default-500 text-tiny">When</p>
               <p className="font-medium">
                 {format(appointment.date, 'EEEE, MMMM d, yyyy')} -{' '}
                 {format(appointment.date, 'h:mm a')}
@@ -67,7 +67,7 @@ export default function AppointmentBookingConfirmation() {
             </div>
             {!!appointment.doctorId && (
               <div className="flex w-full flex-col text-small">
-                <p className="text-tiny text-default-500">Doctor</p>
+                <p className="text-default-500 text-tiny">Doctor</p>
                 {isDoctorLoading ? (
                   <Skeleton className="h-4 w-24" />
                 ) : (
@@ -86,7 +86,7 @@ export default function AppointmentBookingConfirmation() {
               </div>
             )}
             <div className="flex w-full flex-col text-small">
-              <p className="text-tiny text-default-500">Where</p>
+              <p className="text-default-500 text-tiny">Where</p>
               <Link className="flex w-fit items-center gap-1 text-foreground" size="sm">
                 <p className="font-medium">Google Meet</p>
                 <Icon className="text-default-500" icon="mdi:open-in-new" width={14} />
@@ -94,19 +94,19 @@ export default function AppointmentBookingConfirmation() {
             </div>
             {!!appointment.additionalInfo?.symptoms && (
               <div className="flex w-full flex-col text-small">
-                <p className="text-tiny text-default-500">Symptoms</p>
+                <p className="text-default-500 text-tiny">Symptoms</p>
                 <p className="font-medium">{appointment.additionalInfo?.symptoms}</p>
               </div>
             )}
             {!!appointment.additionalInfo?.notes && (
               <div className="flex w-full flex-col text-small">
-                <p className="text-tiny text-default-500">Additional notes</p>
+                <p className="text-default-500 text-tiny">Additional notes</p>
                 <p className="font-medium">{appointment.additionalInfo?.notes}</p>
               </div>
             )}
             {!!appointment.type && (
               <div className="flex w-full flex-col text-small">
-                <p className="text-tiny text-default-500">Appointment Type</p>
+                <p className="text-default-500 text-tiny">Appointment Type</p>
                 <p className="font-medium capitalize">{appointment.type}</p>
               </div>
             )}

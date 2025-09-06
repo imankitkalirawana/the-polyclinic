@@ -1,5 +1,5 @@
+'use server';
 import { $FixMe } from '@/types';
-('use server');
 
 import { DoctorType } from '@/services/client/doctor';
 import { fetchData, fetchDataWithPagination } from '../../fetch';

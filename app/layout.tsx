@@ -1,4 +1,3 @@
-import type { Metadata } from 'next';
 import { Outfit } from 'next/font/google';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 

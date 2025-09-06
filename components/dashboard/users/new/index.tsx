@@ -35,6 +35,7 @@ import {
 } from '@/services/common/user';
 import { withZodSchema } from '@/lib/utils';
 import { GENDERS } from '@/lib/constants';
+import { useQueryState } from 'nuqs';
 
 const getRolesByAccess = (
   role: UnifiedUser['role'] | null | undefined,
@@ -68,19 +69,25 @@ const getRolesByAccess = (
 export default function NewUser({ organization }: { organization?: string | null }) {
   const router = useRouter();
   const { data: session } = useSession();
+  const [redirectUrl] = useQueryState('redirectUrl', {
+    defaultValue: '/dashboard/users',
+  });
+  const [queryRole] = useQueryState('role', {
+    defaultValue: organization ? 'patient' : 'ops',
+  });
   const createUser = useCreateUser();
 
   const formik = useFormik<CreateUser>({
     initialValues: {
       name: '',
       email: '',
-      role: organization ? 'patient' : 'ops',
+      role: queryRole as CreateUser['role'],
       organization,
     },
     validate: withZodSchema(createUserSchema),
     onSubmit: async (values) => {
       await createUser.mutateAsync(values);
-      router.push('/dashboard/users');
+      router.push(redirectUrl);
     },
   });
 
