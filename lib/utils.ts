@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { faker } from '@faker-js/faker';
 import { z } from 'zod';
+import gravatar from 'gravatar';
 
 export const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
 export const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'lvh.me:3000';
@@ -80,4 +81,8 @@ export function withZodSchema<T>(schema: z.ZodSchema<T>) {
       return {};
     }
   };
+}
+
+export function getGravatar(email: string) {
+  return gravatar.url(email, { s: '200', d: 'retro' }, true);
 }

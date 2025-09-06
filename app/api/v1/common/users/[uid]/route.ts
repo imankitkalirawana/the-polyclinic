@@ -82,12 +82,10 @@ export const PUT = withAuth(async (request: NextAuthRequest, { params }: { param
 
     const conn = await connectDB(subdomain);
 
-    const result = await UserService.updateUser({
+    const result = await UserService.update({
       conn,
       uid,
-      data: validation.data,
-      updaterRole,
-      updaterUid,
+      data: body,
     });
 
     if (!result.success) {
@@ -111,21 +109,15 @@ export const PUT = withAuth(async (request: NextAuthRequest, { params }: { param
 export const DELETE = withAuth(async (request: NextAuthRequest, { params }: { params: Params }) => {
   try {
     const { uid } = await params;
-    const deleterRole = request.auth?.user?.role;
     const urlDomain = await getSubdomain();
     const body = await request.json();
-
-    if (!deleterRole) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
 
     const subdomain = body.organization || urlDomain;
     const conn = await connectDB(subdomain);
 
-    const result = await UserService.deleteUser({
+    const result = await UserService.delete({
       conn,
       uid,
-      deleterRole,
     });
 
     if (!result.success) {

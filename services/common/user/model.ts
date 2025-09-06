@@ -2,6 +2,7 @@ import mongoose, { Connection } from 'mongoose';
 import { auth } from '@/auth';
 import { generateUid } from '@/models/client/Counter';
 import { UNIFIED_USER_ROLES, USER_STATUSES } from './constants';
+import { getGravatar } from '@/lib/utils';
 
 const userSchema = new mongoose.Schema(
   {
@@ -31,7 +32,7 @@ const userSchema = new mongoose.Schema(
     password: String,
     image: {
       type: String,
-      default: 'https://cdn.jsdelivr.net/gh/alohe/avatars/png/memo_1.png',
+      default: getGravatar('system-admin@divinely.dev'),
     },
     role: {
       type: String,
@@ -60,15 +61,20 @@ userSchema.pre('save', async function (next) {
   const session = await auth();
   this.uid = await generateUid('uid', this.organization);
   this.createdBy = session?.user?.email || 'system-admin@divinely.dev';
+  // if image is not set, set it to the gravatar
+  if (!this.image && this.email) {
+    this.image = getGravatar(this.email);
+  }
   next();
 });
 
-userSchema.pre(['findOneAndUpdate', 'updateOne', 'updateMany'], async function (next) {
+userSchema.pre(['findOneAndUpdate', 'updateOne'], async function (next) {
   const session = await auth();
   this.setUpdate({
     ...this.getUpdate(),
     updatedBy: session?.user?.email || 'system-admin@divinely.dev',
   });
+
   next();
 });
 

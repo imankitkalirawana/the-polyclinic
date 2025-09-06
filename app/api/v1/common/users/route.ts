@@ -28,7 +28,7 @@ export const GET = withAuth(async (req: NextAuthRequest) => {
 
     const conn = await connectDB(subdomain);
 
-    const result = await UserService.getUsers({ conn, role, uid });
+    const result = await UserService.getAll({ conn, role, uid });
 
     if (!result.success) {
       return NextResponse.json({ message: result.message }, { status: 403 });
@@ -76,10 +76,9 @@ export const POST = auth(async (request: NextAuthRequest) => {
 
     const conn = await connectDB(subdomain);
 
-    const result = await UserService.createUser({
+    const result = await UserService.create({
       conn,
-      data: validation.data,
-      creatorRole: userRole,
+      data: body,
     });
 
     if (!result.success) {

@@ -1,3 +1,4 @@
+import { $FixMe } from '@/types';
 import { ServiceResult } from '@/services';
 import { Connection } from 'mongoose';
 import { getUserModel } from '@/services/common/user/model';
@@ -6,6 +7,8 @@ import { SYSTEM_USER_ROLE } from './constants';
 import bcrypt from 'bcryptjs';
 import { rolePermissions } from './permission';
 import { SERVER_ERROR_MESSAGE } from '@/lib/constants';
+import { getPatientModel } from '@/services/client/patient/model';
+import { getDoctorModel } from '@/services/client/doctor/model';
 
 export class UserService {
   static async getUserByUid({
@@ -79,25 +82,16 @@ export class UserService {
     }
   }
 
-  static async getUsers({
+  static async getAll({
     conn,
-    role,
     uid,
+    role,
   }: {
     conn: Connection;
-    role: UnifiedUser['role'];
     uid: string | null;
+    role: UnifiedUser['role'];
   }): Promise<ServiceResult<UnifiedUser[]>> {
     try {
-      const isPrimaryDb = conn.db?.databaseName === process.env.MONGODB_GLOBAL;
-
-      if (isPrimaryDb && !SYSTEM_USER_ROLE.includes(role as SystemUser['role'])) {
-        return {
-          success: false,
-          message: 'Access denied. System user privileges required.',
-        };
-      }
-
       const queryMap: Record<UnifiedUser['role'], Record<string, unknown>> = {
         superadmin: {},
         moderator: {},
@@ -133,92 +127,94 @@ export class UserService {
         message:
           error instanceof Error
             ? `Failed to retrieve users: ${error.message}`
-            : 'Internal server error occurred while retrieving users.',
+            : SERVER_ERROR_MESSAGE,
       };
     }
   }
 
-  static async createUser({
-    conn,
-    data,
-    creatorRole,
-  }: {
-    conn: Connection;
-    data: CreateUser;
-    creatorRole: UnifiedUser['role'];
-  }): Promise<ServiceResult<UnifiedUser>> {
+  static async create({ conn, data }: { conn: Connection; data: $FixMe }): Promise<ServiceResult> {
     try {
-      const isPrimaryDb = conn.db?.databaseName === process.env.MONGODB_GLOBAL;
-      const { email, password, organization, role = 'patient', ...rest } = data;
-
-      // Permission checks
-      if (isPrimaryDb) {
-        if (!SYSTEM_USER_ROLE.includes(creatorRole as SystemUser['role'])) {
-          return {
-            success: false,
-            message: 'Access denied. System user privileges required to create users.',
-          };
-        }
-
-        if (organization) {
-          return {
-            success: false,
-            message: 'System users cannot be assigned to organizations.',
-          };
-        }
-
-        if (!SYSTEM_USER_ROLE.includes(role as SystemUser['role'])) {
-          return {
-            success: false,
-            message: 'Invalid role for system user. Only system roles are allowed.',
-          };
-        }
-      } else {
-        const allowedRoles = rolePermissions[creatorRole];
-        if (!allowedRoles.includes(role)) {
-          return {
-            success: false,
-            message: `Access denied. Insufficient permissions to create users with ${role} role.`,
-          };
-        }
-      }
-
+      const { role, ...rest } = data;
       const User = getUserModel(conn);
+      const existingUser = await User.findOne({ email: data.email });
 
-      // Check if user already exists
-      const existingUser = await User.findOne({ email });
-      if (existingUser) {
+      if (role === 'superadmin') {
         return {
           success: false,
-          message: 'A user with this email address already exists.',
+          message: 'Superadmin cannot be created.',
         };
       }
 
-      // Hash password if provided
-      let hashedPassword;
-      if (password) {
-        hashedPassword = await bcrypt.hash(password, 10);
+      if (existingUser) {
+        return {
+          success: false,
+          message: 'User already exists.',
+        };
       }
 
-      const userData = {
-        ...rest,
-        email,
-        role,
-        ...(hashedPassword && { password: hashedPassword }),
-        ...(organization && { organization }),
-        status: 'active',
-      };
+      let hashedPassword;
+      if (data.password) {
+        hashedPassword = await bcrypt.hash(data.password, 10);
+      }
 
-      const user = await User.create(userData);
+      if (['superadmin', 'moderator', 'ops'].includes(role)) {
+        const user = await User.create({
+          ...rest,
+          email: data.email,
+          password: hashedPassword,
+          role,
+        });
 
-      const safeUser = user.toObject();
-      delete safeUser.password;
+        return {
+          success: true,
+          message: 'User created successfully.',
+          data: user,
+        };
+      } else {
+        const user = await User.create({
+          ...rest,
+          email: data.email,
+          password: hashedPassword,
+          role,
+        });
+        if (role === 'patient') {
+          const Patient = getPatientModel(conn);
+          const patient = await Patient.create({
+            ...rest,
+            uid: user.uid,
+          });
 
-      return {
-        success: true,
-        message: 'User created successfully.',
-        data: safeUser,
-      };
+          if (!patient) {
+            await User.deleteOne({ _id: user._id });
+            return {
+              success: false,
+              message: 'Failed to create patient.',
+            };
+          }
+        }
+
+        if (role === 'doctor') {
+          const Doctor = getDoctorModel(conn);
+          const doctor = await Doctor.create({
+            ...rest,
+            uid: user.uid,
+          });
+
+          if (!doctor) {
+            await User.deleteOne({ _id: user._id });
+            return {
+              success: false,
+              message: 'Failed to create doctor.',
+            };
+          }
+        }
+
+        return {
+          success: true,
+          message: 'User created successfully.',
+          data: user,
+        };
+      }
     } catch (error) {
       console.error(error);
 
@@ -230,121 +226,63 @@ export class UserService {
     }
   }
 
-  static async updateUser({
+  static async update({
     conn,
     uid,
     data,
-    updaterRole,
-    updaterUid,
   }: {
     conn: Connection;
     uid: string;
     data: Partial<CreateUser>;
-    updaterRole: UnifiedUser['role'];
-    updaterUid: string | null;
   }): Promise<ServiceResult<UnifiedUser>> {
     try {
-      const isPrimaryDb = conn.db?.databaseName === process.env.MONGODB_GLOBAL;
-      const { email, password, organization, role, ...rest } = data;
-
+      const { role, ...rest } = data;
       const User = getUserModel(conn);
+      const user = await User.findOne({ uid });
+      if (!user) {
+        return { success: false, message: 'User not found' };
+      }
 
-      // Check if user exists
-      const existingUser = await User.findOne({ uid });
-      if (!existingUser) {
+      if (user.role === 'superadmin') {
         return {
           success: false,
-          message: 'User not found.',
+          message: 'Superadmin cannot be updated.',
         };
       }
 
-      // Permission checks for primary database
-      if (isPrimaryDb) {
-        if (!SYSTEM_USER_ROLE.includes(updaterRole as SystemUser['role'])) {
-          return {
-            success: false,
-            message: 'Access denied. System user privileges required.',
-          };
-        }
-
-        if (role && !SYSTEM_USER_ROLE.includes(role as SystemUser['role'])) {
-          return {
-            success: false,
-            message: 'Invalid role for system user. Only system roles are allowed.',
-          };
-        }
-      } else {
-        // Organization database permission checks
-        const allowedRoles = rolePermissions[updaterRole];
-
-        // Check if updater can modify this user's role
-        if (role && !allowedRoles.includes(role)) {
-          return {
-            success: false,
-            message: `Access denied. Insufficient permissions to assign ${role} role.`,
-          };
-        }
-
-        // Check if updater can modify the existing user's role
-        if (!allowedRoles.includes(existingUser.role)) {
-          return {
-            success: false,
-            message: `Access denied. Insufficient permissions to modify users with ${existingUser.role} role.`,
-          };
-        }
-
-        // Patients can only update themselves
-        if (updaterRole === 'patient' && existingUser.uid !== updaterUid) {
-          return {
-            success: false,
-            message: 'Access denied. Patients can only update their own profile.',
-          };
-        }
-      }
-
-      // Check for email conflicts (excluding current user)
-      if (email && email !== existingUser.email) {
-        const emailConflict = await User.findOne({
-          email,
-          uid: { $ne: uid },
-        });
-        if (emailConflict) {
-          return {
-            success: false,
-            message: 'Email address is already in use by another user.',
-          };
-        }
-      }
-
-      // Prepare update data
-      const updateData: Record<string, unknown> = { ...rest };
-
-      if (email) updateData.email = email;
-      if (role) updateData.role = role;
-      if (organization !== undefined) updateData.organization = organization;
-
-      // Hash new password if provided
-      if (password) {
-        updateData.password = await bcrypt.hash(password, 10);
-      }
-
-      const updatedUser = await User.findOneAndUpdate({ uid }, updateData, {
-        new: true,
-        runValidators: true,
-      }).select('-password');
+      const updatedUser = await User.findOneAndUpdate(
+        { uid },
+        { $set: { ...rest } },
+        { new: true }
+      );
 
       if (!updatedUser) {
-        return {
-          success: false,
-          message: 'Failed to update user.',
-        };
+        return { success: false, message: 'Failed to update user' };
       }
 
-      return {
-        success: true,
-        message: 'User updated successfully.',
-        data: updatedUser,
-      };
+      if (user.role === 'patient') {
+        const Patient = getPatientModel(conn);
+        const patient = await Patient.findOneAndUpdate(
+          { uid },
+          { $set: { ...rest } },
+          { new: true }
+        );
+
+        if (!patient) {
+          return { success: false, message: 'Failed to update patient' };
+        }
+      }
+
+      if (user.role === 'doctor') {
+        const Doctor = getDoctorModel(conn);
+        const doctor = await Doctor.findOneAndUpdate({ uid }, { $set: { ...rest } }, { new: true });
+
+        if (!doctor) {
+          return { success: false, message: 'Failed to update doctor' };
+        }
+      }
+
+      return { success: true, message: 'User updated successfully', data: updatedUser };
     } catch (error) {
       console.error(error);
       return {
@@ -355,71 +293,36 @@ export class UserService {
     }
   }
 
-  static async deleteUser({
-    conn,
-    uid,
-    deleterRole,
-  }: {
-    conn: Connection;
-    uid: string;
-    deleterRole: UnifiedUser['role'];
-  }): Promise<ServiceResult<{ deletedUser: UnifiedUser }>> {
+  static async delete({ conn, uid }: { conn: Connection; uid: string }): Promise<ServiceResult> {
     try {
-      const isPrimaryDb = conn.db?.databaseName === process.env.MONGODB_GLOBAL;
-
       const User = getUserModel(conn);
 
-      // Check if user exists
-      const existingUser = await User.findOne({ uid }).select('-password');
-      if (!existingUser) {
+      const user = await User.findOne({ uid });
+
+      if (!user) {
+        return { success: false, message: 'User not found' };
+      }
+
+      if (user.role === 'superadmin') {
         return {
           success: false,
-          message: 'User not found.',
+          message: 'Superadmin cannot be deleted.',
         };
       }
 
-      // Permission checks for primary database
-      if (isPrimaryDb) {
-        if (!SYSTEM_USER_ROLE.includes(deleterRole as SystemUser['role'])) {
-          return {
-            success: false,
-            message: 'Access denied. System user privileges required.',
-          };
-        }
+      await User.deleteOne({ uid });
 
-        // Prevent deleting other superadmins unless you're a superadmin
-        if (existingUser.role === 'superadmin' && deleterRole !== 'superadmin') {
-          return {
-            success: false,
-            message: 'Access denied. Only superadmins can delete other superadmin users.',
-          };
-        }
-      } else {
-        // Organization database permission checks
-        const allowedRoles = rolePermissions[deleterRole];
-
-        // Check if deleter can modify this user's role
-        if (!allowedRoles.includes(existingUser.role)) {
-          return {
-            success: false,
-            message: `Access denied. Insufficient permissions to delete users with ${existingUser.role} role.`,
-          };
-        }
+      if (user.role === 'patient') {
+        const Patient = getPatientModel(conn);
+        await Patient.deleteOne({ uid });
       }
 
-      const deletedUser = await User.findOneAndDelete({ uid });
-
-      if (!deletedUser) {
-        return {
-          success: false,
-          message: 'Failed to delete user.',
-        };
+      if (user.role === 'doctor') {
+        const Doctor = getDoctorModel(conn);
+        await Doctor.deleteOne({ uid });
       }
 
-      return {
-        success: true,
-        message: 'User deleted successfully.',
-      };
+      return { success: true, message: 'User deleted successfully' };
     } catch (error) {
       console.error(error);
       return {

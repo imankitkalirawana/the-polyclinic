@@ -1,6 +1,5 @@
 import { UnifiedUser } from '@/services/common/user';
 import { type SidebarItem } from './sidebar';
-
 import { ThemeSwitcher } from '@/components/theme-switcher';
 
 // Extend SidebarItem to include roles

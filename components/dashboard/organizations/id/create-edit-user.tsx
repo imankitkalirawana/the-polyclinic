@@ -46,7 +46,6 @@ export default function UserModal({ isOpen, onClose, organization, mode, user }:
       phone: '',
       password: '',
       role: 'patient' as const,
-      image: '',
       organization: organization.organizationId,
     },
     validate: withZodSchema(createUserSchema),
@@ -61,7 +60,6 @@ export default function UserModal({ isOpen, onClose, organization, mode, user }:
       name: user?.name || '',
       email: user?.email || '',
       phone: user?.phone || '',
-      image: user?.image || '',
       role: user?.role || 'patient',
       status: user?.status || 'active',
       password: '',
@@ -161,24 +159,28 @@ export default function UserModal({ isOpen, onClose, organization, mode, user }:
               errorMessage={errors.password}
             />
 
-            <Select
-              name="role"
-              label="Role"
-              placeholder="Select user role"
-              selectedKeys={[values.role || '']}
-              onChange={(e) => setFieldValue('role', e.target.value)}
-              isRequired
-              disallowEmptySelection={!isEdit}
-              startContent={<Icon icon="solar:user-id-bold-duotone" className="text-default-400" />}
-              isInvalid={touched.role && !!errors.role}
-              errorMessage={errors.role}
-            >
-              {ORGANIZATION_USER_ROLES.map((role) => (
-                <SelectItem key={role} textValue={toTitleCase(role)}>
-                  {toTitleCase(role)}
-                </SelectItem>
-              ))}
-            </Select>
+            {!isEdit && (
+              <Select
+                name="role"
+                label="Role"
+                placeholder="Select user role"
+                selectedKeys={[values.role || '']}
+                onChange={(e) => setFieldValue('role', e.target.value)}
+                isRequired
+                disallowEmptySelection={!isEdit}
+                startContent={
+                  <Icon icon="solar:user-id-bold-duotone" className="text-default-400" />
+                }
+                isInvalid={touched.role && !!errors.role}
+                errorMessage={errors.role}
+              >
+                {ORGANIZATION_USER_ROLES.map((role) => (
+                  <SelectItem key={role} textValue={toTitleCase(role)}>
+                    {toTitleCase(role)}
+                  </SelectItem>
+                ))}
+              </Select>
+            )}
 
             {isEdit && (
               <Select
@@ -201,19 +203,6 @@ export default function UserModal({ isOpen, onClose, organization, mode, user }:
                 </SelectItem>
               </Select>
             )}
-
-            <Input
-              name="image"
-              label="Profile Image URL"
-              placeholder="Enter profile image URL (optional)"
-              value={values.image || ''}
-              onChange={(e) => setFieldValue('image', e.target.value)}
-              startContent={
-                <Icon icon="solar:gallery-circle-bold-duotone" className="text-default-400" />
-              }
-              isInvalid={touched.image && !!errors.image}
-              errorMessage={errors.image}
-            />
           </div>
         </ModalBody>
 
