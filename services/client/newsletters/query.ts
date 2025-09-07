@@ -2,7 +2,7 @@ import { useQuery, UseQueryResult } from '@tanstack/react-query';
 
 import { getAllNewsletters } from './api';
 
-import { NewsletterType } from '@/types/client/newsletter';
+import { NewsletterType } from '@/services/client/newsletters/types';
 
 export const useAllNewsletters = (): UseQueryResult<NewsletterType[]> =>
   useQuery({

@@ -2,7 +2,7 @@ import { useQuery, UseQueryResult } from '@tanstack/react-query';
 
 import { getAllEmails, getEmailWithID } from './api';
 
-import { EmailType } from '@/types/client/email';
+import { EmailType } from '@/services/client/email/types';
 
 export const useAllEmails = (): UseQueryResult<EmailType[]> =>
   useQuery({

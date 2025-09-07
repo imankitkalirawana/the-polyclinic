@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-import { NewsletterType } from '@/types/client/newsletter';
+import { NewsletterType } from '@/services/client/newsletters/types';
 
 const NewsletterSchema = new mongoose.Schema<NewsletterType>(
   {

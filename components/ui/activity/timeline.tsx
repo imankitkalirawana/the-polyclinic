@@ -11,7 +11,7 @@ import ActivityNotFound from './not-found';
 
 import { apiRequest } from '@/lib/axios';
 import type { $FixMe } from '@/types';
-import { ActivityLogType, Schema } from '@/types/client/activity';
+import { ActivityLogType, Schema } from '@/services/common/activity/types';
 
 const isDate = (value: $FixMe) =>
   value instanceof Date || (typeof value === 'string' && !isNaN(Date.parse(value)));
@@ -89,14 +89,14 @@ function ActivityTimelineItem({ activity }: { activity: ActivityLogType }) {
       </div>
 
       <div>
-        <div className="text-tiny text-default-400">
+        <div className="text-default-400 text-tiny">
           {isToday(new Date(activity?.createdAt))
             ? `Today ${format(new Date(activity?.createdAt), 'HH:mm a')}`
             : isYesterday(new Date(activity?.createdAt))
               ? `Yesterday ${format(new Date(activity?.createdAt), 'HH:mm a')}`
               : format(new Date(activity?.createdAt), 'dd/MM/yyyy')}
         </div>
-        <h3 className="mb-1 text-small font-medium text-default-800">{activity.title}</h3>
+        <h3 className="mb-1 font-medium text-default-800 text-small">{activity.title}</h3>
 
         {activity.metadata && (
           <ul className="mt-1 text-default-500">
@@ -124,7 +124,7 @@ function ActivityTimelineItem({ activity }: { activity: ActivityLogType }) {
               visibleFields < activity.metadata?.fields?.length && (
                 <button
                   onClick={() => setVisibleFields(activity.metadata?.fields?.length || 2)}
-                  className="flex items-center text-tiny text-primary-500 hover:underline"
+                  className="flex items-center text-primary-500 text-tiny hover:underline"
                 >
                   <div className="flex h-6 w-6 items-center justify-center rounded-full">
                     <Icon icon="solar:menu-dots-circle-bold-duotone" width={18} />
@@ -138,7 +138,7 @@ function ActivityTimelineItem({ activity }: { activity: ActivityLogType }) {
         )}
 
         {activity.by && visibleFields >= (activity.metadata?.fields?.length ?? 0) && (
-          <div className="mt-1 flex items-center overflow-hidden text-tiny text-default-500">
+          <div className="mt-1 flex items-center overflow-hidden text-default-500 text-tiny">
             <Avatar
               src={activity.by.image}
               className="mr-2 h-5 w-5 flex-shrink-0 rounded-full bg-default-300"

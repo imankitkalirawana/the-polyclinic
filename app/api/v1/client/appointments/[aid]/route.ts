@@ -5,7 +5,7 @@ import { connectDB } from '@/lib/db';
 import { logActivity } from '@/lib/server-actions/activity-log';
 import { trackObjectChanges } from '@/lib/utility';
 import { $FixMe } from '@/types';
-import { Schema, Status } from '@/types/client/activity';
+import { Schema, Status } from '@/services/common/activity/types';
 import { withAuth } from '@/middleware/withAuth';
 import { getSubdomain } from '@/auth/sub-domain';
 import { getAppointmentModel } from '@/services/client/appointment';

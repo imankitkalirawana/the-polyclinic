@@ -2,7 +2,7 @@
 
 import { fetchData } from '../../fetch';
 
-import { EmailType } from '@/types/client/email';
+import { EmailType } from '@/services/client/email/types';
 
 export async function getAllEmails() {
   return await fetchData<EmailType[]>('/emails');

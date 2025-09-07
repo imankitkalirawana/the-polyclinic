@@ -7,7 +7,7 @@ import { permissions } from './data';
 
 import QuickLook from '@/components/ui/dashboard/quicklook';
 import { ButtonProps, DropdownItemProps } from '@/components/ui/dashboard/quicklook/types';
-import { EmailType } from '@/types/client/email';
+import { EmailType } from '@/services/client/email/types';
 
 export function EmailQuickLook() {
   const { selected, setSelected, setAction, action } = useEmailStore();

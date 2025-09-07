@@ -7,7 +7,7 @@ import Loading from '@/app/loading';
 import NoResults from '@/components/ui/no-results';
 import { castData } from '@/lib/utils';
 import { useEmailWithID } from '@/services/client/email/query';
-import { EmailType } from '@/types/client/email';
+import { EmailType } from '@/services/client/email/types';
 
 export default function Email({ id }: { id: string }) {
   const { data, isLoading, isError } = useEmailWithID(id);
