@@ -14,10 +14,10 @@ import {
   CreateAppointmentContentHeader,
   SearchInput,
   SelectionList,
-  SelectionSkeleton,
 } from '../ui';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useAllPatients } from '@/services/client/patient';
+import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 const PatientSelection = ({ className }: { className?: string }) => {
   const formik = useFormikContext<CreateAppointmentFormValues>();
@@ -50,7 +50,7 @@ const PatientSelection = ({ className }: { className?: string }) => {
 
   const renderContent = () => {
     if (isLoading) {
-      return <SelectionSkeleton className="flex flex-col gap-2" />;
+      return <MinimalPlaceholder message="Loading patients..." />;
     }
 
     if (isError) {

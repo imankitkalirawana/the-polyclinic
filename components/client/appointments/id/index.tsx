@@ -18,7 +18,6 @@ import {
 import { format } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import Loading from '@/app/loading';
 import CancelDeleteAppointment from '@/components/client/appointments/ui/cancel-delete';
 import RescheduleAppointment from '@/components/client/appointments/ui/reschedule-modal'; // Ensure this path is correct
 import ActivityTimeline from '@/components/ui/activity/timeline';
@@ -29,6 +28,7 @@ import NoResults from '@/components/ui/no-results';
 import { useAppointmentWithAID } from '@/services/client/appointment/query';
 import { useAppointmentStore } from '@/store/appointment';
 import { AppointmentType } from '@/services/client/appointment';
+import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 export default function Appointment({ aid }: { aid: string }) {
   const { action, setAction, setAppointment } = useAppointmentStore();
@@ -37,7 +37,7 @@ export default function Appointment({ aid }: { aid: string }) {
   const appointment: AppointmentType = data as AppointmentType;
 
   if (isLoading) {
-    return <Loading />;
+    return <MinimalPlaceholder message="Loading appointment..." />;
   }
 
   if (isError) {

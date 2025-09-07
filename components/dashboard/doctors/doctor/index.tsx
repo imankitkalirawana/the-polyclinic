@@ -6,11 +6,11 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import AppointmentSlots from './appointment-slots';
 import Appointments from './appointments';
 
-import Loading from '@/app/loading';
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { castData } from '@/lib/utils';
 import { DoctorType } from '@/services/client/doctor';
 import { useDoctorByUID } from '@/services/client/doctor/query';
+import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 type ListItem = {
   label: string;
@@ -102,7 +102,7 @@ export default function DashboardDoctor({ uid }: { uid: string }) {
   }
 
   if (isLoading) {
-    return <Loading />;
+    return <MinimalPlaceholder message="Loading doctor..." />;
   }
 
   if (!doctor) {

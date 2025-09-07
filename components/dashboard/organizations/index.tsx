@@ -12,6 +12,7 @@ import { formatDate } from 'date-fns';
 import CreateEditOrganizationModal from './create-edit';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import Link from 'next/link';
+import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 export default function OrganizationsDashboard() {
   const createModal = useDisclosure();
@@ -23,11 +24,7 @@ export default function OrganizationsDashboard() {
   }
 
   if (isLoading) {
-    return (
-      <div className="flex h-64 items-center justify-center">
-        <div className="text-lg">Loading organizations...</div>
-      </div>
-    );
+    return <MinimalPlaceholder message="Loading organizations..." />;
   }
 
   return (

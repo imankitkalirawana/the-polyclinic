@@ -7,7 +7,6 @@ import { Icon } from '@iconify/react';
 import DataTable from './data-table';
 import { CircleChartCard } from './graph';
 
-import Loading from '@/app/loading';
 import NoResults from '@/components/ui/no-results';
 import {
   convertMinutesToHoursAndMinutes,
@@ -18,6 +17,7 @@ import { castData } from '@/lib/utils';
 import { useServiceWithUID } from '@/services/client/service/query';
 import { ServiceType } from '@/services/client/service/types';
 import { AuthUser } from '@/services/common/user';
+import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   active: 'success',
@@ -40,7 +40,7 @@ export default function ServiceViewItem({ uid, session }: { uid: string; session
   const service = castData<ServiceType>(data);
 
   if (isLoading) {
-    return <Loading />;
+    return <MinimalPlaceholder message="Loading service..." />;
   }
 
   if (isError) {

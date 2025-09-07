@@ -20,7 +20,6 @@ import { useFormik } from 'formik';
 import ReactQuill from 'react-quill';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import Loading from '@/app/loading';
 import NoResults from '@/components/ui/no-results';
 import QuillInput from '@/components/ui/quill-input';
 import { ServiceStatuses, ServiceTypes } from '@/lib/interface';
@@ -28,6 +27,7 @@ import { castData } from '@/lib/utils';
 import { serviceValidationSchema } from '@/lib/validation';
 import { useServiceWithUID, useUpdateService } from '@/services/client/service/query';
 import { ServiceType } from '@/services/client/service/types';
+import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 export default function EditService({ uid }: { uid: string }) {
   const updateService = useUpdateService();
@@ -133,7 +133,7 @@ export default function EditService({ uid }: { uid: string }) {
   };
 
   if (isLoading) {
-    return <Loading />;
+    return <MinimalPlaceholder message="Loading service..." />;
   }
 
   if (isError) {

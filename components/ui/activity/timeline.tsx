@@ -6,12 +6,12 @@ import { format, isToday, isYesterday } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useQuery } from '@tanstack/react-query';
 
-import ActivityLoading from './loading';
 import ActivityNotFound from './not-found';
 
 import { apiRequest } from '@/lib/axios';
 import type { $FixMe } from '@/types';
 import { ActivityLogType, Schema } from '@/services/common/activity/types';
+import MinimalPlaceholder from '../minimal-placeholder';
 
 const isDate = (value: $FixMe) =>
   value instanceof Date || (typeof value === 'string' && !isNaN(Date.parse(value)));
@@ -61,7 +61,7 @@ export default function ActivityTimeline({ aid, schema }: { aid: number; schema:
   }
 
   if (isLoading) {
-    return <ActivityLoading />;
+    return <MinimalPlaceholder message="Loading activity timeline..." />;
   }
 
   return (

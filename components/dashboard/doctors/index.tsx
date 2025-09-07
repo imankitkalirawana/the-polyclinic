@@ -8,7 +8,6 @@ import { toast } from 'sonner';
 import { UserQuickLook } from './quicklook';
 import { useDoctorStore } from './store';
 
-import Loading from '@/app/loading';
 import { Table } from '@/components/ui/data-table';
 import {
   renderActions,
@@ -22,6 +21,7 @@ import { DoctorType } from '@/services/client/doctor';
 import { useAllDoctors } from '@/services/client/doctor/query';
 import { useDeleteUser } from '@/services/common/user/query';
 import { useSubdomain } from '@/hooks/useSubDomain';
+import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'image',
@@ -225,7 +225,7 @@ export default function Doctors() {
 
   const doctors = castData<DoctorType[]>(data);
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <MinimalPlaceholder message="Loading doctors..." />;
 
   if (!doctors) return null;
 

@@ -3,11 +3,11 @@
 import { Chip } from '@heroui/react';
 import { format } from 'date-fns';
 
-import Loading from '@/app/loading';
 import NoResults from '@/components/ui/no-results';
 import { castData } from '@/lib/utils';
 import { useEmailWithID } from '@/services/client/email/query';
 import { EmailType } from '@/services/client/email/types';
+import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 export default function Email({ id }: { id: string }) {
   const { data, isLoading, isError } = useEmailWithID(id);
@@ -15,7 +15,7 @@ export default function Email({ id }: { id: string }) {
   const email = castData<EmailType>(data);
 
   if (isLoading) {
-    return <Loading />;
+    return <MinimalPlaceholder message="Loading email..." />;
   }
 
   if (isError) {

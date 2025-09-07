@@ -6,11 +6,11 @@ import { Button, Card, CardBody, CardFooter, CardHeader, ScrollShadow } from '@h
 
 import CellValue from '@/components/ui/cell-value';
 
-import Loading from '@/app/loading';
 import { humanReadableDate, humanReadableTime } from '@/lib/utility';
 import { castData } from '@/lib/utils';
 import { useUserWithUID } from '@/services/common/user/query';
 import { OrganizationUser, UnifiedUser } from '@/services/common/user';
+import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 export default function UserCard({ uid }: { uid: string }) {
   const { data, isError, isLoading } = useUserWithUID(uid);
@@ -22,7 +22,7 @@ export default function UserCard({ uid }: { uid: string }) {
   }
 
   if (isLoading) {
-    return <Loading />;
+    return <MinimalPlaceholder message="Loading user..." />;
   }
 
   if (!user) {

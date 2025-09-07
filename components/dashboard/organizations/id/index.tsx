@@ -21,6 +21,7 @@ import DeleteUserModal from './delete-user-modal';
 import UserStatusToggle from './user-status-toggle';
 import CreateEditOrganizationModal from '../create-edit';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 export default function Organization({ id }: { id: string }) {
   const { data, isLoading, error } = useOrganization(id);
@@ -35,11 +36,7 @@ export default function Organization({ id }: { id: string }) {
   const [userModalMode, setUserModalMode] = useState<'create' | 'edit'>('create');
 
   if (isLoading) {
-    return (
-      <div className="flex h-64 items-center justify-center">
-        <Spinner size="lg" />
-      </div>
-    );
+    return <MinimalPlaceholder message="Loading organization..." />;
   }
 
   if (error || !organization) {
