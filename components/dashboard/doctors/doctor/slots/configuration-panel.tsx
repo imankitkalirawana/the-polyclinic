@@ -18,8 +18,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 
 import { SpecificDateManager } from './specific-date-manager';
 import { getValidEndTimes, getValidStartTimes, timeToMinutes } from './util';
-
-import type { SlotConfig, TimeSlot } from '@/types/client/slots';
+import { SlotConfig, TimeSlot } from '@/services/client/doctor';
 
 const DEFAULT_BUFFER_TIME = 30;
 const DEFAULT_MAX_BOOKINGS_PER_DAY = 10;
@@ -350,8 +349,8 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
             <div className="ml-8 flex flex-col gap-4">
               <div className="flex flex-col gap-2">
                 <div className="flex flex-col">
-                  <h3 className="text-small font-medium">Buffer time</h3>
-                  <p className="text-tiny text-default-500">Add time between appointment slots</p>
+                  <h3 className="font-medium text-small">Buffer time</h3>
+                  <p className="text-default-500 text-tiny">Add time between appointment slots</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <Checkbox
@@ -379,8 +378,8 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
 
               <div className="flex flex-col gap-2">
                 <div className="flex flex-col">
-                  <h3 className="text-small font-medium">Maximum bookings per day</h3>
-                  <p className="text-tiny text-default-500">
+                  <h3 className="font-medium text-small">Maximum bookings per day</h3>
+                  <p className="text-default-500 text-tiny">
                     Limit how many booked appointments to accept in a single day
                   </p>
                 </div>
@@ -410,7 +409,7 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
                 </div>
               </div>
               <div className="flex flex-col gap-2">
-                <h3 className="text-small font-medium">Guest permissions</h3>
+                <h3 className="font-medium text-small">Guest permissions</h3>
                 <div className="flex items-center gap-2">
                   <Checkbox
                     aria-label="Guest permissions"
@@ -419,8 +418,8 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
                     onChange={formik.handleChange}
                   />
                   <div>
-                    <div className="text-small font-medium">Guests can invite others</div>
-                    <div className="text-tiny text-default-500">
+                    <div className="font-medium text-small">Guests can invite others</div>
+                    <div className="text-default-500 text-tiny">
                       After booking an appointment guests can modify the calendar event to invite
                       others
                     </div>
@@ -446,7 +445,7 @@ function Title({ title }: { title: string }) {
 }
 
 function Subtitle({ subtitle }: { subtitle: string }) {
-  return <p className="text-tiny text-default-500">{subtitle}</p>;
+  return <p className="text-default-500 text-tiny">{subtitle}</p>;
 }
 
 function ItemIcon({ icon, className }: { icon: string; className?: string }) {

@@ -10,7 +10,7 @@ import {
 import { getAllDrugs, getDrugWithDid, updateDrug } from './api';
 import { ApiResponse } from '@/services/fetch';
 
-import { DrugType } from '@/types/client/drug';
+import { DrugType } from '@/services/client/drug/types';
 
 export const useAllDrugs = (): UseQueryResult<DrugType[]> =>
   useQuery({

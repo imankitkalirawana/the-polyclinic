@@ -4,7 +4,7 @@ import { NextAuthRequest } from 'next-auth';
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import Service from '@/models/client/Service';
-import { ServiceType } from '@/types/client/service';
+import { ServiceType } from '@/services/client/service/types';
 
 export const GET = auth(async (request: NextAuthRequest) => {
   try {

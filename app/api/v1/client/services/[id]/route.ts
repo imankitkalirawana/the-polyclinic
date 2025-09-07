@@ -5,7 +5,7 @@ import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import Service from '@/models/client/Service';
 import { $FixMe } from '@/types';
-import { ServiceType } from '@/types/client/service';
+import { ServiceType } from '@/services/client/service/types';
 
 export const GET = async function GET(_request: NextAuthRequest, context: $FixMe) {
   try {

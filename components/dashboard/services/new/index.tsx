@@ -11,7 +11,7 @@ import ReactQuill from '@/components/ui/react-quill';
 import { ServiceStatuses, ServiceTypes } from '@/lib/interface';
 import { serviceValidationSchema } from '@/lib/validation';
 import { useCreateService } from '@/services/client/service/query';
-import { ServiceType } from '@/types/client/service';
+import { ServiceType } from '@/services/client/service/types';
 
 export default function NewService() {
   const router = useRouter();

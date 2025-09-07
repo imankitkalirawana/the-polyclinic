@@ -16,7 +16,7 @@ import {
 } from '@/lib/utility';
 import { castData } from '@/lib/utils';
 import { useServiceWithUID } from '@/services/client/service/query';
-import { ServiceType } from '@/types/client/service';
+import { ServiceType } from '@/services/client/service/types';
 import { AuthUser } from '@/services/common/user';
 
 const statusColorMap: Record<string, ChipProps['color']> = {

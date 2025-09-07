@@ -2,7 +2,7 @@
 
 import { fetchData } from '@/services/fetch';
 
-import { ServiceType } from '@/types/client/service';
+import { ServiceType } from '@/services/client/service/types';
 
 export async function getAllServices() {
   return await fetchData<ServiceType[]>('/services');

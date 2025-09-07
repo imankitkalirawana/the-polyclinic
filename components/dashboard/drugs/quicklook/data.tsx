@@ -15,7 +15,7 @@ import { ActionType, DropdownKeyType } from '../types';
 
 import { PermissionProps } from '@/components/ui/dashboard/quicklook/types';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
-import { DrugType } from '@/types/client/drug';
+import { DrugType } from '@/services/client/drug/types';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
   doctor: ['cancel', 'reschedule', 'reminder', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
@@ -92,7 +92,7 @@ export const sidebarContent = (drug: DrugType) => (
     <div className="flex flex-col items-center gap-2 p-4">
       <div className="flex flex-col items-center">
         <h6 className="font-medium capitalize">{drug.brandName}</h6>
-        <p className="text-small capitalize text-default-500">
+        <p className="capitalize text-default-500 text-small">
           {drug.manufacturer ? `${drug.manufacturer}` : ''}
         </p>
       </div>

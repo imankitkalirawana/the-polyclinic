@@ -1,6 +1,5 @@
 import { fetchData } from '@/services/fetch';
-import { DoctorType } from './types';
-import { SlotConfig } from '@/types/client/slots';
+import { DoctorType, SlotConfig } from './types';
 
 export class Doctor {
   private static API_BASE = '/client/doctors';

@@ -19,7 +19,7 @@ import {
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 import { CLINIC_INFO } from '@/lib/config';
 import { useAllServices, useDeleteService } from '@/services/client/service/query';
-import { ServiceType } from '@/types/client/service';
+import { ServiceType } from '@/services/client/service/types';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'uniqueId',

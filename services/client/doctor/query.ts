@@ -7,8 +7,7 @@ import {
 } from '@tanstack/react-query';
 import { Doctor, DoctorSlots } from './api';
 
-import { DoctorType } from './types';
-import { SlotConfig } from '@/types/client/slots';
+import { DoctorType, SlotConfig } from './types';
 import { ApiResponse } from '@/services/fetch';
 import { addToast } from '@heroui/react';
 

@@ -4,8 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Button, ButtonGroup, cn, Tooltip } from '@heroui/react';
 import { compareAsc, format, isToday } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
-
-import type { SlotConfig } from '@/types/client/slots';
+import { SlotConfig } from '@/services/client/doctor';
 
 interface SlotsPreviewProps {
   selected?: Date;

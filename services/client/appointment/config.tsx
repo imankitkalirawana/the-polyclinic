@@ -2,11 +2,10 @@ import React from 'react';
 import { addToast } from '@heroui/react';
 
 import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
-import { ButtonConfig } from '@/types/client/appointment';
 import { $FixMe } from '@/types';
 import CancelDeleteAppointment from '@/components/client/appointments/ui/cancel-delete';
 import RescheduleAppointment from '@/components/client/appointments/ui/reschedule-modal';
-import { AppointmentType } from '@/services/client/appointment';
+import { AppointmentType, ButtonConfig } from '@/services/client/appointment';
 
 export const APPOINTMENT_BUTTON_CONFIGS: ButtonConfig[] = [
   {

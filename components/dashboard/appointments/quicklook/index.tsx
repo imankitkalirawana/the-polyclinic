@@ -10,9 +10,8 @@ import QuickLook from '@/components/ui/dashboard/quicklook';
 import { DropdownItemProps } from '@/components/ui/dashboard/quicklook/types';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { useAppointmentStore } from '@/store/appointment';
-import { DropdownKeyType } from '@/types/client/appointment';
 import CancelDeleteAppointment from '@/components/client/appointments/ui/cancel-delete';
-import { AppointmentType } from '@/services/client/appointment';
+import { AppointmentType, DropdownKeyType } from '@/services/client/appointment';
 import { OrganizationUser } from '@/services/common/user';
 
 export function AppointmentQuickLook() {

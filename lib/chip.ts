@@ -1,7 +1,7 @@
 import { AppointmentType } from '@/services/client/appointment';
 import { UnifiedUser } from '@/services/common/user';
-import { DrugStatus } from '@/types/client/drug';
-import { ServiceStatus, ServiceTypes } from '@/types/client/service';
+import { DrugStatus } from '@/services/client/drug/types';
+import { ServiceStatus, ServiceTypes } from '@/services/client/service/types';
 
 export type ChipColorType =
   | UnifiedUser['role']

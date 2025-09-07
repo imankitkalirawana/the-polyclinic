@@ -2,7 +2,7 @@
 
 import { faker } from '@faker-js/faker';
 
-import { ServiceStatus, ServiceType, ServiceTypes } from '@/types/client/service';
+import { ServiceStatus, ServiceType, ServiceTypes } from '@/services/client/service/types';
 
 export async function generateServices(count: number) {
   const services: ServiceType[] = [];

@@ -18,10 +18,9 @@ import { ButtonProps, PermissionProps } from '@/components/ui/dashboard/quickloo
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { avatars } from '@/lib/avatar';
 import { useAppointmentStore } from '@/store/appointment';
-import { ActionType, DropdownKeyType } from '@/types/client/appointment';
 import CancelDeleteAppointment from '@/components/client/appointments/ui/cancel-delete';
 import RescheduleAppointment from '@/components/client/appointments/ui/reschedule-modal';
-import { AppointmentType } from '@/services/client/appointment';
+import { ActionType, AppointmentType, DropdownKeyType } from '@/services/client/appointment';
 import { OrganizationUser } from '@/services/common/user';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
@@ -131,7 +130,7 @@ export const sidebarContent = (appointment: AppointmentType) => (
       />
       <div className="flex flex-col items-center">
         <h6 className="font-medium capitalize">{appointment.patient.name}</h6>
-        <p className="text-small capitalize text-default-500">
+        <p className="capitalize text-default-500 text-small">
           {appointment.patient.gender ? `${appointment.patient.gender},` : ''}
           {appointment.patient.age ? `${appointment.patient.age} Years` : ''}
         </p>
