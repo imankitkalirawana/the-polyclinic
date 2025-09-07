@@ -12,10 +12,10 @@ import {
   CreateAppointmentContentHeader,
   SearchInput,
   SelectionList,
-  SelectionSkeleton,
 } from '../ui';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useAllDoctors } from '@/services/client/doctor/query';
+import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 export default function DoctorSelection({ className }: { className?: string }) {
   const { data: doctors, isLoading: isDoctorsLoading } = useAllDoctors();
@@ -88,7 +88,7 @@ export default function DoctorSelection({ className }: { className?: string }) {
     >
       <div className={cn('flex w-full flex-col', className)}>
         {isDoctorsLoading ? (
-          <SelectionSkeleton className="flex flex-col gap-2" />
+          <MinimalPlaceholder message="Loading doctors..." />
         ) : (
           <>
             <SearchInput
