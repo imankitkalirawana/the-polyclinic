@@ -4,7 +4,7 @@ import { connectDB } from '@/lib/db';
 import { withAuth } from '@/middleware/withAuth';
 import { validateOrganizationId } from '@/lib/server-actions/validation';
 import { validateRequest } from '@/services';
-import { OrganizationService } from '@/services/system/organization';
+import { OrganizationService } from '@/services/system/organization/service';
 import { createUserSchema } from '@/services/common/user';
 
 type Params = Promise<{

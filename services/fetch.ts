@@ -3,9 +3,7 @@ import { cookies } from 'next/headers';
 import axios from 'axios';
 import type { $FixMe } from '@/types';
 import { getSubdomain } from '@/auth/sub-domain';
-import { API_BASE_URL } from '@/lib/config';
-
-export const BASE_URL = `${API_BASE_URL}api/v1`;
+import { BASE_URL } from './constants';
 
 export interface ApiResponse<T = unknown> {
   success: boolean;

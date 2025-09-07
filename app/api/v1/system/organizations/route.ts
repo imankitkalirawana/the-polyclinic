@@ -4,7 +4,7 @@ import { connectDB } from '@/lib/db';
 import { withAuth } from '@/middleware/withAuth';
 import { validateRequest } from '@/services';
 import { createOrganizationSchema } from '@/services/system/organization';
-import { OrganizationService } from '@/services/system/organization';
+import { OrganizationService } from '@/services/system/organization/service';
 
 export const GET = withAuth(async () => {
   try {

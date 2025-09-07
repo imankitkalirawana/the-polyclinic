@@ -3,10 +3,11 @@ import { NextAuthRequest } from 'next-auth';
 import { connectDB } from '@/lib/db';
 import { withAuth } from '@/middleware/withAuth';
 import { getSubdomain } from '@/auth/sub-domain';
-import { AppointmentService, createAppointmentSchema } from '@/services/client/appointment';
+import { createAppointmentSchema } from '@/services/client/appointment';
 import { validateRequest } from '@/services';
 import { validateOrganizationId } from '@/lib/server-actions/validation';
 import { OrganizationUser } from '@/services/common/user';
+import { AppointmentService } from '@/services/client/appointment/service';
 
 export const GET = withAuth(async (request: NextAuthRequest) => {
   try {

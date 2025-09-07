@@ -9,7 +9,7 @@ import {
 } from '@/lib/server-actions/validation';
 import { validateRequest } from '@/services';
 import { updateUserSchema } from '@/services/common/user';
-import { OrganizationService } from '@/services/system/organization';
+import { OrganizationService } from '@/services/system/organization/service';
 
 type Params = Promise<{
   id: string;

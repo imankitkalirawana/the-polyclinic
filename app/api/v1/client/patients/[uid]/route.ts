@@ -4,7 +4,7 @@ import { connectDB } from '@/lib/db';
 import { withAuth } from '@/middleware/withAuth';
 import { getSubdomain } from '@/auth/sub-domain';
 import { validateOrganizationId } from '@/lib/server-actions/validation';
-import { PatientService } from '@/services/client/patient';
+import { PatientService } from '@/services/client/patient/service';
 
 type Params = Promise<{
   uid: string;
