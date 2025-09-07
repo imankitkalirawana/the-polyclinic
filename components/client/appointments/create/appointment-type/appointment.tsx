@@ -6,17 +6,20 @@ import { CreateAppointmentFormValues } from '../types';
 import { castData } from '@/lib/utils';
 import { useAppointmentWithAID } from '@/services/client/appointment/query';
 import { AppointmentType } from '@/services/client/appointment';
+import MinimalLoader from '@/components/ui/minimal-placeholder';
 
 export default function CreateAppointmentSelectedPreviousAppointment() {
   const { values } = useFormikContext<CreateAppointmentFormValues>();
   const { appointment } = values;
 
-  const { data } = useAppointmentWithAID(appointment.previousAppointment ?? '');
+  const { data, isLoading } = useAppointmentWithAID(appointment.previousAppointment ?? '');
   const previousAppointment = castData<AppointmentType>(data);
 
   return (
     <div className="flex-1 border-t border-divider p-4">
-      {previousAppointment ? (
+      {isLoading ? (
+        <MinimalLoader message="Loading appointment details..." />
+      ) : previousAppointment ? (
         <div className="flex flex-col gap-2">
           <div className="text-sm text-default-500">
             {previousAppointment?.patient.name} - {previousAppointment?.doctor?.name}

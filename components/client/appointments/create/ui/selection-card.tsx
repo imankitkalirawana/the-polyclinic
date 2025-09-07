@@ -38,7 +38,7 @@ export default function SelectionCard({
       )}
       onPress={() => onSelect(id)}
     >
-      <Avatar src={image} />
+      <Avatar src={image} name={title} />
       <div className="flex flex-col items-start gap-0">
         <h4 className="text-small">{title}</h4>
         {subtitle && <p className="text-sm text-default-500">{subtitle}</p>}

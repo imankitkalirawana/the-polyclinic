@@ -102,7 +102,7 @@ const PatientSelection = ({ className }: { className?: string }) => {
             radius="full"
             onPress={handleNext}
             isDisabled={!canProceed}
-            endContent={<Kbd keys={['enter']} className="bg-transparent" />}
+            endContent={<Kbd keys={['enter']} className="bg-transparent text-primary-foreground" />}
           >
             Next
           </Button>

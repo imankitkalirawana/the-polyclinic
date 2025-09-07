@@ -9,4 +9,7 @@ export const appointmentPermissions: PermissionConfig = {
     PUT: ['admin', 'doctor'],
     DELETE: ['admin'],
   },
+  [`${BASE_PATH}/:aid`]: {
+    GET: ['admin', 'receptionist', 'doctor', 'patient'],
+  },
 };

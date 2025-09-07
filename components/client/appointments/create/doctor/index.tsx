@@ -66,7 +66,7 @@ export default function DoctorSelection({ className }: { className?: string }) {
             color="primary"
             radius="full"
             onPress={() => setFieldValue('meta.currentStep', 3)}
-            endContent={<Kbd keys={['enter']} className="bg-transparent" />}
+            endContent={<Kbd keys={['enter']} className="bg-transparent text-primary-foreground" />}
           >
             Next
           </Button>

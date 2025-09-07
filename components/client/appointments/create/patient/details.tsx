@@ -1,27 +1,14 @@
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { cn } from '@/lib/utils';
-import {
-  Avatar,
-  Card,
-  CardBody,
-  CardHeader,
-  Divider,
-  Spinner,
-  Chip,
-  ScrollShadow,
-} from '@heroui/react';
+import { Avatar, Card, CardBody, CardHeader, Divider, Chip, ScrollShadow } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { usePatientByUID } from '@/services/client/patient';
+import MinimalLoader from '@/components/ui/minimal-placeholder';
 
 export const CreateAppointmentPatientDetails = ({ uid }: { uid: string }) => {
   const { isLoading, isError, data: user } = usePatientByUID(uid);
 
-  if (isLoading)
-    return (
-      <div className="flex items-center justify-center p-8">
-        <Spinner color="primary" size="lg" />
-      </div>
-    );
+  if (isLoading) return <MinimalLoader message="Loading patient details..." />;
 
   if (isError)
     return (

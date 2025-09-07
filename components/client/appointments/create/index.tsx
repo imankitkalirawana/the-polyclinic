@@ -41,6 +41,7 @@ export default function CreateAppointment({ date, isModal }: { date?: Date; isMo
         },
         patientId: '',
         doctorId: '',
+        previousAppointment: '',
       },
       meta: {
         currentStep: 0,

@@ -6,12 +6,12 @@ import { CreateAppointmentFormValues } from '../types';
 import CreateAppointmentSelectedPreviousAppointment from './appointment';
 
 import CustomRadio from '@/components/ui/custom-radio';
-import Skeleton from '@/components/ui/skeleton';
 import { AppointmentType } from '@/services/client/appointment';
 import { useDebounce } from '@/hooks/useDebounce';
 import Fuse from 'fuse.js';
 import { SearchInput } from '../ui';
 import { usePreviousAppointments } from '@/services/client/patient';
+import MinimalLoader from '@/components/ui/minimal-placeholder';
 
 function PreviousAppointments({ appointments }: { appointments: AppointmentType[] }) {
   const { values, setFieldValue } = useFormikContext<CreateAppointmentFormValues>();
@@ -38,9 +38,9 @@ function PreviousAppointments({ appointments }: { appointments: AppointmentType[
     (value: string) => {
       const selectedAppointment = appointments.find((apt) => apt.aid.toString() === value);
       if (selectedAppointment?.doctor?.uid) {
-        setFieldValue('appointment.doctor', selectedAppointment.doctor.uid);
+        setFieldValue('appointment.doctorId', selectedAppointment.doctor.uid);
       }
-      setFieldValue('appointment.previousAppointment', parseInt(value));
+      setFieldValue('appointment.previousAppointment', value);
     },
     [appointments, setFieldValue]
   );
@@ -61,7 +61,7 @@ function PreviousAppointments({ appointments }: { appointments: AppointmentType[
             hideScrollBar
             as={ScrollShadow}
             orientation="horizontal"
-            value={appointment.previousAppointment?.toString()}
+            value={appointment.previousAppointment}
             onValueChange={handleRadioChange}
           >
             {filteredAppointments.map((appointment) => (
@@ -91,21 +91,10 @@ export default function CreateAppointmentFollowUp() {
   const { values } = useFormikContext<CreateAppointmentFormValues>();
   const { appointment } = values;
 
-  const { data: appointments, isLoading } = usePreviousAppointments(appointment.patientId ?? '');
+  const { data: appointments, isLoading } = usePreviousAppointments(appointment.patientId);
 
   if (isLoading) {
-    return (
-      <div className="flex h-full flex-col p-4">
-        <div className="flex flex-1 flex-col gap-2 overflow-hidden">
-          <Skeleton className="h-8 w-64 rounded-small" />
-          <div className="flex flex-col gap-2 overflow-y-auto">
-            {Array.from({ length: 3 }).map((_, index) => (
-              <Skeleton key={index} className="h-16 w-full rounded-medium" />
-            ))}
-          </div>
-        </div>
-      </div>
-    );
+    return <MinimalLoader message="Loading previous appointments..." />;
   }
 
   if (!appointments || appointments.length === 0) {

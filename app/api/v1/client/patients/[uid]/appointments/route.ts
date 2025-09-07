@@ -17,7 +17,7 @@ export const GET = withAuth(async (_req: NextAuthRequest, { params }: { params: 
     const conn = await connectDB(subdomain);
     const appointments = await getAppointmentsWithDetails({
       conn,
-      query: { patient: uid },
+      query: { patientId: uid },
     });
 
     return NextResponse.json(appointments);

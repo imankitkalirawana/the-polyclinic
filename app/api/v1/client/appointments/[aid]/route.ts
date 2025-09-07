@@ -12,13 +12,24 @@ import { getAppointmentModel } from '@/services/client/appointment';
 import { validateOrganizationId } from '@/lib/server-actions/validation';
 import { OrganizationUser } from '@/services/common/user';
 
+type Params = Promise<{
+  aid: string;
+}>;
 // get appointment by id from param
-export const GET = withAuth(async (request: NextAuthRequest, context: $FixMe) => {
+export const GET = withAuth(async (request: NextAuthRequest, { params }: { params: Params }) => {
   try {
-    const params = await context.params;
-    const aid = Number(params.aid);
+    const { aid } = await params;
     const role = request.auth?.user?.role;
     const subdomain = await getSubdomain();
+    if (!subdomain) {
+      return NextResponse.json({ message: 'Subdomain not found' }, { status: 400 });
+    }
+
+    const doesOrganizationExist = await validateOrganizationId(subdomain);
+    if (!doesOrganizationExist) {
+      return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
+    }
+
     const conn = await connectDB(subdomain);
     const Appointment = getAppointmentModel(conn);
 
@@ -46,19 +57,30 @@ export const GET = withAuth(async (request: NextAuthRequest, context: $FixMe) =>
       queryMap[role as keyof typeof queryMap],
       {
         $lookup: {
-          from: 'users',
-          localField: 'patient',
+          from: 'user',
+          localField: 'patientId',
           foreignField: 'uid',
           as: 'patientDetails',
         },
       },
       {
-        $unwind: { path: '$patientDetails', preserveNullAndEmptyArrays: false },
+        $unwind: { path: '$patientDetails', preserveNullAndEmptyArrays: true },
       },
       {
         $lookup: {
-          from: 'users',
-          localField: 'doctor',
+          from: 'patient',
+          localField: 'patientId',
+          foreignField: 'uid',
+          as: 'morePatientDetails',
+        },
+      },
+      {
+        $unwind: { path: '$morePatientDetails', preserveNullAndEmptyArrays: true },
+      },
+      {
+        $lookup: {
+          from: 'user',
+          localField: 'doctorId',
           foreignField: 'uid',
           as: 'doctorDetails',
         },
@@ -68,8 +90,8 @@ export const GET = withAuth(async (request: NextAuthRequest, context: $FixMe) =>
       },
       {
         $lookup: {
-          from: 'doctors',
-          localField: 'doctor',
+          from: 'doctor',
+          localField: 'doctorId',
           foreignField: 'uid',
           as: 'moreDoctorDetails',
         },
@@ -98,8 +120,8 @@ export const GET = withAuth(async (request: NextAuthRequest, context: $FixMe) =>
             uid: '$patientDetails.uid',
             phone: '$patientDetails.phone',
             image: '$patientDetails.image',
-            gender: '$patientDetails.gender',
-            age: '$patientDetails.age',
+            gender: '$morePatientDetails.gender',
+            age: '$morePatientDetails.age',
           },
           createdAt: 1,
           updatedAt: 1,

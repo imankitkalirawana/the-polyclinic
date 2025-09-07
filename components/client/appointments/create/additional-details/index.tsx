@@ -32,7 +32,7 @@ export default function CreateAppointmentAdditionalDetails() {
           color="primary"
           radius="full"
           onPress={() => setFieldValue('meta.showConfirmation', true)}
-          endContent={<Kbd keys={['enter']} className="bg-transparent" />}
+          endContent={<Kbd keys={['enter']} className="bg-transparent text-primary-foreground" />}
         >
           Confirm Appointment
         </Button>

@@ -12,6 +12,7 @@ import CreateAppointmentTimeSelection from './time';
 import { SlotsPreview } from '@/components/dashboard/doctors/doctor/slots/slots-preview';
 import { useKeyPress } from '@/hooks/useKeyPress';
 import { useSlotsByUID } from '@/services/client/doctor';
+import MinimalLoader from '@/components/ui/minimal-placeholder';
 
 function AvailabilityChip({ date }: { date: Date | undefined }) {
   if (!date || !isValid(date)) {
@@ -45,14 +46,6 @@ function DateDisplay({ date }: { date: Date | undefined }) {
   return <div className="text-sm font-medium">{format(date, 'PPPp')}</div>;
 }
 
-function EmptySlotState({ message }: { message: string }) {
-  return (
-    <div className="flex h-full w-full items-center justify-center">
-      <p className="text-sm text-default-500">{message}</p>
-    </div>
-  );
-}
-
 function SlotContent({
   doctorId,
   selectedDate,
@@ -65,11 +58,11 @@ function SlotContent({
   const { data: slot, isLoading: isSlotsLoading } = useSlotsByUID(doctorId);
 
   if (isSlotsLoading) {
-    return <EmptySlotState message="Loading available slots..." />;
+    return <MinimalLoader message="Loading available slots..." />;
   }
 
   if (!slot) {
-    return <EmptySlotState message="No slots available for this doctor" />;
+    return <MinimalLoader message="No slots available for this doctor" />;
   }
 
   return <SlotsPreview selected={selectedDate} config={slot} onSlotSelect={onDateSelect} />;
