@@ -8,6 +8,7 @@ declare module 'next-auth' {
     image: string;
     role: UnifiedUser['role'];
     organization: string;
+    phone: string;
   }
 
   interface User {
@@ -15,6 +16,7 @@ declare module 'next-auth' {
     uid: string;
     image: string;
     organization: string;
+    phone: string;
   }
 }
 
@@ -23,5 +25,6 @@ declare module 'next-auth/jwt' {
     uid: string;
     role: UnifiedUser['role'];
     organization: string;
+    phone: string;
   }
 }

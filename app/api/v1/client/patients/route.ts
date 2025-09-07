@@ -9,7 +9,7 @@ import { validateRequest } from '@/services';
 import { createPatientSchema } from '@/services/client/patient/validation';
 import { PatientService } from '@/services/client/patient/service';
 
-export const GET = withAuth(async (_req: NextAuthRequest) => {
+export const GET = withAuth(async (req: NextAuthRequest) => {
   try {
     const subdomain = await getSubdomain();
     if (!subdomain) {
@@ -22,7 +22,11 @@ export const GET = withAuth(async (_req: NextAuthRequest) => {
     }
 
     const conn = await connectDB(subdomain);
-    const result = await PatientService.getAll({ conn });
+    const result = await PatientService.getAll({
+      conn,
+      phone: req.auth?.user?.phone || '',
+      isPatient: req.auth?.user?.role === 'patient',
+    });
 
     if (!result.success) {
       return NextResponse.json(

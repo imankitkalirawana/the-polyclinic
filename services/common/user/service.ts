@@ -137,6 +137,7 @@ export class UserService {
           const patient = await Patient.create({
             ...rest,
             uid: user.uid,
+            phone: user.phone,
           });
 
           if (!patient) {

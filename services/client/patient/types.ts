@@ -12,10 +12,11 @@ export interface NewPatientFormValues {
   address?: string;
 }
 
-export interface Patient extends Base {
+export interface PatientType extends Base {
   uid: string;
   name: string;
   email: string;
+  image: string;
   phone: string;
   gender: Gender;
   age?: number;

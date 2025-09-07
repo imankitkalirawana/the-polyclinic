@@ -132,8 +132,6 @@ const config = {
               foreground: '#fff',
               DEFAULT: '#f24821',
             },
-
-            divider: '#E5E7EB',
           },
         },
         dark: {

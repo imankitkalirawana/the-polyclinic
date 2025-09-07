@@ -31,6 +31,13 @@ export const sectionItems: SidebarItem[] = [
         roles: ['superadmin', 'moderator', 'ops', 'admin', 'receptionist'],
       },
       {
+        key: 'patients',
+        href: '/dashboard/patients',
+        icon: 'solar:user-heart-bold-duotone',
+        title: 'Patients',
+        roles: ['admin', 'receptionist'],
+      },
+      {
         key: 'doctors',
         href: '/dashboard/doctors',
         icon: 'solar:stethoscope-bold-duotone',

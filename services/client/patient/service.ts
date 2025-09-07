@@ -1,14 +1,25 @@
 import { Connection } from 'mongoose';
 import { getPatientModel } from '@/services/client/patient/model';
 import { ServiceResult } from '@/services';
-import { Patient } from './types';
+import { PatientType } from './types';
 
 export class PatientService {
-  static async getAll({ conn }: { conn: Connection }): Promise<ServiceResult<Patient[]>> {
+  static async getAll({
+    conn,
+    phone,
+    isPatient = false,
+  }: {
+    conn: Connection;
+    phone: string;
+    isPatient: boolean;
+  }): Promise<ServiceResult<PatientType[]>> {
     try {
       const Patient = getPatientModel(conn);
 
       const patients = await Patient.aggregate([
+        {
+          $match: isPatient ? { phone } : {},
+        },
         {
           $lookup: {
             from: 'user',
@@ -55,7 +66,7 @@ export class PatientService {
   }: {
     conn: Connection;
     uid: string;
-  }): Promise<ServiceResult<Patient | null>> {
+  }): Promise<ServiceResult<PatientType | null>> {
     try {
       const Patient = getPatientModel(conn);
       const patient = await Patient.aggregate([

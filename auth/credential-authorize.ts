@@ -49,6 +49,7 @@ export async function authorizeCredentials(
       email: user.email,
       image: user.image ?? null,
       role: user.role,
+      phone: user.phone || '',
       uid: user.uid,
       organization: user.organization,
     };
@@ -76,6 +77,7 @@ export async function authorizeCredentials(
       email: user.email,
       image: user.image ?? null,
       role: user.role,
+      phone: user.phone || '',
       uid: user.uid,
       organization: user.organization,
     };
