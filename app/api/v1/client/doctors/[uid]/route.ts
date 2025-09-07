@@ -3,57 +3,44 @@ import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
-import Doctor from '@/models/client/Doctor';
-import { $FixMe } from '@/types';
+import { getSubdomain } from '@/auth/sub-domain';
+import { validateOrganizationId } from '@/lib/server-actions/validation';
+import { DoctorService } from '@/services/client/doctor/service';
 
-export const GET = auth(async (request: NextAuthRequest, context: $FixMe) => {
+type Params = Promise<{
+  uid: string;
+}>;
+
+export const GET = auth(async (request: NextAuthRequest, { params }: { params: Params }) => {
   try {
-    const allowedRoles = ['admin', 'doctor'];
+    const { uid } = await params;
 
-    if (!allowedRoles.includes(request.auth?.user?.role ?? '')) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    const subdomain = await getSubdomain();
+
+    if (!subdomain) {
+      return NextResponse.json({ message: 'Subdomain not found' }, { status: 400 });
     }
 
-    const { uid } = await context.params;
+    const doesOrganizationExist = await validateOrganizationId(subdomain);
+    if (!doesOrganizationExist) {
+      return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
+    }
 
-    await connectDB();
-
-    const doctors = await Doctor.aggregate([
-      {
-        $match: {
-          uid: parseInt(uid),
-        },
-      },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'uid',
-          foreignField: 'uid',
-          as: 'user',
-        },
-      },
-      {
-        $unwind: '$user',
-      },
-      {
-        $addFields: {
-          name: '$user.name',
-          email: '$user.email',
-          phone: '$user.phone',
-          gender: '$user.gender',
-          image: '$user.image',
-        },
-      },
-      {
-        $project: {
-          user: 0,
-        },
-      },
-    ]);
+    const conn = await connectDB(subdomain);
+    const result = await DoctorService.getByUID({
+      conn,
+      uid,
+    });
+    if (!result.success) {
+      return NextResponse.json(
+        { message: result.message || 'Failed to fetch doctor' },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({
       message: 'Doctor fetched successfully',
-      data: doctors[0],
+      data: result.data,
     });
   } catch (error: unknown) {
     console.error(error);
