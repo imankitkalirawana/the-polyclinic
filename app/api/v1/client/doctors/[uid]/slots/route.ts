@@ -3,16 +3,29 @@ import { NextAuthRequest } from 'next-auth';
 
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
-import Slot from '@/models/client/Slot';
 import { $FixMe } from '@/types';
+import { getSlotModel } from '@/services/client/doctor/model';
+import { getSubdomain } from '@/auth/sub-domain';
+import { validateOrganizationId } from '@/lib/server-actions/validation';
 
 export const GET = auth(async (_request: NextAuthRequest, context: $FixMe) => {
   try {
     const { uid } = await context.params;
 
-    await connectDB();
+    const subdomain = await getSubdomain();
+    if (!subdomain) {
+      return NextResponse.json({ message: 'Subdomain not found' }, { status: 400 });
+    }
 
-    const slots = await Slot.findOne({ uid: Number(uid) });
+    const doesOrganizationExist = await validateOrganizationId(subdomain);
+    if (!doesOrganizationExist) {
+      return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
+    }
+
+    const conn = await connectDB(subdomain);
+    const Slot = getSlotModel(conn);
+
+    const slots = await Slot.findOne({ uid });
 
     return NextResponse.json(slots);
   } catch (error: unknown) {
@@ -28,7 +41,18 @@ export const POST = auth(async (request: NextAuthRequest, context: $FixMe) => {
     const { uid } = await context.params;
     const data = await request.json();
 
-    await connectDB();
+    const subdomain = await getSubdomain();
+    if (!subdomain) {
+      return NextResponse.json({ message: 'Subdomain not found' }, { status: 400 });
+    }
+
+    const doesOrganizationExist = await validateOrganizationId(subdomain);
+    if (!doesOrganizationExist) {
+      return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
+    }
+
+    const conn = await connectDB(subdomain);
+    const Slot = getSlotModel(conn);
 
     const existingSlot = await Slot.findOne({ uid: Number(uid), title: data.title });
     if (existingSlot) {

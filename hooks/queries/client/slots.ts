@@ -1,29 +1,10 @@
 import { addToast } from '@heroui/react';
-import {
-  useMutation,
-  UseMutationResult,
-  useQuery,
-  useQueryClient,
-  UseQueryResult,
-} from '@tanstack/react-query';
+import { useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
 
-import { getSlotsByUID, updateSlots } from '../../../services/api/client/slots';
-import { ApiResponse } from '../../../services/fetch';
+import { updateSlots } from '@/services/api/client/slots';
+import { ApiResponse } from '@/services/fetch';
 
 import { SlotConfig } from '@/types/client/slots';
-
-export const useSlotsByUID = (uid: string): UseQueryResult<SlotConfig> =>
-  useQuery({
-    queryKey: ['slots', uid],
-    queryFn: async () => {
-      const res = await getSlotsByUID(uid);
-      if (res.success) {
-        return res.data;
-      }
-      throw new Error(res.message);
-    },
-    enabled: !!uid,
-  });
 
 export const useUpdateSlots = (
   uid: string

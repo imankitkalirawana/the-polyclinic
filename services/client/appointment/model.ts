@@ -48,10 +48,7 @@ const appointmentSchema = new mongoose.Schema(
       type: String,
       default: 'system-admin@divinely.dev',
     },
-    updatedBy: {
-      type: String,
-      default: 'system-admin@divinely.dev',
-    },
+    updatedBy: String,
   },
   {
     timestamps: true,

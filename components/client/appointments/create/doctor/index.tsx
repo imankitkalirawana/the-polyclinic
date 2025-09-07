@@ -110,7 +110,7 @@ export default function DoctorSelection({ className }: { className?: string }) {
                 selectedId={appointment.doctorId}
                 onSelect={(doctorId) => {
                   if (!isDisabled) {
-                    setFieldValue('appointment.doctor', Number(doctorId));
+                    setFieldValue('appointment.doctorId', doctorId);
                   }
                 }}
                 isDisabled={isDisabled}

@@ -10,8 +10,8 @@ import CreateAppointmentContentHeader from '../ui/header';
 import CreateAppointmentTimeSelection from './time';
 
 import { SlotsPreview } from '@/components/dashboard/doctors/doctor/slots/slots-preview';
-import { useSlotsByUID } from '@/hooks/queries/client/slots';
 import { useKeyPress } from '@/hooks/useKeyPress';
+import { useSlotsByUID } from '@/services/client/doctor';
 
 function AvailabilityChip({ date }: { date: Date | undefined }) {
   if (!date || !isValid(date)) {
