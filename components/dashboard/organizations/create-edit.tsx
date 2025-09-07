@@ -9,11 +9,15 @@ import {
   ModalFooter,
   ModalHeader,
 } from '@heroui/react';
-import { CreateOrganizationType, OrganizationType } from '@/services/organization/types';
-import { useCreateOrganization, useUpdateOrganization } from '@/services/organization/query';
+import {
+  CreateOrganizationType,
+  OrganizationType,
+  useCreateOrganization,
+  useUpdateOrganization,
+} from '@/services/system/organization';
 import { useFormik } from 'formik';
 import { withZodSchema } from '@/lib/utils';
-import { createOrganizationSchema } from '@/services/organization/validation';
+import { createOrganizationSchema } from '@/services/system/organization';
 
 interface CreateEditModalProps {
   isOpen: boolean;

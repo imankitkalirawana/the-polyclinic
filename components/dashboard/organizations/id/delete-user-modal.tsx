@@ -1,7 +1,7 @@
 'use client';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from '@heroui/react';
 import { Icon } from '@iconify/react';
-import { OrganizationType } from '@/services/organization/types';
+import { OrganizationType } from '@/services/system/organization/types';
 import { OrganizationUser } from '@/services/common/user';
 import { useDeleteUser } from '@/services/common/user/query';
 

@@ -4,7 +4,7 @@ import {
   getAllCitiesByCountryAndState,
   getAllCountries,
   getAllStatesByCountry,
-} from '@/services/api/system/external';
+} from '@/services/external/api';
 
 import { CityProps, CountryProps, StateProps } from '@/types';
 

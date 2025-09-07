@@ -4,6 +4,14 @@ import { CreateUser, UnifiedUser, UpdateUser } from './types';
 export class User {
   private static API_BASE = '/common/users';
 
+  static async getSelf() {
+    return await fetchData<UnifiedUser>('/users/self');
+  }
+
+  static async getLinked() {
+    return await fetchData<UnifiedUser[]>('/users/linked');
+  }
+
   static async getAll() {
     return await fetchData<UnifiedUser[]>(this.API_BASE);
   }

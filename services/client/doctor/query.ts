@@ -11,7 +11,6 @@ import { DoctorType } from './types';
 import { SlotConfig } from '@/types/client/slots';
 import { ApiResponse } from '@/services/fetch';
 import { addToast } from '@heroui/react';
-import { updateSlots } from '@/services/api/client/slots';
 
 export const useAllDoctors = (): UseQueryResult<DoctorType[]> =>
   useQuery({
@@ -58,6 +57,13 @@ export const useUpdateSlots = (
 ): UseMutationResult<ApiResponse<SlotConfig>, Error, SlotConfig> => {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationFn: async (slot: SlotConfig) => {
+      const res = await DoctorSlots.updateSlotsByUID(uid, slot);
+      if (res.success) {
+        return res;
+      }
+      throw new Error(res.message);
+    },
     onSuccess: (data: ApiResponse<SlotConfig>) => {
       queryClient.invalidateQueries({ queryKey: ['slots', uid] });
       addToast({
@@ -70,13 +76,6 @@ export const useUpdateSlots = (
         title: error.message,
         color: 'danger',
       });
-    },
-    mutationFn: async (slot: SlotConfig) => {
-      const res = await updateSlots(uid, slot);
-      if (res.success) {
-        return res;
-      }
-      throw new Error(res.message);
     },
   });
 };

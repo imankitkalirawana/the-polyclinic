@@ -1,11 +1,11 @@
 'use server';
 import { cookies } from 'next/headers';
 import axios from 'axios';
-
-import { BASE_URL } from './api/client/helper';
-
 import type { $FixMe } from '@/types';
 import { getSubdomain } from '@/auth/sub-domain';
+import { API_BASE_URL } from '@/lib/config';
+
+export const BASE_URL = `${API_BASE_URL}api/v1`;
 
 export interface ApiResponse<T = unknown> {
   success: boolean;

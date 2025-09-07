@@ -12,7 +12,7 @@ import {
   ScrollShadow,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
-import { OrganizationType } from '@/services/organization/types';
+import { OrganizationType } from '@/services/system/organization';
 import {
   CreateUser,
   createUserSchema,

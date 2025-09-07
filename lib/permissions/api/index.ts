@@ -1,5 +1,5 @@
 import { basePermissions } from './base';
-import { organizationPermissions } from '../../../services/organization/permission';
+import { organizationPermissions } from '@/services/system/organization';
 import { userPermissions } from '@/services/common/user';
 import { appointmentPermissions } from '@/services/client/appointment';
 import { PermissionConfig } from './types';

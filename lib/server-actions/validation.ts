@@ -2,7 +2,7 @@
 
 import { getUserModel } from '@/services/common/user/model';
 import { connectDB } from '../db';
-import { getOrganizationModel } from '@/services/organization/model';
+import { getOrganizationModel } from '@/services/system/organization/model';
 
 // validate organization id
 export const validateOrganizationId = async (id?: string | null) => {

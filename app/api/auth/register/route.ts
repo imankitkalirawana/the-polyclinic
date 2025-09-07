@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
-import { AuthService, registrationSchema } from '@/services/auth';
+import { AuthService, registrationSchema } from '@/services/common/auth';
 import { validateRequest } from '@/services';
 
 export const POST = async (req: NextRequest) => {

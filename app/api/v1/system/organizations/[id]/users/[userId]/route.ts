@@ -7,9 +7,9 @@ import {
   validateOrganizationId,
   validateUserInOrganization,
 } from '@/lib/server-actions/validation';
-import { OrganizationService } from '@/services/organization/service';
 import { validateRequest } from '@/services';
 import { updateUserSchema } from '@/services/common/user';
+import { OrganizationService } from '@/services/system/organization';
 
 type Params = Promise<{
   id: string;

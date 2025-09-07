@@ -1,12 +1,12 @@
 'use client';
 
 import { Button, Card, CardBody, Spinner, Switch, useDisclosure } from '@heroui/react';
-import { OrganizationType } from '@/services/organization/types';
+import { OrganizationType } from '@/services/system/organization/types';
 import {
   useOrganizations,
   useDeleteOrganization,
   useUpdateOrganization,
-} from '@/services/organization/query';
+} from '@/services/system/organization/query';
 import { toast } from 'sonner';
 import { formatDate } from 'date-fns';
 import CreateEditOrganizationModal from './create-edit';

@@ -10,7 +10,7 @@ import { login, verifyEmail } from '@/lib/server-actions/auth';
 import { $FixMe } from '@/types';
 import { useSubdomain } from '@/hooks/useSubDomain';
 import { isOrganizationActive } from '@/lib/server-actions/validation';
-import { AuthApi } from '@/services/api/system/auth';
+import { AuthApi } from '@/services/common/auth/api';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 

@@ -5,7 +5,7 @@ import { CreateOrganizationType, OrganizationType, UpdateOrganizationType } from
 import { getUserModel } from '@/services/common/user/model';
 import { connectDB } from '@/lib/db';
 import bcrypt from 'bcryptjs';
-import { CreateUser, OrganizationUser, UpdateUser } from '../common/user';
+import { CreateUser, OrganizationUser, UpdateUser } from '@/services/common/user';
 
 export class OrganizationService {
   static async getOrganizations(conn: Connection): Promise<ServiceResult<OrganizationType[]>> {

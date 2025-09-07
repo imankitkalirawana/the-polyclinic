@@ -25,4 +25,11 @@ export class DoctorSlots {
     }
     return await fetchData<SlotConfig>(`${this.API_BASE}/${uid}/slots`);
   }
+
+  static async updateSlotsByUID(uid: string, slot: SlotConfig) {
+    return await fetchData<SlotConfig>(`/doctors/${uid}/slots`, {
+      method: 'POST',
+      data: slot,
+    });
+  }
 }

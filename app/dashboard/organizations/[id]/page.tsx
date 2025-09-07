@@ -1,6 +1,6 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import Organization from '@/components/dashboard/organizations/id';
-import { OrganizationApi } from '@/services/organization';
+import { OrganizationApi } from '@/services/system/organization';
 
 interface OrganizationPageProps {
   params: Promise<{

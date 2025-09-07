@@ -3,8 +3,8 @@ import bcrypt from 'bcryptjs';
 import { getUserModel } from '@/services/common/user/model';
 import { OTPManager } from './otp-manager';
 import { AuthEmailService } from './email-service';
-import { ServiceResult } from '..';
-import { OrganizationUser } from '../common/user';
+import { ServiceResult } from '../..';
+import { OrganizationUser } from '../user';
 
 export class AuthService {
   /**

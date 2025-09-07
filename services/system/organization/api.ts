@@ -1,4 +1,4 @@
-import { OrganizationUser } from '../common/user';
+import { OrganizationUser } from '@/services/common/user';
 import { CreateOrganizationType, OrganizationType, UpdateOrganizationType } from './types';
 
 import { fetchData } from '@/services/fetch';

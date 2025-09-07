@@ -1,6 +1,6 @@
 'use client';
 import { Spinner, Switch } from '@heroui/react';
-import { OrganizationType } from '@/services/organization/types';
+import { OrganizationType } from '@/services/system/organization/types';
 import { OrganizationUser } from '@/services/common/user';
 import { useUpdateUser } from '@/services/common/user/query';
 

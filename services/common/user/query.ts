@@ -7,10 +7,9 @@ import {
   UseQueryResult,
 } from '@tanstack/react-query';
 
-import { ApiResponse } from '../../fetch';
+import { ApiResponse } from '@/services/fetch';
 
-import { getLinkedUsers, getSelf } from '@/services/api/client/user';
-import { CreateUser, SystemUser, UnifiedUser, UpdateUser, User } from '@/services/common/user';
+import { CreateUser, UnifiedUser, UpdateUser, User } from '@/services/common/user';
 
 export const useAllUsers = (): UseQueryResult<UnifiedUser[]> =>
   useQuery({
@@ -24,11 +23,11 @@ export const useAllUsers = (): UseQueryResult<UnifiedUser[]> =>
     },
   });
 
-export const useSelf = (): UseQueryResult<SystemUser> =>
+export const useSelf = (): UseQueryResult<UnifiedUser> =>
   useQuery({
     queryKey: ['self'],
     queryFn: async () => {
-      const res = await getSelf();
+      const res = await User.getSelf();
       if (res.success) {
         return res.data;
       }
@@ -36,11 +35,11 @@ export const useSelf = (): UseQueryResult<SystemUser> =>
     },
   });
 
-export const useLinkedUsers = (): UseQueryResult<SystemUser[]> =>
+export const useLinkedUsers = (): UseQueryResult<UnifiedUser[]> =>
   useQuery({
     queryKey: ['linked-users'],
     queryFn: async () => {
-      const res = await getLinkedUsers();
+      const res = await User.getLinked();
       if (res.success) {
         return res.data;
       }
@@ -48,14 +47,7 @@ export const useLinkedUsers = (): UseQueryResult<SystemUser[]> =>
     },
   });
 
-/**
- * React Query hook to fetch a user by their unique ID.
- *
- * @param {number | undefined} uid - The unique identifier of the user.
- *   If `undefined`, the query will be disabled.
- */
-
-export const useUserWithUID = (uid: string | undefined): UseQueryResult<UnifiedUser | null> =>
+export const useUserWithUID = (uid?: string): UseQueryResult<UnifiedUser | null> =>
   useQuery({
     queryKey: ['user', uid],
     queryFn: async () => {

@@ -1,6 +1,6 @@
 'use server';
 
-import { fetchData } from '../../fetch';
+import { fetchData } from '../fetch';
 
 import { CityProps, CountryProps, StateProps } from '@/types';
 

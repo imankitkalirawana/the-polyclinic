@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
-import { AuthService } from '@/services/auth/auth-service';
-import { sendOTPSchema } from '@/services/auth/validation';
+import { AuthService } from '@/services/common/auth/auth-service';
+import { sendOTPSchema } from '@/services/common/auth/validation';
 import { validateRequest } from '@/services';
 
 export const POST = async (req: NextRequest) => {

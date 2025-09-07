@@ -4,7 +4,7 @@ import {
   ResetPasswordRequest,
   SendOTPRequest,
   VerifyOTPRequest,
-} from '@/services/auth';
+} from '@/services/common/auth';
 import { RegistrationResponse, VerifyOTPResponse } from './types';
 
 export class AuthApi {

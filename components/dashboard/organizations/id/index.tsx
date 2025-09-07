@@ -14,7 +14,7 @@ import {
   ScrollShadow,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
-import { useOrganization, useUpdateOrganization } from '@/services/organization/query';
+import { useOrganization, useUpdateOrganization } from '@/services/system/organization/query';
 import { OrganizationUser } from '@/services/common/user';
 import UserModal from './create-edit-user';
 import DeleteUserModal from './delete-user-modal';
