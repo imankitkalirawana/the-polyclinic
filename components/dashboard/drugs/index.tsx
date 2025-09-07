@@ -15,7 +15,7 @@ import {
   renderDate,
 } from '@/components/ui/data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
-import { useAllDrugs } from '@/hooks/queries/client/drug';
+import { useAllDrugs } from '@/services/client/drug/query';
 import { DrugType } from '@/types/client/drug';
 
 const INITIAL_VISIBLE_COLUMNS = [

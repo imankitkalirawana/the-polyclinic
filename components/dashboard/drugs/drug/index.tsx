@@ -6,7 +6,7 @@ import { Button, Card, CardBody, CardHeader, ScrollShadow } from '@heroui/react'
 import { format } from 'date-fns';
 
 import CellValue from '@/components/ui/cell-value';
-import { useDrugWithDid } from '@/hooks/queries/client/drug';
+import { useDrugWithDid } from '@/services/client/drug/query';
 import { DrugType } from '@/types/client/drug';
 
 export default function DrugCard({ did }: { did: number }) {
@@ -23,7 +23,7 @@ export default function DrugCard({ did }: { did: number }) {
       <CardHeader className="justify-between px-0">
         <div className="flex flex-col items-start">
           <p className="text-large">Drug Details</p>
-          <p className="text-small text-default-500">View and manage drug details</p>
+          <p className="text-default-500 text-small">View and manage drug details</p>
         </div>
         <Button color="primary" as={Link} href={`/dashboard/drugs/${drug.did}/edit`}>
           Edit

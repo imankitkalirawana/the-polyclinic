@@ -17,7 +17,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 
 import NoResults from '@/components/ui/no-results';
 import { drugValidationSchema } from '@/lib/validation';
-import { useDrugWithDid, useUpdateDrug } from '@/hooks/queries/client/drug';
+import { useDrugWithDid, useUpdateDrug } from '@/services/client/drug/query';
 import { DrugType } from '@/types/client/drug';
 
 export default function EditDrug({ did }: { did: number }) {
@@ -50,8 +50,8 @@ export default function EditDrug({ did }: { did: number }) {
       className="bg-transparent shadow-none"
     >
       <CardHeader className="flex-col items-start p-0">
-        <h3 className="leading-large text-medium font-semibold text-default-900">Edit Drug</h3>
-        <p className="leading-medium max-w-2xl text-small text-default-500">Update drug details</p>
+        <h3 className="leading-large font-semibold text-default-900 text-medium">Edit Drug</h3>
+        <p className="leading-medium max-w-2xl text-default-500 text-small">Update drug details</p>
       </CardHeader>
       <CardBody className="space-y-2 px-0" as={ScrollShadow}>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -67,7 +67,7 @@ export default function EditDrug({ did }: { did: number }) {
               min={1}
               startContent={
                 <div className="pointer-events-none flex items-center">
-                  <span className="text-small text-default-400">#</span>
+                  <span className="text-default-400 text-small">#</span>
                 </div>
               }
               isInvalid={!!formik.errors.did}

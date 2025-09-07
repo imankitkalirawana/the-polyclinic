@@ -15,7 +15,7 @@ import {
   humanReadableTime,
 } from '@/lib/utility';
 import { castData } from '@/lib/utils';
-import { useServiceWithUID } from '@/hooks/queries/client/service';
+import { useServiceWithUID } from '@/services/client/service/query';
 import { ServiceType } from '@/types/client/service';
 import { AuthUser } from '@/services/common/user';
 
@@ -63,7 +63,7 @@ export default function ServiceViewItem({ uid, session }: { uid: string; session
 
         <div className="flex flex-col">
           <div className="my-2 flex items-center gap-2">
-            <p className="text-small italic text-default-400">#{service.uniqueId}</p>
+            <p className="italic text-default-400 text-small">#{service.uniqueId}</p>
           </div>
           <h1 className="text-2xl font-semibold tracking-tight">{service.name}</h1>
           <h2 className="sr-only">Service information</h2>
@@ -76,7 +76,7 @@ export default function ServiceViewItem({ uid, session }: { uid: string; session
             {service.duration > 0 && (
               <div className="mb-4 flex items-center gap-2 text-default-700">
                 <Icon icon="solar:clock-circle-broken" width={20} />
-                <p className="text-small font-medium">
+                <p className="font-medium text-small">
                   Done in approx. {convertMinutesToHoursAndMinutes(service.duration)}
                 </p>
               </div>

@@ -10,7 +10,7 @@ import QuillInput from '@/components/ui/quill-input';
 import ReactQuill from '@/components/ui/react-quill';
 import { ServiceStatuses, ServiceTypes } from '@/lib/interface';
 import { serviceValidationSchema } from '@/lib/validation';
-import { useCreateService } from '@/hooks/queries/client/service';
+import { useCreateService } from '@/services/client/service/query';
 import { ServiceType } from '@/types/client/service';
 
 export default function NewService() {
@@ -116,8 +116,8 @@ export default function NewService() {
   return (
     <div className="pb-12">
       <div className="mt-4 px-4 sm:px-0">
-        <h3 className="leading-large text-medium font-semibold text-gray-900">Add New Service</h3>
-        <p className="leading-medium max-w-2xl text-small text-gray-500">
+        <h3 className="leading-large font-semibold text-gray-900 text-medium">Add New Service</h3>
+        <p className="leading-medium max-w-2xl text-gray-500 text-small">
           Fill in the form below to add a new service.
         </p>
       </div>
@@ -134,7 +134,7 @@ export default function NewService() {
               }}
               startContent={
                 <div className="pointer-events-none flex items-center">
-                  <span className="text-small text-default-400">#</span>
+                  <span className="text-default-400 text-small">#</span>
                 </div>
               }
               isInvalid={!!formik.errors.uniqueId}
@@ -164,7 +164,7 @@ export default function NewService() {
               }}
               startContent={
                 <div className="pointer-events-none flex items-center">
-                  <span className="text-small text-default-400">₹</span>
+                  <span className="text-default-400 text-small">₹</span>
                 </div>
               }
               isInvalid={!!(formik.touched.price && formik.errors.price)}
@@ -185,7 +185,7 @@ export default function NewService() {
               min={1}
               endContent={
                 <div className="pointer-events-none flex items-center">
-                  <span className="text-small text-default-400">min(s)</span>
+                  <span className="text-default-400 text-small">min(s)</span>
                 </div>
               }
               isInvalid={!!(formik.touched.duration && formik.errors.duration)}

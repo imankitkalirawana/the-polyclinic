@@ -1,6 +1,6 @@
 'use server';
 
-import { fetchData } from '../../fetch';
+import { fetchData } from '@/services/fetch';
 
 import { DrugType } from '@/types/client/drug';
 

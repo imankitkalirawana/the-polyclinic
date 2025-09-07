@@ -13,10 +13,10 @@ import {
   getAllServices,
   getServiceWithUID,
   updateService,
-} from '../../../services/api/client/service';
-import { ApiResponse } from '../../../services/fetch';
+} from './api';
 
 import { ServiceType } from '@/types/client/service';
+import { ApiResponse } from '@/services/fetch';
 
 export const useAllServices = (): UseQueryResult<ServiceType[]> =>
   useQuery({
