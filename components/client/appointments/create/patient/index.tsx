@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useMemo, useState, useCallback, useRef } from 'react';
-import { Button, Kbd, Spinner } from '@heroui/react';
+import React, { useState } from 'react';
+import { Button, Kbd } from '@heroui/react';
 import { cn } from '@heroui/react';
 import { useFormikContext } from 'formik';
 
@@ -9,7 +9,6 @@ import { CreateAppointmentFormValues } from '../types';
 import { CreateAppointmentPatientDetails } from './details';
 
 import { useKeyPress } from '@/hooks/useKeyPress';
-import { usePatientsInfiniteQuery } from '@/hooks/queries/client/patient';
 import {
   CreateAppointmentContentContainer,
   CreateAppointmentContentHeader,
@@ -18,25 +17,19 @@ import {
   SelectionSkeleton,
 } from '../ui';
 import { useDebounce } from '@/hooks/useDebounce';
+import { useAllPatients } from '@/services/client/patient';
 
 const PatientSelection = ({ className }: { className?: string }) => {
   const formik = useFormikContext<CreateAppointmentFormValues>();
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
 
-  const queryResult = usePatientsInfiniteQuery(debouncedSearch);
-  const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage, isError, error } =
-    queryResult;
-
-  const allPatients = useMemo(() => {
-    if (!data?.pages) return [];
-    return data.pages.flatMap((page) => page.data);
-  }, [data?.pages]);
+  const { data: allPatients, isLoading, isError, error } = useAllPatients();
 
   const { appointment } = formik.values;
 
   const handlePatientSelect = (patientId: string) => {
-    formik.setFieldValue('appointment.patient', patientId);
+    formik.setFieldValue('appointment.patientId', patientId);
   };
 
   const handleNext = () => {
@@ -55,25 +48,6 @@ const PatientSelection = ({ className }: { className?: string }) => {
     { capture: true }
   );
 
-  // Intersection Observer for infinite scroll
-  const observerRef = useRef<IntersectionObserver | null>(null);
-  const lastPatientRef = useCallback(
-    (node: HTMLDivElement) => {
-      if (isLoading || isFetchingNextPage) return;
-
-      if (observerRef.current) observerRef.current.disconnect();
-
-      observerRef.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasNextPage) {
-          fetchNextPage();
-        }
-      });
-
-      if (node) observerRef.current.observe(node);
-    },
-    [isLoading, isFetchingNextPage, hasNextPage, fetchNextPage]
-  );
-
   const renderContent = () => {
     if (isLoading) {
       return <SelectionSkeleton className="flex flex-col gap-2" />;
@@ -88,18 +62,17 @@ const PatientSelection = ({ className }: { className?: string }) => {
       );
     }
 
-    const patientItems = allPatients.map((patient, index) => ({
-      id: patient.uid,
-      image: patient.image,
-      title: patient.name,
-      subtitle: patient.email,
-      ref: index === allPatients.length - 1 ? lastPatientRef : undefined,
-    }));
-
     return (
       <div className="min-h-0 flex-1">
         <SelectionList
-          items={patientItems}
+          items={
+            allPatients?.map((patient) => ({
+              id: patient.uid,
+              image: patient.image,
+              title: patient.name,
+              subtitle: patient.email,
+            })) ?? []
+          }
           selectedId={appointment.patientId}
           onSelect={handlePatientSelect}
           emptyMessage={
@@ -109,11 +82,6 @@ const PatientSelection = ({ className }: { className?: string }) => {
           }
           containerClassName="h-full"
         />
-        {isFetchingNextPage && (
-          <div className="flex justify-center p-4">
-            <Spinner size="sm" />
-          </div>
-        )}
       </div>
     );
   };

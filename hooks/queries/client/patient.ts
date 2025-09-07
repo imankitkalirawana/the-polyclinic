@@ -10,7 +10,6 @@ import {
   createPatient,
   getAllPatients,
   getPatientsWithPagination,
-  getPreviousAppointments,
 } from '@/services/api/client/patient';
 import { useInfiniteQueryWithSearch } from './infinite-query';
 // TODO: Remove this once the types are updated
@@ -18,7 +17,6 @@ import { $FixMe } from '@/types';
 import { NewPatientFormValues } from '@/services/client/patient/types';
 import { ApiResponse } from '@/services/fetch';
 import { addToast } from '@heroui/react';
-import { AppointmentType } from '@/services/client/appointment';
 
 export const useAllPatients = (): UseQueryResult<$FixMe[]> =>
   useQuery({
@@ -44,19 +42,6 @@ export const usePatientsInfiniteQuery = (search: string = '') => {
     },
   });
 };
-
-export const usePreviousAppointments = (uid: string): UseQueryResult<AppointmentType[]> =>
-  useQuery({
-    queryKey: ['previous-appointments', uid],
-    queryFn: async () => {
-      const res = await getPreviousAppointments(uid);
-      if (res.success) {
-        return res.data;
-      }
-      throw new Error(res.message);
-    },
-    enabled: !!uid,
-  });
 
 export const useCreatePatient = (): UseMutationResult<
   ApiResponse<$FixMe>,

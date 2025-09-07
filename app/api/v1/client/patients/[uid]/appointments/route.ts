@@ -9,8 +9,8 @@ type Params = Promise<{
   uid: string;
 }>;
 
-export const GET = withAuth(async (req: NextAuthRequest, { params }: { params: Params }) => {
-  const uid = Number((await params).uid);
+export const GET = withAuth(async (_req: NextAuthRequest, { params }: { params: Params }) => {
+  const uid = (await params).uid;
 
   try {
     const subdomain = await getSubdomain();

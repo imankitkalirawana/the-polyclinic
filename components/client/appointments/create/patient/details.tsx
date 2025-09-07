@@ -1,7 +1,5 @@
 import { CellRenderer } from '@/components/ui/cell-renderer';
-import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { cn } from '@/lib/utils';
-import { useUserWithUID } from '@/services/common/user/query';
 import {
   Avatar,
   Card,
@@ -13,12 +11,10 @@ import {
   ScrollShadow,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
-import { $FixMe } from '@/types';
+import { usePatientByUID } from '@/services/client/patient';
 
 export const CreateAppointmentPatientDetails = ({ uid }: { uid: string }) => {
-  // TODO: Fix this once the user details are fetched from the backend
-  const { isLoading, isError } = useUserWithUID(uid);
-  const user = {} as $FixMe;
+  const { isLoading, isError, data: user } = usePatientByUID(uid);
 
   if (isLoading)
     return (
@@ -36,10 +32,10 @@ export const CreateAppointmentPatientDetails = ({ uid }: { uid: string }) => {
               <Icon icon="solar:danger-triangle-bold-duotone" className="h-6 w-6 text-danger" />
             </div>
             <div>
-              <p className="text-medium font-medium text-default-foreground">
+              <p className="font-medium text-default-foreground text-medium">
                 Error fetching user data
               </p>
-              <p className="text-small text-default-400">Please try again later</p>
+              <p className="text-default-400 text-small">Please try again later</p>
             </div>
           </div>
         </CardBody>
@@ -55,8 +51,8 @@ export const CreateAppointmentPatientDetails = ({ uid }: { uid: string }) => {
               <Icon icon="solar:user-id-bold-duotone" className="h-6 w-6 text-default-400" />
             </div>
             <div>
-              <p className="text-medium font-medium text-default-foreground">Select a patient</p>
-              <p className="text-small text-default-400">Choose a patient to view their details</p>
+              <p className="font-medium text-default-foreground text-medium">Select a patient</p>
+              <p className="text-default-400 text-small">Choose a patient to view their details</p>
             </div>
           </div>
         </CardBody>
@@ -72,8 +68,8 @@ export const CreateAppointmentPatientDetails = ({ uid }: { uid: string }) => {
               <Icon icon="solar:user-id-bold" className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h3 className="text-large font-semibold text-default-foreground">Patient Details</h3>
-              <p className="text-small text-default-400">
+              <h3 className="font-semibold text-default-foreground text-large">Patient Details</h3>
+              <p className="text-default-400 text-small">
                 Personal information and contact details
               </p>
             </div>
@@ -90,30 +86,22 @@ export const CreateAppointmentPatientDetails = ({ uid }: { uid: string }) => {
         {/* Profile Section */}
         <div className="flex items-start gap-4">
           <Avatar
-            src={user.image || '/assets/placeholder-avatar.jpeg'}
+            src={user.image}
             alt={user.name}
             className="h-16 w-16 flex-shrink-0"
-            showFallback
-            fallback={
-              <div className="flex h-full w-full items-center justify-center bg-primary-50 text-primary">
-                <Icon icon="solar:user-bold" className="h-6 w-6" />
-              </div>
-            }
+            name={user.name}
           />
           <div className="flex flex-1 flex-col gap-2">
             <div>
-              <h4 className="text-large font-medium">{user.name}</h4>
-              <p className="text-small text-default-400">{user.email}</p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {renderChip({ item: user.status, size: 'sm' })}
+              <h4 className="font-medium text-large">{user.name}</h4>
+              <p className="text-default-400 text-small">{user.email}</p>
             </div>
           </div>
         </div>
 
         {/* Contact Information */}
         <div>
-          <h5 className="text-medium font-medium text-default-foreground">Contact Information</h5>
+          <h5 className="font-medium text-default-foreground text-medium">Contact Information</h5>
           <div className="grid gap-3">
             <CellRenderer
               icon="solar:letter-bold-duotone"
@@ -136,19 +124,19 @@ export const CreateAppointmentPatientDetails = ({ uid }: { uid: string }) => {
           </div>
         </div>
 
-        {(user.dob || user.gender) && (
+        {(user.age || user.gender) && (
           <>
             <Divider />
             <div className="space-y-2">
-              <h5 className="text-medium font-medium text-default-foreground">
+              <h5 className="font-medium text-default-foreground text-medium">
                 Personal Information
               </h5>
               <div className="grid gap-3">
-                {user.dob && (
+                {user.age && (
                   <CellRenderer
                     icon="solar:calendar-bold-duotone"
                     label="Date of Birth"
-                    value={user.dob}
+                    value={user.age}
                     classNames={{
                       icon: 'text-rose-500 bg-rose-100',
                     }}
@@ -174,11 +162,11 @@ export const CreateAppointmentPatientDetails = ({ uid }: { uid: string }) => {
         )}
 
         {/* Address Information */}
-        {(user.address || user.city || user.state || user.country) && (
+        {user.address && (
           <>
             <Divider />
             <div>
-              <h5 className="text-medium font-medium text-default-foreground">
+              <h5 className="font-medium text-default-foreground text-medium">
                 Address Information
               </h5>
               <div className="space-y-3">
@@ -189,52 +177,6 @@ export const CreateAppointmentPatientDetails = ({ uid }: { uid: string }) => {
                     value={user.address}
                     classNames={{
                       icon: 'text-orange-500 bg-orange-100',
-                    }}
-                  />
-                )}
-
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                  {user.city && (
-                    <CellRenderer
-                      icon="solar:buildings-bold-duotone"
-                      label="City"
-                      value={user.city}
-                      classNames={{
-                        icon: 'text-teal-500 bg-teal-100',
-                      }}
-                    />
-                  )}
-
-                  {user.state && (
-                    <CellRenderer
-                      icon="solar:map-point-line-duotone"
-                      label="State"
-                      value={user.state}
-                      classNames={{
-                        icon: 'text-indigo-500 bg-indigo-100',
-                      }}
-                    />
-                  )}
-
-                  {user.country && (
-                    <CellRenderer
-                      icon="solar:flag-bold-duotone"
-                      label="Country"
-                      value={user.country}
-                      classNames={{
-                        icon: 'text-cyan-500 bg-cyan-100',
-                      }}
-                    />
-                  )}
-                </div>
-
-                {user.zipcode && (
-                  <CellRenderer
-                    icon="solar:point-on-map-perspective-bold-duotone"
-                    label="Zip Code"
-                    value={user.zipcode}
-                    classNames={{
-                      icon: 'text-violet-500 bg-violet-100',
                     }}
                   />
                 )}

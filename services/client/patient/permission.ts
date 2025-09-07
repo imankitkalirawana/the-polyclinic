@@ -8,4 +8,12 @@ export const patientPermissions: PermissionConfig = {
     POST: ['superadmin', 'moderator', 'ops', 'admin', 'receptionist'],
     DELETE: ['superadmin'],
   },
+  [`${BASE_PATH}/:uid`]: {
+    GET: ['superadmin', 'moderator', 'ops', 'admin', 'receptionist'],
+    POST: ['superadmin', 'moderator', 'ops', 'admin', 'receptionist'],
+    DELETE: ['superadmin'],
+  },
+  [`${BASE_PATH}/:uid/appointments`]: {
+    GET: ['superadmin', 'moderator', 'ops', 'admin', 'receptionist'],
+  },
 };

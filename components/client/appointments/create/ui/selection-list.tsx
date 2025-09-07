@@ -1,6 +1,5 @@
 import { ScrollShadow } from '@heroui/react';
 import { cn } from '@heroui/react';
-import { RefObject } from 'react';
 
 import SelectionCard from './selection-card';
 
@@ -9,7 +8,6 @@ interface SelectionItem {
   image?: string;
   title: string;
   subtitle?: string;
-  ref?: RefObject<HTMLDivElement> | ((node: HTMLDivElement) => void);
 }
 
 interface SelectionListProps {
@@ -45,7 +43,7 @@ export default function SelectionList({
     <ScrollShadow className={cn('h-full pr-3', containerClassName)}>
       <div className={cn('flex flex-col gap-2', className)}>
         {items.map((item) => (
-          <div key={item.id} ref={item.ref}>
+          <div key={item.id}>
             <SelectionCard
               id={item.id}
               image={item.image}
