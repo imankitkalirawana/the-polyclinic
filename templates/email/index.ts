@@ -1,7 +1,8 @@
 import { APP_INFO } from '@/lib/config';
-import { UserType } from '@/types/user';
+import { UnifiedUser } from '@/services/common/user';
+import { VerificationType } from '@/types';
 
-export function WelcomeUser(user: UserType) {
+export function WelcomeUser(user: UnifiedUser) {
   return `
     <html lang="en">
         <head>
@@ -94,7 +95,37 @@ export function WelcomeUser(user: UserType) {
 `;
 }
 
-export function OtpEmail(otp: number) {
+export function OtpEmail({
+  otp,
+  type = 'register',
+}: {
+  otp: number | string;
+  type: VerificationType;
+}) {
+  const TYPE_MAP: Record<
+    VerificationType,
+    {
+      title: string;
+      description: string;
+      code: number | string;
+    }
+  > = {
+    register: {
+      title: `Verify your email to sign up for ${APP_INFO.name}!`,
+      description: `We have received a sign-up attempt from ${APP_INFO.name}`,
+      code: otp,
+    },
+    'reset-password': {
+      title: `Reset your password for ${APP_INFO.name}!`,
+      description: `We have received a password reset attempt from ${APP_INFO.name}`,
+      code: otp,
+    },
+    'verify-email': {
+      title: `Verify your email for ${APP_INFO.name}!`,
+      description: `We have received a verification attempt from ${APP_INFO.name}`,
+      code: otp,
+    },
+  } as const;
   return `<html lang="en">
         <head>
             <meta charset="UTF-8" />
@@ -143,7 +174,8 @@ export function OtpEmail(otp: number) {
             .code {
               padding: 8px 12px;
               background: #F6F6F6;
-              width: 100%;
+              width: 90%;
+              margin: 0 auto;
               border-radius: 5px;
               font-weight: 700;
               text-align: center;
@@ -180,16 +212,16 @@ export function OtpEmail(otp: number) {
                 />
             </div>
 
-            <h1 class="heading">Verify your email to sign up for ${APP_INFO.name}!</h1>
+            <h1 class="heading">${TYPE_MAP[type].title}</h1>
 
             <p class="description">
-            We have received a sign-up attempt from <strong>${APP_INFO.name}</strong>
+            ${TYPE_MAP[type].description}
             </p>
             <p class="description">
-            To complete the sign-up process; enter the 4-digit code in the original window:
+            To complete the ${type} process; enter the 4-digit code in the original window:
             </p>
             <p class="code">
-            ${otp}
+            ${TYPE_MAP[type].code}
             </p>
             <p class="overview">
             Please ignore if you haven't requested this code.

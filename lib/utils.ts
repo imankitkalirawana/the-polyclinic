@@ -1,6 +1,13 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { faker } from '@faker-js/faker';
+import { z } from 'zod';
+import crypto from 'crypto';
+
+export const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+export const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'lvh.me:3000';
+
+export const excludedSubdomains = ['www', 'staging', 'demo', 'test'];
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -53,4 +60,36 @@ export function toTitleCase(str: string) {
 
 export function isSearchMatch(haystack: string, needle: string) {
   return haystack?.toLowerCase().trim().includes(needle?.toLowerCase().trim());
+}
+
+export function withZodSchema<T>(schema: z.ZodSchema<T>) {
+  return (values: T) => {
+    try {
+      schema.parse(values);
+      return {};
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const errors: Record<string, string> = {};
+        error.issues.forEach((issue) => {
+          if (issue.path.length > 0) {
+            const field = issue.path[0] as string;
+            errors[field] = issue.message;
+          }
+        });
+        return errors;
+      }
+      return {};
+    }
+  };
+}
+
+function getGravatarHash(email: string): string {
+  email = email.trim().toLowerCase();
+  const hash = crypto.createHash('sha256').update(email).digest('hex');
+  return hash;
+}
+
+export function getGravatar(email: string) {
+  const hash = getGravatarHash(email);
+  return `https://0.gravatar.com/avatar/${hash}`;
 }

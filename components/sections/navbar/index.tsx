@@ -26,15 +26,16 @@ import {
 import { motion } from 'framer-motion';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import ModeToggle from '../../mode-toggle';
+import ModeToggle from '@/components/mode-toggle';
 import { defaultItems, itemsMap } from './data';
 
-import { avatars } from '@/lib/avatar';
-import { UserType } from '@/types/user';
+import { useSubdomain } from '@/hooks/useSubDomain';
+import { APP_INFO } from '@/lib/config';
 
 export default function Navbar() {
   const router = useRouter();
   const { data: session } = useSession();
+  const subdomain = useSubdomain();
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [activeMenu, setActiveMenu] = React.useState<null | (typeof menuItems)[0]>(null);
@@ -59,9 +60,9 @@ export default function Navbar() {
     }, 500);
   };
 
-  const menuItems = session?.user?.role
-    ? itemsMap[session?.user?.role as UserType['role']]
-    : defaultItems;
+  const role = session?.user?.role || 'patient';
+
+  const menuItems = Object.keys(itemsMap).includes(role) ? itemsMap[role] : defaultItems;
 
   if (isDisabled) return null;
 
@@ -77,15 +78,15 @@ export default function Navbar() {
       }}
       height="56px"
       isMenuOpen={!!(isMenuOpen || activeMenu)}
-      // isMenuOpen={true}
       onMenuOpenChange={setIsMenuOpen}
       maxWidth="2xl"
     >
       <NavbarMenuToggle className="text-default-400 md:hidden" />
 
       <NavbarBrand>
-        <Link className="ml-2 font-medium text-foreground" href="/">
-          The Polyclinic
+        <Link className="ml-2 text-large font-medium text-foreground" href="/">
+          {APP_INFO.name}
+          <span className="ml-1 text-tiny uppercase text-primary">{subdomain}</span>
         </Link>
       </NavbarBrand>
 
@@ -128,7 +129,7 @@ export default function Navbar() {
                   size="sm"
                   className="bg-primary-200 transition-transform"
                   src={session.user?.image || ''}
-                  fallback={avatars.memoji[2]}
+                  name={session.user?.name || ''}
                 />
               </DropdownTrigger>
               <DropdownMenu aria-label="Profile Actions" variant="flat">
@@ -151,7 +152,17 @@ export default function Navbar() {
                 <DropdownItem key="system">System</DropdownItem>
                 <DropdownItem key="configurations">Configurations</DropdownItem>
                 <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
-                <DropdownItem key="logout" onPress={() => signOut()} color="danger">
+                <DropdownItem
+                  key="logout"
+                  onPress={async () => {
+                    await signOut({
+                      redirect: false,
+                    }).then(() => {
+                      window.location.href = `http://${subdomain}.lvh.me:3000/`;
+                    });
+                  }}
+                  color="danger"
+                >
                   Log Out
                 </DropdownItem>
               </DropdownMenu>

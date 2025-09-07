@@ -1,11 +1,22 @@
 // role based navbar
 
+import { UnifiedUser } from '@/services/common/user';
 import { NavItem } from './types';
 
-import { UserType } from '@/types/user';
-
-export const itemsMap: Record<UserType['role'], NavItem[]> = {
+export const itemsMap: Record<UnifiedUser['role'], NavItem[]> = {
   superadmin: [
+    {
+      name: 'Home',
+      href: '/home',
+    },
+  ],
+  moderator: [
+    {
+      name: 'Home',
+      href: '/home',
+    },
+  ],
+  ops: [
     {
       name: 'Home',
       href: '/home',
@@ -212,13 +223,7 @@ export const itemsMap: Record<UserType['role'], NavItem[]> = {
       href: '/home',
     },
   ],
-  laboratorist: [
-    {
-      name: 'Home',
-      href: '/home',
-    },
-  ],
-  user: [
+  patient: [
     {
       name: 'Home',
       href: '/home',

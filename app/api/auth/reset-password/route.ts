@@ -1,45 +1,47 @@
-import { NextResponse } from 'next/server';
-import { NextAuthRequest } from 'next-auth';
-import bcrypt from 'bcryptjs';
-
+import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
-import Otp from '@/models/Otp';
-import User from '@/models/User';
+import { AuthService } from '@/services/common/auth/auth-service';
+import { resetPasswordSchema } from '@/services/common/auth/validation';
+import { validateRequest } from '@/services';
 
-export const PATCH = async (request: NextAuthRequest) => {
+export const POST = async (req: NextRequest) => {
   try {
-    await connectDB();
-    const { email, password, otp } = await request.json();
-    if (!email || !password || !otp) {
+    // Parse and validate request body
+    const body = await req.json();
+    const validation = validateRequest(resetPasswordSchema, body);
+
+    if (!validation.success) {
       return NextResponse.json(
-        { message: 'Email, password and otp are required' },
+        { message: 'Invalid request data', errors: validation.errors },
         { status: 400 }
       );
     }
 
-    const user = await User.findOne({ email });
-    if (!user) {
-      return NextResponse.json({ message: 'User not found' }, { status: 404 });
-    }
-    const otpData = await Otp.findOne({ id: email });
-    if (!otpData) {
-      return NextResponse.json({ message: 'Otp not found' }, { status: 404 });
+    const { email, password, token, otp, subdomain } = validation.data;
+
+    // Connect to database - use default connection if no subdomain
+    const conn = await connectDB(subdomain);
+
+    // Use AuthService to reset password
+    const result = await AuthService.resetPassword({
+      conn,
+      email,
+      password,
+      token,
+      otp,
+      subdomain,
+    });
+
+    if (!result.success) {
+      return NextResponse.json(
+        { message: result.message || 'Failed to reset password' },
+        { status: 400 }
+      );
     }
 
-    if (otpData.otp !== otp) {
-      return NextResponse.json({ message: 'Invalid otp' }, { status: 400 });
-    }
-
-    user.password = await bcrypt.hash(password, 10);
-    await user.save();
-    await Otp.deleteOne({ id: email });
-
-    return NextResponse.json({ message: 'Password reset successfully' }, { status: 200 });
-  } catch (error: unknown) {
-    console.error(error);
-    return NextResponse.json(
-      { message: error instanceof Error ? error.message : 'Internal Server Error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: result.message || 'Password reset successfully' });
+  } catch (error) {
+    console.error('Reset password error:', error);
+    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
 };

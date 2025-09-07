@@ -14,11 +14,11 @@ import { ActionType, DropdownKeyType } from '../types';
 
 import { PermissionProps } from '@/components/ui/dashboard/quicklook/types';
 import { avatars } from '@/lib/avatar';
-import { DoctorType } from '@/types/doctor';
+import { DoctorType } from '@/services/client/doctor';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
   doctor: ['cancel', 'reschedule', 'reminder', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
-  user: ['cancel', 'reschedule', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
+  patient: ['cancel', 'reschedule', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
   admin: 'all',
   nurse: ['cancel', 'reschedule'],
   receptionist: ['cancel', 'reschedule', 'reminder'],
@@ -30,12 +30,6 @@ export const sidebarContent = (doctor: DoctorType) => (
         src={doctor.image || avatars.memoji[Math.floor(Math.random() * avatars.memoji.length)]}
         size="lg"
       />
-      <div className="flex flex-col items-center">
-        <h6 className="font-medium capitalize">{doctor.name}</h6>
-        <p className="text-small capitalize text-default-500">
-          {doctor.gender ? `${doctor.gender}` : ''}
-        </p>
-      </div>
       <div className="flex gap-1">
         <Button
           color="primary"

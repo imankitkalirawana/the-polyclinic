@@ -13,8 +13,8 @@ import { AuthStep } from '../types';
 import Auth from '..';
 
 import { APP_INFO } from '@/lib/config';
-import { $FixMe } from '@/types';
-import { Gender, genders } from '@/types/user';
+import { $FixMe, Gender } from '@/types';
+import { GENDERS } from '@/lib/constants';
 
 const RegisterComponent: React.FC = () => {
   const { formik, paginate } = useRegister();
@@ -109,7 +109,7 @@ const RegisterComponent: React.FC = () => {
             isInvalid={!!(formik.touched.gender && formik.errors.gender)}
             errorMessage={formik.errors.gender?.toString()}
           >
-            {genders.map((gender) => (
+            {GENDERS.map((gender) => (
               <SelectItem key={gender}>
                 {gender.charAt(0).toUpperCase() + gender.slice(1)}
               </SelectItem>
@@ -118,7 +118,6 @@ const RegisterComponent: React.FC = () => {
           <I18nProvider locale="en-IN">
             <DatePicker
               label="Date of Birth (Optional)"
-              // @ts-expect-error - TODO: fix this
               value={formik.values.dob ? parseDate(formik.values.dob) : null}
               onChange={(value) => {
                 const dob = new Date(value as $FixMe).toISOString().split('T')[0];
@@ -191,7 +190,7 @@ const RegisterComponent: React.FC = () => {
         </div>
         <div className="flex items-center gap-2">
           <div className="h-px w-full bg-divider" />
-          <div className="text-small text-default-500">or</div>
+          <div className="text-default-500 text-small">or</div>
           <div className="h-px w-full bg-divider" />
         </div>
         <div className="text-center text-small">

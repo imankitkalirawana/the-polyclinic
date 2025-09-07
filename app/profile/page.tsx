@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
-import Profile from '@/components/profile';
-import { getSelf } from '@/services/api/user';
+import Profile from '@/components/features/profile';
+import { User } from '@/services/common/user';
 
 export const metadata: Metadata = {
   title: 'Profile',
@@ -13,7 +13,7 @@ export default async function ProfilePage() {
   await queryClient.prefetchQuery({
     queryKey: ['self'],
     queryFn: async () => {
-      const res = await getSelf();
+      const res = await User.getSelf();
       if (res.success) {
         return res.data;
       }

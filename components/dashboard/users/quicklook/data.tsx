@@ -16,16 +16,16 @@ import { ActionType, DropdownKeyType } from '../types';
 
 import { PermissionProps } from '@/components/ui/dashboard/quicklook/types';
 import { avatars } from '@/lib/avatar';
-import { UserType } from '@/types/user';
+import { UnifiedUser } from '@/services/common/user';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
   doctor: ['cancel', 'reschedule', 'reminder', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
-  user: ['cancel', 'reschedule', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
+  patient: ['cancel', 'reschedule', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
   admin: 'all',
   nurse: ['cancel', 'reschedule'],
   receptionist: ['cancel', 'reschedule', 'reminder'],
 };
-export const sidebarContent = (user: UserType) => (
+export const sidebarContent = (user: UnifiedUser) => (
   <>
     <div className="flex flex-col items-center gap-2 p-4">
       <Avatar
@@ -34,9 +34,6 @@ export const sidebarContent = (user: UserType) => (
       />
       <div className="flex flex-col items-center">
         <h6 className="font-medium capitalize">{user.name}</h6>
-        <p className="text-small capitalize text-default-500">
-          {user.gender ? `${user.gender}` : ''}
-        </p>
       </div>
       <div className="flex gap-1">
         <Button
@@ -97,14 +94,12 @@ export const sidebarContent = (user: UserType) => (
               <div className="rounded-medium bg-blue-200 p-[5px] text-blue-400">
                 <Icon icon="uim:calender" width="24" height="24" />
               </div>
-              <span className="capitalize text-default-400">Date of Birth</span>
             </div>
-            <span className="text-default-foreground">{user.dob}</span>
           </div>
         </div>
       </Tab>
       <Tab title="Activity" key="activity">
-        <ActivityTimeline aid={user.uid} schema="user" />
+        <ActivityTimeline aid={Number(user.uid)} schema="user" />
       </Tab>
     </Tabs>
   </>

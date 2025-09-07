@@ -5,8 +5,8 @@ import { Formik, FormikProps } from 'formik';
 import { ConfigurationPanel } from './configuration-panel';
 import { SlotsPreview } from './slots-preview';
 
-import { useSlotsByUID, useUpdateSlots } from '@/services/slots';
-import type { SlotConfig } from '@/types/slots';
+import type { SlotConfig } from '@/types/client/slots';
+import { useSlotsByUID, useUpdateSlots } from '@/services/client/doctor';
 
 const initialValues: SlotConfig = {
   title: '',
@@ -53,7 +53,7 @@ const initialValues: SlotConfig = {
   timezone: 'GMT+05:30',
 };
 
-export function AppointmentScheduler({ uid }: { uid: number }) {
+export function AppointmentScheduler({ uid }: { uid: string }) {
   const updateSlots = useUpdateSlots(uid);
   const { data: slots } = useSlotsByUID(uid);
 

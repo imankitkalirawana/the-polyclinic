@@ -23,12 +23,11 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import Loading from '@/app/loading';
 import NoResults from '@/components/ui/no-results';
 import QuillInput from '@/components/ui/quill-input';
-import { verifyUID } from '@/functions/server-actions';
 import { ServiceStatuses, ServiceTypes } from '@/lib/interface';
 import { castData } from '@/lib/utils';
 import { serviceValidationSchema } from '@/lib/validation';
-import { useServiceWithUID, useUpdateService } from '@/services/service';
-import { ServiceType } from '@/types/service';
+import { useServiceWithUID, useUpdateService } from '@/services/client/service/query';
+import { ServiceType } from '@/types/client/service';
 
 export default function EditService({ uid }: { uid: string }) {
   const updateService = useUpdateService();
@@ -155,8 +154,8 @@ export default function EditService({ uid }: { uid: string }) {
       className="bg-transparent shadow-none"
     >
       <CardHeader className="flex-col items-start p-0">
-        <h3 className="leading-large text-medium font-semibold text-default-900">Edit Service</h3>
-        <p className="leading-medium max-w-2xl text-small text-default-500">
+        <h3 className="leading-large font-semibold text-default-900 text-medium">Edit Service</h3>
+        <p className="leading-medium max-w-2xl text-default-500 text-small">
           Edit the service details below.
         </p>
       </CardHeader>
@@ -171,16 +170,11 @@ export default function EditService({ uid }: { uid: string }) {
                 formik.handleChange(e);
               }}
               onBlur={async () => {
-                const uid = formik.values.uniqueId;
-                if (await verifyUID(uid, service?._id)) {
-                  formik.setErrors({
-                    uniqueId: 'This Unique ID is already taken',
-                  });
-                }
+                // TODO: Implement unique ID verification
               }}
               startContent={
                 <div className="pointer-events-none flex items-center">
-                  <span className="text-small text-default-400">#</span>
+                  <span className="text-default-400 text-small">#</span>
                 </div>
               }
               isInvalid={!!formik.errors?.uniqueId}
@@ -209,7 +203,7 @@ export default function EditService({ uid }: { uid: string }) {
               }}
               startContent={
                 <div className="pointer-events-none flex items-center">
-                  <span className="text-small text-default-400">₹</span>
+                  <span className="text-default-400 text-small">₹</span>
                 </div>
               }
               isInvalid={!!(formik.touched?.price && formik.errors?.price)}
@@ -231,7 +225,7 @@ export default function EditService({ uid }: { uid: string }) {
               min={1}
               endContent={
                 <div className="pointer-events-none flex items-center">
-                  <span className="text-small text-default-400">min(s)</span>
+                  <span className="text-default-400 text-small">min(s)</span>
                 </div>
               }
               isInvalid={!!(formik.touched?.duration && formik.errors?.duration)}

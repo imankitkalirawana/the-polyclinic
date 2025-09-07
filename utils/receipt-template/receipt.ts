@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 
 import { statusColorMap } from '@/lib/maps';
-import { AppointmentType } from '@/types/appointment';
+import { AppointmentType } from '@/services/client/appointment';
 
 export function Receipt(appointment: AppointmentType) {
   return `<html lang="en">

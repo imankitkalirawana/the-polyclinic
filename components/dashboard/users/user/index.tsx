@@ -2,28 +2,20 @@
 
 import React from 'react';
 import Link from 'next/link';
-import {
-  Avatar,
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  ScrollShadow,
-} from '@heroui/react';
+import { Button, Card, CardBody, CardFooter, CardHeader, ScrollShadow } from '@heroui/react';
 
-import CellValue from '../../../ui/cell-value';
+import CellValue from '@/components/ui/cell-value';
 
 import Loading from '@/app/loading';
 import { humanReadableDate, humanReadableTime } from '@/lib/utility';
 import { castData } from '@/lib/utils';
-import { useUserWithUID } from '@/services/user';
-import { UserType } from '@/types/user';
+import { useUserWithUID } from '@/services/common/user/query';
+import { OrganizationUser, UnifiedUser } from '@/services/common/user';
 
-export default function UserCard({ uid }: { uid: number }) {
+export default function UserCard({ uid }: { uid: string }) {
   const { data, isError, isLoading } = useUserWithUID(uid);
 
-  const user = castData<UserType>(data);
+  const user = castData<UnifiedUser>(data);
 
   if (isError) {
     return <p>Error fetching user data</p>;
@@ -37,14 +29,12 @@ export default function UserCard({ uid }: { uid: number }) {
     return <p>User not found</p>;
   }
 
-  const actionButton: Record<UserType['role'], React.ReactNode> = {
-    superadmin: null,
+  const actionButton: Record<OrganizationUser['role'], React.ReactNode> = {
     admin: null,
     receptionist: null,
     nurse: null,
     pharmacist: null,
-    laboratorist: null,
-    user: (
+    patient: (
       <Button as={Link} href={`/appointments?uid=${user.uid}`} variant="flat" color="secondary">
         Book Appointment
       </Button>
@@ -60,7 +50,7 @@ export default function UserCard({ uid }: { uid: number }) {
       <CardHeader className="justify-between px-0">
         <div className="no-scrollbar flex flex-col items-start">
           <p className="text-large">Personal Details</p>
-          <p className="text-small text-default-500">Manage your personal details</p>
+          <p className="text-default-500 text-small">Manage your personal details</p>
         </div>
         <Button as={Link} href={`/dashboard/users/${user.uid}/edit`}>
           Edit
@@ -69,28 +59,6 @@ export default function UserCard({ uid }: { uid: number }) {
       <CardBody className="space-y-2 px-0">
         <ScrollShadow hideScrollBar className="pb-4 pr-4">
           <CellValue label="Full Name" value={user.name} />
-          <CellValue label="Date of Birth" value={user.dob || '-'} />
-          <CellValue
-            label="Country"
-            value={
-              user.country ? (
-                <div className="flex items-center gap-2">
-                  <p>{user.country}</p>
-                  <Avatar
-                    alt={user.country}
-                    className="h-6 w-6"
-                    src={`https://flagcdn.com/${user.country.toLowerCase()}.svg`}
-                  />
-                </div>
-              ) : (
-                '-'
-              )
-            }
-          />
-          <CellValue label="State" value={user.state || '-'} />
-          <CellValue label="City" value={user.city || '-'} />
-          <CellValue label="Address" value={user.address || '-'} />
-          <CellValue label="Zip Code" value={user.zipcode || '-'} />
           <CellValue label="Phone Number" value={user.phone || '-'} />
           <CellValue label="Email" value={user.email || '-'} />
           <CellValue label="Status" value={<span className="capitalize">{user.status}</span>} />
@@ -105,7 +73,9 @@ export default function UserCard({ uid }: { uid: number }) {
           />
         </ScrollShadow>
       </CardBody>
-      <CardFooter className="justify-end">{actionButton[user.role]}</CardFooter>
+      <CardFooter className="justify-end">
+        {actionButton[user.role as OrganizationUser['role']]}
+      </CardFooter>
     </Card>
   );
 }

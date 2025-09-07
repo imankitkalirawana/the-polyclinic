@@ -4,70 +4,92 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import {
-  Autocomplete,
-  AutocompleteItem,
   Button,
   Card,
   CardBody,
   CardFooter,
   CardHeader,
-  DatePicker,
   Form,
   Input,
+  NumberInput,
   ScrollShadow,
   Select,
   SelectItem,
+  Textarea,
   Tooltip,
 } from '@heroui/react';
 import { useFormik } from 'formik';
 import { faker } from '@faker-js/faker';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { getLocalTimeZone, parseDate, today } from '@internationalized/date';
-import { I18nProvider } from '@react-aria/i18n';
 
 import { Genders } from '@/lib/options';
 import { generateEmail, generatePhoneNumber, toCapitalCase } from '@/lib/utils';
-import { userValidationSchema } from '@/lib/validation';
-import {
-  useAllCitiesByCountryAndState,
-  useAllCountries,
-  useAllStatesByCountry,
-} from '@/services/external';
-import { useCreateUser } from '@/services/user';
-import { $FixMe, CityProps, CountryProps, StateProps } from '@/types';
-import { CreateUserType, userRoles } from '@/types/user';
 
-export default function NewUser() {
+import { useCreateUser } from '@/services/common/user/query';
+import {
+  CreateUser,
+  createUserSchema,
+  ORGANIZATION_USER_ROLES,
+  SYSTEM_USER_ROLE,
+  UnifiedUser,
+} from '@/services/common/user';
+import { withZodSchema } from '@/lib/utils';
+import { GENDERS } from '@/lib/constants';
+import { useQueryState } from 'nuqs';
+
+const getRolesByAccess = (
+  role: UnifiedUser['role'] | null | undefined,
+  organization?: string | null
+) => {
+  if (organization) {
+    switch (role) {
+      case 'superadmin':
+      case 'moderator':
+      case 'ops':
+        return ORGANIZATION_USER_ROLES;
+      case 'admin':
+        return ORGANIZATION_USER_ROLES;
+      case 'receptionist':
+        return ['patient'];
+      default:
+        return [];
+    }
+  } else {
+    switch (role) {
+      case 'superadmin':
+        return SYSTEM_USER_ROLE;
+      case 'moderator':
+        return SYSTEM_USER_ROLE.filter((r) => r !== 'superadmin' && r !== 'moderator');
+      default:
+        return [];
+    }
+  }
+};
+
+export default function NewUser({ organization }: { organization?: string | null }) {
   const router = useRouter();
   const { data: session } = useSession();
+  const [redirectUrl] = useQueryState('redirectUrl', {
+    defaultValue: '/dashboard/users',
+  });
+  const [queryRole] = useQueryState('role', {
+    defaultValue: organization ? 'patient' : 'ops',
+  });
   const createUser = useCreateUser();
 
-  const { data: countriesData, isLoading: isCountriesLoading } = useAllCountries();
-  const countries: CountryProps[] = countriesData || [];
-
-  const formik = useFormik({
+  const formik = useFormik<CreateUser>({
     initialValues: {
-      role: 'user',
-    } as CreateUserType,
-    validationSchema: userValidationSchema,
+      name: '',
+      email: '',
+      role: queryRole as CreateUser['role'],
+      organization,
+    },
+    validate: withZodSchema(createUserSchema),
     onSubmit: async (values) => {
-      await createUser.mutateAsync(values).then(() => {
-        router.push('/dashboard/users');
-      });
+      await createUser.mutateAsync(values);
+      router.push(redirectUrl);
     },
   });
-
-  const { data: statesData, isLoading: isStatesLoading } = useAllStatesByCountry(
-    formik.values.country
-  );
-
-  const { data: citiesData, isLoading: isCitiesLoading } = useAllCitiesByCountryAndState(
-    formik.values.country,
-    formik.values.state
-  );
-
-  const states: StateProps[] = statesData || [];
-  const cities: CityProps[] = citiesData || [];
 
   const handleAutofill = () => {
     const name = faker.person.fullName();
@@ -77,6 +99,8 @@ export default function NewUser() {
     formik.setFieldValue('gender', faker.helpers.arrayElement(Genders).value);
     formik.setFieldValue('dob', faker.date.birthdate().toISOString().split('T')[0]);
   };
+
+  const roles = getRolesByAccess('moderator', organization);
 
   return (
     <Card
@@ -88,8 +112,13 @@ export default function NewUser() {
       }}
     >
       <CardHeader className="items-center justify-between px-4 pb-0 pt-4">
-        <h1 className="text-large">Add New User</h1>
-        {session?.user?.role === 'admin' && (
+        <div>
+          <h1 className="text-large">Add New User</h1>
+          <p className="text-default-500 text-tiny">
+            Fields with <span className="text-red-500">*</span> are required
+          </p>
+        </div>
+        {['superadmin', 'admin'].includes(session?.user?.role || '') && (
           <Button
             startContent={<Icon icon="solar:magic-stick-3-bold-duotone" width={16} />}
             variant="flat"
@@ -104,12 +133,12 @@ export default function NewUser() {
           <Input
             isRequired
             label="Name"
-            placeholder="Enter Name"
+            placeholder={formik.values.role === 'doctor' ? 'eg. Dr. John Doe' : 'eg. John Doe'}
             name="name"
             value={formik.values.name}
             onChange={formik.handleChange}
             isInvalid={!!(formik.touched.name && formik.errors.name)}
-            errorMessage={formik.touched.name && formik.errors.name}
+            errorMessage={formik.errors.name}
           />
           <Input
             isRequired
@@ -139,6 +168,27 @@ export default function NewUser() {
               )
             }
           />
+
+          {roles.length > 0 && (
+            <Select
+              isRequired
+              disallowEmptySelection
+              label="Role"
+              placeholder="Select Role"
+              selectedKeys={[formik.values.role]}
+              name="role"
+              onChange={formik.handleChange}
+              isInvalid={!!(formik.touched.role && formik.errors.role)}
+              errorMessage={formik.touched.role && formik.errors.role}
+              items={roles.map((role) => ({
+                label: toCapitalCase(role),
+                value: role,
+              }))}
+            >
+              {(item) => <SelectItem key={item.value}>{item.label}</SelectItem>}
+            </Select>
+          )}
+
           <Input
             label="Phone Number"
             placeholder="Enter phone number"
@@ -166,124 +216,119 @@ export default function NewUser() {
             value={formik.values.phone}
             startContent={
               <div className="pointer-events-none flex items-center">
-                <span className="text-small text-default-400">+91</span>
+                <span className="text-default-400 text-small">+91</span>
               </div>
             }
           />
-          <Select
-            isRequired
-            label="Gender"
-            placeholder="Select Gender"
-            selectedKeys={[formik.values.gender]}
-            name="gender"
-            onChange={formik.handleChange}
-            isInvalid={!!(formik.touched.gender && formik.errors.gender)}
-            errorMessage={formik.touched.gender && formik.errors.gender}
-            items={Genders}
-            disallowEmptySelection
-          >
-            {(item) => <SelectItem key={item.value}>{item.label}</SelectItem>}
-          </Select>
-          {session?.user?.role === 'admin' && (
-            <Select
-              disallowEmptySelection
-              label="Role"
-              placeholder="Select Role"
-              selectedKeys={[formik.values.role]}
-              name="role"
-              onChange={formik.handleChange}
-              isInvalid={!!(formik.touched.role && formik.errors.role)}
-              errorMessage={formik.touched.role && formik.errors.role}
-              items={userRoles.map((role) => ({
-                label: toCapitalCase(role),
-                value: role,
-              }))}
-            >
-              {(item) => <SelectItem key={item.value}>{item.label}</SelectItem>}
-            </Select>
+
+          {/* Patients fields */}
+
+          {formik.values.role === 'patient' && (
+            <>
+              <Select
+                label="Gender"
+                placeholder="Select Gender"
+                selectedKeys={[formik.values.gender || '']}
+                name="gender"
+                onChange={formik.handleChange}
+                isInvalid={!!(formik.touched.gender && formik.errors.gender)}
+                errorMessage={formik.touched.gender && formik.errors.gender}
+                items={GENDERS.map((gender) => ({
+                  label: gender.charAt(0).toUpperCase() + gender.slice(1),
+                  value: gender,
+                }))}
+              >
+                {(item) => <SelectItem key={item.value}>{item.label}</SelectItem>}
+              </Select>
+
+              <NumberInput
+                label="Age"
+                placeholder="Enter age"
+                value={formik.values.age || 0}
+                onChange={(value) =>
+                  formik.setFieldValue('age', parseInt(value.toString()) || undefined)
+                }
+                name="age"
+                isInvalid={!!(formik.touched.age && formik.errors.age)}
+                errorMessage={formik.touched.age && formik.errors.age}
+              />
+
+              <Input
+                label="Address"
+                placeholder="Enter address"
+                value={formik.values.address || ''}
+                onChange={formik.handleChange}
+                name="address"
+                isInvalid={!!(formik.touched.address && formik.errors.address)}
+                errorMessage={formik.touched.address && formik.errors.address}
+              />
+            </>
           )}
 
-          <I18nProvider locale="en-IN">
-            <DatePicker
-              name="dob"
-              label="Date of Birth (Optional)"
-              // @ts-expect-error - value is not typed
-              value={formik.values.dob ? parseDate(formik.values.dob) : null}
-              onChange={(value) => {
-                const dob = new Date(value as $FixMe).toISOString().split('T')[0];
-                formik.setFieldValue('dob', dob);
-              }}
-              maxValue={today(getLocalTimeZone())}
-              showMonthAndYearPickers
-            />
-          </I18nProvider>
-          <Autocomplete
-            label="Country (Optional)"
-            isLoading={isCountriesLoading}
-            defaultItems={countries}
-            className="grid-cols-2 bg-gradient-to-b"
-            placeholder="Select country"
-            showScrollIndicators={false}
-            onSelectionChange={(value) => {
-              formik.setFieldValue('country', value);
-            }}
-            selectedKey={formik.values.country}
-          >
-            {(item) => (
-              <AutocompleteItem key={item.iso2} startContent={<>{item.emoji}</>}>
-                {item.name}
-              </AutocompleteItem>
-            )}
-          </Autocomplete>
-          <Autocomplete
-            isLoading={isStatesLoading}
-            defaultItems={states}
-            label="State (Optional)"
-            placeholder="Select state"
-            showScrollIndicators={false}
-            onSelectionChange={(value) => {
-              formik.setFieldValue('state', value);
-            }}
-            selectedKey={formik.values.state}
-          >
-            {(item) => <AutocompleteItem key={item.iso2}>{item.name}</AutocompleteItem>}
-          </Autocomplete>
-          <Autocomplete
-            isLoading={isCitiesLoading}
-            defaultItems={cities}
-            label="City (Optional)"
-            placeholder="Select city"
-            showScrollIndicators={false}
-            onSelectionChange={(value) => {
-              formik.setFieldValue('city', value);
-            }}
-            selectedKey={formik.values.city}
-          >
-            {(item) => <AutocompleteItem key={item.name}>{item.name}</AutocompleteItem>}
-          </Autocomplete>
-          <Input
-            label="Address (Optional)"
-            placeholder="Enter address"
-            value={formik.values.address}
-            onChange={formik.handleChange}
-            name="address"
-            isInvalid={!!(formik.touched.address && formik.errors.address)}
-            errorMessage={formik.touched.address && formik.errors.address}
-          />
-          <Input
-            label="Zip Code (Optional)"
-            placeholder="Enter zip code"
-            value={formik.values.zipcode}
-            onChange={formik.handleChange}
-            name="zipcode"
-            isInvalid={!!(formik.touched.zipcode && formik.errors.zipcode)}
-            errorMessage={formik.touched.zipcode && formik.errors.zipcode}
-          />
+          {/* Doctor Fields */}
+
+          {formik.values.role === 'doctor' && (
+            <>
+              <Input
+                label="Specialization"
+                placeholder="eg. Cardiologist"
+                value={formik.values.specialization || ''}
+                onChange={formik.handleChange}
+                name="specialization"
+                isInvalid={!!(formik.touched.specialization && formik.errors.specialization)}
+                errorMessage={formik.touched.specialization && formik.errors.specialization}
+              />
+              <Input
+                label="Department"
+                placeholder="eg. Cardiology"
+                value={formik.values.department || ''}
+                onChange={formik.handleChange}
+                name="department"
+                isInvalid={!!(formik.touched.department && formik.errors.department)}
+                errorMessage={formik.touched.department && formik.errors.department}
+              />
+
+              <Input
+                label="Seating"
+                placeholder="eg. Room No, Floor"
+                value={formik.values.seating || ''}
+                onChange={formik.handleChange}
+                name="seating"
+                isInvalid={!!(formik.touched.seating && formik.errors.seating)}
+                errorMessage={formik.touched.seating && formik.errors.seating}
+              />
+              <Input
+                label="Education"
+                placeholder="eg. MBBS, MD"
+                value={formik.values.education || ''}
+                onChange={formik.handleChange}
+                name="education"
+                isInvalid={!!(formik.touched.education && formik.errors.education)}
+                errorMessage={formik.touched.education && formik.errors.education}
+              />
+              <Textarea
+                className="col-span-2"
+                label="Biography"
+                placeholder="eg. Experienced cardiologist"
+                value={formik.values.biography || ''}
+                onChange={formik.handleChange}
+                name="biography"
+                isInvalid={!!(formik.touched.biography && formik.errors.biography)}
+                errorMessage={formik.touched.biography && formik.errors.biography}
+              />
+            </>
+          )}
         </ScrollShadow>
       </CardBody>
 
       <CardFooter className="mt-4 justify-end gap-2">
-        <Button color="primary" radius="full" isLoading={formik.isSubmitting} type="submit">
+        <Button
+          color="primary"
+          radius="full"
+          isLoading={formik.isSubmitting}
+          onPress={() => formik.handleSubmit()}
+          type="submit"
+        >
           Create User
         </Button>
       </CardFooter>

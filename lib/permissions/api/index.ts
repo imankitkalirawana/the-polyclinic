@@ -1,0 +1,16 @@
+import { basePermissions } from './base';
+import { organizationPermissions } from '@/services/system/organization';
+import { userPermissions } from '@/services/common/user';
+import { appointmentPermissions } from '@/services/client/appointment';
+import { PermissionConfig } from './types';
+import { patientPermissions } from '@/services/client/patient/permission';
+import { doctorsPermissions } from '@/services/client/doctor/permission';
+
+export const permissionsConfig: PermissionConfig = {
+  ...basePermissions,
+  ...organizationPermissions,
+  ...userPermissions,
+  ...patientPermissions,
+  ...doctorsPermissions,
+  ...appointmentPermissions,
+};

@@ -1,9 +1,8 @@
+import { UnifiedUser } from '@/services/common/user';
 import {
   ButtonProps as HeroButtonProps,
   DropdownItemProps as HeroDropdownItemProps,
 } from '@heroui/react';
-
-import { UserType } from '@/types/user';
 
 export type ActionType<T extends string> = T;
 export type DropdownKeyType<T extends string> = T;
@@ -29,7 +28,10 @@ export type DropdownItemProps<T extends string> = Omit<
 };
 
 export type PermissionProps<T extends string, D extends string> = Partial<
-  Record<UserType['role'], Array<ActionType<T> | DropdownKeyType<D>> | 'all' | 'none' | undefined>
+  Record<
+    UnifiedUser['role'],
+    Array<ActionType<T> | DropdownKeyType<D>> | 'all' | 'none' | undefined
+  >
 >;
 export interface QuickLookProps<T, A extends string, D extends string> {
   /**

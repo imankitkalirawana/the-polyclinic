@@ -1,0 +1,27 @@
+import { GENDERS } from '@/lib/constants';
+import mongoose, { Connection } from 'mongoose';
+
+const patientSchema = new mongoose.Schema(
+  {
+    uid: {
+      type: String,
+      unique: true,
+    },
+    phone: String,
+    gender: {
+      type: String,
+      enum: GENDERS,
+    },
+    age: {
+      type: Number,
+      min: 0,
+      max: 120,
+    },
+    address: String,
+  },
+  { collection: 'patient' }
+);
+
+export const getPatientModel = (conn: Connection) => {
+  return conn.models.patient || conn.model('Patient', patientSchema);
+};

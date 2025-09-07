@@ -1,5 +1,18 @@
+import { GENDERS } from '@/lib/constants';
+import { ValuesOf } from '@/lib/utils';
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type $FixMe = any;
+
+export type Base = {
+  _id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  createdBy: string;
+  updatedBy: string;
+};
+
+export type Gender = ValuesOf<typeof GENDERS>;
 
 export interface CountryProps {
   id: number;
@@ -28,3 +41,5 @@ export interface CityProps {
   id: number;
   name: string;
 }
+
+export type VerificationType = 'register' | 'reset-password' | 'verify-email';

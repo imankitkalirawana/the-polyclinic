@@ -6,12 +6,14 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 
 import { permissions, sidebarContent, useAppointmentButtons } from './data';
 
-import CancelDeleteAppointment from '@/components/appointments/ui/cancel-delete';
 import QuickLook from '@/components/ui/dashboard/quicklook';
 import { DropdownItemProps } from '@/components/ui/dashboard/quicklook/types';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { useAppointmentStore } from '@/store/appointment';
-import { AppointmentType, DropdownKeyType } from '@/types/appointment';
+import { DropdownKeyType } from '@/types/client/appointment';
+import CancelDeleteAppointment from '@/components/client/appointments/ui/cancel-delete';
+import { AppointmentType } from '@/services/client/appointment';
+import { OrganizationUser } from '@/services/common/user';
 
 export function AppointmentQuickLook() {
   const { data: session } = useSession();
@@ -19,7 +21,7 @@ export function AppointmentQuickLook() {
 
   const buttons = useAppointmentButtons({
     appointment,
-    role: session?.user?.role || 'user',
+    role: (session?.user?.role || 'patient') as OrganizationUser['role'],
   });
 
   const dropdown = useMemo<Array<Partial<DropdownItemProps<DropdownKeyType>>>>(

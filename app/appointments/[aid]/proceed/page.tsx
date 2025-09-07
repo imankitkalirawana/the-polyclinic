@@ -1,11 +1,11 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
-import Appointment from '@/components/appointments/id';
-import { getAppointmentWithAID } from '@/services/api/appointment';
+import Appointment from '@/components/client/appointments/id';
+import { AppointmentApi } from '@/services/client/appointment';
 
 interface Props {
   params: Promise<{
-    aid: number;
+    aid: string;
   }>;
 }
 
@@ -15,7 +15,7 @@ export default async function Page(props: Props) {
   await queryClient.prefetchQuery({
     queryKey: ['appointment', params.aid],
     queryFn: async () => {
-      const res = await getAppointmentWithAID(params.aid);
+      const res = await AppointmentApi.getById(params.aid);
       if (res.success) {
         return res.data;
       }

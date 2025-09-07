@@ -19,7 +19,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { SpecificDateManager } from './specific-date-manager';
 import { getValidEndTimes, getValidStartTimes, timeToMinutes } from './util';
 
-import type { SlotConfig, TimeSlot } from '@/types/slots';
+import type { SlotConfig, TimeSlot } from '@/types/client/slots';
 
 const DEFAULT_BUFFER_TIME = 30;
 const DEFAULT_MAX_BOOKINGS_PER_DAY = 10;

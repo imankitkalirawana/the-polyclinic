@@ -2,19 +2,19 @@
 
 import { faker } from '@faker-js/faker';
 
-import { UserType } from '@/types/user';
+import { $FixMe } from '@/types';
 
 export async function generateUsers({
   count,
   role,
 }: {
   count: number;
-  role?: UserType['role'];
-}): Promise<UserType[]> {
-  const generated: UserType[] = [];
+  role?: $FixMe['role'];
+}): Promise<$FixMe[]> {
+  const generated: $FixMe[] = [];
 
   for (let i = 0; i < count; i++) {
-    const user: UserType = {
+    const user: $FixMe = {
       uid: faker.number.int({ min: 1000, max: 9999 }),
       email: faker.internet.email(),
       phone: faker.phone.number(),

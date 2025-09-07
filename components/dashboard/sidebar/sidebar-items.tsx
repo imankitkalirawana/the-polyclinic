@@ -1,14 +1,10 @@
+import { UnifiedUser } from '@/services/common/user';
 import { type SidebarItem } from './sidebar';
-
-import ModeToggle from '@/components/mode-toggle';
+import { ThemeSwitcher } from '@/components/theme-switcher';
 
 // Extend SidebarItem to include roles
-export interface SidebarItemWithRoles extends SidebarItem {
-  roles?: string[];
-  items?: SidebarItemWithRoles[];
-}
 
-export const sectionItems: SidebarItemWithRoles[] = [
+export const sectionItems: SidebarItem[] = [
   {
     key: 'overview',
     title: 'Overview',
@@ -18,61 +14,77 @@ export const sectionItems: SidebarItemWithRoles[] = [
         href: '/dashboard',
         icon: 'solar:home-2-bold-duotone',
         title: 'Home',
+        roles: ['superadmin', 'moderator', 'ops', 'admin', 'receptionist', 'doctor', 'patient'],
       },
       {
         key: 'organizations',
         href: '/dashboard/organizations',
         icon: 'solar:buildings-bold-duotone',
         title: 'Organizations',
-        roles: ['superadmin'],
+        roles: ['superadmin', 'moderator', 'ops'],
       },
       {
         key: 'users',
         href: '/dashboard/users',
         icon: 'solar:users-group-rounded-bold-duotone',
         title: 'Users',
+        roles: ['superadmin', 'moderator', 'ops', 'admin', 'receptionist'],
+      },
+      {
+        key: 'patients',
+        href: '/dashboard/patients',
+        icon: 'solar:user-heart-bold-duotone',
+        title: 'Patients',
+        roles: ['admin', 'receptionist'],
       },
       {
         key: 'doctors',
         href: '/dashboard/doctors',
         icon: 'solar:stethoscope-bold-duotone',
         title: 'Doctors',
+        roles: ['admin'],
       },
       {
         key: 'appointments',
         href: '/dashboard/appointments',
         icon: 'solar:calendar-bold-duotone',
         title: 'Appointments',
+        roles: ['admin', 'receptionist', 'doctor', 'patient'],
       },
       {
         key: 'services',
         href: '/dashboard/services',
         icon: 'solar:test-tube-minimalistic-bold-duotone',
         title: 'Services',
+        roles: ['admin'],
       },
       {
         key: 'drugs',
         href: '/dashboard/drugs',
         icon: 'solar:pills-bold-duotone',
         title: 'Drugs',
+        roles: ['admin'],
       },
       {
         key: 'emails',
         href: '/dashboard/emails',
         icon: 'solar:letter-bold-duotone',
         title: 'Emails',
+        roles: ['admin'],
       },
       {
         key: 'newsletters',
         href: '/dashboard/newsletters',
         icon: 'solar:inbox-bold-duotone',
         title: 'Newsletters',
+        roles: ['admin'],
       },
       {
         key: 'website',
         href: '/dashboard/website',
         icon: 'solar:card-bold-duotone',
         title: 'Website',
+        roles: ['admin'],
       },
     ],
   },
@@ -85,19 +97,19 @@ export const sectionItems: SidebarItemWithRoles[] = [
         href: undefined,
         icon: 'solar:moon-fog-bold-duotone',
         title: 'Dark Mode',
-        endContent: <ModeToggle />,
+        endContent: <ThemeSwitcher />,
       },
     ],
   },
 ];
-export const sectionItemsWithTeams: SidebarItemWithRoles[] = [...sectionItems];
 
 // Function to filter sidebar items based on user role
-export const filterSidebarItemsByRole = (
-  items: SidebarItemWithRoles[],
-  userRole: string
-): SidebarItemWithRoles[] => {
-  return items
+export const getSidebarItems = (userRole?: UnifiedUser['role'] | null): SidebarItem[] => {
+  if (!userRole) {
+    return [];
+  }
+
+  return sectionItems
     .map((section) => ({
       ...section,
       items: section.items?.filter((item) => {

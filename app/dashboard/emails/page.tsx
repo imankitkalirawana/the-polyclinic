@@ -1,7 +1,7 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 import Emails from '@/components/dashboard/emails';
-import { getAllEmails } from '@/services/api/email';
+import { getAllEmails } from '@/services/client/email/api';
 
 export default async function Page() {
   const queryClient = new QueryClient();

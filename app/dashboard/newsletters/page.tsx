@@ -1,7 +1,7 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 import Newsletters from '@/components/dashboard/newsletters/newsletters';
-import { getAllNewsletters } from '@/services/api/newsletter';
+import { getAllNewsletters } from '@/services/client/newsletters/api';
 
 export default async function Page() {
   const queryClient = new QueryClient();

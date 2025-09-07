@@ -1,24 +1,30 @@
-import { UserType } from './user';
+import { UnifiedUser } from '@/services/common/user';
 
 declare module 'next-auth' {
   interface Session {
-    uid: number;
+    uid: string;
     email: string;
     name: string;
     image: string;
-    role: UserType['role'];
+    role: UnifiedUser['role'];
+    organization: string;
+    phone: string;
   }
 
   interface User {
-    role: UserType['role'];
-    uid: number;
+    role: UnifiedUser['role'];
+    uid: string;
     image: string;
+    organization: string;
+    phone: string;
   }
 }
 
 declare module 'next-auth/jwt' {
   interface JWT {
-    uid: number;
-    role: UserType['role'];
+    uid: string;
+    role: UnifiedUser['role'];
+    organization: string;
+    phone: string;
   }
 }

@@ -9,7 +9,7 @@ import { permissions, sidebarContent } from './data';
 import QuickLook from '@/components/ui/dashboard/quicklook';
 import { ButtonProps, DropdownItemProps } from '@/components/ui/dashboard/quicklook/types';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
-import { UserType } from '@/types/user';
+import { UnifiedUser } from '@/services/common/user';
 
 export function UserQuickLook() {
   const { selected, setSelected, setAction, action } = useUserStore();
@@ -96,7 +96,7 @@ export function UserQuickLook() {
     [selected]
   );
 
-  const content = (user: UserType) => [
+  const content = (user: UnifiedUser) => [
     {
       label: 'User ID',
       value: () => user.uid,
@@ -126,12 +126,6 @@ export function UserQuickLook() {
       value: () => (user.role === 'admin' ? 'doctor' : 'Nurse'),
       icon: 'solar:map-point-bold-duotone',
       classNames: { icon: 'text-teal-500 bg-teal-50' },
-    },
-    {
-      label: 'Address',
-      value: () => user.address || 'N/A',
-      icon: 'solar:map-point-bold-duotone',
-      classNames: { icon: 'text-teal-500 bg-teal-50', value: 'lowercase' },
     },
   ];
 

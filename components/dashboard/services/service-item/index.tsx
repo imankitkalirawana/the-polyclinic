@@ -8,7 +8,6 @@ import DataTable from './data-table';
 import { CircleChartCard } from './graph';
 
 import Loading from '@/app/loading';
-import PriceDisplay from '@/components/helper/display-price';
 import NoResults from '@/components/ui/no-results';
 import {
   convertMinutesToHoursAndMinutes,
@@ -16,9 +15,9 @@ import {
   humanReadableTime,
 } from '@/lib/utility';
 import { castData } from '@/lib/utils';
-import { useServiceWithUID } from '@/services/service';
-import { ServiceType } from '@/types/service';
-import { AuthUser } from '@/types/user';
+import { useServiceWithUID } from '@/services/client/service/query';
+import { ServiceType } from '@/types/client/service';
+import { AuthUser } from '@/services/common/user';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   active: 'success',
@@ -64,20 +63,20 @@ export default function ServiceViewItem({ uid, session }: { uid: string; session
 
         <div className="flex flex-col">
           <div className="my-2 flex items-center gap-2">
-            <p className="text-small italic text-default-400">#{service.uniqueId}</p>
+            <p className="italic text-default-400 text-small">#{service.uniqueId}</p>
           </div>
           <h1 className="text-2xl font-semibold tracking-tight">{service.name}</h1>
           <h2 className="sr-only">Service information</h2>
 
           <div className="text-xl font-medium tracking-tight">
-            <PriceDisplay price={service.price} />
+            <p>Price: {service.price}</p>
           </div>
 
           <div className="mt-6 flex flex-col gap-1">
             {service.duration > 0 && (
               <div className="mb-4 flex items-center gap-2 text-default-700">
                 <Icon icon="solar:clock-circle-broken" width={20} />
-                <p className="text-small font-medium">
+                <p className="font-medium text-small">
                   Done in approx. {convertMinutesToHoursAndMinutes(service.duration)}
                 </p>
               </div>
@@ -137,19 +136,20 @@ export default function ServiceViewItem({ uid, session }: { uid: string; session
             >
               Book Appointment
             </Button>
-            {session && session?.user?.role === 'admin' && (
-              <Tooltip content="Edit">
-                <Button
-                  isIconOnly
-                  className="text-default-600"
-                  variant="flat"
-                  as={Link}
-                  href={`/dashboard/services/${service.uniqueId}/edit`}
-                >
-                  <Icon icon="solar:pen-linear" width={16} />
-                </Button>
-              </Tooltip>
-            )}
+            {session.user?.role &&
+              ['superadmin', 'moderator', 'ops'].includes(session.user.role) && (
+                <Tooltip content="Edit">
+                  <Button
+                    isIconOnly
+                    className="text-default-600"
+                    variant="flat"
+                    as={Link}
+                    href={`/dashboard/services/${service.uniqueId}/edit`}
+                  >
+                    <Icon icon="solar:pen-linear" width={16} />
+                  </Button>
+                </Tooltip>
+              )}
           </div>
         </div>
       </div>

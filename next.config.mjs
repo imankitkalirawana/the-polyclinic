@@ -1,8 +1,14 @@
 import { withSentryConfig } from '@sentry/nextjs';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  allowedDevOrigins: ['lvh.me', '*.lvh.me', 'localhost'],
   images: {
-    domains: ['lh3.googleusercontent.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+      },
+    ],
   },
   experimental: {
     authInterrupts: true,

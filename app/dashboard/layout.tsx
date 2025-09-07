@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 
 import { auth } from '@/auth';
-import DashboardLayout from '@/components/dashboard/layout';
+import DashboardLayout from '@/components/layouts/dashboard';
 
 export default async function Layout({
   children,
@@ -10,7 +10,7 @@ export default async function Layout({
 }>) {
   const session = await auth();
 
-  if (!session) {
+  if (!session?.user) {
     redirect('/auth/login');
   }
 

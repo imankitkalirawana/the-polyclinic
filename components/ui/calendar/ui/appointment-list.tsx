@@ -9,7 +9,7 @@ import DateChip from './date-chip';
 import StatusRenderer from './status-renderer';
 
 import { useAppointmentStore } from '@/store/appointment';
-import { AppointmentType } from '@/types/appointment';
+import { AppointmentType } from '@/services/client/appointment';
 
 export default function AppointmentList({
   appointments,

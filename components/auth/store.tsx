@@ -1,25 +1,25 @@
 'use client';
 
-import { createContext, useContext } from 'react';
-import { useRouter } from 'nextjs-toploader/app';
+import { createContext, useContext, useState } from 'react';
 import { addToast } from '@heroui/react';
 import { useFormik } from 'formik';
 import { useQueryState } from 'nuqs';
 import * as Yup from 'yup';
-
 import { AuthContextType, FlowType } from './types';
-
-import { verifyEmail } from '@/functions/server-actions/auth/verification';
-import { login, register, sendOTP, verifyOTP } from '@/lib/server-actions/auth';
+import { login, verifyEmail } from '@/lib/server-actions/auth';
 import { $FixMe } from '@/types';
+import { useSubdomain } from '@/hooks/useSubDomain';
+import { isOrganizationActive } from '@/lib/server-actions/validation';
+import { AuthApi } from '@/services/common/auth/api';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Provider Factory
 export const createAuthProvider = (flowType: FlowType) =>
   function AuthProvider({ children }: { children: React.ReactNode }) {
-    const router = useRouter();
     const [email] = useQueryState('email');
+    const subdomain = useSubdomain();
+    const [token, setToken] = useState<string | null>(null);
 
     // Initial values based on flow type
     const getInitialValues = () => {
@@ -27,7 +27,7 @@ export const createAuthProvider = (flowType: FlowType) =>
         email: email ?? '',
         password: '',
         otp: '',
-        page: 0,
+        page: token ? 4 : 0,
         direction: 1,
         submitCount: 0,
       };
@@ -155,10 +155,10 @@ export const createAuthProvider = (flowType: FlowType) =>
             return handleForgotPasswordSubmit(values, { setFieldError });
           default:
         }
-      } catch {
+      } catch (error) {
         addToast({
           title: 'An error occurred',
-          description: 'Please try again later.',
+          description: error instanceof Error ? error.message : 'Please try again later.',
           color: 'danger',
         });
       }
@@ -169,54 +169,60 @@ export const createAuthProvider = (flowType: FlowType) =>
       if (values.page === 0) {
         paginate(1);
       } else if (values.page === 1) {
-        // Check if email exists
-        if (await verifyEmail(values.email)) {
-          setFieldError('email', 'Email already exists');
-        } else {
-          paginate(1);
+        // TODO: this will be removed after global organization check
+        const isOrgActive = await isOrganizationActive(subdomain ?? '');
+        if (!isOrgActive) {
+          setFieldError('email', 'Organization is not active, please contact support');
+          return;
         }
+        paginate(1);
       } else if (values.page === 2) {
-        // Send OTP
-        const res = await sendOTP({ email: values.email });
-        if (!res.success) {
-          setFieldError('email', res.message);
-        } else {
-          addToast({
-            title: res.message,
-            color: 'success',
-          });
-          paginate(1);
-        }
-      } else if (values.page === 3) {
-        // Verify OTP
-        const res = await verifyOTP({
+        await AuthApi.sendOTP({
           email: values.email,
-          otp: parseInt(values.otp),
+          type: 'register',
+          subdomain,
+        })
+          .then(() => {
+            paginate(1);
+          })
+          .catch((error) => {
+            addToast({
+              title: 'An error occurred',
+              description: error instanceof Error ? error.message : 'Please try again later.',
+              color: 'danger',
+            });
+          });
+      } else if (values.page === 3) {
+        //  Verify OTP here
+        const res = await AuthApi.verifyOTP({
+          email: values.email,
+          otp: values.otp,
+          type: 'register',
+          subdomain,
         });
-        if (!res.success) {
-          setFieldError('otp', res.message);
-        } else {
+
+        if (res.success) {
+          setToken(res.data.token);
           paginate(1);
+        } else {
+          setFieldError('otp', res.message);
         }
       } else if (values.page === 4) {
-        // Register user
-        const res = await register({
+        const res = await AuthApi.registerUser({
           email: values.email,
-          password: values.password,
           name: values.name,
-          dob: values.dob ?? undefined,
-          gender: values.gender,
+          password: values.password,
+          subdomain: subdomain ?? '',
+          token: token ?? '',
         });
+
         if (res.success) {
+          // login user
           await login({
             email: values.email,
             password: values.password,
-          });
-          window.location.href = '/';
-        } else {
-          addToast({
-            title: res.message,
-            color: 'danger',
+          }).then(() => {
+            window.location.href = '/dashboard';
           });
         }
       }
@@ -228,9 +234,9 @@ export const createAuthProvider = (flowType: FlowType) =>
         paginate(1);
       }
       if (values.page === 1) {
-        // Check if email exists
-        if (!(await verifyEmail(values.email))) {
-          setFieldError('email', 'Email not found');
+        const res = await verifyEmail(values.email);
+        if (res?.error) {
+          setFieldError('email', res.message);
         } else {
           paginate(1);
         }
@@ -251,61 +257,54 @@ export const createAuthProvider = (flowType: FlowType) =>
     // Forgot password flow
     const handleForgotPasswordSubmit = async (values: $FixMe, { setFieldError }: $FixMe) => {
       if (values.page === 0) {
-        // Send OTP
-        const res = await sendOTP({
+        await AuthApi.sendOTP({
           email: values.email,
-          type: 'forgot-password',
+          type: 'reset-password',
+          subdomain,
+        })
+          .then(() => {
+            paginate(1);
+          })
+          .catch((error) => {
+            addToast({
+              title: 'An error occurred',
+              description: error instanceof Error ? error.message : 'Please try again later.',
+              color: 'danger',
+            });
+          });
+      } else if (values.page === 1) {
+        const res = await AuthApi.verifyOTP({
+          email: values.email,
+          otp: values.otp,
+          type: 'reset-password',
+          subdomain,
         });
 
-        if (!res.success) {
-          setFieldError('email', res.message);
+        if (res.success) {
+          setToken(res.data.token);
+          paginate(1);
+        } else {
+          setFieldError('otp', res.message);
+        }
+      } else if (values.page === 2) {
+        const res = await AuthApi.resetPassword({
+          email: values.email,
+          password: values.newPassword,
+          subdomain: subdomain ?? '',
+          token: token ?? '',
+        });
+
+        if (res.success) {
+          await login({
+            email: values.email,
+            password: values.newPassword,
+          }).then(() => {
+            window.location.href = '/dashboard';
+          });
         } else {
           addToast({
             title: res.message,
-            color: 'success',
-          });
-          paginate(1);
-        }
-      } else if (values.page === 1) {
-        // Verify OTP
-        const res = await verifyOTP({
-          email: values.email,
-          otp: parseInt(values.otp),
-        });
-
-        if (!res.success) {
-          setFieldError('otp', res.message);
-        } else {
-          paginate(1);
-        }
-      } else if (values.page === 2) {
-        // Reset password
-        // Since resetPassword function is not available, use fetch API directly
-        try {
-          const res = await fetch('/api/auth/reset-password', {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              email: values.email,
-              password: values.newPassword,
-              otp: parseInt(values.otp),
-            }),
-          });
-
-          const data = await res.json();
-
-          addToast({
-            title: data.message,
-            description: 'You can now login with your new password.',
-            color: 'success',
-          });
-          router.push(`/auth/login?email=${values.email}`);
-        } catch {
-          addToast({
-            title: 'An error occurred',
-            description: 'Please try again later.',
+            description: res.errors?.[0],
             color: 'danger',
           });
         }

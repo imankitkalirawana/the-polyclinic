@@ -6,8 +6,8 @@ import { format } from 'date-fns';
 import Loading from '@/app/loading';
 import NoResults from '@/components/ui/no-results';
 import { castData } from '@/lib/utils';
-import { useEmailWithID } from '@/services/email';
-import { EmailType } from '@/types/email';
+import { useEmailWithID } from '@/services/client/email/query';
+import { EmailType } from '@/types/client/email';
 
 export default function Email({ id }: { id: string }) {
   const { data, isLoading, isError } = useEmailWithID(id);
@@ -30,12 +30,12 @@ export default function Email({ id }: { id: string }) {
     <div className="mx-auto w-full">
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between border-b p-4">
-        <h1 title={email?.subject} className="line-clamp-1 text-large font-medium">
+        <h1 title={email?.subject} className="line-clamp-1 font-medium text-large">
           {email?.subject}
         </h1>
         <span
           title={format(email?.createdAt as Date, 'PPp')}
-          className="line-clamp-1 text-tiny text-default-500"
+          className="line-clamp-1 text-default-500 text-tiny"
         >
           {format(email?.createdAt as Date, 'PPp')}
         </span>
@@ -46,13 +46,13 @@ export default function Email({ id }: { id: string }) {
         {/* Recipients */}
         <div className="space-y-4">
           <div className="flex items-center gap-8">
-            <span className="w-8 text-small text-default-500">From:</span>
+            <span className="w-8 text-default-500 text-small">From:</span>
             <Chip variant="flat">
               <span className="text-small">{email?.from}</span>
             </Chip>
           </div>
           <div className="flex items-center gap-8">
-            <span className="w-8 text-small text-default-500">To:</span>
+            <span className="w-8 text-default-500 text-small">To:</span>
             <Chip variant="flat">
               <span className="text-small">{email?.to}</span>
             </Chip>

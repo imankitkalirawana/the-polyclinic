@@ -1,9 +1,9 @@
 import { User } from '@heroui/react';
 
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
-import { UserType } from '@/types/user';
+import { SystemUser } from '@/services/common/user';
 
-export function ModalCellRenderer({ user }: { user: UserType }) {
+export function ModalCellRenderer({ user }: { user: SystemUser }) {
   return (
     <div className="flex items-center justify-between gap-4">
       <User

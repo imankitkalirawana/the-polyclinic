@@ -35,9 +35,9 @@ import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import useAppointmentButtonsInDrawer from '@/hooks/useAppointmentButton';
 import { useIsMobile } from '@/hooks/useMobile';
 import { CLINIC_INFO } from '@/lib/config';
-import { useAppointmentWithAID } from '@/services/appointment';
+import { useAppointmentWithAID } from '@/services/client/appointment/query';
 import { useAppointmentStore } from '@/store/appointment';
-import { AppointmentType } from '@/types/appointment';
+import { AppointmentType } from '@/services/client/appointment';
 
 const DRAWER_DELAY = 200;
 
@@ -106,7 +106,7 @@ MeetDirections.displayName = 'MeetDirections';
 // Extracted shared content component
 const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType }) => {
   const { data: previousAppointment, isLoading } = useAppointmentWithAID(
-    appointment?.previousAppointment || 0
+    appointment?.previousAppointment || ''
   );
 
   const patientDescription = useMemo(() => {

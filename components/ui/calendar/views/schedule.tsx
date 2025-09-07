@@ -7,8 +7,7 @@ import { parseAsStringEnum, useQueryState } from 'nuqs';
 import { views } from '../types';
 import AppointmentTriggerItem from '../ui/appointment-trigger-item';
 import DateChip from '../ui/date-chip';
-
-import { AppointmentType } from '@/types/appointment';
+import { AppointmentType } from '@/services/client/appointment';
 
 interface ScheduleViewProps {
   appointments: AppointmentType[];

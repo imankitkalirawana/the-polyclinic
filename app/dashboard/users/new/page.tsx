@@ -3,12 +3,12 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 
 import { auth } from '@/auth';
 import NewUser from '@/components/dashboard/users/new';
-import { getAllCountries } from '@/services/api/external';
-
-const allowedRoles = ['admin', 'doctor', 'nurse', 'receptionist', 'pharmacist', 'laboratorist'];
+import { getAllCountries } from '@/services/external/api';
+import { getSubdomain } from '@/auth/sub-domain';
 
 export default async function Page() {
   const session = await auth();
+  const subdomain = await getSubdomain();
 
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
@@ -22,13 +22,13 @@ export default async function Page() {
     },
   });
 
-  if (session?.user && !allowedRoles.includes(session?.user?.role)) {
+  if (!session?.user) {
     return redirect('/dashboard');
   }
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <NewUser />
+      <NewUser organization={subdomain} />
     </HydrationBoundary>
   );
 }

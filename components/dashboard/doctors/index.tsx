@@ -18,8 +18,10 @@ import {
 } from '@/components/ui/data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 import { castData } from '@/lib/utils';
-import { useAllDoctors, useDeleteDoctor } from '@/services/doctor';
-import { DoctorType } from '@/types/doctor';
+import { DoctorType } from '@/services/client/doctor';
+import { useAllDoctors } from '@/services/client/doctor/query';
+import { useDeleteUser } from '@/services/common/user/query';
+import { useSubdomain } from '@/hooks/useSubDomain';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'image',
@@ -35,16 +37,13 @@ export default function Doctors() {
   const router = useRouter();
   const deleteModal = useDisclosure();
   const { setSelected } = useDoctorStore();
-  const deleteDoctor = useDeleteDoctor();
+  const deleteDoctor = useDeleteUser();
+  const organization = useSubdomain();
 
   const { data, isLoading, isError, error } = useAllDoctors();
 
-  const handleDelete = async (uid: number) => {
-    toast.promise(deleteDoctor.mutateAsync(uid), {
-      loading: `Deleting doctor ${uid}`,
-      success: (data) => data.message,
-      error: (error) => error.message,
-    });
+  const handleDelete = async (uid: string) => {
+    await deleteDoctor.mutateAsync({ uid, organization });
   };
 
   // Define columns with render functions
@@ -165,7 +164,11 @@ export default function Doctors() {
 
   // Render top bar
   const endContent = () => (
-    <Button color="primary" size="sm" onPress={() => router.push('/dashboard/doctors/new')}>
+    <Button
+      color="primary"
+      size="sm"
+      onPress={() => router.push('/dashboard/users/new?redirectUrl=/dashboard/doctors&role=doctor')}
+    >
       New Doctor
     </Button>
   );

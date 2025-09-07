@@ -23,9 +23,9 @@
     "@commitlint/types": "^19.8.0",
     "@faker-js/faker": "^9.7.0",
     "@google/generative-ai": "^0.24.1",
-    "@heroui/react": "^2.7.6",
+    "@heroui/react": "^2.8.3",
     "@iconify/react": "^5.0.2",
-    "@internationalized/date": "^3.8.1",
+    "@internationalized/date": "^3.9.0",
     "@react-aria/i18n": "^3.12.8",
     "@react-types/shared": "^3.29.0",
     "@sentry/nextjs": "^10",
@@ -59,12 +59,14 @@
     "mongodb": "^6.10.0",
     "mongoose": "^8.7.3",
     "mongoose-sequence": "^6.0.1",
+    "motion": "^12.23.12",
     "next": "15.3.5",
     "next-auth": "5.0.0-beta.28",
     "next-themes": "^0.3.0",
     "nextjs-toploader": "^3.7.15",
     "nodemailer": "^6.9.16",
-    "nuqs": "^2.2.3",
+    "nuqs": "^2.6.0",
+    "path-to-regexp": "^8.2.0",
     "prettier": "^3.5.3",
     "prettier-eslint": "^16.4.2",
     "prettier-eslint-cli": "^8.0.1",
@@ -114,6 +116,16 @@
     "overrides": {
       "@types/react": "19.1.8",
       "@types/react-dom": "19.1.6"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "@heroui/shared-utils",
+      "@sentry/cli",
+      "core-js",
+      "esbuild",
+      "puppeteer",
+      "sharp",
+      "unrs-resolver",
+      "ws"
+    ]
   }
 }

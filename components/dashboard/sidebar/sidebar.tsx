@@ -10,6 +10,7 @@ import {
 } from '@heroui/react';
 import { cn, Link, Listbox, ListboxItem, ListboxSection, Tooltip } from '@heroui/react';
 import { Icon } from '@iconify/react';
+import { UnifiedUser } from '@/services/common/user';
 // import Link from 'next/link';
 
 export enum SidebarItemType {
@@ -26,6 +27,7 @@ export type SidebarItem = {
   endContent?: React.ReactNode;
   items?: SidebarItem[];
   className?: string;
+  roles?: UnifiedUser['role'][];
 };
 
 export type SidebarProps = Omit<ListboxProps<SidebarItem>, 'children'> & {

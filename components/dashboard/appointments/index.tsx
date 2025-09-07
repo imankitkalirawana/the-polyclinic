@@ -6,7 +6,7 @@ import { useRouter } from 'nextjs-toploader/app';
 import { Button, DropdownItem, DropdownMenu, Selection, Tooltip } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import CancelDeleteAppointments from '../../appointments/ui/bulk-cancel-delete';
+import CancelDeleteAppointments from '@/components/client/appointments/ui/bulk-cancel-delete';
 import { AppointmentQuickLook } from './quicklook';
 
 import { Table } from '@/components/ui/data-table';
@@ -20,9 +20,9 @@ import {
 import { convertSelectionToKeys } from '@/components/ui/data-table/helper';
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 import { apiRequest } from '@/lib/axios';
-import { useAllAppointments } from '@/services/appointment';
+import { useAllAppointments } from '@/services/client/appointment/query';
 import { useAppointmentStore } from '@/store/appointment';
-import { AppointmentType } from '@/types/appointment';
+import { AppointmentType } from '@/services/client/appointment';
 
 const INITIAL_VISIBLE_COLUMNS = ['aid', 'date', 'patient.name', 'doctor.name', 'status'];
 
@@ -31,6 +31,8 @@ export default function Appointments() {
 
   const { appointment, setAppointment, keys, setKeys, action, setAction } = useAppointmentStore();
   const { data, isLoading } = useAllAppointments();
+
+  // Removed debug log for production
 
   const appointments: AppointmentType[] = useMemo(() => data || [], [data]);
 
