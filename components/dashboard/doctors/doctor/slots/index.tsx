@@ -5,8 +5,8 @@ import { Formik, FormikProps } from 'formik';
 import { ConfigurationPanel } from './configuration-panel';
 import { SlotsPreview } from './slots-preview';
 
-import { useSlotsByUID, useUpdateSlots } from '@/hooks/queries/client/slots';
 import type { SlotConfig } from '@/types/client/slots';
+import { useSlotsByUID, useUpdateSlots } from '@/services/client/doctor';
 
 const initialValues: SlotConfig = {
   title: '',

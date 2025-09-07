@@ -1,7 +1,7 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 import { AppointmentScheduler } from '@/components/dashboard/doctors/doctor/slots';
-import { getSlotsByUID } from '@/services/api/client/slots';
+import { DoctorSlots } from '@/services/client/doctor';
 
 interface DoctorSlotsPageProps {
   params: Promise<{ uid: string }>;
@@ -15,7 +15,7 @@ export default async function DoctorSlotsPage(props: DoctorSlotsPageProps) {
   await queryClient.prefetchQuery({
     queryKey: ['slots', uid],
     queryFn: async () => {
-      const res = await getSlotsByUID(uid);
+      const res = await DoctorSlots.getSlotsByUID(uid);
       if (res.success) {
         return res.data;
       }
