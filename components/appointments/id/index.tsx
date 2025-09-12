@@ -119,15 +119,6 @@ export default function Appointment({ aid, session }: AppointmentProps) {
           <Button
             color="primary"
             variant="light"
-            startContent={
-              <Icon icon="solar:printer-2-bold-duotone" width="18" />
-            }
-          >
-            Print
-          </Button>
-          <Button
-            color="primary"
-            variant="light"
             startContent={<Icon icon="solar:share-bold-duotone" width="18" />}
           >
             Share
