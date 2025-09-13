@@ -78,6 +78,7 @@
     "react-markdown": "^10.1.0",
     "react-quill": "^2.0.0",
     "recharts": "^2.15.3",
+    "resend": "^6.0.3",
     "sharp": "^0.34.1",
     "slugify": "^1.6.6",
     "sonner": "^2.0.3",
