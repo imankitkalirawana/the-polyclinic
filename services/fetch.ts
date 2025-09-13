@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import axios from 'axios';
 import type { $FixMe } from '@/types';
 import { getSubdomain } from '@/auth/sub-domain';
-import { BASE_URL } from './constants';
+import { API_BASE_URL } from '@/lib/config';
 
 export interface ApiResponse<T = unknown> {
   success: boolean;
@@ -57,7 +57,7 @@ export async function fetchData<T = unknown>(
     } else {
       const subdomain = await getSubdomain(); // e.g. "clinic"
 
-      const parsed = new URL(BASE_URL);
+      const parsed = new URL(API_BASE_URL);
 
       if (subdomain) {
         // ✅ Always prepend subdomain to full hostname
@@ -130,7 +130,7 @@ export async function fetchDataWithPagination<T>(
     });
 
     const res = await axios({
-      url: `${baseUrl || BASE_URL}${endpoint}?${searchParams.toString()}`,
+      url: `${baseUrl || API_BASE_URL}${endpoint}?${searchParams.toString()}`,
       method,
       data,
       headers: {
