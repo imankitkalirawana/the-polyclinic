@@ -1,243 +1,485 @@
-# Next.js Healthcare Management System (The Polyclinic)
+# The Polyclinic - Healthcare Management System
 
-A comprehensive healthcare management system built with Next.js, featuring appointment scheduling, user management, and drug inventory tracking.
+A comprehensive, multi-tenant healthcare management system built with Next.js 15, featuring appointment scheduling, user management, drug inventory tracking, and organization management.
 
-This project is a full-stack web application designed to streamline healthcare operations. It provides a robust set of features for managing appointments, users, services, and drug inventory. The system is built with modern web technologies, ensuring a responsive and user-friendly experience for healthcare professionals and patients alike.
+## 🏥 Overview
 
-Key features include:
+The Polyclinic is a full-stack healthcare management platform designed to streamline operations for clinics, hospitals, and healthcare facilities. It provides a robust set of features for managing appointments, users, services, drug inventory, and multi-tenant organizations with role-based access control.
 
-- User authentication and role-based access control
-- Appointment scheduling and management
-- Patient and doctor profiles
-- Drug inventory tracking
-- Service catalog management
-- Email notifications
-- Data export functionality
-- Responsive dashboard with real-time updates
+### Key Features
 
-## Repository Structure
+- **Multi-tenant Architecture**: Support for multiple organizations with subdomain-based routing
+- **Role-based Access Control**: 7 different user roles (superadmin, moderator, ops, admin, receptionist, doctor, patient)
+- **Appointment Management**: Complete scheduling system with calendar integration
+- **User Management**: Comprehensive user profiles with organization-based access
+- **Drug Inventory**: Track medications, dosages, and stock levels
+- **Service Catalog**: Manage medical services and procedures
+- **Email Notifications**: Automated email system for appointments and communications
+- **Data Export**: Excel export functionality for all major entities
+- **Real-time Dashboard**: Responsive admin dashboard with analytics
+- **Secure Authentication**: OTP-based verification with JWT tokens
+- **API Documentation**: RESTful API with comprehensive endpoints
+
+## 🏗️ Architecture
+
+### Technology Stack
+
+- **Frontend**: Next.js 15 (App Router), React 19, TypeScript
+- **UI Framework**: HeroUI (NextUI), Tailwind CSS
+- **Backend**: Next.js API Routes, Server Actions
+- **Database**: MongoDB with Mongoose ODM
+- **Authentication**: NextAuth.js with OTP verification
+- **State Management**: React Query (TanStack Query), Zustand
+- **Email**: Nodemailer with custom templates
+- **Deployment**: Docker, Vercel-ready
+- **Monitoring**: Sentry integration
+- **Development**: ESLint, Prettier, Husky, Commitlint
+
+### Project Structure
 
 ```
-.
-├── app/
-│   ├── api/
-│   │   └── v1/
-│   │       ├── appointments/
-│   │       ├── drugs/
-│   │       ├── emails/
-│   │       ├── services/
-│   │       └── users/
-│   ├── auth/
-│   ├── dashboard/
-│   └── appointments/
-├── components/
-│   ├── appointments/
-│   ├── dashboard/
-│   ├── ui/
-│   └── auth/
-├── functions/
-│   ├── client/
-│   └── server-actions/
-├── lib/
-├── models/
-├── public/
-├── styles/
-├── utils/
-├── auth.ts
-├── next.config.mjs
-├── package.json
-├── tailwind.config.ts
-└── tsconfig.json
+the-polyclinic/
+├── app/                          # Next.js App Router
+│   ├── api/                     # API routes
+│   │   ├── auth/                # Authentication endpoints
+│   │   └── v1/                  # Versioned API endpoints
+│   │       ├── client/          # Client-facing APIs
+│   │       ├── common/          # Shared APIs
+│   │       └── system/          # System/admin APIs
+│   ├── auth/                    # Authentication pages
+│   ├── dashboard/               # Admin dashboard
+│   ├── appointments/            # Appointment management
+│   └── s/[subdomain]/          # Multi-tenant pages
+├── components/                   # React components
+│   ├── auth/                    # Authentication components
+│   ├── dashboard/               # Dashboard components
+│   ├── client/                  # Client-facing components
+│   └── ui/                      # Reusable UI components
+├── services/                     # API services and React Query hooks
+│   ├── client/                  # Client services
+│   ├── common/                  # Shared services
+│   └── system/                  # System services
+├── models/                       # Mongoose models
+├── lib/                         # Utility libraries
+├── functions/                   # Server actions
+├── hooks/                       # Custom React hooks
+├── types/                       # TypeScript type definitions
+├── docs/                        # Documentation
+└── public/                      # Static assets
 ```
 
-Key Files:
+## 🚀 Quick Start
 
-- `app/api/`: Contains API routes for various entities
-- `components/`: Reusable React components
-- `functions/`: Server-side and client-side utility functions
-- `models/`: Mongoose models for database entities
-- `auth.ts`: Authentication configuration
-- `next.config.mjs`: Next.js configuration
-- `tailwind.config.ts`: Tailwind CSS configuration
+### Prerequisites
 
-## Usage Instructions
+- Node.js 18+
+- MongoDB 4.4+
+- pnpm (recommended) or npm
 
 ### Installation
 
-Prerequisites:
+1. **Clone the repository**
 
-- Node.js (v18 or later)
-- MongoDB (v4.4 or later)
+   ```bash
+   git clone https://github.com/your-username/the-polyclinic.git
+   cd the-polyclinic
+   ```
 
-Steps:
+2. **Install dependencies**
 
-1. Clone the repository:
+   ```bash
+   pnpm install
    ```
-   git clone https://github.com/your-username/healthcare-management-system.git
-   ```
-2. Navigate to the project directory:
-   ```
-   cd healthcare-management-system
-   ```
-3. Install dependencies:
-   ```
-   npm install
-   ```
-4. Create a `.env.local` file in the root directory and add the following environment variables:
-   ```
-   MONGODB_URI=your_mongodb_connection_string
-   NEXTAUTH_SECRET=your_nextauth_secret
+
+3. **Environment Setup**
+   Create a `.env.local` file in the root directory:
+
+   ```env
+   # Database
+   MONGODB_URI=mongodb://localhost:27017/the-polyclinic
+
+   # Authentication
+   NEXTAUTH_SECRET=your-secret-key-here
    NEXTAUTH_URL=http://localhost:3000
+
+   # Google OAuth (optional)
+   GOOGLE_CLIENT_ID=your-google-client-id
+   GOOGLE_CLIENT_SECRET=your-google-client-secret
+
+   # Email Configuration
+   EMAIL_HOST=smtp.gmail.com
+   EMAIL_PORT=587
+   EMAIL_USER=your-email@gmail.com
+   EMAIL_PASS=your-app-password
+
+   # Sentry (optional)
+   SENTRY_DSN=your-sentry-dsn
    ```
 
-### Getting Started
+4. **Start the development server**
 
-To run the development server:
+   ```bash
+   pnpm dev
+   ```
 
-```
-npm run dev
-```
+5. **Access the application**
+   - Main application: http://localhost:3000
+   - Admin dashboard: http://localhost:3000/dashboard
+   - Multi-tenant: http://organization.lvh.me:3000
 
-Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+## 📋 User Roles & Permissions
 
-### Configuration
+| Role             | Permissions                                 |
+| ---------------- | ------------------------------------------- |
+| **Superadmin**   | Full system access, organization management |
+| **Moderator**    | User management, system oversight           |
+| **Ops**          | Operational management, user administration |
+| **Admin**        | Clinic management, staff oversight          |
+| **Receptionist** | Patient management, appointment scheduling  |
+| **Doctor**       | Patient care, appointment management        |
+| **Patient**      | Personal appointments, profile management   |
 
-The application can be configured through various files:
+## 🔧 Configuration
 
-- `next.config.mjs`: Adjust Next.js settings
-- `tailwind.config.ts`: Customize the Tailwind CSS theme
-- `auth.ts`: Configure authentication providers and callbacks
+### Multi-tenant Setup
 
-### Common Use Cases
+The system supports multi-tenancy through subdomain routing:
 
-1. Creating a new appointment:
+- **Development**: `organization.lvh.me:3000`
+- **Production**: `organization.yourdomain.com`
+- **Vercel**: `organization---branch.vercel.app`
 
-   - Navigate to the Appointments page
-   - Click "New Appointment"
-   - Fill in the required details and submit
+### Appointment Configuration
 
-2. Managing drug inventory:
+Configure appointment settings in `lib/config.ts`:
 
-   - Go to the Dashboard
-   - Select "Drugs" from the sidebar
-   - Add, edit, or delete drug entries as needed
-
-3. Exporting data:
-   - Navigate to the desired section (e.g., Users, Drugs)
-   - Click the "Export" button to download an Excel file
-
-### Testing & Quality
-
-To run the test suite:
-
-```
-npm run test
-```
-
-### Troubleshooting
-
-Common issues and solutions:
-
-1. Database connection errors:
-
-   - Ensure your MongoDB instance is running
-   - Check that the `MONGODB_URI` in `.env.local` is correct
-   - Verify network connectivity to the database server
-
-2. Authentication issues:
-
-   - Make sure `NEXTAUTH_SECRET` and `NEXTAUTH_URL` are set correctly in `.env.local`
-   - Clear browser cookies and try logging in again
-
-3. API errors:
-   - Check the server logs for detailed error messages
-   - Verify that you're using the correct API endpoints and HTTP methods
-
-Debugging:
-
-- Enable verbose logging by setting `DEBUG=true` in `.env.local`
-- Use the browser's developer tools to inspect network requests and console output
-- Check the application logs in `./logs/app.log` for server-side errors
-
-Performance optimization:
-
-- Monitor API response times using the Network tab in browser dev tools
-- Use the React DevTools profiler to identify slow-rendering components
-- Consider implementing server-side rendering for data-heavy pages
-
-## Data Flow
-
-The application follows a typical client-server architecture with Next.js handling both frontend and backend operations. Here's an overview of the data flow:
-
-1. Client makes a request (e.g., fetching appointments)
-2. Next.js API route handles the request
-3. API route connects to MongoDB using Mongoose
-4. Data is retrieved or modified in the database
-5. Response is sent back to the client
-6. React components update to reflect the new data
-
-```
-[Client] <-> [Next.js API Routes] <-> [Mongoose] <-> [MongoDB]
-   ^                                                    |
-   |                                                    |
-   +----------------------------------------------------+
+```typescript
+export const TIMINGS = {
+  appointment: {
+    start: 9, // 9 AM
+    end: 17, // 5 PM
+    interval: 30, // 30-minute slots
+  },
+  booking: {
+    maximum: 30, // Max days in advance
+  },
+  holidays: ['weekend', '2025-01-17', '2025-01-26'],
+};
 ```
 
-Important technical considerations:
+### Email Templates
 
-- Use of server-side rendering (SSR) for initial page loads
-- Client-side data fetching for dynamic updates
-- JWT-based authentication for secure API access
-- Optimistic UI updates for improved perceived performance
+Customize email templates in `templates/email/`:
 
-## Deployment
+- OTP verification emails
+- Appointment confirmations
+- Password reset notifications
+- Welcome emails
 
-Prerequisites:
+## 📚 API Documentation
 
-- Vercel account or similar hosting platform
-- Production MongoDB instance
+### Authentication Endpoints
 
-Steps:
+#### Send OTP
 
-1. Push your code to a Git repository
-2. Connect your repository to Vercel
-3. Configure environment variables in Vercel dashboard
-4. Deploy the application
+```http
+POST /api/auth/send-otp
+Content-Type: application/json
 
-Environment configurations:
+{
+  "email": "user@example.com",
+  "type": "register",
+  "subdomain": "organization-name"
+}
+```
 
-- Set `NODE_ENV=production`
-- Ensure all required environment variables are set
-- Configure proper CORS settings for production API endpoints
+#### Verify OTP
 
-Monitoring:
+```http
+POST /api/auth/verify-otp
+Content-Type: application/json
 
-- Use Vercel Analytics for performance monitoring
-- Set up error tracking with a service like Sentry
+{
+  "email": "user@example.com",
+  "otp": "123456",
+  "type": "register"
+}
+```
 
-## Infrastructure
+#### Register User
 
-The application is containerized using Docker for easy deployment and scaling. Key infrastructure components include:
+```http
+POST /api/auth/register
+Content-Type: application/json
 
-- Docker:
+{
+  "name": "User Name",
+  "email": "user@example.com",
+  "password": "securepassword123",
+  "subdomain": "organization-name",
+  "token": "jwt_token_from_verify_otp"
+}
+```
 
-  - `Dockerfile`: Defines the container image for the application
-  - `docker-compose.yml`: Orchestrates the application and its dependencies
+### Core API Endpoints
 
-- Node.js:
+#### Users
 
-  - The application runs on Node.js 18 in an Alpine Linux container
+- `GET /api/v1/common/users` - List users
+- `POST /api/v1/common/users` - Create user
+- `GET /api/v1/common/users/[uid]` - Get user details
+- `PUT /api/v1/common/users/[uid]` - Update user
+- `DELETE /api/v1/common/users/[uid]` - Delete user
 
-- Next.js:
+#### Appointments
 
-  - Provides the framework for both frontend and backend
+- `GET /api/v1/client/appointments` - List appointments
+- `POST /api/v1/client/appointments` - Create appointment
+- `GET /api/v1/client/appointments/[aid]` - Get appointment
+- `PUT /api/v1/client/appointments/[aid]` - Update appointment
+- `DELETE /api/v1/client/appointments/[aid]` - Cancel appointment
 
-- MongoDB:
+#### Doctors
 
-  - Used as the primary database (connection managed through environment variables)
+- `GET /api/v1/client/doctors` - List doctors
+- `POST /api/v1/client/doctors` - Create doctor profile
+- `GET /api/v1/client/doctors/[uid]` - Get doctor details
+- `GET /api/v1/client/doctors/[uid]/slots` - Get available slots
 
-- Tailwind CSS:
-  - `tailwind.config.ts`: Configures the design system and theme
-  - `tailwind.config.ts`: configure the design system and theme
+#### Drugs
 
-The infrastructure is designed to be cloud-agnostic and can be deployed to various platforms that support Docker containers.
+- `GET /api/v1/client/drugs` - List drugs
+- `POST /api/v1/client/drugs` - Add drug
+- `PUT /api/v1/client/drugs/[did]` - Update drug
+- `DELETE /api/v1/client/drugs/[did]` - Remove drug
+
+#### Services
+
+- `GET /api/v1/client/services` - List services
+- `POST /api/v1/client/services` - Create service
+- `PUT /api/v1/client/services/[id]` - Update service
+- `DELETE /api/v1/client/services/[id]` - Delete service
+
+## 🗄️ Database Schema
+
+### Core Models
+
+#### User Model
+
+```typescript
+{
+  uid: String,           // Unique identifier
+  name: String,          // User's full name
+  email: String,         // Email address (unique)
+  organization: String,  // Organization subdomain
+  phone: String,         // Phone number
+  password: String,      // Hashed password
+  image: String,         // Profile image URL
+  role: String,          // User role
+  status: String,        // Active/Inactive
+  createdBy: String,     // Creator email
+  updatedBy: String,     // Last updater email
+  createdAt: Date,       // Creation timestamp
+  updatedAt: Date        // Last update timestamp
+}
+```
+
+#### Doctor Model
+
+```typescript
+{
+  uid: Number,           // Doctor ID
+  designation: String,   // Job title
+  department: String,    // Medical department
+  experience: String,    // Years of experience
+  education: String,     // Educational background
+  patients: Number,      // Patient count
+  biography: String,     // Detailed bio
+  shortbio: String,      // Short bio
+  seating: String,       // Office location
+  createdBy: String,     // Creator email
+  updatedBy: String,     // Last updater email
+  createdAt: Date,       // Creation timestamp
+  updatedAt: Date        // Last update timestamp
+}
+```
+
+#### Drug Model
+
+```typescript
+{
+  did: Number,           // Drug ID
+  brandName: String,     // Brand name
+  genericName: String,   // Generic name
+  description: String,   // Drug description
+  manufacturer: String,  // Manufacturer
+  dosage: String,        // Dosage information
+  form: String,          // Form (tablet, liquid, etc.)
+  strength: Number,      // Strength
+  quantity: Number,      // Quantity
+  price: Number,         // Price
+  frequency: String,     // Frequency
+  status: String,        // Available/Out of stock
+  stock: Number,         // Stock level
+  createdBy: String,     // Creator email
+  updatedBy: String,     // Last updater email
+  createdAt: Date,       // Creation timestamp
+  updatedAt: Date        // Last update timestamp
+}
+```
+
+#### Service Model
+
+```typescript
+{
+  uniqueId: String,      // Unique service ID
+  name: String,          // Service name
+  description: String,   // Service description
+  summary: String,       // Short summary
+  price: Number,         // Service price
+  duration: Number,      // Duration in minutes
+  image: String,         // Service image
+  status: String,        // Active/Inactive
+  type: String,          // Service type
+  data: Map,             // Additional data
+  createdBy: String,     // Creator email
+  updatedBy: String,     // Last updater email
+  createdAt: Date,       // Creation timestamp
+  updatedAt: Date        // Last update timestamp
+}
+```
+
+## 🚀 Deployment
+
+### Docker Deployment
+
+1. **Build the Docker image**
+
+   ```bash
+   docker build -t the-polyclinic .
+   ```
+
+2. **Run with Docker Compose**
+   ```bash
+   docker-compose up -d
+   ```
+
+### Vercel Deployment
+
+1. **Connect to Vercel**
+
+   ```bash
+   vercel --prod
+   ```
+
+2. **Set environment variables** in Vercel dashboard:
+   - `MONGODB_URI`
+   - `NEXTAUTH_SECRET`
+   - `NEXTAUTH_URL`
+   - `GOOGLE_CLIENT_ID`
+   - `GOOGLE_CLIENT_SECRET`
+   - `EMAIL_HOST`
+   - `EMAIL_USER`
+   - `EMAIL_PASS`
+
+### Environment Variables
+
+| Variable               | Description                   | Required |
+| ---------------------- | ----------------------------- | -------- |
+| `MONGODB_URI`          | MongoDB connection string     | Yes      |
+| `NEXTAUTH_SECRET`      | NextAuth.js secret key        | Yes      |
+| `NEXTAUTH_URL`         | Application URL               | Yes      |
+| `GOOGLE_CLIENT_ID`     | Google OAuth client ID        | No       |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth client secret    | No       |
+| `EMAIL_HOST`           | SMTP host                     | Yes      |
+| `EMAIL_PORT`           | SMTP port                     | Yes      |
+| `EMAIL_USER`           | SMTP username                 | Yes      |
+| `EMAIL_PASS`           | SMTP password                 | Yes      |
+| `SENTRY_DSN`           | Sentry DSN for error tracking | No       |
+
+## 🧪 Development
+
+### Available Scripts
+
+```bash
+# Development
+pnpm dev              # Start development server
+pnpm build            # Build for production
+pnpm start            # Start production server
+
+# Code Quality
+pnpm lint             # Run ESLint
+pnpm lint:fix         # Fix ESLint errors
+pnpm format           # Format code with Prettier
+pnpm tsc              # Type check
+
+# Utilities
+pnpm clean            # Clean node_modules and rebuild
+```
+
+### Code Style
+
+- **ESLint**: Airbnb configuration with TypeScript support
+- **Prettier**: Code formatting with Tailwind CSS plugin
+- **Husky**: Git hooks for pre-commit linting
+- **Commitlint**: Conventional commit messages
+
+### Testing
+
+```bash
+# Run tests (when implemented)
+pnpm test
+
+# Run tests in watch mode
+pnpm test:watch
+
+# Run tests with coverage
+pnpm test:coverage
+```
+
+## 📖 Documentation
+
+- [Authentication Architecture](docs/AUTHENTICATION_ARCHITECTURE.md) - Detailed auth system documentation
+- [Organization Management](docs/ORGANIZATION_MANAGEMENT.md) - Multi-tenant setup guide
+- [API Reference](docs/API.md) - Complete API documentation
+- [Deployment Guide](docs/DEPLOYMENT.md) - Production deployment instructions
+- [Contributing Guide](docs/CONTRIBUTING.md) - Development guidelines
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit your changes: `git commit -m 'Add amazing feature'`
+4. Push to the branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
+
+### Development Guidelines
+
+- Follow the existing code style and patterns
+- Write meaningful commit messages using conventional commits
+- Add tests for new features
+- Update documentation as needed
+- Ensure all checks pass before submitting PR
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+- **Documentation**: Check the [docs](docs/) folder
+- **Issues**: Report bugs and request features via [GitHub Issues](https://github.com/your-username/the-polyclinic/issues)
+- **Discussions**: Join community discussions in [GitHub Discussions](https://github.com/your-username/the-polyclinic/discussions)
+
+## 🙏 Acknowledgments
+
+- [Next.js](https://nextjs.org/) - React framework
+- [HeroUI](https://heroui.com/) - UI component library
+- [MongoDB](https://www.mongodb.com/) - Database
+- [NextAuth.js](https://next-auth.js.org/) - Authentication
+- [Tailwind CSS](https://tailwindcss.com/) - Styling
+- [React Query](https://tanstack.com/query) - Data fetching
+
+---
+
+**Built with ❤️ for healthcare professionals**

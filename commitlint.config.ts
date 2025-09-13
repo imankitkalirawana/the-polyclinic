@@ -23,6 +23,7 @@ const Configuration: UserConfig = {
         'revert', // Reverts a previous commit
       ],
     ],
+    'header-max-length': [2, 'always', 200], // Allow up to 200 characters in header
   },
 };
 
