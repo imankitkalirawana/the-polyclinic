@@ -66,7 +66,11 @@ export const POST = withAuth(async (request: NextAuthRequest) => {
       );
     }
 
-    const result = await AppointmentService.create(conn, body);
+    const result = await AppointmentService.create(
+      conn,
+      body,
+      request.auth?.user?.role as OrganizationUser['role']
+    );
 
     return NextResponse.json({ message: result.message, data: result.data });
   } catch (error: unknown) {

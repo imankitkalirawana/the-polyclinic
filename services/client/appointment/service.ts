@@ -3,6 +3,7 @@ import { Connection } from 'mongoose';
 import { getAppointmentsWithDetails } from './operations';
 import { getAppointmentModel } from './model';
 import { format } from 'date-fns';
+import { OrganizationUser } from '@/services/common/user';
 
 export class AppointmentService {
   static async getAll(conn: Connection, query: Record<string, unknown>): Promise<ServiceResult> {
@@ -22,9 +23,17 @@ export class AppointmentService {
     }
   }
 
-  static async create(conn: Connection, data: Record<string, unknown>): Promise<ServiceResult> {
+  static async create(
+    conn: Connection,
+    data: Record<string, unknown>,
+    role: OrganizationUser['role']
+  ): Promise<ServiceResult> {
     try {
       const Appointment = getAppointmentModel(conn);
+      if (data.doctorId && (role === 'receptionist' || role === 'admin')) {
+        data.status = 'confirmed';
+      }
+
       const appointment = new Appointment(data);
       await appointment.save();
       return {
