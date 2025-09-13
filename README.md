@@ -1,4 +1,4 @@
-# Next.js Healthcare Management System (The Polyclnic)
+# Next.js Healthcare Management System (The Polyclinic)
 
 A comprehensive healthcare management system built with Next.js, featuring appointment scheduling, user management, and drug inventory tracking.
 
