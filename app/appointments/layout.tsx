@@ -7,7 +7,7 @@ export default async function Layout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
-  const allowedRoles = ['admin', 'receptionist', 'doctor', 'user'];
+  const allowedRoles = ['admin', 'receptionist', 'doctor', 'patient'];
 
   if (!session || !allowedRoles.includes(session.user?.role ?? '')) {
     unauthorized();

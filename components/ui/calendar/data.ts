@@ -31,4 +31,4 @@ export const weekdays = [
   },
 ];
 
-export const allowedRolesToCreateAppointment = ['admin', 'receptionist', 'user'];
+export const allowedRolesToCreateAppointment = ['admin', 'receptionist', 'patient'];
