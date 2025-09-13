@@ -1,5 +1,6 @@
 import VercelInviteUserEmail from '@/components/template';
 import { emails } from '@/lib/resend';
+import { NextResponse } from 'next/server';
 
 export async function POST() {
   try {
@@ -21,12 +22,12 @@ export async function POST() {
     });
 
     if (error) {
-      return Response.json({ error }, { status: 500 });
+      return NextResponse.json({ error }, { status: 500 });
     }
 
-    return Response.json(data);
+    return NextResponse.json(data);
   } catch (error) {
     console.error(error);
-    return Response.json({ error }, { status: 500 });
+    return NextResponse.json({ error }, { status: 500 });
   }
 }
