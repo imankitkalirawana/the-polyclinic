@@ -12,6 +12,7 @@ import Fuse from 'fuse.js';
 import { SearchInput } from '../ui';
 import { usePreviousAppointments } from '@/services/client/patient';
 import MinimalLoader from '@/components/ui/minimal-placeholder';
+import { format } from 'date-fns';
 
 function PreviousAppointments({ appointments }: { appointments: AppointmentType[] }) {
   const { values, setFieldValue } = useFormikContext<CreateAppointmentFormValues>();
@@ -69,9 +70,9 @@ function PreviousAppointments({ appointments }: { appointments: AppointmentType[
                 key={appointment.aid}
                 value={appointment.aid.toString()}
                 className="rounded-medium p-2"
-                description={`${appointment.patient.name} - ${appointment.doctor?.name}`}
+                description={`On ${format(new Date(appointment.date), 'PPp')}`}
               >
-                #{appointment.aid}
+                {appointment.patient.name} - {appointment.doctor?.name}
               </CustomRadio>
             ))}
           </RadioGroup>

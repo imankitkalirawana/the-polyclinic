@@ -8,7 +8,7 @@ Healthcare management system built with Next.js 15, NextAuth.js, MongoDB, HeroUI
 
 ### API Structure
 
-- **REST API**: `/app/api/v1/{entity}/route.ts` with authenticated endpoints using `auth()` wrapper
+- **REST API**: `/app/api/v1/{entity}/route.ts` with authenticated endpoints using `withAuth()` wrapper
 - **Server Actions**: Functions in `/functions/server-actions/` for server-side operations
 - **Services Layer**: React Query hooks in `/services/{entity}.ts` for data fetching with optimistic updates
 

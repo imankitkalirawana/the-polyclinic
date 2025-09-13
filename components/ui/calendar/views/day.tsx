@@ -56,14 +56,14 @@ export function DayView({ appointments, currentDate, onTimeSlotClick }: DayViewP
   return (
     <div className="flex h-full flex-col">
       {/* Day header */}
-      <div className="flex border-b">
-        <div className="flex w-20 shrink-0 items-end border-r px-2 pb-1">
-          <div className="text-tiny uppercase tracking-wide text-default-500">
+      <div className="flex border-b border-divider">
+        <div className="flex w-20 shrink-0 items-end border-r border-divider px-2 pb-1">
+          <div className="uppercase tracking-wide text-default-500 text-tiny">
             {format(currentDate, 'z')}
           </div>
         </div>
         <div className="flex flex-1 flex-col p-2">
-          <div className="text-small uppercase tracking-wide text-default-500">
+          <div className="uppercase tracking-wide text-default-500 text-small">
             {format(currentDate, 'EEEE')}
           </div>
           <DateChip date={currentDate} size="lg" className="self-start" />
@@ -91,7 +91,7 @@ export function DayView({ appointments, currentDate, onTimeSlotClick }: DayViewP
               <React.Fragment key={`hour-${hour}`}>
                 {/* Time Label Cell */}
                 <div
-                  className="row-span-1 w-20 shrink-0 border-b border-r p-2 text-right text-small text-default-500"
+                  className="row-span-1 w-20 shrink-0 border-b border-r border-divider p-2 text-right text-default-500 text-small"
                   style={{ gridRowStart: hourIndex + 1, gridColumnStart: 1 }}
                 >
                   {hour < 12 ? `${hour} AM` : hour === 12 ? '12 PM' : `${hour - 12} PM`}
@@ -100,10 +100,13 @@ export function DayView({ appointments, currentDate, onTimeSlotClick }: DayViewP
                 {/* Day Content Cell for this Hour */}
                 <div
                   title={isHourDisabled ? 'Cannot create appointments in the past' : ''}
-                  className={cn('relative min-h-[80px] cursor-pointer border-b p-1', {
-                    'cursor-not-allowed': isHourDisabled,
-                    'cursor-auto': !isAllowedToCreateAppointment,
-                  })}
+                  className={cn(
+                    'relative min-h-[80px] cursor-pointer border-b border-divider p-1',
+                    {
+                      'cursor-not-allowed': isHourDisabled,
+                      'cursor-auto': !isAllowedToCreateAppointment,
+                    }
+                  )}
                   style={{
                     gridRowStart: hourIndex + 1,
                     gridColumnStart: 2,

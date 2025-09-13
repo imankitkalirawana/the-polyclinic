@@ -130,7 +130,7 @@ export function CalendarHeader({
   };
 
   return (
-    <header className="flex items-center justify-between border-b px-2 py-2 sm:px-4">
+    <header className="flex items-center justify-between border-b border-divider px-2 py-2 sm:px-4">
       <div className="flex items-center sm:gap-4">
         <Button
           variant="flat"

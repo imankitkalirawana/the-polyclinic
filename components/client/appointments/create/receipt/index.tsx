@@ -75,14 +75,16 @@ export default function AppointmentBookingReceipt() {
                 ) : (
                   <span className="flex items-center gap-1">
                     <p className="font-medium">{doctor?.name}</p>
-                    <Chip
-                      classNames={{ base: 'px-1', content: 'text-tiny' }}
-                      color="primary"
-                      size="sm"
-                      variant="flat"
-                    >
-                      {doctor?.designation}
-                    </Chip>
+                    {doctor?.designation && (
+                      <Chip
+                        classNames={{ base: 'px-1', content: 'text-tiny' }}
+                        color="primary"
+                        size="sm"
+                        variant="flat"
+                      >
+                        {doctor?.designation}
+                      </Chip>
+                    )}
                   </span>
                 )}
               </div>

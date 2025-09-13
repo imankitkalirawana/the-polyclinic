@@ -236,6 +236,9 @@ export default function Organization({ id }: { id: string }) {
           onClose={deleteUserModal.onClose}
           organization={organization}
           user={selectedUser}
+          onSubmit={() => {
+            console.log('Deleted');
+          }}
         />
       )}
     </>

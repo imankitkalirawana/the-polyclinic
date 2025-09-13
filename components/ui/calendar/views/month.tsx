@@ -67,7 +67,7 @@ export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
           <div
             key={day}
             className={cn(
-              'border-r text-center text-tiny font-medium uppercase text-default-500 last:border-r-0'
+              'border-r border-divider text-center font-medium uppercase text-default-500 text-tiny last:border-r-0'
             )}
           >
             {day}
@@ -97,7 +97,7 @@ export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
               key={day.toISOString()}
               title={isDateDisabled ? 'Booking is not allowed in the past' : ''}
               className={cn(
-                'flex select-none flex-col justify-start overflow-hidden border-b border-r p-1 last:border-r-0',
+                'flex select-none flex-col justify-start overflow-hidden border-b border-r border-divider p-1 last:border-r-0',
                 {
                   'bg-default-100 text-default-500': !isCurrentMonth,
                   'cursor-not-allowed bg-default-50': isDateDisabled,

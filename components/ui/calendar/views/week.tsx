@@ -74,15 +74,15 @@ export function WeekView({ appointments, currentDate, onTimeSlotClick }: WeekVie
   return (
     <div className="flex h-full flex-col">
       {/* Week header using Grid */}
-      <div className="grid grid-cols-[auto_repeat(7,1fr)] border-b">
+      <div className="grid grid-cols-[auto_repeat(7,1fr)] border-b border-divider">
         <div className="w-20 shrink-0 border-r" />
         {/* Empty top-left cell */}
         {weekDays.map((day) => (
           <div
             key={`header-${day.toISOString()}`}
-            className="flex flex-col items-center border-r p-2 text-center last:border-r-0"
+            className="flex flex-col items-center border-r border-divider p-2 text-center last:border-r-0"
           >
-            <div className="text-small text-default-500">{format(day, 'EEE')}</div>
+            <div className="text-default-500 text-small">{format(day, 'EEE')}</div>
             <DateChip
               date={day}
               size="md"
@@ -108,7 +108,7 @@ export function WeekView({ appointments, currentDate, onTimeSlotClick }: WeekVie
             <React.Fragment key={`hour-${hour}`}>
               {/* Time Label Cell */}
               <div
-                className="row-span-1 w-20 shrink-0 border-b border-r p-2 text-right text-small text-default-500"
+                className="row-span-1 w-20 shrink-0 border-b border-r border-divider p-2 text-right text-default-500 text-small"
                 style={{ gridRowStart: hourIndex + 1, gridColumnStart: 1 }}
               >
                 {hour < 12 ? `${hour} AM` : hour === 12 ? '12 PM' : `${hour - 12} PM`}
@@ -122,7 +122,7 @@ export function WeekView({ appointments, currentDate, onTimeSlotClick }: WeekVie
                     key={`cell-${day.toISOString()}-${hour}`}
                     title={isHourDisabled ? 'Cannot create appointments in the past' : ''}
                     className={cn(
-                      'relative min-h-[80px] cursor-pointer overflow-hidden border-b border-r p-1',
+                      'relative min-h-[80px] cursor-pointer overflow-hidden border-b border-r border-divider p-1',
                       {
                         'last:border-r-0': dayIndex === weekDays.length - 1,
                         'cursor-not-allowed': isHourDisabled,
