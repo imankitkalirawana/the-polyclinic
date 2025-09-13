@@ -1,16 +1,23 @@
-import { Template } from '@/components/template';
-import { Resend } from 'resend';
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+import VercelInviteUserEmail from '@/components/template';
+import { emails } from '@/lib/resend';
 
 export async function POST() {
   try {
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await emails.send({
       from: 'Ankit Kalirawana <ankit@thepolyclinic.app>',
       to: ['009ankitkalirawana@gmail.com'],
       subject: 'Hello world',
-      text: 'Hello world',
-      react: Template(),
+      react: VercelInviteUserEmail({
+        username: 'Ankit Kalirawana',
+        userImage: 'https://github.com/shadcn.png',
+        invitedByUsername: 'Ankit Kalirawana',
+        invitedByEmail: 'ankit@thepolyclinic.app',
+        teamName: 'The Polyclinic',
+        teamImage: 'https://github.com/shadcn.png',
+        inviteLink: 'https://thepolyclinic.app',
+        inviteFromIp: '127.0.0.1',
+        inviteFromLocation: 'India',
+      }),
     });
 
     if (error) {
