@@ -22,6 +22,7 @@ export const useAllAppointments = (): UseQueryResult<AppointmentType[]> =>
       }
       throw new Error(res.message);
     },
+    initialData: [],
   });
 
 export const useAppointmentWithAID = (aid: string): UseQueryResult<AppointmentType> =>

@@ -47,7 +47,7 @@ export async function fetchData<T = unknown>(
   } = {}
 ): Promise<ApiResponse<T>> {
   try {
-    const { method = 'GET', data, params, baseUrl, headers } = options;
+    const { method = 'GET', data = {}, params = {}, baseUrl, headers } = options;
 
     let url: string;
 
@@ -55,28 +55,51 @@ export async function fetchData<T = unknown>(
       // ✅ if baseUrl is provided, use it directly
       url = `${baseUrl}${endpoint}`;
     } else {
-      const subdomain = await getSubdomain(); // e.g. "clinic"
-
-      const parsed = new URL(API_BASE_URL);
-
-      if (subdomain) {
-        // ✅ Always prepend subdomain to full hostname
-        parsed.hostname = `${subdomain}.${parsed.hostname}`;
-      }
-
-      url = `${parsed.origin}${parsed.pathname}${endpoint}`;
+      // ✅ just use API_BASE_URL as is (no subdomain rewriting)
+      url = `${API_BASE_URL}${endpoint}`;
     }
 
-    const res = await axios({
+    // ✅ Get subdomain
+    const subdomain = await getSubdomain();
+    let finalData = data;
+    let finalParams = params;
+
+    if (subdomain) {
+      if (method === 'GET') {
+        finalParams = {
+          ...params,
+          organization: subdomain,
+        };
+      } else {
+        finalData = {
+          ...data,
+          organization: subdomain,
+        };
+      }
+    }
+
+    const config = {
       url,
       method,
-      data,
-      params,
+      data: finalData,
+      params: finalParams,
       headers: {
         ...headers,
         Cookie: (await cookies()).toString(),
       },
-    });
+    };
+
+    const res = await axios(config);
+
+    if (axios.isAxiosError(res)) {
+      console.error('Axios error', res.response?.data);
+      return {
+        success: false,
+        message: res.response?.data?.message || 'Request failed',
+        data: [] as T,
+        errors: res.response?.data?.errors,
+      };
+    }
 
     return {
       success: true,
@@ -84,6 +107,7 @@ export async function fetchData<T = unknown>(
       data: res.data?.data || res.data,
     };
   } catch (error: $FixMe) {
+    console.error('error', error);
     return {
       success: false,
       message: error?.response?.data?.message || 'Request failed',

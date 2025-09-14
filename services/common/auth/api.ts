@@ -24,7 +24,7 @@ export class AuthApi {
     });
   }
 
-  static async verifyEmail(data: { email: string; subdomain?: string | null }) {
+  static async verifyEmail(data: { email: string }) {
     return await fetchData<{ exists: boolean }>(`${this.baseUrl}/verify-email`, {
       method: 'POST',
       data,

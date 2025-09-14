@@ -5,18 +5,12 @@ import { withAuth } from '@/middleware/withAuth';
 import { getSubdomain } from '@/auth/sub-domain';
 import { createAppointmentSchema } from '@/services/client/appointment';
 import { validateRequest } from '@/services';
-import { validateOrganizationId } from '@/lib/server-actions/validation';
 import { OrganizationUser } from '@/services/common/user';
 import { AppointmentService } from '@/services/client/appointment/service';
 
 export const GET = withAuth(async (request: NextAuthRequest) => {
   try {
     const subdomain = await getSubdomain();
-
-    const doesOrganizationExist = await validateOrganizationId(subdomain);
-    if (!doesOrganizationExist) {
-      return NextResponse.json({ message: 'Organization not found' }, { status: 404 });
-    }
 
     const conn = await connectDB(subdomain);
 
