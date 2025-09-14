@@ -9,7 +9,6 @@ export default async function AppointmentsPage() {
     queryKey: ['appointments'],
     queryFn: async () => {
       const res = await AppointmentApi.getAll();
-      console.log('AppointmentsPage', res);
       if (res.success) {
         return res.data;
       }
