@@ -1,33 +1,37 @@
-'use server';
-
 import { fetchData } from '@/services/fetch';
-
 import { ServiceType } from '@/services/client/service/types';
 
-export async function getAllServices() {
-  return await fetchData<ServiceType[]>('/services');
-}
+export class ServiceApi {
+  private static API_BASE = '/client/services';
 
-export async function getServiceWithUID(uid: string) {
-  return await fetchData<ServiceType>(`/services/${uid}`);
-}
+  static async getAll() {
+    return await fetchData<ServiceType[]>(this.API_BASE);
+  }
 
-export async function createService(service: ServiceType) {
-  return await fetchData<ServiceType>('/services', {
-    method: 'POST',
-    data: service,
-  });
-}
+  static async getByUID(uid?: string | null) {
+    if (!uid) {
+      return { success: false, message: 'UID is required', data: null };
+    }
+    return await fetchData<ServiceType>(`${this.API_BASE}/${uid}`);
+  }
 
-export async function updateService(data: ServiceType) {
-  return await fetchData<ServiceType>(`/services/${data.uniqueId}`, {
-    method: 'PUT',
-    data,
-  });
-}
+  static async create(service: ServiceType) {
+    return await fetchData<ServiceType>(this.API_BASE, {
+      method: 'POST',
+      data: service,
+    });
+  }
 
-export async function deleteService(uid: string) {
-  return await fetchData<ServiceType>(`/services/${uid}`, {
-    method: 'DELETE',
-  });
+  static async update(uid: string, service: ServiceType) {
+    return await fetchData<ServiceType>(`${this.API_BASE}/${uid}`, {
+      method: 'PUT',
+      data: service,
+    });
+  }
+
+  static async delete(uid: string) {
+    return await fetchData<ServiceType>(`${this.API_BASE}/${uid}`, {
+      method: 'DELETE',
+    });
+  }
 }

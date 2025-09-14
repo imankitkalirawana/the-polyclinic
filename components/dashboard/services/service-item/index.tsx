@@ -13,9 +13,7 @@ import {
   humanReadableDate,
   humanReadableTime,
 } from '@/lib/utility';
-import { castData } from '@/lib/utils';
 import { useServiceWithUID } from '@/services/client/service/query';
-import { ServiceType } from '@/services/client/service/types';
 import { AuthUser } from '@/services/common/user';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
@@ -35,9 +33,7 @@ const dummyData = {
 };
 
 export default function ServiceViewItem({ uid, session }: { uid: string; session: AuthUser }) {
-  const { data, isError, isLoading } = useServiceWithUID(uid);
-
-  const service = castData<ServiceType>(data);
+  const { data: service, isError, isLoading } = useServiceWithUID(uid);
 
   if (isLoading) {
     return <MinimalPlaceholder message="Loading service..." />;
@@ -153,7 +149,7 @@ export default function ServiceViewItem({ uid, session }: { uid: string; session
           </div>
         </div>
       </div>
-      <div>{!!service.data && <DataTable data={service.data} />}</div>
+      <div>{!!service.fields && <DataTable data={service.fields} />}</div>
     </div>
   );
 }

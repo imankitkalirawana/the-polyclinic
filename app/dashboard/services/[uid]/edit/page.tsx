@@ -1,7 +1,7 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 import EditService from '@/components/dashboard/services/service-item/edit';
-import { getServiceWithUID } from '@/services/client/service/api';
+import { ServiceApi } from '@/services/client/service/api';
 
 interface Props {
   params: Promise<{
@@ -15,7 +15,7 @@ export default async function Page(props: Props) {
   await queryClient.prefetchQuery({
     queryKey: ['service', params.uid],
     queryFn: async () => {
-      const res = await getServiceWithUID(params.uid);
+      const res = await ServiceApi.getByUID(params.uid);
       if (res.success) {
         return res.data;
       }

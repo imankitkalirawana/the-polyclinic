@@ -7,14 +7,7 @@ import {
   UseQueryResult,
 } from '@tanstack/react-query';
 
-import {
-  createService,
-  deleteService,
-  getAllServices,
-  getServiceWithUID,
-  updateService,
-} from './api';
-
+import { ServiceApi } from '@/services/client/service/api';
 import { ServiceType } from '@/services/client/service/types';
 import { ApiResponse } from '@/services/fetch';
 
@@ -22,7 +15,7 @@ export const useAllServices = (): UseQueryResult<ServiceType[]> =>
   useQuery({
     queryKey: ['services'],
     queryFn: async () => {
-      const res = await getAllServices();
+      const res = await ServiceApi.getAll();
       if (res.success) {
         return res.data;
       }
@@ -30,11 +23,11 @@ export const useAllServices = (): UseQueryResult<ServiceType[]> =>
     },
   });
 
-export const useServiceWithUID = (uid: string): UseQueryResult<ServiceType> =>
+export const useServiceWithUID = (uid: string): UseQueryResult<ServiceType | null> =>
   useQuery({
     queryKey: ['service', uid],
     queryFn: async () => {
-      const res = await getServiceWithUID(uid);
+      const res = await ServiceApi.getByUID(uid);
       if (res.success) {
         return res.data;
       }
@@ -51,7 +44,7 @@ export const useCreateService = (): UseMutationResult<
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: ServiceType) => {
-      const res = await createService(data);
+      const res = await ServiceApi.create(data);
       if (res.success) {
         return res;
       }
@@ -81,7 +74,7 @@ export const useUpdateService = (): UseMutationResult<
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: ServiceType) => {
-      const res = await updateService(data);
+      const res = await ServiceApi.update(data.uniqueId, data);
       if (res.success) {
         return res;
       }
@@ -109,7 +102,7 @@ export const useDeleteService = (): UseMutationResult<ApiResponse<ServiceType>, 
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (uid: string) => {
-      const res = await deleteService(uid);
+      const res = await ServiceApi.delete(uid);
       if (res.success) {
         return res;
       }

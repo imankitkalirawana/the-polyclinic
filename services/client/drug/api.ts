@@ -1,17 +1,34 @@
-'use server';
-
 import { fetchData } from '@/services/fetch';
-
 import { DrugType } from '@/services/client/drug/types';
 
-export async function getAllDrugs() {
-  return await fetchData<DrugType[]>('/drugs');
+export class DrugApi {
+  private static API_BASE = '/client/drugs';
+
+  static async getAll() {
+    return await fetchData<DrugType[]>(this.API_BASE);
+  }
+
+  static async getByUID(uid?: string | null) {
+    if (!uid) {
+      return { success: false, message: 'UID is required', data: null };
+    }
+    return await fetchData<DrugType>(`${this.API_BASE}/${uid}`);
+  }
+
+  static async getByDid(did: number) {
+    return await fetchData<DrugType>(`${this.API_BASE}/${did}`);
+  }
+
+  static async update(data: DrugType) {
+    return await fetchData<DrugType>(`${this.API_BASE}/${data.did}`, {
+      method: 'PUT',
+      data,
+    });
+  }
+
+  static async delete(did: number) {
+    return await fetchData<DrugType>(`${this.API_BASE}/${did}`, {
+      method: 'DELETE',
+    });
+  }
 }
-
-export const getDrugWithDid = async (did: number) => await fetchData<DrugType>(`/drugs/${did}`);
-
-export const updateDrug = async (data: DrugType) =>
-  await fetchData<DrugType>(`/drugs/${data.did}`, {
-    method: 'PUT',
-    data,
-  });

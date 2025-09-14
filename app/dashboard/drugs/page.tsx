@@ -1,14 +1,14 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 import Drugs from '@/components/dashboard/drugs';
-import { getAllDrugs } from '@/services/client/drug/api';
+import { DrugApi } from '@/services/client/drug/api';
 
 export default async function Page() {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ['drugs'],
     queryFn: async () => {
-      const res = await getAllDrugs();
+      const res = await DrugApi.getAll();
       if (res.success) {
         return res.data;
       }

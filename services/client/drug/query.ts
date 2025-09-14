@@ -7,16 +7,16 @@ import {
   UseQueryResult,
 } from '@tanstack/react-query';
 
-import { getAllDrugs, getDrugWithDid, updateDrug } from './api';
 import { ApiResponse } from '@/services/fetch';
 
 import { DrugType } from '@/services/client/drug/types';
+import { DrugApi } from './api';
 
 export const useAllDrugs = (): UseQueryResult<DrugType[]> =>
   useQuery({
     queryKey: ['drugs'],
     queryFn: async () => {
-      const res = await getAllDrugs();
+      const res = await DrugApi.getAll();
       if (res.success) {
         return res.data;
       }
@@ -24,11 +24,11 @@ export const useAllDrugs = (): UseQueryResult<DrugType[]> =>
     },
   });
 
-export const useDrugWithDid = (did: number): UseQueryResult<DrugType> =>
+export const useDrugWithDid = (did: number): UseQueryResult<DrugType | null> =>
   useQuery({
     queryKey: ['drug', did],
     queryFn: async () => {
-      const res = await getDrugWithDid(did);
+      const res = await DrugApi.getByDid(did);
       if (res.success) {
         return res.data;
       }
@@ -42,7 +42,7 @@ export const useUpdateDrug = (): UseMutationResult<ApiResponse<DrugType>, Error,
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: DrugType) => {
-      const res = await updateDrug(data);
+      const res = await DrugApi.update(data);
       if (res.success) {
         return res;
       }
