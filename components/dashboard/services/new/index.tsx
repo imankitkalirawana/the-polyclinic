@@ -19,10 +19,10 @@ export default function NewService() {
 
   const formik = useFormik({
     initialValues: {
-      data: {
+      fields: {
         'cell-0-0': '',
         'cell-0-1': '',
-      } as ServiceType['data'],
+      } as ServiceType['fields'],
     } as ServiceType,
 
     validationSchema: serviceValidationSchema,
@@ -34,19 +34,19 @@ export default function NewService() {
   });
 
   const [numRows, setNumRows] = useState(
-    Math.max(...Object.keys(formik.values.data).map((key) => parseInt(key.split('-')[1]))) + 1
+    Math.max(...Object.keys(formik.values.fields).map((key) => parseInt(key.split('-')[1]))) + 1
   );
 
   const [numCols, setNumCols] = useState(
-    Math.max(...Object.keys(formik.values.data).map((key) => parseInt(key.split('-')[2]))) + 1
+    Math.max(...Object.keys(formik.values.fields).map((key) => parseInt(key.split('-')[2]))) + 1
   );
 
   const handleInputChange = (key: string, value: string) => {
-    formik.setFieldValue(`data.${key}`, value);
+    formik.setFieldValue(`fields.${key}`, value);
   };
 
   const handleAddRow = (rowIndex: number) => {
-    const newValues = { ...formik.values.data };
+    const newValues = { ...formik.values.fields };
     for (let row = numRows; row > rowIndex; row--) {
       for (let col = 0; col < numCols; col++) {
         newValues[`cell-${row}-${col}`] = newValues[`cell-${row - 1}-${col}`];
@@ -58,11 +58,11 @@ export default function NewService() {
     }
 
     setNumRows(numRows + 1);
-    formik.setFieldValue('data', newValues);
+    formik.setFieldValue('fields', newValues);
   };
 
   const handleAddColumn = (colIndex: number) => {
-    const newValues = { ...formik.values.data };
+    const newValues = { ...formik.values.fields };
     for (let row = 0; row < numRows; row++) {
       for (let col = numCols; col > colIndex; col--) {
         newValues[`cell-${row}-${col}`] = newValues[`cell-${row}-${col - 1}`];
@@ -74,11 +74,11 @@ export default function NewService() {
     }
 
     setNumCols(numCols + 1);
-    formik.setFieldValue('data', newValues);
+    formik.setFieldValue('fields', newValues);
   };
 
   const handleDeleteRow = (rowIndex: number) => {
-    const newValues = { ...formik.values.data };
+    const newValues = { ...formik.values.fields };
     for (let col = 0; col < numCols; col++) {
       delete newValues[`cell-${rowIndex}-${col}`];
     }
@@ -91,11 +91,11 @@ export default function NewService() {
     }
 
     setNumRows(numRows - 1);
-    formik.setFieldValue('data', newValues);
+    formik.setFieldValue('fields', newValues);
   };
 
   const handleDeleteColumn = (colIndex: number) => {
-    const newValues = { ...formik.values.data };
+    const newValues = { ...formik.values.fields };
     for (let row = 0; row < numRows; row++) {
       delete newValues[`cell-${row}-${colIndex}`];
     }
@@ -108,7 +108,7 @@ export default function NewService() {
     }
 
     setNumCols(numCols - 1);
-    formik.setFieldValue('data', newValues);
+    formik.setFieldValue('fields', newValues);
   };
 
   const [hoveredColIndex, setHoveredColIndex] = useState<number | null>(null);
@@ -339,7 +339,7 @@ export default function NewService() {
                           >
                             <ReactQuill
                               theme="snow"
-                              value={formik.values.data[`cell-${rowIndex}-${colIndex}`] || ''}
+                              value={formik.values.fields[`cell-${rowIndex}-${colIndex}`] || ''}
                               onChange={(value) =>
                                 handleInputChange(`cell-${rowIndex}-${colIndex}`, value)
                               }
