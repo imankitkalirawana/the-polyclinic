@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 import { useQueryState } from 'nuqs';
 import * as Yup from 'yup';
 import { AuthContextType, FlowType } from './types';
-import { login, verifyEmail } from '@/lib/server-actions/auth';
+import { login } from '@/lib/server-actions/auth';
 import { $FixMe } from '@/types';
 import { useSubdomain } from '@/hooks/useSubDomain';
 import { isOrganizationActive } from '@/lib/server-actions/validation';
@@ -234,9 +234,9 @@ export const createAuthProvider = (flowType: FlowType) =>
         paginate(1);
       }
       if (values.page === 1) {
-        const res = await verifyEmail(values.email);
-        if (res?.error) {
-          setFieldError('email', res.message);
+        const res = await AuthApi.verifyEmail({ email: values.email, subdomain });
+        if (!res?.data?.exists) {
+          setFieldError('email', 'Email does not exist');
         } else {
           paginate(1);
         }

@@ -65,6 +65,9 @@ export async function authorizeCredentials(
     const password = credentials.password as string;
 
     const user = await User.findOne({ email });
+    if (!user) {
+      throw new ErrorMessage('User not found');
+    }
 
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) {

@@ -10,28 +10,32 @@ import { excludedSubdomains } from '@/lib/utils';
  * - clinic.staging.divinely.dev => "clinic"
  * - staging.divinely.dev => null
  * - divinely.dev => null
+ * - clinic.localhost:3000 => "clinic"
+ * - localhost:3000 => null
  */
 export function useSubdomain() {
   const [subdomain, setSubdomain] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const hostname = window.location.hostname;
+      const hostname = window.location.hostname; // e.g., "fortis.localhost"
       const parts = hostname.split('.');
 
-      // If it's only root domain (e.g., "divinely.dev") → no subdomain
-      if (parts.length <= 2) {
-        setSubdomain(null);
-        return;
+      let extracted: string | null = null;
+
+      if (hostname === 'localhost') {
+        extracted = null;
+      } else if (hostname.endsWith('.localhost')) {
+        extracted = parts[0];
+      } else {
+        if (parts.length > 2) {
+          const subdomainParts = parts.slice(0, -2);
+          const filtered = subdomainParts.filter((label) => !excludedSubdomains.includes(label));
+          extracted = filtered.length > 0 ? filtered[0] : null;
+        }
       }
 
-      // Remove the root domain (e.g., "clinic.staging.divinely.dev" → ["clinic", "staging"])
-      const subdomainParts = parts.slice(0, -2);
-
-      // Filter out excluded ones
-      const filtered = subdomainParts.filter((label) => !excludedSubdomains.includes(label));
-
-      setSubdomain(filtered.length > 0 ? filtered[0] : null);
+      setSubdomain(extracted);
     }
   }, []);
 
