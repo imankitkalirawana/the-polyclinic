@@ -22,6 +22,7 @@ import UserStatusToggle from './user-status-toggle';
 import CreateEditOrganizationModal from '../create-edit';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
+import { useDeleteUser } from '@/services/common/user/query';
 
 export default function Organization({ id }: { id: string }) {
   const { data, isLoading, error } = useOrganization(id);
@@ -30,6 +31,7 @@ export default function Organization({ id }: { id: string }) {
   const editModal = useDisclosure();
   const userModal = useDisclosure();
   const deleteUserModal = useDisclosure();
+  const deleteUser = useDeleteUser();
 
   const [selectedTab, setSelectedTab] = useState('users');
   const [selectedUser, setSelectedUser] = useState<OrganizationUser | null>(null);
@@ -55,6 +57,14 @@ export default function Organization({ id }: { id: string }) {
       </div>
     );
   }
+
+  const handleDelete = async () => {
+    if (!selectedUser) return;
+    await deleteUser.mutateAsync({
+      uid: selectedUser.uid,
+      organization: organization.organizationId,
+    });
+  };
 
   const handleToggleStatus = async () => {
     const newStatus = organization.status === 'active' ? 'inactive' : 'active';
@@ -232,10 +242,12 @@ export default function Organization({ id }: { id: string }) {
       {/* Delete User Modal */}
       {deleteUserModal.isOpen && selectedUser && (
         <DeleteUserModal
+          modalTitle="Delete User"
+          content={`Are you sure you want to delete user "${selectedUser.name}"? This action cannot be undone.`}
           isOpen={deleteUserModal.isOpen}
           onClose={deleteUserModal.onClose}
-          organization={organization}
-          user={selectedUser}
+          onDelete={handleDelete}
+          isLoading={false}
         />
       )}
     </>
