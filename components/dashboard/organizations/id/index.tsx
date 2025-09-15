@@ -243,11 +243,12 @@ export default function Organization({ id }: { id: string }) {
       {deleteUserModal.isOpen && selectedUser && (
         <DeleteUserModal
           modalTitle="Delete User"
-          content={`Are you sure you want to delete user "${selectedUser.name}"? This action cannot be undone.`}
+          content={`Are you sure you want to delete user "${selectedUser.name}"? `}
           isOpen={deleteUserModal.isOpen}
           onClose={deleteUserModal.onClose}
           onDelete={handleDelete}
           isLoading={false}
+          showAlert={true}
         />
       )}
     </>
