@@ -14,6 +14,7 @@ import { getQueryClient } from './get-query-client';
 
 import { ModalProvider } from '@/components/ui/global-modal';
 import { ThemeProvider } from 'next-themes';
+import { CookiesProvider, CookieItem } from '@/providers/cookies-provider';
 
 declare module '@react-types/shared' {
   interface RouterConfig {
@@ -36,9 +37,11 @@ if (typeof window !== 'undefined') {
 export function Providers({
   children,
   session,
+  cookies,
 }: {
   children: React.ReactNode;
   session: Session | null;
+  cookies: CookieItem[];
 }) {
   const router = useRouter();
 
@@ -88,14 +91,16 @@ export function Providers({
             />
 
             <SessionProvider session={session}>
-              <NextTopLoader
-                height={5}
-                showSpinner={false}
-                shadow="false"
-                easing="ease"
-                color="hsl(var(--heroui-primary))"
-              />
-              <ModalProvider>{children}</ModalProvider>
+              <CookiesProvider cookieStore={cookies}>
+                <NextTopLoader
+                  height={5}
+                  showSpinner={false}
+                  shadow="false"
+                  easing="ease"
+                  color="hsl(var(--heroui-primary))"
+                />
+                <ModalProvider>{children}</ModalProvider>
+              </CookiesProvider>
             </SessionProvider>
           </ThemeProvider>
         </HeroUIProvider>
