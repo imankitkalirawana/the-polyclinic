@@ -9,7 +9,6 @@ import { AuthContextType, FlowType } from './types';
 import { login } from '@/lib/server-actions/auth';
 import { $FixMe } from '@/types';
 import { useSubdomain } from '@/hooks/useSubDomain';
-import { isOrganizationActive } from '@/lib/server-actions/validation';
 import { AuthApi } from '@/services/common/auth/api';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -169,12 +168,6 @@ export const createAuthProvider = (flowType: FlowType) =>
       if (values.page === 0) {
         paginate(1);
       } else if (values.page === 1) {
-        // TODO: this will be removed after global organization check
-        const isOrgActive = await isOrganizationActive(subdomain ?? '');
-        if (!isOrgActive) {
-          setFieldError('email', 'Organization is not active, please contact support');
-          return;
-        }
         paginate(1);
       } else if (values.page === 2) {
         await AuthApi.sendOTP({

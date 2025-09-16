@@ -4,7 +4,6 @@ import { connectDB } from '@/lib/db';
 import { getSubdomain } from './sub-domain';
 import { getUserModel } from '@/services/common/user/model';
 import { User as NextAuthUser } from 'next-auth';
-import { isOrganizationActive } from '@/lib/server-actions/validation';
 
 class ErrorMessage extends AuthError {
   code = 'custom';
@@ -25,11 +24,6 @@ export async function authorizeCredentials(
   const subDomain = await getSubdomain();
 
   if (subDomain) {
-    const isOrgActive = await isOrganizationActive(subDomain);
-    if (!isOrgActive) {
-      throw new ErrorMessage('Organization is not active, please contact support');
-    }
-
     const conn = await connectDB(subDomain);
     const User = getUserModel(conn);
 
