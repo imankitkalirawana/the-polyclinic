@@ -50,7 +50,7 @@ export function ScheduleView({ appointments, currentDate }: ScheduleViewProps) {
               <div key={dateKey} className="flex w-full items-start py-1">
                 <div className="flex w-28 items-center gap-2">
                   <DateChip date={date} onClick={() => setView('day')} size="md" />
-                  <p className="mt-1.5 text-tiny uppercase text-default-600">
+                  <p className="mt-1.5 uppercase text-default-600 text-tiny">
                     {format(date, 'MMM, EEE')}
                   </p>
                 </div>

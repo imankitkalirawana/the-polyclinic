@@ -1,10 +1,7 @@
 import { AuthError } from 'next-auth';
-import bcrypt from 'bcryptjs';
-import { connectDB } from '@/lib/db';
 import { getSubdomain } from './sub-domain';
-import { getUserModel } from '@/services/common/user/model';
 import { User as NextAuthUser } from 'next-auth';
-import { isOrganizationActive } from '@/lib/server-actions/validation';
+import { AuthApi } from '@/services/common/auth/api';
 
 class ErrorMessage extends AuthError {
   code = 'custom';
@@ -21,65 +18,33 @@ export async function authorizeCredentials(
   if (!credentials?.email || !credentials?.password) {
     throw new ErrorMessage('Invalid Email/Password');
   }
+  const organization = await getSubdomain();
 
-  const subDomain = await getSubdomain();
+  const response = await AuthApi.login({
+    email: credentials.email as string,
+    password: credentials.password as string,
+    organization,
+  });
 
-  if (subDomain) {
-    const isOrgActive = await isOrganizationActive(subDomain);
-    if (!isOrgActive) {
-      throw new ErrorMessage('Organization is not active, please contact support');
-    }
+  console.log('response', response);
 
-    const conn = await connectDB(subDomain);
-    const User = getUserModel(conn);
-
-    const user = await User.findOne({ email: credentials.email });
-    if (!user) {
-      throw new ErrorMessage('User not found');
-    }
-
-    const isValid = await bcrypt.compare(credentials.password as string, user.password);
-    if (!isValid) {
-      throw new ErrorMessage('Invalid Email/Password');
-    }
-
-    return {
-      id: user._id.toString(),
-      name: user.name,
-      email: user.email,
-      image: user.image ?? null,
-      role: user.role,
-      phone: user.phone || '',
-      uid: user.uid,
-      organization: user.organization,
-    };
-  } else {
-    const conn = await connectDB();
-    const User = getUserModel(conn);
-
-    if (!credentials?.email || !credentials?.password) {
-      throw new ErrorMessage('Invalid Email/Password');
-    }
-
-    const email = credentials.email as string;
-    const password = credentials.password as string;
-
-    const user = await User.findOne({ email });
-
-    const isValid = await bcrypt.compare(password, user.password);
-    if (!isValid) {
-      throw new ErrorMessage('Invalid Email/Password');
-    }
-
-    return {
-      id: user._id.toString(),
-      name: user.name,
-      email: user.email,
-      image: user.image ?? null,
-      role: user.role,
-      phone: user.phone || '',
-      uid: user.uid,
-      organization: user.organization,
-    };
+  if (!response.success) {
+    throw new ErrorMessage(response.message);
   }
+
+  const user = response.data;
+  if (!user) {
+    throw new ErrorMessage('User not found');
+  }
+
+  return {
+    id: user._id.toString(),
+    name: user.name,
+    email: user.email,
+    image: user.image ?? '',
+    role: user.role,
+    phone: user.phone || '',
+    uid: user.uid,
+    organization: organization || '',
+  };
 }

@@ -7,7 +7,6 @@ import { useRouter } from 'nextjs-toploader/app';
 import {
   Avatar,
   Button,
-  cn,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -70,9 +69,7 @@ export default function Navbar() {
     <NextNavbar
       isBordered
       classNames={{
-        base: cn('border-default-100', {
-          'bg-default-200/50': isMenuOpen,
-        }),
+        base: 'border-divider-100',
         wrapper: 'w-full justify-center bg-transparent',
         item: 'hidden md:flex',
       }}
@@ -84,9 +81,9 @@ export default function Navbar() {
       <NavbarMenuToggle className="text-default-400 md:hidden" />
 
       <NavbarBrand>
-        <Link className="ml-2 text-large font-medium text-foreground" href="/">
+        <Link className="ml-2 font-medium text-foreground text-large" href="/">
           {APP_INFO.name}
-          <span className="ml-1 text-tiny uppercase text-primary">{subdomain}</span>
+          <span className="ml-1 uppercase text-primary text-tiny">{subdomain}</span>
         </Link>
       </NavbarBrand>
 
@@ -97,7 +94,7 @@ export default function Navbar() {
               <Link
                 aria-label={item.name}
                 // href={item.href}
-                className="cursor-pointer text-small text-default-500"
+                className="cursor-pointer text-default-500 text-small"
                 onMouseEnter={() => {
                   clearTimeoutRef();
                   timeoutRef.current = setTimeout(() => {
@@ -135,7 +132,7 @@ export default function Navbar() {
               <DropdownMenu aria-label="Profile Actions" variant="flat">
                 <DropdownItem key="profile" href="/profile" className="h-14 gap-2">
                   <p className="font-semibold">{session.user?.name}</p>
-                  <p className="text-tiny capitalize text-default-500">{session.user?.role}</p>
+                  <p className="capitalize text-default-500 text-tiny">{session.user?.role}</p>
                 </DropdownItem>
                 <DropdownItem key="dashboard" href="/dashboard">
                   My Dashboard
@@ -216,7 +213,7 @@ export default function Navbar() {
               {activeMenu.subItems.map((subItem, idx) => (
                 <div key={`${subItem.title}-${idx}`}>
                   <motion.h3
-                    className="mb-4 text-tiny font-light text-default-500"
+                    className="mb-4 font-light text-default-500 text-tiny"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                   >

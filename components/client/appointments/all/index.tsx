@@ -1,14 +1,14 @@
 'use client';
 
 import { Calendar } from '@/components/ui/calendar';
-import { castData } from '@/lib/utils';
-import { AppointmentType } from '@/services/client/appointment';
 import { useAllAppointments } from '@/services/client/appointment';
 
 export default function Appointments() {
-  const { data } = useAllAppointments();
+  const { data: appointments } = useAllAppointments();
 
-  const appointments = castData<AppointmentType[]>(data);
+  if (!appointments) {
+    return <div>No appointments found</div>;
+  }
 
-  return <Calendar appointments={appointments} />;
+  return <Calendar appointments={appointments || []} />;
 }

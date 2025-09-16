@@ -12,7 +12,7 @@ export enum ServiceTypes {
   consultation = 'consultation',
 }
 
-export type ServiceData = {
+export type ServiceFields = {
   [key: `cell-${number}-${number}`]: string;
 };
 export interface ServiceType extends Base {
@@ -24,6 +24,6 @@ export interface ServiceType extends Base {
   duration: number;
   status: ServiceStatus;
   type: ServiceTypes;
-  data: ServiceData;
+  fields: ServiceFields;
   image?: string;
 }

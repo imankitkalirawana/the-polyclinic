@@ -6,10 +6,9 @@ import { useFormik } from 'formik';
 import { useQueryState } from 'nuqs';
 import * as Yup from 'yup';
 import { AuthContextType, FlowType } from './types';
-import { login, verifyEmail } from '@/lib/server-actions/auth';
+import { login } from '@/lib/server-actions/auth';
 import { $FixMe } from '@/types';
 import { useSubdomain } from '@/hooks/useSubDomain';
-import { isOrganizationActive } from '@/lib/server-actions/validation';
 import { AuthApi } from '@/services/common/auth/api';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -169,12 +168,6 @@ export const createAuthProvider = (flowType: FlowType) =>
       if (values.page === 0) {
         paginate(1);
       } else if (values.page === 1) {
-        // TODO: this will be removed after global organization check
-        const isOrgActive = await isOrganizationActive(subdomain ?? '');
-        if (!isOrgActive) {
-          setFieldError('email', 'Organization is not active, please contact support');
-          return;
-        }
         paginate(1);
       } else if (values.page === 2) {
         await AuthApi.sendOTP({
@@ -234,9 +227,9 @@ export const createAuthProvider = (flowType: FlowType) =>
         paginate(1);
       }
       if (values.page === 1) {
-        const res = await verifyEmail(values.email);
-        if (res?.error) {
-          setFieldError('email', res.message);
+        const res = await AuthApi.verifyEmail({ email: values.email });
+        if (!res?.data?.exists) {
+          setFieldError('email', 'Email does not exist');
         } else {
           paginate(1);
         }

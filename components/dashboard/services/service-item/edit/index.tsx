@@ -23,23 +23,20 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import NoResults from '@/components/ui/no-results';
 import QuillInput from '@/components/ui/quill-input';
 import { ServiceStatuses, ServiceTypes } from '@/lib/interface';
-import { castData } from '@/lib/utils';
 import { serviceValidationSchema } from '@/lib/validation';
 import { useServiceWithUID, useUpdateService } from '@/services/client/service/query';
-import { ServiceType } from '@/services/client/service/types';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
+import { ServiceType } from '@/services/client/service/types';
 
 export default function EditService({ uid }: { uid: string }) {
   const updateService = useUpdateService();
-  const { data, isError, isLoading } = useServiceWithUID(uid);
-
-  const service = castData<ServiceType>(data);
+  const { data: service, isError, isLoading } = useServiceWithUID(uid);
 
   const router = useRouter();
   const [hoveredColIndex, setHoveredColIndex] = useState<number | null>(null);
 
   const formik = useFormik({
-    initialValues: service,
+    initialValues: service as ServiceType,
     validationSchema: serviceValidationSchema,
     onSubmit: async (values) => {
       await updateService.mutateAsync(values).then(() => {
@@ -51,23 +48,23 @@ export default function EditService({ uid }: { uid: string }) {
   const [numRows, setNumRows] = useState(
     Math.max(
       // eslint-disable-next-line no-unsafe-optional-chaining
-      ...Object?.keys(formik.values.data)?.map((key) => parseInt(key.split('-')[1]))
+      ...Object?.keys(formik.values.fields)?.map((key) => parseInt(key.split('-')[1]))
     ) + 1
   );
 
   const [numCols, setNumCols] = useState(
     Math.max(
       // eslint-disable-next-line no-unsafe-optional-chaining
-      ...Object?.keys(formik.values.data)?.map((key) => parseInt(key.split('-')[2]))
+      ...Object?.keys(formik.values.fields)?.map((key) => parseInt(key.split('-')[2]))
     ) + 1
   );
 
   const handleInputChange = (key: string, value: string) => {
-    formik.setFieldValue(`data.${key}`, value);
+    formik.setFieldValue(`fields.${key}`, value);
   };
 
   const handleAddRow = (rowIndex: number) => {
-    const newValues = { ...formik.values.data };
+    const newValues = { ...formik.values.fields };
     for (let row = numRows; row > rowIndex; row--) {
       for (let col = 0; col < numCols; col++) {
         newValues[`cell-${row}-${col}`] = newValues[`cell-${row - 1}-${col}`];
@@ -79,11 +76,11 @@ export default function EditService({ uid }: { uid: string }) {
     }
 
     setNumRows(numRows + 1);
-    formik.setFieldValue('data', newValues);
+    formik.setFieldValue('fields', newValues);
   };
 
   const handleAddColumn = (colIndex: number) => {
-    const newValues = { ...formik.values.data };
+    const newValues = { ...formik.values.fields };
     for (let row = 0; row < numRows; row++) {
       for (let col = numCols; col > colIndex; col--) {
         newValues[`cell-${row}-${col}`] = newValues[`cell-${row}-${col - 1}`];
@@ -95,11 +92,11 @@ export default function EditService({ uid }: { uid: string }) {
     }
 
     setNumCols(numCols + 1);
-    formik.setFieldValue('data', newValues);
+    formik.setFieldValue('fields', newValues);
   };
 
   const handleDeleteRow = (rowIndex: number) => {
-    const newValues = { ...formik.values.data };
+    const newValues = { ...formik.values.fields };
     for (let col = 0; col < numCols; col++) {
       delete newValues[`cell-${rowIndex}-${col}`];
     }
@@ -112,11 +109,11 @@ export default function EditService({ uid }: { uid: string }) {
     }
 
     setNumRows(numRows - 1);
-    formik.setFieldValue('data', newValues);
+    formik.setFieldValue('fields', newValues);
   };
 
   const handleDeleteColumn = (colIndex: number) => {
-    const newValues = { ...formik.values.data };
+    const newValues = { ...formik.values.fields };
     for (let row = 0; row < numRows; row++) {
       delete newValues[`cell-${row}-${colIndex}`];
     }
@@ -129,7 +126,7 @@ export default function EditService({ uid }: { uid: string }) {
     }
 
     setNumCols(numCols - 1);
-    formik.setFieldValue('data', newValues);
+    formik.setFieldValue('fields', newValues);
   };
 
   if (isLoading) {
@@ -392,7 +389,7 @@ export default function EditService({ uid }: { uid: string }) {
                           >
                             <ReactQuill
                               theme="snow"
-                              value={formik.values.data[`cell-${rowIndex}-${colIndex}`] || ''}
+                              value={formik.values.fields[`cell-${rowIndex}-${colIndex}`] || ''}
                               onChange={(value) =>
                                 handleInputChange(`cell-${rowIndex}-${colIndex}`, value)
                               }

@@ -19,6 +19,11 @@ export const copyToClipboard = (text: string) => {
 
 export type ValuesOf<T> = T extends readonly unknown[] ? T[number] : T[keyof T];
 
+/**
+ * @deprecated Avoid using this unless absolutely necessary.
+ * This function forcefully casts data to the specified type,
+ * which may lead to runtime errors and break the UI if the data shape is incorrect.
+ */
 export function castData<T>(data: unknown): T {
   return data as T;
 }

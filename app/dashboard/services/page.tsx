@@ -1,14 +1,14 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 import Services from '@/components/dashboard/services';
-import { getAllServices } from '@/services/client/service/api';
+import { ServiceApi } from '@/services/client/service/api';
 
 export default async function Page() {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ['services'],
     queryFn: async () => {
-      const res = await getAllServices();
+      const res = await ServiceApi.getAll();
       if (res.success) {
         return res.data;
       }

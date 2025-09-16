@@ -23,7 +23,7 @@ export async function generateServices(count: number) {
         ServiceTypes.diagnostic,
         ServiceTypes.consultation,
       ]),
-      data: {},
+      fields: {},
       createdBy: faker.string.uuid(),
       updatedBy: faker.string.uuid(),
       createdAt: faker.date.past({

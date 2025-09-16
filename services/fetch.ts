@@ -3,7 +3,8 @@ import { cookies } from 'next/headers';
 import axios from 'axios';
 import type { $FixMe } from '@/types';
 import { getSubdomain } from '@/auth/sub-domain';
-import { BASE_URL } from './constants';
+import { API_BASE_URL } from '@/lib/config';
+import { AUTHJS_SESSION_TOKEN } from '@/lib/constants';
 
 export interface ApiResponse<T = unknown> {
   success: boolean;
@@ -47,7 +48,7 @@ export async function fetchData<T = unknown>(
   } = {}
 ): Promise<ApiResponse<T>> {
   try {
-    const { method = 'GET', data, params, baseUrl, headers } = options;
+    const { method = 'GET', data = {}, params = {}, baseUrl, headers } = options;
 
     let url: string;
 
@@ -55,28 +56,54 @@ export async function fetchData<T = unknown>(
       // ✅ if baseUrl is provided, use it directly
       url = `${baseUrl}${endpoint}`;
     } else {
-      const subdomain = await getSubdomain(); // e.g. "clinic"
-
-      const parsed = new URL(BASE_URL);
-
-      if (subdomain) {
-        // ✅ Always prepend subdomain to full hostname
-        parsed.hostname = `${subdomain}.${parsed.hostname}`;
-      }
-
-      url = `${parsed.origin}${parsed.pathname}${endpoint}`;
+      // ✅ just use API_BASE_URL as is (no subdomain rewriting)
+      url = `${API_BASE_URL}${endpoint}`;
     }
 
-    const res = await axios({
+    // ✅ Get subdomain
+    const subdomain = await getSubdomain();
+    let finalData = data;
+    let finalParams = params;
+
+    if (subdomain) {
+      if (method === 'GET') {
+        finalParams = {
+          ...params,
+          organization: subdomain,
+        };
+      } else {
+        finalData = {
+          ...data,
+          organization: subdomain,
+        };
+      }
+    }
+
+    const authjsSessionToken = (await cookies()).get(AUTHJS_SESSION_TOKEN)?.value;
+
+    const config = {
       url,
       method,
-      data,
-      params,
+      data: finalData,
+      params: finalParams,
       headers: {
         ...headers,
+        Authorization: `Bearer ${authjsSessionToken}`,
         Cookie: (await cookies()).toString(),
       },
-    });
+    };
+
+    const res = await axios(config);
+
+    if (axios.isAxiosError(res)) {
+      console.error('Axios error', res.response?.data);
+      return {
+        success: false,
+        message: res.response?.data?.message || 'Request failed',
+        data: [] as T,
+        errors: res.response?.data?.errors,
+      };
+    }
 
     return {
       success: true,
@@ -84,6 +111,7 @@ export async function fetchData<T = unknown>(
       data: res.data?.data || res.data,
     };
   } catch (error: $FixMe) {
+    console.error('error', error);
     return {
       success: false,
       message: error?.response?.data?.message || 'Request failed',
@@ -130,7 +158,7 @@ export async function fetchDataWithPagination<T>(
     });
 
     const res = await axios({
-      url: `${baseUrl || BASE_URL}${endpoint}?${searchParams.toString()}`,
+      url: `${baseUrl || API_BASE_URL}${endpoint}?${searchParams.toString()}`,
       method,
       data,
       headers: {

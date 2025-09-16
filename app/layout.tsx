@@ -1,5 +1,6 @@
 import { Outfit } from 'next/font/google';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
+import { cookies } from 'next/headers';
 
 import { Providers } from './providers';
 
@@ -36,11 +37,12 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
+  const cookie = await cookies();
 
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={outfit.className} suppressHydrationWarning>
-        <Providers session={session}>
+        <Providers session={session} cookies={cookie.getAll()}>
           <NuqsAdapter>
             <Navbar />
             {children}

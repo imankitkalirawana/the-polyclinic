@@ -62,7 +62,9 @@ function SlotContent({
   }
 
   if (!slot) {
-    return <MinimalLoader message="No slots available for this doctor" />;
+    return (
+      <MinimalLoader message="No slots available for this doctor" isLoading={isSlotsLoading} />
+    );
   }
 
   return <SlotsPreview selected={selectedDate} config={slot} onSlotSelect={onDateSelect} />;

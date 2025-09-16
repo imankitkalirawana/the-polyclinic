@@ -117,7 +117,7 @@ const LoginComponent: React.FC<{ subdomain: string | null }> = ({ subdomain }) =
       {formik.values.page === 2 && (
         <div className="flex items-center justify-between px-1 py-2">
           <Link
-            className="text-small text-default-500 hover:underline"
+            className="text-default-500 text-small hover:underline"
             href={`/auth/forgot-password?email=${formik.values.email}`}
           >
             Forgot password?
@@ -129,7 +129,7 @@ const LoginComponent: React.FC<{ subdomain: string | null }> = ({ subdomain }) =
         <>
           <div className="flex items-center gap-2">
             <div className="h-px w-full bg-divider" />
-            <div className="text-small text-default-500">or</div>
+            <div className="text-default-500 text-small">or</div>
             <div className="h-px w-full bg-divider" />
           </div>
           <div className="text-center text-small">

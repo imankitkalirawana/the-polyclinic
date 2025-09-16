@@ -28,6 +28,7 @@
     "@internationalized/date": "^3.9.0",
     "@radix-ui/react-slot": "^1.2.3",
     "@react-aria/i18n": "^3.12.8",
+    "@react-email/components": "0.5.3",
     "@react-types/shared": "^3.29.0",
     "@sentry/nextjs": "^10",
     "@tanstack/react-query": "^5.62.10",
@@ -78,6 +79,7 @@
     "react-markdown": "^10.1.0",
     "react-quill": "^2.0.0",
     "recharts": "^2.15.3",
+    "resend": "^6.0.3",
     "sharp": "^0.34.1",
     "slugify": "^1.6.6",
     "sonner": "^2.0.3",
@@ -109,6 +111,7 @@
     "lint-staged": "^13.0.3",
     "postcss": "^8.4.47",
     "prettier": "^3.5.3",
+    "react-email": "4.2.11",
     "tailwindcss": "^3.4.14",
     "typescript": "5.1.6"
   },

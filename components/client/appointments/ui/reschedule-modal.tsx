@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import { CalendarDate, getLocalTimeZone, Time } from '@internationalized/date';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import DateTimePicker from '@/components/client/appointments/new/session/date-time-picker';
+import DateTimePicker from '@/components/ui/date-time-picker';
 import Modal from '@/components/ui/modal';
 import { apiRequest } from '@/lib/axios';
 import { TIMINGS } from '@/lib/config';

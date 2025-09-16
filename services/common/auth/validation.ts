@@ -67,6 +67,7 @@ export const resetPasswordSchema = z
 export const loginSchema = z.object({
   email: z.email({ error: 'Invalid email format' }),
   password: z.string().min(1, { error: 'Password is required' }),
+  organization: z.string().optional().nullable(),
 });
 
 export type EmailRequest = z.infer<typeof emailSchema>;

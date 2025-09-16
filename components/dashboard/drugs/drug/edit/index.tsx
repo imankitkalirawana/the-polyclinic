@@ -47,7 +47,7 @@ export default function EditDrug({ did }: { did: number }) {
         e.preventDefault();
         formik.handleSubmit();
       }}
-      className="bg-transparent shadow-none"
+      className="rounded-none bg-transparent shadow-none"
     >
       <CardHeader className="flex-col items-start p-0">
         <h3 className="leading-large font-semibold text-default-900 text-medium">Edit Drug</h3>
