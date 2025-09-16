@@ -4,6 +4,7 @@ import axios from 'axios';
 import type { $FixMe } from '@/types';
 import { getSubdomain } from '@/auth/sub-domain';
 import { API_BASE_URL } from '@/lib/config';
+import { AUTHJS_SESSION_TOKEN } from '@/lib/constants';
 
 export interface ApiResponse<T = unknown> {
   success: boolean;
@@ -78,6 +79,8 @@ export async function fetchData<T = unknown>(
       }
     }
 
+    const authjsSessionToken = (await cookies()).get(AUTHJS_SESSION_TOKEN)?.value;
+
     const config = {
       url,
       method,
@@ -85,6 +88,7 @@ export async function fetchData<T = unknown>(
       params: finalParams,
       headers: {
         ...headers,
+        Authorization: `Bearer ${authjsSessionToken}`,
         Cookie: (await cookies()).toString(),
       },
     };
