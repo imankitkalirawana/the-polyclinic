@@ -1,14 +1,23 @@
 import { fetchData } from '../../fetch';
 import {
+  LoginRequest,
   RegistrationRequest,
   ResetPasswordRequest,
   SendOTPRequest,
   VerifyOTPRequest,
 } from '@/services/common/auth';
 import { RegistrationResponse, VerifyOTPResponse } from './types';
+import { UnifiedUser } from '../user';
 
 export class AuthApi {
   static baseUrl = '/auth';
+
+  static async login(data: LoginRequest) {
+    return await fetchData<UnifiedUser>(`${this.baseUrl}/login`, {
+      method: 'POST',
+      data,
+    });
+  }
 
   static async sendOTP(data: SendOTPRequest) {
     return await fetchData(`${this.baseUrl}/send-otp`, {

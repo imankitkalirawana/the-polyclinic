@@ -1,8 +1,6 @@
 'use server';
 
 import { headers } from 'next/headers';
-import { connectDB } from '@/lib/db';
-import { getUserModel } from '@/services/common/user/model';
 import { rootDomain, excludedSubdomains } from '@/lib/utils';
 
 /**
@@ -56,11 +54,4 @@ export async function getSubdomain(): Promise<string | null> {
   const filtered = labels.filter((l) => !excludedSubdomains.includes(l));
 
   return filtered.length > 0 ? filtered[0] : null;
-}
-
-export async function isOrganizationRegistered(organization: string) {
-  const conn = await connectDB(organization);
-  const User = getUserModel(conn);
-  const user = await User.findOne({ organization });
-  return !!user;
 }
