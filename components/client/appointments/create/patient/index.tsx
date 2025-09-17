@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Kbd } from '@heroui/react';
 import { cn } from '@heroui/react';
 import { useFormikContext } from 'formik';
@@ -37,6 +37,21 @@ const PatientSelection = ({ className }: { className?: string }) => {
   };
 
   const canProceed = !!appointment.patientId;
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      const active = document.activeElement;
+      const wrapper = document.querySelector('.patient-search-wrapper');
+      if (wrapper && active && wrapper.contains(active)) {
+        if (/^[sdwmytTSDWMY]$/.test(e.key)) {
+          e.stopImmediatePropagation();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handler, true); // capture
+    return () => window.removeEventListener('keydown', handler, true);
+  }, []);
 
   useKeyPress(
     ['Enter'],
@@ -119,12 +134,14 @@ const PatientSelection = ({ className }: { className?: string }) => {
       endContent={<CreateAppointmentPatientDetails uid={appointment.patientId ?? ''} />}
     >
       <div className={cn('flex h-full w-full flex-col', className)}>
-        <SearchInput
-          key="patient-search-input"
-          value={search}
-          placeholder="Search by name, email, phone, or UID"
-          onChange={setSearch}
-        />
+        <div className="patient-search-wrapper">
+          <SearchInput
+            key="patient-search-input"
+            value={search}
+            placeholder="Search by name, email, phone, or UID"
+            onChange={setSearch}
+          />
+        </div>
         {renderContent()}
       </div>
     </CreateAppointmentContentContainer>
