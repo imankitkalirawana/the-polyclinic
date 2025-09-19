@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { signOut } from 'next-auth/react';
+import { logout } from '@/lib/auth';
 import {
   addToast,
   Alert,
@@ -60,7 +60,7 @@ export default function Profile() {
       <div className="space-y-12">
         <form className="border-b border-default-900/10 pb-12" onSubmit={formik.handleSubmit}>
           <h2 className="font-semibold">Personal Information</h2>
-          <p className="mt-1 text-small/6 text-default-600">
+          <p className="text-small/6 mt-1 text-default-600">
             This information can be used to identify you in the system.
           </p>
 
@@ -163,7 +163,7 @@ function PasswordForm({ email }: { email: string }) {
   return (
     <form className="border-b border-default-900/10 pb-12" onSubmit={formik.handleSubmit}>
       <h2 className="font-semibold">Security</h2>
-      <p className="mt-1 text-small/6 text-default-600">Manage your account security settings.</p>
+      <p className="text-small/6 mt-1 text-default-600">Manage your account security settings.</p>
 
       <div className="mt-10 flex flex-col gap-4">
         <div className="max-w-sm">
@@ -227,7 +227,7 @@ function DeleteAccountForm({ email }: { email: string }) {
       await axios
         .delete(`/api/v1/users/${email}`, { data: values })
         .then(async (res) => {
-          await signOut();
+          await logout();
           addToast({
             title: 'Success',
             description: res.data.message,
@@ -253,7 +253,7 @@ function DeleteAccountForm({ email }: { email: string }) {
     <>
       <div className="border-b border-default-900/10 pb-12">
         <h2 className="font-semibold">Danger Zone</h2>
-        <p className="mt-1 text-small/6 text-default-600">
+        <p className="text-small/6 mt-1 text-default-600">
           Delete your account and all associated data.
         </p>
         <div className="mt-6 flex items-center justify-end gap-x-4">
@@ -273,10 +273,10 @@ function DeleteAccountForm({ email }: { email: string }) {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                <h3 className="leading-medium text-large font-medium text-default-900">
+                <h3 className="leading-medium font-medium text-default-900 text-large">
                   Delete Account
                 </h3>
-                <p className="mt-2 text-medium font-normal text-default-500">
+                <p className="mt-2 font-normal text-default-500 text-medium">
                   Your account will be deleted, along with all of its data.
                 </p>
                 <Alert

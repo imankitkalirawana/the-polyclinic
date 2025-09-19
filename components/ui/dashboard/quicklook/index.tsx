@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback, useMemo } from 'react';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@/providers/session-provider';
 import {
   Button,
   cn,
@@ -36,7 +36,7 @@ export default function QuickLook<T, A extends string = string, D extends string
   sidebarContent,
   content,
 }: QuickLookProps<T, A, D>): React.ReactElement<$FixMe> {
-  const { data: session } = useSession();
+  const session = useSession();
   const role = useMemo(() => session?.user?.role ?? 'user', [session?.user?.role]);
 
   const item = useMemo(() => selectedItem || ({} as T), [selectedItem]);

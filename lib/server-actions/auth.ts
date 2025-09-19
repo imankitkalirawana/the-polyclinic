@@ -1,23 +1,15 @@
 'use server';
-import { AuthError } from 'next-auth';
-import { signIn } from '@/auth';
+import { login as customLogin } from '@/lib/auth';
 
 export const login = async ({ email, password }: { email: string; password: string }) => {
   try {
-    await signIn('credentials', {
-      email,
-      password,
-      redirect: false,
-    });
+    const result = await customLogin({ email, password });
+    return { success: true, data: result };
   } catch (error) {
-    if (error instanceof AuthError) {
-      return { error: 'error', message: error.message, status: 401 };
-    }
-
-    throw error;
+    return {
+      error: 'error',
+      message: error instanceof Error ? error.message : 'Login failed',
+      status: 401,
+    };
   }
-};
-
-export const googleLogin = async () => {
-  await signIn('google');
 };

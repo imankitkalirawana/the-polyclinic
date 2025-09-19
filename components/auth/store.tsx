@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 import { useQueryState } from 'nuqs';
 import * as Yup from 'yup';
 import { AuthContextType, FlowType } from './types';
-import { login } from '@/lib/server-actions/auth';
+import { login } from '@/lib/auth';
 import { $FixMe } from '@/types';
 import { useSubdomain } from '@/hooks/useSubDomain';
 import { AuthApi } from '@/services/common/auth/api';

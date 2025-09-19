@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@/providers/session-provider';
 import { ScrollShadow, Tooltip } from '@heroui/react';
 import {
   eachDayOfInterval,
@@ -33,7 +33,7 @@ interface WeekViewProps {
 }
 
 export function WeekView({ appointments, currentDate, onTimeSlotClick }: WeekViewProps) {
-  const { data: session } = useSession();
+  const { user } = useSession();
   const ref = useRef<HTMLDivElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_currentDate, setCurrentDate] = useQueryState(
@@ -47,7 +47,7 @@ export function WeekView({ appointments, currentDate, onTimeSlotClick }: WeekVie
   const weekEnd = endOfWeek(currentDate);
   const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd });
   const isAllowedToCreateAppointment = allowedRolesToCreateAppointment.includes(
-    session?.user?.role || 'user'
+    user?.role || 'patient'
   );
 
   const { appointment, setIsTooltipOpen } = useAppointmentStore();

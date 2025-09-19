@@ -55,3 +55,17 @@ export async function getSubdomain(): Promise<string | null> {
 
   return filtered.length > 0 ? filtered[0] : null;
 }
+
+export async function subdomainToUrl() {
+  const url = process.env.NEXT_PUBLIC_API_URL;
+  if (!url) {
+    throw new Error('Cannot retrieve url from environment variables');
+  }
+  const subdomain = await getSubdomain();
+  const apiEndpoint = '/api/v1';
+
+  if (subdomain) {
+    return `${url.replace('://', `://${subdomain}.`)}${apiEndpoint}`;
+  }
+  return `${url}${apiEndpoint}`;
+}

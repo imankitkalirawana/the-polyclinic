@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@/providers/session-provider';
 import {
   Button,
   Card,
@@ -68,7 +68,7 @@ const getRolesByAccess = (
 
 export default function NewUser({ organization }: { organization?: string | null }) {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { user } = useSession();
   const [redirectUrl] = useQueryState('redirectUrl', {
     defaultValue: '/dashboard/users',
   });
@@ -118,7 +118,7 @@ export default function NewUser({ organization }: { organization?: string | null
             Fields with <span className="text-red-500">*</span> are required
           </p>
         </div>
-        {['superadmin', 'admin'].includes(session?.user?.role || '') && (
+        {['superadmin', 'admin'].includes(user?.role || '') && (
           <Button
             startContent={<Icon icon="solar:magic-stick-3-bold-duotone" width={16} />}
             variant="flat"
@@ -150,7 +150,7 @@ export default function NewUser({ organization }: { organization?: string | null
             isInvalid={!!(formik.touched.email && formik.errors.email)}
             errorMessage={formik.touched.email && formik.errors.email}
             endContent={
-              session?.user?.role === 'admin' && (
+              user?.role === 'admin' && (
                 <Tooltip content="Generate a random email">
                   <Button
                     isIconOnly
@@ -196,7 +196,7 @@ export default function NewUser({ organization }: { organization?: string | null
             onChange={formik.handleChange}
             isInvalid={!!(formik.touched.phone && formik.errors.phone)}
             endContent={
-              session?.user?.role === 'admin' && (
+              user?.role === 'admin' && (
                 <Tooltip content="Generate a random phone number">
                   <Button
                     isIconOnly

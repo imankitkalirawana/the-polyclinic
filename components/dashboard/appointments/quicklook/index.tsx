@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@/providers/session-provider';
 import { addToast, Select, SelectItem } from '@heroui/react';
 import { format } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -15,12 +15,12 @@ import { AppointmentType, DropdownKeyType } from '@/services/client/appointment'
 import { OrganizationUser } from '@/services/common/user';
 
 export function AppointmentQuickLook() {
-  const { data: session } = useSession();
+  const { user } = useSession();
   const { appointment, setAppointment, setAction, action } = useAppointmentStore();
 
   const buttons = useAppointmentButtons({
     appointment,
-    role: (session?.user?.role || 'patient') as OrganizationUser['role'],
+    role: user?.role as OrganizationUser['role'],
   });
 
   const dropdown = useMemo<Array<Partial<DropdownItemProps<DropdownKeyType>>>>(

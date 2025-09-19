@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/data-table/cell-renderers';
 import { convertSelectionToKeys } from '@/components/ui/data-table/helper';
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
-import { apiRequest } from '@/lib/axios';
+import { apiRequest } from '@/lib/axios-legacy';
 import { useAllAppointments } from '@/services/client/appointment/query';
 import { useAppointmentStore } from '@/store/appointment';
 import { AppointmentType } from '@/services/client/appointment';

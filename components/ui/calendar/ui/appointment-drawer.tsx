@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useMemo } from 'react';
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@/providers/session-provider';
 import {
   Button,
   ButtonGroup,
@@ -54,7 +54,7 @@ const AppointmentHeading = memo(
   }) => (
     <div
       className={cn(
-        'flex w-full items-center justify-between gap-2 text-tiny font-medium uppercase tracking-wide text-default-500',
+        'flex w-full items-center justify-between gap-2 font-medium uppercase tracking-wide text-default-500 text-tiny',
         className
       )}
     >
@@ -95,7 +95,7 @@ const MeetDirections = memo(
             <Icon icon="solar:copy-linear" width={18} />
           </Button>
         </ButtonGroup>
-        <span className="text-tiny text-default-500">{description}</span>
+        <span className="text-default-500 text-tiny">{description}</span>
       </div>
     </div>
   )
@@ -216,7 +216,7 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
                   {renderChip({
                     item: previousAppointment?.status,
                   })}
-                  <span className="text-tiny text-default-500">
+                  <span className="text-default-500 text-tiny">
                     {format(new Date(previousAppointment?.date || ''), 'EEEE, MMMM d · hh:mm a')}
                   </span>
                 </div>
@@ -302,7 +302,7 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
       ) : (
         <div className="flex flex-col items-start gap-1">
           <AppointmentHeading title="No Additional Information" />
-          <span className="text-tiny text-default-400">
+          <span className="text-default-400 text-tiny">
             There are no additional details for this appointment.
           </span>
         </div>
@@ -325,7 +325,7 @@ const AppointmentHeader = memo(
       <div className="flex w-full flex-row items-start justify-between gap-8 rounded-none pr-2">
         <div>
           <div className="flex items-center gap-1">
-            <h2 className="text-large font-medium capitalize text-primary-foreground">
+            <h2 className="font-medium capitalize text-primary-foreground text-large">
               #{appointment.aid} - {appointment.type}
             </h2>
             {appointment.type === 'emergency' && (
@@ -335,7 +335,7 @@ const AppointmentHeader = memo(
           <div className="flex items-center gap-1">
             <StatusRenderer status={appointment.status} />
             &middot;
-            <span className="text-tiny text-primary-foreground/90">{formattedDate}</span>
+            <span className="text-primary-foreground/90 text-tiny">{formattedDate}</span>
           </div>
         </div>
 
@@ -393,10 +393,10 @@ AppointmentHeader.displayName = 'AppointmentHeader';
 // Shared footer component
 const AppointmentFooter = memo(({ appointment }: { appointment: AppointmentType }) => {
   const { action } = useAppointmentStore();
-  const { data: session } = useSession();
+  const { user } = useSession();
   const buttons = useAppointmentButtonsInDrawer({
     selected: appointment,
-    role: session?.user?.role || 'user',
+    role: user?.role || 'patient',
   });
 
   return (

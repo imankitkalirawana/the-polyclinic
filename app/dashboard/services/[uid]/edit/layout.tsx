@@ -1,20 +1,20 @@
 import { unauthorized } from 'next/navigation';
 
-import { auth } from '@/auth';
+import { getServerSession } from '@/lib/serverAuth';
 
 export default async function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
+  const session = await getServerSession();
   const allowed = ['admin', 'receptionist', 'doctor'];
 
   if (!session) {
     unauthorized();
   }
 
-  if (session?.user && !allowed.includes(session?.user?.role)) {
+  if (session?.user?.role && !allowed.includes(session?.user?.role)) {
     unauthorized();
   }
 

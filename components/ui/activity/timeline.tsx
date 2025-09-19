@@ -8,7 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import ActivityNotFound from './not-found';
 
-import { apiRequest } from '@/lib/axios';
+import { apiRequest } from '@/lib/axios-legacy';
 import type { $FixMe } from '@/types';
 import { ActivityLogType, Schema } from '@/services/common/activity/types';
 import MinimalPlaceholder from '../minimal-placeholder';

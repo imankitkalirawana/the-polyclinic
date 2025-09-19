@@ -6,11 +6,11 @@ import { Providers } from './providers';
 
 import './globals.css';
 
-import { auth } from '@/auth';
 import Navbar from '@/components/sections/navbar';
 import { APP_INFO } from '@/lib/config';
 import { getSubdomain } from '@/auth/sub-domain';
 import { toTitleCase } from '@/lib/utils';
+import { getServerSession } from '@/lib/serverAuth';
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -36,13 +36,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
   const cookie = await cookies();
+  const session = await getServerSession();
 
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={outfit.className} suppressHydrationWarning>
-        <Providers session={session} cookies={cookie.getAll()}>
+        <Providers cookies={cookie.getAll()} session={session}>
           <NuqsAdapter>
             <Navbar />
             {children}

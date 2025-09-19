@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import Modal from '@/components/ui/modal';
-import { apiRequest } from '@/lib/axios';
+import { apiRequest } from '@/lib/axios-legacy';
 import { useAppointmentStore } from '@/store/appointment';
 import { AppointmentType } from '@/services/client/appointment';
 

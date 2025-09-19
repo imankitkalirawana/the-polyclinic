@@ -1,25 +1,18 @@
 'use client';
+import { useSession } from '@/providers/session-provider';
 
-import { useEffect } from 'react';
-import axios from 'axios';
-import { AUTHJS_SESSION_TOKEN } from '@/lib/constants';
-import { useCookies } from '@/providers/cookies-provider';
+export default function Dashboard() {
+  const { user } = useSession();
 
-export default function DashboardPage() {
-  const cookies = useCookies();
+  if (!user) return <p>Not logged in</p>;
 
-  useEffect(() => {
-    axios
-      .get('https://api.thepolyclinic.app/api/v1/client/doctors?organization=fortis', {
-        headers: {
-          Authorization: `Bearer ${cookies[AUTHJS_SESSION_TOKEN]}`,
-        },
-      })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => console.error(err));
-  }, []);
-
-  return <div>Dashboard</div>;
+  return (
+    <div>
+      <h1>Welcome, {user?.name}!</h1>
+      <p>Email: {user?.email}</p>
+      <p>Role: {user?.role}</p>
+      <p>Organization: {user?.organization || 'None'}</p>
+      <p>Phone: {user?.phone || 'Not provided'}</p>
+    </div>
+  );
 }

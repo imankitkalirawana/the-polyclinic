@@ -1,5 +1,5 @@
 import { cache } from 'react';
 
-import { auth } from '@/auth';
+import { getServerSession } from '@/lib/serverAuth';
 
-export default cache(auth);
+export default cache(getServerSession);

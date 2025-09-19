@@ -1,7 +1,7 @@
 'use client';
 
 import React, { type MouseEvent, useEffect, useRef } from 'react';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@/providers/session-provider';
 import { ScrollShadow, Tooltip } from '@heroui/react';
 import { format, isPast, isSameDay, isToday } from 'date-fns';
 
@@ -23,12 +23,12 @@ interface DayViewProps {
 }
 
 export function DayView({ appointments, currentDate, onTimeSlotClick }: DayViewProps) {
-  const { data: session } = useSession();
+  const { user } = useSession();
   const ref = useRef<HTMLDivElement>(null);
   const { appointment, setIsTooltipOpen } = useAppointmentStore();
 
   const isAllowedToCreateAppointment = allowedRolesToCreateAppointment.includes(
-    session?.user?.role || 'user'
+    user?.role || 'patient'
   );
 
   const displayHours = Array.from(

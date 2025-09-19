@@ -5,7 +5,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import Modal from '@/components/ui/modal';
-import { apiRequest } from '@/lib/axios';
+import { apiRequest } from '@/lib/axios-legacy';
 import { useAppointmentStore } from '@/store/appointment';
 
 export default function CancelDeleteAppointment({

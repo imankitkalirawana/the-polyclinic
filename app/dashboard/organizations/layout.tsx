@@ -1,13 +1,13 @@
 import { unauthorized } from 'next/navigation';
 
-import { auth } from '@/auth';
+import { getServerSession } from '@/lib/serverAuth';
 
 export default async function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
+  const session = await getServerSession();
   const allowedRoles = ['superadmin'];
 
   if (!session || !allowedRoles.includes(session.user?.role ?? '')) {

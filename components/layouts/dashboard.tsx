@@ -3,8 +3,8 @@
 import React, { useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Session } from 'next-auth';
-import { signOut } from 'next-auth/react';
+import { useSession } from '@/providers/session-provider';
+import { logout } from '@/lib/auth';
 import {
   Avatar,
   BreadcrumbItem,
@@ -23,13 +23,9 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { getSidebarItems } from '@/components/dashboard/sidebar/sidebar-items';
 import Sidebar from '@/components/dashboard/sidebar/sidebar';
 
-export default function DashboardLayout({
-  children,
-  session,
-}: {
-  readonly children: React.ReactNode;
-  session: Session;
-}) {
+export default function DashboardLayout({ children }: { readonly children: React.ReactNode }) {
+  const { user } = useSession();
+
   const [isHidden, setIsHidden] = useLocalStorage('isDashboardSidebarHidden', true);
 
   const pathname = usePathname();
@@ -43,8 +39,10 @@ export default function DashboardLayout({
   });
 
   const sidebar = useMemo(() => {
+    if (!user) return null;
+
     // Filter sidebar items based on user role
-    const filteredItems = getSidebarItems(session.user?.role);
+    const filteredItems = getSidebarItems(user?.role);
 
     return (
       <div
@@ -86,9 +84,7 @@ export default function DashboardLayout({
               className={cn('justify-center text-default-500', {
                 'justify-start text-foreground': !isHidden,
               })}
-              startContent={
-                <Avatar src={session.user?.image} name={session.user?.name || ''} size="sm" />
-              }
+              startContent={<Avatar src={user?.image} name={user?.name || ''} size="sm" />}
               variant="light"
               as={Link}
               href="/dashboard/profile"
@@ -108,11 +104,13 @@ export default function DashboardLayout({
               variant="light"
               color="danger"
               onPress={async () => {
-                await signOut({
-                  redirect: true,
-                }).then(() => {
+                try {
+                  await logout();
                   window.location.href = '/auth/login';
-                });
+                } catch (error) {
+                  console.error('Logout failed:', error);
+                  window.location.href = '/auth/login';
+                }
               }}
               isIconOnly={isHidden}
             >
@@ -122,7 +120,7 @@ export default function DashboardLayout({
         </div>
       </div>
     );
-  }, [isHidden, currentPath, session.user?.role]);
+  }, [isHidden, currentPath, user?.role]);
 
   const header = useMemo(
     () => (
