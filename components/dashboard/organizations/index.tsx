@@ -27,9 +27,6 @@ export default function OrganizationsDashboard() {
     return <MinimalPlaceholder message="Loading organizations..." />;
   }
 
-  if (!organizations) {
-    return <MinimalPlaceholder message="No organizations found" isLoading={false} />;
-  }
 
   return (
     <div className="space-y-6">
