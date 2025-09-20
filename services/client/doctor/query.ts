@@ -1,17 +1,10 @@
-import {
-  useMutation,
-  UseMutationResult,
-  useQuery,
-  useQueryClient,
-  UseQueryResult,
-} from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Doctor, DoctorSlots } from './api';
 
-import { DoctorType, SlotConfig } from './types';
-import { ApiResponse } from '@/services/fetch';
+import { SlotConfig } from './types';
 import { addToast } from '@heroui/react';
 
-export const useAllDoctors = (): UseQueryResult<DoctorType[]> =>
+export const useAllDoctors = () =>
   useQuery({
     queryKey: ['doctors'],
     queryFn: async () => {
@@ -23,7 +16,7 @@ export const useAllDoctors = (): UseQueryResult<DoctorType[]> =>
     },
   });
 
-export const useDoctorByUID = (uid?: string | null): UseQueryResult<DoctorType | null> =>
+export const useDoctorByUID = (uid?: string | null) =>
   useQuery({
     queryKey: ['doctor', uid],
     queryFn: async () => {
@@ -38,7 +31,7 @@ export const useDoctorByUID = (uid?: string | null): UseQueryResult<DoctorType |
 
 // Slots
 
-export const useSlotsByUID = (uid: string): UseQueryResult<SlotConfig | null> =>
+export const useSlotsByUID = (uid: string) =>
   useQuery({
     queryKey: ['slots', uid],
     queryFn: async () => {
@@ -51,9 +44,7 @@ export const useSlotsByUID = (uid: string): UseQueryResult<SlotConfig | null> =>
     enabled: !!uid,
   });
 
-export const useUpdateSlots = (
-  uid: string
-): UseMutationResult<ApiResponse<SlotConfig>, Error, SlotConfig> => {
+export const useUpdateSlots = (uid: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (slot: SlotConfig) => {
@@ -63,7 +54,7 @@ export const useUpdateSlots = (
       }
       throw new Error(res.message);
     },
-    onSuccess: (data: ApiResponse<SlotConfig>) => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['slots', uid] });
       addToast({
         title: data.message,

@@ -1,17 +1,10 @@
 import { addToast } from '@heroui/react';
-import {
-  useMutation,
-  UseMutationResult,
-  useQuery,
-  useQueryClient,
-  UseQueryResult,
-} from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { ServiceApi } from '@/services/client/service/api';
 import { ServiceType } from '@/services/client/service/types';
-import { ApiResponse } from '@/services/fetch';
 
-export const useAllServices = (): UseQueryResult<ServiceType[]> =>
+export const useAllServices = () =>
   useQuery({
     queryKey: ['services'],
     queryFn: async () => {
@@ -23,7 +16,7 @@ export const useAllServices = (): UseQueryResult<ServiceType[]> =>
     },
   });
 
-export const useServiceWithUID = (uid: string): UseQueryResult<ServiceType | null> =>
+export const useServiceWithUID = (uid: string) =>
   useQuery({
     queryKey: ['service', uid],
     queryFn: async () => {
@@ -36,11 +29,7 @@ export const useServiceWithUID = (uid: string): UseQueryResult<ServiceType | nul
     enabled: !!uid,
   });
 
-export const useCreateService = (): UseMutationResult<
-  ApiResponse<ServiceType>,
-  Error,
-  ServiceType
-> => {
+export const useCreateService = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: ServiceType) => {
@@ -66,11 +55,7 @@ export const useCreateService = (): UseMutationResult<
   });
 };
 
-export const useUpdateService = (): UseMutationResult<
-  ApiResponse<ServiceType>,
-  Error,
-  ServiceType
-> => {
+export const useUpdateService = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: ServiceType) => {
@@ -82,7 +67,7 @@ export const useUpdateService = (): UseMutationResult<
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({
-        queryKey: ['service', data.data.uniqueId],
+        queryKey: ['service', data.data?.uniqueId],
       });
       addToast({
         title: data.message,
@@ -98,7 +83,7 @@ export const useUpdateService = (): UseMutationResult<
   });
 };
 
-export const useDeleteService = (): UseMutationResult<ApiResponse<ServiceType>, Error, string> => {
+export const useDeleteService = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (uid: string) => {

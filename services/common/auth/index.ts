@@ -17,6 +17,3 @@ export {
   type ResetPasswordRequest,
   type LoginRequest,
 } from './validation';
-
-// Types
-export { validateRequest } from '@/services';

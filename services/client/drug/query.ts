@@ -1,18 +1,10 @@
 import { addToast } from '@heroui/react';
-import {
-  useMutation,
-  UseMutationResult,
-  useQuery,
-  useQueryClient,
-  UseQueryResult,
-} from '@tanstack/react-query';
-
-import { ApiResponse } from '@/services/fetch';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { DrugType } from '@/services/client/drug/types';
 import { DrugApi } from './api';
 
-export const useAllDrugs = (): UseQueryResult<DrugType[]> =>
+export const useAllDrugs = () =>
   useQuery({
     queryKey: ['drugs'],
     queryFn: async () => {
@@ -24,7 +16,7 @@ export const useAllDrugs = (): UseQueryResult<DrugType[]> =>
     },
   });
 
-export const useDrugWithDid = (did: number): UseQueryResult<DrugType | null> =>
+export const useDrugWithDid = (did: number) =>
   useQuery({
     queryKey: ['drug', did],
     queryFn: async () => {
@@ -38,7 +30,7 @@ export const useDrugWithDid = (did: number): UseQueryResult<DrugType | null> =>
   });
 
 // Update
-export const useUpdateDrug = (): UseMutationResult<ApiResponse<DrugType>, Error, DrugType> => {
+export const useUpdateDrug = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: DrugType) => {
@@ -49,7 +41,7 @@ export const useUpdateDrug = (): UseMutationResult<ApiResponse<DrugType>, Error,
       throw new Error(res.message);
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['drug', data.data.did] });
+      queryClient.invalidateQueries({ queryKey: ['drug', data?.data?.did] });
       addToast({
         title: data.message,
         color: 'success',

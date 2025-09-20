@@ -195,7 +195,7 @@ export const createAuthProvider = (flowType: FlowType) =>
         });
 
         if (res.success) {
-          setToken(res.data.token);
+          setToken(res.data?.token ?? null);
           paginate(1);
         } else {
           setFieldError('otp', res.message);
@@ -267,7 +267,7 @@ export const createAuthProvider = (flowType: FlowType) =>
         });
 
         if (res.success) {
-          setToken(res.data.token);
+          setToken(res.data?.token ?? null);
           paginate(1);
         } else {
           setFieldError('otp', res.message);

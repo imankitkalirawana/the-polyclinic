@@ -1,9 +1,11 @@
 'use server';
 
-import { fetchData } from '../../fetch';
+import { apiRequest } from '@/lib/axios';
 
 import { NewsletterType } from '@/services/client/newsletters/types';
 
 export async function getAllNewsletters() {
-  return await fetchData<NewsletterType[]>('/newsletters');
+  return await apiRequest<NewsletterType[]>({
+    url: '/newsletters',
+  });
 }
