@@ -38,7 +38,7 @@ export default function OrganizationsDashboard() {
       </div>
 
       <div className="grid gap-4">
-        {organizations?.length === 0 ? (
+        {organizations.length === 0 ? (
           <Card>
             <CardBody className="flex h-32 items-center justify-center">
               <p className="text-default-400">No organizations found</p>
