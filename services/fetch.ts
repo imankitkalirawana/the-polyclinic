@@ -1,9 +1,9 @@
 'use server';
 import { cookies } from 'next/headers';
+// eslint-disable-next-line no-restricted-imports
 import axios from 'axios';
 import type { $FixMe } from '@/types';
 import { getSubdomain } from '@/auth/sub-domain';
-import { API_BASE_URL } from '@/lib/config';
 import { AUTHJS_SESSION_TOKEN } from '@/lib/constants';
 
 export interface ApiResponse<T = unknown> {
@@ -60,7 +60,7 @@ export async function fetchData<T = unknown>(
       url = `${baseUrl}${endpoint}`;
     } else {
       // ✅ just use API_BASE_URL as is (no subdomain rewriting)
-      url = `${API_BASE_URL}${endpoint}`;
+      url = `${process.env.NEXT_PUBLIC_API_URL}${endpoint}`;
     }
 
     // ✅ Get subdomain
@@ -162,7 +162,7 @@ export async function fetchDataWithPagination<T>(
     });
 
     const res = await axios({
-      url: `${baseUrl || API_BASE_URL}${endpoint}?${searchParams.toString()}`,
+      url: `${baseUrl || process.env.NEXT_PUBLIC_API_URL}${endpoint}?${searchParams.toString()}`,
       method,
       data,
       headers: {

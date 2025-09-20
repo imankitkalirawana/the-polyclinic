@@ -45,7 +45,18 @@
       }
     ],
     "@typescript-eslint/no-explicit-any": "error", // This rule disallows the use of the `any` type.
-    "no-console": ["warn", { "allow": ["warn", "error"] }]
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "no-restricted-imports": [
+      "warn",
+      {
+        "paths": [
+          {
+            "name": "axios",
+            "message": "Please import axios from \"@/lib/axios\" instead of directly importing \"axios\"."
+          }
+        ]
+      }
+    ]
     // "simple-import-sort/imports": [
     //   "warn",
     //   {

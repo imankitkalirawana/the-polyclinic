@@ -1,11 +1,11 @@
+import { cache } from 'react';
 import { cookies } from 'next/headers';
 import { Session } from '@/types/session';
 import { apiRequest } from './axios';
 
-export async function getServerSession(): Promise<Session | null> {
+export const getServerSession = cache(async (): Promise<Session | null> => {
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get('connect.sid')?.value;
-
   if (!sessionCookie) return null;
 
   try {
@@ -14,11 +14,8 @@ export async function getServerSession(): Promise<Session | null> {
       method: 'GET',
     });
 
-    if (res.data) {
-      return res.data;
-    }
-    return null;
+    return res.data ?? null;
   } catch (error) {
     return null;
   }
-}
+});

@@ -1,10 +1,4 @@
-import {
-  useMutation,
-  UseMutationResult,
-  useQuery,
-  useQueryClient,
-  UseQueryResult,
-} from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { CreateOrganizationType, OrganizationType, UpdateOrganizationType } from './types';
 import { addToast } from '@heroui/react';
 import { OrganizationApi } from './api';
@@ -24,24 +18,22 @@ export const useOrganizations = () => {
   });
 };
 
-export const useOrganization = (
-  id: string
-): UseQueryResult<{
-  organization: OrganizationType;
-  users: OrganizationUser[];
-}> => {
-  return useQuery({
+export const useOrganization = (id: string) =>
+  useQuery<{
+    organization: OrganizationType;
+    users: OrganizationUser[];
+  }>({
     queryKey: ['organizations', id],
     queryFn: async () => {
       const response = await OrganizationApi.getById(id);
-      if (response.success) {
-        return response.data;
+
+      if (!response.success || !response.data) {
+        throw new Error(response.message);
       }
-      throw new Error(response.message);
+      return response.data;
     },
     enabled: !!id,
   });
-};
 
 export const useCreateOrganization = () => {
   const queryClient = useQueryClient();
@@ -70,11 +62,7 @@ export const useCreateOrganization = () => {
   });
 };
 
-export const useUpdateOrganization = (): UseMutationResult<
-  unknown,
-  Error,
-  { id: string; data: UpdateOrganizationType }
-> => {
+export const useUpdateOrganization = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: UpdateOrganizationType }) => {
