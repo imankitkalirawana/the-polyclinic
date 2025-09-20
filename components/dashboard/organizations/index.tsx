@@ -27,6 +27,9 @@ export default function OrganizationsDashboard() {
     return <MinimalPlaceholder message="Loading organizations..." />;
   }
 
+  if (organizations && organizations.length === 0) {
+    return <MinimalPlaceholder message="No organizations found" isLoading={isLoading} />;
+  }
 
   return (
     <div className="space-y-6">
@@ -38,7 +41,7 @@ export default function OrganizationsDashboard() {
       </div>
 
       <div className="grid gap-4">
-        {organizations.length === 0 ? (
+        {organizations?.length === 0 ? (
           <Card>
             <CardBody className="flex h-32 items-center justify-center">
               <p className="text-default-400">No organizations found</p>
