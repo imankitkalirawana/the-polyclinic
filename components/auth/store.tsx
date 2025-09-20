@@ -214,8 +214,6 @@ export const createAuthProvider = (flowType: FlowType) =>
           await login({
             email: values.email,
             password: values.password,
-          }).then(() => {
-            window.location.href = '/dashboard';
           });
         }
       }
@@ -226,6 +224,7 @@ export const createAuthProvider = (flowType: FlowType) =>
       if (values.page === 0) {
         paginate(1);
       }
+
       if (values.page === 1) {
         const res = await AuthApi.verifyEmail({ email: values.email });
         if (!res?.data?.exists) {
@@ -234,16 +233,10 @@ export const createAuthProvider = (flowType: FlowType) =>
           paginate(1);
         }
       } else if (values.page === 2) {
-        const res = await login({
+        await login({
           email: values.email,
           password: values.password,
         });
-
-        if (res?.error) {
-          setFieldError('password', res.message);
-        } else {
-          window.location.href = '/dashboard';
-        }
       }
     };
 

@@ -7,9 +7,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import DateTimePicker from '@/components/ui/date-time-picker';
 import Modal from '@/components/ui/modal';
-import { apiRequest } from '@/lib/axios-legacy';
+import { apiRequest } from '@/lib/axios';
 import { TIMINGS } from '@/lib/config';
 import { useAppointmentStore } from '@/store/appointment';
+import { AppointmentType } from '@/services/client/appointment';
 
 export default function RescheduleAppointment() {
   const { user } = useSession();
@@ -34,14 +35,14 @@ export default function RescheduleAppointment() {
   const rescheduleMutation = useMutation({
     mutationFn: async () =>
       apiRequest({
-        url: `/api/v1/appointments/${appointment?.aid}`,
+        url: `/appointments/${appointment?.aid}`,
         method: 'PATCH',
         data: {
           status: user?.role === 'patient' ? 'booked' : 'confirmed',
           date: timing,
         },
       }),
-    onSuccess: async (res) => {
+    onSuccess: async () => {
       addToast({
         title: `Appointment rescheduled to ${format(timing, 'PPp')}`,
         description: 'Appointment rescheduled successfully',
@@ -54,7 +55,6 @@ export default function RescheduleAppointment() {
         }),
       ]);
       setAction(null);
-      setAppointment(res);
     },
     onError: (error) => {
       addToast({

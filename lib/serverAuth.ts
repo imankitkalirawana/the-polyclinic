@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { axios } from './axios';
+import axios from './axios/client';
 import { Session } from '@/types/session';
 
 export async function getServerSession(): Promise<Session | null> {

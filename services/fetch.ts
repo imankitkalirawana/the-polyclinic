@@ -37,6 +37,9 @@ export interface PaginatedApiResponse<T> {
   errors?: string[];
 }
 
+/**
+ * @deprecated use apiRequest from @/lib/axios instead
+ */
 export async function fetchData<T = unknown>(
   endpoint: string,
   options: {
@@ -79,7 +82,9 @@ export async function fetchData<T = unknown>(
       }
     }
 
-    const authjsSessionToken = (await cookies()).get(AUTHJS_SESSION_TOKEN)?.value;
+    const cookieStore = await cookies();
+
+    const authjsSessionToken = cookieStore.get(AUTHJS_SESSION_TOKEN)?.value;
 
     const config = {
       url,
@@ -89,7 +94,6 @@ export async function fetchData<T = unknown>(
       headers: {
         ...headers,
         Authorization: `Bearer ${authjsSessionToken}`,
-        Cookie: (await cookies()).toString(),
       },
     };
 

@@ -1,18 +1,29 @@
-import { getServerSession } from '@/lib/serverAuth';
+import Profile from '@/components/profile';
+import { apiRequest } from '@/lib/axios';
+import { Session } from '@/types/session';
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
-export default async function Profile() {
-  const session = await getServerSession();
+export default async function ProfilePage() {
+  const queryClient = new QueryClient();
 
-  if (!session) return <p>Not logged in</p>;
+  await queryClient.prefetchQuery({
+    queryKey: ['session'],
+    queryFn: async () => {
+      try {
+        const res = await apiRequest<Session>({
+          url: '/auth/session',
+          method: 'GET',
+        });
+        return res.data;
+      } catch (error) {
+        return null;
+      }
+    },
+  });
 
   return (
-    <div>
-      <h1>Profile</h1>
-      <p>Name: {session.user?.name}</p>
-      <p>Email: {session.user?.email}</p>
-      <p>Role: {session.user?.role}</p>
-      <p>Organization: {session.user?.organization || 'None'}</p>
-      <p>Phone: {session.user?.phone || 'Not provided'}</p>
-    </div>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <Profile />
+    </HydrationBoundary>
   );
 }

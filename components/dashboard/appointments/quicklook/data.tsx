@@ -191,7 +191,7 @@ export const sidebarContent = (appointment: AppointmentType) => (
         </div>
       </Tab>
       <Tab title="Activity" key="activity">
-        <ActivityTimeline aid={appointment.aid} schema="appointment" />
+        <ActivityTimeline />
       </Tab>
     </Tabs>
   </>
