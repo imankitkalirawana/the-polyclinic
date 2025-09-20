@@ -157,10 +157,10 @@ export default function Navbar() {
                   onPress={async () => {
                     try {
                       await logout();
-                      window.location.href = `http://${subdomain}.lvh.me:3000/`;
+                      window.location.href = `/`;
                     } catch (error) {
                       console.error('Logout failed:', error);
-                      window.location.href = `http://${subdomain}.lvh.me:3000/`;
+                      window.location.href = `/`;
                     }
                   }}
                   color="danger"

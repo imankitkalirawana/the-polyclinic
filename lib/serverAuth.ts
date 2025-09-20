@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
-import axios from './axios/client';
 import { Session } from '@/types/session';
+import { apiRequest } from './axios';
 
 export async function getServerSession(): Promise<Session | null> {
   const cookieStore = await cookies();
@@ -9,13 +9,15 @@ export async function getServerSession(): Promise<Session | null> {
   if (!sessionCookie) return null;
 
   try {
-    const { data }: { data: Session | null } = await axios.get(`/auth/session`, {
-      headers: {
-        Cookie: `connect.sid=${sessionCookie}`, // Forward cookie
-      },
+    const res = await apiRequest<Session>({
+      url: '/auth/session',
+      method: 'GET',
     });
 
-    return data;
+    if (res.data) {
+      return res.data;
+    }
+    return null;
   } catch (error) {
     return null;
   }

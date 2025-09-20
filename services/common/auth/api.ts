@@ -8,6 +8,7 @@ import {
 } from '@/services/common/auth';
 import { RegistrationResponse, VerifyOTPResponse } from './types';
 import { UnifiedUser } from '../user';
+import { apiRequest } from '@/lib/axios';
 
 export class AuthApi {
   static baseUrl = '/auth';
@@ -34,7 +35,8 @@ export class AuthApi {
   }
 
   static async verifyEmail(data: { email: string }) {
-    return await fetchData<{ exists: boolean }>(`${this.baseUrl}/verify-email`, {
+    return await apiRequest<{ exists: boolean }>({
+      url: `${this.baseUrl}/verify-email`,
       method: 'POST',
       data,
     });

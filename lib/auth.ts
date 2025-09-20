@@ -1,13 +1,12 @@
 'use server';
-import { getQueryClient } from '@/app/get-query-client';
-import axios from './axios/client';
 import { AxiosError } from 'axios';
 import { cookies } from 'next/headers';
-import { fetchData } from '@/services/fetch';
+import { apiRequest } from './axios';
 
 export async function login({ email, password }: { email: string; password: string }) {
   try {
-    const { data } = await fetchData<{ token: string }>('/auth/login', {
+    const { data } = await apiRequest<{ token: string }>({
+      url: '/auth/login',
       method: 'POST',
       data: { email, password },
     });
@@ -30,14 +29,24 @@ export async function login({ email, password }: { email: string; password: stri
 }
 
 export async function logout() {
-  const queryClient = getQueryClient();
-  const url = process.env.NEXT_PUBLIC_API_URL;
   try {
-    const { data } = await axios.post(`${url}/auth/logout`);
-    // Clear session cache
-    queryClient.setQueryData(['session'], null);
-    await queryClient.invalidateQueries({ queryKey: ['session'] });
-    return data; // { message }
+    const res = await apiRequest<{ message: string }>({
+      url: '/auth/logout',
+      method: 'POST',
+    });
+
+    if (res.success) {
+      const cookieStore = await cookies();
+      cookieStore.delete('connect.sid');
+      return {
+        success: true,
+        message: 'Logout successful',
+      };
+    }
+    return {
+      success: false,
+      message: 'Logout failed',
+    };
   } catch (error) {
     throw new Error((error as AxiosError).message || 'Logout failed');
   }
