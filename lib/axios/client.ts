@@ -17,14 +17,24 @@ const clientAxios = Axios.create({
 
 clientAxios.interceptors.request.use(async (config) => {
   const token = getCookie(AUTH_COOKIE_NAME);
-  // add organization to body
   const subdomain = await getSubdomain();
+
   if (subdomain) {
-    config.data = {
-      ...config.data,
-      organization: subdomain,
-    };
+    if (config.method?.toLowerCase() === 'get') {
+      // Add organization to query params for GET requests
+      config.params = {
+        ...config.params,
+        organization: subdomain,
+      };
+    } else {
+      // Add organization to body for non-GET requests
+      config.data = {
+        ...config.data,
+        organization: subdomain,
+      };
+    }
   }
+
   if (token) {
     config.headers.set('Authorization', `Bearer ${token}`);
   }

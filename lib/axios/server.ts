@@ -23,11 +23,19 @@ const serverAxios = Axios.create({
 serverAxios.interceptors.request.use(async (config) => {
   const token = await getServerCookie(AUTH_COOKIE_NAME);
   const subdomain = await getSubdomain();
+
   if (subdomain) {
-    config.data = {
-      ...config.data,
-      organization: subdomain,
-    };
+    if (config.method?.toLowerCase() === 'get') {
+      config.params = {
+        ...config.params,
+        organization: subdomain,
+      };
+    } else {
+      config.data = {
+        ...config.data,
+        organization: subdomain,
+      };
+    }
   }
 
   if (token) {

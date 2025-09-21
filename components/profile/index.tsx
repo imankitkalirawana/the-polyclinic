@@ -10,7 +10,6 @@ export default function Profile() {
     queryFn: async () => {
       const res = await apiRequest<Session>({
         url: '/auth/session',
-        method: 'GET',
       });
       return res.data;
     },
