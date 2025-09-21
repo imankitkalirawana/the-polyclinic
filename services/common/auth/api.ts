@@ -1,4 +1,5 @@
 import {
+  LoginRequest,
   RegistrationRequest,
   ResetPasswordRequest,
   SendOTPRequest,
@@ -9,6 +10,14 @@ import { apiRequest } from '@/lib/axios';
 
 export class AuthApi {
   static baseUrl = '/auth';
+
+  static async login(data: LoginRequest) {
+    return await apiRequest<{ token: string }>({
+      url: `${this.baseUrl}/login`,
+      method: 'POST',
+      data,
+    });
+  }
 
   static async sendOTP(data: SendOTPRequest) {
     return await apiRequest({

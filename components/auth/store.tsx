@@ -10,6 +10,7 @@ import { login } from '@/lib/auth';
 import { $FixMe } from '@/types';
 import { useSubdomain } from '@/hooks/useSubDomain';
 import { AuthApi } from '@/services/common/auth/api';
+import { useCookies } from '@/providers/cookies-provider';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -19,6 +20,7 @@ export const createAuthProvider = (flowType: FlowType) =>
     const [email] = useQueryState('email');
     const subdomain = useSubdomain();
     const [token, setToken] = useState<string | null>(null);
+    const { setCookie } = useCookies();
 
     // Initial values based on flow type
     const getInitialValues = () => {
@@ -233,12 +235,21 @@ export const createAuthProvider = (flowType: FlowType) =>
           paginate(1);
         }
       } else if (values.page === 2) {
-        console.log('store.tsx: Before login');
-        await login({
+        await AuthApi.login({
           email: values.email,
           password: values.password,
+        }).then((res) => {
+          if (res.success) {
+            setCookie('connect.sid', res.data?.token ?? '');
+            window.location.href = '/dashboard';
+          } else {
+            addToast({
+              title: res.message,
+              color: 'danger',
+            });
+            setFieldError('password', res.errors?.[0] ?? res.message);
+          }
         });
-        console.log('store.tsx: After login');
       }
     };
 

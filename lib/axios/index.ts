@@ -16,14 +16,11 @@ export async function apiRequest<TData = unknown, TRequest = unknown>(
   config: AxiosRequestConfig<TRequest>
 ): Promise<ApiResponse<TData>> {
   try {
-    console.log('axios/index.ts: Before request', config);
     const response: AxiosResponse<ApiResponse<TData>> = await axiosInstance.request<
       ApiResponse<TData>,
       AxiosResponse<ApiResponse<TData>>,
       TRequest
     >(config);
-
-    console.log('axios/index.ts: After request', response);
 
     return {
       success: true,
@@ -32,10 +29,9 @@ export async function apiRequest<TData = unknown, TRequest = unknown>(
       errors: response.data.errors,
     };
   } catch (error) {
-    console.log('axios/index.ts: After request error', error);
     if (error && typeof error === 'object' && 'isAxiosError' in error) {
       const axiosError = error as AxiosError<ApiResponse<TData>>;
-      console.log('axios/index.ts: After request error with axiosError', axiosError);
+      console.error('Axios error', axiosError);
       return {
         success: false,
         data: axiosError.response?.data?.data ?? null,
@@ -43,8 +39,8 @@ export async function apiRequest<TData = unknown, TRequest = unknown>(
         errors: axiosError.response?.data?.errors,
       };
     }
-    console.log('axios/index.ts: After request error with error', error);
 
+    console.error('Error', error);
     return {
       success: false,
       data: null,
