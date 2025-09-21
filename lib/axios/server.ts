@@ -24,6 +24,9 @@ serverAxios.interceptors.request.use(async (config) => {
   const token = await getServerCookie(AUTH_COOKIE_NAME);
   const subdomain = await getSubdomain();
 
+  console.log('subdomain', subdomain);
+  console.log('config', config);
+
   if (subdomain) {
     if (config.method?.toLowerCase() === 'get') {
       config.params = {

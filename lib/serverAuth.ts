@@ -9,10 +9,12 @@ export const getServerSession = cache(async (): Promise<Session | null> => {
   if (!sessionCookie) return null;
 
   try {
+    console.log('sessionCookie', sessionCookie);
     const res = await apiRequest<Session>({
       url: '/auth/session',
-      method: 'GET',
     });
+
+    console.log('res', res);
 
     return res.data ?? null;
   } catch (error) {
