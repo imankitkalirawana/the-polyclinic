@@ -14,11 +14,11 @@ import { headers } from 'next/headers';
  * - localhost:3000 => null
  */
 
-export const getSubdomain = async (): Promise<string | undefined> => {
+export const getSubdomain = async (): Promise<string> => {
   const headersList = await headers();
   const host = headersList.get('host') || '';
 
-  if (!host) return undefined;
+  if (!host) return '';
 
   // Remove protocol if present
   const cleanedHost = host.replace(/^https?:\/\//, '').split(':')[0]; // also removes port
@@ -36,12 +36,12 @@ export const getSubdomain = async (): Promise<string | undefined> => {
     'api',
   ];
   if (ignoredHosts.some((h) => cleanedHost.startsWith(h))) {
-    return undefined;
+    return '';
   }
 
   // If it's just a root domain (example.com), no subdomain
   if (parts.length <= 2) {
-    return undefined;
+    return '';
   }
 
   return parts[0]; // ✅ real subdomain
