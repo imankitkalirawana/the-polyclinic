@@ -22,10 +22,6 @@ export async function getSubdomain(): Promise<string | null> {
   const origin = headersList.get('origin') || '';
   const referer = headersList.get('referer') || '';
 
-  console.log('host', host);
-  console.log('origin', origin);
-  console.log('referer', referer);
-
   // Extract hostname from different sources
   let hostname = '';
 
@@ -57,8 +53,6 @@ export async function getSubdomain(): Promise<string | null> {
       }
     }
   }
-
-  console.log('extracted hostname', hostname);
 
   if (!hostname) return null;
 

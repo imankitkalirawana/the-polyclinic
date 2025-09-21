@@ -1,5 +1,6 @@
 import { getServerSession } from '@/lib/serverAuth';
 import DashboardLayout from '@/components/layouts/dashboard';
+import { unauthorized } from 'next/navigation';
 
 export default async function Layout({
   children,
@@ -8,7 +9,9 @@ export default async function Layout({
 }>) {
   const session = await getServerSession();
 
-  console.log('session', session);
+  if (!session) {
+    unauthorized();
+  }
 
   return <DashboardLayout>{children}</DashboardLayout>;
 }
