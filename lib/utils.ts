@@ -2,7 +2,6 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { faker } from '@faker-js/faker';
 import { z } from 'zod';
-import crypto from 'crypto';
 
 export const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
 export const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'thepolyclinic.app';
@@ -86,15 +85,4 @@ export function withZodSchema<T>(schema: z.ZodSchema<T>) {
       return {};
     }
   };
-}
-
-function getGravatarHash(email: string): string {
-  email = email.trim().toLowerCase();
-  const hash = crypto.createHash('sha256').update(email).digest('hex');
-  return hash;
-}
-
-export function getGravatar(email: string) {
-  const hash = getGravatarHash(email);
-  return `https://0.gravatar.com/avatar/${hash}`;
 }
