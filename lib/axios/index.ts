@@ -16,11 +16,14 @@ export async function apiRequest<TData = unknown, TRequest = unknown>(
   config: AxiosRequestConfig<TRequest>
 ): Promise<ApiResponse<TData>> {
   try {
+    console.log('axios/index.ts: Before request', config);
     const response: AxiosResponse<ApiResponse<TData>> = await axiosInstance.request<
       ApiResponse<TData>,
       AxiosResponse<ApiResponse<TData>>,
       TRequest
     >(config);
+
+    console.log('axios/index.ts: After request', response);
 
     return {
       success: true,

@@ -1,19 +1,22 @@
 'use server';
+// eslint-disable-next-line no-restricted-imports
 import { AxiosError } from 'axios';
 import { cookies } from 'next/headers';
 import { apiRequest } from './axios';
 
 export async function login({ email, password }: { email: string; password: string }) {
   try {
-    const { data } = await apiRequest<{ token: string }>({
+    console.log('auth.ts: Before login');
+    const res = await apiRequest<{ token: string }>({
       url: '/auth/login',
       method: 'POST',
       data: { email, password },
     });
+    console.log('auth.ts: After login with res', res);
 
-    if (data?.token) {
+    if (res?.data?.token) {
       const cookieStore = await cookies();
-      cookieStore.set('connect.sid', data.token);
+      cookieStore.set('connect.sid', res.data.token);
       return {
         success: true,
         message: 'Login successful',
@@ -21,7 +24,7 @@ export async function login({ email, password }: { email: string; password: stri
     }
     return {
       success: false,
-      message: 'Login failed',
+      message: res.message,
     };
   } catch (error) {
     throw new Error('Login failed');

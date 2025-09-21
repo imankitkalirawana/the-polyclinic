@@ -233,10 +233,12 @@ export const createAuthProvider = (flowType: FlowType) =>
           paginate(1);
         }
       } else if (values.page === 2) {
+        console.log('store.tsx: Before login');
         await login({
           email: values.email,
           password: values.password,
         });
+        console.log('store.tsx: After login');
       }
     };
 
@@ -281,12 +283,19 @@ export const createAuthProvider = (flowType: FlowType) =>
         });
 
         if (res.success) {
-          await login({
+          const result = await login({
             email: values.email,
             password: values.newPassword,
-          }).then(() => {
-            window.location.href = '/dashboard';
           });
+
+          if (result.success) {
+            window.location.href = '/dashboard';
+          } else {
+            addToast({
+              title: result.message,
+              color: 'danger',
+            });
+          }
         } else {
           addToast({
             title: res.message,
