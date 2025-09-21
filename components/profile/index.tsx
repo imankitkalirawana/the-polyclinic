@@ -1,19 +1,9 @@
 'use client';
 
-import { apiRequest } from '@/lib/axios';
-import { Session } from '@/types/session';
-import { useQuery } from '@tanstack/react-query';
+import { useSession } from '@/providers/session-provider';
 
 export default function Profile() {
-  const { data: session } = useQuery({
-    queryKey: ['session'],
-    queryFn: async () => {
-      const res = await apiRequest<Session>({
-        url: '/auth/session',
-      });
-      return res.data;
-    },
-  });
+  const session = useSession();
 
   if (!session) return <p>Not logged in</p>;
 
