@@ -240,7 +240,7 @@ export const createAuthProvider = (flowType: FlowType) =>
           password: values.password,
         }).then((res) => {
           if (res.success) {
-            setCookie('connect.sid', res.data?.token ?? '');
+            setCookie('connect.sid', res.data?.token ?? '', { path: '/' });
             window.location.href = '/dashboard';
           } else {
             addToast({

@@ -59,9 +59,9 @@ export const CookiesProvider = ({
       cookieString += `; max-age=${options.maxAge}`;
     }
 
-    if (options.path) {
-      cookieString += `; path=${options.path}`;
-    }
+    // Default to root path if not specified
+    const path = options.path || '/';
+    cookieString += `; path=${path}`;
 
     if (options.domain) {
       cookieString += `; domain=${options.domain}`;
