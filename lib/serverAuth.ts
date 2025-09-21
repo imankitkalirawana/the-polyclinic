@@ -1,13 +1,14 @@
-import { cache } from 'react';
 import { cookies } from 'next/headers';
 import { Session } from '@/types/session';
 import { getSubdomain } from '@/auth/sub-domain';
 
-export const getServerSession = cache(async (): Promise<Session | null> => {
+export const getServerSession = async (): Promise<Session | null> => {
   const subdomain = await getSubdomain();
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get('connect.sid')?.value;
   if (!sessionCookie) return null;
+
+  console.log('serverAuth.ts: subdomain', subdomain);
 
   try {
     const res = await fetch(
@@ -25,4 +26,4 @@ export const getServerSession = cache(async (): Promise<Session | null> => {
   } catch (error) {
     return null;
   }
-});
+};
