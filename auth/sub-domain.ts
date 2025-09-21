@@ -22,6 +22,12 @@ export const getSubdomain = async (): Promise<string> => {
 
   // Remove protocol if present
   const cleanedHost = host.replace(/^https?:\/\//, '').split(':')[0]; // also removes port
+
+  // Ensure cleanedHost is defined and not empty
+  if (!cleanedHost) {
+    return '';
+  }
+
   const parts = cleanedHost.split('.');
 
   // Skip if host is localhost-like or a known non-subdomain host
