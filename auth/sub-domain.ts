@@ -20,11 +20,6 @@ export async function getSubdomain(): Promise<string | null> {
   console.log('host', headersList.get('host'));
   console.log('hostname', headersList.get('hostname'));
   console.log('origin', headersList.get('origin'));
-  console.log('referer', headersList.get('referer'));
-  console.log('user-agent', headersList.get('user-agent'));
-  console.log('accept', headersList.get('accept'));
-  console.log('accept-language', headersList.get('accept-language'));
-  console.log('accept-encoding', headersList.get('accept-encoding'));
   const host = headersList.get('host') || '';
   const hostname = host.split(':')[0]; // remove port
 
