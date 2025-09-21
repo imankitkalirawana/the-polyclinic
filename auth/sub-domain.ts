@@ -58,6 +58,9 @@ export async function getSubdomain(): Promise<string | null> {
 
   const rootDomainFormatted = rootDomain.split(':')[0];
 
+  console.log('getSubdomain: hostname', hostname, 'rootDomain', rootDomainFormatted);
+  console.log('getSubdomain: headers', Object.fromEntries(headersList.entries()));
+
   // Special-case: localhost and lvh.me (dev environments)
   if (hostname === 'localhost') return null;
 
