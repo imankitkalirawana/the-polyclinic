@@ -16,11 +16,49 @@ import { rootDomain, excludedSubdomains } from '@/lib/utils';
  */
 export async function getSubdomain(): Promise<string | null> {
   const headersList = await headers();
-  console.log('host', headersList.get('host'));
-  console.log('hostname', headersList.get('hostname'));
-  console.log('origin', headersList.get('origin'));
+
+  // Try multiple headers to get the hostname
   const host = headersList.get('host') || '';
-  const hostname = host.split(':')[0]; // remove port
+  const origin = headersList.get('origin') || '';
+  const referer = headersList.get('referer') || '';
+
+  console.log('host', host);
+  console.log('origin', origin);
+  console.log('referer', referer);
+
+  // Extract hostname from different sources
+  let hostname = '';
+
+  if (host && !host.match(/^\d+\.\d+\.\d+\.\d+/)) {
+    // Use host if it's not an IP address
+    hostname = host.split(':')[0];
+  } else if (origin) {
+    // Try to extract from origin header
+    try {
+      const url = new URL(origin);
+      hostname = url.hostname;
+    } catch {
+      // If URL parsing fails, try to extract manually
+      const match = origin.match(/https?:\/\/([^\/]+)/);
+      if (match) {
+        hostname = match[1].split(':')[0];
+      }
+    }
+  } else if (referer) {
+    // Try to extract from referer header
+    try {
+      const url = new URL(referer);
+      hostname = url.hostname;
+    } catch {
+      // If URL parsing fails, try to extract manually
+      const match = referer.match(/https?:\/\/([^\/]+)/);
+      if (match) {
+        hostname = match[1].split(':')[0];
+      }
+    }
+  }
+
+  console.log('extracted hostname', hostname);
 
   if (!hostname) return null;
 
