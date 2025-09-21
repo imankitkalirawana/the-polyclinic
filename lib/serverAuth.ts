@@ -9,6 +9,7 @@ export const getServerSession = async (): Promise<Session | null> => {
   if (!sessionCookie) return null;
 
   console.log('serverAuth.ts: subdomain', subdomain);
+  console.log('serverAuth.ts: sessionCookie', sessionCookie);
 
   try {
     const res = await fetch(
