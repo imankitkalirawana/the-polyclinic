@@ -15,6 +15,9 @@ import { rootDomain, excludedSubdomains } from '@/lib/utils';
  * - localhost:3000 => null
  */
 export async function getSubdomain(): Promise<string | null> {
+  if (!rootDomain) {
+    throw new Error('rootDomain is not set');
+  }
   const headersList = await headers();
 
   // Try multiple headers to get the hostname

@@ -5,7 +5,7 @@ import { z } from 'zod';
 import crypto from 'crypto';
 
 export const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
-export const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'lvh.me:3000';
+export const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN;
 
 export const excludedSubdomains = ['www', 'staging', 'demo', 'test'];
 

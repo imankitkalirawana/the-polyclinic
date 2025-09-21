@@ -2,6 +2,9 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { rootDomain, excludedSubdomains } from '@/lib/utils';
 
 export function extractSubdomain(request: NextRequest): string | null {
+  if (!rootDomain) {
+    throw new Error('rootDomain is not set');
+  }
   const url = request.url;
   const host = request.headers.get('host') || '';
   const hostname = host.split(':')[0]; // remove port
