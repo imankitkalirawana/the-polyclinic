@@ -3,11 +3,17 @@ import { rootDomain, excludedSubdomains } from '@/lib/utils';
 
 export function extractSubdomain(request: NextRequest): string | null {
   if (!rootDomain) {
-    throw new Error('rootDomain is not set');
+    console.warn('rootDomain is not set, returning null');
+    return null;
   }
   const url = request.url;
   const host = request.headers.get('host') || '';
   const hostname = host.split(':')[0]; // remove port
+
+  // Ensure hostname is valid
+  if (!hostname || typeof hostname !== 'string') {
+    return null;
+  }
 
   const rootDomainFormatted = rootDomain.split(':')[0];
 
@@ -61,7 +67,7 @@ export async function middleware(request: NextRequest) {
 
   if (subdomain) {
     // Block access to admin page from subdomains
-    if (pathname.startsWith('/admin')) {
+    if (pathname?.startsWith('/admin')) {
       return NextResponse.redirect(new URL('/', request.url));
     }
 
