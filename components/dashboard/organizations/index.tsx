@@ -17,7 +17,9 @@ import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 export default function OrganizationsDashboard() {
   const createModal = useDisclosure();
 
-  const { data: organizations = [], isLoading, error } = useOrganizations();
+  const { data, isLoading, error } = useOrganizations();
+
+  const { organizations } = data || {};
 
   if (error) {
     toast.error('Failed to fetch organizations');

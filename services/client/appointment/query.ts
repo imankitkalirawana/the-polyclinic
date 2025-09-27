@@ -9,11 +9,11 @@ export const useAllAppointments = () =>
   useQuery({
     queryKey: ['appointments'],
     queryFn: async () => {
-      const res = await AppointmentApi.getAll();
-      if (res.success) {
-        return res.data;
+      const result = await AppointmentApi.getAll();
+      if (result.success) {
+        return result.data;
       }
-      throw new Error(res.message);
+      throw new Error(result.message);
     },
     initialData: [],
   });
@@ -22,11 +22,11 @@ export const useAppointmentWithAID = (aid: string) =>
   useQuery({
     queryKey: ['appointment', aid],
     queryFn: async () => {
-      const res = await AppointmentApi.getById(aid);
-      if (res.success) {
-        return res.data;
+      const result = await AppointmentApi.getById(aid);
+      if (result.success) {
+        return result.data;
       }
-      throw new Error(res.message);
+      throw new Error(result.message);
     },
     enabled: !!aid,
   });
@@ -37,11 +37,11 @@ export const useCreateAppointment = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (appointment: CreateAppointmentType) => {
-      const res = await AppointmentApi.create(appointment);
-      if (res.success) {
-        return res;
+      const result = await AppointmentApi.create(appointment);
+      if (result.success) {
+        return result;
       }
-      throw new Error(res.message);
+      throw new Error(result.message);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['appointments'] });

@@ -12,11 +12,11 @@ export const useAllCountries = () =>
   useQuery({
     queryKey: ['countries'],
     queryFn: async () => {
-      const res = await getAllCountries();
-      if (res.success) {
-        return res.data;
+      const result = await getAllCountries();
+      if (result.success) {
+        return result.data;
       }
-      throw new Error(res.message);
+      throw new Error(result.message);
     },
   });
 
@@ -24,11 +24,11 @@ export const useAllStatesByCountry = (country: CountryProps['iso2']) =>
   useQuery({
     queryKey: ['states', country],
     queryFn: async () => {
-      const res = await getAllStatesByCountry(country);
-      if (res.success) {
-        return res.data;
+      const result = await getAllStatesByCountry(country);
+      if (result.success) {
+        return result.data;
       }
-      throw new Error(res.message);
+      throw new Error(result.message);
     },
     enabled: !!country,
   });
@@ -40,11 +40,11 @@ export const useAllCitiesByCountryAndState = (
   useQuery({
     queryKey: ['cities', country, state],
     queryFn: async () => {
-      const res = await getAllCitiesByCountryAndState(country, state);
-      if (res.success) {
-        return res.data;
+      const result = await getAllCitiesByCountryAndState(country, state);
+      if (result.success) {
+        return result.data;
       }
-      throw new Error(res.message);
+      throw new Error(result.message);
     },
     enabled: !!country && !!state,
   });

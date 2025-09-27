@@ -8,11 +8,11 @@ export const useAllServices = () =>
   useQuery({
     queryKey: ['services'],
     queryFn: async () => {
-      const res = await ServiceApi.getAll();
-      if (res.success) {
-        return res.data;
+      const result = await ServiceApi.getAll();
+      if (result.success) {
+        return result.data;
       }
-      throw new Error(res.message);
+      throw new Error(result.message);
     },
   });
 
@@ -20,11 +20,11 @@ export const useServiceWithUID = (uid: string) =>
   useQuery({
     queryKey: ['service', uid],
     queryFn: async () => {
-      const res = await ServiceApi.getByUID(uid);
-      if (res.success) {
-        return res.data;
+      const result = await ServiceApi.getByUID(uid);
+      if (result.success) {
+        return result.data;
       }
-      throw new Error(res.message);
+      throw new Error(result.message);
     },
     enabled: !!uid,
   });
@@ -33,11 +33,11 @@ export const useCreateService = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: ServiceType) => {
-      const res = await ServiceApi.create(data);
-      if (res.success) {
-        return res;
+      const result = await ServiceApi.create(data);
+      if (result.success) {
+        return result;
       }
-      throw new Error(res.message);
+      throw new Error(result.message);
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['services'] });
@@ -59,11 +59,11 @@ export const useUpdateService = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: ServiceType) => {
-      const res = await ServiceApi.update(data.uniqueId, data);
-      if (res.success) {
-        return res;
+      const result = await ServiceApi.update(data.uniqueId, data);
+      if (result.success) {
+        return result;
       }
-      throw new Error(res.message);
+      throw new Error(result.message);
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({
@@ -87,11 +87,11 @@ export const useDeleteService = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (uid: string) => {
-      const res = await ServiceApi.delete(uid);
-      if (res.success) {
-        return res;
+      const result = await ServiceApi.delete(uid);
+      if (result.success) {
+        return result;
       }
-      throw new Error(res.message);
+      throw new Error(result.message);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['services'] });

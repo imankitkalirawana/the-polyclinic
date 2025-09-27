@@ -1,36 +1,31 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { CreateOrganizationType, OrganizationType, UpdateOrganizationType } from './types';
+import { CreateOrganizationType, UpdateOrganizationType } from './types';
 import { addToast } from '@heroui/react';
 import { OrganizationApi } from './api';
-import { OrganizationUser } from '@/services/common/user';
 
 // React Query hooks
 export const useOrganizations = () => {
   return useQuery({
     queryKey: ['organizations'],
     queryFn: async () => {
-      const response = await OrganizationApi.getAll();
-      if (response.success) {
-        return response.data;
+      const result = await OrganizationApi.getAll();
+      if (result.success) {
+        return result.data;
       }
-      throw new Error(response.message);
+      throw new Error(result.message);
     },
   });
 };
 
 export const useOrganization = (id: string) =>
-  useQuery<{
-    organization: OrganizationType;
-    users: OrganizationUser[];
-  }>({
+  useQuery({
     queryKey: ['organizations', id],
     queryFn: async () => {
-      const response = await OrganizationApi.getById(id);
-
-      if (!response.success || !response.data) {
-        throw new Error(response.message);
+      const result = await OrganizationApi.getById(id);
+      if (result.success) {
+        return result.data;
       }
-      return response.data;
+      throw new Error(result.message);
     },
     enabled: !!id,
   });
@@ -40,22 +35,22 @@ export const useCreateOrganization = () => {
 
   return useMutation({
     mutationFn: async (data: CreateOrganizationType) => {
-      const response = await OrganizationApi.create(data);
-      if (response.success) {
-        return response.data;
+      const result = await OrganizationApi.create(data);
+      if (result.success) {
+        return result;
       }
-      throw new Error(response.message);
+      throw new Error(result.message);
     },
-    onSuccess: () => {
+    onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ['organizations'] });
       addToast({
-        title: 'Organization created successfully',
+        title: result.message,
         color: 'success',
       });
     },
     onError: (error) => {
       addToast({
-        title: error instanceof Error ? error.message : 'Failed to create organization',
+        title: error.message,
         color: 'danger',
       });
     },
@@ -66,15 +61,15 @@ export const useUpdateOrganization = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: UpdateOrganizationType }) => {
-      const response = await OrganizationApi.update(id, data);
-      if (response.success) {
-        return response.data;
+      const result = await OrganizationApi.update(id, data);
+      if (result.success) {
+        return result;
       }
-      throw new Error(response.message);
+      throw new Error(result.message);
     },
-    onSuccess: (_, variables) => {
+    onSuccess: (result, variables) => {
       addToast({
-        title: 'Organization updated successfully',
+        title: result.message,
         color: 'success',
       });
       queryClient.invalidateQueries({ queryKey: ['organizations'] });
@@ -82,7 +77,7 @@ export const useUpdateOrganization = () => {
     },
     onError: (error) => {
       addToast({
-        title: error instanceof Error ? error.message : 'Failed to update organization',
+        title: error.message,
         color: 'danger',
       });
     },
@@ -94,22 +89,22 @@ export const useDeleteOrganization = () => {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      const response = await OrganizationApi.delete(id);
-      if (response.success) {
-        return response.data;
+      const result = await OrganizationApi.delete(id);
+      if (result.success) {
+        return result;
       }
-      throw new Error(response.message);
+      throw new Error(result.message);
     },
-    onSuccess: () => {
+    onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ['organizations'] });
       addToast({
-        title: 'Organization deleted successfully',
+        title: result.message,
         color: 'success',
       });
     },
     onError: (error) => {
       addToast({
-        title: error instanceof Error ? error.message : 'Failed to delete organization',
+        title: error.message,
         color: 'danger',
       });
     },

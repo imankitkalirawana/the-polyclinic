@@ -6,7 +6,10 @@ import { apiRequest } from '@/lib/axios';
 export class OrganizationApi {
   private static readonly API_BASE = '/system/organizations';
   static async getAll() {
-    return await apiRequest<OrganizationType[]>({
+    return await apiRequest<{
+      organizations: OrganizationType[];
+      users: OrganizationUser[];
+    }>({
       url: this.API_BASE,
     });
   }

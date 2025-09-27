@@ -5,11 +5,11 @@ export const useAllPatients = () =>
   useQuery({
     queryKey: ['patients'],
     queryFn: async () => {
-      const res = await Patient.getAll();
-      if (res.success) {
-        return res.data;
+      const result = await Patient.getAll();
+      if (result.success) {
+        return result.data;
       }
-      throw new Error(res.message);
+      throw new Error(result.message);
     },
   });
 
@@ -17,11 +17,11 @@ export const usePatientByUID = (uid?: string | null) =>
   useQuery({
     queryKey: ['patient', uid],
     queryFn: async () => {
-      const res = await Patient.getByUID(uid);
-      if (res.success) {
-        return res.data;
+      const result = await Patient.getByUID(uid);
+      if (result.success) {
+        return result.data;
       }
-      throw new Error(res.message);
+      throw new Error(result.message);
     },
     enabled: !!uid,
   });
@@ -30,11 +30,11 @@ export const usePreviousAppointments = (uid?: string | null) =>
   useQuery({
     queryKey: ['previous-appointments', uid],
     queryFn: async () => {
-      const res = await Patient.getPreviousAppointments(uid);
-      if (res.success) {
-        return res.data;
+      const result = await Patient.getPreviousAppointments(uid);
+      if (result.success) {
+        return result.data;
       }
-      throw new Error(res.message);
+      throw new Error(result.message);
     },
     enabled: !!uid,
   });

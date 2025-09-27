@@ -6,10 +6,10 @@ export const useAllNewsletters = () =>
   useQuery({
     queryKey: ['newsletters'],
     queryFn: async () => {
-      const res = await getAllNewsletters();
-      if (res.success) {
-        return res.data;
+      const result = await getAllNewsletters();
+      if (result.success) {
+        return result.data;
       }
-      throw new Error(res.message);
+      throw new Error(result.message);
     },
   });
