@@ -58,4 +58,11 @@ export class AuthApi {
       data,
     });
   }
+
+  static async logout() {
+    return await apiRequest({
+      url: `${this.baseUrl}/logout`,
+      method: 'POST',
+    });
+  }
 }

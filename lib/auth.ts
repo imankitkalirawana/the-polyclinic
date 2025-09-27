@@ -6,13 +6,11 @@ import { apiRequest } from './axios';
 
 export async function login({ email, password }: { email: string; password: string }) {
   try {
-    
     const res = await apiRequest<{ token: string }>({
       url: '/auth/login',
       method: 'POST',
       data: { email, password },
     });
-    
 
     if (res?.data?.token) {
       const cookieStore = await cookies();

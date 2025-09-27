@@ -4,7 +4,7 @@ import React from 'react';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'nextjs-toploader/app';
 import { useSession } from '@/providers/session-provider';
-import { logout } from '@/lib/auth';
+import { useLogout } from '@/services/common/auth/query';
 import {
   Avatar,
   Button,
@@ -36,6 +36,7 @@ export default function Navbar() {
   const router = useRouter();
   const { user } = useSession();
   const subdomain = useSubdomain();
+  const { mutateAsync } = useLogout();
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [activeMenu, setActiveMenu] = React.useState<null | (typeof menuItems)[0]>(null);
@@ -155,13 +156,7 @@ export default function Navbar() {
                 <DropdownItem
                   key="logout"
                   onPress={async () => {
-                    try {
-                      await logout();
-                      window.location.href = `/`;
-                    } catch (error) {
-                      console.error('Logout failed:', error);
-                      window.location.href = `/`;
-                    }
+                    await mutateAsync();
                   }}
                   color="danger"
                 >

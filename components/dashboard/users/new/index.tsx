@@ -37,6 +37,9 @@ import { withZodSchema } from '@/lib/utils';
 import { GENDERS } from '@/lib/constants';
 import { useQueryState } from 'nuqs';
 
+// TODO: Remove this after the roles are implemented
+const TEMP_DISABLED_ROLES = ['nurse', 'pharmacist', 'laboratorist'];
+
 const getRolesByAccess = (
   role: UnifiedUser['role'] | null | undefined,
   organization?: string | null
@@ -184,6 +187,7 @@ export default function NewUser({ organization }: { organization?: string | null
                 label: toCapitalCase(role),
                 value: role,
               }))}
+              disabledKeys={TEMP_DISABLED_ROLES}
             >
               {(item) => <SelectItem key={item.value}>{item.label}</SelectItem>}
             </Select>

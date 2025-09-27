@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession } from '@/providers/session-provider';
-import { logout } from '@/lib/auth';
+import { useLogout } from '@/services/common/auth/query';
 import {
   Avatar,
   BreadcrumbItem,
@@ -25,6 +25,7 @@ import Sidebar from '@/components/dashboard/sidebar/sidebar';
 
 export default function DashboardLayout({ children }: { readonly children: React.ReactNode }) {
   const { user } = useSession();
+  const { mutateAsync, isPending } = useLogout();
 
   const [isHidden, setIsHidden] = useLocalStorage('isDashboardSidebarHidden', true);
 
@@ -104,14 +105,9 @@ export default function DashboardLayout({ children }: { readonly children: React
               variant="light"
               color="danger"
               onPress={async () => {
-                try {
-                  await logout();
-                  window.location.href = '/auth/login';
-                } catch (error) {
-                  console.error('Logout failed:', error);
-                  window.location.href = '/auth/login';
-                }
+                await mutateAsync();
               }}
+              isLoading={isPending}
               isIconOnly={isHidden}
             >
               {!isHidden && 'Log Out'}
