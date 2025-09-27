@@ -15,12 +15,12 @@ import {
   subWeeks,
   subYears,
 } from 'date-fns';
-import { parseAsStringEnum, useQueryState } from 'nuqs';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 import { allowedRolesToCreateAppointment } from './data';
-import { View, views as Views } from './types';
 import { useKeyPress } from '@/hooks/useKeyPress';
+import { useCurrentView } from './useCurrentView';
+import { useRouter } from 'nextjs-toploader/app';
 
 interface CalendarHeaderProps {
   currentDate: Date;
@@ -44,22 +44,23 @@ export function CalendarHeader({
   onCreateAppointment,
 }: CalendarHeaderProps) {
   const { user } = useSession();
-  const [view, setView] = useQueryState('view', parseAsStringEnum(Views).withDefault('schedule'));
+  const { view } = useCurrentView();
+  const router = useRouter();
 
   useKeyPress(['m'], () => {
-    setView('month');
+    router.push('/appointments/month');
   });
   useKeyPress(['y'], () => {
-    setView('year');
+    router.push('/appointments/year');
   });
   useKeyPress(['w'], () => {
-    setView('week');
+    router.push('/appointments/week');
   });
   useKeyPress(['d'], () => {
-    setView('day');
+    router.push('/appointments/day');
   });
   useKeyPress(['s'], () => {
-    setView('schedule');
+    router.push('/appointments/schedule');
   });
   useKeyPress(['t'], () => {
     onToday();
@@ -166,7 +167,6 @@ export function CalendarHeader({
           selectedKeys={[view || '']}
           defaultSelectedKeys={[view || '']}
           disallowEmptySelection
-          onChange={(e) => setView(e.target.value as View)}
           className="max-w-36"
           items={views}
           size="sm"
@@ -176,6 +176,7 @@ export function CalendarHeader({
               key={item.value}
               textValue={item.value.charAt(0).toUpperCase() + item.value.slice(1)}
               endContent={<Kbd className="capitalize">{item.shortcut}</Kbd>}
+              href={`/appointments/${item.value}`}
             >
               {item.label}
             </SelectItem>
