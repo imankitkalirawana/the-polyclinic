@@ -1,6 +1,6 @@
 'use client';
 
-import { Calendar } from '@/components/ui/calendar';
+import { Calendar } from '@/components/client/appointments/all/calendar';
 import { useAllAppointments } from '@/services/client/appointment';
 
 export default function Appointments() {

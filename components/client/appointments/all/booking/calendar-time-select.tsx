@@ -7,7 +7,7 @@ import {
   generateTimeSlots,
   getDateTime,
   getTimeSlot,
-} from '@/components/ui/calendar/booking/helper';
+} from '@/components/client/appointments/all/booking/helper';
 
 const timeSlots = generateTimeSlots();
 
