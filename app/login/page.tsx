@@ -3,8 +3,8 @@ import { login } from '@/lib/auth';
 import { useState } from 'react';
 
 export default function LoginForm() {
-  const [email, setEmail] = useState('imankitkalirawana@gmail.com');
-  const [password, setPassword] = useState('007@ViAn');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
