@@ -6,13 +6,13 @@ import { apiRequest } from './axios';
 
 export async function login({ email, password }: { email: string; password: string }) {
   try {
-    console.log('auth.ts: Before login');
+    
     const res = await apiRequest<{ token: string }>({
       url: '/auth/login',
       method: 'POST',
       data: { email, password },
     });
-    console.log('auth.ts: After login with res', res);
+    
 
     if (res?.data?.token) {
       const cookieStore = await cookies();
