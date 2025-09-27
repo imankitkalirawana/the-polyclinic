@@ -39,7 +39,6 @@ export const getSubdomain = async (): Promise<string> => {
       '127.0.0.1',
       'thepolyclinic',
       'staging',
-      'demo',
       'api',
     ];
     if (ignoredHosts.some((h) => cleanedHost?.startsWith(h))) {
