@@ -1,4 +1,4 @@
-import { useQuery, UseQueryResult } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import {
   getAllCitiesByCountryAndState,
@@ -6,9 +6,9 @@ import {
   getAllStatesByCountry,
 } from '@/services/external/api';
 
-import { CityProps, CountryProps, StateProps } from '@/types';
+import { CountryProps, StateProps } from '@/types';
 
-export const useAllCountries = (): UseQueryResult<CountryProps[]> =>
+export const useAllCountries = () =>
   useQuery({
     queryKey: ['countries'],
     queryFn: async () => {
@@ -20,9 +20,7 @@ export const useAllCountries = (): UseQueryResult<CountryProps[]> =>
     },
   });
 
-export const useAllStatesByCountry = (
-  country: CountryProps['iso2']
-): UseQueryResult<StateProps[]> =>
+export const useAllStatesByCountry = (country: CountryProps['iso2']) =>
   useQuery({
     queryKey: ['states', country],
     queryFn: async () => {
@@ -38,7 +36,7 @@ export const useAllStatesByCountry = (
 export const useAllCitiesByCountryAndState = (
   country: CountryProps['iso2'],
   state: StateProps['iso2']
-): UseQueryResult<CityProps[]> =>
+) =>
   useQuery({
     queryKey: ['cities', country, state],
     queryFn: async () => {

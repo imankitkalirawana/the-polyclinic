@@ -99,7 +99,7 @@ export const sidebarContent = (user: UnifiedUser) => (
         </div>
       </Tab>
       <Tab title="Activity" key="activity">
-        <ActivityTimeline aid={Number(user.uid)} schema="user" />
+        <ActivityTimeline />
       </Tab>
     </Tabs>
   </>

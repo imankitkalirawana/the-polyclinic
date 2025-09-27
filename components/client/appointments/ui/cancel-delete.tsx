@@ -13,7 +13,7 @@ export default function CancelDeleteAppointment({
 }: {
   type?: 'cancel' | 'delete';
 }) {
-  const { setAction, appointment, setAppointment } = useAppointmentStore();
+  const { setAction, appointment } = useAppointmentStore();
   const queryClient = useQueryClient();
 
   const body = React.useMemo(
@@ -58,13 +58,13 @@ export default function CancelDeleteAppointment({
   const cancelDeleteMutation = useMutation({
     mutationFn: async () =>
       apiRequest({
-        url: `/api/v1/appointments/${appointment?.aid}`,
+        url: `/appointments/${appointment?.aid}`,
         method: type === 'cancel' ? 'PATCH' : 'DELETE',
         data: {
           status: 'cancelled',
         },
       }),
-    onSuccess: async (res) => {
+    onSuccess: async () => {
       addToast({
         title: `Appointment ${type === 'cancel' ? 'cancelled' : 'deleted'}`,
         description: 'Appointment cancelled successfully',
@@ -77,7 +77,6 @@ export default function CancelDeleteAppointment({
         }),
       ]);
       setAction(null);
-      setAppointment(type === 'cancel' ? res : null);
     },
     onError: (error) => {
       addToast({

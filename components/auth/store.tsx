@@ -6,10 +6,11 @@ import { useFormik } from 'formik';
 import { useQueryState } from 'nuqs';
 import * as Yup from 'yup';
 import { AuthContextType, FlowType } from './types';
-import { login } from '@/lib/server-actions/auth';
+import { login } from '@/lib/auth';
 import { $FixMe } from '@/types';
 import { useSubdomain } from '@/hooks/useSubDomain';
 import { AuthApi } from '@/services/common/auth/api';
+import { useCookies } from '@/providers/cookies-provider';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -19,6 +20,7 @@ export const createAuthProvider = (flowType: FlowType) =>
     const [email] = useQueryState('email');
     const subdomain = useSubdomain();
     const [token, setToken] = useState<string | null>(null);
+    const { setCookie } = useCookies();
 
     // Initial values based on flow type
     const getInitialValues = () => {
@@ -195,7 +197,7 @@ export const createAuthProvider = (flowType: FlowType) =>
         });
 
         if (res.success) {
-          setToken(res.data.token);
+          setToken(res.data?.token ?? null);
           paginate(1);
         } else {
           setFieldError('otp', res.message);
@@ -214,8 +216,6 @@ export const createAuthProvider = (flowType: FlowType) =>
           await login({
             email: values.email,
             password: values.password,
-          }).then(() => {
-            window.location.href = '/dashboard';
           });
         }
       }
@@ -226,6 +226,7 @@ export const createAuthProvider = (flowType: FlowType) =>
       if (values.page === 0) {
         paginate(1);
       }
+
       if (values.page === 1) {
         const res = await AuthApi.verifyEmail({ email: values.email });
         if (!res?.data?.exists) {
@@ -234,16 +235,21 @@ export const createAuthProvider = (flowType: FlowType) =>
           paginate(1);
         }
       } else if (values.page === 2) {
-        const res = await login({
+        await AuthApi.login({
           email: values.email,
           password: values.password,
+        }).then((res) => {
+          if (res.success) {
+            setCookie('connect.sid', res.data?.token ?? '', { path: '/' });
+            window.location.href = '/dashboard';
+          } else {
+            addToast({
+              title: res.message,
+              color: 'danger',
+            });
+            setFieldError('password', res.errors?.[0] ?? res.message);
+          }
         });
-
-        if (res?.error) {
-          setFieldError('password', res.message);
-        } else {
-          window.location.href = '/dashboard';
-        }
       }
     };
 
@@ -274,7 +280,7 @@ export const createAuthProvider = (flowType: FlowType) =>
         });
 
         if (res.success) {
-          setToken(res.data.token);
+          setToken(res.data?.token ?? null);
           paginate(1);
         } else {
           setFieldError('otp', res.message);
@@ -288,12 +294,19 @@ export const createAuthProvider = (flowType: FlowType) =>
         });
 
         if (res.success) {
-          await login({
+          const result = await login({
             email: values.email,
             password: values.newPassword,
-          }).then(() => {
-            window.location.href = '/dashboard';
           });
+
+          if (result.success) {
+            window.location.href = '/dashboard';
+          } else {
+            addToast({
+              title: result.message,
+              color: 'danger',
+            });
+          }
         } else {
           addToast({
             title: res.message,

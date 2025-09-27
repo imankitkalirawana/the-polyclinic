@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@/providers/session-provider';
 import { addToast } from '@heroui/react';
 import { format } from 'date-fns';
 import { CalendarDate, getLocalTimeZone, Time } from '@internationalized/date';
@@ -12,10 +12,10 @@ import { TIMINGS } from '@/lib/config';
 import { useAppointmentStore } from '@/store/appointment';
 
 export default function RescheduleAppointment() {
-  const { data: session } = useSession();
+  const { user } = useSession();
   const queryClient = useQueryClient();
 
-  const { setAction, appointment, setAppointment } = useAppointmentStore();
+  const { setAction, appointment } = useAppointmentStore();
 
   const [timing, setTiming] = useState<Date>(() => {
     if (appointment?.date) {
@@ -34,14 +34,14 @@ export default function RescheduleAppointment() {
   const rescheduleMutation = useMutation({
     mutationFn: async () =>
       apiRequest({
-        url: `/api/v1/appointments/${appointment?.aid}`,
+        url: `/appointments/${appointment?.aid}`,
         method: 'PATCH',
         data: {
-          status: session?.user?.role === 'patient' ? 'booked' : 'confirmed',
+          status: user?.role === 'patient' ? 'booked' : 'confirmed',
           date: timing,
         },
       }),
-    onSuccess: async (res) => {
+    onSuccess: async () => {
       addToast({
         title: `Appointment rescheduled to ${format(timing, 'PPp')}`,
         description: 'Appointment rescheduled successfully',
@@ -54,7 +54,6 @@ export default function RescheduleAppointment() {
         }),
       ]);
       setAction(null);
-      setAppointment(res);
     },
     onError: (error) => {
       addToast({

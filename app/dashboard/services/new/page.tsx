@@ -1,13 +1,13 @@
 import { unauthorized } from 'next/navigation';
 
-import { auth } from '@/auth';
+import { getServerSession } from '@/lib/serverAuth';
 import NewService from '@/components/dashboard/services/new';
 
 export default async function Page() {
-  const session = await auth();
+  const session = await getServerSession();
   const allowed = ['admin'];
 
-  if (session?.user && !allowed.includes(session?.user?.role)) {
+  if (session?.user?.role && !allowed.includes(session?.user?.role)) {
     unauthorized();
   }
 

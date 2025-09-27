@@ -4,11 +4,7 @@ import React, { useState } from 'react';
 import { Avatar, ScrollShadow } from '@heroui/react';
 import { format, isToday, isYesterday } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useQuery } from '@tanstack/react-query';
 
-import ActivityNotFound from './not-found';
-
-import { apiRequest } from '@/lib/axios';
 import type { $FixMe } from '@/types';
 import { ActivityLogType, Schema } from '@/services/common/activity/types';
 import MinimalPlaceholder from '../minimal-placeholder';
@@ -46,21 +42,10 @@ const getActivityColor = (type: Schema) => {
   }
 };
 
-export default function ActivityTimeline({ aid, schema }: { aid: number; schema: Schema }) {
-  const { data: activities, isLoading } = useQuery<Array<ActivityLogType>>({
-    queryKey: ['activity', schema, aid],
-    queryFn: () =>
-      apiRequest({
-        method: 'GET',
-        url: `/api/v1/activity/${aid}`,
-      }),
-  });
+export default function ActivityTimeline() {
+  const [activities] = useState<Array<ActivityLogType>>([]);
 
-  if (activities?.length === 0) {
-    return <ActivityNotFound />;
-  }
-
-  if (isLoading) {
+  if (activities.length === 0) {
     return <MinimalPlaceholder message="Loading activity timeline..." />;
   }
 

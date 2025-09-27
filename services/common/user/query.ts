@@ -1,17 +1,9 @@
 import { addToast } from '@heroui/react';
-import {
-  useMutation,
-  UseMutationResult,
-  useQuery,
-  useQueryClient,
-  UseQueryResult,
-} from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { ApiResponse } from '@/services/fetch';
+import { CreateUser, UpdateUser, User } from '@/services/common/user';
 
-import { CreateUser, UnifiedUser, UpdateUser, User } from '@/services/common/user';
-
-export const useAllUsers = (): UseQueryResult<UnifiedUser[]> =>
+export const useAllUsers = () =>
   useQuery({
     queryKey: ['users'],
     queryFn: async () => {
@@ -23,7 +15,7 @@ export const useAllUsers = (): UseQueryResult<UnifiedUser[]> =>
     },
   });
 
-export const useSelf = (): UseQueryResult<UnifiedUser> =>
+export const useSelf = () =>
   useQuery({
     queryKey: ['self'],
     queryFn: async () => {
@@ -35,7 +27,7 @@ export const useSelf = (): UseQueryResult<UnifiedUser> =>
     },
   });
 
-export const useLinkedUsers = (): UseQueryResult<UnifiedUser[]> =>
+export const useLinkedUsers = () =>
   useQuery({
     queryKey: ['linked-users'],
     queryFn: async () => {
@@ -47,7 +39,7 @@ export const useLinkedUsers = (): UseQueryResult<UnifiedUser[]> =>
     },
   });
 
-export const useUserWithUID = (uid?: string): UseQueryResult<UnifiedUser | null> =>
+export const useUserWithUID = (uid?: string) =>
   useQuery({
     queryKey: ['user', uid],
     queryFn: async () => {
@@ -60,7 +52,7 @@ export const useUserWithUID = (uid?: string): UseQueryResult<UnifiedUser | null>
     enabled: !!uid,
   });
 
-export const useCreateUser = (): UseMutationResult<ApiResponse<UnifiedUser>, Error, CreateUser> => {
+export const useCreateUser = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (user: CreateUser) => {
@@ -92,11 +84,7 @@ export const useCreateUser = (): UseMutationResult<ApiResponse<UnifiedUser>, Err
   });
 };
 
-export const useUpdateUser = (): UseMutationResult<
-  ApiResponse<UnifiedUser>,
-  Error,
-  { uid: string; data: UpdateUser }
-> => {
+export const useUpdateUser = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ uid, data }: { uid: string; data: UpdateUser }) => {
@@ -123,17 +111,10 @@ export const useUpdateUser = (): UseMutationResult<
   });
 };
 
-export const useDeleteUser = (): UseMutationResult<
-  ApiResponse,
-  Error,
-  {
-    uid: string;
-    organization?: string | null;
-  }
-> => {
+export const useDeleteUser = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ uid, organization }) => {
+    mutationFn: async ({ uid, organization }: { uid: string; organization?: string | null }) => {
       const res = await User.delete(uid, organization);
       if (res.success) {
         return res;

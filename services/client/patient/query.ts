@@ -1,9 +1,7 @@
-import { useQuery, UseQueryResult } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Patient } from './api';
-import { PatientType } from './types';
-import { AppointmentType } from '../appointment';
 
-export const useAllPatients = (): UseQueryResult<PatientType[]> =>
+export const useAllPatients = () =>
   useQuery({
     queryKey: ['patients'],
     queryFn: async () => {
@@ -15,7 +13,7 @@ export const useAllPatients = (): UseQueryResult<PatientType[]> =>
     },
   });
 
-export const usePatientByUID = (uid?: string | null): UseQueryResult<PatientType | null> =>
+export const usePatientByUID = (uid?: string | null) =>
   useQuery({
     queryKey: ['patient', uid],
     queryFn: async () => {
@@ -28,9 +26,7 @@ export const usePatientByUID = (uid?: string | null): UseQueryResult<PatientType
     enabled: !!uid,
   });
 
-export const usePreviousAppointments = (
-  uid?: string | null
-): UseQueryResult<AppointmentType[] | null> =>
+export const usePreviousAppointments = (uid?: string | null) =>
   useQuery({
     queryKey: ['previous-appointments', uid],
     queryFn: async () => {

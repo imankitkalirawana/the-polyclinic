@@ -1,8 +1,6 @@
 'use client';
 
 import React from 'react';
-import { Session } from 'next-auth';
-import { SessionProvider } from 'next-auth/react';
 import NextTopLoader from 'nextjs-toploader';
 import { useRouter } from 'nextjs-toploader/app';
 import { HeroUIProvider, Spinner, ToastProvider } from '@heroui/react';
@@ -15,6 +13,8 @@ import { getQueryClient } from './get-query-client';
 import { ModalProvider } from '@/components/ui/global-modal';
 import { ThemeProvider } from 'next-themes';
 import { CookiesProvider, CookieItem } from '@/providers/cookies-provider';
+import { SessionProvider } from '@/providers/session-provider';
+import { Session } from '@/types/session';
 
 declare module '@react-types/shared' {
   interface RouterConfig {
@@ -36,12 +36,12 @@ if (typeof window !== 'undefined') {
 
 export function Providers({
   children,
-  session,
   cookies,
+  session,
 }: {
   children: React.ReactNode;
-  session: Session | null;
   cookies: CookieItem[];
+  session?: Session | null;
 }) {
   const router = useRouter();
 

@@ -190,32 +190,12 @@ export default function Appointments() {
           // convert selectedKeys to array of numbers
           const keys = convertSelectionToKeys(selectedKeys);
 
+          // TODO: Fix this
           await apiRequest({
             method: 'POST',
-            url: '/api/v1/appointments/export',
+            url: '/appointments/export',
             data: { keys },
             responseType: 'blob',
-            successMessage: {
-              title: 'Appointments exported successfully',
-            },
-            onSuccess: (data) => {
-              setAction(null);
-              // Create a blob URL and trigger download
-              const blob = new Blob([data], {
-                type: 'application/vnd.ms-excel',
-              });
-              const url = window.URL.createObjectURL(blob);
-              const link = document.createElement('a');
-              link.href = url;
-              link.setAttribute(
-                'download',
-                `appointments-export-${new Date().toISOString().split('T')[0]}.xlsx`
-              );
-              document.body.appendChild(link);
-              link.click();
-              link.remove();
-              window.URL.revokeObjectURL(url);
-            },
           });
         }}
       >

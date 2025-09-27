@@ -5,9 +5,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import Modal from '@/components/ui/modal';
-import { apiRequest } from '@/lib/axios';
 import { useAppointmentStore } from '@/store/appointment';
 import { AppointmentType } from '@/services/client/appointment';
+import { apiRequest } from '@/lib/axios';
 
 export default function CancelDeleteAppointments({
   appointments,
@@ -54,13 +54,10 @@ export default function CancelDeleteAppointments({
   const cancelDeleteMutation = useMutation({
     mutationFn: async () =>
       apiRequest({
-        url: '/api/v1/appointments',
+        url: '/appointments',
         method: type === 'cancel' ? 'PATCH' : 'DELETE',
         data: {
           ids,
-        },
-        successMessage: {
-          title: `${ids.length} Appointment${ids.length <= 1 ? '' : 's'} ${type === 'cancel' ? 'cancelled' : 'deleted'}`,
         },
       }),
     onSuccess: async () => {

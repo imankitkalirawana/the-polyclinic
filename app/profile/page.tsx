@@ -1,29 +1,33 @@
-import type { Metadata } from 'next';
-import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
+import Profile from '@/components/profile';
+// import { apiRequest } from '@/lib/axios';
+// import { Session } from '@/types/session';
+// import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
-import Profile from '@/components/features/profile';
-import { User } from '@/services/common/user';
+// export default async function ProfilePage() {
+//   const queryClient = new QueryClient();
 
-export const metadata: Metadata = {
-  title: 'Profile',
-};
+//   await queryClient.prefetchQuery({
+//     queryKey: ['session'],
+//     queryFn: async () => {
+//       try {
+//         const res = await apiRequest<Session>({
+//           url: '/auth/session',
+//           method: 'GET',
+//         });
+//         return res.data;
+//       } catch (error) {
+//         return null;
+//       }
+//     },
+//   });
+
+//   return (
+//     <HydrationBoundary state={dehydrate(queryClient)}>
+//       <Profile />
+//     </HydrationBoundary>
+//   );
+// }
 
 export default async function ProfilePage() {
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery({
-    queryKey: ['self'],
-    queryFn: async () => {
-      const res = await User.getSelf();
-      if (res.success) {
-        return res.data;
-      }
-      throw new Error(res.message);
-    },
-  });
-
-  return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <Profile />
-    </HydrationBoundary>
-  );
+  return <Profile />;
 }

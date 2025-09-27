@@ -27,6 +27,10 @@ export default function OrganizationsDashboard() {
     return <MinimalPlaceholder message="Loading organizations..." />;
   }
 
+  if (organizations && organizations.length === 0) {
+    return <MinimalPlaceholder message="No organizations found" isLoading={isLoading} />;
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -37,14 +41,14 @@ export default function OrganizationsDashboard() {
       </div>
 
       <div className="grid gap-4">
-        {organizations.length === 0 ? (
+        {organizations?.length === 0 ? (
           <Card>
             <CardBody className="flex h-32 items-center justify-center">
               <p className="text-default-400">No organizations found</p>
             </CardBody>
           </Card>
         ) : (
-          organizations.map((org) => <OrganizationCard key={org._id} org={org} />)
+          organizations?.map((org) => <OrganizationCard key={org._id} org={org} />)
         )}
       </div>
 

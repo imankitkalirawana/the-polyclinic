@@ -1,9 +1,9 @@
 import { unauthorized } from 'next/navigation';
 
-import { auth } from '@/auth';
+import { getServerSession } from '@/lib/serverAuth';
 
 export default async function Page() {
-  const session = await auth();
+  const session = await getServerSession();
   const allowedRoles = ['admin'];
 
   if (!session || !allowedRoles.includes(session.user?.role ?? '')) {

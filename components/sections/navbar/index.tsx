@@ -2,8 +2,9 @@
 
 import React from 'react';
 import { usePathname } from 'next/navigation';
-import { signIn, signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'nextjs-toploader/app';
+import { useSession } from '@/providers/session-provider';
+import { logout } from '@/lib/auth';
 import {
   Avatar,
   Button,
@@ -33,7 +34,7 @@ import { APP_INFO } from '@/lib/config';
 
 export default function Navbar() {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { user } = useSession();
   const subdomain = useSubdomain();
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -59,9 +60,11 @@ export default function Navbar() {
     }, 500);
   };
 
-  const role = session?.user?.role || 'patient';
+  const role = user?.role || 'patient';
 
-  const menuItems = Object.keys(itemsMap).includes(role) ? itemsMap[role] : defaultItems;
+  const menuItems = Object.keys(itemsMap).includes(role)
+    ? itemsMap[role as keyof typeof itemsMap]
+    : defaultItems;
 
   if (isDisabled) return null;
 
@@ -118,21 +121,21 @@ export default function Navbar() {
 
       <NavbarContent justify="end">
         <NavbarItem className="ml-2 !flex gap-2">
-          {session ? (
+          {user ? (
             <Dropdown size="sm" placement="bottom-end">
               <DropdownTrigger>
                 <Avatar
                   as="button"
                   size="sm"
                   className="bg-primary-200 transition-transform"
-                  src={session.user?.image || ''}
-                  name={session.user?.name || ''}
+                  src={user?.image || ''}
+                  name={user?.name || ''}
                 />
               </DropdownTrigger>
               <DropdownMenu aria-label="Profile Actions" variant="flat">
                 <DropdownItem key="profile" href="/profile" className="h-14 gap-2">
-                  <p className="font-semibold">{session.user?.name}</p>
-                  <p className="capitalize text-default-500 text-tiny">{session.user?.role}</p>
+                  <p className="font-semibold">{user?.name}</p>
+                  <p className="capitalize text-default-500 text-tiny">{user?.role}</p>
                 </DropdownItem>
                 <DropdownItem key="dashboard" href="/dashboard">
                   My Dashboard
@@ -152,11 +155,13 @@ export default function Navbar() {
                 <DropdownItem
                   key="logout"
                   onPress={async () => {
-                    await signOut({
-                      redirect: false,
-                    }).then(() => {
-                      window.location.href = `http://${subdomain}.lvh.me:3000/`;
-                    });
+                    try {
+                      await logout();
+                      window.location.href = `/`;
+                    } catch (error) {
+                      console.error('Logout failed:', error);
+                      window.location.href = `/`;
+                    }
                   }}
                   color="danger"
                 >
@@ -165,7 +170,12 @@ export default function Navbar() {
               </DropdownMenu>
             </Dropdown>
           ) : (
-            <Button onPress={() => signIn()} radius="full" color="primary" size="sm">
+            <Button
+              onPress={() => router.push('/auth/login')}
+              radius="full"
+              color="primary"
+              size="sm"
+            >
               Sign In
             </Button>
           )}

@@ -5,11 +5,11 @@ import AppointmentsTimeline from './appointments';
 import { FormProvider } from './context';
 import DatePicker from './date-picker';
 
-import { auth } from '@/auth';
+import { getServerSession } from '@/lib/serverAuth';
 import { $FixMe } from '@/types';
 
 export default async function CompactView() {
-  const session = await auth();
+  const session = await getServerSession();
 
   return (
     <FormProvider session={session as $FixMe}>

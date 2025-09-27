@@ -54,7 +54,9 @@ export default function CreateAppointment({ date, isModal }: { date?: Date; isMo
     onSubmit: async ({ appointment }, { setFieldValue }) => {
       try {
         const { data } = await createAppointment.mutateAsync(appointment);
-        setFieldValue('appointment.aid', data.aid);
+        if (data && typeof data.aid !== 'undefined') {
+          setFieldValue('appointment.aid', data.aid);
+        }
         setFieldValue('meta.showConfirmation', false);
         setFieldValue('meta.showReceipt', true);
       } catch (error) {

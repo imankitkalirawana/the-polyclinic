@@ -1,7 +1,6 @@
 'use server';
 
 import { headers } from 'next/headers';
-import { rootDomain, excludedSubdomains } from '@/lib/utils';
 
 /**
  * Extracts subdomain (tenant) from request headers.
@@ -14,44 +13,47 @@ import { rootDomain, excludedSubdomains } from '@/lib/utils';
  * - divinely.dev => null
  * - localhost:3000 => null
  */
-export async function getSubdomain(): Promise<string | null> {
-  const headersList = await headers();
-  const host = headersList.get('host') || '';
-  const hostname = host.split(':')[0]; // remove port
 
-  if (!hostname) return null;
+export const getSubdomain = async (): Promise<string> => {
+  try {
+    const headersList = await headers();
+    const host = headersList.get('host') || '';
 
-  const rootDomainFormatted = rootDomain.split(':')[0];
+    if (!host) return '';
 
-  // Special-case: localhost and lvh.me (dev environments)
-  if (hostname === 'localhost') return null;
+    // Remove protocol if present
+    const cleanedHost = host.replace(/^https?:\/\//, '').split(':')[0]; // also removes port
 
-  if (hostname.endsWith('.localhost')) {
-    // e.g. fortis.localhost → ["fortis", "localhost"]
-    const sub = hostname.split('.')[0];
-    return excludedSubdomains.includes(sub) ? null : sub;
+    // Ensure cleanedHost is defined and not empty
+    if (!cleanedHost || typeof cleanedHost !== 'string') {
+      return '';
+    }
+
+    const parts = cleanedHost.split('.');
+
+    // Skip if host is localhost-like or a known non-subdomain host
+    const ignoredHosts = [
+      'localhost',
+      'lvh',
+      'lvhme',
+      '127.0.0.1',
+      'thepolyclinic',
+      'staging',
+      'api',
+    ];
+    if (ignoredHosts.some((h) => cleanedHost?.startsWith(h))) {
+      return '';
+    }
+
+    // If it's just a root domain (example.com), no subdomain
+    if (parts.length <= 2) {
+      return '';
+    }
+
+    return parts[0]; // ✅ real subdomain
+  } catch (error) {
+    // During build time, headers might not be available
+    console.warn('Failed to get subdomain:', error);
+    return '';
   }
-
-  if (hostname.endsWith('.lvh.me')) {
-    // e.g. fortis.lvh.me → ["fortis", "lvh", "me"]
-    const sub = hostname.split('.')[0];
-    return excludedSubdomains.includes(sub) ? null : sub;
-  }
-
-  // Production: Check if hostname is a subdomain of root domain
-  const isSubdomain =
-    hostname !== rootDomainFormatted &&
-    hostname !== `www.${rootDomainFormatted}` &&
-    hostname.endsWith(`.${rootDomainFormatted}`);
-
-  if (!isSubdomain) return null;
-
-  // Remove root domain → e.g. "fortis.staging.divinely.dev" → "fortis.staging"
-  const subdomainPart = hostname.replace(`.${rootDomainFormatted}`, '');
-
-  // Split into labels and filter out excluded ones
-  const labels = subdomainPart.split('.');
-  const filtered = labels.filter((l) => !excludedSubdomains.includes(l));
-
-  return filtered.length > 0 ? filtered[0] : null;
-}
+};

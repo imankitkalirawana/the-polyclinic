@@ -1,18 +1,17 @@
-import { redirect } from 'next/navigation';
-
-import { auth } from '@/auth';
+import { getServerSession } from '@/lib/serverAuth';
 import DashboardLayout from '@/components/layouts/dashboard';
+import { unauthorized } from 'next/navigation';
 
 export default async function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
+  const session = await getServerSession();
 
-  if (!session?.user) {
-    redirect('/auth/login');
+  if (!session) {
+    unauthorized();
   }
 
-  return <>{session && <DashboardLayout session={session}>{children}</DashboardLayout>}</>;
+  return <DashboardLayout>{children}</DashboardLayout>;
 }

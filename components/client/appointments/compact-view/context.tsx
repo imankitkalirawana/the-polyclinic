@@ -40,9 +40,7 @@ export function FormProvider({
       selected: null,
       modal: null,
     },
-    onSubmit: async (values) => {
-      console.log(values);
-    },
+    onSubmit: async () => {},
   });
 
   return (

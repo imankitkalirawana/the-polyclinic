@@ -1,18 +1,11 @@
-import {
-  useMutation,
-  UseMutationResult,
-  useQuery,
-  useQueryClient,
-  UseQueryResult,
-} from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { ApiResponse } from '@/services/fetch';
 import { AppointmentApi } from '@/services/client/appointment/api';
 
-import { AppointmentType, CreateAppointmentType } from './types';
+import { CreateAppointmentType } from './types';
 import { addToast } from '@heroui/react';
 
-export const useAllAppointments = (): UseQueryResult<AppointmentType[]> =>
+export const useAllAppointments = () =>
   useQuery({
     queryKey: ['appointments'],
     queryFn: async () => {
@@ -25,7 +18,7 @@ export const useAllAppointments = (): UseQueryResult<AppointmentType[]> =>
     initialData: [],
   });
 
-export const useAppointmentWithAID = (aid: string): UseQueryResult<AppointmentType> =>
+export const useAppointmentWithAID = (aid: string) =>
   useQuery({
     queryKey: ['appointment', aid],
     queryFn: async () => {
@@ -40,11 +33,7 @@ export const useAppointmentWithAID = (aid: string): UseQueryResult<AppointmentTy
 
 // POST
 
-export const useCreateAppointment = (): UseMutationResult<
-  ApiResponse<AppointmentType>,
-  Error,
-  CreateAppointmentType
-> => {
+export const useCreateAppointment = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (appointment: CreateAppointmentType) => {
