@@ -39,7 +39,7 @@ export const createAppointmentButtonConfigs = (actions: {
     isIconOnly: true,
     visibilityRules: {
       statuses: ['confirmed', 'in-progress', 'on-hold', 'overdue'],
-      roles: ['patient', 'receptionist', 'admin'],
+      roles: ['patient', 'receptionist', 'admin', 'doctor'],
       custom: (appointment) => appointment.status !== 'in-progress',
     },
     action: {
