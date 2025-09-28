@@ -1,13 +1,17 @@
 import React from 'react';
-import { addToast } from '@heroui/react';
 
 import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
 import { $FixMe } from '@/types';
 import CancelDeleteAppointment from '@/components/client/appointments/ui/cancel-delete';
 import RescheduleAppointment from '@/components/client/appointments/ui/reschedule-modal';
 import { AppointmentType, ButtonConfig } from '@/services/client/appointment';
+import { useAppointmentActions } from './hooks/useAppointmentActions';
 
-export const APPOINTMENT_BUTTON_CONFIGS: ButtonConfig[] = [
+export const createAppointmentButtonConfigs = (actions: {
+  handleConfirm: (appointment: AppointmentType) => Promise<void>;
+  handleCancel: (appointment: AppointmentType) => Promise<void>;
+  handleReminder: (appointment: AppointmentType) => Promise<void>;
+}): ButtonConfig[] => [
   {
     key: 'add-to-calendar',
     label: 'Add to Calendar',
@@ -16,7 +20,7 @@ export const APPOINTMENT_BUTTON_CONFIGS: ButtonConfig[] = [
     variant: 'flat',
     position: 'left',
     visibilityRules: {
-      statuses: ['booked', 'confirmed', 'in-progress'],
+      statuses: ['confirmed', 'in-progress'],
       roles: ['patient', 'doctor'],
     },
     action: {
@@ -34,7 +38,7 @@ export const APPOINTMENT_BUTTON_CONFIGS: ButtonConfig[] = [
     position: 'right',
     isIconOnly: true,
     visibilityRules: {
-      statuses: ['booked', 'confirmed', 'in-progress', 'on-hold', 'overdue'],
+      statuses: ['confirmed', 'in-progress', 'on-hold', 'overdue'],
       roles: ['patient', 'receptionist', 'admin'],
       custom: (appointment) => appointment.status !== 'in-progress',
     },
@@ -54,19 +58,28 @@ export const APPOINTMENT_BUTTON_CONFIGS: ButtonConfig[] = [
     isIconOnly: true,
     whileLoading: 'Sending...',
     visibilityRules: {
-      statuses: ['booked', 'confirmed', 'in-progress', 'on-hold', 'overdue'],
+      statuses: ['confirmed', 'in-progress', 'on-hold', 'overdue'],
       roles: ['doctor', 'receptionist', 'admin'],
     },
     action: {
       type: 'async-function',
-      handler: async () => {
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        addToast({
-          title: 'Reminder Sent',
-          description: 'Reminder sent to the patient',
-          color: 'success',
-        });
-      },
+      handler: actions.handleReminder,
+    },
+  },
+  {
+    key: 'decline',
+    label: 'Decline',
+    icon: 'solar:close-circle-line-duotone',
+    color: 'danger',
+    variant: 'flat',
+    position: 'right',
+    visibilityRules: {
+      statuses: ['booked'],
+      roles: ['doctor', 'admin'],
+    },
+    action: {
+      type: 'async-function',
+      handler: actions.handleCancel,
     },
   },
   {
@@ -75,6 +88,7 @@ export const APPOINTMENT_BUTTON_CONFIGS: ButtonConfig[] = [
     icon: 'solar:calendar-bold-duotone',
     color: 'warning',
     variant: 'flat',
+    isIconOnly: true,
     position: 'right',
     visibilityRules: {
       statuses: ['booked', 'confirmed', 'in-progress', 'on-hold', 'overdue'],
@@ -89,6 +103,22 @@ export const APPOINTMENT_BUTTON_CONFIGS: ButtonConfig[] = [
       payload: 'reschedule',
     },
     content: () => <RescheduleAppointment />,
+  },
+  {
+    key: 'accept',
+    label: 'Accept',
+    icon: 'solar:check-circle-line-duotone',
+    color: 'success',
+    variant: 'flat',
+    position: 'left',
+    visibilityRules: {
+      statuses: ['booked'],
+      roles: ['doctor', 'admin'],
+    },
+    action: {
+      type: 'async-function',
+      handler: actions.handleConfirm,
+    },
   },
   {
     key: 'proceed',
@@ -108,6 +138,16 @@ export const APPOINTMENT_BUTTON_CONFIGS: ButtonConfig[] = [
     content: () => <h2>Proceed</h2>,
   },
 ];
+
+export const useAppointmentButtonConfigs = () => {
+  const { handleConfirm, handleCancel, handleReminder } = useAppointmentActions();
+
+  return createAppointmentButtonConfigs({
+    handleConfirm,
+    handleCancel,
+    handleReminder,
+  });
+};
 
 export const isButtonVisible = (
   config: ButtonConfig,

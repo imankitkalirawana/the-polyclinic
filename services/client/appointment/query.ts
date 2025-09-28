@@ -53,3 +53,116 @@ export const useCreateAppointment = () => {
     },
   });
 };
+
+export const useConfirmAppointment = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ aid }: { aid: string }) => {
+      const result = await AppointmentApi.confirm(aid);
+      if (result.success) {
+        return result;
+      }
+      throw new Error(result.message);
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      queryClient.invalidateQueries({ queryKey: ['appointment', variables.aid] });
+      addToast({
+        title: data.message,
+        description: 'Your appointment has been successfully confirmed.',
+        color: 'success',
+      });
+    },
+    onError: (error) => {
+      addToast({
+        title: 'Error confirming appointment',
+        description: error.message,
+        color: 'danger',
+      });
+    },
+  });
+};
+
+export const useCancelAppointment = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ aid }: { aid: string }) => {
+      const result = await AppointmentApi.cancel(aid);
+      if (result.success) {
+        return result;
+      }
+      throw new Error(result.message);
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      queryClient.invalidateQueries({ queryKey: ['appointment', variables.aid] });
+      addToast({
+        title: data.message,
+        description: 'Your appointment has been successfully cancelled.',
+        color: 'success',
+      });
+    },
+    onError: (error) => {
+      addToast({
+        title: 'Error cancelling appointment',
+        description: error.message,
+        color: 'danger',
+      });
+    },
+  });
+};
+
+export const useRescheduleAppointment = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ aid, date }: { aid: string; date: string }) => {
+      const result = await AppointmentApi.reschedule(aid, date);
+      if (result.success) {
+        return result;
+      }
+      throw new Error(result.message);
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      queryClient.invalidateQueries({ queryKey: ['appointment', variables.aid] });
+      addToast({
+        title: data.message,
+        description: 'Your appointment has been successfully rescheduled.',
+        color: 'success',
+      });
+    },
+    onError: (error) => {
+      addToast({
+        title: 'Error rescheduling appointment',
+        description: error.message,
+        color: 'danger',
+      });
+    },
+  });
+};
+
+export const useSendReminder = () => {
+  return useMutation({
+    mutationFn: async ({ aid }: { aid: string }) => {
+      const result = await AppointmentApi.sendReminder(aid);
+      if (result.success) {
+        return result;
+      }
+      throw new Error(result.message);
+    },
+    onSuccess: (data) => {
+      addToast({
+        title: 'Reminder Sent',
+        description: data.message || 'Reminder sent to the patient successfully.',
+        color: 'success',
+      });
+    },
+    onError: (error) => {
+      addToast({
+        title: 'Error sending reminder',
+        description: error.message,
+        color: 'danger',
+      });
+    },
+  });
+};

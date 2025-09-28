@@ -27,17 +27,18 @@ import {
 import { format } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import StatusRenderer from './status-renderer';
+import StatusRenderer from '../status-renderer';
 
 import AsyncButton from '@/components/ui/buttons/async-button';
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
-import useAppointmentButtonsInDrawer from '@/hooks/useAppointmentButton';
+import useAppointmentButtonsInDrawer from '@/services/client/appointment/hooks/useAppointmentButton';
 import { useIsMobile } from '@/hooks/useMobile';
 import { CLINIC_INFO } from '@/lib/config';
 import { useAppointmentWithAID } from '@/services/client/appointment/query';
 import { useAppointmentStore } from '@/store/appointment';
 import { AppointmentType } from '@/services/client/appointment';
+import { OrganizationUser } from '@/services/common/user';
 
 const DRAWER_DELAY = 200;
 
@@ -396,7 +397,7 @@ const AppointmentFooter = memo(({ appointment }: { appointment: AppointmentType 
   const { user } = useSession();
   const buttons = useAppointmentButtonsInDrawer({
     selected: appointment,
-    role: user?.role || 'patient',
+    role: user?.role as OrganizationUser['role'],
   });
 
   return (

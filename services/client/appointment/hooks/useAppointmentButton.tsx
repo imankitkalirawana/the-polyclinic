@@ -2,27 +2,28 @@ import React, { useMemo } from 'react';
 import { useRouter } from 'nextjs-toploader/app';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import { APPOINTMENT_BUTTON_CONFIGS, isButtonVisible } from '../services/client/appointment/config';
+import { useAppointmentButtonConfigs, isButtonVisible } from '../config';
 
 import { useAppointmentStore } from '@/store/appointment';
-// TODO: Remove this once the types are updated
-import { $FixMe } from '@/types';
 import { AppointmentType, ProcessedButton } from '@/services/client/appointment';
+import { OrganizationUser } from '@/services/common/user';
 
 const useAppointmentButtonsInDrawer = ({
   selected,
   role,
 }: {
   selected: AppointmentType | null;
-  role: $FixMe['role'];
+  role: OrganizationUser['role'];
 }) => {
   const { setAction } = useAppointmentStore();
   const router = useRouter();
+  const buttonConfigs = useAppointmentButtonConfigs();
 
   return useMemo(
     () =>
-      APPOINTMENT_BUTTON_CONFIGS.filter((config) => isButtonVisible(config, selected, role)).map(
-        (config): ProcessedButton => {
+      buttonConfigs
+        .filter((config) => isButtonVisible(config, selected, role))
+        .map((config): ProcessedButton => {
           const isVisible = isButtonVisible(config, selected, role);
 
           const handlePress = async () => {
@@ -61,9 +62,8 @@ const useAppointmentButtonsInDrawer = ({
                 <config.content appointment={selected} onClose={() => setAction(null)} />
               ) : undefined,
           };
-        }
-      ),
-    [selected, role, setAction, router]
+        }),
+    [selected, role, setAction, router, buttonConfigs]
   );
 };
 

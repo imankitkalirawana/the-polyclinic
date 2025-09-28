@@ -6,7 +6,7 @@ import { APPOINTMENT_MODES, APPOINTMENT_STATUSES, APPOINTMENT_TYPES } from './co
 import { OrganizationUser } from '@/services/common/user';
 import { ButtonProps } from '@heroui/react';
 
-interface PatientInfo {
+type PatientInfo = {
   uid: number;
   name: string;
   phone?: string;
@@ -14,18 +14,18 @@ interface PatientInfo {
   gender?: Gender;
   age?: number;
   image?: string;
-}
+};
 
-interface DoctorInfo {
+type DoctorInfo = {
   uid: number;
   name: string;
   email: string;
   phone: string;
   seating?: string;
   image?: string;
-}
+};
 
-export interface AppointmentType extends Base {
+export type AppointmentType = Base & {
   aid: number;
   date: string | Date;
   patient: PatientInfo;
@@ -42,7 +42,7 @@ export interface AppointmentType extends Base {
   data?: Record<string, string>;
   type: AppointmentTypes;
   previousAppointment?: string;
-}
+};
 
 export type ActionType =
   | 'reschedule'
@@ -56,7 +56,7 @@ export type ActionType =
 
 export type DropdownKeyType = 'invoice' | 'reports' | 'edit' | 'delete';
 
-export interface ButtonConfig {
+export type ButtonConfig = {
   key: string;
   label: string;
   icon: string;
@@ -80,9 +80,9 @@ export interface ButtonConfig {
     appointment: AppointmentType;
     onClose: () => void;
   }>;
-}
+};
 
-export interface ProcessedButton {
+export type ProcessedButton = {
   key: string;
   children: string;
   startContent: React.ReactNode;
@@ -94,7 +94,7 @@ export interface ProcessedButton {
   isHidden: boolean;
   onPress: () => Promise<void> | void;
   content?: React.ReactNode;
-}
+};
 
 export type AppointmentStatus = ValuesOf<typeof APPOINTMENT_STATUSES>;
 export type AppointmentMode = ValuesOf<typeof APPOINTMENT_MODES>;
