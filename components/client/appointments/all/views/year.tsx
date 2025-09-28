@@ -68,10 +68,11 @@ const DayCell = memo(
             'relative flex aspect-square size-7 cursor-pointer items-center justify-center rounded text-xs transition-colors',
             {
               'text-default-400': !isCurrentMonth,
+              'text-white': hasAppointments && isCurrentMonth,
+              [colorDensityMap[appointmentCount]]: hasAppointments && isCurrentMonth,
               'hover:bg-default-100': !hasAppointments,
-              'text-white': hasAppointments,
-              [colorDensityMap[appointmentCount]]: hasAppointments,
-              'bg-secondary text-secondary-foreground hover:bg-secondary-300': isDayToday,
+              'bg-secondary text-secondary-foreground hover:bg-secondary-300':
+                isDayToday && isCurrentMonth,
             }
           )}
         >
