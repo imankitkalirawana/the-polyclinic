@@ -39,6 +39,7 @@ import { useAppointmentWithAID } from '@/services/client/appointment/query';
 import { useAppointmentStore } from '@/store/appointment';
 import { AppointmentType } from '@/services/client/appointment';
 import { OrganizationUser } from '@/services/common/user';
+import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 const DRAWER_DELAY = 200;
 
@@ -439,19 +440,18 @@ const AppointmentFooter = memo(({ appointment }: { appointment: AppointmentType 
 AppointmentFooter.displayName = 'AppointmentFooter';
 
 const AppointmentDrawerDesktop = memo(() => {
-  const { appointment, setAppointment, isTooltipOpen } = useAppointmentStore();
-
-  if (!appointment) return null;
+  const { aid, setAid, isTooltipOpen } = useAppointmentStore();
+  const { data: appointment, isLoading } = useAppointmentWithAID(aid);
 
   return (
     <Drawer
       placement="right"
       shouldBlockScroll
-      isOpen={!!appointment}
+      isOpen={!!aid}
       onOpenChange={(open) => {
         if (!open && !isTooltipOpen) {
           setTimeout(() => {
-            setAppointment(null);
+            setAid(null);
           }, DRAWER_DELAY);
         }
       }}
@@ -461,15 +461,23 @@ const AppointmentDrawerDesktop = memo(() => {
       <DrawerContent className="p-0">
         {(onClose) => (
           <>
-            <DrawerHeader className="flex flex-row items-start justify-between gap-8 rounded-none border-b border-divider bg-primary-500 pr-2 text-primary-foreground">
-              <AppointmentHeader appointment={appointment} onClose={onClose} />
-            </DrawerHeader>
-            <DrawerBody>
-              <AppointmentContent appointment={appointment} />
-            </DrawerBody>
-            <DrawerFooter>
-              <AppointmentFooter appointment={appointment} />
-            </DrawerFooter>
+            {isLoading ? (
+              <MinimalPlaceholder message="Loading appointment..." />
+            ) : (
+              appointment && (
+                <>
+                  <DrawerHeader className="flex flex-row items-start justify-between gap-8 rounded-none border-b border-divider bg-primary-500 pr-2 text-primary-foreground">
+                    <AppointmentHeader appointment={appointment} onClose={onClose} />
+                  </DrawerHeader>
+                  <DrawerBody>
+                    <AppointmentContent appointment={appointment} />
+                  </DrawerBody>
+                  <DrawerFooter>
+                    <AppointmentFooter appointment={appointment} />
+                  </DrawerFooter>
+                </>
+              )
+            )}
           </>
         )}
       </DrawerContent>
@@ -480,20 +488,19 @@ const AppointmentDrawerDesktop = memo(() => {
 AppointmentDrawerDesktop.displayName = 'AppointmentDrawerDesktop';
 
 const AppointmentDrawerMobile = memo(() => {
-  const { appointment, setAppointment, isTooltipOpen } = useAppointmentStore();
-
-  if (!appointment) return null;
+  const { aid, setAid, isTooltipOpen } = useAppointmentStore();
+  const { data: appointment, isLoading } = useAppointmentWithAID(aid);
 
   return (
     <Modal
       backdrop="blur"
       placement="bottom"
       shouldBlockScroll
-      isOpen={!!appointment}
+      isOpen={!!aid}
       onOpenChange={(open) => {
         if (!open && !isTooltipOpen) {
           setTimeout(() => {
-            setAppointment(null);
+            setAid(null);
           }, DRAWER_DELAY);
         }
       }}
@@ -503,15 +510,23 @@ const AppointmentDrawerMobile = memo(() => {
       <ModalContent className="rounded-b-none p-0 sm:rounded-b-large">
         {(onClose) => (
           <>
-            <ModalHeader className="flex flex-row items-start justify-between gap-8 rounded-t-large border-b border-divider bg-primary-500 pr-2 text-primary-foreground">
-              <AppointmentHeader appointment={appointment} onClose={onClose} />
-            </ModalHeader>
-            <ModalBody>
-              <AppointmentContent appointment={appointment} />
-            </ModalBody>
-            <ModalFooter>
-              <AppointmentFooter appointment={appointment} />
-            </ModalFooter>
+            {isLoading ? (
+              <MinimalPlaceholder message="Loading appointment..." />
+            ) : (
+              appointment && (
+                <>
+                  <ModalHeader className="flex flex-row items-start justify-between gap-8 rounded-t-large border-b border-divider bg-primary-500 pr-2 text-primary-foreground">
+                    <AppointmentHeader appointment={appointment} onClose={onClose} />
+                  </ModalHeader>
+                  <ModalBody>
+                    <AppointmentContent appointment={appointment} />
+                  </ModalBody>
+                  <ModalFooter>
+                    <AppointmentFooter appointment={appointment} />
+                  </ModalFooter>
+                </>
+              )
+            )}
           </>
         )}
       </ModalContent>

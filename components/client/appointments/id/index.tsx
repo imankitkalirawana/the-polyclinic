@@ -27,14 +27,11 @@ import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import NoResults from '@/components/ui/no-results';
 import { useAppointmentWithAID } from '@/services/client/appointment/query';
 import { useAppointmentStore } from '@/store/appointment';
-import { AppointmentType } from '@/services/client/appointment';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 export default function Appointment({ aid }: { aid: string }) {
-  const { action, setAction, setAppointment } = useAppointmentStore();
-  const { data, isLoading, isError, error } = useAppointmentWithAID(aid);
-
-  const appointment: AppointmentType = data as AppointmentType;
+  const { action, setAction, setAid } = useAppointmentStore();
+  const { data: appointment, isLoading, isError, error } = useAppointmentWithAID(aid);
 
   if (isLoading) {
     return <MinimalPlaceholder message="Loading appointment..." />;
@@ -401,7 +398,7 @@ export default function Appointment({ aid }: { aid: string }) {
                   isIconOnly
                   className="mr-2"
                   onPress={() => {
-                    setAppointment(appointment);
+                    setAid(appointment.aid);
                     setAction('cancel');
                   }}
                 >

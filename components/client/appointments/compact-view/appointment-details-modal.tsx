@@ -104,7 +104,7 @@ export default function AppointmentDetailsModal() {
       color: 'primary',
       action: async () => {
         setIsLoading((prev) => ({ ...prev, receipt: true }));
-        await downloadAppointmentReceipt(formik.values.selected?.aid || 0);
+        await downloadAppointmentReceipt(formik.values.selected?.aid || '');
         setIsLoading((prev) => ({ ...prev, receipt: false }));
       },
     },
@@ -202,7 +202,7 @@ export default function AppointmentDetailsModal() {
                                 .avatarBg
                             )}
                           />
-                          <span className="text-small capitalize text-default-700">
+                          <span className="capitalize text-default-700 text-small">
                             {formik.values.selected?.status.split('-').join(' ')}
                           </span>
                         </div>
@@ -404,7 +404,7 @@ export default function AppointmentDetailsModal() {
 }
 
 export function Title({ title, className }: { title: string; className?: string }) {
-  return <h2 className={cn('text-large font-semibold', className)}>{title}</h2>;
+  return <h2 className={cn('font-semibold text-large', className)}>{title}</h2>;
 }
 
 export function Subtitle({ title, className }: { title: string; className?: string }) {

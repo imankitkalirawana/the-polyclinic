@@ -7,13 +7,16 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Modal from '@/components/ui/modal';
 import { apiRequest } from '@/lib/axios';
 import { useAppointmentStore } from '@/store/appointment';
+import { useAppointmentWithAID } from '@/services/client/appointment';
 
 export default function CancelDeleteAppointment({
   type = 'cancel',
 }: {
   type?: 'cancel' | 'delete';
 }) {
-  const { setAction, appointment } = useAppointmentStore();
+  const { setAction, aid } = useAppointmentStore();
+  const { data: appointment } = useAppointmentWithAID(aid);
+
   const queryClient = useQueryClient();
 
   const body = React.useMemo(

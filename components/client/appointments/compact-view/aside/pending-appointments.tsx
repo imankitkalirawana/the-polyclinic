@@ -18,7 +18,7 @@ export default function PendingAppointments({ appointments }: { appointments: Ap
     cancel: false,
   });
 
-  const handleSubmit = async (aid: number, status: 'confirmed' | 'cancelled') => {
+  const handleSubmit = async (aid: string, status: 'confirmed' | 'cancelled') => {
     // await axios
     //   .post(`/api/v1/appointments/${aid}/status`, { status })
     //   .then(() => {
@@ -52,7 +52,7 @@ export default function PendingAppointments({ appointments }: { appointments: Ap
                 <span className="line-clamp-1 font-semibold capitalize text-default-900">
                   {appointment.patient.name}
                 </span>
-                <span className="text-tiny text-default-500">
+                <span className="text-default-500 text-tiny">
                   {format(new Date(appointment.date), 'PPp')}
                 </span>
               </div>

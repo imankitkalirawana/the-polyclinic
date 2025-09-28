@@ -11,12 +11,18 @@ import { DropdownItemProps } from '@/components/ui/dashboard/quicklook/types';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import { useAppointmentStore } from '@/store/appointment';
 import CancelDeleteAppointment from '@/components/client/appointments/ui/cancel-delete';
-import { AppointmentType, DropdownKeyType } from '@/services/client/appointment';
+import {
+  AppointmentType,
+  DropdownKeyType,
+  useAppointmentWithAID,
+} from '@/services/client/appointment';
 import { OrganizationUser } from '@/services/common/user';
+import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 export function AppointmentQuickLook() {
   const { user } = useSession();
-  const { appointment, setAppointment, setAction, action } = useAppointmentStore();
+  const { aid, setAid, setAction, action } = useAppointmentStore();
+  const { data: appointment } = useAppointmentWithAID(aid);
 
   const buttons = useAppointmentButtons({
     appointment,
@@ -164,13 +170,15 @@ export function AppointmentQuickLook() {
       : []),
   ];
 
-  if (!appointment) return null;
+  if (!appointment) {
+    return <MinimalPlaceholder message="Appointment not found" isLoading={false} />;
+  }
 
   return (
     <QuickLook
       selectedItem={appointment}
       isOpen={!!appointment}
-      onClose={() => setAppointment(null)}
+      onClose={() => setAid(null)}
       selectedKey={action}
       buttons={buttons}
       permissions={permissions}

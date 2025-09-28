@@ -10,12 +10,14 @@ import Modal from '@/components/ui/modal';
 import { apiRequest } from '@/lib/axios';
 import { TIMINGS } from '@/lib/config';
 import { useAppointmentStore } from '@/store/appointment';
+import { useAppointmentWithAID } from '@/services/client/appointment';
 
 export default function RescheduleAppointment() {
   const { user } = useSession();
   const queryClient = useQueryClient();
 
-  const { setAction, appointment } = useAppointmentStore();
+  const { setAction, aid } = useAppointmentStore();
+  const { data: appointment } = useAppointmentWithAID(aid);
 
   const [timing, setTiming] = useState<Date>(() => {
     if (appointment?.date) {

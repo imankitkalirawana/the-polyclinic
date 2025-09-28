@@ -18,7 +18,7 @@ export const useAllAppointments = () =>
     initialData: [],
   });
 
-export const useAppointmentWithAID = (aid: string) =>
+export const useAppointmentWithAID = (aid?: string | null) =>
   useQuery({
     queryKey: ['appointment', aid],
     queryFn: async () => {

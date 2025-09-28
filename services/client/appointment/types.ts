@@ -26,7 +26,7 @@ type DoctorInfo = {
 };
 
 export type AppointmentType = Base & {
-  aid: number;
+  aid: string;
   date: string | Date;
   patient: PatientInfo;
   doctor?: DoctorInfo;

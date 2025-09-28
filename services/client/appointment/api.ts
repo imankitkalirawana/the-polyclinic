@@ -10,7 +10,14 @@ export class AppointmentApi {
     });
   }
 
-  static async getById(aid: string) {
+  static async getById(aid?: string | null) {
+    if (!aid) {
+      return {
+        success: false,
+        data: null,
+        message: 'Appointment not found',
+      };
+    }
     return await apiRequest<AppointmentType>({
       url: `${this.API_BASE}/${aid}`,
     });

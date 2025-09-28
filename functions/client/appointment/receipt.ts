@@ -12,7 +12,7 @@ const fetchAppointmentReceipt = async () => {
   };
 };
 
-export const downloadAppointmentReceipt = async (aid: number) => {
+export const downloadAppointmentReceipt = async (aid: string) => {
   try {
     if (!aid) throw new Error('Invalid appointment ID');
     const res = await fetchAppointmentReceipt();

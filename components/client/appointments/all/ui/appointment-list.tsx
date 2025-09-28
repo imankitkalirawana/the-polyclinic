@@ -25,7 +25,7 @@ export default function AppointmentList({
   );
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_view, setView] = useQueryState('view', parseAsStringEnum(views));
-  const { setAppointment } = useAppointmentStore();
+  const { setAid } = useAppointmentStore();
 
   return (
     <Card className="flex max-w-xs flex-col shadow-none">
@@ -51,7 +51,7 @@ export default function AppointmentList({
               )}
               onClick={(e) => {
                 e.stopPropagation();
-                setAppointment(appointment);
+                setAid(appointment.aid);
               }}
             >
               <StatusRenderer isDotOnly status={appointment.status} />

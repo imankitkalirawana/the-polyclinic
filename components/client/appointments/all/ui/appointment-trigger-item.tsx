@@ -8,7 +8,7 @@ import { useAppointmentStore } from '@/store/appointment';
 import { AppointmentType } from '@/services/client/appointment';
 
 export default function AppointmentTriggerItem({ appointment }: { appointment: AppointmentType }) {
-  const { setAppointment } = useAppointmentStore();
+  const { setAid } = useAppointmentStore();
 
   return (
     <button
@@ -23,7 +23,7 @@ export default function AppointmentTriggerItem({ appointment }: { appointment: A
       )}
       onClick={(e) => {
         e.stopPropagation();
-        setAppointment(appointment);
+        setAid(appointment.aid);
       }}
     >
       <StatusRenderer isDotOnly status={appointment.status} />

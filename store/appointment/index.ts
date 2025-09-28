@@ -1,13 +1,13 @@
 import { Selection } from '@heroui/react';
 import { create } from 'zustand';
 
-import { ActionType, AppointmentType } from '@/services/client/appointment';
+import { ActionType } from '@/services/client/appointment';
 
 interface AppointmentStoreState {
-  appointment: AppointmentType | null;
+  aid: string | null;
   action: ActionType | null;
   keys: Selection | undefined;
-  setAppointment: (appointment: AppointmentType | null) => void;
+  setAid: (aid: string | null) => void;
   setAction: (action: ActionType | null) => void;
   setKeys: (keys: Selection) => void;
   resetState: () => void;
@@ -17,13 +17,13 @@ interface AppointmentStoreState {
 
 // Zustand store for appointment state
 export const useAppointmentStore = create<AppointmentStoreState>((set) => ({
-  appointment: null,
+  aid: null,
   action: null,
   keys: undefined,
   isTooltipOpen: false,
-  setAppointment: (appointment) => set({ appointment }),
+  setAid: (aid) => set({ aid }),
   setAction: (action) => set({ action }),
   setKeys: (keys) => set({ keys }),
-  resetState: () => set({ appointment: null, action: null, keys: undefined }),
+  resetState: () => set({ aid: null, action: null, keys: undefined }),
   setIsTooltipOpen: (isTooltipOpen) => set({ isTooltipOpen }),
 }));
