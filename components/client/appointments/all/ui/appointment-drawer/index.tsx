@@ -439,8 +439,13 @@ const AppointmentFooter = memo(({ appointment }: { appointment: AppointmentType 
 
 AppointmentFooter.displayName = 'AppointmentFooter';
 
-const AppointmentDrawerDesktop = memo(() => {
-  const { aid, setAid, isTooltipOpen } = useAppointmentStore();
+type AppointmentDrawerProps = {
+  aid: string | null;
+  setAid: (aid: string | null) => void;
+  isTooltipOpen: boolean;
+};
+
+const AppointmentDrawerDesktop = memo(({ aid, setAid, isTooltipOpen }: AppointmentDrawerProps) => {
   const { data: appointment, isLoading } = useAppointmentWithAID(aid);
 
   return (
@@ -487,8 +492,7 @@ const AppointmentDrawerDesktop = memo(() => {
 
 AppointmentDrawerDesktop.displayName = 'AppointmentDrawerDesktop';
 
-const AppointmentDrawerMobile = memo(() => {
-  const { aid, setAid, isTooltipOpen } = useAppointmentStore();
+const AppointmentDrawerMobile = memo(({ aid, setAid, isTooltipOpen }: AppointmentDrawerProps) => {
   const { data: appointment, isLoading } = useAppointmentWithAID(aid);
 
   return (
@@ -537,7 +541,12 @@ const AppointmentDrawerMobile = memo(() => {
 AppointmentDrawerMobile.displayName = 'AppointmentDrawerMobile';
 
 export default function AppointmentDrawer() {
+  const { aid, setAid, isTooltipOpen } = useAppointmentStore();
   const isMobile = useIsMobile();
 
-  return isMobile ? <AppointmentDrawerMobile /> : <AppointmentDrawerDesktop />;
+  return isMobile ? (
+    <AppointmentDrawerMobile aid={aid} setAid={setAid} isTooltipOpen={isTooltipOpen} />
+  ) : (
+    <AppointmentDrawerDesktop aid={aid} setAid={setAid} isTooltipOpen={isTooltipOpen} />
+  );
 }
