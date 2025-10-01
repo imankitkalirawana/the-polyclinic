@@ -6,7 +6,7 @@ import { z } from 'zod';
 export const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
 export const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'thepolyclinic.app';
 
-export const excludedSubdomains = ['www', 'staging', 'test'];
+export const excludedSubdomains = ['www', 'staging', 'api'];
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

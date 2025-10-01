@@ -1,6 +1,8 @@
 import { withSentryConfig } from '@sentry/nextjs';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
+  compress: true,
   allowedDevOrigins: ['lvh.me', '*.lvh.me', 'localhost'],
   images: {
     remotePatterns: [
