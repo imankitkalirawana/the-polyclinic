@@ -53,6 +53,11 @@
           {
             "name": "axios",
             "message": "Please import axios from \"@/lib/axios\" instead of directly importing \"axios\"."
+          },
+          {
+            "name": "sonner",
+            "importNames": ["toast"],
+            "message": "Please import addToast from \"@heroui/react\" instead of using \"toast\" from sonner."
           }
         ]
       }

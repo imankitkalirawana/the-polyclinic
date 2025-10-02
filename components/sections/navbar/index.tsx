@@ -34,6 +34,7 @@ import { NavItem as NavItemType } from './types';
 import { useSubdomain } from '@/hooks/useSubDomain';
 import { APP_INFO } from '@/lib/config';
 import { UnifiedUser } from '@/services/common/user';
+import NotificationsWrapper from './notifications';
 
 // Utility function to filter nav items by user role
 const filterNavItemsByRole = (items: NavItemType[], userRole?: string): NavItemType[] => {
@@ -146,6 +147,9 @@ export default function Navbar() {
       </NavbarContent>
 
       <NavbarContent justify="end">
+        <NavbarItem className="flex">
+          <NotificationsWrapper />
+        </NavbarItem>
         <NavbarItem className="ml-2 !flex gap-2">
           {user ? (
             <Dropdown size="sm" placement="bottom-end">

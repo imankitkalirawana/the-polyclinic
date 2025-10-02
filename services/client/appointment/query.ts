@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { AppointmentApi } from '@/services/client/appointment/api';
-import { useGenericMutation } from './hooks/useGenericMutation';
+import { useGenericMutation } from '../../useGenericMutation';
 
 import { CreateAppointmentType } from './types';
 
