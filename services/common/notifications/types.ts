@@ -24,12 +24,13 @@ export type ExecutedAction = {
 };
 
 export type NotificationAction = {
+  isVisible: boolean;
   label: string;
   action: string;
-  url?: string;
+  url: string;
+  color: ButtonProps['color'];
+  method: AxiosRequestConfig['method'];
   body?: Record<string, unknown>;
-  method?: AxiosRequestConfig['method'];
-  color?: ButtonProps['color'];
   icon?: string;
 };
 

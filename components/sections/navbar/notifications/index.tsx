@@ -15,6 +15,7 @@ import {
   PopoverTrigger,
   Badge,
   PopoverContent,
+  ButtonProps,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
 
@@ -56,9 +57,6 @@ export function Notifications({
         <div className="flex w-full items-center justify-between px-5 py-2">
           <div className="inline-flex items-center gap-1">
             <h4 className="inline-block align-middle font-medium text-large">Notifications</h4>
-            <Chip size="sm" variant="flat">
-              {stats.total}
-            </Chip>
           </div>
           <Button
             className="h-8 px-3"
@@ -133,23 +131,34 @@ export function Notifications({
   );
 }
 
-export default function NotificationsWrapper() {
+export default function NotificationsWrapper({ size = 'md' }: { size?: ButtonProps['size'] }) {
   const { data } = useAllNotifications();
   const notifications = data?.notifications || [];
   const stats = data?.stats || { total: 0, unread: 0, read: 0 };
 
   return (
-    <Popover offset={12} placement="bottom-end">
+    <Popover placement="bottom-end">
       <PopoverTrigger>
-        <Button disableRipple isIconOnly className="overflow-visible" radius="full" variant="light">
+        <Button
+          disableRipple
+          isIconOnly
+          className="overflow-visible"
+          radius="full"
+          variant="light"
+          size={size}
+        >
           <Badge
             color="danger"
             content={stats.unread}
             showOutline={false}
-            size="md"
+            size={size}
             isInvisible={stats.unread === 0}
           >
-            <Icon className="text-default-500" icon="solar:bell-linear" width={22} />
+            <Icon
+              className="text-default-500"
+              icon="solar:bell-linear"
+              width={size === 'sm' ? 18 : 20}
+            />
           </Badge>
         </Button>
       </PopoverTrigger>

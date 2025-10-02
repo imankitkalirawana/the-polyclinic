@@ -22,6 +22,7 @@ import Logo from '../ui/logo';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { getSidebarItems } from '@/components/dashboard/sidebar/sidebar-items';
 import Sidebar from '@/components/dashboard/sidebar/sidebar';
+import NotificationsWrapper from '../sections/navbar/notifications';
 
 export default function DashboardLayout({ children }: { readonly children: React.ReactNode }) {
   const { user } = useSession();
@@ -120,34 +121,37 @@ export default function DashboardLayout({ children }: { readonly children: React
 
   const header = useMemo(
     () => (
-      <header className="flex items-center gap-3 rounded-medium border-small border-divider p-4 py-1">
-        <Button
-          aria-label="Toggle Sidebar"
-          isIconOnly
-          size="sm"
-          variant="light"
-          onPress={() => setIsHidden(!isHidden)}
-        >
-          <Icon
-            className="text-default-500"
-            height={24}
-            icon="solar:sidebar-minimalistic-outline"
-            width={24}
-          />
-        </Button>
-        <NextUIBreadcrumbs variant="light">
-          {breadcrumbItems?.map((item, index) => (
-            <BreadcrumbItem key={index}>
-              {index !== breadcrumbItems.length - 1 ? (
-                <Link href={item.link} className="capitalize">
-                  {item.label}
-                </Link>
-              ) : (
-                <span className="capitalize">{item.label}</span>
-              )}
-            </BreadcrumbItem>
-          ))}
-        </NextUIBreadcrumbs>
+      <header className="flex items-center justify-between gap-3 rounded-medium border-small border-divider p-4 py-1">
+        <div className="flex items-center gap-3">
+          <Button
+            aria-label="Toggle Sidebar"
+            isIconOnly
+            size="sm"
+            variant="light"
+            onPress={() => setIsHidden(!isHidden)}
+          >
+            <Icon
+              className="text-default-500"
+              height={24}
+              icon="solar:sidebar-minimalistic-outline"
+              width={24}
+            />
+          </Button>
+          <NextUIBreadcrumbs variant="light">
+            {breadcrumbItems?.map((item, index) => (
+              <BreadcrumbItem key={index}>
+                {index !== breadcrumbItems.length - 1 ? (
+                  <Link href={item.link} className="capitalize">
+                    {item.label}
+                  </Link>
+                ) : (
+                  <span className="capitalize">{item.label}</span>
+                )}
+              </BreadcrumbItem>
+            ))}
+          </NextUIBreadcrumbs>
+        </div>
+        <NotificationsWrapper size="sm" />
       </header>
     ),
     [breadcrumbItems, isHidden]

@@ -75,7 +75,7 @@ const NotificationItem = React.forwardRef<HTMLDivElement, NotificationItemProps>
       <div
         ref={ref}
         className={cn(
-          'flex gap-3 border-b border-divider px-6 py-4 transition-colors hover:bg-default-100/50',
+          'flex gap-3 border-b border-divider px-6 py-4 transition-colors',
           {
             'bg-primary-50': !isRead,
           },
@@ -101,9 +101,18 @@ const NotificationItem = React.forwardRef<HTMLDivElement, NotificationItemProps>
           <p className="text-foreground text-small">{message}</p>
           {actions && (
             <div className="flex gap-2 pt-2">
-              {actions.map((action) => (
-                <ActionButton action={action} notification={notification} />
-              ))}
+              {actions
+                .filter((action) => {
+                  // Always show actions with method "get"
+                  if (action.method === 'get') {
+                    return action.isVisible;
+                  }
+                  // For other actions, only show when notification is unread
+                  return notification.status === 'unread' && action.isVisible;
+                })
+                .map((action) => (
+                  <ActionButton key={action.label} action={action} notification={notification} />
+                ))}
             </div>
           )}
           <div className="flex items-center gap-2">

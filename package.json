@@ -81,6 +81,7 @@
     "resend": "^6.0.3",
     "sharp": "^0.34.1",
     "slugify": "^1.6.6",
+    "socket.io-client": "^4.8.1",
     "sonner": "^2.0.3",
     "string-strip-html": "^13.4.8",
     "tailwind-merge": "^2.5.4",

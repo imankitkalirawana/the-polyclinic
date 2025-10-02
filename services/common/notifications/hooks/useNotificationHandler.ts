@@ -1,13 +1,11 @@
 import { useState } from 'react';
-import { AxiosRequestConfig } from 'axios';
 import { apiRequest } from '@/lib/axios';
 import { Notification, NotificationAction } from '../types';
-import { useRouter } from 'next/navigation';
-import { addToast } from '@heroui/react';
+import { useMarkAsRead } from '../query';
 
 export function useNotificationHandler() {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const { mutate: markAsRead } = useMarkAsRead();
 
   const handleNotificationAction = async (
     notification: Notification,
@@ -15,39 +13,20 @@ export function useNotificationHandler() {
   ) => {
     setIsLoading(true);
     try {
-      if (action.url) {
-        // If method provided → API call
-        if (action.method && action.method !== 'GET') {
-          const config: AxiosRequestConfig = {
-            method: action.method,
-            url: action.url,
-            data: action.body || {},
-          };
-
-          await apiRequest(config);
-          addToast({
-            title: `${action.label} successful`,
-            color: 'success',
-          });
-        } else {
-          // If no method or GET → redirect
-          router.push(action.url ?? '');
-        }
+      if (action.method?.toLowerCase() === 'get') {
+        window.open(action.url, '_blank');
       } else {
-        // If no URL → just emit an event or fallback
-        addToast({
-          title: `${action.label} executed`,
-          color: 'default',
+        await apiRequest({
+          url: action.url,
+          method: action.method,
+          data: action.body || {},
         });
       }
     } catch (error) {
       console.error('Notification action failed:', error);
-      addToast({
-        title: `${action.label} failed`,
-        color: 'danger',
-      });
     } finally {
       setIsLoading(false);
+      markAsRead({ notificationIds: [notification.nid] });
     }
   };
 

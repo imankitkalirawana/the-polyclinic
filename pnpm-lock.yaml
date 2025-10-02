@@ -210,6 +210,9 @@ importers:
       slugify:
         specifier: ^1.6.6
         version: 1.6.6
+      socket.io-client:
+        specifier: ^4.8.1
+        version: 4.8.1
       sonner:
         specifier: ^2.0.3
         version: 2.0.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -5045,6 +5048,9 @@ packages:
   engine.io-client@1.3.1:
     resolution: {integrity: sha512-bTOZMqAe7HXhyA/2T7Fve04b/ZZruTHSOqa+yn8U4RFSyRAVPePjopOgJOUNciEfuXo1gx850P5LzaQU28/p3w==}
 
+  engine.io-client@6.6.3:
+    resolution: {integrity: sha512-T0iLjnyNWahNyv/lcjS2y4oE358tVS/SYQNxYXGAJ9/GLgH4VCvOQ/mhTjqU88mLZCQgiG8RIegFHYCdVC+j5w==}
+
   engine.io-parser@1.0.6:
     resolution: {integrity: sha512-ipbmiNj4OfAL9csof0FlI9L2jkU/lgcUphHjnTDo1KABsA21WtsVy/1OjhCj8xxhNIHtxEZ3/t7uB45gEMhD4g==}
 
@@ -7688,6 +7694,10 @@ packages:
   socket.io-client@1.0.6:
     resolution: {integrity: sha512-itdtz6fQBTFIDBP4+hJox0OlT+SbCVdENjPgjMup3ehu7OsiG6t0FYBXCx+k/upt9lbeyp9BmUNNi5EfnGa5Vw==}
 
+  socket.io-client@4.8.1:
+    resolution: {integrity: sha512-hJVXfu3E28NmzGk8o1sHhN3om52tRvwYeidbj7xKy2eIIse5IoKX3USlS6Tqt3BHAtflLIkCQBkzVrEEfWUyYQ==}
+    engines: {node: '>=10.0.0'}
+
   socket.io-parser@2.1.2:
     resolution: {integrity: sha512-eVkt8prgw20H+4P8Iw6tis/w7leiN5EW/93Vq+KL8w+yNJu+QNgaej2Cgt8FhVCVuN3AHyLU50vXvM8cpUR1JQ==}
 
@@ -8409,6 +8419,10 @@ packages:
 
   xmlchars@2.2.0:
     resolution: {integrity: sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==}
+
+  xmlhttprequest-ssl@2.1.2:
+    resolution: {integrity: sha512-TEU+nJVUUnA4CYJFLvK5X9AOeH4KvDvhIfm0vV1GaQRtchnG0hgK5p8hw/xjv8cunWYCsiPCSDzObPyhEwq3KQ==}
+    engines: {node: '>=0.4.0'}
 
   xmlhttprequest@https://codeload.github.com/LearnBoost/node-XMLHttpRequest/tar.gz/0f36d0b5ebc03d85f860d42a64ae9791e1daa433:
     resolution: {tarball: https://codeload.github.com/LearnBoost/node-XMLHttpRequest/tar.gz/0f36d0b5ebc03d85f860d42a64ae9791e1daa433}
@@ -14879,6 +14893,18 @@ snapshots:
       - supports-color
       - utf-8-validate
 
+  engine.io-client@6.6.3:
+    dependencies:
+      '@socket.io/component-emitter': 3.1.2
+      debug: 4.3.4
+      engine.io-parser: 5.2.3
+      ws: 8.17.1
+      xmlhttprequest-ssl: 2.1.2
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
   engine.io-parser@1.0.6:
     dependencies:
       after: 0.8.1
@@ -18027,6 +18053,17 @@ snapshots:
       - supports-color
       - utf-8-validate
 
+  socket.io-client@4.8.1:
+    dependencies:
+      '@socket.io/component-emitter': 3.1.2
+      debug: 4.3.4
+      engine.io-client: 6.6.3
+      socket.io-parser: 4.2.4
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
   socket.io-parser@2.1.2:
     dependencies:
       debug: 0.7.4
@@ -18880,6 +18917,8 @@ snapshots:
   ws@8.18.2: {}
 
   xmlchars@2.2.0: {}
+
+  xmlhttprequest-ssl@2.1.2: {}
 
   xmlhttprequest@https://codeload.github.com/LearnBoost/node-XMLHttpRequest/tar.gz/0f36d0b5ebc03d85f860d42a64ae9791e1daa433: {}
 
