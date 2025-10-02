@@ -52,6 +52,7 @@
         "paths": [
           {
             "name": "axios",
+            "importNames": ["default"],
             "message": "Please import axios from \"@/lib/axios\" instead of directly importing \"axios\"."
           },
           {

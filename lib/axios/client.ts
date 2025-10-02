@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import Axios from 'axios';
 import { AUTH_COOKIE_NAME, axiosConfig } from './constants';
 import { getSubdomain } from '@/auth/sub-domain';
