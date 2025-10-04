@@ -146,10 +146,12 @@ export default function Navbar() {
         ))}
       </NavbarContent>
 
-      <NavbarContent justify="end">
-        <NavbarItem className="flex">
-          <NotificationsWrapper />
-        </NavbarItem>
+      <NavbarContent justify="end" className="gap-2">
+        {!!user && (
+          <NavbarItem className="flex">
+            <NotificationsWrapper />
+          </NavbarItem>
+        )}
         <NavbarItem className="ml-2 !flex gap-2">
           {user ? (
             <Dropdown size="sm" placement="bottom-end">

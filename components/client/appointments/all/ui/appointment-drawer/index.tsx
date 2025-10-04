@@ -420,7 +420,7 @@ const AppointmentFooter = memo(({ appointment }: { appointment: AppointmentType 
               isIconOnly={isButtonIconOnly}
               fullWidth
               whileSubmitting={button.whileLoading}
-              fn={async () => {
+              onPress={async () => {
                 if (button.onPress) {
                   await button.onPress();
                 }

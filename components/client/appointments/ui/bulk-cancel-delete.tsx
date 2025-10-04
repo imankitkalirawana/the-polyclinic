@@ -86,26 +86,23 @@ export default function CancelDeleteAppointments({
 
   return (
     <Modal
-      header={`${type === 'cancel' ? 'Cancel' : 'Delete'} Appointments?`}
-      alert={{
-        title: `Are you sure? You want to ${type === 'cancel' ? 'cancel' : 'delete'} these appointments.`,
-        color: 'danger',
-      }}
+      title={`${type === 'cancel' ? 'Cancel' : 'Delete'} Appointments?`}
+      // alert={{
+      //   title: `Are you sure? You want to ${type === 'cancel' ? 'cancel' : 'delete'} these appointments.`,
+      //   color: 'danger',
+      // }}
       body={body}
       onClose={() => setAction(null)}
-      primaryButton={{
+      submitButton={{
         children: `Confirm ${type === 'cancel' ? 'Cancellation' : 'Deletion'}`,
         whileSubmitting: type === 'cancel' ? 'Cancelling...' : 'Deleting...',
         color: 'danger',
-        onPress: async () => {
-          await cancelDeleteMutation.mutateAsync();
-        },
       }}
-      secondaryButton={{
+      onSubmit={async () => {
+        await cancelDeleteMutation.mutateAsync();
+      }}
+      cancelButton={{
         children: 'Keep',
-        onPress: () => {
-          setAction(null);
-        },
       }}
     />
   );

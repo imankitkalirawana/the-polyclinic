@@ -29,7 +29,7 @@ export default function RescheduleAppointment() {
 
   return (
     <Modal
-      header="Reschedule Appointment"
+      title="Reschedule Appointment"
       body={
         <DateTimePicker
           date={new CalendarDate(timing.getFullYear(), timing.getMonth() + 1, timing.getDate())}
@@ -59,22 +59,16 @@ export default function RescheduleAppointment() {
         />
       }
       onClose={() => setAction(null)}
-      primaryButton={{
+      submitButton={{
         children: 'Reschedule',
         whileSubmitting: 'Rescheduling...',
         color: 'warning',
-        onPress: async () => {
-          await rescheduleMutation({
-            aid: appointment?.aid ?? '',
-            date: timing.toISOString(),
-          });
-        },
       }}
-      secondaryButton={{
-        children: 'Cancel',
-        onPress: () => {
-          setAction(null);
-        },
+      onSubmit={async () => {
+        await rescheduleMutation({
+          aid: appointment?.aid ?? '',
+          date: timing.toISOString(),
+        });
       }}
     />
   );

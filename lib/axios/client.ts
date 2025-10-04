@@ -21,19 +21,7 @@ clientAxios.interceptors.request.use(async (config) => {
   const subdomain = await getSubdomain();
 
   if (subdomain) {
-    if (config.method?.toLowerCase() === 'get') {
-      // Add organization to query params for GET requests
-      config.params = {
-        ...config.params,
-        organization: subdomain,
-      };
-    } else {
-      // Add organization to body for non-GET requests
-      config.data = {
-        ...config.data,
-        organization: subdomain,
-      };
-    }
+    config.headers.set('x-organization', subdomain);
   }
 
   if (token) {

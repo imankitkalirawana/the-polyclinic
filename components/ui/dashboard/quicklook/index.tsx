@@ -112,7 +112,7 @@ export default function QuickLook<T, A extends string = string, D extends string
               <AsyncButton
                 key={btn.key}
                 {...(({ key, content, ref, onPress, children, ...rest }) => rest)(btn)}
-                fn={async () => {
+                onPress={async () => {
                   if (btn.onPress) {
                     await btn.onPress({} as $FixMe);
                   }
@@ -145,7 +145,7 @@ export default function QuickLook<T, A extends string = string, D extends string
                   btn
                 )}
                 whileSubmitting={btn.whileLoading}
-                fn={async () => {
+                onPress={async () => {
                   if (btn.onPress) {
                     await btn.onPress({} as $FixMe);
                   }

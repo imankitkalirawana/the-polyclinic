@@ -5,18 +5,18 @@ import { Button, ButtonProps, cn } from '@heroui/react';
 
 const AsyncButton = React.forwardRef<
   HTMLButtonElement,
-  ButtonProps & {
-    fn?: () => Promise<void>;
+  Omit<ButtonProps, 'onPress'> & {
     whileSubmitting?: string;
+    onPress?: () => Promise<void> | void;
   }
->(({ isLoading: propIsLoading, fn, onPress, whileSubmitting, ...props }, ref) => {
+>(({ isLoading: propIsLoading, whileSubmitting, onPress, ...props }, ref) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
-      if (fn) {
-        await fn();
+      if (onPress) {
+        await onPress();
       }
     } finally {
       setIsLoading(false);
@@ -29,7 +29,7 @@ const AsyncButton = React.forwardRef<
       {...props}
       className={cn('btn btn-primary', props.className)}
       isLoading={isLoading || propIsLoading}
-      onPress={onPress || handleSubmit}
+      onPress={handleSubmit}
       startContent={isLoading ? null : props.startContent}
     >
       {isLoading && whileSubmitting ? whileSubmitting : props.children}

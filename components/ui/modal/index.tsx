@@ -1,107 +1,157 @@
-import React from 'react';
+'use client';
+import { forwardRef } from 'react';
 import {
-  Alert,
-  AlertProps,
-  Button,
-  ButtonProps,
   Modal as HeroModal,
+  ModalProps as HeroModalProps,
   ModalBody,
   ModalContent,
-  ModalFooter,
   ModalHeader,
-  ModalProps as HeroModalProps,
-  ScrollShadow,
+  ModalFooter,
+  Button,
+  ButtonProps,
 } from '@heroui/react';
-
 import AsyncButton from '../buttons/async-button';
 
-import { $FixMe } from '@/types';
+/**
+ * Props for the Modal component
+ */
+type ModalProps = Omit<HeroModalProps, 'children'> & {
+  /**
+   * Whether to hide the cancel button in the modal footer
+   * @default false
+   */
+  hideCancelButton?: boolean;
 
-interface ModalProps {
-  header?: React.ReactNode;
-  alert?: AlertProps;
-  body: React.ReactNode;
-  primaryButton?: ButtonProps & {
+  /**
+   * The title displayed in the modal header
+   * Can be a string or React node
+   */
+  title?: React.ReactNode;
+
+  /**
+   * The subtitle displayed below the title in the modal header
+   * Can be a string or React node
+   */
+  subtitle?: React.ReactNode;
+
+  /**
+   * The main content body of the modal
+   * Can be a string or React node
+   */
+  body?: React.ReactNode;
+
+  /**
+   * Configuration for the submit button
+   * Extends ButtonProps but excludes onPress (handled internally)
+   */
+  submitButton?: Omit<ButtonProps, 'onPress'> & {
+    /**
+     * Text to display on the submit button while the async operation is in progress
+     */
     whileSubmitting?: string;
   };
-  secondaryButton?: ButtonProps & {
-    whileSubmitting?: string;
-  };
-  onClose: () => void;
-  modalProps?: HeroModalProps;
-}
 
-function Modal({
-  header,
-  body,
-  alert,
-  primaryButton,
-  secondaryButton,
-  onClose,
-  modalProps,
-}: ModalProps) {
-  const defaultPrimaryButton: ButtonProps = {
-    color: 'primary',
-    variant: 'solid',
-    fullWidth: true,
-    radius: 'lg',
-    className: 'p-6 font-medium',
-  };
+  /**
+   * Configuration for the cancel button
+   * Extends ButtonProps but excludes onPress (handled internally)
+   */
+  cancelButton?: Omit<ButtonProps, 'onPress'>;
 
-  const defaultSecondaryButton: ButtonProps = {
-    variant: 'flat',
-    fullWidth: true,
-    onPress: onClose,
-    radius: 'lg',
-    className: 'p-6 font-medium',
-  };
+  /**
+   * Async function called when the submit button is pressed
+   * Can return a Promise or void
+   */
+  onSubmit?: () => Promise<void> | void;
 
-  return (
-    <HeroModal
-      isOpen
-      backdrop="blur"
-      scrollBehavior="inside"
-      onClose={onClose}
-      hideCloseButton
-      {...modalProps}
-    >
-      <ModalContent>
-        {() => (
-          <>
-            <ModalHeader className="flex flex-col gap-1">{header}</ModalHeader>
-            <ModalBody as={ScrollShadow} className="items-center gap-2">
-              {alert && <Alert {...alert} />}
-              {body}
-            </ModalBody>
-            <ModalFooter>
-              {secondaryButton && (
-                <Button
-                  {...(({ ref, children, ...rest }) => rest)(defaultSecondaryButton)}
-                  {...(({ ref, children, ...rest }) => rest)(secondaryButton)}
-                >
-                  {secondaryButton.isIconOnly ? null : secondaryButton.children}
-                </Button>
+  /**
+   * Whether to automatically close the modal after successful submission
+   * @default true
+   */
+  closeOnSubmit?: boolean;
+};
+
+/**
+ * A customizable modal component built on top of HeroUI Modal
+ *
+ * @example
+ * ```tsx
+ * <Modal
+ *   isOpen={isOpen}
+ *   onOpenChange={setIsOpen}
+ *   title="Confirm Action"
+ *   subtitle="This action cannot be undone"
+ *   body={<p>Are you sure you want to proceed?</p>}
+ *   onSubmit={async () => {
+ *     await handleSubmit();
+ *   }}
+ *   submitButton={{
+ *     children: "Confirm",
+ *     whileSubmitting: "Processing..."
+ *   }}
+ * />
+ * ```
+ */
+const Modal = forwardRef<HTMLDivElement, ModalProps>(
+  (
+    {
+      title,
+      subtitle,
+      body,
+      submitButton,
+      cancelButton,
+      hideCancelButton = false,
+      hideCloseButton = true,
+      onSubmit,
+      closeOnSubmit = true,
+      ...rest
+    },
+    ref
+  ) => {
+    return (
+      <HeroModal ref={ref} hideCloseButton={hideCloseButton} backdrop="blur" {...rest}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              {!!title && (
+                <ModalHeader className="flex flex-col gap-1 border-b border-divider">
+                  <h2>{title}</h2>
+                  {!!subtitle && (
+                    <p className="font-normal text-default-500 text-small">{subtitle}</p>
+                  )}
+                </ModalHeader>
               )}
-              {primaryButton && (
-                <AsyncButton
-                  {...(({ ref, children, onPress, ...rest }) => rest)(defaultPrimaryButton)}
-                  {...(({ ref, children, onPress, ...rest }) => rest)(primaryButton)}
-                  fn={async () => {
-                    if (primaryButton.onPress) {
-                      await primaryButton.onPress({} as $FixMe);
-                    }
-                  }}
-                  whileSubmitting={primaryButton.whileSubmitting}
-                >
-                  {primaryButton.isIconOnly ? null : primaryButton.children}
-                </AsyncButton>
-              )}
-            </ModalFooter>
-          </>
-        )}
-      </ModalContent>
-    </HeroModal>
-  );
-}
+              {!!body && <ModalBody className="bg-default-50">{body}</ModalBody>}
+              <ModalFooter className="border-t border-divider">
+                {!hideCancelButton && (
+                  <Button fullWidth variant="flat" onPress={onClose} {...cancelButton}>
+                    {cancelButton?.children || 'Cancel'}
+                  </Button>
+                )}
+                {!!onSubmit && (
+                  <AsyncButton
+                    fullWidth
+                    onPress={async () => {
+                      await onSubmit();
+                      if (closeOnSubmit) {
+                        onClose();
+                      }
+                    }}
+                    color="primary"
+                    whileSubmitting={submitButton?.whileSubmitting}
+                    {...submitButton}
+                  >
+                    {submitButton?.children}
+                  </AsyncButton>
+                )}
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </HeroModal>
+    );
+  }
+);
 
-export default React.memo(Modal);
+Modal.displayName = 'Modal';
+
+export default Modal;

@@ -3,9 +3,9 @@ import React from 'react';
 import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
 import { $FixMe } from '@/types';
 import CancelDeleteAppointment from '@/components/client/appointments/ui/cancel-delete';
-import RescheduleAppointment from '@/components/client/appointments/ui/reschedule-modal';
 import { AppointmentType, ButtonConfig } from '@/services/client/appointment';
 import { useAppointmentActions } from './hooks/useAppointmentActions';
+import RescheduleAppointment from '@/components/client/appointments/ui/reschedule-modal';
 
 export const createAppointmentButtonConfigs = (actions: {
   handleConfirm: (appointment: AppointmentType) => Promise<void>;

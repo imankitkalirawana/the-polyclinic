@@ -10,7 +10,6 @@ import { QueryClientProvider } from '@tanstack/react-query';
 
 import { getQueryClient } from './get-query-client';
 
-import { ModalProvider } from '@/components/ui/global-modal';
 import { ThemeProvider } from 'next-themes';
 import { CookiesProvider, CookieItem } from '@/providers/cookies-provider';
 import { SessionProvider } from '@/providers/session-provider';
@@ -99,7 +98,7 @@ export function Providers({
                   easing="ease"
                   color="hsl(var(--heroui-primary))"
                 />
-                <ModalProvider>{children}</ModalProvider>
+                {children}
               </CookiesProvider>
             </SessionProvider>
           </ThemeProvider>
