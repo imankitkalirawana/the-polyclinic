@@ -13,6 +13,8 @@ export const useAllNotifications = () =>
       }
       throw new Error(res.message);
     },
+    // TODO: Remove this once we have a real-time notifications system
+    refetchInterval: 30 * 1000, // 30 seconds
   });
 
 export const useMarkAsRead = () => {

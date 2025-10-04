@@ -37,7 +37,7 @@ export function Notifications({
   stats: GetAllNotificationsResponse['stats'];
 }) {
   const [activeTab, setActiveTab] = React.useState<NotificationTabs>(NotificationTabs.All);
-  const { mutateAsync: markAsRead } = useMarkAsRead();
+  const { mutateAsync: markAsRead, isPending: isMarkingAsRead } = useMarkAsRead();
 
   // Filter notifications based on active tab
   const filteredNotifications = React.useMemo(() => {
@@ -52,7 +52,7 @@ export function Notifications({
   };
 
   return (
-    <Card className="w-full max-w-[420px]">
+    <Card className="w-full min-w-[512px]">
       <CardHeader className="flex flex-col px-0 pb-0">
         <div className="flex w-full items-center justify-between px-5 py-2">
           <div className="inline-flex items-center gap-1">
@@ -65,6 +65,7 @@ export function Notifications({
             variant="light"
             onPress={handleMarkAllAsRead}
             isDisabled={stats.unread === 0}
+            isLoading={isMarkingAsRead}
           >
             Mark all as read
           </Button>
@@ -72,10 +73,10 @@ export function Notifications({
         <Tabs
           aria-label="Notifications"
           classNames={{
-            base: 'w-full min-w-96',
+            base: 'w-full min-w-[512px]',
             tabList: 'gap-6 px-6 py-0 w-full relative rounded-none border-b border-divider',
             cursor: 'w-full',
-            tab: 'max-w-fit px-2 h-12',
+            tab: 'px-2 h-12 max-w-fit',
           }}
           color="primary"
           selectedKey={activeTab}
@@ -162,7 +163,7 @@ export default function NotificationsWrapper({ size = 'md' }: { size?: ButtonPro
           </Badge>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="max-w-[90vw] p-0 sm:max-w-[380px]">
+      <PopoverContent className="max-w-[90vw] p-0 sm:max-w-[420px]">
         <Notifications notifications={notifications} stats={stats} />
       </PopoverContent>
     </Popover>
