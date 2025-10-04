@@ -1,5 +1,6 @@
 'use server';
 
+// eslint-disable-next-line no-restricted-imports
 import Axios from 'axios';
 import { cookies } from 'next/headers';
 import { AUTH_COOKIE_NAME, axiosConfig } from './constants';

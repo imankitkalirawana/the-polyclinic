@@ -9,7 +9,7 @@ import { SlotConfig, useSlotsByUID, useUpdateSlots } from '@/services/client/doc
 
 const initialValues: SlotConfig = {
   title: '',
-  duration: 60,
+  duration: 30,
   availability: {
     type: 'weekly',
     schedule: {
@@ -49,7 +49,7 @@ const initialValues: SlotConfig = {
   guestPermissions: {
     canInviteOthers: false,
   },
-  timezone: 'GMT+05:30',
+  timezone: 'Asia/Kolkata',
 };
 
 export function AppointmentScheduler({ uid }: { uid: string }) {

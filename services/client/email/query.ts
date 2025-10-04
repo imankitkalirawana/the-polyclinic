@@ -6,11 +6,11 @@ export const useAllEmails = () =>
   useQuery({
     queryKey: ['emails'],
     queryFn: async () => {
-      const res = await getAllEmails();
-      if (res.success) {
-        return res.data;
+      const result = await getAllEmails();
+      if (result.success) {
+        return result.data;
       }
-      throw new Error(res.message);
+      throw new Error(result.message);
     },
   });
 
@@ -18,10 +18,10 @@ export const useEmailWithID = (id: string) =>
   useQuery({
     queryKey: ['email', id],
     queryFn: async () => {
-      const res = await getEmailWithID(id);
-      if (res.success) {
-        return res.data;
+      const result = await getEmailWithID(id);
+      if (result.success) {
+        return result.data;
       }
-      throw new Error(res.message);
+      throw new Error(result.message);
     },
   });

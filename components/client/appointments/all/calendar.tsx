@@ -15,6 +15,7 @@ import { views } from './types';
 
 import CreateAppointment from '@/components/client/appointments/create';
 import { AppointmentType } from '@/services/client/appointment';
+import { useAppointmentStore } from '@/store/appointment';
 
 interface CalendarProps {
   appointments: AppointmentType[];
@@ -22,6 +23,7 @@ interface CalendarProps {
 
 export function Calendar({ appointments }: CalendarProps) {
   const [view] = useQueryState('view', parseAsStringEnum(views).withDefault('schedule'));
+  const { aid } = useAppointmentStore();
   const [currentDate, setCurrentDate] = useQueryState(
     'date',
     parseAsIsoDateTime.withDefault(new Date())
@@ -94,7 +96,7 @@ export function Calendar({ appointments }: CalendarProps) {
         />
         <div className="h-[calc(100vh_-_120px)] flex-1">{renderView()}</div>
       </div>
-      <AppointmentDrawer />
+      {aid && <AppointmentDrawer />}
       <Modal
         isOpen={showDialog}
         size="full"

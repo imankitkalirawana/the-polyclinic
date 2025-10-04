@@ -8,11 +8,11 @@ export const useAllDoctors = () =>
   useQuery({
     queryKey: ['doctors'],
     queryFn: async () => {
-      const res = await Doctor.getAll();
-      if (res.success) {
-        return res.data;
+      const result = await Doctor.getAll();
+      if (result.success) {
+        return result.data;
       }
-      throw new Error(res.message);
+      throw new Error(result.message);
     },
   });
 
@@ -20,11 +20,11 @@ export const useDoctorByUID = (uid?: string | null) =>
   useQuery({
     queryKey: ['doctor', uid],
     queryFn: async () => {
-      const res = await Doctor.getByUID(uid);
-      if (res.success) {
-        return res.data;
+      const result = await Doctor.getByUID(uid);
+      if (result.success) {
+        return result.data;
       }
-      throw new Error(res.message);
+      throw new Error(result.message);
     },
     enabled: !!uid,
   });
@@ -35,11 +35,11 @@ export const useSlotsByUID = (uid: string) =>
   useQuery({
     queryKey: ['slots', uid],
     queryFn: async () => {
-      const res = await DoctorSlots.getSlotsByUID(uid);
-      if (res.success) {
-        return res.data;
+      const result = await DoctorSlots.getSlotsByUID(uid);
+      if (result.success) {
+        return result.data;
       }
-      throw new Error(res.message);
+      throw new Error(result.message);
     },
     enabled: !!uid,
   });
@@ -48,11 +48,11 @@ export const useUpdateSlots = (uid: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (slot: SlotConfig) => {
-      const res = await DoctorSlots.updateSlotsByUID(uid, slot);
-      if (res.success) {
-        return res;
+      const result = await DoctorSlots.updateSlotsByUID(uid, slot);
+      if (result.success) {
+        return result;
       }
-      throw new Error(res.message);
+      throw new Error(result.message);
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['slots', uid] });

@@ -27,17 +27,19 @@ import {
 import { format } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import StatusRenderer from './status-renderer';
+import StatusRenderer from '../status-renderer';
 
 import AsyncButton from '@/components/ui/buttons/async-button';
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
-import useAppointmentButtonsInDrawer from '@/hooks/useAppointmentButton';
+import useAppointmentButtonsInDrawer from '@/services/client/appointment/hooks/useAppointmentButton';
 import { useIsMobile } from '@/hooks/useMobile';
 import { CLINIC_INFO } from '@/lib/config';
 import { useAppointmentWithAID } from '@/services/client/appointment/query';
 import { useAppointmentStore } from '@/store/appointment';
 import { AppointmentType } from '@/services/client/appointment';
+import { OrganizationUser } from '@/services/common/user';
+import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 const DRAWER_DELAY = 200;
 
@@ -396,7 +398,7 @@ const AppointmentFooter = memo(({ appointment }: { appointment: AppointmentType 
   const { user } = useSession();
   const buttons = useAppointmentButtonsInDrawer({
     selected: appointment,
-    role: user?.role || 'patient',
+    role: user?.role as OrganizationUser['role'],
   });
 
   return (
@@ -437,20 +439,24 @@ const AppointmentFooter = memo(({ appointment }: { appointment: AppointmentType 
 
 AppointmentFooter.displayName = 'AppointmentFooter';
 
-const AppointmentDrawerDesktop = memo(() => {
-  const { appointment, setAppointment, isTooltipOpen } = useAppointmentStore();
+type AppointmentDrawerProps = {
+  aid: string | null;
+  setAid: (aid: string | null) => void;
+  isTooltipOpen: boolean;
+};
 
-  if (!appointment) return null;
+const AppointmentDrawerDesktop = memo(({ aid, setAid, isTooltipOpen }: AppointmentDrawerProps) => {
+  const { data: appointment, isLoading } = useAppointmentWithAID(aid);
 
   return (
     <Drawer
       placement="right"
       shouldBlockScroll
-      isOpen={!!appointment}
+      isOpen={!!aid}
       onOpenChange={(open) => {
         if (!open && !isTooltipOpen) {
           setTimeout(() => {
-            setAppointment(null);
+            setAid(null);
           }, DRAWER_DELAY);
         }
       }}
@@ -460,15 +466,23 @@ const AppointmentDrawerDesktop = memo(() => {
       <DrawerContent className="p-0">
         {(onClose) => (
           <>
-            <DrawerHeader className="flex flex-row items-start justify-between gap-8 rounded-none border-b border-divider bg-primary-500 pr-2 text-primary-foreground">
-              <AppointmentHeader appointment={appointment} onClose={onClose} />
-            </DrawerHeader>
-            <DrawerBody>
-              <AppointmentContent appointment={appointment} />
-            </DrawerBody>
-            <DrawerFooter>
-              <AppointmentFooter appointment={appointment} />
-            </DrawerFooter>
+            {isLoading ? (
+              <MinimalPlaceholder message="Loading appointment..." />
+            ) : (
+              appointment && (
+                <>
+                  <DrawerHeader className="flex flex-row items-start justify-between gap-8 rounded-none border-b border-divider bg-primary-500 pr-2 text-primary-foreground">
+                    <AppointmentHeader appointment={appointment} onClose={onClose} />
+                  </DrawerHeader>
+                  <DrawerBody>
+                    <AppointmentContent appointment={appointment} />
+                  </DrawerBody>
+                  <DrawerFooter>
+                    <AppointmentFooter appointment={appointment} />
+                  </DrawerFooter>
+                </>
+              )
+            )}
           </>
         )}
       </DrawerContent>
@@ -478,21 +492,19 @@ const AppointmentDrawerDesktop = memo(() => {
 
 AppointmentDrawerDesktop.displayName = 'AppointmentDrawerDesktop';
 
-const AppointmentDrawerMobile = memo(() => {
-  const { appointment, setAppointment, isTooltipOpen } = useAppointmentStore();
-
-  if (!appointment) return null;
+const AppointmentDrawerMobile = memo(({ aid, setAid, isTooltipOpen }: AppointmentDrawerProps) => {
+  const { data: appointment, isLoading } = useAppointmentWithAID(aid);
 
   return (
     <Modal
       backdrop="blur"
       placement="bottom"
       shouldBlockScroll
-      isOpen={!!appointment}
+      isOpen={!!aid}
       onOpenChange={(open) => {
         if (!open && !isTooltipOpen) {
           setTimeout(() => {
-            setAppointment(null);
+            setAid(null);
           }, DRAWER_DELAY);
         }
       }}
@@ -502,15 +514,23 @@ const AppointmentDrawerMobile = memo(() => {
       <ModalContent className="rounded-b-none p-0 sm:rounded-b-large">
         {(onClose) => (
           <>
-            <ModalHeader className="flex flex-row items-start justify-between gap-8 rounded-t-large border-b border-divider bg-primary-500 pr-2 text-primary-foreground">
-              <AppointmentHeader appointment={appointment} onClose={onClose} />
-            </ModalHeader>
-            <ModalBody>
-              <AppointmentContent appointment={appointment} />
-            </ModalBody>
-            <ModalFooter>
-              <AppointmentFooter appointment={appointment} />
-            </ModalFooter>
+            {isLoading ? (
+              <MinimalPlaceholder message="Loading appointment..." />
+            ) : (
+              appointment && (
+                <>
+                  <ModalHeader className="flex flex-row items-start justify-between gap-8 rounded-t-large border-b border-divider bg-primary-500 pr-2 text-primary-foreground">
+                    <AppointmentHeader appointment={appointment} onClose={onClose} />
+                  </ModalHeader>
+                  <ModalBody>
+                    <AppointmentContent appointment={appointment} />
+                  </ModalBody>
+                  <ModalFooter>
+                    <AppointmentFooter appointment={appointment} />
+                  </ModalFooter>
+                </>
+              )
+            )}
           </>
         )}
       </ModalContent>
@@ -521,7 +541,12 @@ const AppointmentDrawerMobile = memo(() => {
 AppointmentDrawerMobile.displayName = 'AppointmentDrawerMobile';
 
 export default function AppointmentDrawer() {
+  const { aid, setAid, isTooltipOpen } = useAppointmentStore();
   const isMobile = useIsMobile();
 
-  return isMobile ? <AppointmentDrawerMobile /> : <AppointmentDrawerDesktop />;
+  return isMobile ? (
+    <AppointmentDrawerMobile aid={aid} setAid={setAid} isTooltipOpen={isTooltipOpen} />
+  ) : (
+    <AppointmentDrawerDesktop aid={aid} setAid={setAid} isTooltipOpen={isTooltipOpen} />
+  );
 }

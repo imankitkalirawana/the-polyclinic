@@ -4,7 +4,7 @@ import React from 'react';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'nextjs-toploader/app';
 import { useSession } from '@/providers/session-provider';
-import { logout } from '@/lib/auth';
+import { useLogout } from '@/services/common/auth/query';
 import {
   Avatar,
   Button,
@@ -27,24 +27,67 @@ import { motion } from 'framer-motion';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 import ModeToggle from '@/components/mode-toggle';
-import { defaultItems, itemsMap } from './data';
+import { navItems } from './data';
+import NavItem from './NavItem';
+import { NavItem as NavItemType } from './types';
 
 import { useSubdomain } from '@/hooks/useSubDomain';
 import { APP_INFO } from '@/lib/config';
+import { UnifiedUser } from '@/services/common/user';
+import NotificationsWrapper from './notifications';
+
+// Utility function to filter nav items by user role
+const filterNavItemsByRole = (items: NavItemType[], userRole?: string): NavItemType[] => {
+  if (!userRole) return items;
+
+  return items
+    .filter((item) => {
+      // If item has no roles specified, show it to everyone
+      if (!item.roles) return true;
+      // Check if user role is in the allowed roles
+      return item.roles.includes(userRole as UnifiedUser['role']);
+    })
+    .map((item) => {
+      // If item has subItems, filter them too
+      if (item.subItems) {
+        const filteredSubItems = item.subItems
+          .map((subItem) => ({
+            ...subItem,
+            items: subItem.items.filter((subMenuItem) => {
+              // If subMenuItem has no roles specified, show it to everyone
+              if (!subMenuItem.roles) return true;
+              // Check if user role is in the allowed roles
+              return subMenuItem.roles.includes(userRole as UnifiedUser['role']);
+            }),
+          }))
+          .filter((subItem) => subItem.items.length > 0); // Remove empty subItems
+
+        return {
+          ...item,
+          subItems: filteredSubItems,
+        };
+      }
+      return item;
+    });
+};
 
 export default function Navbar() {
   const router = useRouter();
   const { user } = useSession();
   const subdomain = useSubdomain();
+  const { mutateAsync } = useLogout();
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const [activeMenu, setActiveMenu] = React.useState<null | (typeof menuItems)[0]>(null);
+  const [activeMenu, setActiveMenu] = React.useState<null | NavItemType>(null);
 
   const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
   const DISABLED_PATHS = ['/auth', '/dashboard'];
   const pathname = usePathname();
   const isDisabled = DISABLED_PATHS.some((path) => pathname.startsWith(path));
+
+  // Filter nav items based on user role
+  const filteredNavItems = filterNavItemsByRole(navItems, user?.role);
 
   const clearTimeoutRef = () => {
     if (timeoutRef.current) {
@@ -59,12 +102,6 @@ export default function Navbar() {
       setActiveMenu(null);
     }, 500);
   };
-
-  const role = user?.role || 'patient';
-
-  const menuItems = Object.keys(itemsMap).includes(role)
-    ? itemsMap[role as keyof typeof itemsMap]
-    : defaultItems;
 
   if (isDisabled) return null;
 
@@ -91,35 +128,28 @@ export default function Navbar() {
       </NavbarBrand>
 
       <NavbarContent className="hidden h-11 gap-4 px-4 md:flex" justify="center">
-        {menuItems.map((item, index) => (
-          <NavbarItem key={`${item.name}-${index}`}>
-            {item.subItems ? (
-              <Link
-                aria-label={item.name}
-                // href={item.href}
-                className="cursor-pointer text-default-500 text-small"
-                onMouseEnter={() => {
-                  clearTimeoutRef();
-                  timeoutRef.current = setTimeout(() => {
-                    setActiveMenu(item);
-                  }, 200);
-                }}
-                onMouseLeave={() => {
-                  startCloseTimeout();
-                }}
-              >
-                {item.name} <Icon icon="tabler:chevron-down" />
-              </Link>
-            ) : (
-              <Link className="text-default-500" href={item.href} size="sm">
-                {item.name}
-              </Link>
-            )}
-          </NavbarItem>
+        {filteredNavItems.map((item, index) => (
+          <NavItem
+            key={`${item.name}-${index}`}
+            item={item}
+            index={index}
+            onMouseEnter={() => {
+              clearTimeoutRef();
+              timeoutRef.current = setTimeout(() => {
+                setActiveMenu(item);
+              }, 200);
+            }}
+            onMouseLeave={() => {
+              startCloseTimeout();
+            }}
+          />
         ))}
       </NavbarContent>
 
       <NavbarContent justify="end">
+        <NavbarItem className="flex">
+          <NotificationsWrapper />
+        </NavbarItem>
         <NavbarItem className="ml-2 !flex gap-2">
           {user ? (
             <Dropdown size="sm" placement="bottom-end">
@@ -155,13 +185,7 @@ export default function Navbar() {
                 <DropdownItem
                   key="logout"
                   onPress={async () => {
-                    try {
-                      await logout();
-                      window.location.href = `/`;
-                    } catch (error) {
-                      console.error('Logout failed:', error);
-                      window.location.href = `/`;
-                    }
+                    await mutateAsync();
                   }}
                   color="danger"
                 >
@@ -194,7 +218,7 @@ export default function Navbar() {
           },
         }}
       >
-        {menuItems.map((item, index) => (
+        {filteredNavItems.map((item, index) => (
           <NavbarMenuItem key={`${item.name}-${index}`}>
             <Link className="w-full text-default-500" href={item.href} size="md">
               {item.name}
@@ -244,9 +268,11 @@ export default function Navbar() {
                           )
                         }
                         description={
-                          <span className="line-clamp-1 max-w-[50ch]">
-                            {subMenuItem.description}
-                          </span>
+                          'description' in subMenuItem && subMenuItem.description ? (
+                            <span className="line-clamp-1 max-w-[50ch]">
+                              {(subMenuItem as { description: string }).description}
+                            </span>
+                          ) : null
                         }
                         onPress={() => {
                           router.push(subMenuItem.href);
@@ -255,7 +281,10 @@ export default function Navbar() {
                           }, 200);
                         }}
                         classNames={{
-                          title: subMenuItem.description ? 'text-foreground' : 'text-default-500',
+                          title:
+                            'description' in subMenuItem && subMenuItem.description
+                              ? 'text-foreground'
+                              : 'text-default-500',
                         }}
                       >
                         {subMenuItem.name}

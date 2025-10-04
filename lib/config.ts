@@ -28,7 +28,7 @@ export const rowOptions = [
 export const TIMINGS = {
   appointment: {
     start: 9,
-    end: 17,
+    end: 23,
     interval: 30,
   },
   booking: {

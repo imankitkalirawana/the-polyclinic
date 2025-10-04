@@ -7,7 +7,6 @@ import {
   useDeleteOrganization,
   useUpdateOrganization,
 } from '@/services/system/organization/query';
-import { toast } from 'sonner';
 import { formatDate } from 'date-fns';
 import CreateEditOrganizationModal from './create-edit';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -17,11 +16,7 @@ import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 export default function OrganizationsDashboard() {
   const createModal = useDisclosure();
 
-  const { data: organizations = [], isLoading, error } = useOrganizations();
-
-  if (error) {
-    toast.error('Failed to fetch organizations');
-  }
+  const { data: organizations, isLoading } = useOrganizations();
 
   if (isLoading) {
     return <MinimalPlaceholder message="Loading organizations..." />;

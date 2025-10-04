@@ -50,7 +50,7 @@ export function WeekView({ appointments, currentDate, onTimeSlotClick }: WeekVie
     user?.role || 'patient'
   );
 
-  const { appointment, setIsTooltipOpen } = useAppointmentStore();
+  const { aid, setIsTooltipOpen } = useAppointmentStore();
   const displayHours = Array.from(
     { length: TIMINGS.appointment.end - TIMINGS.appointment.start },
     (_, i) => i + TIMINGS.appointment.start
@@ -138,7 +138,7 @@ export function WeekView({ appointments, currentDate, onTimeSlotClick }: WeekVie
                         return;
                       }
 
-                      if (!appointment) {
+                      if (!aid) {
                         const rect = e.currentTarget.getBoundingClientRect();
                         const clickY = e.clientY - rect.top;
                         const cellHeight = rect.height;

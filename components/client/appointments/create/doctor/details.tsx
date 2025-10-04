@@ -48,15 +48,10 @@ export const CreateAppointmentDoctorDetails = ({ doctor }: { doctor?: DoctorType
         {/* Profile Section */}
         <div className="flex items-start gap-4">
           <Avatar
-            src={doctor.image || '/assets/placeholder-avatar.jpeg'}
+            src={doctor.image}
             alt={doctor.name}
             className="h-16 w-16 flex-shrink-0"
-            showFallback
-            fallback={
-              <div className="flex h-full w-full items-center justify-center bg-primary-50 text-primary">
-                <Icon icon="solar:stethoscope-bold" className="h-6 w-6" />
-              </div>
-            }
+            name={doctor.name}
           />
           <div className="flex flex-1 flex-col gap-2">
             <div>

@@ -1,13 +1,14 @@
 'use client';
 
-import { Calendar } from '@/components/ui/calendar';
+import { Calendar } from '@/components/client/appointments/all/calendar';
+import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { useAllAppointments } from '@/services/client/appointment';
 
 export default function Appointments() {
   const { data: appointments } = useAllAppointments();
 
   if (!appointments) {
-    return <div>No appointments found</div>;
+    return <MinimalPlaceholder message="No appointments found" isLoading={false} />;
   }
 
   return <Calendar appointments={appointments || []} />;

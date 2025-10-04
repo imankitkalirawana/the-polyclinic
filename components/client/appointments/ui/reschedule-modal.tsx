@@ -1,21 +1,17 @@
 import { useState } from 'react';
-import { useSession } from '@/providers/session-provider';
-import { addToast } from '@heroui/react';
-import { format } from 'date-fns';
 import { CalendarDate, getLocalTimeZone, Time } from '@internationalized/date';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import DateTimePicker from '@/components/ui/date-time-picker';
 import Modal from '@/components/ui/modal';
-import { apiRequest } from '@/lib/axios';
 import { TIMINGS } from '@/lib/config';
 import { useAppointmentStore } from '@/store/appointment';
+import { useAppointmentWithAID, useRescheduleAppointment } from '@/services/client/appointment';
 
 export default function RescheduleAppointment() {
-  const { user } = useSession();
-  const queryClient = useQueryClient();
+  const { mutateAsync: rescheduleMutation } = useRescheduleAppointment();
 
-  const { setAction, appointment } = useAppointmentStore();
+  const { setAction, aid } = useAppointmentStore();
+  const { data: appointment } = useAppointmentWithAID(aid);
 
   const [timing, setTiming] = useState<Date>(() => {
     if (appointment?.date) {
@@ -29,39 +25,6 @@ export default function RescheduleAppointment() {
       date.setMinutes(date.getMinutes() + 5);
     }
     return date;
-  });
-
-  const rescheduleMutation = useMutation({
-    mutationFn: async () =>
-      apiRequest({
-        url: `/appointments/${appointment?.aid}`,
-        method: 'PATCH',
-        data: {
-          status: user?.role === 'patient' ? 'booked' : 'confirmed',
-          date: timing,
-        },
-      }),
-    onSuccess: async () => {
-      addToast({
-        title: `Appointment rescheduled to ${format(timing, 'PPp')}`,
-        description: 'Appointment rescheduled successfully',
-        color: 'success',
-      });
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['appointments'] }),
-        queryClient.invalidateQueries({
-          queryKey: ['activity', 'appointment', appointment?.aid],
-        }),
-      ]);
-      setAction(null);
-    },
-    onError: (error) => {
-      addToast({
-        title: 'Error rescheduling appointment',
-        description: error.message,
-        color: 'danger',
-      });
-    },
   });
 
   return (
@@ -101,7 +64,10 @@ export default function RescheduleAppointment() {
         whileSubmitting: 'Rescheduling...',
         color: 'warning',
         onPress: async () => {
-          await rescheduleMutation.mutateAsync();
+          await rescheduleMutation({
+            aid: appointment?.aid ?? '',
+            date: timing.toISOString(),
+          });
         },
       }}
       secondaryButton={{

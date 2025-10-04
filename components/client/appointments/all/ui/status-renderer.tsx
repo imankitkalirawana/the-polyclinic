@@ -39,7 +39,7 @@ export default function StatusRenderer({
           )}
         />
         {!isDotOnly && (
-          <span className={cn('text-tiny capitalize', className)}>
+          <span className={cn('capitalize text-tiny', className)}>
             {status.split('-').join(' ')}
           </span>
         )}

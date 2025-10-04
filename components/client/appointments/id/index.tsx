@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  Avatar,
   Button,
   Card,
   CardBody,
@@ -11,7 +12,6 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
-  Image,
   Progress,
   Tooltip,
 } from '@heroui/react';
@@ -27,14 +27,11 @@ import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import NoResults from '@/components/ui/no-results';
 import { useAppointmentWithAID } from '@/services/client/appointment/query';
 import { useAppointmentStore } from '@/store/appointment';
-import { AppointmentType } from '@/services/client/appointment';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 export default function Appointment({ aid }: { aid: string }) {
-  const { action, setAction, setAppointment } = useAppointmentStore();
-  const { data, isLoading, isError, error } = useAppointmentWithAID(aid);
-
-  const appointment: AppointmentType = data as AppointmentType;
+  const { action, setAction, setAid } = useAppointmentStore();
+  const { data: appointment, isLoading, isError, error } = useAppointmentWithAID(aid);
 
   if (isLoading) {
     return <MinimalPlaceholder message="Loading appointment..." />;
@@ -128,7 +125,7 @@ export default function Appointment({ aid }: { aid: string }) {
                   <Icon
                     icon="solar:pen-new-square-line-duotone"
                     width="20"
-                    className="text-gray-400"
+                    className="text-default-400"
                   />
                 </Button>
               }
@@ -139,17 +136,15 @@ export default function Appointment({ aid }: { aid: string }) {
               {/* Patient Avatar and Name */}
               <div className="flex items-start gap-4 pb-4">
                 <div className="flex-shrink-0">
-                  <Image
-                    src={appointment.patient.image || '/assets/placeholder-avatar.jpeg'}
-                    alt={appointment.patient.name}
-                    width={100}
-                    height={100}
-                    className="rounded-full bg-slate-300"
+                  <Avatar
+                    src={appointment.patient.image}
+                    name={appointment.patient.name}
+                    size="lg"
                   />
                 </div>
                 <div className="flex flex-col">
-                  <h3 className="pl-8 text-xl text-black">{appointment.patient.name}</h3>
-                  <p className="pl-8 text-sm text-gray-500">
+                  <h3 className="pl-8 text-xl">{appointment.patient.name}</h3>
+                  <p className="pl-8 text-sm text-default-400">
                     <span className="text-gray-500">Patient ID: </span>
                     {appointment.patient.uid}
                   </p>
@@ -168,7 +163,7 @@ export default function Appointment({ aid }: { aid: string }) {
                         ]}
                         classNames={{
                           icon: 'text-default-500 ',
-                          value: 'text-black',
+                          value: 'text-default-foreground',
                         }}
                         iconSize={18}
                       />
@@ -179,7 +174,7 @@ export default function Appointment({ aid }: { aid: string }) {
                         value={[appointment.patient.phone ? appointment.patient.phone : '']}
                         classNames={{
                           icon: 'text-default-500 ',
-                          value: 'text-black',
+                          value: 'text-default-foreground',
                         }}
                         iconSize={18}
                       />
@@ -190,7 +185,7 @@ export default function Appointment({ aid }: { aid: string }) {
                       value={appointment.patient.email}
                       classNames={{
                         icon: 'text-default-500 ',
-                        value: 'text-black lowercase',
+                        value: 'text-default-foreground lowercase',
                       }}
                       iconSize={18}
                     />
@@ -217,18 +212,16 @@ export default function Appointment({ aid }: { aid: string }) {
                 {/* Patient Avatar and Name */}
                 <div className="flex items-start gap-4 pb-4">
                   <div className="flex-shrink-0">
-                    <Image
-                      src={appointment.doctor.image || '/assets/placeholder-avatar.jpeg'}
-                      alt={appointment.doctor?.name}
-                      width={100}
-                      height={100}
-                      className="rounded-full bg-slate-300"
+                    <Avatar
+                      src={appointment.doctor.image}
+                      name={appointment.doctor?.name}
+                      size="lg"
                     />
                   </div>
                   <div className="flex flex-col">
-                    <h3 className="pl-6 text-xl text-black">{appointment.doctor?.name}</h3>
-                    <p className="pl-6 text-sm text-gray-500">
-                      <span className="text-gray-500">Doctor ID: </span>
+                    <h3 className="pl-6 text-large">{appointment.doctor?.name}</h3>
+                    <p className="pl-6 text-sm text-default-400">
+                      <span className="text-default-400">Doctor ID: </span>
                       {appointment.doctor?.uid}
                     </p>
 
@@ -405,7 +398,7 @@ export default function Appointment({ aid }: { aid: string }) {
                   isIconOnly
                   className="mr-2"
                   onPress={() => {
-                    setAppointment(appointment);
+                    setAid(appointment.aid);
                     setAction('cancel');
                   }}
                 >

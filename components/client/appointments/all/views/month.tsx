@@ -38,7 +38,7 @@ export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
     parseAsIsoDateTime.withDefault(new Date())
   );
 
-  const { appointment, setIsTooltipOpen } = useAppointmentStore();
+  const { aid, setIsTooltipOpen } = useAppointmentStore();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_view, setView] = useQueryState('view', parseAsStringEnum(views));
@@ -105,7 +105,7 @@ export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
                 }
               )}
               onClick={(e) => {
-                if (!appointment) {
+                if (!aid) {
                   if (isDateDisabled || !isAllowedToCreateAppointment) {
                     return;
                   }

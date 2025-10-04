@@ -1,7 +1,8 @@
 import { addToast } from '@heroui/react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { CreateUser, UpdateUser, User } from '@/services/common/user';
+import { CreateUser, UpdateUser } from './types';
+import { User } from './api';
 
 export const useAllUsers = () =>
   useQuery({

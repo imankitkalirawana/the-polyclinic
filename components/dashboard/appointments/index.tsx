@@ -29,7 +29,7 @@ const INITIAL_VISIBLE_COLUMNS = ['aid', 'date', 'patient.name', 'doctor.name', '
 export default function Appointments() {
   const router = useRouter();
 
-  const { appointment, setAppointment, keys, setKeys, action, setAction } = useAppointmentStore();
+  const { aid, setAid, keys, setKeys, action, setAction } = useAppointmentStore();
   const { data, isLoading } = useAllAppointments();
 
   // Removed debug log for production
@@ -249,11 +249,11 @@ export default function Appointments() {
         onRowAction={(row) => {
           const appointment = appointments.find((appointment) => appointment.aid == row);
           if (appointment) {
-            setAppointment(appointment);
+            setAid(appointment.aid);
           }
         }}
       />
-      {appointment && <AppointmentQuickLook />}
+      {aid && <AppointmentQuickLook />}
       {(action === 'bulk-delete' || action === 'bulk-cancel') && (
         <CancelDeleteAppointments
           appointments={appointments.filter((appointment) => {

@@ -25,7 +25,7 @@ interface DayViewProps {
 export function DayView({ appointments, currentDate, onTimeSlotClick }: DayViewProps) {
   const { user } = useSession();
   const ref = useRef<HTMLDivElement>(null);
-  const { appointment, setIsTooltipOpen } = useAppointmentStore();
+  const { aid, setIsTooltipOpen } = useAppointmentStore();
 
   const isAllowedToCreateAppointment = allowedRolesToCreateAppointment.includes(
     user?.role || 'patient'
@@ -116,7 +116,7 @@ export function DayView({ appointments, currentDate, onTimeSlotClick }: DayViewP
                       return;
                     }
 
-                    if (!appointment) {
+                    if (!aid) {
                       const rect = e.currentTarget.getBoundingClientRect();
                       const clickY = e.clientY - rect.top;
                       const cellHeight = rect.height;

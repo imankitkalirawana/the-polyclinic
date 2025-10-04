@@ -10,7 +10,7 @@ import { login } from '@/lib/auth';
 import { $FixMe } from '@/types';
 import { useSubdomain } from '@/hooks/useSubDomain';
 import { AuthApi } from '@/services/common/auth/api';
-import { useCookies } from '@/providers/cookies-provider';
+import { useLogin as useLoginQuery } from '@/services/common/auth/query';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -20,7 +20,7 @@ export const createAuthProvider = (flowType: FlowType) =>
     const [email] = useQueryState('email');
     const subdomain = useSubdomain();
     const [token, setToken] = useState<string | null>(null);
-    const { setCookie } = useCookies();
+    const { mutateAsync } = useLoginQuery();
 
     // Initial values based on flow type
     const getInitialValues = () => {
@@ -203,21 +203,10 @@ export const createAuthProvider = (flowType: FlowType) =>
           setFieldError('otp', res.message);
         }
       } else if (values.page === 4) {
-        const res = await AuthApi.registerUser({
+        await mutateAsync({
           email: values.email,
-          name: values.name,
           password: values.password,
-          subdomain: subdomain ?? '',
-          token: token ?? '',
         });
-
-        if (res.success) {
-          // login user
-          await login({
-            email: values.email,
-            password: values.password,
-          });
-        }
       }
     };
 
@@ -235,20 +224,9 @@ export const createAuthProvider = (flowType: FlowType) =>
           paginate(1);
         }
       } else if (values.page === 2) {
-        await AuthApi.login({
+        await mutateAsync({
           email: values.email,
           password: values.password,
-        }).then((res) => {
-          if (res.success) {
-            setCookie('connect.sid', res.data?.token ?? '', { path: '/' });
-            window.location.href = '/dashboard';
-          } else {
-            addToast({
-              title: res.message,
-              color: 'danger',
-            });
-            setFieldError('password', res.errors?.[0] ?? res.message);
-          }
         });
       }
     };

@@ -25,12 +25,12 @@ export default function AppointmentList({
   );
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_view, setView] = useQueryState('view', parseAsStringEnum(views));
-  const { setAppointment } = useAppointmentStore();
+  const { setAid } = useAppointmentStore();
 
   return (
     <Card className="flex max-w-xs flex-col shadow-none">
       <CardHeader className="flex-col items-center gap-2 pb-0">
-        <span className="text-small font-medium uppercase">{format(date, 'E')}</span>
+        <span className="font-medium uppercase text-small">{format(date, 'E')}</span>
         <DateChip
           date={date}
           size="lg"
@@ -51,7 +51,7 @@ export default function AppointmentList({
               )}
               onClick={(e) => {
                 e.stopPropagation();
-                setAppointment(appointment);
+                setAid(appointment.aid);
               }}
             >
               <StatusRenderer isDotOnly status={appointment.status} />
@@ -65,14 +65,14 @@ export default function AppointmentList({
             </button>
           ))
         ) : (
-          <p className="pb-4 text-center text-small text-default-500">
+          <p className="pb-4 text-center text-default-500 text-small">
             There are no appointments for this day
           </p>
         )}
       </CardBody>
       <CardFooter className="pt-0">
         {appointments && appointments.length > 0 && (
-          <p className="text-center text-tiny text-default-500">
+          <p className="text-center text-default-500 text-tiny">
             Total appointments: {appointments.length}
           </p>
         )}
