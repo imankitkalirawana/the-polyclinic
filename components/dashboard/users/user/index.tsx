@@ -6,11 +6,11 @@ import { Button, Card, CardBody, CardFooter, CardHeader, ScrollShadow } from '@h
 
 import CellValue from '@/components/ui/cell-value';
 
-import { humanReadableDate, humanReadableTime } from '@/lib/utility';
 import { castData } from '@/lib/utils';
 import { useUserWithUID } from '@/services/common/user/query';
 import { OrganizationUser, UnifiedUser } from '@/services/common/user';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
+import { format } from 'date-fns';
 
 export default function UserCard({ uid }: { uid: string }) {
   const { data, isError, isLoading } = useUserWithUID(uid);
@@ -65,11 +65,11 @@ export default function UserCard({ uid }: { uid: string }) {
           <CellValue label="Role" value={<span className="capitalize">{user.role}</span>} />
           <CellValue
             label="Created By"
-            value={`${user.createdBy || 'Admin'} on ${humanReadableDate(user.createdAt)} at ${humanReadableTime(user.createdAt)}`}
+            value={`${user.createdBy || 'Admin'} on ${format(user.createdAt, 'PPPp')}`}
           />
           <CellValue
             label="Updated By"
-            value={`${user.updatedBy || 'Admin'} on ${humanReadableDate(user.updatedAt)} at ${humanReadableTime(user.updatedAt)}`}
+            value={`${user.updatedBy || 'Admin'} on ${format(user.updatedAt, 'PPPp')}`}
           />
         </ScrollShadow>
       </CardBody>

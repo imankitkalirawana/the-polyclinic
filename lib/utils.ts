@@ -12,10 +12,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const copyToClipboard = (text: string) => {
-  navigator.clipboard.writeText(text);
-};
-
 export type ValuesOf<T> = T extends readonly unknown[] ? T[number] : T[keyof T];
 
 /**
@@ -25,11 +21,6 @@ export type ValuesOf<T> = T extends readonly unknown[] ? T[number] : T[keyof T];
  */
 export function castData<T>(data: unknown): T {
   return data as T;
-}
-
-// Case
-export function toCapitalCase(str: string) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 export function generatePhoneNumber(): string {
