@@ -22,8 +22,8 @@ import { useFormik } from 'formik';
 import { faker } from '@faker-js/faker';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import { Genders } from '@/lib/options';
-import { generateEmail, generatePhoneNumber, toCapitalCase } from '@/lib/utils';
+import { GENDERS } from '@/lib/constants';
+import { generateEmail, generatePhoneNumber, toTitleCase } from '@/lib/utils';
 
 import { useCreateUser } from '@/services/common/user/query';
 import {
@@ -34,7 +34,6 @@ import {
   UnifiedUser,
 } from '@/services/common/user';
 import { withZodSchema } from '@/lib/utils';
-import { GENDERS } from '@/lib/constants';
 import { useQueryState } from 'nuqs';
 
 // TODO: Remove this after the roles are implemented
@@ -99,7 +98,7 @@ export default function NewUser({ organization }: { organization?: string | null
     formik.setFieldValue('name', name);
     formik.setFieldValue('email', generateEmail(name));
     formik.setFieldValue('phone', generatePhoneNumber());
-    formik.setFieldValue('gender', faker.helpers.arrayElement(Genders).value);
+    formik.setFieldValue('gender', faker.helpers.arrayElement(GENDERS));
     formik.setFieldValue('dob', faker.date.birthdate().toISOString().split('T')[0]);
   };
 
@@ -184,7 +183,7 @@ export default function NewUser({ organization }: { organization?: string | null
               isInvalid={!!(formik.touched.role && formik.errors.role)}
               errorMessage={formik.touched.role && formik.errors.role}
               items={roles.map((role) => ({
-                label: toCapitalCase(role),
+                label: toTitleCase(role),
                 value: role,
               }))}
               disabledKeys={TEMP_DISABLED_ROLES}

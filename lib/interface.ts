@@ -38,17 +38,6 @@ export const ServiceStatuses = [
   },
 ];
 
-export interface MailOptionsProps {
-  from: {
-    name: string;
-    address: string;
-  };
-  to: string;
-  subject: string;
-  text?: string;
-  html?: string;
-}
-
 // event type
 
 export interface EventType {

@@ -8,14 +8,11 @@ import DataTable from './data-table';
 import { CircleChartCard } from './graph';
 
 import NoResults from '@/components/ui/no-results';
-import {
-  convertMinutesToHoursAndMinutes,
-  humanReadableDate,
-  humanReadableTime,
-} from '@/lib/utility';
+import { convertMinutesToHoursAndMinutes } from '@/lib/utility';
 import { useServiceWithUID } from '@/services/client/service/query';
 import { AuthUser } from '@/services/common/user';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
+import { format } from 'date-fns';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   active: 'success',
@@ -113,14 +110,14 @@ export default function ServiceViewItem({ uid, session }: { uid: string; session
             </AccordionItem>
             <AccordionItem title="Created By">
               <p className="text-default-500">
-                {service.createdBy || 'Admin'} on {humanReadableDate(service.createdAt)} at{' '}
-                {humanReadableTime(service.createdAt)}
+                {service.createdBy || 'Admin'} on {format(service.createdAt, 'PPPp')} at{' '}
+                {format(service.createdAt, 'PPPp')}
               </p>
             </AccordionItem>
             <AccordionItem title="Updated By">
               <p className="text-default-500">
-                {service.updatedBy || 'Admin'} on {humanReadableDate(service.updatedAt)} at{' '}
-                {humanReadableTime(service.updatedAt)}
+                {service.updatedBy || 'Admin'} on {format(service.updatedAt, 'PPPp')} at{' '}
+                {format(service.updatedAt, 'PPPp')}
               </p>
             </AccordionItem>
           </Accordion>

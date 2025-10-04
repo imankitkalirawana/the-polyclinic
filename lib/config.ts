@@ -10,21 +10,6 @@ export const APP_INFO = {
   description: `The Polyclinic is a platform for booking appointments with doctors.`,
 };
 
-export const rowOptions = [
-  {
-    label: '10',
-    value: 10,
-  },
-  {
-    label: '50',
-    value: 50,
-  },
-  {
-    label: '100',
-    value: 100,
-  },
-];
-
 export const TIMINGS = {
   appointment: {
     start: 9,
@@ -72,49 +57,6 @@ export const CLINIC_INFO = {
   },
 };
 
-export const APPOINTMENT = {
-  isGoogleCalendar: false,
-  fees: 500,
-  cancellation: {
-    allowed: true,
-    time: 24,
-  },
-  reschedule: {
-    allowed: true,
-    time: 24,
-  },
-  payment: {
-    allowed: true,
-    time: 24,
-  },
-  reminder: {
-    allowed: true,
-    time: 24,
-  },
-  paymentMethods: [
-    {
-      label: 'Credit Card',
-      value: 'credit-card',
-    },
-    {
-      label: 'Debit Card',
-      value: 'debit-card',
-    },
-    {
-      label: 'Net Banking',
-      value: 'net-banking',
-    },
-    {
-      label: 'UPI',
-      value: 'upi',
-    },
-    {
-      label: 'Wallet',
-      value: 'wallet',
-    },
-  ],
-};
-
 export const WEBSITE_SETTING = {
   status: {
     maintainance: false,
@@ -126,27 +68,4 @@ export const WEBSITE_SETTING = {
     theme: 'light',
     logo: '/images/logo.png',
   },
-};
-
-export const MOCK_DATA = {
-  users: {
-    isMock: false,
-    count: 100,
-  },
-  services: {
-    isMock: false,
-    count: 100,
-  },
-  appointments: {
-    isMock: false,
-    count: 100,
-  },
-};
-
-export const API_ACTIONS = {
-  isDelete: false,
-  isUpdate: true,
-  isCreate: true,
-  isRead: true,
-  isAi: false,
 };
