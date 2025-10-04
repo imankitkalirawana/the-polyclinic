@@ -9,6 +9,7 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
+  // eslint-disable-next-line no-restricted-imports
   Modal,
   ModalBody,
   ModalContent,

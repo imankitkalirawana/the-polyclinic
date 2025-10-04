@@ -8,6 +8,7 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
+  // eslint-disable-next-line no-restricted-imports
   Modal,
   ModalBody,
   ModalContent,
@@ -81,7 +82,7 @@ export default function AddToCalendar({
       <ModalContent>
         <ModalHeader className="flex-col items-start gap-2">
           <h2 className="max-w-xs text-center text-medium">Add to Calendar</h2>
-          <p className="text-small font-normal text-default-500">
+          <p className="font-normal text-default-500 text-small">
             Add this appointment to your calendar by downloading the{' '}
             <span className="font-medium text-foreground">event file</span> or adding it to your{' '}
             <span className="font-medium text-foreground">Google</span> or{' '}

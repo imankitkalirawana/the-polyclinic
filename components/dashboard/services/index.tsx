@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'nextjs-toploader/app';
 import { Button, DropdownItem, DropdownMenu, Selection } from '@heroui/react';
+// eslint-disable-next-line no-restricted-imports
 import { toast } from 'sonner';
 
 import { ServiceQuickLook } from './quicklook';
