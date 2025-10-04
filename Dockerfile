@@ -21,7 +21,7 @@ RUN npm install -g pnpm
 COPY --from=builder /app/.npmrc /app/package.json /app/pnpm-lock.yaml ./
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/next.config.js ./next.config.js
+COPY --from=builder /app/next.config.mjs ./next.config.mjs
 # Install only production dependencies
 RUN pnpm install --prod --frozen-lockfile
 # Expose the port Next.js runs on
