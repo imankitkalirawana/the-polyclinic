@@ -23,25 +23,31 @@ import NotificationItem from './notification-item';
 import { Notification } from '@/services/common/notifications/types';
 import { useAllNotifications, useMarkAsRead } from '@/services/common/notifications/query';
 import { GetAllNotificationsResponse } from '@/services/common/notifications/api.types';
+import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 enum NotificationTabs {
-  All = 'all',
-  Unread = 'unread',
+  all = 'all',
+  unread = 'unread',
 }
 
 export function Notifications({
+  isLoading,
   notifications,
   stats,
+  activeTab,
+  setActiveTab,
 }: {
+  isLoading: boolean;
   notifications: Notification[];
   stats: GetAllNotificationsResponse['stats'];
+  activeTab: NotificationTabs;
+  setActiveTab: (tab: NotificationTabs) => void;
 }) {
-  const [activeTab, setActiveTab] = React.useState<NotificationTabs>(NotificationTabs.All);
   const { mutateAsync: markAsRead, isPending: isMarkingAsRead } = useMarkAsRead();
 
   // Filter notifications based on active tab
   const filteredNotifications = React.useMemo(() => {
-    if (activeTab === NotificationTabs.Unread) {
+    if (activeTab === NotificationTabs.unread) {
       return notifications.filter((notification) => notification.status === 'unread');
     }
     return notifications;
@@ -84,17 +90,6 @@ export function Notifications({
           onSelectionChange={(selected) => setActiveTab(selected as NotificationTabs)}
         >
           <Tab
-            key="all"
-            title={
-              <div className="flex items-center space-x-2">
-                <span>All</span>
-                <Chip size="sm" variant="flat">
-                  {stats.total}
-                </Chip>
-              </div>
-            }
-          />
-          <Tab
             key="unread"
             title={
               <div className="flex items-center space-x-2">
@@ -105,11 +100,26 @@ export function Notifications({
               </div>
             }
           />
+          <Tab
+            key="all"
+            title={
+              <div className="flex items-center space-x-2">
+                <span>All</span>
+                <Chip size="sm" variant="flat">
+                  {stats.total}
+                </Chip>
+              </div>
+            }
+          />
         </Tabs>
       </CardHeader>
       <CardBody className="w-full gap-0 p-0">
         <ScrollShadow className="h-[500px] w-full">
-          {!!filteredNotifications && filteredNotifications.length > 0 ? (
+          {isLoading ? (
+            <div className="flex h-full w-full flex-col items-center justify-center gap-2">
+              <MinimalPlaceholder />
+            </div>
+          ) : !!filteredNotifications && filteredNotifications.length > 0 ? (
             filteredNotifications.map((notification) => (
               <NotificationItem key={notification.nid} notification={notification} />
             ))
@@ -117,7 +127,7 @@ export function Notifications({
             <div className="flex h-full w-full flex-col items-center justify-center gap-2">
               <Icon className="text-default-400" icon="solar:bell-off-linear" width={40} />
               <p className="text-default-400 text-small">
-                {activeTab === NotificationTabs.Unread
+                {activeTab === NotificationTabs.unread
                   ? 'No unread notifications.'
                   : 'No notifications yet.'}
               </p>
@@ -133,7 +143,11 @@ export function Notifications({
 }
 
 export default function NotificationsWrapper({ size = 'md' }: { size?: ButtonProps['size'] }) {
-  const { data } = useAllNotifications();
+  const [activeTab, setActiveTab] = React.useState<NotificationTabs>(NotificationTabs.unread);
+
+  const { data, isLoading } = useAllNotifications(
+    activeTab === NotificationTabs.unread ? 'unread' : undefined
+  );
   const notifications = data?.notifications || [];
   const stats = data?.stats || { total: 0, unread: 0, read: 0 };
 
@@ -157,7 +171,13 @@ export default function NotificationsWrapper({ size = 'md' }: { size?: ButtonPro
         </Button>
       </PopoverTrigger>
       <PopoverContent className="max-w-[90vw] p-0 sm:max-w-[420px]">
-        <Notifications notifications={notifications} stats={stats} />
+        <Notifications
+          isLoading={isLoading}
+          notifications={notifications}
+          stats={stats}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+        />
       </PopoverContent>
     </Popover>
   );

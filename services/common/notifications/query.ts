@@ -3,11 +3,11 @@ import { useQuery } from '@tanstack/react-query';
 
 import { Notifications } from './api';
 
-export const useAllNotifications = () =>
+export const useAllNotifications = (status?: 'unread' | 'read') =>
   useQuery({
-    queryKey: ['notifications'],
+    queryKey: ['notifications', status],
     queryFn: async () => {
-      const res = await Notifications.getAll();
+      const res = await Notifications.getAll({ status });
       if (res.success) {
         return res.data;
       }
