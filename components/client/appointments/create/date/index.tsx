@@ -2,17 +2,16 @@
 
 import { Button, Chip, Kbd } from '@heroui/react';
 import { format, isPast, isValid } from 'date-fns';
-import { useFormikContext } from 'formik';
 
-import { CreateAppointmentFormValues } from '../types';
 import CreateAppointmentContentContainer from '../ui/content-container';
 import CreateAppointmentContentHeader from '../ui/header';
 import CreateAppointmentTimeSelection from './time';
+import { useCreateAppointmentForm } from '../context';
 
 import { SlotsPreview } from '@/components/dashboard/doctors/doctor/slots/slots-preview';
 import { useKeyPress } from '@/hooks/useKeyPress';
 import { useSlotsByUID } from '@/services/client/doctor';
-import MinimalLoader from '@/components/ui/minimal-placeholder';
+import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 function AvailabilityChip({ date }: { date: Date | undefined }) {
   if (!date || !isValid(date)) {
@@ -58,12 +57,12 @@ function SlotContent({
   const { data: slot, isLoading: isSlotsLoading } = useSlotsByUID(doctorId);
 
   if (isSlotsLoading) {
-    return <MinimalLoader message="Loading available slots..." />;
+    return <MinimalPlaceholder message="Loading available slots..." />;
   }
 
   if (!slot) {
     return (
-      <MinimalLoader message="No slots available for this doctor" isLoading={isSlotsLoading} />
+      <MinimalPlaceholder message="No slots available for this doctor" isLoading={isSlotsLoading} />
     );
   }
 
@@ -71,18 +70,18 @@ function SlotContent({
 }
 
 export default function DateSelectionContainer() {
-  const { values, setFieldValue } = useFormikContext<CreateAppointmentFormValues>();
+  const { form, values } = useCreateAppointmentForm();
   const { appointment } = values;
 
   const isDateValid = appointment.date && isValid(appointment.date);
   const canProceed = isDateValid && !isPast(appointment.date);
 
   const handleNext = () => {
-    setFieldValue('meta.currentStep', 4);
+    form.setValue('meta.currentStep', 4);
   };
 
   const handleDateSelect = (date: Date) => {
-    setFieldValue('appointment.date', date);
+    form.setValue('appointment.date', date);
   };
 
   // Handle Enter key to proceed

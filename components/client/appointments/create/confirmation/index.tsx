@@ -12,18 +12,16 @@ import {
   ModalHeader,
 } from '@heroui/react';
 import { format } from 'date-fns';
-import { useFormikContext } from 'formik';
 import { Icon } from '@iconify/react';
 
-import { CreateAppointmentFormValues } from '../types';
+import { useCreateAppointmentForm } from '../context';
 
 import Skeleton from '@/components/ui/skeleton';
 import { useUserWithUID } from '@/services/common/user/query';
 import { useDoctorByUID } from '@/services/client/doctor/query';
 
 export default function AppointmentBookingConfirmation() {
-  const { values, setFieldValue, handleSubmit, isSubmitting } =
-    useFormikContext<CreateAppointmentFormValues>();
+  const { form, values } = useCreateAppointmentForm();
   const { appointment } = values;
 
   const { data: patient, isLoading: isPatientLoading } = useUserWithUID(appointment.patientId);
@@ -34,7 +32,7 @@ export default function AppointmentBookingConfirmation() {
       isOpen
       backdrop="blur"
       scrollBehavior="inside"
-      onOpenChange={() => setFieldValue('meta.showConfirmation', false)}
+      onOpenChange={() => form.setValue('meta.showConfirmation', false)}
     >
       <ModalContent>
         <ModalHeader className="flex-col items-center border-b border-divider">
@@ -117,7 +115,7 @@ export default function AppointmentBookingConfirmation() {
             fullWidth
             variant="bordered"
             startContent={<Icon icon="solar:pen-line-duotone" />}
-            onPress={() => setFieldValue('meta.showConfirmation', false)}
+            onPress={() => form.setValue('meta.showConfirmation', false)}
           >
             Edit
           </Button>
@@ -125,8 +123,8 @@ export default function AppointmentBookingConfirmation() {
             fullWidth
             variant="shadow"
             color="primary"
-            onPress={() => handleSubmit()}
-            isLoading={isSubmitting}
+            onPress={() => form.handleSubmit()}
+            isLoading={form.formState.isSubmitting}
           >
             Book Now
           </Button>

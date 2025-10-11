@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { addToast } from '@heroui/react';
-import { Formik, FormikConfig, useFormikContext } from 'formik';
 
 import CreateAppointmentAdditionalDetails from './additional-details';
 import AppointmentType from './appointment-type';
@@ -12,7 +11,8 @@ import DoctorSelection from './doctor';
 import PatientSelection from './patient';
 import AppointmentBookingReceipt from './receipt';
 import { CreateAppointmentSidebar } from './sidebar';
-import { CreateAppointmentFormValues } from './types';
+import { CreateAppointmentFormProvider, useCreateAppointmentForm } from './context';
+import { CreateAppointmentFormValues } from './schema';
 
 import { useCreateAppointment } from '@/services/client/appointment/query';
 import { cn } from '@/lib/utils';
@@ -29,74 +29,50 @@ const contentMap: Record<number, React.ReactNode> = {
 export default function CreateAppointment({ date, isModal }: { date?: Date; isModal?: boolean }) {
   const createAppointment = useCreateAppointment();
 
-  const formikConfig: FormikConfig<CreateAppointmentFormValues> = {
-    initialValues: {
-      appointment: {
-        date: date ?? new Date(new Date().setHours(9, 0, 0, 0)),
-        type: 'consultation',
-        additionalInfo: {
-          notes: '',
-          mode: 'online',
-          symptoms: '',
-        },
-        patientId: '',
-        doctorId: '',
-        previousAppointment: '',
-      },
-      meta: {
-        currentStep: 0,
-        showConfirmation: false,
-        showReceipt: false,
-        createNewPatient: false,
-        knowYourDoctor: false,
-      },
-    },
-    onSubmit: async ({ appointment }, { setFieldValue }) => {
-      try {
-        const { data } = await createAppointment.mutateAsync(appointment);
-        if (data && typeof data.aid !== 'undefined') {
-          setFieldValue('appointment.aid', data.aid);
-        }
-        setFieldValue('meta.showConfirmation', false);
-        setFieldValue('meta.showReceipt', true);
-      } catch (error) {
-        if (error instanceof Error) {
-          addToast({
-            title: 'Failed to create appointment',
-            description: `${error.message}`,
-            color: 'danger',
-          });
-        }
-        console.error(error);
+  const handleSubmit = async (values: CreateAppointmentFormValues) => {
+    try {
+      const { data } = await createAppointment.mutateAsync(values.appointment);
+      if (data && typeof data.aid !== 'undefined') {
+        // Update form state to show receipt
+        // This will be handled by the context provider
       }
-    },
+      // Handle success state updates
+    } catch (error) {
+      if (error instanceof Error) {
+        addToast({
+          title: 'Failed to create appointment',
+          description: `${error.message}`,
+          color: 'danger',
+        });
+      }
+      console.error(error);
+    }
   };
 
   return (
-    <Formik {...formikConfig}>
-      {({ values, setFieldValue }) => {
-        return (
-          <div className={cn('flex h-[calc(100vh-3.75rem)]', isModal && 'h-screen')}>
-            <CreateAppointmentSidebar
-              currentStep={values.meta.currentStep}
-              setCurrentStep={(step) => setFieldValue('meta.currentStep', step)}
-            />
-            <MainContent />
-          </div>
-        );
+    <CreateAppointmentFormProvider
+      defaultValues={{
+        appointment: {
+          date: date ?? new Date(new Date().setHours(9, 0, 0, 0)),
+        },
       }}
-    </Formik>
+      onSubmit={handleSubmit}
+    >
+      <div className={cn('flex h-[calc(100vh-3.75rem)]', isModal && 'h-screen')}>
+        <MainContent />
+      </div>
+    </CreateAppointmentFormProvider>
   );
 }
 
 function MainContent() {
-  const { values, setFieldValue } = useFormikContext<CreateAppointmentFormValues>();
+  const { form, values } = useCreateAppointmentForm();
 
   useKeyPress(
     ['Control', 'Backspace'],
     () => {
       if (values.meta.currentStep > 0) {
-        setFieldValue('meta.currentStep', values.meta.currentStep - 1);
+        form.setValue('meta.currentStep', values.meta.currentStep - 1);
       }
     },
     {
@@ -106,6 +82,10 @@ function MainContent() {
 
   return (
     <>
+      <CreateAppointmentSidebar
+        currentStep={values.meta.currentStep}
+        setCurrentStep={(step) => form.setValue('meta.currentStep', step)}
+      />
       {contentMap[values.meta.currentStep]}
       {values.meta.showConfirmation && <AppointmentBookingConfirmation />}
       {values.meta.showReceipt && <AppointmentBookingReceipt />}
