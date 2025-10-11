@@ -1,170 +1,40 @@
-# Healthcare Git Workflow & Commit Guidelines
+---
+description: Apply when making commits, creating branches, writing commit messages, or performing code reviews. Essential for healthcare development workflow and release management.
+alwaysApply: false
+---
 
-## Healthcare Git Workflow Standards
+# Git Workflow & Commits
 
-- Use **feature branch workflow** for healthcare development with proper code review
-- **Branch Naming**: Use healthcare domain prefixes:
-  - `feature/appointments-scheduling-improvement`
-  - `fix/patient-data-validation-bug`
-  - `security/hipaa-compliance-enhancement`
-  - `docs/api-documentation-update`
-- **Protected Branches**: Main/production branches require review and passing tests
-- **Code Review**: All healthcare code changes require peer review for patient safety
-- **CI/CD Integration**: Automated testing and security scanning before deployment
+## Branch Naming
 
-## Healthcare Commit Message Standards
+- `feature/appointments-scheduling-improvement`
+- `fix/patient-data-validation-bug`
+- `security/hipaa-compliance-enhancement`
 
-Follow the conventional commit format from [commitlint.config.ts](mdc:commitlint.config.ts) with healthcare context:
+## Commit Format
 
-### Commit Types for Healthcare
-- `feat`: New healthcare features (appointment booking, patient management)
-- `fix`: Bug fixes in healthcare functionality
-- `security`: HIPAA compliance and security improvements
-- `docs`: Healthcare documentation and API updates
-- `test`: Healthcare testing improvements
-- `refactor`: Code refactoring without functionality changes
-- `perf`: Performance improvements for healthcare operations
-- `style`: Code formatting changes (no functional impact)
-- `build`: Build system or dependency updates
-- `ci`: Continuous integration configuration changes
-- `chore`: Maintenance tasks and minor updates
+Follow [commitlint.config.ts](mdc:commitlint.config.ts):
 
-### Healthcare Commit Examples
 ```bash
-# ✅ Good healthcare commit messages
-feat(appointments): add real-time appointment conflict detection
-fix(patient-data): resolve PHI masking in error messages
-security(auth): implement MFA for healthcare provider accounts
-docs(api): update patient data API documentation
-test(appointments): add comprehensive appointment scheduling tests
-refactor(validation): migrate from Yup to Zod for medical data validation
-perf(database): optimize patient record query performance
-
-# ❌ Avoid generic commit messages
-fix: bug fix
-update: changes
-add: new feature
+# Good examples
+feat(appointments): add real-time conflict detection
+fix(patient-data): resolve PHI masking in errors
+security(auth): implement MFA for providers
+refactor(validation): migrate Yup to Zod
 ```
 
-## Healthcare Code Review Guidelines
+## Code Review Checklist
 
-### Security & Compliance Review Checklist
-- [ ] **PHI Protection**: No patient health information exposed in logs or errors
-- [ ] **Authentication**: Proper user authentication and authorization checks
-- [ ] **Data Validation**: All healthcare data properly validated with Zod schemas
-- [ ] **Error Handling**: HIPAA-compliant error messages (no PHI exposure)
-- [ ] **Audit Logging**: Sensitive operations properly logged for compliance
-- [ ] **Input Sanitization**: All user inputs sanitized to prevent injection attacks
-- [ ] **Access Controls**: Role-based access controls properly implemented
+- [ ] No PHI in logs/errors
+- [ ] Authentication/authorization checks
+- [ ] Zod validation for healthcare data
+- [ ] HIPAA-compliant error messages
+- [ ] Audit logging for sensitive ops
+- [ ] Input sanitization (prevent injection)
+- [ ] RBAC properly implemented
 
-### Healthcare Functionality Review
-- [ ] **Medical Logic**: Healthcare business rules correctly implemented
-- [ ] **Data Integrity**: Patient data consistency and accuracy maintained
-- [ ] **Appointment Logic**: Scheduling conflicts and availability properly handled
-- [ ] **User Experience**: Healthcare workflows intuitive and error-free
-- [ ] **Performance**: Healthcare operations perform within acceptable time limits
-- [ ] **Accessibility**: Healthcare interfaces accessible to users with disabilities
+## Git Security
 
-## Healthcare Pre-commit Hooks & Quality Gates
-
-Reference [lint-staged.config.js](mdc:lint-staged.config.js) and implement healthcare-specific checks:
-
-```javascript
-// Enhanced lint-staged for healthcare
-module.exports = {
-  '**/*.{js,jsx,ts,tsx}': [
-    'prettier --write',
-    'eslint --fix',
-    'npm run tsc', // TypeScript compilation check
-  ],
-  '**/*.{ts,tsx}': [
-    // Healthcare-specific checks
-    'npm run test:security', // Security vulnerability scan
-    'npm run test:phi-detection', // PHI detection scan
-  ],
-  '**/*.test.{js,jsx,ts,tsx}': [
-    'npm run test:coverage', // Ensure test coverage
-  ],
-};
-```
-
-## Healthcare Release Management
-
-### Semantic Versioning for Healthcare
-- **Major (X.0.0)**: Breaking changes affecting healthcare workflows
-- **Minor (X.Y.0)**: New healthcare features (backward compatible)
-- **Patch (X.Y.Z)**: Bug fixes and security patches
-
-### Healthcare Release Process
-1. **Security Review**: Comprehensive security assessment
-2. **Compliance Check**: HIPAA compliance verification
-3. **Performance Testing**: Healthcare workflow performance validation
-4. **Backup Preparation**: Database and system backup before deployment
-5. **Rollback Plan**: Prepared rollback procedures for critical issues
-6. **Monitoring Setup**: Enhanced monitoring during deployment
-
-## Healthcare Emergency Procedures
-
-### Hotfix Process for Healthcare
-- **Security Vulnerabilities**: Immediate hotfix process for security issues
-- **Patient Safety Issues**: Emergency deployment procedures for patient safety
-- **System Downtime**: Rapid response procedures for healthcare system outages
-- **Data Breach Response**: Immediate containment and reporting procedures
-
-### Emergency Commit Process
-```bash
-# Emergency security fix
-git checkout -b hotfix/security-vulnerability-cve-2024-001
-# ... make critical fixes
-git commit -m "security(urgent): patch critical PHI exposure vulnerability CVE-2024-001"
-git push origin hotfix/security-vulnerability-cve-2024-001
-# ... immediate deployment after minimal review
-```
-
-## Healthcare Git Best Practices
-
-### Repository Security
-- **No PHI in Git**: Never commit patient health information to version control
-- **Secrets Management**: Use environment variables for API keys and sensitive configuration
-- **Access Control**: Restrict repository access to authorized healthcare IT personnel
-- **Audit Trail**: Maintain comprehensive audit trail of all code changes
-
-### Healthcare-Specific .gitignore
-```gitignore
-# Healthcare-specific files to ignore
-*.phi
-*.patient-data
-*.medical-records
-/temp-patient-exports/
-/diagnostic-images/
-/phi-logs/
-
-# Environment and secrets
-.env.local
-.env.production
-/secrets/
-/certificates/
-
-# Test data
-/test-data/patient-records/
-/mock-phi-data/
-```
-
-## Healthcare Deployment Guidelines
-
-### Pre-deployment Checklist
-- [ ] All healthcare tests passing (unit, integration, E2E)
-- [ ] Security scans completed with no critical vulnerabilities
-- [ ] HIPAA compliance verification completed
-- [ ] Database migration scripts tested in staging
-- [ ] Backup and rollback procedures verified
-- [ ] Monitoring and alerting configured
-- [ ] On-call healthcare IT team notified
-
-### Post-deployment Verification
-- [ ] Healthcare workflows functioning correctly
-- [ ] Patient data integrity maintained
-- [ ] Authentication and authorization working
-- [ ] Performance metrics within acceptable ranges
-- [ ] Error rates and logs monitored
-- [ ] Security monitoring active
+- **Never commit PHI** to version control
+- Use environment variables for secrets
+- Maintain comprehensive audit trail

@@ -1,95 +1,37 @@
-# Next.js App Router Healthcare Implementation Guidelines
-
-## Healthcare App Router Architecture
-
-- Follow the established App Router structure in [app/](mdc:app/) directory
-- Use [app/layout.tsx](mdc:app/layout.tsx) as root layout with healthcare-specific providers
-- Organize healthcare routes: `app/dashboard/`, `app/appointments/`, `app/(public)/`, `app/auth/`
-- Use dynamic routes with `[param]` for patient/appointment IDs with proper sanitization
-- Implement proper middleware for healthcare route protection and HIPAA compliance
-
-## Healthcare Page Components & Security
-
-- Use `page.tsx` for healthcare route pages with proper data validation
-- Use `layout.tsx` for shared healthcare layouts with role-based access
-- Use `loading.tsx` for healthcare-appropriate loading states (avoid showing PHI)
-- Use `error.tsx` for HIPAA-compliant error boundaries (no PHI in error messages)
-- Use `not-found.tsx` for secure 404 pages that don't leak information
-- Implement proper redirect logic for unauthenticated healthcare users
-
-## Server vs Client Components for Healthcare Data
-
-- **Default to Server Components** for initial healthcare data fetching to minimize PHI exposure
-- Use `'use client'` directive only for interactive healthcare forms and real-time features
-- Keep client components minimal and avoid storing PHI in client state
-- Use Server Actions for HIPAA-compliant form submissions and data mutations
-- Implement proper data sanitization before sending to client components
-- Use server-side validation for all healthcare data inputs
-
-## Healthcare Data Fetching & Caching
-
-- Use Server Components for initial patient/appointment data with proper access controls
-- Use TanStack Query for client-side healthcare data with appropriate cache policies
-- Implement cache invalidation for real-time healthcare updates (appointments, alerts)
-- Use Suspense boundaries for healthcare data streaming with privacy considerations
-- Reference caching configuration from [lib/config.ts](mdc:lib/config.ts) `isCaching` setting
-- Implement proper error boundaries for healthcare data fetching failures
-
-## Healthcare API Routes & Security
-
-- Use App Router API routes in `app/api/v1/` with healthcare domain organization
-- Follow RESTful conventions: `app/api/v1/patients/`, `app/api/v1/appointments/`
-- Use proper HTTP methods with healthcare security considerations
-- Implement comprehensive error handling with HIPAA-compliant error messages
-- Use proper HTTP status codes for healthcare scenarios (401 for auth, 403 for access)
-- Reference API patterns from [services/](mdc:services/) directory
-
-## Healthcare Authentication & Session Management
-
-- Use the authentication patterns from [lib/auth.ts](mdc:lib/auth.ts) and [lib/serverAuth.ts](mdc:lib/serverAuth.ts)
-- Implement secure cookie-based sessions with healthcare-appropriate timeouts
-- Use middleware for route protection with role-based access (admin, doctor, patient)
-- Implement proper session cleanup and logout procedures
-- Use secure session storage with encryption for healthcare data
-- Reference authentication UI from [components/auth/](mdc:components/auth/)
-
-## Healthcare-Specific Styling & Theming
-
-- Use Tailwind CSS with the healthcare theme from [tailwind.config.ts](mdc:tailwind.config.ts)
-- Implement dark/light mode support optimized for healthcare environments
-- Use the healthcare color system (primary green, semantic colors for alerts)
-- Use proper contrast ratios for medical professional environments
-- Implement responsive design for healthcare workflows across devices
-- Reference the theme provider in [app/providers.tsx](mdc:app/providers.tsx)
-
-## Healthcare Performance & Optimization
-
-- Use Next.js Image component for medical images with proper security headers
-- Implement healthcare-appropriate caching strategies (considering PHI sensitivity)
-- Use dynamic imports for large healthcare modules (reporting, analytics)
-- Optimize bundle size while maintaining healthcare functionality
-- Implement proper preloading for critical healthcare resources
-- Use service workers for offline healthcare functionality where appropriate
-
-## Healthcare Monitoring & Error Handling
-
-- Integrate Sentry error tracking with healthcare-specific context
-- Implement proper error boundaries that don't expose PHI
-- Use structured logging for healthcare operations with proper data masking
-- Monitor healthcare-critical operations (appointment booking, prescription processing)
-- Implement proper health checks for healthcare dependencies
-- Use performance monitoring for healthcare-critical user journeys
-
-## Healthcare Compliance & Security Headers
-
-- Implement proper security headers for healthcare applications
-- Use Content Security Policy (CSP) appropriate for healthcare environments
-- Implement proper CORS policies for healthcare API access
-- Use HTTPS enforcement with proper certificate management
-- Implement proper request validation and sanitization
-- Use rate limiting for healthcare API endpoints to prevent abuse
-  description:
-  globs:
-  alwaysApply: false
-
 ---
+description: Apply when working with Next.js App Router, pages, layouts, routing, middleware, or server/client components in the healthcare application.
+alwaysApply: false
+---
+
+# Next.js App Router
+
+## App Structure
+
+- Root layout: [app/layout.tsx](mdc:app/layout.tsx)
+- Routes: `app/dashboard/`, `app/appointments/`, `app/(public)/`, `app/auth/`
+- Dynamic routes: `[param]` with proper sanitization
+- Middleware for route protection and HIPAA compliance
+
+## Page Components
+
+- `page.tsx` - proper data validation
+- `layout.tsx` - role-based access
+- `loading.tsx` - no PHI in loading states
+- `error.tsx` - HIPAA-compliant (no PHI in errors)
+- `not-found.tsx` - secure 404s
+
+## Server vs Client
+
+- **Default to Server Components** (minimize PHI exposure)
+- `'use client'` only for interactive forms/real-time features
+- Never store PHI in client state
+- Server Actions for HIPAA-compliant submissions
+- Server-side validation for all healthcare inputs
+- In [app/](mdc:app/) never use 'use client' directive instead create a folder and component file in [components/](mdc:components/) and hydrate it
+
+## Data Fetching
+
+- Server Components for initial data with access controls
+- TanStack Query for client-side with cache policies
+- Cache config: [lib/config.ts](mdc:lib/config.ts) `isCaching`
+- Suspense boundaries with privacy considerations

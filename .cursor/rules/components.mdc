@@ -1,98 +1,31 @@
-# React Component Architecture Guidelines
-
-## Healthcare-First Component Organization
-
-- Organize components by healthcare domain in [components/](mdc:components/) directory:
-  - `components/client/appointments/` - Patient-facing appointment components
-  - `components/dashboard/` - Healthcare provider dashboard components
-  - `components/auth/` - Authentication and security components
-  - `components/ui/` - Reusable UI components with healthcare design system
-- Use index files for clean imports and follow the established patterns
-- Separate client and server components appropriately for healthcare data sensitivity
-
-## Component Structure & TypeScript Standards
-
-- Use functional components with explicit TypeScript interfaces
-- Define prop interfaces immediately after imports: `interface ComponentProps { ... }`
-- Use PascalCase for component names, camelCase for props and functions
-- Keep components single-purpose with clear healthcare domain responsibilities
-- Use TSDoc comments for complex healthcare logic and APIs
-- Follow the TypeScript patterns from [lib/interface.ts](mdc:lib/interface.ts)
-
-## Healthcare State Management
-
-- Use Zustand for global state as configured in [store/appointment/](mdc:store/appointment/)
-- Use TanStack Query for server state management with healthcare data caching considerations
-- Implement proper state persistence for patient data (with privacy considerations)
-- Use React hooks for local component state (appointments, forms, UI states)
-- Avoid prop drilling - use context for healthcare domain data sharing
-
-## Form Handling & Medical Data Input
-
-- **PRIORITY**: Replace all Yup usage in [lib/validation.ts](mdc:lib/validation.ts) with Zod
-- Use Formik for complex medical forms (patient intake, prescription forms)
-- Implement healthcare-specific validation (date formats, medical codes, dosage)
-- Use controlled components for all medical data inputs
-- Implement real-time validation with proper error messaging
-- Add form auto-save for long medical forms to prevent data loss
-- Use proper input masking for medical identifiers (SSN, insurance numbers)
-
-## HeroUI Design System Integration
-
-- Use HeroUI components from [tailwind.config.ts](mdc:tailwind.config.ts) theme configuration
-- Follow the established color system (primary: healthcare green, secondary: neutral)
-- Use consistent spacing from the defined layout system
-- Implement proper dark/light mode support for healthcare environments
-- Use the typography scale defined in the theme configuration
-- Follow accessibility guidelines for healthcare applications
-
-## Healthcare Data Display Components
-
-- Use TanStack Table for patient lists, appointment schedules, medical records
-- Implement proper loading states with healthcare-appropriate skeletons
-- Use Recharts for medical data visualization (patient metrics, clinic analytics)
-- Handle sensitive data display with proper privacy controls
-- Implement proper empty states for healthcare scenarios
-- Use data masking for sensitive information display
-
-## Medical Domain Event Handling
-
-- Use proper TypeScript event types: `React.FormEvent<HTMLFormElement>`
-- Implement comprehensive error boundaries for healthcare data operations
-- Use async/await for medical data operations with proper error handling
-- Provide clear user feedback for healthcare actions (appointments, prescriptions)
-- Implement confirmation dialogs for critical medical actions
-- Add audit logging for sensitive healthcare operations
-
-## Performance & Healthcare Data Optimization
-
-- Use React.memo for expensive medical data components
-- Implement proper key props for patient/appointment lists
-- Use useCallback and useMemo for expensive healthcare computations
-- Implement virtual scrolling for large patient datasets
-- Use lazy loading for medical images and documents
-- Optimize re-renders for real-time healthcare data updates
-
-## Healthcare Accessibility & Compliance
-
-- Use semantic HTML elements for screen reader compatibility
-- Implement ARIA attributes for complex medical forms
-- Ensure keyboard navigation works for all healthcare workflows
-- Provide proper focus management for medical data entry
-- Implement high contrast mode support for healthcare environments
-- Use proper color contrast ratios for medical professionals
-- Add keyboard shortcuts for common healthcare actions
-
-## Healthcare Security in Components
-
-- Never store sensitive medical data in component state without encryption
-- Implement proper data sanitization before display
-- Use secure data transmission for all medical data
-- Implement session timeout handling for healthcare security
-- Add data masking for sensitive information in development mode
-- Use proper error boundaries to prevent data leakage
-  description:
-  globs:
-  alwaysApply: false
-
 ---
+description: Apply when creating or modifying React components, forms, UI elements, or client-side healthcare interfaces. Essential for component architecture and state management.
+alwaysApply: false
+---
+
+# React Component Guidelines
+
+## Component Organization
+
+- `components/client/appointments/` - Patient-facing
+- `components/dashboard/` - Provider dashboard
+- `components/auth/` - Authentication
+- `components/ui/` - Reusable UI components
+- Separate client/server components for PHI protection
+
+## Critical Requirements
+
+- **PRIORITY**: Migrate all Yup to Zod in [lib/validation.ts](mdc:lib/validation.ts)
+- Use Zustand for global state [store/appointment/](mdc:store/appointment/)
+- Use TanStack Query for server state
+- Use Formik for complex medical forms
+- Use TanStack Table for data tables, Recharts for visualization
+- HeroUI components from [tailwind.config.ts](mdc:tailwind.config.ts)
+
+## PHI Security
+
+- Never store PHI in unencrypted component state
+- Mask sensitive data in display
+- Implement session timeout handling
+- Add audit logging for sensitive operations
+- Use error boundaries to prevent data leakage
