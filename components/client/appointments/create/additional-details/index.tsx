@@ -1,19 +1,18 @@
 import { Button, Input, Kbd, Select, SelectItem, Textarea } from '@heroui/react';
-import { useFormikContext } from 'formik';
 
-import { CreateAppointmentFormValues } from '../types';
 import CreateAppointmentContentContainer from '../ui/content-container';
 import CreateAppointmentContentHeader from '../ui/header';
+import { useCreateAppointmentForm } from '../context';
 import { useKeyPress } from '@/hooks/useKeyPress';
 
 export default function CreateAppointmentAdditionalDetails() {
-  const { values, handleChange, setFieldValue } = useFormikContext<CreateAppointmentFormValues>();
+  const { form, values } = useCreateAppointmentForm();
   const { appointment } = values;
 
   useKeyPress(
     ['Enter'],
     () => {
-      setFieldValue('meta.showConfirmation', true);
+      form.setValue('meta.showConfirmation', true);
     },
     { capture: true }
   );
@@ -31,7 +30,7 @@ export default function CreateAppointmentAdditionalDetails() {
           variant="shadow"
           color="primary"
           radius="full"
-          onPress={() => setFieldValue('meta.showConfirmation', true)}
+          onPress={() => form.setValue('meta.showConfirmation', true)}
           endContent={<Kbd keys={['enter']} className="bg-transparent text-primary-foreground" />}
         >
           Confirm Appointment
@@ -41,19 +40,19 @@ export default function CreateAppointmentAdditionalDetails() {
       <div className="grid gap-4 sm:grid-cols-2">
         <Input
           label="Symptoms"
-          value={appointment.additionalInfo?.symptoms}
           placeholder='e.g. "Headache, Fever, etc."'
           className="col-span-2 sm:col-span-1"
-          name="appointment.additionalInfo.symptoms"
-          onChange={handleChange}
+          {...form.register('appointment.additionalInfo.symptoms')}
         />
         <Select
           label="Appointment Type"
-          selectedKeys={[appointment.additionalInfo?.mode]}
-          name="appointment.additionalInfo.type"
-          onChange={handleChange}
+          selectedKeys={[appointment.additionalInfo?.mode || 'online']}
           className="col-span-2 sm:col-span-1"
           disabledKeys={['online']}
+          onSelectionChange={(keys) => {
+            const selectedKey = Array.from(keys)[0] as string;
+            form.setValue('appointment.additionalInfo.mode', selectedKey as any);
+          }}
         >
           <SelectItem key="offline">Clinic</SelectItem>
           <SelectItem key="online">Online</SelectItem>
@@ -63,9 +62,7 @@ export default function CreateAppointmentAdditionalDetails() {
           label="Additional Notes"
           placeholder="Any additional notes for the doctor"
           className="col-span-2"
-          name="appointment.additionalInfo.notes"
-          value={appointment.additionalInfo?.notes}
-          onChange={handleChange}
+          {...form.register('appointment.additionalInfo.notes')}
         />
       </div>
     </CreateAppointmentContentContainer>

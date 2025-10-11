@@ -3,10 +3,9 @@
 import React, { useState } from 'react';
 import { Button, Kbd } from '@heroui/react';
 import { cn } from '@heroui/react';
-import { useFormikContext } from 'formik';
 
-import { CreateAppointmentFormValues } from '../types';
 import { CreateAppointmentPatientDetails } from './details';
+import { useCreateAppointmentForm } from '../context';
 
 import { useKeyPress } from '@/hooks/useKeyPress';
 import {
@@ -20,20 +19,20 @@ import { useAllPatients } from '@/services/client/patient';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 const PatientSelection = ({ className }: { className?: string }) => {
-  const formik = useFormikContext<CreateAppointmentFormValues>();
+  const { form, values } = useCreateAppointmentForm();
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
 
   const { data: allPatients, isLoading, isError, error } = useAllPatients();
 
-  const { appointment } = formik.values;
+  const { appointment } = values;
 
   const handlePatientSelect = (patientId: string) => {
-    formik.setFieldValue('appointment.patientId', patientId);
+    form.setValue('appointment.patientId', patientId);
   };
 
   const handleNext = () => {
-    formik.setFieldValue('meta.currentStep', 1);
+    form.setValue('meta.currentStep', 1);
   };
 
   const canProceed = !!appointment.patientId;
@@ -41,7 +40,7 @@ const PatientSelection = ({ className }: { className?: string }) => {
   useKeyPress(
     ['Enter'],
     () => {
-      if (canProceed && !formik.values.meta.createNewPatient) {
+      if (canProceed && !values.meta.createNewPatient) {
         handleNext();
       }
     },
@@ -110,7 +109,7 @@ const PatientSelection = ({ className }: { className?: string }) => {
             variant="light"
             color="primary"
             radius="full"
-            onPress={() => formik.setFieldValue('meta.createNewPatient', true)}
+            onPress={() => form.setValue('meta.createNewPatient', true)}
           >
             Create New Patient
           </Button>

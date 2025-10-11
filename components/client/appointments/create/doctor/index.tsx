@@ -1,10 +1,9 @@
 import { useMemo, useState } from 'react';
 import { Button, cn, Kbd } from '@heroui/react';
-import { useFormikContext } from 'formik';
 import Fuse from 'fuse.js';
 
-import { CreateAppointmentFormValues } from '../types';
 import { CreateAppointmentDoctorDetails } from './details';
+import { useCreateAppointmentForm } from '../context';
 
 import { useKeyPress } from '@/hooks/useKeyPress';
 import {
@@ -16,10 +15,11 @@ import {
 import { useDebounce } from '@/hooks/useDebounce';
 import { useAllDoctors } from '@/services/client/doctor/query';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
+import { APPOINTMENT_TYPES } from '@/services/client/appointment';
 
 export default function DoctorSelection({ className }: { className?: string }) {
   const { data: doctors, isLoading: isDoctorsLoading } = useAllDoctors();
-  const { values, setFieldValue } = useFormikContext<CreateAppointmentFormValues>();
+  const { form, values } = useCreateAppointmentForm();
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
 
@@ -45,16 +45,16 @@ export default function DoctorSelection({ className }: { className?: string }) {
   }, [doctors, appointment.doctorId]);
 
   const isDisabled = useMemo(() => {
-    return appointment.type === 'follow-up';
+    return appointment.type === APPOINTMENT_TYPES.follow_up.value;
   }, [appointment.type]);
 
-  useKeyPress(['Enter'], () => setFieldValue('meta.currentStep', 3), { capture: true });
+  useKeyPress(['Enter'], () => form.setValue('meta.currentStep', 3), { capture: true });
 
   return (
     <CreateAppointmentContentContainer
       header={
         <CreateAppointmentContentHeader
-          title={`Doctor Selection ${appointment.type !== 'follow-up' ? '(Optional)' : ''}`}
+          title={`Doctor Selection ${appointment.type !== APPOINTMENT_TYPES.follow_up.value ? '(Optional)' : ''}`}
           description="Select the doctor for whom you want to book the appointment"
         />
       }
@@ -65,7 +65,7 @@ export default function DoctorSelection({ className }: { className?: string }) {
             variant="shadow"
             color="primary"
             radius="full"
-            onPress={() => setFieldValue('meta.currentStep', 3)}
+            onPress={() => form.setValue('meta.currentStep', 3)}
             endContent={<Kbd keys={['enter']} className="bg-transparent text-primary-foreground" />}
           >
             Next
@@ -76,8 +76,8 @@ export default function DoctorSelection({ className }: { className?: string }) {
             color="primary"
             radius="full"
             onPress={() => {
-              setFieldValue('appointment.doctor', undefined);
-              setFieldValue('meta.currentStep', 3);
+              form.setValue('appointment.doctorId', '');
+              form.setValue('meta.currentStep', 3);
             }}
           >
             Skip
@@ -110,7 +110,7 @@ export default function DoctorSelection({ className }: { className?: string }) {
                 selectedId={appointment.doctorId}
                 onSelect={(doctorId) => {
                   if (!isDisabled) {
-                    setFieldValue('appointment.doctorId', doctorId);
+                    form.setValue('appointment.doctorId', doctorId);
                   }
                 }}
                 isDisabled={isDisabled}

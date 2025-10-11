@@ -14,17 +14,16 @@ import {
   ModalHeader,
 } from '@heroui/react';
 import { format } from 'date-fns';
-import { useFormikContext } from 'formik';
 import { Icon } from '@iconify/react';
 
-import { CreateAppointmentFormValues } from '../types';
+import { useCreateAppointmentForm } from '../context';
 
 import Skeleton from '@/components/ui/skeleton';
 import { useUserWithUID } from '@/services/common/user/query';
 import { useDoctorByUID } from '@/services/client/doctor/query';
 
 export default function AppointmentBookingReceipt() {
-  const { values, resetForm } = useFormikContext<CreateAppointmentFormValues>();
+  const { form, values } = useCreateAppointmentForm();
   const { appointment } = values;
   const { data: patient, isLoading: isPatientLoading } = useUserWithUID(appointment.patientId);
   const { data: doctor, isLoading: isDoctorLoading } = useDoctorByUID(appointment.doctorId);
@@ -35,7 +34,7 @@ export default function AppointmentBookingReceipt() {
       backdrop="blur"
       scrollBehavior="inside"
       onOpenChange={() => {
-        resetForm();
+        form.reset();
       }}
     >
       <ModalContent>

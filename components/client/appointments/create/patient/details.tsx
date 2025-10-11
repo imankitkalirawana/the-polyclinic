@@ -3,12 +3,12 @@ import { cn } from '@/lib/utils';
 import { Avatar, Card, CardBody, CardHeader, Divider, Chip, ScrollShadow } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { usePatientByUID } from '@/services/client/patient';
-import MinimalLoader from '@/components/ui/minimal-placeholder';
+import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 export const CreateAppointmentPatientDetails = ({ uid }: { uid: string }) => {
   const { isLoading, isError, data: user } = usePatientByUID(uid);
 
-  if (isLoading) return <MinimalLoader message="Loading patient details..." />;
+  if (isLoading) return <MinimalPlaceholder message="Loading patient details..." />;
 
   if (isError)
     return (
