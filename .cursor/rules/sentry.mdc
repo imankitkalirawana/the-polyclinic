@@ -1,128 +1,259 @@
-These examples should be used as guidance when configuring Sentry functionality within a project.
+# Healthcare Sentry Error Tracking & Monitoring Guidelines
 
-# Exception Catching
+These examples should be used as guidance when configuring Sentry functionality within a healthcare application with proper PHI protection.
 
-Use `Sentry.captureException(error)` to capture an exception and log the error in Sentry.
-Use this in try catch blocks or areas where exceptions are expected
+## Healthcare Exception Handling & PHI Protection
 
-# Tracing Examples
-
-Spans should be created for meaningful actions within an applications like button clicks, API calls, and function calls
-Use the `Sentry.startSpan` function to create a span
-Child spans can exist within a parent span
-
-## Custom Span instrumentation in component actions
-
-The `name` and `op` properties should be meaninful for the activities in the call.
-Attach attributes based on relevant information and metrics from the request
+Use `Sentry.captureException(error)` to capture exceptions while ensuring **NO PHI (Patient Health Information) is logged**:
+- Strip patient identifiers, medical record numbers, and personal data before logging
+- Use sanitized error messages that don't expose sensitive healthcare information
+- Implement proper error context without including patient-specific details
 
 ```javascript
-function TestComponent() {
-  const handleTestButtonClick = () => {
-    // Create a transaction/span to measure performance
+// ✅ CORRECT: PHI-safe error logging
+try {
+  await scheduleAppointment(patientData);
+} catch (error) {
+  // Remove PHI before logging
+  const sanitizedError = {
+    ...error,
+    message: error.message.replace(/patient_id:\s*\d+/gi, 'patient_id: [REDACTED]'),
+    // Never log: SSN, patient names, addresses, phone numbers, medical records
+  };
+  Sentry.captureException(sanitizedError, {
+    tags: {
+      operation: 'schedule_appointment',
+      user_role: 'healthcare_staff',
+      // Never include: patient_id, medical_record_number, ssn
+    }
+  });
+}
+```
+
+## Healthcare Performance Monitoring with Privacy
+
+Create spans for meaningful healthcare operations while protecting patient privacy:
+- Monitor appointment booking, medical record access, prescription processing
+- Use anonymized or hashed identifiers in monitoring data
+- Track healthcare workflow performance without exposing PHI
+
+### Healthcare Component Performance Monitoring
+
+```javascript
+function AppointmentScheduler() {
+  const handleScheduleAppointment = (appointmentData) => {
     Sentry.startSpan(
       {
-        op: 'ui.click',
-        name: 'Test Button Click',
+        op: 'healthcare.appointment.schedule',
+        name: 'Schedule Patient Appointment',
       },
       (span) => {
-        const value = 'some config';
-        const metric = 'some metric';
-
-        // Metrics can be added to the span
-        span.setAttribute('config', value);
-        span.setAttribute('metric', metric);
-
-        doSomething();
+        // ✅ Safe metrics - no PHI
+        span.setAttribute('appointment_type', appointmentData.type);
+        span.setAttribute('provider_specialty', appointmentData.specialty);
+        span.setAttribute('duration_minutes', appointmentData.duration);
+        span.setAttribute('clinic_location', appointmentData.location);
+        
+        // ❌ NEVER include: patient_name, ssn, patient_id, medical_details
+        
+        try {
+          const result = scheduleAppointment(appointmentData);
+          span.setAttribute('success', true);
+          return result;
+        } catch (error) {
+          span.setAttribute('success', false);
+          span.setAttribute('error_type', error.constructor.name);
+          throw error;
+        }
       }
     );
   };
 
   return (
-    <button type="button" onClick={handleTestButtonClick}>
-      Test Sentry
+    <button type="button" onClick={handleScheduleAppointment}>
+      Schedule Appointment
     </button>
   );
 }
 ```
 
-## Custom span instrumentation in API calls
-
-The `name` and `op` properties should be meaninful for the activities in the call.
-Attach attributes based on relevant information and metrics from the request
+### Healthcare API Performance Monitoring
 
 ```javascript
-async function fetchUserData(userId) {
+async function fetchPatientAppointments(patientId) {
   return Sentry.startSpan(
     {
-      op: 'http.client',
-      name: `GET /api/users/${userId}`,
+      op: 'healthcare.api.patient_appointments',
+      name: `GET /api/v1/appointments/patient`,
     },
-    async () => {
-      const response = await fetch(`/api/users/${userId}`);
-      const data = await response.json();
-      return data;
+    async (span) => {
+      // ✅ Safe attributes
+      span.setAttribute('request_type', 'patient_appointments');
+      span.setAttribute('cache_status', 'miss');
+      
+      // ❌ NEVER include: actual patient_id, patient data
+      // ✅ Use hashed or anonymized identifiers if needed
+      span.setAttribute('patient_hash', hashPatientId(patientId));
+      
+      try {
+        const response = await fetch(`/api/v1/appointments/patient/${patientId}`);
+        const data = await response.json();
+        
+        span.setAttribute('appointment_count', data.appointments?.length || 0);
+        span.setAttribute('response_status', response.status);
+        
+        return data;
+      } catch (error) {
+        span.setAttribute('error_occurred', true);
+        throw error;
+      }
     }
   );
 }
 ```
 
-# Logs
+## Healthcare Logging with HIPAA Compliance
 
-Where logs are used, ensure Sentry is imported using `import * as Sentry from "@sentry/nextjs"`
-Enable logging in Sentry using `Sentry.init({ _experiments: { enableLogs: true } })`
-Reference the logger using `const { logger } = Sentry`
-Sentry offers a consoleLoggingIntegration that can be used to log specific console error types automatically without instrumenting the individual logger calls
+Implement structured logging that complies with healthcare privacy regulations:
+- Enable logs in Sentry with proper PHI filtering
+- Use log levels appropriate for healthcare operations
+- Implement automatic PHI detection and masking
 
-## Configuration
+### Healthcare Sentry Configuration
 
-In NextJS the client side Sentry initialization is in `instrumentation-client.ts`, the server initialization is in `sentry.edge.config.ts` and the edge initialization is in `sentry.server.config.ts`
-Initialization does not need to be repeated in other files, it only needs to happen the files mentioned above. You should use `import * as Sentry from "@sentry/nextjs"` to reference Sentry functionality
-
-### Baseline
+Configure Sentry in healthcare environments with proper privacy controls:
 
 ```javascript
+// instrumentation-client.ts / sentry.server.config.ts
 import * as Sentry from '@sentry/nextjs';
 
 Sentry.init({
-  dsn: 'https://examplePublicKey@o0.ingest.sentry.io/0',
-
+  dsn: process.env.SENTRY_DSN,
+  
+  // Healthcare-specific configuration
+  environment: process.env.NODE_ENV,
+  
+  // Enable structured logging for healthcare operations
   _experiments: {
     enableLogs: true,
   },
-});
-```
-
-### Logger Integration
-
-```javascript
-Sentry.init({
-  dsn: 'https://examplePublicKey@o0.ingest.sentry.io/0',
+  
+  // Healthcare data filtering
+  beforeSend(event) {
+    // Strip PHI from error events
+    if (event.exception) {
+      event.exception.values = event.exception.values?.map(exception => ({
+        ...exception,
+        value: sanitizeHealthcareError(exception.value),
+        stacktrace: {
+          ...exception.stacktrace,
+          frames: exception.stacktrace?.frames?.map(frame => ({
+            ...frame,
+            vars: sanitizeVariables(frame.vars), // Remove PHI from variables
+          })),
+        },
+      }));
+    }
+    
+    // Remove PHI from event context
+    if (event.contexts?.user) {
+      event.contexts.user = {
+        id: hashUserId(event.contexts.user.id), // Hash user ID
+        role: event.contexts.user.role, // Keep role for debugging
+        // Remove: email, name, phone, address
+      };
+    }
+    
+    return event;
+  },
+  
+  // Healthcare console logging integration
   integrations: [
-    // send console.log, console.error, and console.warn calls as logs to Sentry
-    Sentry.consoleLoggingIntegration({ levels: ['log', 'error', 'warn'] }),
+    Sentry.consoleLoggingIntegration({ 
+      levels: ['error', 'warn'] // Only log errors and warnings
+    }),
   ],
+  
+  // Performance monitoring for healthcare operations
+  tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
 });
+
+// Helper function to sanitize healthcare errors
+function sanitizeHealthcareError(errorMessage) {
+  if (!errorMessage) return errorMessage;
+  
+  return errorMessage
+    .replace(/patient[_\s]?id[:\s]*\d+/gi, 'patient_id: [REDACTED]')
+    .replace(/ssn[:\s]*\d{3}-?\d{2}-?\d{4}/gi, 'ssn: [REDACTED]')
+    .replace(/phone[:\s]*\(?\d{3}\)?[\s.-]*\d{3}[\s.-]*\d{4}/gi, 'phone: [REDACTED]')
+    .replace(/email[:\s]*[\w.-]+@[\w.-]+\.[\w]+/gi, 'email: [REDACTED]')
+    .replace(/medical[_\s]?record[:\s]*\w+/gi, 'medical_record: [REDACTED]');
+}
+
+function sanitizeVariables(vars) {
+  if (!vars) return vars;
+  
+  const sanitized = { ...vars };
+  const sensitiveKeys = ['patient_id', 'ssn', 'phone', 'email', 'medical_record', 'patient_name'];
+  
+  sensitiveKeys.forEach(key => {
+    if (sanitized[key]) {
+      sanitized[key] = '[REDACTED]';
+    }
+  });
+  
+  return sanitized;
+}
 ```
 
-## Logger Examples
-
-`logger.fmt` is a template literal function that should be used to bring variables into the structured logs.
+### Healthcare Logger Examples with PHI Protection
 
 ```javascript
-logger.trace('Starting database connection', { database: 'users' });
-logger.debug(logger.fmt`Cache miss for user: ${userId}`);
-logger.info('Updated profile', { profileId: 345 });
-logger.warn('Rate limit reached for endpoint', {
-  endpoint: '/api/results/',
-  isEnterprise: false,
+import * as Sentry from '@sentry/nextjs';
+const { logger } = Sentry;
+
+// ✅ SAFE: Healthcare operation logging
+logger.info('Patient appointment scheduled', {
+  appointment_type: 'routine_checkup',
+  provider_specialty: 'family_medicine',
+  duration_minutes: 30,
+  clinic_location: 'main_campus'
+  // ❌ NEVER include: patient_name, ssn, patient_id, medical_details
 });
-logger.error('Failed to process payment', {
-  orderId: 'order_123',
-  amount: 99.99,
+
+// ✅ SAFE: Healthcare error logging
+logger.error('Appointment scheduling failed', {
+  error_type: 'schedule_conflict',
+  provider_id: hashProviderId(providerId), // Use hashed ID
+  requested_time_slot: '2024-01-15T10:00:00Z',
+  conflict_reason: 'provider_unavailable'
+  // ❌ NEVER include: patient information, medical details
 });
-logger.fatal('Database connection pool exhausted', {
-  database: 'users',
-  activeConnections: 100,
+
+// ✅ SAFE: Healthcare performance logging
+logger.debug('Database query performance', {
+  operation: 'fetch_patient_appointments',
+  query_duration_ms: 150,
+  result_count: 5,
+  cache_hit: false
+  // ❌ NEVER include: actual query parameters with PHI
+});
+
+// ✅ SAFE: Healthcare audit logging (separate from Sentry)
+// Note: Audit logs with PHI should use separate, secure logging system
+logger.warn('Potential security event detected', {
+  event_type: 'multiple_failed_login_attempts',
+  user_role: 'healthcare_provider',
+  ip_address_hash: hashIPAddress(request.ip),
+  timestamp: new Date().toISOString()
 });
 ```
+
+## Healthcare Compliance & Security Considerations
+
+- **HIPAA Compliance**: Never log PHI in Sentry or any external monitoring service
+- **Audit Requirements**: Use separate, secure audit logging systems for PHI-related operations
+- **Data Retention**: Configure appropriate data retention policies for healthcare monitoring data
+- **Access Control**: Ensure only authorized healthcare IT staff have access to Sentry dashboards
+- **Incident Response**: Include Sentry monitoring in healthcare incident response procedures
+- **Regular Review**: Periodically audit Sentry logs to ensure no PHI is being captured

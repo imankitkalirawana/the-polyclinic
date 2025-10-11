@@ -2,74 +2,82 @@
 
 ## API Structure
 
-- Use App Router API routes in [app/api/](mdc:app/api/) directory
-- Follow RESTful conventions for route naming
-- Use versioned API routes (e.g., `app/api/v1/`)
-- Organize by feature (e.g., `app/api/v1/appointments/`, `app/api/v1/doctors/`)
+- Use App Router API routes in `app/api/` directory with proper versioning (e.g., `app/api/v1/`)
+- Follow RESTful conventions for route naming and HTTP methods
+- Organize by healthcare domain features (e.g., `appointments/`, `doctors/`, `patients/`, `prescriptions/`)
+- Use the configured API base URL from [lib/config.ts](mdc:lib/config.ts)
+- Reference the service layer patterns in [services/](mdc:services/) directory
 
 ## Route Handlers
 
-- Use proper HTTP methods (GET, POST, PUT, DELETE, PATCH)
-- Implement proper error handling with try-catch blocks
-- Return actual error in catch block and a hardcoded error as fallback
-- Return appropriate HTTP status codes
-- Use proper response formats (JSON)
+- Use proper HTTP methods: GET (retrieve), POST (create), PUT (full update), PATCH (partial update), DELETE (remove)
+- Implement comprehensive error handling with try-catch blocks
+- Return detailed error information in development, sanitized errors in production
+- Use appropriate HTTP status codes (200, 201, 400, 401, 403, 404, 422, 500)
+- Always return JSON responses with consistent structure: `{ success: boolean, data?: any, message?: string, error?: any }`
+- Add request/response logging for debugging and monitoring
 
-## Data Models
+## Healthcare Data Models
 
-- Use Mongoose models defined in [models/](mdc:models/) directory
-- Follow the schema patterns established in the project
-- Use proper TypeScript interfaces for request/response types
-- Implement proper validation using Zod schemas
+- Use Mongoose schemas with proper validation for medical data integrity
+- Implement field-level encryption for sensitive patient information (PII, PHI)
+- Use proper data types for medical fields (dates, measurements, codes)
+- Reference established patterns in [lib/interface.ts](mdc:lib/interface.ts) for type definitions
+- Implement audit trails for all patient data modifications
+- Use proper indexing for frequently queried medical data
 
 ## Authentication & Authorization
 
-- Use NextAuth.js for authentication as configured in [auth.ts](mdc:auth.ts)
-- Implement proper middleware for route protection
-- Use session data for user context
-- Implement role-based access control
+- Use the authentication patterns from [lib/auth.ts](mdc:lib/auth.ts) and [lib/serverAuth.ts](mdc:lib/serverAuth.ts)
+- Implement cookie-based session management with secure settings
+- Use middleware for route protection based on user roles (admin, doctor, patient, staff)
+- Validate JWT tokens and refresh token logic
+- Implement proper logout and session cleanup
+- Use HTTPS-only cookies with proper SameSite settings
+
+## Healthcare Domain Validation
+
+- **CRITICAL**: Replace Yup with Zod throughout the project (as seen in [lib/validation.ts](mdc:lib/validation.ts))
+- Implement medical data validation (appointment times, patient demographics, medical records)
+- Validate against healthcare standards (ICD-10, CPT codes, drug classifications)
+- Use proper date/time validation for appointment scheduling from [lib/config.ts](mdc:lib/config.ts) TIMINGS
+- Implement business rule validation (appointment conflicts, doctor availability)
+
+## Error Handling & Monitoring
+
+- Use Sentry for error tracking with proper healthcare context
+- Implement structured logging with patient ID masking for privacy
+- Use `Sentry.captureException()` for unexpected errors
+- Create custom spans for performance monitoring of critical healthcare operations
+- Log API response times and database query performance
+- Implement rate limiting for API endpoints
+
+## Security & Compliance
+
+- Implement HIPAA-compliant logging (no PHI in logs)
+- Use proper input sanitization and validation
+- Implement SQL injection prevention with parameterized queries
+- Use CSRF protection for state-changing operations
+- Implement proper CORS settings for healthcare domain
+- Add request throttling and DDoS protection
 
 ## Database Operations
 
-- Use Mongoose for MongoDB operations
-- Implement proper error handling for database operations
-- Use transactions when multiple operations are needed
-- Implement proper indexing for performance
-- Separate business logic from route handlers
+- Use Mongoose with proper connection pooling
+- Implement database transactions for multi-step operations
+- Use proper indexing strategy for healthcare queries
+- Implement soft deletes for audit compliance
+- Use database connection retry logic with exponential backoff
+- Implement proper database backup and recovery procedures
 
-## Service Layer
+## Performance & Scalability
 
-- Use service functions in [functions/api/](mdc:functions/api/) directory
-- Separate business logic from route handlers
-- Implement proper error handling and logging
-- Use dependency injection patterns
-
-## Error Handling
-
-- Implement proper logging with Sentry
-- Handle both expected and unexpected errors
-- Provide meaningful error messages
-
-## Validation
-
-- Use Zod for request validation
-- Implement proper input sanitization
-- Validate all user inputs
-- Use TypeScript for type safety
-
-## Performance
-
-- Implement proper caching strategies
-- Use database indexing for queries
-- Implement pagination for large datasets
-- Use proper HTTP caching headers
-
-## Testing
-
-- Write unit tests for service functions
-- Test API endpoints with proper test data
-- Mock external dependencies
-- Test error scenarios
+- Implement Redis caching for frequently accessed data (with PHI considerations)
+- Use database query optimization and explain plans
+- Implement proper pagination for large datasets (appointments, patients)
+- Use background jobs for heavy operations (report generation, email sending)
+- Implement API response compression
+- Monitor and optimize database query performance
   description:
   globs:
   alwaysApply: false

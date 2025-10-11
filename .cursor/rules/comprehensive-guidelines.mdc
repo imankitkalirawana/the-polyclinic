@@ -1,0 +1,164 @@
+# Comprehensive Healthcare Development Guidelines Summary
+
+## Overview
+
+This document provides a complete overview of development guidelines for The Polyclinic healthcare application, focusing on maintainability, scalability, HIPAA compliance, and patient safety.
+
+## Critical Healthcare Priorities
+
+### 1. Patient Health Information (PHI) Protection
+- **NEVER** log, store, or transmit PHI without proper encryption
+- Use field-level encryption for sensitive patient data
+- Implement proper data masking in development and testing environments
+- Reference healthcare domain guidelines in [healthcare-domain.mdc](mdc:.cursor/rules/healthcare-domain.mdc)
+
+### 2. HIPAA Compliance Requirements
+- Implement comprehensive audit trails for all PHI access
+- Use role-based access controls with minimum necessary principle
+- Ensure proper authentication and authorization mechanisms
+- Maintain secure session management with appropriate timeouts
+- Reference security patterns in [api.mdc](mdc:.cursor/rules/api.mdc)
+
+### 3. Code Quality & Type Safety
+- **CRITICAL**: Replace all Yup validation with Zod throughout the project
+- Use strict TypeScript configuration from [tsconfig.json](mdc:tsconfig.json)
+- Follow healthcare-specific naming conventions from [typescript.mdc](mdc:.cursor/rules/typescript.mdc)
+- Implement comprehensive error handling with PHI protection
+
+## Development Workflow Integration
+
+### 1. Project Structure Adherence
+- Follow healthcare domain organization from [project-structure.mdc](mdc:.cursor/rules/project-structure.mdc)
+- Organize components by healthcare functionality
+- Use proper separation of concerns for medical data handling
+- Reference [lib/config.ts](mdc:lib/config.ts) for healthcare configurations
+
+### 2. Component Architecture
+- Use healthcare-specific component patterns from [components.mdc](mdc:.cursor/rules/components.mdc)
+- Implement proper state management for patient data
+- Use HeroUI design system with healthcare theme from [tailwind.config.ts](mdc:tailwind.config.ts)
+- Follow responsive design patterns for healthcare environments
+
+### 3. API Development Standards
+- Implement healthcare API patterns from [api.mdc](mdc:.cursor/rules/api.mdc)
+- Use proper authentication from [lib/auth.ts](mdc:lib/auth.ts) and [lib/serverAuth.ts](mdc:lib/serverAuth.ts)
+- Implement comprehensive input validation and sanitization
+- Use proper error handling with HIPAA-compliant messaging
+
+## Quality Assurance Integration
+
+### 1. Testing Requirements
+- Follow comprehensive testing guidelines from [testing.mdc](mdc:.cursor/rules/testing.mdc)
+- Test all healthcare workflows and patient safety features
+- Implement PHI protection in test data and scenarios
+- Use synthetic healthcare data for testing
+
+### 2. Code Review Process
+- Use healthcare-specific review checklist from [git.mdc](mdc:.cursor/rules/git.mdc)
+- Verify HIPAA compliance in all code changes
+- Check for PHI exposure in logs, errors, and client-side code
+- Validate healthcare business logic and medical calculations
+
+### 3. Monitoring & Error Tracking
+- Implement Sentry monitoring with PHI protection from [sentry.mdc](mdc:.cursor/rules/sentry.mdc)
+- Use structured logging with healthcare context
+- Monitor healthcare-critical operations performance
+- Implement proper incident response procedures
+
+## Technology Stack Compliance
+
+### 1. Next.js App Router Implementation
+- Follow healthcare App Router patterns from [nextjs.mdc](mdc:.cursor/rules/nextjs.mdc)
+- Use proper Server vs Client component separation for PHI protection
+- Implement healthcare-specific middleware and route protection
+- Use proper data fetching patterns with privacy considerations
+
+### 2. Styling & Design System
+- Use healthcare design system from [styling.mdc](mdc:.cursor/rules/styling.mdc)
+- Implement accessibility features for healthcare environments
+- Use proper color psychology and contrast for medical interfaces
+- Support healthcare professional workflows across devices
+
+### 3. TypeScript Implementation
+- Follow strict TypeScript guidelines from [typescript.mdc](mdc:.cursor/rules/typescript.mdc)
+- Use healthcare domain type definitions
+- Implement proper error handling and validation
+- Use branded types for sensitive healthcare identifiers
+
+## Continuous Integration Requirements
+
+### 1. Pre-commit Quality Gates
+- Run healthcare-specific linting and formatting
+- Perform security vulnerability scanning
+- Execute PHI detection and masking verification
+- Validate TypeScript compilation and type safety
+
+### 2. CI/CD Pipeline Requirements
+- Comprehensive healthcare testing (unit, integration, E2E)
+- Security scanning and compliance verification
+- Performance testing for healthcare workflows
+- Automated backup and rollback procedures
+
+### 3. Deployment Procedures
+- Healthcare-specific deployment checklist
+- Database migration verification
+- Monitoring and alerting configuration
+- Emergency rollback procedures
+
+## Compliance & Security Checklist
+
+### Development Phase
+- [ ] No PHI in code, comments, or version control
+- [ ] Proper input validation and sanitization
+- [ ] Healthcare business logic properly implemented
+- [ ] Error handling with HIPAA-compliant messaging
+- [ ] Comprehensive test coverage for healthcare workflows
+
+### Review Phase
+- [ ] Security and compliance review completed
+- [ ] Healthcare functionality verification
+- [ ] Performance and accessibility testing
+- [ ] Code quality and type safety validation
+- [ ] Audit logging implementation verified
+
+### Deployment Phase
+- [ ] Security scanning with no critical vulnerabilities
+- [ ] HIPAA compliance verification
+- [ ] Healthcare workflow testing in staging
+- [ ] Monitoring and alerting configuration
+- [ ] Emergency procedures documentation
+
+## Emergency Procedures
+
+### Security Incident Response
+1. Immediate containment of security vulnerability
+2. Assessment of PHI exposure risk
+3. Notification of healthcare compliance team
+4. Emergency patch deployment procedures
+5. Incident documentation and reporting
+
+### System Outage Response
+1. Immediate notification to healthcare operations
+2. Alternative workflow activation
+3. System restoration procedures
+4. Data integrity verification
+5. Post-incident analysis and improvement
+
+## Key File References
+
+- **Configuration**: [lib/config.ts](mdc:lib/config.ts), [tailwind.config.ts](mdc:tailwind.config.ts)
+- **Authentication**: [lib/auth.ts](mdc:lib/auth.ts), [lib/serverAuth.ts](mdc:lib/serverAuth.ts)
+- **Validation**: [lib/validation.ts](mdc:lib/validation.ts) (migrate to Zod)
+- **Types**: [lib/interface.ts](mdc:lib/interface.ts), [types/](mdc:types/)
+- **Services**: [services/](mdc:services/) directory structure
+- **Components**: [components/](mdc:components/) healthcare organization
+
+## Continuous Improvement
+
+- Regular security assessments and penetration testing
+- Healthcare workflow optimization based on user feedback
+- Performance monitoring and optimization
+- Compliance audit preparation and documentation
+- Technology stack updates with security patches
+
+Remember: Patient safety and data privacy are paramount in all development decisions.

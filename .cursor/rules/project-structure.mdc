@@ -1,75 +1,139 @@
-# Project Structure Guidelines
+# Healthcare Project Structure & Organization Guidelines
 
-## Root Directory Organization
+## Root Directory Healthcare Organization
 
-- [app/](mdc:app/): Next.js App Router pages and layouts
-- [components/](mdc:components/): Reusable React components
-- [lib/](mdc:lib/): Utility functions and configurations
-- [models/](mdc:models/): Mongoose data models
-- [services/](mdc:services/): Business logic and API services
-- [types/](mdc:types/): TypeScript type definitions
-- [store/](mdc:store/): Zustand state management
-- [hooks/](mdc:hooks/): Custom React hooks
-- [utils/](mdc:utils/): Utility functions and helpers
+- [app/](mdc:app/): Next.js App Router with healthcare domain routing (dashboard, appointments, auth)
+- [components/](mdc:components/): Healthcare-specific React components organized by domain
+- [lib/](mdc:lib/): Healthcare utilities, configurations, and shared business logic
+- [services/](mdc:services/): Healthcare API services and business logic layer
+- [types/](mdc:types/): TypeScript healthcare domain type definitions
+- [store/](mdc:store/): Healthcare state management (appointments, patient data)
+- [hooks/](mdc:hooks/): Custom React hooks for healthcare functionality
+- [utils/](mdc:utils/): Healthcare-specific utility functions and helpers
+- [auth/](mdc:auth/): Authentication and authorization configurations
+- [providers/](mdc:providers/): React context providers for healthcare data
+- [templates/email/](mdc:templates/email/): Healthcare email template system
+- [functions/client/](mdc:functions/client/): Client-side healthcare business functions
 
-## App Directory Structure
+## Healthcare App Directory Structure
 
-- Follow Next.js App Router conventions
-- Use `page.tsx` for route pages
-- Use `layout.tsx` for shared layouts
-- Use `loading.tsx` for loading states
-- Use `error.tsx` for error boundaries
-- Use `not-found.tsx` for 404 pages
+- **Public Routes**: `app/(public)/` for non-authenticated healthcare information
+- **Authentication**: `app/auth/` with `login/`, `register/`, `forgot-password/` subdirectories
+- **Patient Portal**: `app/appointments/` with create, manage, and proceed workflows
+- **Provider Dashboard**: `app/dashboard/` with healthcare provider tools:
+  - `appointments/` - Appointment management for providers
+  - `doctors/` - Healthcare provider management
+  - `patients/` - Patient management and records
+  - `services/` - Medical service management
+  - `drugs/` - Medication and pharmacy management
+  - `users/` - System user management
+  - `organizations/` - Multi-tenant organization management
+  - `emails/` - Healthcare communication management
+  - `newsletters/` - Patient communication and outreach
+- **Profile Management**: `app/profile/` for user profile and preferences
+- **Subdomain Support**: `app/s/[subdomain]/` for multi-tenant healthcare organizations
 
-## Components Directory
+## Healthcare Components Architecture
 
-- Organize by feature (e.g., `components/appointments/`, `components/dashboard/`)
-- Use `components/ui/` for reusable UI components
-- Use `components/sections/` for page sections
-- Use `components/skeletons/` for loading skeletons
+- **Domain-Driven Organization**:
+  - `components/client/appointments/` - Patient-facing appointment components
+  - `components/dashboard/` - Healthcare provider dashboard components
+  - `components/auth/` - Authentication and security components
+  - `components/ui/` - Reusable healthcare UI design system
+  - `components/sections/` - Page-level healthcare sections
+  - `components/layouts/` - Healthcare-specific layout components
+  - `components/profile/` - User profile management components
 
-## API Routes
+- **UI Component Structure**:
+  - `components/ui/data-table/` - Healthcare data table components
+  - `components/ui/appointments/` - Appointment-specific UI components
+  - `components/ui/buttons/` - Healthcare action buttons
+  - `components/ui/modal/` - Healthcare modal dialogs
+  - `components/ui/typography/` - Healthcare typography system
+  - `components/ui/activity/` - Healthcare activity and audit components
 
-- Use `app/api/` for API routes
-- Version API routes (e.g., `app/api/v1/`)
-- Organize by feature (e.g., `app/api/v1/appointments/`)
-- Use proper HTTP method handlers
+## Healthcare API & Services Architecture
 
-## Configuration Files
+- **API Routes**: `app/api/v1/` with healthcare domain organization (future implementation)
+- **Service Layer**: `services/` organized by healthcare domains:
+  - `services/client/` - Client-side service functions:
+    - `appointment/` - Appointment management services
+    - `doctor/` - Healthcare provider services
+    - `patient/` - Patient management services
+    - `drug/` - Medication management services
+    - `email/` - Healthcare communication services
+    - `newsletters/` - Patient outreach services
+    - `service/` - Medical service management
+  - `services/common/` - Shared healthcare services:
+    - `auth/` - Authentication services
+    - `user/` - User management services
+    - `activity/` - Audit and activity logging
+    - `notifications/` - Healthcare notification services
+  - `services/system/organization/` - Multi-tenant organization services
+  - `services/external/` - Third-party healthcare integrations
 
-- [lib/config.ts](mdc:lib/config.ts): Application configuration
-- [auth.ts](mdc:auth.ts): NextAuth.js configuration
-- [next.config.mjs](mdc:next.config.mjs): Next.js configuration
-- [tsconfig.json](mdc:tsconfig.json): TypeScript configuration
-- [tailwind.config.js](mdc:tailwind.config.js): Tailwind CSS configuration
+## Healthcare Configuration & Library Structure
 
-## Type Definitions
+- **Core Configuration**:
+  - [lib/config.ts](mdc:lib/config.ts): Healthcare application settings (timings, clinic info)
+  - [lib/auth.ts](mdc:lib/auth.ts): Authentication configuration and utilities
+  - [lib/serverAuth.ts](mdc:lib/serverAuth.ts): Server-side authentication
+  - [lib/validation.ts](mdc:lib/validation.ts): Healthcare data validation schemas
+  - [lib/interface.ts](mdc:lib/interface.ts): Healthcare TypeScript interfaces
+  - [lib/constants.ts](mdc:lib/constants.ts): Healthcare domain constants
 
-- Use [types/](mdc:types/) directory for shared types
-- Define interfaces for API requests/responses
-- Use proper TypeScript naming conventions
-- Export types from index files
+- **Utility Libraries**:
+  - [lib/axios/](mdc:lib/axios/): HTTP client configuration for healthcare APIs
+  - [lib/appointments/](mdc:lib/appointments/): Appointment-specific utilities
+  - [lib/users/](mdc:lib/users/): User management utilities
+  - [lib/utils.ts](mdc:lib/utils.ts): General utility functions
+  - [lib/utility.ts](mdc:lib/utility.ts): Healthcare-specific utilities
 
-## State Management
+## Healthcare State Management Structure
 
-- Use [store/](mdc:store/) for Zustand stores
-- Organize stores by feature
-- Use proper TypeScript typing for stores
-- Implement proper state persistence
+- [store/appointment/](mdc:store/appointment/): Appointment state management with Zustand
+- Organize stores by healthcare domain (patients, providers, schedules)
+- Use proper TypeScript typing for healthcare data states
+- Implement proper state persistence with privacy considerations
 
-## Utility Functions
+## Healthcare Type Definitions Organization
 
-- Use [lib/](mdc:lib/) for shared utilities
-- Use [utils/](mdc:utils/) for specific utility functions
-- Use [hooks/](mdc:hooks/) for custom React hooks
-- Follow proper naming conventions
+- [types/index.ts](mdc:types/index.ts): General healthcare type definitions
+- [types/session.ts](mdc:types/session.ts): Authentication and session types
+- Define interfaces for healthcare API requests/responses
+- Use proper healthcare domain naming conventions
+- Export types from domain-specific index files
 
-## Assets and Static Files
+## Healthcare Asset & Template Organization
 
-- Use [public/](mdc:public/) for static assets
-- Organize assets by type (images, icons, etc.)
-- Use proper file naming conventions
-- Optimize assets for web delivery
+- [public/](mdc:public/): Static healthcare assets (logos, images, documents)
+- [templates/email/](mdc:templates/email/): Healthcare email templates
+- [utils/email-template/](mdc:utils/email-template/): Email template utilities:
+  - `doctor/` - Healthcare provider email templates
+  - `patient/` - Patient communication templates
+- [functions/client/appointment/](mdc:functions/client/appointment/): Client-side appointment functions
+
+## Healthcare Development & Build Configuration
+
+- **Core Configuration Files**:
+  - [next.config.mjs](mdc:next.config.mjs): Next.js with Sentry integration
+  - [tailwind.config.ts](mdc:tailwind.config.ts): Healthcare design system configuration
+  - [tsconfig.json](mdc:tsconfig.json): TypeScript configuration with healthcare paths
+  - [sentry.server.config.ts](mdc:sentry.server.config.ts): Healthcare error monitoring
+  - [sentry.edge.config.ts](mdc:sentry.edge.config.ts): Edge runtime monitoring
+
+- **Development Workflow**:
+  - [commitlint.config.ts](mdc:commitlint.config.ts): Healthcare-appropriate commit standards
+  - [lint-staged.config.js](mdc:lint-staged.config.js): Code quality automation
+  - [package.json](mdc:package.json): Healthcare dependencies and scripts
+
+## Healthcare Security & Compliance Structure
+
+- Implement proper file permissions for healthcare data
+- Use environment-based configuration for PHI handling
+- Organize security policies by healthcare compliance requirements
+- Implement proper backup and disaster recovery file organization
+- Use proper logging structure for healthcare audit requirements
   description:
   globs:
   alwaysApply: false

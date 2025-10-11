@@ -1,51 +1,119 @@
-# TypeScript Coding Standards
+# TypeScript Healthcare Coding Standards
 
-## General Guidelines
+## Healthcare-Specific TypeScript Guidelines
 
-- Follow the [TypeScript Style Guide](https://mkosir.github.io/typescript-style-guide/#naming)
-- Use TSDoc comments when documenting APIs, libraries, configurations or reusable code
-- Always use strict TypeScript configuration as defined in [tsconfig.json](mdc:tsconfig.json)
-- Use path aliases defined in tsconfig.json (e.g., `@/*` for root imports)
+- Follow the [TypeScript Style Guide](https://mkosir.github.io/typescript-style-guide/#naming) with healthcare domain adaptations
+- Use TSDoc comments for all healthcare APIs, medical business logic, and compliance-critical code
+- Use strict TypeScript configuration from [tsconfig.json](mdc:tsconfig.json) with healthcare-appropriate compiler options
+- Use path aliases `@/*` for internal healthcare modules to improve code organization
+- **CRITICAL**: Implement proper type safety for Patient Health Information (PHI) handling
 
-## Naming Conventions
+## Healthcare Domain Naming Conventions
 
-- Use PascalCase for components, interfaces, and type definitions
-- Use camelCase for variables, functions, and properties
-- Use UPPER_SNAKE_CASE for constants
-- Use kebab-case for file names and URLs
+- **Components**: Use PascalCase with healthcare context (`PatientCard`, `AppointmentScheduler`, `MedicalRecordForm`)
+- **Interfaces**: Use PascalCase with healthcare domain prefixes (`IPatientData`, `IAppointmentRequest`, `IMedicalRecord`)
+- **Types**: Use PascalCase for medical domain types (`AppointmentStatus`, `PatientGender`, `MedicalSpecialty`)
+- **Variables**: Use camelCase with descriptive healthcare terms (`patientId`, `appointmentDateTime`, `medicalHistory`)
+- **Functions**: Use camelCase with action-oriented healthcare naming (`scheduleAppointment`, `updatePatientRecord`, `validateMedicalData`)
+- **Constants**: Use UPPER_SNAKE_CASE for healthcare configurations (`APPOINTMENT_DURATION_MINUTES`, `MAX_DAILY_APPOINTMENTS`)
+- **Files**: Use kebab-case for healthcare domain files (`patient-management.ts`, `appointment-scheduler.tsx`)
 
-## Type Safety
+## Healthcare Type Safety & PHI Protection
 
-- Avoid using `any` type - use proper TypeScript types
-- Use `unknown` instead of `any` when the type is truly unknown
-- Prefer interfaces over types for object shapes
-- Use union types for variables that can have multiple types
-- Use optional properties (`?`) instead of union with `undefined`
+- **Never use `any` type** - especially critical for healthcare data handling
+- Use `unknown` for external healthcare data before validation
+- Prefer interfaces over types for healthcare data structures
+- Use union types for medical enums (`'scheduled' | 'confirmed' | 'completed' | 'cancelled'`)
+- Use optional properties (`?`) for non-required medical fields
+- Implement branded types for sensitive identifiers (SSN, patient IDs, medical record numbers)
+- Use proper generic constraints for healthcare data operations
 
-## Import/Export Patterns
+## Healthcare Import/Export Patterns
 
-- Use named exports for utilities and components
-- Use default exports for pages and layouts
-- Group imports: React/Next.js, third-party libraries, internal modules, relative imports
-- Use absolute imports with `@/` prefix for internal modules
+- **Import Organization**: Group imports in healthcare-appropriate order:
+  1. React/Next.js framework imports
+  2. Healthcare-specific third-party libraries (HL7, medical validators)
+  3. Internal healthcare modules (`@/lib/medical`, `@/services/patient`)
+  4. Relative healthcare component imports
+- Use named exports for healthcare utilities, components, and services
+- Use default exports sparingly - only for pages, layouts, and main healthcare modules
+- Use absolute imports with `@/` prefix for all internal healthcare modules
+- Reference healthcare configurations from [lib/config.ts](mdc:lib/config.ts) and [lib/interface.ts](mdc:lib/interface.ts)
 
-## Component Patterns
+## Healthcare Component Type Patterns
 
-- Use functional components with TypeScript
-- Define proper prop interfaces for all components
-- Use React.FC type sparingly, prefer explicit return types
-- Use proper event handler types (e.g., `React.MouseEvent<HTMLButtonElement>`)
+- Use functional components with explicit TypeScript interfaces for healthcare props
+- Define comprehensive prop interfaces immediately after imports:
+  ```typescript
+  interface PatientCardProps {
+    patient: IPatientData;
+    onAppointmentSchedule: (patientId: string) => Promise<void>;
+    showSensitiveData?: boolean;
+  }
+  ```
+- Use proper generic types for healthcare data operations
+- Implement proper event handler types for medical forms (`React.FormEvent<HTMLFormElement>`)
+- Use discriminated unions for healthcare status types
+- Avoid React.FC type - prefer explicit return types for healthcare components
 
-## Error Handling
+## Healthcare Data Validation & Error Handling
 
-- Use proper error types and interfaces
-- Implement proper error boundaries
-- Use try-catch blocks with proper typing
+- **PRIORITY**: Replace all Yup usage in [lib/validation.ts](mdc:lib/validation.ts) with Zod
+- Implement comprehensive Zod schemas for all healthcare data validation
+- Use proper error types for medical data validation failures
+- Implement proper error boundaries with healthcare-appropriate error types
+- Use try-catch blocks with typed healthcare exceptions
+- Implement proper validation for medical codes (ICD-10, CPT, NDC)
+- Use branded types for validated healthcare data
 
-## Configuration Files
+## Healthcare Configuration & Environment Types
 
-- Reference [lib/config.ts](mdc:lib/config.ts) for application constants
-- Use environment variables with proper typing
-- Define interfaces for configuration objects
+- Reference healthcare configurations from [lib/config.ts](mdc:lib/config.ts) with proper typing
+- Use environment variables with proper TypeScript typing for healthcare settings
+- Define interfaces for healthcare configuration objects (clinic info, appointment settings)
+- Implement proper types for healthcare API responses and requests
+- Use const assertions for healthcare configuration constants
+- Implement proper typing for healthcare third-party integrations
 
-- Use TSDoc comments when documenting APIs, libraries, configurations or reusable code.
+## Healthcare API & Service Types
+
+- Define comprehensive interfaces for all healthcare API endpoints
+- Use proper request/response types for medical data operations
+- Implement proper typing for healthcare authentication and authorization
+- Use generic types for healthcare CRUD operations
+- Implement proper error response types for healthcare API failures
+- Reference service patterns from [services/](mdc:services/) directory with proper typing
+
+## Healthcare Performance & Safety Types
+
+- Use const assertions for healthcare configuration objects
+- Implement proper types for healthcare performance monitoring
+- Use proper typing for healthcare analytics and reporting
+- Implement branded types for sensitive healthcare identifiers
+- Use proper generic constraints for healthcare data processing
+- Implement proper types for healthcare caching with PHI considerations
+
+## Healthcare Documentation Standards
+
+- Use comprehensive TSDoc comments for all healthcare APIs:
+  ```typescript
+  /**
+   * Schedules a new patient appointment with conflict checking
+   * @param appointmentData - The appointment details to schedule
+   * @param patientId - Unique patient identifier (branded type)
+   * @returns Promise resolving to appointment confirmation
+   * @throws {ValidationError} When appointment data is invalid
+   * @throws {ConflictError} When appointment conflicts with existing schedule
+   * @example
+   * ```typescript
+   * const appointment = await scheduleAppointment({
+   *   patientId: 'PAT-12345' as PatientId,
+   *   providerId: 'DOC-67890' as ProviderId,
+   *   dateTime: new Date('2024-01-15T10:00:00Z')
+   * });
+   * ```
+   */
+  ```
+- Document healthcare business rules and compliance requirements
+- Use proper JSDoc tags for healthcare-specific metadata
+- Document PHI handling and security considerations
