@@ -9,7 +9,7 @@ import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import Skeleton from '@/components/ui/skeleton';
 import { castData } from '@/lib/utils';
 import { useAllAppointments } from '@/services/client/appointment/query';
-import { AppointmentType } from '@/services/client/appointment';
+import { APPOINTMENT_TYPES, AppointmentType } from '@/services/client/appointment';
 
 const APPOINTMENTS_PER_PAGE = 6;
 
@@ -24,15 +24,15 @@ export default function Appointments() {
       <CardHeader className="justify-between">
         <h3 className="text-lg font-medium">Today&apos;s Schedules</h3>
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1 text-tiny text-default-500">
+          <div className="flex items-center gap-1 text-default-500 text-tiny">
             <span className="h-2 w-2 rounded-full bg-default" />
             <span>Consultation</span>
           </div>
-          <div className="flex items-center gap-1 text-tiny text-default-500">
+          <div className="flex items-center gap-1 text-default-500 text-tiny">
             <span className="h-2 w-2 rounded-full bg-blue-300" />
             <span>Follow-up</span>
           </div>
-          <div className="flex items-center gap-1 text-tiny text-default-500">
+          <div className="flex items-center gap-1 text-default-500 text-tiny">
             <span className="h-2 w-2 rounded-full bg-danger-300" />
             <span>Emergency</span>
           </div>
@@ -42,7 +42,7 @@ export default function Appointments() {
             {APPOINTMENTS_PER_PAGE > appointments.length
               ? appointments.length
               : APPOINTMENTS_PER_PAGE}
-            <span className="text-tiny text-default-500">/{appointments.length}</span>
+            <span className="text-default-500 text-tiny">/{appointments.length}</span>
           </p>
           <ButtonGroup isIconOnly size="sm" variant="flat">
             <Button isDisabled={page === 1} onPress={() => setPage(page - 1)}>
@@ -68,8 +68,10 @@ export default function Appointments() {
                 isPressable
                 key={appointment.aid}
                 className={cn('flex flex-col gap-2 p-4', {
-                  'border border-danger-100 bg-danger-50': appointment.type === 'emergency',
-                  'border border-blue-100 bg-blue-50': appointment.type === 'follow-up',
+                  'border border-danger-100 bg-danger-50':
+                    appointment.type === APPOINTMENT_TYPES.emergency.value,
+                  'border border-blue-100 bg-blue-50':
+                    appointment.type === APPOINTMENT_TYPES.follow_up.value,
                 })}
               >
                 <CardHeader className="justify-between p-0">
@@ -85,14 +87,14 @@ export default function Appointments() {
                   <p className="capitalize">{appointment.additionalInfo.type}</p>
                 </CardBody>
                 <CardFooter className="overflow-visible p-0">
-                  <p className="text-tiny text-default-500">{appointment.patient.name}</p>
+                  <p className="text-default-500 text-tiny">{appointment.patient.name}</p>
                 </CardFooter>
               </Card>
             ))}
         </CardBody>
       ) : (
         <CardBody className="flex items-center justify-center">
-          <p className="text-small text-default-500">No appointments today</p>
+          <p className="text-default-500 text-small">No appointments today</p>
         </CardBody>
       )}
     </Card>

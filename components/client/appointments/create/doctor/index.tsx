@@ -16,6 +16,7 @@ import {
 import { useDebounce } from '@/hooks/useDebounce';
 import { useAllDoctors } from '@/services/client/doctor/query';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
+import { APPOINTMENT_TYPES } from '@/services/client/appointment';
 
 export default function DoctorSelection({ className }: { className?: string }) {
   const { data: doctors, isLoading: isDoctorsLoading } = useAllDoctors();
@@ -45,7 +46,7 @@ export default function DoctorSelection({ className }: { className?: string }) {
   }, [doctors, appointment.doctorId]);
 
   const isDisabled = useMemo(() => {
-    return appointment.type === 'follow-up';
+    return appointment.type === APPOINTMENT_TYPES.follow_up.value;
   }, [appointment.type]);
 
   useKeyPress(['Enter'], () => setFieldValue('meta.currentStep', 3), { capture: true });
@@ -54,7 +55,7 @@ export default function DoctorSelection({ className }: { className?: string }) {
     <CreateAppointmentContentContainer
       header={
         <CreateAppointmentContentHeader
-          title={`Doctor Selection ${appointment.type !== 'follow-up' ? '(Optional)' : ''}`}
+          title={`Doctor Selection ${appointment.type !== APPOINTMENT_TYPES.follow_up.value ? '(Optional)' : ''}`}
           description="Select the doctor for whom you want to book the appointment"
         />
       }

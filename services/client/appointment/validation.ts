@@ -11,7 +11,7 @@ export const createAppointmentSchema = z.object({
       message: 'Appointment date must be in the future',
     }),
   type: z.enum(
-    APPOINTMENT_TYPES.map((type) => type.value),
+    Object.values(APPOINTMENT_TYPES).map((type) => type.value),
     { error: 'Invalid appointment type' }
   ),
   additionalInfo: z.object({

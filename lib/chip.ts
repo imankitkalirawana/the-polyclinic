@@ -87,7 +87,7 @@ export const chipColorMap: Record<
     text: 'bg-default-500',
     bg: 'bg-default-100',
   },
-  'on-hold': {
+  on_hold: {
     text: 'bg-yellow-500',
     bg: 'bg-yellow-100',
   },
@@ -121,7 +121,7 @@ export const chipColorMap: Record<
     text: 'bg-blue-500',
     bg: 'bg-blue-100',
   },
-  'in-progress': {
+  in_progress: {
     text: 'bg-orange-500',
     bg: 'bg-orange-100',
   },

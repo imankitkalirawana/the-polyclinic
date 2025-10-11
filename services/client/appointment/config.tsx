@@ -19,9 +19,9 @@ export const createAppointmentButtonConfigs = (actions: {
     position: 'right',
     isIconOnly: true,
     visibilityRules: {
-      statuses: ['confirmed', 'in-progress', 'on-hold', 'overdue'],
+      statuses: ['confirmed', 'in_progress', 'on_hold', 'overdue'],
       roles: ['patient', 'receptionist', 'admin', 'doctor'],
-      custom: (appointment) => appointment.status !== 'in-progress',
+      custom: (appointment) => appointment.status !== 'in_progress',
     },
     action: {
       type: 'store-action',
@@ -56,7 +56,7 @@ export const createAppointmentButtonConfigs = (actions: {
     isIconOnly: true,
     whileLoading: 'Sending...',
     visibilityRules: {
-      statuses: ['confirmed', 'in-progress', 'on-hold', 'overdue'],
+      statuses: ['confirmed', 'in_progress', 'on_hold', 'overdue'],
       roles: ['doctor', 'receptionist', 'admin'],
     },
     action: {
@@ -74,7 +74,7 @@ export const createAppointmentButtonConfigs = (actions: {
     isIconOnly: true,
     position: 'right',
     visibilityRules: {
-      statuses: ['booked', 'confirmed', 'in-progress', 'on-hold', 'overdue'],
+      statuses: ['booked', 'confirmed', 'in_progress', 'on_hold', 'overdue'],
       roles: ['patient', 'doctor', 'receptionist', 'admin'],
       custom: (appointment) =>
         appointment.status === 'booked' ||
@@ -111,7 +111,7 @@ export const createAppointmentButtonConfigs = (actions: {
     variant: 'flat',
     position: 'right',
     visibilityRules: {
-      statuses: ['confirmed', 'in-progress', 'on-hold'],
+      statuses: ['confirmed', 'in_progress', 'on_hold'],
       roles: ['doctor', 'admin'],
     },
     action: {

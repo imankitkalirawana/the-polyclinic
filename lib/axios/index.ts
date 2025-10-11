@@ -6,7 +6,8 @@ const axiosInstance = typeof window !== 'undefined' ? clientAxios : serverAxios;
 
 export interface ApiResponse<T = unknown> {
   success: boolean;
-  data: T | null; // always defined (but can be null)
+  data: T | null;
+  meta?: Record<string, unknown>;
   message: string; // always defined
   errors?: string[];
 }

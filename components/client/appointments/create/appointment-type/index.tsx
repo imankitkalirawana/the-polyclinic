@@ -10,7 +10,7 @@ import CreateAppointmentFollowUp from './follow-up';
 
 import CustomRadio from '@/components/ui/custom-radio';
 import { cn } from '@/lib/utils';
-import { APPOINTMENT_TYPES, type AppointmentType } from '@/services/client/appointment';
+import { APPOINTMENT_TYPES } from '@/services/client/appointment';
 import { useKeyPress } from '@/hooks/useKeyPress';
 
 export default function AppointmentType() {
@@ -20,16 +20,24 @@ export default function AppointmentType() {
 
   const isNextButtonDisabled = useMemo(() => {
     return (
-      (appointment.type === 'follow-up' && !appointment.previousAppointment) || !appointment.type
+      (appointment.type === APPOINTMENT_TYPES.follow_up.value &&
+        !appointment.previousAppointment) ||
+      !appointment.type
     );
   }, [appointment.type, appointment.previousAppointment]);
 
   useKeyPress(
     ['Enter'],
     () => {
-      if (appointment.type === 'follow-up' && appointment.previousAppointment) {
+      if (
+        appointment.type === APPOINTMENT_TYPES.follow_up.value &&
+        appointment.previousAppointment
+      ) {
         setFieldValue('meta.currentStep', 3);
-      } else if (appointment.type === 'consultation' || appointment.type === 'emergency') {
+      } else if (
+        appointment.type === APPOINTMENT_TYPES.consultation.value ||
+        appointment.type === APPOINTMENT_TYPES.emergency.value
+      ) {
         setFieldValue('meta.currentStep', 2);
       }
     },
@@ -58,7 +66,7 @@ export default function AppointmentType() {
           isDisabled={isSubmitting || isNextButtonDisabled}
           endContent={<Kbd keys={['enter']} className="bg-transparent text-primary-foreground" />}
           onPress={() => {
-            if (appointment.type === 'follow-up') {
+            if (appointment.type === APPOINTMENT_TYPES.follow_up.value) {
               setFieldValue('meta.currentStep', 3);
             } else {
               setFieldValue('meta.currentStep', 2);
@@ -68,7 +76,9 @@ export default function AppointmentType() {
           Next
         </Button>
       }
-      endContent={appointment.type === 'follow-up' && <CreateAppointmentFollowUp />}
+      endContent={
+        appointment.type === APPOINTMENT_TYPES.follow_up.value && <CreateAppointmentFollowUp />
+      }
     >
       <RadioGroup
         orientation="horizontal"
@@ -79,15 +89,15 @@ export default function AppointmentType() {
           setFieldValue('appointment.doctor', undefined);
         }}
       >
-        {APPOINTMENT_TYPES.map((type) => (
+        {Object.values(APPOINTMENT_TYPES).map((type) => (
           <CustomRadio
             key={type.value}
             value={type.value}
             description={type.description}
-            color={type.value === 'emergency' ? 'danger' : 'primary'}
+            color={type.value === APPOINTMENT_TYPES.emergency.value ? 'danger' : 'primary'}
             className={cn({
               'data-[selected=true]:border-danger data-[selected=true]:bg-danger/10':
-                type.value === 'emergency',
+                type.value === APPOINTMENT_TYPES.emergency.value,
             })}
           >
             {type.label}

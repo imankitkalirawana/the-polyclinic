@@ -2,6 +2,7 @@ import React, { memo, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import { useSession } from '@/lib/providers/session-provider';
 import {
+  addToast,
   Button,
   ButtonGroup,
   cn,
@@ -37,7 +38,11 @@ import { useIsMobile } from '@/hooks/useMobile';
 import { CLINIC_INFO } from '@/lib/config';
 import { useAppointmentWithAID } from '@/services/client/appointment/query';
 import { useAppointmentStore } from '@/store/appointment';
-import { AppointmentType } from '@/services/client/appointment';
+import {
+  APPOINTMENT_STATUSES,
+  APPOINTMENT_TYPES,
+  AppointmentType,
+} from '@/services/client/appointment';
 import { OrganizationUser } from '@/services/common/user';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
@@ -153,12 +158,18 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
   // Event handlers
   const handleGetDirections = useCallback(() => {
     // Implementation for getting directions
-    console.log('Get directions');
+    addToast({
+      title: 'Feature not implemented',
+      color: 'warning',
+    });
   }, []);
 
   const handleCopy = useCallback(() => {
     // Implementation for copying
-    console.log('Copy');
+    addToast({
+      title: 'Feature not implemented',
+      color: 'warning',
+    });
   }, []);
 
   return (
@@ -228,32 +239,41 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
         )}
       </div>
 
-      <Divider className="my-2" />
+      {(
+        [
+          APPOINTMENT_STATUSES.booked,
+          APPOINTMENT_STATUSES.confirmed,
+          APPOINTMENT_STATUSES.in_progress,
+        ] as AppointmentType['status'][]
+      ).includes(appointment.status) && (
+        <>
+          <Divider className="my-2" />
+          <div className="flex flex-col items-start gap-1">
+            <AppointmentHeading
+              title="Appointment Mode"
+              description={
+                <div className="flex items-center gap-1">
+                  <Icon
+                    icon={appointmentModeContent.icon}
+                    className={appointmentModeContent.iconColor}
+                    width={12}
+                  />
+                  <span className="capitalize">{appointmentModeContent.label}</span>
+                </div>
+              }
+            />
+            <MeetDirections
+              icon={appointmentModeContent.meetIcon}
+              label={appointmentModeContent.meetLabel}
+              description={appointmentModeContent.meetDescription}
+              onGetDirections={handleGetDirections}
+              onCopy={handleCopy}
+            />
+          </div>
+        </>
+      )}
 
-      <div className="flex flex-col items-start gap-1">
-        <AppointmentHeading
-          title="Appointment Mode"
-          description={
-            <div className="flex items-center gap-1">
-              <Icon
-                icon={appointmentModeContent.icon}
-                className={appointmentModeContent.iconColor}
-                width={12}
-              />
-              <span className="capitalize">{appointmentModeContent.label}</span>
-            </div>
-          }
-        />
-        <MeetDirections
-          icon={appointmentModeContent.meetIcon}
-          label={appointmentModeContent.meetLabel}
-          description={appointmentModeContent.meetDescription}
-          onGetDirections={handleGetDirections}
-          onCopy={handleCopy}
-        />
-      </div>
-
-      {hasAdditionalInfo ? (
+      {hasAdditionalInfo || appointment.cancellation?.remarks ? (
         <>
           <Divider className="my-2" />
           <div className="flex flex-col items-start gap-1">
@@ -299,6 +319,14 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
                 className="p-0"
               />
             )}
+            {appointment.cancellation?.remarks && (
+              <CellRenderer
+                label={`Cancelled by ${appointment.cancellation.by?.name} on ${format(new Date(appointment.cancellation.date || ''), 'MMMM d, yyyy')}`}
+                icon="solar:danger-triangle-bold"
+                classNames={{ icon: 'text-warning-500 bg-warning-50' }}
+                value={appointment.cancellation.remarks}
+              />
+            )}
           </div>
         </>
       ) : (
@@ -327,10 +355,14 @@ const AppointmentHeader = memo(
       <div className="flex w-full flex-row items-start justify-between gap-8 rounded-none pr-2">
         <div>
           <div className="flex items-center gap-1">
-            <h2 className="font-medium capitalize text-primary-foreground text-large">
-              #{appointment.aid} - {appointment.type}
+            <h2
+              className={cn('font-medium capitalize text-primary-foreground text-large', {
+                'line-through': appointment.status === APPOINTMENT_STATUSES.cancelled,
+              })}
+            >
+              #{appointment.aid} - {APPOINTMENT_TYPES[appointment.type].label}
             </h2>
-            {appointment.type === 'emergency' && (
+            {appointment.type === APPOINTMENT_TYPES.emergency.value && (
               <Icon icon="solar:danger-triangle-bold" className="animate-pulse text-warning-500" />
             )}
           </div>
