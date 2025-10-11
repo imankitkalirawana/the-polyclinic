@@ -3,7 +3,7 @@
 import React from 'react';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'nextjs-toploader/app';
-import { useSession } from '@/providers/session-provider';
+import { useSession } from '@/lib/providers/session-provider';
 import {
   Button,
   Link,

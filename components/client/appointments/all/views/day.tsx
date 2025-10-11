@@ -1,7 +1,7 @@
 'use client';
 
 import React, { type MouseEvent, useEffect, useRef } from 'react';
-import { useSession } from '@/providers/session-provider';
+import { useSession } from '@/lib/providers/session-provider';
 import { ScrollShadow, Tooltip } from '@heroui/react';
 import { format, isPast, isSameDay, isToday } from 'date-fns';
 

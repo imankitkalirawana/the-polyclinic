@@ -3,7 +3,7 @@
 import React, { useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useSession } from '@/providers/session-provider';
+import { useSession } from '@/lib/providers/session-provider';
 import { useLogout } from '@/services/common/auth/query';
 import {
   Avatar,
@@ -151,7 +151,19 @@ export default function DashboardLayout({ children }: { readonly children: React
             ))}
           </NextUIBreadcrumbs>
         </div>
-        <NotificationsWrapper size="sm" />
+        <div className="flex items-center gap-2">
+          <NotificationsWrapper size="sm" />
+          <Button
+            aria-label="Profile"
+            startContent={<Avatar src={user?.image} name={user?.name || ''} size="sm" />}
+            variant="light"
+            as={Link}
+            href="/profile"
+            isIconOnly
+            size="sm"
+            radius="full"
+          />
+        </div>
       </header>
     ),
     [breadcrumbItems, isHidden]

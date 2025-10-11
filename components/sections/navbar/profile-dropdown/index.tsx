@@ -1,5 +1,5 @@
 import ModeToggle from '@/components/mode-toggle';
-import { useSession } from '@/providers/session-provider';
+import { useSession } from '@/lib/providers/session-provider';
 import { useLogout } from '@/services/common/auth/query';
 import { Dropdown, DropdownTrigger, Avatar, DropdownMenu, DropdownItem } from '@heroui/react';
 

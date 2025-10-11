@@ -138,16 +138,9 @@ export default function NotificationsWrapper({ size = 'md' }: { size?: ButtonPro
   const stats = data?.stats || { total: 0, unread: 0, read: 0 };
 
   return (
-    <Popover placement="bottom-end">
+    <Popover placement="bottom-end" shouldCloseOnScroll={false}>
       <PopoverTrigger>
-        <Button
-          disableRipple
-          isIconOnly
-          className="overflow-visible"
-          radius="full"
-          variant="light"
-          size={size}
-        >
+        <Button isIconOnly radius="full" variant="light" size={size}>
           <Badge
             color="danger"
             content={stats.unread}

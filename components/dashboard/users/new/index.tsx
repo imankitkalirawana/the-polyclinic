@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'nextjs-toploader/app';
-import { useSession } from '@/providers/session-provider';
+import { useSession } from '@/lib/providers/session-provider';
 import {
   Button,
   Card,

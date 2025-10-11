@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useMemo } from 'react';
 import Link from 'next/link';
-import { useSession } from '@/providers/session-provider';
+import { useSession } from '@/lib/providers/session-provider';
 import {
   Button,
   ButtonGroup,

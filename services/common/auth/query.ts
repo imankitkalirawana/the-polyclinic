@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 
 import { AuthApi } from './api';
 import { LoginRequest } from './validation';
-import { useCookies } from '@/providers/cookies-provider';
+import { useCookies } from '@/lib/providers/cookies-provider';
 
 export const useLogin = () => {
   const { setCookie } = useCookies();

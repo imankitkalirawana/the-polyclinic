@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useSession } from '@/providers/session-provider';
+import { useSession } from '@/lib/providers/session-provider';
 import { Tooltip } from '@heroui/react';
 import {
   eachDayOfInterval,

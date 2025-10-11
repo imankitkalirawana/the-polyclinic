@@ -4,7 +4,7 @@ import { CalendarDate, getLocalTimeZone, today } from '@internationalized/date';
 import Modal from '@/components/ui/modal';
 import { useAppointmentStore } from '@/store/appointment';
 import { useAppointmentWithAID, useRescheduleAppointment } from '@/services/client/appointment';
-import { useSession } from '@/providers/session-provider';
+import { useSession } from '@/lib/providers/session-provider';
 import { useSlotsByUID } from '@/services/client/doctor';
 import { SlotsPreview } from '@/components/dashboard/doctors/doctor/slots/slots-preview';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
