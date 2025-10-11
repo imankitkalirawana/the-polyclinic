@@ -7,19 +7,28 @@ export const createOrganizationSchema = z.object({
     .trim()
     .min(1, { error: 'Name cannot be empty' })
     .max(100, { error: 'Name cannot exceed 100 characters' }),
-  domain: z
-    .string({ error: 'Domain is required' })
+  organizationId: z
+    .string({ error: 'Organization ID is required' })
     .trim()
-    .toLowerCase()
-    .min(1, { error: 'Domain cannot be empty' })
-    .regex(/^[a-z0-9.-]+$/, {
-      error: 'Domain must contain only lowercase letters, numbers, dots, and hyphens',
-    }),
+    .min(1, { error: 'Organization ID cannot be empty' })
+    .max(100, { error: 'Organization ID cannot exceed 100 characters' }),
   logoUrl: z.url({ error: 'Logo URL must be a valid URL' }).optional().or(z.literal('')),
-});
-
-export const updateOrganizationSchema = createOrganizationSchema.partial().extend({
-  status: z
-    .enum(ORGANIZATION_STATUSES, { error: 'Organization can be either active or inactive' })
+  organizationDetails: z
+    .object({
+      location: z.url({ error: 'Invalid Location URL' }).optional().or(z.literal('')),
+      address: z.string({ error: 'Invalid Address' }).optional().or(z.literal('')),
+      phone: z.string({ error: 'Invalid Phone Number' }).optional().or(z.literal('')),
+      email: z.string({ error: 'Invalid Email' }).optional().or(z.literal('')),
+      website: z.string({ error: 'Invalid Website' }).optional().or(z.literal('')),
+    })
     .optional(),
 });
+
+export const updateOrganizationSchema = createOrganizationSchema
+  .omit({ organizationId: true })
+  .partial()
+  .extend({
+    status: z
+      .enum(ORGANIZATION_STATUSES, { error: 'Organization can be either active or inactive' })
+      .optional(),
+  });

@@ -9,9 +9,18 @@ export type OrganizationType = Base & {
   organizationId: string;
   name: string;
   domain: string;
-  logoUrl: string | null;
+  logoUrl?: string | undefined;
   status: OrganizationStatus;
   subscriptionId: string | null;
+  organizationDetails?:
+    | {
+        location?: string | undefined;
+        address?: string | undefined;
+        phone?: string | undefined;
+        email?: string | undefined;
+        website?: string | undefined;
+      }
+    | undefined;
 };
 
 export type OrganizationStatus = ValuesOf<typeof ORGANIZATION_STATUSES>;

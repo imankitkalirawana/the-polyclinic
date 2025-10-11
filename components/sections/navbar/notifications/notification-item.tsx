@@ -78,7 +78,7 @@ const NotificationItem = React.forwardRef<HTMLDivElement, NotificationItemProps>
         className={cn(
           'flex gap-3 border-b border-divider px-6 py-4 transition-colors',
           {
-            'bg-primary-50': !isRead,
+            'bg-default-100': !isRead,
           },
           className
         )}
@@ -92,7 +92,14 @@ const NotificationItem = React.forwardRef<HTMLDivElement, NotificationItemProps>
             placement="bottom-right"
             shape="circle"
           >
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-default-100">
+            <div
+              className={cn(
+                'flex h-10 w-10 items-center justify-center rounded-full bg-default-100',
+                {
+                  'bg-default-200': !isRead,
+                }
+              )}
+            >
               <Icon className="text-default-500" icon={getTypeIcon(type)} width={20} />
             </div>
           </Badge>

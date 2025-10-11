@@ -1,23 +1,17 @@
 'use client';
 
-import {
-  Button,
-  Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-} from '@heroui/react';
+import { Input } from '@heroui/react';
+import Modal from '@/components/ui/modal';
 import {
   CreateOrganizationType,
   OrganizationType,
   useCreateOrganization,
   useUpdateOrganization,
+  createOrganizationSchema,
 } from '@/services/system/organization';
-import { useFormik } from 'formik';
-import { withZodSchema } from '@/lib/utils';
-import { createOrganizationSchema } from '@/services/system/organization';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
 
 interface CreateEditModalProps {
   isOpen: boolean;
@@ -25,6 +19,21 @@ interface CreateEditModalProps {
   mode: 'create' | 'edit';
   organization?: OrganizationType | null;
 }
+
+/**
+ * Generates a URL-friendly organization ID from the organization name
+ * @param name - The organization name
+ * @returns A slugified organization ID
+ */
+const generateOrganizationId = (name: string): string => {
+  return name
+    .toLowerCase() // Convert to lowercase
+    .trim() // Remove leading/trailing spaces
+    .replace(/[^\w\s-]/g, '') // Remove special characters except spaces and hyphens
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+    .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+};
 
 export default function CreateEditOrganizationModal({
   isOpen,
@@ -35,100 +44,97 @@ export default function CreateEditOrganizationModal({
   const createOrganization = useCreateOrganization();
   const updateOrganization = useUpdateOrganization();
 
-  const formik = useFormik<CreateOrganizationType>({
-    initialValues: {
-      name: organization?.name || '',
-      domain: organization?.domain || '',
-      logoUrl: organization?.logoUrl || '',
-    },
-    validate: withZodSchema(createOrganizationSchema),
-    onSubmit: async (values) => {
-      try {
-        if (mode === 'create') {
-          await createOrganization.mutateAsync(values);
-        } else {
-          if (organization) {
-            await updateOrganization.mutateAsync({
-              id: organization?.organizationId,
-              data: values,
-            });
-          }
-        }
-        onClose();
-      } catch (error) {
-        console.error(error);
-      }
-    },
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+    setValue,
+  } = useForm<CreateOrganizationType>({
+    resolver: zodResolver(createOrganizationSchema),
+    defaultValues: organization ?? {},
   });
 
-  const handleClose = () => {
-    formik.resetForm();
+  const organizationName = watch('name');
+
+  useEffect(() => {
+    if (mode === 'create' && organizationName) {
+      const generatedId = generateOrganizationId(organizationName);
+      setValue('organizationId', generatedId);
+    }
+  }, [organizationName, mode, setValue]);
+
+  const onSubmit = async (values: CreateOrganizationType) => {
+    if (mode === 'create') {
+      await createOrganization.mutateAsync(values);
+    } else {
+      if (organization) {
+        await updateOrganization.mutateAsync({
+          id: organization.organizationId,
+          data: values,
+        });
+      }
+    }
     onClose();
   };
 
+  const renderBody = () => {
+    return (
+      <div className="space-y-4">
+        <Input
+          label="Organization Name"
+          placeholder="Organization name"
+          className="mt-1"
+          isInvalid={!!errors.name}
+          errorMessage={errors.name?.message}
+          {...register('name')}
+        />
+        {mode === 'create' && (
+          <Input
+            label="Organization ID"
+            placeholder="example-organization-id"
+            description="This cannot be changed later"
+            className="mt-1"
+            isInvalid={!!errors.organizationId}
+            errorMessage={errors.organizationId?.message}
+            {...register('organizationId')}
+          />
+        )}
+        <Input
+          label="Logo URL"
+          placeholder="https://example.com/logo.png"
+          className="mt-1"
+          isInvalid={!!errors.logoUrl}
+          errorMessage={errors.logoUrl?.message}
+          {...register('logoUrl')}
+        />
+        <Input
+          label="Location"
+          placeholder="https://maps.app.goo.gl/U3FhzYTscMsYY5Vf8"
+          className="mt-1"
+          isInvalid={!!errors.organizationDetails?.location}
+          errorMessage={errors.organizationDetails?.location?.message}
+          {...register('organizationDetails.location')}
+        />
+      </div>
+    );
+  };
+
   return (
-    <Modal isOpen={isOpen} backdrop="blur" onClose={handleClose} size="2xl" hideCloseButton>
-      <ModalContent>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            formik.handleSubmit();
-          }}
-        >
-          <ModalHeader className="w-full">
-            {mode === 'create' ? 'Create New Organization' : 'Edit Organization'}
-          </ModalHeader>
-          <ModalBody className="w-full">
-            <div className="space-y-4">
-              <Input
-                label="Organization Name"
-                name="name"
-                value={formik.values.name}
-                onChange={formik.handleChange}
-                placeholder="Organization name"
-                className="mt-1"
-                isRequired
-                isInvalid={formik.touched.name && !!formik.errors.name}
-                errorMessage={formik.errors.name}
-              />
-              <Input
-                label="Domain"
-                name="domain"
-                value={formik.values.domain}
-                onChange={formik.handleChange}
-                placeholder="example.com"
-                className="mt-1"
-                isRequired
-                isInvalid={formik.touched.domain && !!formik.errors.domain}
-                errorMessage={formik.errors.domain}
-              />
-              <Input
-                label="Logo URL"
-                name="logoUrl"
-                value={formik.values.logoUrl}
-                onChange={formik.handleChange}
-                placeholder="https://example.com/logo.png"
-                className="mt-1"
-                isInvalid={formik.touched.logoUrl && !!formik.errors.logoUrl}
-                errorMessage={formik.errors.logoUrl}
-              />
-            </div>
-          </ModalBody>
-          <ModalFooter className="w-full">
-            <Button type="button" variant="flat" onPress={handleClose}>
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              color="primary"
-              isLoading={formik.isSubmitting}
-              onPress={() => formik.handleSubmit()}
-            >
-              {mode === 'create' ? 'Create' : 'Update'}
-            </Button>
-          </ModalFooter>
-        </form>
-      </ModalContent>
-    </Modal>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      size="2xl"
+      hideCloseButton
+      closeOnSubmit={false}
+      title={mode === 'create' ? 'Create New Organization' : 'Edit Organization'}
+      body={renderBody()}
+      submitButton={{
+        children: mode === 'create' ? 'Create' : 'Update',
+        whileSubmitting:
+          mode === 'create' ? 'Creating Organization...' : 'Updating Organization...',
+      }}
+      onSubmit={handleSubmit(onSubmit)}
+    />
   );
 }

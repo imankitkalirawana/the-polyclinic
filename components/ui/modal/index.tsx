@@ -9,6 +9,7 @@ import {
   ModalFooter,
   Button,
   ButtonProps,
+  ScrollShadow,
 } from '@heroui/react';
 import AsyncButton from '../buttons/async-button';
 import { cn } from '@/lib/utils';
@@ -138,7 +139,9 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                 </ModalHeader>
               )}
               {!!body && (
-                <ModalBody className={cn('bg-default-50', classNames?.body)}>{body}</ModalBody>
+                <ModalBody as={ScrollShadow} className={cn('bg-default-50', classNames?.body)}>
+                  {body}
+                </ModalBody>
               )}
               <ModalFooter
                 className={cn('justify-between border-t border-divider', classNames?.footer)}
@@ -158,9 +161,14 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                   <AsyncButton
                     fullWidth
                     onPress={async () => {
-                      await onSubmit();
-                      if (closeOnSubmit) {
-                        onClose();
+                      try {
+                        await onSubmit();
+                        if (closeOnSubmit) {
+                          onClose();
+                        }
+                      } catch (error) {
+                        // Don't close modal on error - let the error be handled by the parent
+                        throw error;
                       }
                     }}
                     color="primary"

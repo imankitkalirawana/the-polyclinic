@@ -96,18 +96,18 @@ export const CreateAppointmentPatientDetails = ({ uid }: { uid: string }) => {
               value={user.email}
               classNames={{
                 icon: 'text-blue-500 bg-blue-100',
-                value: 'text-black',
               }}
             />
-            <CellRenderer
-              icon="solar:phone-bold-duotone"
-              label="Phone Number"
-              value={user.phone}
-              classNames={{
-                icon: 'text-green-500 bg-green-100',
-                value: 'text-black',
-              }}
-            />
+            {!!user.phone && (
+              <CellRenderer
+                icon="solar:phone-bold-duotone"
+                label="Phone Number"
+                value={user.phone}
+                classNames={{
+                  icon: 'text-green-500 bg-green-100',
+                }}
+              />
+            )}
           </div>
         </div>
 

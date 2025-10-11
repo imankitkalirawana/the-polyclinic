@@ -93,18 +93,18 @@ export const CreateAppointmentDoctorDetails = ({ doctor }: { doctor?: DoctorType
               value={doctor.email}
               classNames={{
                 icon: 'text-blue-500 bg-blue-100',
-                value: 'text-black',
               }}
             />
-            <CellRenderer
-              icon="solar:phone-bold-duotone"
-              label="Phone Number"
-              value={doctor.phone}
-              classNames={{
-                icon: 'text-green-500 bg-green-100',
-                value: 'text-black',
-              }}
-            />
+            {doctor.phone && (
+              <CellRenderer
+                icon="solar:phone-bold-duotone"
+                label="Phone Number"
+                value={doctor.phone}
+                classNames={{
+                  icon: 'text-green-500 bg-green-100',
+                }}
+              />
+            )}
           </div>
         </div>
 
