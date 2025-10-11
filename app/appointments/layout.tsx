@@ -1,4 +1,4 @@
-import { unauthorized } from 'next/navigation';
+import { redirect, unauthorized } from 'next/navigation';
 import { getServerSession } from '@/lib/serverAuth';
 import { ORGANIZATION_USER_ROLES, OrganizationUser } from '@/services/common/user';
 
@@ -15,7 +15,11 @@ export default async function Layout({
     ORGANIZATION_USER_ROLES.patient,
   ];
 
-  if (!session || !ALLOWED_ROLES.includes(session.user?.role as OrganizationUser['role'])) {
+  if (!session?.user) {
+    redirect('/auth/login');
+  }
+
+  if (!ALLOWED_ROLES.includes(session.user?.role as OrganizationUser['role'])) {
     unauthorized();
   }
 

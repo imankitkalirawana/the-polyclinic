@@ -1,8 +1,8 @@
 import React, { memo, useCallback, useMemo } from 'react';
-import Link from 'next/link';
 import { useSession } from '@/lib/providers/session-provider';
 import {
   addToast,
+  Alert,
   Button,
   ButtonGroup,
   cn,
@@ -14,7 +14,7 @@ import {
   DrawerHeader,
   Dropdown,
   DropdownItem,
-  DropdownMenu,
+  Link,
   DropdownTrigger,
   Modal,
   ModalBody,
@@ -24,6 +24,7 @@ import {
   Skeleton,
   Tooltip,
   User,
+  DropdownMenu,
 } from '@heroui/react';
 import { format } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -43,7 +44,7 @@ import {
   APPOINTMENT_TYPES,
   AppointmentType,
 } from '@/services/client/appointment';
-import { OrganizationUser } from '@/services/common/user';
+import { ORGANIZATION_USER_ROLES, OrganizationUser } from '@/services/common/user';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 const DRAWER_DELAY = 200;
@@ -433,7 +434,26 @@ const AppointmentFooter = memo(({ appointment }: { appointment: AppointmentType 
     role: user?.role as OrganizationUser['role'],
   });
 
-  return (
+  return appointment.status === APPOINTMENT_STATUSES.cancelled &&
+    user?.role === ORGANIZATION_USER_ROLES.patient ? (
+    <Alert
+      color="warning"
+      title="Cancelled"
+      description={
+        <>
+          <p>
+            This appointment has been cancelled
+            {appointment.cancellation?.by?.name ? ` by ${appointment.cancellation.by?.name}` : null}
+            , please contact the clinic for more information. or try booking another{' '}
+            <Link href="/appointments/create" underline="always" size="sm">
+              here
+            </Link>
+            .
+          </p>
+        </>
+      }
+    />
+  ) : (
     <div className="flex w-full flex-row items-center justify-center gap-2">
       {buttons.map((button) => {
         const isButtonIconOnly = button.isIconOnly || buttons.length > 3;
