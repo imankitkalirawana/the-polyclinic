@@ -11,7 +11,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 import Fuse from 'fuse.js';
 import { SearchInput } from '../ui';
 import { usePreviousAppointments } from '@/services/client/patient';
-import MinimalLoader from '@/components/ui/minimal-placeholder';
+import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { format } from 'date-fns';
 
 function PreviousAppointments({ appointments }: { appointments: AppointmentType[] }) {
@@ -95,7 +95,7 @@ export default function CreateAppointmentFollowUp() {
   const { data: appointments, isLoading } = usePreviousAppointments(appointment.patientId);
 
   if (isLoading) {
-    return <MinimalLoader message="Loading previous appointments..." />;
+    return <MinimalPlaceholder message="Loading previous appointments..." />;
   }
 
   if (!appointments || appointments.length === 0) {

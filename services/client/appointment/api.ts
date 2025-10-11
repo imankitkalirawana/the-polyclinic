@@ -38,10 +38,11 @@ export class AppointmentApi {
     });
   }
 
-  static async cancel(aid: string) {
+  static async cancel(aid: string, remarks: string) {
     return await apiRequest<AppointmentType>({
       url: `${this.API_BASE}/${aid}/cancel`,
       method: 'PATCH',
+      data: { remarks },
     });
   }
 

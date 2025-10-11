@@ -7,7 +7,7 @@ import { OrganizationUser } from '@/services/common/user';
 import { ButtonProps } from '@heroui/react';
 
 type PatientInfo = {
-  uid: number;
+  uid: string;
   name: string;
   phone?: string;
   email: string;
@@ -17,7 +17,7 @@ type PatientInfo = {
 };
 
 type DoctorInfo = {
-  uid: number;
+  uid: string;
   name: string;
   email: string;
   phone: string;
@@ -37,6 +37,15 @@ export type AppointmentType = Base & {
     type: AppointmentMode;
     description?: string;
     instructions?: string;
+  };
+  cancellation?: {
+    remarks?: string;
+    date?: string;
+    by?: {
+      name?: string;
+      email?: string;
+      uid?: string;
+    };
   };
   progress?: number;
   data?: Record<string, string>;

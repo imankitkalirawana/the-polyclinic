@@ -11,11 +11,12 @@ import {
   ButtonProps,
 } from '@heroui/react';
 import AsyncButton from '../buttons/async-button';
+import { cn } from '@/lib/utils';
 
 /**
  * Props for the Modal component
  */
-type ModalProps = Omit<HeroModalProps, 'children'> & {
+type ModalProps = Omit<HeroModalProps, 'children' | 'classNames'> & {
   /**
    * Whether to hide the cancel button in the modal footer
    * @default false
@@ -68,6 +69,12 @@ type ModalProps = Omit<HeroModalProps, 'children'> & {
    * @default true
    */
   closeOnSubmit?: boolean;
+
+  classNames?: HeroModalProps['classNames'] & {
+    header?: string;
+    body?: string;
+    footer?: string;
+  };
 };
 
 /**
@@ -103,27 +110,47 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
       hideCloseButton = true,
       onSubmit,
       closeOnSubmit = true,
+      classNames,
       ...rest
     },
     ref
   ) => {
     return (
-      <HeroModal ref={ref} hideCloseButton={hideCloseButton} backdrop="blur" {...rest}>
+      <HeroModal
+        ref={ref}
+        hideCloseButton={hideCloseButton}
+        backdrop="blur"
+        scrollBehavior="inside"
+        classNames={classNames}
+        {...rest}
+      >
         <ModalContent>
           {(onClose) => (
             <>
               {!!title && (
-                <ModalHeader className="flex flex-col gap-1 border-b border-divider">
+                <ModalHeader
+                  className={cn('flex flex-col gap-1 border-b border-divider', classNames?.header)}
+                >
                   <h2>{title}</h2>
                   {!!subtitle && (
                     <p className="font-normal text-default-500 text-small">{subtitle}</p>
                   )}
                 </ModalHeader>
               )}
-              {!!body && <ModalBody className="bg-default-50">{body}</ModalBody>}
-              <ModalFooter className="border-t border-divider">
+              {!!body && (
+                <ModalBody className={cn('bg-default-50', classNames?.body)}>{body}</ModalBody>
+              )}
+              <ModalFooter
+                className={cn('justify-between border-t border-divider', classNames?.footer)}
+              >
                 {!hideCancelButton && (
-                  <Button fullWidth variant="flat" onPress={onClose} {...cancelButton}>
+                  <Button
+                    fullWidth
+                    variant="flat"
+                    onPress={onClose}
+                    className={cn('max-w-sm', cancelButton?.className)}
+                    {...cancelButton}
+                  >
                     {cancelButton?.children || 'Cancel'}
                   </Button>
                 )}
@@ -138,6 +165,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                     }}
                     color="primary"
                     whileSubmitting={submitButton?.whileSubmitting}
+                    className={cn('max-w-sm', submitButton?.className)}
                     {...submitButton}
                   >
                     {submitButton?.children}

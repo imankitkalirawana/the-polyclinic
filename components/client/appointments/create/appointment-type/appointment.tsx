@@ -6,7 +6,7 @@ import { CreateAppointmentFormValues } from '../types';
 import { castData } from '@/lib/utils';
 import { useAppointmentWithAID } from '@/services/client/appointment/query';
 import { AppointmentType } from '@/services/client/appointment';
-import MinimalLoader from '@/components/ui/minimal-placeholder';
+import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 export default function CreateAppointmentSelectedPreviousAppointment() {
   const { values } = useFormikContext<CreateAppointmentFormValues>();
@@ -18,7 +18,7 @@ export default function CreateAppointmentSelectedPreviousAppointment() {
   return (
     <div className="flex-1 border-t border-divider p-4">
       {isLoading ? (
-        <MinimalLoader message="Loading appointment details..." />
+        <MinimalPlaceholder message="Loading appointment details..." />
       ) : previousAppointment ? (
         <div className="flex flex-col gap-2">
           <div className="text-sm text-default-500">

@@ -12,7 +12,7 @@ import CreateAppointmentTimeSelection from './time';
 import { SlotsPreview } from '@/components/dashboard/doctors/doctor/slots/slots-preview';
 import { useKeyPress } from '@/hooks/useKeyPress';
 import { useSlotsByUID } from '@/services/client/doctor';
-import MinimalLoader from '@/components/ui/minimal-placeholder';
+import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 function AvailabilityChip({ date }: { date: Date | undefined }) {
   if (!date || !isValid(date)) {
@@ -58,12 +58,12 @@ function SlotContent({
   const { data: slot, isLoading: isSlotsLoading } = useSlotsByUID(doctorId);
 
   if (isSlotsLoading) {
-    return <MinimalLoader message="Loading available slots..." />;
+    return <MinimalPlaceholder message="Loading available slots..." />;
   }
 
   if (!slot) {
     return (
-      <MinimalLoader message="No slots available for this doctor" isLoading={isSlotsLoading} />
+      <MinimalPlaceholder message="No slots available for this doctor" isLoading={isSlotsLoading} />
     );
   }
 

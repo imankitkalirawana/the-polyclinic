@@ -1,34 +1,15 @@
 import React from 'react';
 
-import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
 import { $FixMe } from '@/types';
-import CancelDeleteAppointment from '@/components/client/appointments/ui/cancel-delete';
 import { AppointmentType, ButtonConfig } from '@/services/client/appointment';
 import { useAppointmentActions } from './hooks/useAppointmentActions';
 import RescheduleAppointment from '@/components/client/appointments/ui/reschedule-modal';
+import CancelModal from './components/cancel-modal';
 
 export const createAppointmentButtonConfigs = (actions: {
   handleConfirm: (appointment: AppointmentType) => Promise<void>;
-  handleCancel: (appointment: AppointmentType) => Promise<void>;
   handleReminder: (appointment: AppointmentType) => Promise<void>;
 }): ButtonConfig[] => [
-  {
-    key: 'add-to-calendar',
-    label: 'Add to Calendar',
-    icon: 'solar:calendar-add-bold-duotone',
-    color: 'default',
-    variant: 'flat',
-    position: 'left',
-    visibilityRules: {
-      statuses: ['confirmed', 'in-progress'],
-      roles: ['patient', 'doctor'],
-    },
-    action: {
-      type: 'store-action',
-      payload: 'add-to-calendar',
-    },
-    content: AddToCalendar,
-  },
   {
     key: 'cancel',
     label: 'Cancel Appointment',
@@ -46,7 +27,24 @@ export const createAppointmentButtonConfigs = (actions: {
       type: 'store-action',
       payload: 'cancel',
     },
-    content: () => <CancelDeleteAppointment type="cancel" />,
+    content: () => <CancelModal />,
+  },
+  {
+    key: 'decline',
+    label: 'Decline',
+    icon: 'solar:close-circle-bold-duotone',
+    color: 'danger',
+    variant: 'flat',
+    position: 'left',
+    visibilityRules: {
+      statuses: ['booked'],
+      roles: ['admin', 'doctor'],
+    },
+    action: {
+      type: 'store-action',
+      payload: 'cancel',
+    },
+    content: () => <CancelModal />,
   },
   {
     key: 'reminder',
@@ -66,22 +64,7 @@ export const createAppointmentButtonConfigs = (actions: {
       handler: actions.handleReminder,
     },
   },
-  {
-    key: 'decline',
-    label: 'Decline',
-    icon: 'solar:close-circle-line-duotone',
-    color: 'danger',
-    variant: 'flat',
-    position: 'right',
-    visibilityRules: {
-      statuses: ['booked'],
-      roles: ['doctor', 'admin'],
-    },
-    action: {
-      type: 'async-function',
-      handler: actions.handleCancel,
-    },
-  },
+
   {
     key: 'reschedule',
     label: 'Reschedule',
@@ -140,11 +123,10 @@ export const createAppointmentButtonConfigs = (actions: {
 ];
 
 export const useAppointmentButtonConfigs = () => {
-  const { handleConfirm, handleCancel, handleReminder } = useAppointmentActions();
+  const { handleConfirm, handleReminder } = useAppointmentActions();
 
   return createAppointmentButtonConfigs({
     handleConfirm,
-    handleCancel,
     handleReminder,
   });
 };

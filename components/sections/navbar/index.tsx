@@ -4,14 +4,8 @@ import React from 'react';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'nextjs-toploader/app';
 import { useSession } from '@/providers/session-provider';
-import { useLogout } from '@/services/common/auth/query';
 import {
-  Avatar,
   Button,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
   Link,
   Listbox,
   ListboxItem,
@@ -26,7 +20,6 @@ import {
 import { motion } from 'framer-motion';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import ModeToggle from '@/components/mode-toggle';
 import { navItems } from './data';
 import NavItem from './NavItem';
 import { NavItem as NavItemType } from './types';
@@ -35,6 +28,7 @@ import { useSubdomain } from '@/hooks/useSubDomain';
 import { APP_INFO } from '@/lib/config';
 import { UnifiedUser } from '@/services/common/user';
 import NotificationsWrapper from './notifications';
+import ProfileDropdown from './profile-dropdown';
 
 // Utility function to filter nav items by user role
 const filterNavItemsByRole = (items: NavItemType[], userRole?: string): NavItemType[] => {
@@ -75,7 +69,6 @@ export default function Navbar() {
   const router = useRouter();
   const { user } = useSession();
   const subdomain = useSubdomain();
-  const { mutateAsync } = useLogout();
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [activeMenu, setActiveMenu] = React.useState<null | NavItemType>(null);
@@ -154,47 +147,7 @@ export default function Navbar() {
         )}
         <NavbarItem className="ml-2 !flex gap-2">
           {user ? (
-            <Dropdown size="sm" placement="bottom-end">
-              <DropdownTrigger>
-                <Avatar
-                  as="button"
-                  size="sm"
-                  className="bg-primary-200 transition-transform"
-                  src={user?.image || ''}
-                  name={user?.name || ''}
-                />
-              </DropdownTrigger>
-              <DropdownMenu aria-label="Profile Actions" variant="flat">
-                <DropdownItem key="profile" href="/profile" className="h-14 gap-2">
-                  <p className="font-semibold">{user?.name}</p>
-                  <p className="capitalize text-default-500 text-tiny">{user?.role}</p>
-                </DropdownItem>
-                <DropdownItem key="dashboard" href="/dashboard">
-                  My Dashboard
-                </DropdownItem>
-                <DropdownItem key="appointments" href="/appointments">
-                  My Appointments
-                </DropdownItem>
-                <DropdownItem key="theme">
-                  <div className="flex items-center justify-between">
-                    <span>Dark Mode</span>
-                    <ModeToggle />
-                  </div>
-                </DropdownItem>
-                <DropdownItem key="system">System</DropdownItem>
-                <DropdownItem key="configurations">Configurations</DropdownItem>
-                <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
-                <DropdownItem
-                  key="logout"
-                  onPress={async () => {
-                    await mutateAsync();
-                  }}
-                  color="danger"
-                >
-                  Log Out
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
+            <ProfileDropdown />
           ) : (
             <Button
               onPress={() => router.push('/auth/login')}

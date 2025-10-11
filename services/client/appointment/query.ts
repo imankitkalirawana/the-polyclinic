@@ -65,8 +65,8 @@ export const useConfirmAppointment = () => {
 
 export const useCancelAppointment = () => {
   return useGenericMutation({
-    mutationFn: async ({ aid }: { aid: string }) => {
-      const result = await AppointmentApi.cancel(aid);
+    mutationFn: async ({ aid, remarks }: { aid: string; remarks: string }) => {
+      const result = await AppointmentApi.cancel(aid, remarks);
       if (result.success) {
         return result;
       }
