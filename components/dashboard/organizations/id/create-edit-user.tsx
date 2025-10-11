@@ -174,7 +174,7 @@ export default function UserModal({ isOpen, onClose, organization, mode, user }:
                 isInvalid={touched.role && !!errors.role}
                 errorMessage={errors.role}
               >
-                {ORGANIZATION_USER_ROLES.map((role) => (
+                {Object.values(ORGANIZATION_USER_ROLES).map((role) => (
                   <SelectItem key={role} textValue={toTitleCase(role)}>
                     {toTitleCase(role)}
                   </SelectItem>

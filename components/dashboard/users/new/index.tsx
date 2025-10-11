@@ -37,7 +37,7 @@ import { withZodSchema } from '@/lib/utils';
 import { useQueryState } from 'nuqs';
 
 // TODO: Remove this after the roles are implemented
-const TEMP_DISABLED_ROLES = ['nurse', 'pharmacist', 'laboratorist'];
+const TEMP_DISABLED_ROLES = [ORGANIZATION_USER_ROLES.nurse, ORGANIZATION_USER_ROLES.pharmacist];
 
 const getRolesByAccess = (
   role: UnifiedUser['role'] | null | undefined,
@@ -45,23 +45,25 @@ const getRolesByAccess = (
 ) => {
   if (organization) {
     switch (role) {
-      case 'superadmin':
-      case 'moderator':
-      case 'ops':
-        return ORGANIZATION_USER_ROLES;
-      case 'admin':
-        return ORGANIZATION_USER_ROLES;
-      case 'receptionist':
-        return ['patient'];
+      case SYSTEM_USER_ROLE.superadmin:
+      case SYSTEM_USER_ROLE.moderator:
+      case SYSTEM_USER_ROLE.ops:
+        return Object.values(ORGANIZATION_USER_ROLES);
+      case ORGANIZATION_USER_ROLES.admin:
+        return Object.values(ORGANIZATION_USER_ROLES);
+      case ORGANIZATION_USER_ROLES.receptionist:
+        return [ORGANIZATION_USER_ROLES.patient];
       default:
         return [];
     }
   } else {
     switch (role) {
-      case 'superadmin':
-        return SYSTEM_USER_ROLE;
-      case 'moderator':
-        return SYSTEM_USER_ROLE.filter((r) => r !== 'superadmin' && r !== 'moderator');
+      case SYSTEM_USER_ROLE.superadmin:
+        return Object.values(SYSTEM_USER_ROLE);
+      case SYSTEM_USER_ROLE.moderator:
+        return Object.values(SYSTEM_USER_ROLE).filter(
+          (r) => r !== SYSTEM_USER_ROLE.superadmin && r !== SYSTEM_USER_ROLE.moderator
+        );
       default:
         return [];
     }
@@ -75,7 +77,7 @@ export default function NewUser({ organization }: { organization?: string | null
     defaultValue: '/dashboard/users',
   });
   const [queryRole] = useQueryState('role', {
-    defaultValue: organization ? 'patient' : 'ops',
+    defaultValue: organization ? ORGANIZATION_USER_ROLES.patient : SYSTEM_USER_ROLE.ops,
   });
   const createUser = useCreateUser();
 
@@ -102,7 +104,7 @@ export default function NewUser({ organization }: { organization?: string | null
     formik.setFieldValue('dob', faker.date.birthdate().toISOString().split('T')[0]);
   };
 
-  const roles = getRolesByAccess('moderator', organization);
+  const roles = getRolesByAccess(SYSTEM_USER_ROLE.moderator, organization);
 
   return (
     <Card
@@ -120,7 +122,9 @@ export default function NewUser({ organization }: { organization?: string | null
             Fields with <span className="text-red-500">*</span> are required
           </p>
         </div>
-        {['superadmin', 'admin'].includes(user?.role || '') && (
+        {(
+          [SYSTEM_USER_ROLE.superadmin, ORGANIZATION_USER_ROLES.admin] as UnifiedUser['role'][]
+        ).includes(user?.role as UnifiedUser['role']) && (
           <Button
             startContent={<Icon icon="solar:magic-stick-3-bold-duotone" width={16} />}
             variant="flat"
@@ -135,7 +139,11 @@ export default function NewUser({ organization }: { organization?: string | null
           <Input
             isRequired
             label="Name"
-            placeholder={formik.values.role === 'doctor' ? 'eg. Dr. John Doe' : 'eg. John Doe'}
+            placeholder={
+              formik.values.role === ORGANIZATION_USER_ROLES.doctor
+                ? 'eg. Dr. John Doe'
+                : 'eg. John Doe'
+            }
             name="name"
             value={formik.values.name}
             onChange={formik.handleChange}
@@ -152,7 +160,7 @@ export default function NewUser({ organization }: { organization?: string | null
             isInvalid={!!(formik.touched.email && formik.errors.email)}
             errorMessage={formik.touched.email && formik.errors.email}
             endContent={
-              user?.role === 'admin' && (
+              user?.role === ORGANIZATION_USER_ROLES.admin && (
                 <Tooltip content="Generate a random email">
                   <Button
                     isIconOnly
@@ -199,7 +207,7 @@ export default function NewUser({ organization }: { organization?: string | null
             onChange={formik.handleChange}
             isInvalid={!!(formik.touched.phone && formik.errors.phone)}
             endContent={
-              user?.role === 'admin' && (
+              user?.role === ORGANIZATION_USER_ROLES.admin && (
                 <Tooltip content="Generate a random phone number">
                   <Button
                     isIconOnly
@@ -226,7 +234,7 @@ export default function NewUser({ organization }: { organization?: string | null
 
           {/* Patients fields */}
 
-          {formik.values.role === 'patient' && (
+          {formik.values.role === ORGANIZATION_USER_ROLES.patient && (
             <>
               <Select
                 label="Gender"
@@ -270,7 +278,7 @@ export default function NewUser({ organization }: { organization?: string | null
 
           {/* Doctor Fields */}
 
-          {formik.values.role === 'doctor' && (
+          {formik.values.role === ORGANIZATION_USER_ROLES.doctor && (
             <>
               <Input
                 label="Specialization"

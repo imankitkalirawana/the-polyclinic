@@ -69,6 +69,10 @@
             "name": "@heroui/react",
             "importNames": ["Modal"],
             "message": "Please import Modal from \"@/components/ui/modal\" instead of using \"Modal\" from @heroui/react."
+          },
+          {
+            "name": "yup",
+            "message": "Please use zod instead of yup."
           }
         ]
       }

@@ -1,5 +1,3 @@
-import { z } from 'zod';
-import { createAppointmentSchema } from '@/services/client/appointment/validation';
 import { $FixMe, Base, Gender } from '@/types';
 import { ValuesOf } from '@/lib/utils';
 import { APPOINTMENT_MODES, APPOINTMENT_STATUSES, APPOINTMENT_TYPES } from './constants';
@@ -109,5 +107,17 @@ export type AppointmentStatus = ValuesOf<typeof APPOINTMENT_STATUSES>;
 export type AppointmentMode = ValuesOf<typeof APPOINTMENT_MODES>;
 export type AppointmentTypes = ValuesOf<typeof APPOINTMENT_TYPES>[`value`];
 
-// Zod
-export type CreateAppointmentType = z.infer<typeof createAppointmentSchema>;
+export type CreateAppointmentType = {
+  patientId: string;
+  date: Date;
+  type: 'consultation' | 'follow_up' | 'emergency';
+  additionalInfo: {
+    mode: 'online' | 'offline';
+    notes?: string | undefined;
+    symptoms?: string | undefined;
+    description?: string | undefined;
+    instructions?: string | undefined;
+  };
+  doctorId?: string | undefined;
+  previousAppointment?: string | undefined;
+};
