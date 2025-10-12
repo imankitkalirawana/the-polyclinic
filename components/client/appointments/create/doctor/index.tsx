@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react';
 import { Button, cn, Kbd } from '@heroui/react';
-import { useFormikContext } from 'formik';
 import Fuse from 'fuse.js';
 
 import { CreateAppointmentFormValues } from '../types';
 import { CreateAppointmentDoctorDetails } from './details';
+import { useCreateAppointmentForm } from '../index';
 
 import { useKeyPress } from '@/hooks/useKeyPress';
 import {
@@ -20,11 +20,11 @@ import { APPOINTMENT_TYPES } from '@/services/client/appointment';
 
 export default function DoctorSelection({ className }: { className?: string }) {
   const { data: doctors, isLoading: isDoctorsLoading } = useAllDoctors();
-  const { values, setFieldValue } = useFormikContext<CreateAppointmentFormValues>();
+  const { watch, setValue } = useCreateAppointmentForm();
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
 
-  const { appointment } = values;
+  const appointment = watch('appointment');
 
   const fuse = useMemo(() => {
     if (!doctors) return null;
@@ -49,7 +49,7 @@ export default function DoctorSelection({ className }: { className?: string }) {
     return appointment.type === APPOINTMENT_TYPES.follow_up.value;
   }, [appointment.type]);
 
-  useKeyPress(['Enter'], () => setFieldValue('meta.currentStep', 3), { capture: true });
+  useKeyPress(['Enter'], () => setValue('meta.currentStep', 3), { capture: true });
 
   return (
     <CreateAppointmentContentContainer
@@ -66,7 +66,7 @@ export default function DoctorSelection({ className }: { className?: string }) {
             variant="shadow"
             color="primary"
             radius="full"
-            onPress={() => setFieldValue('meta.currentStep', 3)}
+            onPress={() => setValue('meta.currentStep', 3)}
             endContent={<Kbd keys={['enter']} className="bg-transparent text-primary-foreground" />}
           >
             Next
@@ -77,8 +77,8 @@ export default function DoctorSelection({ className }: { className?: string }) {
             color="primary"
             radius="full"
             onPress={() => {
-              setFieldValue('appointment.doctor', undefined);
-              setFieldValue('meta.currentStep', 3);
+              setValue('appointment.doctorId', undefined);
+              setValue('meta.currentStep', 3);
             }}
           >
             Skip
@@ -111,7 +111,7 @@ export default function DoctorSelection({ className }: { className?: string }) {
                 selectedId={appointment.doctorId}
                 onSelect={(doctorId) => {
                   if (!isDisabled) {
-                    setFieldValue('appointment.doctorId', doctorId);
+                    setValue('appointment.doctorId', doctorId);
                   }
                 }}
                 isDisabled={isDisabled}

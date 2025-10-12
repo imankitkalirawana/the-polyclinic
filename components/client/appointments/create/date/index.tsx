@@ -2,12 +2,12 @@
 
 import { Button, Chip, Kbd } from '@heroui/react';
 import { format, isPast, isValid } from 'date-fns';
-import { useFormikContext } from 'formik';
 
 import { CreateAppointmentFormValues } from '../types';
 import CreateAppointmentContentContainer from '../ui/content-container';
 import CreateAppointmentContentHeader from '../ui/header';
 import CreateAppointmentTimeSelection from './time';
+import { useCreateAppointmentForm } from '../index';
 
 import { SlotsPreview } from '@/components/dashboard/doctors/doctor/slots/slots-preview';
 import { useKeyPress } from '@/hooks/useKeyPress';
@@ -71,18 +71,18 @@ function SlotContent({
 }
 
 export default function DateSelectionContainer() {
-  const { values, setFieldValue } = useFormikContext<CreateAppointmentFormValues>();
-  const { appointment } = values;
+  const { watch, setValue } = useCreateAppointmentForm();
+  const appointment = watch('appointment');
 
   const isDateValid = appointment.date && isValid(appointment.date);
   const canProceed = isDateValid && !isPast(appointment.date);
 
   const handleNext = () => {
-    setFieldValue('meta.currentStep', 4);
+    setValue('meta.currentStep', 4);
   };
 
   const handleDateSelect = (date: Date) => {
-    setFieldValue('appointment.date', date);
+    setValue('appointment.date', date);
   };
 
   // Handle Enter key to proceed

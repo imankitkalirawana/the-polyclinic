@@ -18,6 +18,13 @@ export function useKeyPress(
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.repeat) return; // To prevent this function from triggering on key hold e.g. Ctrl hold
 
+    // Ignore keyboard shortcuts when user is typing in input fields
+    const target = e.target as HTMLElement;
+    const isTyping =
+      target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable;
+
+    if (isTyping) return;
+
     lastKeyPressed.current?.add(normalizeKey(e.key));
 
     // To bypass TypeScript check for the new ECMAScript method `isSubsetOf`

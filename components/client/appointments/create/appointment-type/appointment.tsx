@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
-import { useFormikContext } from 'formik';
 
 import { CreateAppointmentFormValues } from '../types';
+import { useCreateAppointmentForm } from '../index';
 
 import { castData } from '@/lib/utils';
 import { useAppointmentWithAID } from '@/services/client/appointment/query';
@@ -9,8 +9,8 @@ import { AppointmentType } from '@/services/client/appointment';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 export default function CreateAppointmentSelectedPreviousAppointment() {
-  const { values } = useFormikContext<CreateAppointmentFormValues>();
-  const { appointment } = values;
+  const { watch } = useCreateAppointmentForm();
+  const appointment = watch('appointment');
 
   const { data, isLoading } = useAppointmentWithAID(appointment.previousAppointment ?? '');
   const previousAppointment = castData<AppointmentType>(data);

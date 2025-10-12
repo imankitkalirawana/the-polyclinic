@@ -1,12 +1,12 @@
 'use client';
 import { useMemo } from 'react';
 import { Button, Kbd, RadioGroup } from '@heroui/react';
-import { useFormikContext } from 'formik';
 
 import { CreateAppointmentFormValues } from '../types';
 import CreateAppointmentContentContainer from '../ui/content-container';
 import CreateAppointmentContentHeader from '../ui/header';
 import CreateAppointmentFollowUp from './follow-up';
+import { useCreateAppointmentForm } from '../index';
 
 import CustomRadio from '@/components/ui/custom-radio';
 import { cn } from '@/lib/utils';
@@ -14,9 +14,10 @@ import { APPOINTMENT_TYPES } from '@/services/client/appointment';
 import { useKeyPress } from '@/hooks/useKeyPress';
 
 export default function AppointmentType() {
-  const { values, setFieldValue, isSubmitting } = useFormikContext<CreateAppointmentFormValues>();
+  const { watch, setValue, formState } = useCreateAppointmentForm();
 
-  const { appointment } = values;
+  const appointment = watch('appointment');
+  const { isSubmitting } = formState;
 
   const isNextButtonDisabled = useMemo(() => {
     return (
@@ -33,12 +34,12 @@ export default function AppointmentType() {
         appointment.type === APPOINTMENT_TYPES.follow_up.value &&
         appointment.previousAppointment
       ) {
-        setFieldValue('meta.currentStep', 3);
+        setValue('meta.currentStep', 3);
       } else if (
         appointment.type === APPOINTMENT_TYPES.consultation.value ||
         appointment.type === APPOINTMENT_TYPES.emergency.value
       ) {
-        setFieldValue('meta.currentStep', 2);
+        setValue('meta.currentStep', 2);
       }
     },
     {
@@ -67,9 +68,9 @@ export default function AppointmentType() {
           endContent={<Kbd keys={['enter']} className="bg-transparent text-primary-foreground" />}
           onPress={() => {
             if (appointment.type === APPOINTMENT_TYPES.follow_up.value) {
-              setFieldValue('meta.currentStep', 3);
+              setValue('meta.currentStep', 3);
             } else {
-              setFieldValue('meta.currentStep', 2);
+              setValue('meta.currentStep', 2);
             }
           }}
         >
@@ -84,9 +85,9 @@ export default function AppointmentType() {
         orientation="horizontal"
         value={appointment.type}
         onValueChange={(value) => {
-          setFieldValue('appointment.type', value);
-          setFieldValue('appointment.previousAppointment', undefined);
-          setFieldValue('appointment.doctor', undefined);
+          setValue('appointment.type', value as any);
+          setValue('appointment.previousAppointment', undefined);
+          setValue('appointment.doctorId', undefined);
         }}
       >
         {Object.values(APPOINTMENT_TYPES).map((type) => (

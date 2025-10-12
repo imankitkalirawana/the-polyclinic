@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Button, Kbd } from '@heroui/react';
 import { cn } from '@heroui/react';
-import { useFormikContext } from 'formik';
+import Fuse from 'fuse.js';
 
 import { CreateAppointmentFormValues } from '../types';
 import { CreateAppointmentPatientDetails } from './details';
+import { useCreateAppointmentForm } from '../index';
 
 import { useKeyPress } from '@/hooks/useKeyPress';
 import {
@@ -20,28 +21,44 @@ import { useAllPatients } from '@/services/client/patient';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 const PatientSelection = ({ className }: { className?: string }) => {
-  const formik = useFormikContext<CreateAppointmentFormValues>();
+  const { watch, setValue } = useCreateAppointmentForm();
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
 
   const { data: allPatients, isLoading, isError, error } = useAllPatients();
 
-  const { appointment } = formik.values;
+  const patientId = watch('appointment.patientId');
+  const createNewPatient = watch('meta.createNewPatient');
 
-  const handlePatientSelect = (patientId: string) => {
-    formik.setFieldValue('appointment.patientId', patientId);
+  const fuse = useMemo(() => {
+    if (!allPatients) return null;
+    return new Fuse(allPatients, {
+      keys: ['name', 'email', 'phone', 'uid'],
+      threshold: 0.3,
+    });
+  }, [allPatients]);
+
+  const filteredPatients = useMemo(() => {
+    if (!allPatients) return [];
+    if (!debouncedSearch.trim() || !fuse) return allPatients;
+
+    return fuse.search(debouncedSearch).map((result) => result.item);
+  }, [allPatients, debouncedSearch, fuse]);
+
+  const handlePatientSelect = (id: string) => {
+    setValue('appointment.patientId', id);
   };
 
   const handleNext = () => {
-    formik.setFieldValue('meta.currentStep', 1);
+    setValue('meta.currentStep', 1);
   };
 
-  const canProceed = !!appointment.patientId;
+  const canProceed = !!patientId;
 
   useKeyPress(
     ['Enter'],
     () => {
-      if (canProceed && !formik.values.meta.createNewPatient) {
+      if (canProceed && !createNewPatient) {
         handleNext();
       }
     },
@@ -66,14 +83,14 @@ const PatientSelection = ({ className }: { className?: string }) => {
       <div className="min-h-0 flex-1">
         <SelectionList
           items={
-            allPatients?.map((patient) => ({
+            filteredPatients?.map((patient) => ({
               id: patient.uid,
               image: patient.image,
               title: patient.name,
               subtitle: patient.email,
             })) ?? []
           }
-          selectedId={appointment.patientId}
+          selectedId={patientId}
           onSelect={handlePatientSelect}
           emptyMessage={
             debouncedSearch.trim()
@@ -110,13 +127,13 @@ const PatientSelection = ({ className }: { className?: string }) => {
             variant="light"
             color="primary"
             radius="full"
-            onPress={() => formik.setFieldValue('meta.createNewPatient', true)}
+            onPress={() => setValue('meta.createNewPatient', true)}
           >
             Create New Patient
           </Button>
         </>
       }
-      endContent={<CreateAppointmentPatientDetails uid={appointment.patientId ?? ''} />}
+      endContent={<CreateAppointmentPatientDetails uid={patientId ?? ''} />}
     >
       <div className={cn('flex h-full w-full flex-col', className)}>
         <SearchInput
