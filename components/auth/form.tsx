@@ -10,7 +10,7 @@ import {
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import { cn } from '@/lib/utils';
+import { cn, tryCatch } from '@/lib/utils';
 import { $FixMe } from '@/types';
 import { AuthApi } from '@/services/common/auth/api';
 
@@ -155,26 +155,25 @@ export const OtpInput = forwardRef<
 
   const resendOtp = async () => {
     setIsResendingOtp(true);
-    try {
-      const res = await AuthApi.sendOTP({ email, type: type as $FixMe });
-      if (res.success) {
-        addToast({
-          title: 'OTP resent',
-          description: 'Please check your email for the verification code',
-          color: 'success',
-        });
-      } else {
-        addToast({ title: res.message, color: 'danger' });
-      }
-    } catch {
+    const [res, error] = await tryCatch(AuthApi.sendOTP({ email, type: type as $FixMe }));
+
+    if (error) {
       addToast({
         title: 'Failed to resend OTP',
         description: 'Please try again later',
         color: 'danger',
       });
-    } finally {
-      setIsResendingOtp(false);
+    } else if (res?.success) {
+      addToast({
+        title: 'OTP resent',
+        description: 'Please check your email for the verification code',
+        color: 'success',
+      });
+    } else {
+      addToast({ title: res?.message || 'Failed to resend OTP', color: 'danger' });
     }
+
+    setIsResendingOtp(false);
   };
 
   return (
