@@ -13,6 +13,7 @@ import { TIMINGS } from '@/lib/config';
 import { isDateUnavailable } from '../create/helpers';
 import { useLocale } from '@react-aria/i18n';
 import CalendarTimeSelect from '../all/booking/calendar-time-select';
+import { isPast } from 'date-fns';
 
 export default function RescheduleAppointment() {
   const { mutateAsync: rescheduleMutation } = useRescheduleAppointment();
@@ -96,6 +97,8 @@ export default function RescheduleAppointment() {
         children: 'Reschedule',
         whileSubmitting: 'Rescheduling...',
         color: 'warning',
+        // disabled if date is in past
+        isDisabled: isPast(date),
       }}
       onSubmit={async () => {
         await rescheduleMutation({

@@ -14,6 +14,8 @@ import {
 import AsyncButton from '../buttons/async-button';
 import { cn } from '@/lib/utils';
 
+const isLargerThan3xl = (size?: string) => /^(5xl|4xl|full)$/.test(size ?? '');
+
 /**
  * Props for the Modal component
  */
@@ -112,10 +114,13 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
       onSubmit,
       closeOnSubmit = true,
       classNames,
+      size,
       ...rest
     },
     ref
   ) => {
+    const isLargeModal = isLargerThan3xl(size);
+
     return (
       <HeroModal
         ref={ref}
@@ -123,6 +128,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
         backdrop="blur"
         scrollBehavior="inside"
         classNames={classNames}
+        size={size}
         {...rest}
       >
         <ModalContent>
@@ -144,14 +150,25 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                 </ModalBody>
               )}
               <ModalFooter
-                className={cn('justify-between border-t border-divider', classNames?.footer)}
+                className={cn(
+                  'justify-between border-t border-divider',
+                  {
+                    'justify-end': isLargeModal,
+                  },
+                  classNames?.footer
+                )}
               >
                 {!hideCancelButton && (
                   <Button
-                    fullWidth
                     variant="flat"
                     onPress={onClose}
-                    className={cn('max-w-sm', cancelButton?.className)}
+                    className={cn(
+                      'max-w-sm',
+                      {
+                        'w-full': !isLargeModal,
+                      },
+                      cancelButton?.className
+                    )}
                     {...cancelButton}
                   >
                     {cancelButton?.children || 'Cancel'}
@@ -159,7 +176,6 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                 )}
                 {!!onSubmit && (
                   <AsyncButton
-                    fullWidth
                     onPress={async () => {
                       try {
                         await onSubmit();
@@ -173,7 +189,13 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                     }}
                     color="primary"
                     whileSubmitting={submitButton?.whileSubmitting}
-                    className={cn('max-w-sm', submitButton?.className)}
+                    className={cn(
+                      'max-w-sm',
+                      {
+                        'w-full': !isLargeModal,
+                      },
+                      submitButton?.className
+                    )}
                     {...submitButton}
                   >
                     {submitButton?.children}

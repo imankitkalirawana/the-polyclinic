@@ -9,7 +9,7 @@ import {
 export const navItems = [
   {
     name: 'Home',
-    href: '/home',
+    href: '/',
     roles: [...UNIFIED_USER_ROLES],
   },
   {

@@ -89,7 +89,7 @@ export default function DashboardLayout({ children }: { readonly children: React
               startContent={<Avatar src={user?.image} name={user?.name || ''} size="sm" />}
               variant="light"
               as={Link}
-              href="/dashboard/profile"
+              href="/profile"
               isIconOnly={isHidden}
             >
               {!isHidden && 'Profile'}
