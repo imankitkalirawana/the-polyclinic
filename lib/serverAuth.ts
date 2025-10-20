@@ -1,26 +1,21 @@
 import { cookies } from 'next/headers';
 import { Session } from '@/types/session';
-import { getSubdomain } from '@/auth/sub-domain';
+import { cache } from 'react';
+import { apiRequest } from './axios';
 
-export const getServerSession = async (): Promise<Session | null> => {
-  const subdomain = await getSubdomain();
+export const getServerSession = cache(async (): Promise<Session | null> => {
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get('connect.sid')?.value;
   if (!sessionCookie) return null;
 
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/session?organization=${subdomain}`,
-      {
-        headers: {
-          Authorization: `Bearer ${sessionCookie}`,
-        },
-      }
-    );
+    const res = await apiRequest<Session>({
+      url: '/auth/session',
+      method: 'GET',
+    });
 
-    const data = await res.json();
-    return data?.data;
+    return res.data;
   } catch (error) {
     return null;
   }
-};
+});
