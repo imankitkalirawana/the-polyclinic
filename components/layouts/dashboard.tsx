@@ -173,10 +173,10 @@ export default function DashboardLayout({ children }: { readonly children: React
   return (
     <div className="flex h-dvh w-full overflow-hidden">
       {sidebar}
-      <div className="w-[80vw] flex-1 flex-col md:p-2">
+      <div className="flex w-[80vw] flex-1 flex-col md:p-2">
         {header}
-        <main className="h-full w-full overflow-visible">
-          <div className="flex h-[93vh] flex-col gap-4 overflow-hidden p-2">{children}</div>
+        <main className="w-full flex-1 overflow-hidden">
+          <div className="flex h-full flex-col gap-4 overflow-hidden p-2">{children}</div>
         </main>
       </div>
     </div>

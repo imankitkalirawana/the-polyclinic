@@ -7,7 +7,13 @@ import StatusRenderer from './status-renderer';
 import { useAppointmentStore } from '@/store/appointment';
 import { AppointmentType } from '@/services/client/appointment';
 
-export default function AppointmentTriggerItem({ appointment }: { appointment: AppointmentType }) {
+export default function AppointmentTriggerItem({
+  appointment,
+  openInNewTab = false,
+}: {
+  appointment: AppointmentType;
+  openInNewTab?: boolean;
+}) {
   const { setAid } = useAppointmentStore();
 
   return (
@@ -23,7 +29,11 @@ export default function AppointmentTriggerItem({ appointment }: { appointment: A
       )}
       onClick={(e) => {
         e.stopPropagation();
-        setAid(appointment.aid);
+        if (openInNewTab) {
+          window.open(`/appointments/${appointment.aid}`, '_blank');
+        } else {
+          setAid(appointment.aid);
+        }
       }}
     >
       <StatusRenderer isDotOnly status={appointment.status} />

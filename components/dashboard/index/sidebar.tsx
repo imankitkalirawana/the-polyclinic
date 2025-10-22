@@ -1,21 +1,65 @@
 'use client';
+import { DayView } from '@/components/client/appointments/all/views/day';
+import { AppointmentType } from '@/services/client/appointment';
 import { Calendar } from '@heroui/react';
 import { getLocalTimeZone, today } from '@internationalized/date';
+import { faker } from '@faker-js/faker';
+
+const appointments: AppointmentType[] = Array.from({ length: 10 }, (_) => ({
+  _id: faker.string.uuid(),
+  aid: faker.string.uuid(),
+  //   date: faker.date.recent(),
+  date: new Date(),
+  patient: {
+    uid: faker.string.uuid(),
+    name: faker.person.fullName(),
+    email: faker.internet.email(),
+    phone: faker.phone.number(),
+    gender: faker.person.sexType(),
+    age: faker.number.int({ min: 18, max: 60 }),
+    image: faker.image.avatar(),
+  },
+  status: 'booked',
+  additionalInfo: {
+    type: 'online',
+    notes: 'Some notes',
+    symptoms: 'Some symptoms',
+    description: 'Some description',
+    instructions: 'Some instructions',
+  },
+  type: 'consultation',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  createdBy: '1234567890',
+  updatedBy: '1234567890',
+}));
 
 export default function Sidebar() {
   return (
-    <aside className="flex w-full max-w-fit flex-col gap-4 rounded-large bg-default-100 p-2">
-      <Calendar
-        isReadOnly
-        className="border-none bg-transparent shadow-none"
-        classNames={{
-          headerWrapper: 'bg-transparent',
-          gridHeader: 'bg-transparent shadow-none',
-        }}
-        showMonthAndYearPickers
-        aria-label="Date (Read Only)"
-        value={today(getLocalTimeZone())}
-      />
-    </aside>
+    <div className="flex h-full w-full max-w-fit flex-col items-center gap-4 rounded-large bg-default-100 p-2">
+      <div>
+        <Calendar
+          isReadOnly
+          className="border-none bg-transparent shadow-none"
+          classNames={{
+            headerWrapper: 'bg-transparent',
+            gridHeader: 'bg-transparent shadow-none',
+          }}
+          showMonthAndYearPickers
+          aria-label="Date (Read Only)"
+          value={today(getLocalTimeZone())}
+        />
+      </div>
+
+      <section className="flex-1 overflow-auto rounded-large bg-background p-2">
+        <DayView
+          isCompact
+          openInNewTab
+          appointments={appointments}
+          currentDate={new Date()}
+          onTimeSlotClick={() => {}}
+        />
+      </section>
+    </div>
   );
 }

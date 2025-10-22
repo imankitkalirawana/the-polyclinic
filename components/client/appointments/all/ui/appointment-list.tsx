@@ -14,9 +14,11 @@ import { AppointmentType } from '@/services/client/appointment';
 export default function AppointmentList({
   appointments,
   date,
+  openInNewTab = false,
 }: {
   appointments: AppointmentType[] | null;
   date: Date;
+  openInNewTab?: boolean;
 }) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_currentDate, setCurrentDate] = useQueryState(
@@ -51,7 +53,11 @@ export default function AppointmentList({
               )}
               onClick={(e) => {
                 e.stopPropagation();
-                setAid(appointment.aid);
+                if (openInNewTab) {
+                  window.open(`/appointments/${appointment.aid}`, '_blank');
+                } else {
+                  setAid(appointment.aid);
+                }
               }}
             >
               <StatusRenderer isDotOnly status={appointment.status} />
