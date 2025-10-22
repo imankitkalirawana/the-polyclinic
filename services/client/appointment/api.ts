@@ -54,10 +54,11 @@ export class AppointmentApi {
     });
   }
 
-  static async sendReminder(aid: string) {
+  static async sendReminder(aid: string, emails: string | string[]) {
     return await apiRequest<{ message: string }>({
       url: `${this.API_BASE}/${aid}/reminder`,
       method: 'POST',
+      data: { emails },
     });
   }
 }

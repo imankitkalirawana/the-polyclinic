@@ -1,7 +1,15 @@
 import ModeToggle from '@/components/mode-toggle';
 import { useSession } from '@/lib/providers/session-provider';
 import { useLogout } from '@/services/common/auth/query';
-import { Dropdown, DropdownTrigger, Avatar, DropdownMenu, DropdownItem } from '@heroui/react';
+import {
+  Dropdown,
+  DropdownTrigger,
+  Avatar,
+  DropdownMenu,
+  DropdownItem,
+  Button,
+} from '@heroui/react';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 export default function ProfileDropdown() {
   const { user } = useSession();
@@ -10,13 +18,22 @@ export default function ProfileDropdown() {
   return (
     <Dropdown size="sm" placement="bottom-end">
       <DropdownTrigger>
-        <Avatar
-          as="button"
-          size="sm"
-          className="bg-primary-200 transition-transform"
-          src={user?.image || ''}
-          name={user?.name || ''}
-        />
+        <Button
+          aria-label="Profile"
+          className="bg-default-200 pl-1 pr-2"
+          startContent={
+            <Avatar
+              className="bg-primary-500 text-primary-foreground"
+              src={user?.image}
+              name={user?.name || ''}
+              size="sm"
+              radius="sm"
+            />
+          }
+          endContent={<Icon icon="solar:alt-arrow-down-linear" width={18} />}
+        >
+          {user?.name}
+        </Button>
       </DropdownTrigger>
       <DropdownMenu aria-label="Profile Actions" variant="flat">
         <DropdownItem key="profile" href="/profile" className="h-14 gap-2">

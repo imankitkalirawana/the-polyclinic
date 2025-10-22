@@ -14,6 +14,7 @@ import {
   ScrollShadow,
   Spacer,
   Tooltip,
+  Input,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
 
@@ -23,6 +24,7 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { getSidebarItems } from '@/components/dashboard/sidebar/sidebar-items';
 import Sidebar from '@/components/dashboard/sidebar/sidebar';
 import NotificationsWrapper from '../sections/navbar/notifications';
+import ProfileDropdown from '../sections/navbar/profile-dropdown';
 
 export default function DashboardLayout({ children }: { readonly children: React.ReactNode }) {
   const { user } = useSession();
@@ -121,8 +123,8 @@ export default function DashboardLayout({ children }: { readonly children: React
 
   const header = useMemo(
     () => (
-      <header className="flex items-center justify-between gap-3 rounded-medium border-small border-divider p-4 py-1">
-        <div className="flex items-center gap-3">
+      <header className="flex items-center justify-between gap-3 p-2 py-1">
+        <div className="flex items-center gap-3 rounded-medium bg-default-200 px-3 py-1">
           <Button
             aria-label="Toggle Sidebar"
             isIconOnly
@@ -137,7 +139,7 @@ export default function DashboardLayout({ children }: { readonly children: React
               width={24}
             />
           </Button>
-          <NextUIBreadcrumbs variant="light">
+          <NextUIBreadcrumbs>
             {breadcrumbItems?.map((item, index) => (
               <BreadcrumbItem key={index}>
                 {index !== breadcrumbItems.length - 1 ? (
@@ -151,18 +153,17 @@ export default function DashboardLayout({ children }: { readonly children: React
             ))}
           </NextUIBreadcrumbs>
         </div>
-        <div className="flex items-center gap-2">
-          <NotificationsWrapper size="sm" />
-          <Button
-            aria-label="Profile"
-            startContent={<Avatar src={user?.image} name={user?.name || ''} size="sm" />}
-            variant="light"
-            as={Link}
-            href="/profile"
-            isIconOnly
-            size="sm"
-            radius="full"
+        <div>
+          <Input
+            aria-label="Search anything..."
+            placeholder="Search anything..."
+            className="w-64"
+            startContent={<Icon icon="heroicons:magnifying-glass-solid" width={18} />}
           />
+        </div>
+        <div className="flex items-center gap-2">
+          <NotificationsWrapper />
+          <ProfileDropdown />
         </div>
       </header>
     ),

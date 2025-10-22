@@ -154,7 +154,7 @@ export default function NotificationsWrapper({ size = 'md' }: { size?: ButtonPro
   return (
     <Popover placement="bottom-end" shouldCloseOnScroll={false}>
       <PopoverTrigger>
-        <Button isIconOnly radius="full" variant="light" size={size}>
+        <Button isIconOnly size={size} className="bg-default-200">
           <Badge
             color="danger"
             content={stats.unread}
@@ -162,11 +162,7 @@ export default function NotificationsWrapper({ size = 'md' }: { size?: ButtonPro
             size={size}
             isInvisible={stats.unread === 0}
           >
-            <Icon
-              className="text-default-500"
-              icon="solar:bell-linear"
-              width={size === 'sm' ? 18 : 20}
-            />
+            <Icon icon="solar:bell-linear" width={size === 'sm' ? 18 : 20} />
           </Badge>
         </Button>
       </PopoverTrigger>

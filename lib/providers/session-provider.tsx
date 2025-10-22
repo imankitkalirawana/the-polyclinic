@@ -3,7 +3,10 @@
 import React, { createContext, useContext, ReactNode } from 'react';
 import type { Session } from '@/types/session';
 
-const SessionContext = createContext<Session | null | undefined>({ user: null });
+const SessionContext = createContext<Session | null | undefined>({
+  user: null,
+  organization: null,
+});
 
 interface SessionProviderProps {
   children: ReactNode;
@@ -12,7 +15,9 @@ interface SessionProviderProps {
 
 export function SessionProvider({ children, session }: SessionProviderProps) {
   return (
-    <SessionContext.Provider value={session || { user: null }}>{children}</SessionContext.Provider>
+    <SessionContext.Provider value={session || { user: null, organization: null }}>
+      {children}
+    </SessionContext.Provider>
   );
 }
 

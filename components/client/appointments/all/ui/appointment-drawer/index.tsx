@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { useSession } from '@/lib/providers/session-provider';
 import {
   addToast,
@@ -36,7 +36,6 @@ import { CellRenderer } from '@/components/ui/cell-renderer';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import useAppointmentButtonsInDrawer from '@/services/client/appointment/hooks/useAppointmentButton';
 import { useIsMobile } from '@/hooks/useMobile';
-import { CLINIC_INFO } from '@/lib/config';
 import { useAppointmentWithAID } from '@/services/client/appointment/query';
 import { useAppointmentStore } from '@/store/appointment';
 import {
@@ -46,6 +45,7 @@ import {
 } from '@/services/client/appointment';
 import { ORGANIZATION_USER_ROLES, OrganizationUser } from '@/services/common/user';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
+import { useClipboard } from '@/hooks/useClipboard';
 
 const DRAWER_DELAY = 200;
 
@@ -116,6 +116,9 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
   const { data: previousAppointment, isLoading } = useAppointmentWithAID(
     appointment?.previousAppointment || ''
   );
+  const clipboard = useClipboard({ timeout: 3000 });
+  const { organization } = useSession();
+  const location = organization?.organizationDetails?.location || '';
 
   const patientDescription = useMemo(() => {
     const parts = [`Patient • #${appointment.patient.uid}`];
@@ -142,11 +145,12 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
     const isOnline = appointment.additionalInfo.type === 'online';
 
     return {
+      isOnline,
       icon: isOnline ? 'solar:videocamera-bold-duotone' : 'solar:map-bold-duotone',
       label: isOnline ? 'Online' : 'In-Person',
       meetIcon: isOnline ? 'logos:google-meet' : 'logos:google-maps',
       meetLabel: isOnline ? 'Join with Google Meet' : 'Get Directions to Clinic',
-      meetDescription: isOnline ? 'meet.google.com/yzg-fdrq-sga' : CLINIC_INFO.location.address,
+      meetDescription: isOnline ? 'meet.google.com/yzg-fdrq-sga' : location,
       iconColor: isOnline ? 'text-primary-500' : '',
     };
   }, [appointment.additionalInfo.type]);
@@ -157,21 +161,21 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
   }, [appointment.additionalInfo]);
 
   // Event handlers
-  const handleGetDirections = useCallback(() => {
-    // Implementation for getting directions
-    addToast({
-      title: 'Feature not implemented',
-      color: 'warning',
-    });
-  }, []);
+  const handleGetDirections = () => {
+    if (location) {
+      window.open(location, '_blank');
+    }
+  };
 
-  const handleCopy = useCallback(() => {
-    // Implementation for copying
-    addToast({
-      title: 'Feature not implemented',
-      color: 'warning',
-    });
-  }, []);
+  const handleCopy = () => {
+    if (location) {
+      clipboard.copy(location);
+      addToast({
+        title: 'Location copied to clipboard',
+        color: 'success',
+      });
+    }
+  };
 
   return (
     <>
@@ -263,13 +267,15 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
                 </div>
               }
             />
-            <MeetDirections
-              icon={appointmentModeContent.meetIcon}
-              label={appointmentModeContent.meetLabel}
-              description={appointmentModeContent.meetDescription}
-              onGetDirections={handleGetDirections}
-              onCopy={handleCopy}
-            />
+            {!appointmentModeContent.isOnline && organization?.organizationDetails?.location && (
+              <MeetDirections
+                icon={appointmentModeContent.meetIcon}
+                label={appointmentModeContent.meetLabel}
+                description={appointmentModeContent.meetDescription}
+                onGetDirections={handleGetDirections}
+                onCopy={handleCopy}
+              />
+            )}
           </div>
         </>
       )}

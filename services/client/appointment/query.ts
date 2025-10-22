@@ -97,8 +97,8 @@ export const useRescheduleAppointment = () => {
 
 export const useSendReminder = () => {
   return useGenericMutation({
-    mutationFn: async ({ aid }: { aid: string }) => {
-      const result = await AppointmentApi.sendReminder(aid);
+    mutationFn: async ({ aid, emails }: { aid: string; emails: string | string[] }) => {
+      const result = await AppointmentApi.sendReminder(aid, emails);
       if (result.success) {
         return result;
       }
