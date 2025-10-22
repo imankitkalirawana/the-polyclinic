@@ -93,7 +93,7 @@ function OrganizationCard({ org }: { org: OrganizationType }) {
                     (#{org.organizationId})
                   </span>
                 </h3>
-                <p className="text-sm text-default-400">{org.domain} </p>
+                <p className="text-sm text-default-400">{org.organizationId} </p>
                 <p className="text-xs text-default-400">
                   Created: {formatDate(org.createdAt, 'dd/MM/yyyy')}
                 </p>
