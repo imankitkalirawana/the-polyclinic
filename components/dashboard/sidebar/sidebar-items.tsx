@@ -83,6 +83,13 @@ export const sectionItems: SidebarItem[] = [
         title: 'Drugs',
         roles: ['admin'],
       },
+      {
+        key: 'departments',
+        href: '/dashboard/departments',
+        icon: 'solar:hospital-bold-duotone',
+        title: 'Departments',
+        roles: ['admin', 'receptionist', 'patient', 'doctor'],
+      },
     ],
   },
   {
