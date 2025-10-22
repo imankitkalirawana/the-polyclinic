@@ -1,4 +1,54 @@
-export const dummyData = {
+import { $FixMe } from '@/types';
+import { ButtonProps } from '@heroui/react';
+
+export type ChartData = {
+  weekday: string;
+  [key: string]: string | number;
+};
+
+export type BarChartProps = {
+  title: string;
+  value: string;
+  unit?: string;
+  color: ButtonProps['color'];
+  categories: string[];
+  chartData: ChartData[];
+};
+
+export type CircleChartProps = {
+  title: string;
+  total: number;
+  unit?: string;
+  color: ButtonProps['color'];
+  categories: string[];
+  chartData: { name: string; value: number }[];
+};
+
+export type KpiSummaryProps = {
+  metricName: string;
+  icon: string;
+  value: number;
+  changeValue: number;
+  changeUnit: string;
+  trend: 'up' | 'down';
+  changeDescription: string;
+};
+
+export type DummyDataProps = {
+  dashboardData: {
+    kpiSummary: KpiSummaryProps[];
+    appointmentsByType: BarChartProps;
+    patientByAgeGroup: CircleChartProps;
+    financialTrend: $FixMe;
+    patientLoadByDepartment: $FixMe;
+    dailyStaffAvailability: $FixMe;
+    operationalTaskLog: $FixMe;
+    upcomingAppointments: $FixMe;
+    systemEventFeed: $FixMe;
+  };
+};
+
+export const dummyData: DummyDataProps = {
   dashboardData: {
     kpiSummary: [
       {
@@ -38,17 +88,71 @@ export const dummyData = {
         changeDescription: '32 more than yesterday',
       },
     ],
-    patientDemographics: {
-      breakdownBy: 'Age Group',
-      data: [
-        { group: 'Child', count: 105 },
-        { group: 'Adult', count: 132 },
-        { group: 'Elderly', count: 36 },
-      ],
+    appointmentsByType: {
+      title: 'Appointments by Type',
+      value: '128',
+      unit: 'appointments',
+      categories: ['Consultation', 'Follow-up', 'Emergency'],
+      color: 'primary',
       chartData: [
-        // Array of objects representing daily counts for the last 8 days
+        {
+          weekday: 'Mon',
+          Consultation: 120,
+          'Follow-up': 280,
+          Emergency: 180,
+        },
+        {
+          weekday: 'Tue',
+          Consultation: 150,
+          'Follow-up': 320,
+          Emergency: 220,
+        },
+        {
+          weekday: 'Wed',
+          Consultation: 180,
+          'Follow-up': 250,
+          Emergency: 150,
+        },
+        {
+          weekday: 'Thu',
+          Consultation: 140,
+          'Follow-up': 290,
+          Emergency: 180,
+        },
+        {
+          weekday: 'Fri',
+          Consultation: 160,
+          'Follow-up': 270,
+          Emergency: 190,
+        },
+        {
+          weekday: 'Sat',
+          Consultation: 130,
+          'Follow-up': 240,
+          Emergency: 210,
+        },
+        {
+          weekday: 'Sun',
+          Consultation: 170,
+          'Follow-up': 300,
+          Emergency: 240,
+        },
       ],
     },
+    patientByAgeGroup: {
+      title: 'Patient by Age Group',
+      total: 224000,
+      unit: 'patients',
+      categories: ['0-18', '19-36', '37-54', '55+'],
+      color: 'default',
+      chartData: [
+        { name: '0-18', value: 400 },
+        { name: '19-36', value: 300 },
+        { name: '37-54', value: 300 },
+        { name: '55+', value: 200 },
+      ],
+    },
+
     financialTrend: {
       metric: 'Revenue',
       currentValue: 1495, // (Implied)
