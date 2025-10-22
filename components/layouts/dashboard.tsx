@@ -4,16 +4,12 @@ import React, { useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession } from '@/lib/providers/session-provider';
-import { useLogout } from '@/services/common/auth/query';
 import {
-  Avatar,
   BreadcrumbItem,
   Breadcrumbs as NextUIBreadcrumbs,
   Button,
   cn,
   ScrollShadow,
-  Spacer,
-  Tooltip,
   Input,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
@@ -28,7 +24,6 @@ import ProfileDropdown from '../sections/navbar/profile-dropdown';
 
 export default function DashboardLayout({ children }: { readonly children: React.ReactNode }) {
   const { user } = useSession();
-  const { mutateAsync, isPending } = useLogout();
 
   const [isHidden, setIsHidden] = useLocalStorage('isDashboardSidebarHidden', true);
 
@@ -75,48 +70,6 @@ export default function DashboardLayout({ children }: { readonly children: React
             isCompact={isHidden}
           />
         </ScrollShadow>
-        <Spacer y={8} />
-        <div
-          className={cn('flex flex-col items-center gap-1 pb-4 pl-2', {
-            'px-2': !isHidden,
-          })}
-        >
-          <Tooltip isDisabled={!isHidden} content="Profile" placement="right">
-            <Button
-              aria-label="Profile"
-              fullWidth
-              className={cn('justify-center text-default-500', {
-                'justify-start text-foreground': !isHidden,
-              })}
-              startContent={<Avatar src={user?.image} name={user?.name || ''} size="sm" />}
-              variant="light"
-              as={Link}
-              href="/profile"
-              isIconOnly={isHidden}
-            >
-              {!isHidden && 'Profile'}
-            </Button>
-          </Tooltip>
-          <Tooltip isDisabled={!isHidden} color="danger" content="Log Out" placement="right">
-            <Button
-              aria-label="Log Out"
-              fullWidth
-              className="justify-start text-default-500 data-[hover=true]:text-danger"
-              startContent={
-                <Icon className="w-full rotate-180" icon="solar:logout-bold-duotone" width={24} />
-              }
-              variant="light"
-              color="danger"
-              onPress={async () => {
-                await mutateAsync();
-              }}
-              isLoading={isPending}
-              isIconOnly={isHidden}
-            >
-              {!isHidden && 'Log Out'}
-            </Button>
-          </Tooltip>
-        </div>
       </div>
     );
   }, [isHidden, currentPath, user?.role]);
