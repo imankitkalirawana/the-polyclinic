@@ -141,7 +141,7 @@ export const dummyData: DummyDataProps = {
     },
     patientByAgeGroup: {
       title: 'Patient by Age Group',
-      total: 224000,
+      total: 1200,
       unit: 'patients',
       categories: ['0-18', '19-36', '37-54', '55+'],
       color: 'default',

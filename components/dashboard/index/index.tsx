@@ -4,10 +4,11 @@ import { dummyData } from './data';
 import Revenue from './revenue';
 import { ScrollShadow } from '@heroui/react';
 import PatientByAgeGroup from './patient-by-age-group';
+import Sidebar from './sidebar';
 
 export default function Dashboard() {
   return (
-    <div className="flex h-full w-full gap-4">
+    <div className="flex h-full w-full">
       {/* main content */}
       <ScrollShadow
         className="flex h-full w-full flex-col gap-4 p-4"
@@ -28,7 +29,7 @@ export default function Dashboard() {
         </div>
       </ScrollShadow>
       {/* sidebar */}
-      <aside className="w-full max-w-64">Sidebar</aside>
+      <Sidebar />
     </div>
   );
 }

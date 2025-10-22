@@ -70,7 +70,10 @@ const PatientByAgeGroup = React.forwardRef<
   return (
     <Card
       ref={ref}
-      className={cn('min-h-[280px] border border-transparent dark:border-default-100', className)}
+      className={cn(
+        'h-full min-h-[280px] border border-transparent dark:border-default-100',
+        className
+      )}
       {...props}
     >
       <div className="flex flex-col gap-y-2 p-4 pb-0">
