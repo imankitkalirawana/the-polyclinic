@@ -3,9 +3,13 @@
 import Modal from '@/components/ui/modal';
 import {
   createDepartmentSchema,
+  updateDepartmentSchema,
   CreateDepartmentType,
+  UpdateDepartmentType,
   MAX_DESCRIPTION_LENGTH,
   useCreateDepartment,
+  useUpdateDepartment,
+  DepartmentType,
 } from '@/services/client/department';
 
 import { Button, Input, Textarea } from '@heroui/react';
@@ -13,8 +17,22 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-export default function NewDepartment({ onClose }: { onClose: () => void }) {
+interface DepartmentModalProps {
+  onClose: () => void;
+  department?: DepartmentType | null;
+  mode?: 'create' | 'edit';
+}
+
+export default function DepartmentModal({
+  onClose,
+  department,
+  mode = 'create',
+}: DepartmentModalProps) {
   const createDepartment = useCreateDepartment();
+  const updateDepartment = useUpdateDepartment(department?.did || '');
+
+  const isEdit = mode === 'edit' && department?.did;
+  const schema = isEdit ? updateDepartmentSchema : createDepartmentSchema;
 
   const {
     register,
@@ -22,9 +40,9 @@ export default function NewDepartment({ onClose }: { onClose: () => void }) {
     formState: { errors },
     watch,
     control,
-  } = useForm<CreateDepartmentType>({
-    resolver: zodResolver(createDepartmentSchema),
-    defaultValues: {
+  } = useForm<CreateDepartmentType | UpdateDepartmentType>({
+    resolver: zodResolver(schema),
+    defaultValues: department ?? {
       features: [],
     },
   });
@@ -36,8 +54,28 @@ export default function NewDepartment({ onClose }: { onClose: () => void }) {
 
   const desciption = watch('description');
 
-  const onSubmit = async (data: CreateDepartmentType) => {
-    await createDepartment.mutateAsync(data);
+  const onSubmit = async (data: CreateDepartmentType | UpdateDepartmentType) => {
+    if (isEdit) {
+      await updateDepartment.mutateAsync(data as UpdateDepartmentType);
+    } else {
+      await createDepartment.mutateAsync(data as CreateDepartmentType);
+    }
+    onClose();
+  };
+
+  const renderAddFeatureButton = () => {
+    return (
+      <Button
+        type="button"
+        size="sm"
+        color="primary"
+        variant="flat"
+        startContent={<Icon icon="material-symbols:add" />}
+        onPress={() => append({ name: '', description: '' })}
+      >
+        Add a new feature
+      </Button>
+    );
   };
 
   const renderBody = () => {
@@ -72,30 +110,13 @@ export default function NewDepartment({ onClose }: { onClose: () => void }) {
         {/* Features Section */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h4 className="text-lg font-medium">Features</h4>
-            <Button
-              type="button"
-              size="sm"
-              color="primary"
-              variant="flat"
-              startContent={<Icon icon="material-symbols:add" />}
-              onPress={() => append({ name: '', description: '' })}
-            >
-              Add Feature
-            </Button>
+            <h4 className="font-medium text-large">Features</h4>
           </div>
 
-          {fields.length === 0 && (
-            <div className="py-8 text-center text-gray-500">
-              <Icon icon="material-symbols:feature-search" className="mx-auto mb-2 text-4xl" />
-              <p>No features added yet. Click &ldquo;Add Feature&rdquo; to get started.</p>
-            </div>
-          )}
-
           {fields.map((field, index) => (
-            <div key={field.id} className="space-y-3 rounded-lg border border-gray-200 p-4">
+            <div key={field.id} className="space-y-3 rounded-large border border-divider p-4">
               <div className="flex items-center justify-between">
-                <h5 className="font-medium text-gray-700">Feature {index + 1}</h5>
+                <h5 className="font-medium text-default-700">Feature {index + 1}</h5>
                 <Button
                   isIconOnly
                   type="button"
@@ -104,7 +125,7 @@ export default function NewDepartment({ onClose }: { onClose: () => void }) {
                   variant="flat"
                   onPress={() => remove(index)}
                 >
-                  <Icon icon="material-symbols:delete" />
+                  <Icon icon="solar:trash-bin-minimalistic-bold-duotone" width={18} />
                 </Button>
               </div>
 
@@ -129,6 +150,16 @@ export default function NewDepartment({ onClose }: { onClose: () => void }) {
               </div>
             </div>
           ))}
+
+          {fields.length === 0 ? (
+            <div className="flex flex-col gap-2 py-8 text-center text-default-500">
+              <Icon icon="material-symbols:feature-search" className="mx-auto mb-2 text-4xl" />
+              <p>No features added yet</p>
+              <div>{renderAddFeatureButton()}</div>
+            </div>
+          ) : (
+            renderAddFeatureButton()
+          )}
         </div>
       </div>
     );
@@ -139,12 +170,17 @@ export default function NewDepartment({ onClose }: { onClose: () => void }) {
       isOpen
       size="4xl"
       onClose={onClose}
-      title="New Department"
-      subtitle="Create a new department to manage your clinical services."
+      title={isEdit ? 'Edit Department' : 'New Department'}
+      subtitle={
+        isEdit
+          ? 'Update department information and features.'
+          : 'Create a new department to manage your clinical services.'
+      }
       body={renderBody()}
       submitButton={{
-        children: 'Create Department',
-        whileSubmitting: 'Creating Department...',
+        children: isEdit ? 'Update Department' : 'Create Department',
+        whileSubmitting: isEdit ? 'Updating Department...' : 'Creating Department...',
+        isLoading: createDepartment.isPending || updateDepartment.isPending,
       }}
       onSubmit={handleSubmit(onSubmit)}
     />

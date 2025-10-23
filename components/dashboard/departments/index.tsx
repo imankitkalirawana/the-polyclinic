@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import {
   Card,
   CardHeader,
@@ -9,18 +10,38 @@ import {
   AvatarGroup,
   Avatar,
   useDisclosure,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
 } from '@heroui/react';
-import { useAllDepartments } from '@/services/client/department/query';
+import { useAllDepartments, useDeleteDepartment } from '@/services/client/department/query';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import NewDepartment from './new';
+import NewDepartment from './new-edit';
+import { DepartmentType } from '@/services/client/department';
 
 export default function Departments() {
   const { data: departments, isLoading } = useAllDepartments();
+  const deleteDepartment = useDeleteDepartment();
   const newDepartment = useDisclosure();
+  const editDepartment = useDisclosure();
+  const [selectedDepartment, setSelectedDepartment] = useState<DepartmentType | null>(null);
+
+  const handleDeleteDepartment = async (department: DepartmentType) => {
+    if (
+      confirm(`Are you sure you want to delete "${department.name}"? This action cannot be undone.`)
+    ) {
+      await deleteDepartment.mutateAsync(department.did);
+    }
+  };
 
   if (isLoading) {
     return <MinimalPlaceholder message="Loading departments..." />;
+  }
+
+  if (!departments || departments.length === 0) {
+    return <MinimalPlaceholder message="No departments found" isLoading={false} />;
   }
 
   return (
@@ -35,7 +56,7 @@ export default function Departments() {
         <div className="mt-4 grid grid-cols-3 gap-4">
           {departments?.map((department) => (
             <Card key={department.did} isFooterBlurred className="h-[300px] w-full">
-              <CardHeader className="absolute top-1 z-10 flex-col items-start">
+              <CardHeader className="absolute top-1 z-10 flex-row items-start justify-between">
                 <AvatarGroup
                   isBordered={false}
                   max={3}
@@ -52,12 +73,36 @@ export default function Departments() {
                   <Avatar src="https://i.pravatar.cc/150?u=a04258114e29026702d" />
                   <Avatar src="https://i.pravatar.cc/150?u=a04258114e29026708c" />
                 </AvatarGroup>
+                <Dropdown placement="bottom-end">
+                  <DropdownTrigger>
+                    <Button size="sm" variant="flat" isIconOnly>
+                      <Icon icon="solar:menu-dots-bold" width="20" className="rotate-90" />
+                    </Button>
+                  </DropdownTrigger>
+                  <DropdownMenu>
+                    <DropdownItem
+                      key="edit"
+                      onPress={() => {
+                        setSelectedDepartment(department);
+                        editDepartment.onOpen();
+                      }}
+                    >
+                      Edit
+                    </DropdownItem>
+                    <DropdownItem
+                      key="delete"
+                      color="danger"
+                      onPress={() => handleDeleteDepartment(department)}
+                    >
+                      Delete
+                    </DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
               </CardHeader>
               <Image
                 removeWrapper
                 alt={department.name}
                 className="z-0 h-full w-full object-cover"
-                // TODO: Add default image
                 src={
                   department.image ||
                   'https://thepolyclinic.s3.ap-south-1.amazonaws.com/clients/departments/default.jpg'
@@ -82,7 +127,17 @@ export default function Departments() {
           ))}
         </div>
       </div>
-      {newDepartment.isOpen && <NewDepartment onClose={newDepartment.onClose} />}
+      {newDepartment.isOpen && <NewDepartment onClose={newDepartment.onClose} mode="create" />}
+      {editDepartment.isOpen && (
+        <NewDepartment
+          onClose={() => {
+            editDepartment.onClose();
+            setSelectedDepartment(null);
+          }}
+          department={selectedDepartment}
+          mode="edit"
+        />
+      )}
     </>
   );
 }
