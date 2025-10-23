@@ -5,7 +5,8 @@ import { Base } from '@/types';
 export type CreateDepartmentType = z.infer<typeof createDepartmentSchema>;
 export type UpdateDepartmentType = z.infer<typeof updateDepartmentSchema>;
 
-export type DepartmentType = Base &
-  CreateDepartmentType & {
-    slug: string;
+export type DepartmentType = CreateDepartmentType &
+  Base & {
+    did: string;
+    status: 'active' | 'inactive';
   };

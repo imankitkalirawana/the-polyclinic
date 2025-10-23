@@ -1,4 +1,4 @@
-import { DepartmentType } from './types';
+import { CreateDepartmentType, DepartmentType, UpdateDepartmentType } from './types';
 import { apiRequest } from '@/lib/axios';
 
 export class Department {
@@ -10,16 +10,16 @@ export class Department {
     });
   }
 
-  static async getBySlug(slug?: string | null) {
-    if (!slug) {
-      return { success: false, message: 'Slug is required', data: null };
+  static async getByDid(did?: string | null) {
+    if (!did) {
+      return { success: false, message: 'Department Id is required', data: null };
     }
     return await apiRequest<DepartmentType>({
-      url: `${this.API_BASE}/${slug}`,
+      url: `${this.API_BASE}/${did}`,
     });
   }
 
-  static async create(data: Partial<DepartmentType>) {
+  static async create(data: CreateDepartmentType) {
     return await apiRequest<DepartmentType>({
       url: this.API_BASE,
       method: 'POST',
@@ -27,17 +27,17 @@ export class Department {
     });
   }
 
-  static async update(slug: string, data: Partial<DepartmentType>) {
+  static async update(did: string, data: UpdateDepartmentType) {
     return await apiRequest<DepartmentType>({
-      url: `${this.API_BASE}/${slug}`,
+      url: `${this.API_BASE}/${did}`,
       method: 'PUT',
       data,
     });
   }
 
-  static async delete(slug: string) {
+  static async delete(did: string) {
     return await apiRequest<{ success: boolean; message: string }>({
-      url: `${this.API_BASE}/${slug}`,
+      url: `${this.API_BASE}/${did}`,
       method: 'DELETE',
     });
   }

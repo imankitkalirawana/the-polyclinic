@@ -1,3 +1,23 @@
-export default function DepartmentsPage() {
-  return <div>Departments</div>;
+import Departments from '@/components/dashboard/departments';
+import { Department } from '@/services/client/department';
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
+
+export default async function DepartmentsPage() {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ['departments'],
+    queryFn: async () => {
+      const res = await Department.getAll();
+      if (res.success) {
+        return res.data;
+      }
+      throw new Error(res.message);
+    },
+    initialData: [],
+  });
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <Departments />
+    </HydrationBoundary>
+  );
 }

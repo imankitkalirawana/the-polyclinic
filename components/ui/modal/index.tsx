@@ -112,7 +112,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
       hideCancelButton = false,
       hideCloseButton = true,
       onSubmit,
-      closeOnSubmit = true,
+      closeOnSubmit = false,
       classNames,
       size,
       ...rest
@@ -136,7 +136,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
             <>
               {!!title && (
                 <ModalHeader
-                  className={cn('flex flex-col gap-1 border-b border-divider', classNames?.header)}
+                  className={cn('flex flex-col border-b border-divider', classNames?.header)}
                 >
                   <h2>{title}</h2>
                   {!!subtitle && (
