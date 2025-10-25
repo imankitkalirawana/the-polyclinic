@@ -2,7 +2,7 @@ import React from 'react';
 
 import { APPOINTMENT_STATUSES, AppointmentType, ButtonConfig } from '@/services/client/appointment';
 import { useAppointmentActions } from './hooks/useAppointmentActions';
-import RescheduleAppointment from '@/components/client/appointments/ui/reschedule-modal';
+import RescheduleAppointment from '@/services/client/appointment/components/reschedule-modal';
 import CancelModal from './components/cancel-modal';
 import { ORGANIZATION_USER_ROLES, OrganizationUser } from '@/services/common/user';
 import ChangeDoctorModal from './components/change-doctor-modal';

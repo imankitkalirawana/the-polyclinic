@@ -18,8 +18,7 @@ import {
 import { format } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import CancelDeleteAppointment from '@/components/client/appointments/ui/cancel-delete';
-import RescheduleAppointment from '@/components/client/appointments/ui/reschedule-modal'; // Ensure this path is correct
+import RescheduleAppointment from '@/services/client/appointment/components/reschedule-modal'; // Ensure this path is correct
 import ActivityTimeline from '@/components/ui/activity/timeline';
 import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
 import { CellRenderer } from '@/components/ui/cell-renderer';
@@ -405,7 +404,6 @@ export default function Appointment({ aid }: { aid: string }) {
                   <Icon icon="solar:close-circle-bold-duotone" width="24" />
                 </Button>
               </Tooltip>
-              {action === 'cancel' && <CancelDeleteAppointment />}
             </div>
 
             <Tooltip content="Send a Reminder">

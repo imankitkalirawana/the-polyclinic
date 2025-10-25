@@ -10,9 +10,9 @@ import { SlotsPreview } from '@/components/dashboard/doctors/doctor/slots/slots-
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { Calendar } from '@heroui/react';
 import { TIMINGS } from '@/lib/config';
-import { isDateUnavailable } from '../create/helpers';
+import { isDateUnavailable } from '@/components/client/appointments/create/helpers';
 import { useLocale } from '@react-aria/i18n';
-import CalendarTimeSelect from '../all/booking/calendar-time-select';
+import CalendarTimeSelect from '@/components/client/appointments/all/booking/calendar-time-select';
 import { isPast } from 'date-fns';
 
 export default function RescheduleAppointment() {
