@@ -79,6 +79,22 @@ export const useCancelAppointment = () => {
   });
 };
 
+export const useChangeDoctorAppointment = () => {
+  return useGenericMutation({
+    mutationFn: async ({ aid, doctorUID }: { aid: string; doctorUID: string }) => {
+      const result = await AppointmentApi.changeDoctor(aid, doctorUID);
+      if (result.success) {
+        return result;
+      }
+      throw new Error(result.message);
+    },
+    successMessage: 'Doctor changed',
+    errorMessage: 'Error changing doctor',
+    invalidateQueries: [['appointments']],
+    invalidateQueriesWithVariables: ({ aid }) => [['appointment', aid]],
+  });
+};
+
 export const useRescheduleAppointment = () => {
   return useGenericMutation({
     mutationFn: async ({ aid, date }: { aid: string; date: string }) => {

@@ -3,6 +3,7 @@ import { cn, Tooltip } from '@heroui/react';
 
 import { chipColorMap } from '@/lib/chip';
 import { AppointmentType } from '@/services/client/appointment';
+import { formatLabel } from '@/lib/utils';
 
 export default function StatusRenderer({
   status,
@@ -23,7 +24,7 @@ export default function StatusRenderer({
 
   return (
     <Tooltip
-      content={status}
+      content={formatLabel(status)}
       classNames={{
         content: cn('capitalize', chipColorMap[status].bg),
       }}
@@ -40,7 +41,7 @@ export default function StatusRenderer({
         />
         {!isDotOnly && (
           <span className={cn('capitalize text-tiny', className)}>
-            {status.split('-').join(' ')}
+            {status.replace(/[_-]/g, ' ')}
           </span>
         )}
       </div>

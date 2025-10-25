@@ -2,6 +2,7 @@ import { ScrollShadow } from '@heroui/react';
 import { cn } from '@heroui/react';
 
 import SelectionCard from './selection-card';
+import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 interface SelectionItem {
   id: string;
@@ -14,6 +15,7 @@ interface SelectionListProps {
   items: SelectionItem[];
   selectedId?: string;
   onSelect: (id: string) => void;
+  isLoading?: boolean;
   isDisabled?: boolean;
   disabledTitle?: string;
   emptyMessage?: string;
@@ -25,12 +27,29 @@ export default function SelectionList({
   items,
   selectedId,
   onSelect,
+  isLoading = false,
   isDisabled = false,
   disabledTitle,
   emptyMessage = 'No items found',
   className,
   containerClassName,
 }: SelectionListProps) {
+  if (isLoading) {
+    return (
+      <div className={cn('flex h-full items-center justify-center', containerClassName)}>
+        <MinimalPlaceholder message="Loading items..." />
+      </div>
+    );
+  }
+
+  if (!items || items.length === 0) {
+    return (
+      <div className={cn('flex h-full items-center justify-center', containerClassName)}>
+        <MinimalPlaceholder message="No items found" isLoading={isLoading} />
+      </div>
+    );
+  }
+
   if (items.length === 0) {
     return (
       <div className={cn('flex h-full items-center justify-center', containerClassName)}>

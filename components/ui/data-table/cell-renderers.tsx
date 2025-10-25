@@ -27,10 +27,15 @@ export const renderUser = ({
   avatar,
   name,
   description,
+  classNames,
 }: {
   avatar?: string | undefined;
   name: string | undefined;
   description?: string | number | undefined;
+  classNames?: {
+    name?: string;
+    description?: string;
+  };
 }) => (
   <Tooltip
     delay={1000}
@@ -46,8 +51,8 @@ export const renderUser = ({
         name,
       }}
       classNames={{
-        name: 'text-default-foreground',
-        description: 'text-default-500',
+        name: cn('text-default-foreground', classNames?.name),
+        description: cn('text-default-500', classNames?.description),
       }}
       description={description}
       name={name}
@@ -62,11 +67,11 @@ export const renderDate = ({ date, isTime = false }: { date: Date | string; isTi
 
   return (
     <div className="flex flex-col">
-      <p className="text-nowrap text-small capitalize text-default-foreground">
+      <p className="text-nowrap capitalize text-default-foreground text-small">
         {format(dateObj, 'PP')}
       </p>
       {isTime && (
-        <p className="text-nowrap text-tiny capitalize text-default-500">{format(dateObj, 'p')}</p>
+        <p className="text-nowrap capitalize text-default-500 text-tiny">{format(dateObj, 'p')}</p>
       )}
     </div>
   );
@@ -75,7 +80,7 @@ export const renderDate = ({ date, isTime = false }: { date: Date | string; isTi
 export const renderCountry = (name: string, icon: React.ReactNode) => (
   <div className="flex items-center gap-2">
     <div className="h-[16px] w-[16px]">{icon}</div>
-    <p className="text-nowrap text-small text-default-foreground">{name}</p>
+    <p className="text-nowrap text-default-foreground text-small">{name}</p>
   </div>
 );
 
@@ -96,7 +101,7 @@ export const renderChip = ({
     size={size}
     startContent={<span className={cn('size-2 rounded-full', chipColorMap[item]?.text)} />}
   >
-    <span className="capitalize text-default-800">{item?.split('-').join(' ')}</span>
+    <span className="capitalize text-default-800">{item?.replace(/[_-]/g, ' ')}</span>
   </Chip>
 );
 

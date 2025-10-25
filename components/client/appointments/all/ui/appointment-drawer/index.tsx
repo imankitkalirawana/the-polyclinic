@@ -23,8 +23,8 @@ import {
   ModalHeader,
   Skeleton,
   Tooltip,
-  User,
   DropdownMenu,
+  Card,
 } from '@heroui/react';
 import { format } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -46,6 +46,7 @@ import {
 import { ORGANIZATION_USER_ROLES, OrganizationUser } from '@/services/common/user';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { useClipboard } from '@/hooks/useClipboard';
+import { UserDetailsPopover } from './user-details-popover';
 
 const DRAWER_DELAY = 200;
 
@@ -181,7 +182,8 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
     <>
       <div className="flex flex-col items-start gap-1">
         <AppointmentHeading title="PEOPLE" />
-        <User
+        <UserDetailsPopover
+          uid={appointment.patient.uid}
           name={appointment.patient.name}
           avatarProps={{
             src: appointment.patient.image,
@@ -194,7 +196,8 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
           description={patientDescription}
         />
         {!!appointment.doctor?.uid && (
-          <User
+          <UserDetailsPopover
+            uid={appointment.doctor.uid}
             name={appointment.doctor.name}
             avatarProps={{
               src: appointment.doctor.image,
@@ -208,13 +211,18 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
           />
         )}
         {appointment.previousAppointment && (
-          <>
+          <Card
+            isPressable
+            as={Link}
+            href={`/appointments/${appointment.previousAppointment}`}
+            target="_blank"
+            className="mt-2 w-full items-start rounded-small px-2 py-1"
+          >
             <AppointmentHeading
-              className="mt-2"
               title="LINKED APPOINTMENT"
               description={
                 <Link
-                  className="flex items-center gap-0.5 underline hover:text-primary"
+                  className="flex items-center gap-0.5 underline text-small hover:text-primary"
                   href={`/appointments/${appointment.previousAppointment}`}
                   target="_blank"
                 >
@@ -240,7 +248,7 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
                 </div>
               )
             )}
-          </>
+          </Card>
         )}
       </div>
 

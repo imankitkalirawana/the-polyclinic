@@ -18,7 +18,7 @@ export const chipColorMap: Record<
     bg: string;
   }
 > = {
-  // for status
+  /* for status */
   active: {
     text: 'bg-green-500',
     bg: 'bg-green-100',
@@ -40,7 +40,7 @@ export const chipColorMap: Record<
     bg: 'bg-red-100',
   },
 
-  // for roles
+  /* for roles */
   superadmin: {
     text: 'bg-red-500',
     bg: 'bg-red-100',
@@ -74,7 +74,7 @@ export const chipColorMap: Record<
     bg: 'bg-purple-100',
   },
 
-  // for appointment status
+  /* for appointment status */
   overdue: {
     text: 'bg-red-500',
     bg: 'bg-red-100',
@@ -95,8 +95,16 @@ export const chipColorMap: Record<
     text: 'bg-cyan-500',
     bg: 'bg-cyan-100',
   },
+  confirmed: {
+    text: 'bg-blue-500',
+    bg: 'bg-blue-100',
+  },
+  in_progress: {
+    text: 'bg-violet-500',
+    bg: 'bg-violet-100',
+  },
 
-  // for service types
+  /* for service types */
   medical: {
     text: 'bg-red-500',
     bg: 'bg-red-100',
@@ -116,13 +124,5 @@ export const chipColorMap: Record<
   patient: {
     text: 'bg-emerald-500',
     bg: 'bg-emerald-100',
-  },
-  confirmed: {
-    text: 'bg-blue-500',
-    bg: 'bg-blue-100',
-  },
-  in_progress: {
-    text: 'bg-orange-500',
-    bg: 'bg-orange-100',
   },
 };

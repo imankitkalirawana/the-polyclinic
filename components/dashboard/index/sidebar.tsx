@@ -51,7 +51,7 @@ export default function Sidebar() {
         />
       </div>
 
-      <section className="flex-1 overflow-auto rounded-large bg-background p-2">
+      <section className="w-full overflow-auto rounded-large bg-background">
         <DayView
           isCompact
           openInNewTab

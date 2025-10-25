@@ -53,6 +53,9 @@ export default function Users() {
             avatar: user.image,
             name: user.name,
             description: user.email,
+            classNames: {
+              description: 'lowercase',
+            },
           }),
       },
       {
