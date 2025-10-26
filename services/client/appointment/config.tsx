@@ -43,7 +43,7 @@ export const createAppointmentButtonConfigs = (actions: {
   {
     key: 'decline',
     label: 'Decline',
-    icon: 'solar:close-circle-bold-duotone',
+    icon: 'solar:minus-circle-bold-duotone',
     color: 'danger',
     variant: 'flat',
     position: 'left',
@@ -95,14 +95,32 @@ export const createAppointmentButtonConfigs = (actions: {
     isIconOnly: true,
     visibilityRules: {
       statuses: [APPOINTMENT_STATUSES.booked, APPOINTMENT_STATUSES.confirmed],
-      roles: [ORGANIZATION_USER_ROLES.doctor, ORGANIZATION_USER_ROLES.admin],
+      roles: [ORGANIZATION_USER_ROLES.receptionist, ORGANIZATION_USER_ROLES.admin],
       custom: (appointment) => appointment.doctor?.uid !== undefined,
     },
     action: {
       type: 'store-action',
       payload: 'change-doctor',
     },
-    content: () => <ChangeDoctorModal />,
+    content: () => <ChangeDoctorModal type="change-doctor" />,
+  },
+  {
+    key: 'assign-doctor',
+    label: 'Assign a doctor',
+    icon: 'solar:user-plus-bold-duotone',
+    color: 'primary',
+    variant: 'flat',
+    position: 'left',
+    visibilityRules: {
+      statuses: [APPOINTMENT_STATUSES.booked],
+      roles: [ORGANIZATION_USER_ROLES.receptionist, ORGANIZATION_USER_ROLES.admin],
+      custom: (appointment) => !appointment.doctor?.uid,
+    },
+    action: {
+      type: 'store-action',
+      payload: 'assign-doctor',
+    },
+    content: () => <ChangeDoctorModal type="assign-doctor" />,
   },
   {
     key: 'reschedule',
@@ -142,7 +160,7 @@ export const createAppointmentButtonConfigs = (actions: {
   {
     key: 'accept',
     label: 'Accept',
-    icon: 'solar:check-circle-line-duotone',
+    icon: 'solar:check-circle-bold-duotone',
     color: 'success',
     variant: 'flat',
     position: 'left',

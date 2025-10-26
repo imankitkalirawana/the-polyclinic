@@ -5,7 +5,7 @@ import { useAllDoctors, DoctorType } from '@/services/client/doctor';
 import { SelectionList } from '@/components/client/appointments/create/ui';
 import { useState } from 'react';
 
-export default function ChangeDoctorModal() {
+export default function ChangeDoctorModal({ type }: { type: 'change-doctor' | 'assign-doctor' }) {
   const { setAction, aid } = useAppointmentStore();
   const { mutateAsync: changeDoctor } = useChangeDoctorAppointment();
   const { data: doctors, isLoading: isDoctorsLoading } = useAllDoctors();
@@ -13,8 +13,10 @@ export default function ChangeDoctorModal() {
   const [selectedDoctor, setSelectedDoctor] = useState<DoctorType | undefined>(undefined);
 
   const handleSubmit = async () => {
-    if (!aid) return;
-    await changeDoctor({ aid, doctorUID: '123' });
+    if (!aid || !selectedDoctor) return;
+    await changeDoctor({ aid, doctorId: selectedDoctor.uid }).then(() => {
+      setAction(null);
+    });
   };
 
   const renderBody = () => {
@@ -40,11 +42,15 @@ export default function ChangeDoctorModal() {
   return (
     <Modal
       isOpen
-      title="Change Doctor"
+      title={type === 'change-doctor' ? 'Change Doctor' : 'Assign a doctor'}
       subtitle="Select a doctor from the list below"
       body={renderBody()}
       onClose={() => setAction(null)}
-      submitButton={{ children: 'Change Doctor', color: 'warning' }}
+      submitButton={{
+        children: type === 'change-doctor' ? 'Change Doctor' : 'Assign a doctor',
+        color: type === 'change-doctor' ? 'warning' : 'primary',
+        isDisabled: !selectedDoctor,
+      }}
       onSubmit={handleSubmit}
     />
   );

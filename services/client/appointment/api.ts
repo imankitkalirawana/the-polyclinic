@@ -46,11 +46,11 @@ export class AppointmentApi {
     });
   }
 
-  static async changeDoctor(aid: string, doctorUID: string) {
+  static async changeDoctor(aid: string, doctorId: string) {
     return await apiRequest<AppointmentType>({
       url: `${this.API_BASE}/${aid}/change-doctor`,
       method: 'PATCH',
-      data: { doctorUID },
+      data: { doctorId },
     });
   }
 

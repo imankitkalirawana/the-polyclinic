@@ -81,15 +81,15 @@ export const useCancelAppointment = () => {
 
 export const useChangeDoctorAppointment = () => {
   return useGenericMutation({
-    mutationFn: async ({ aid, doctorUID }: { aid: string; doctorUID: string }) => {
-      const result = await AppointmentApi.changeDoctor(aid, doctorUID);
+    mutationFn: async ({ aid, doctorId }: { aid: string; doctorId: string }) => {
+      const result = await AppointmentApi.changeDoctor(aid, doctorId);
       if (result.success) {
         return result;
       }
       throw new Error(result.message);
     },
-    successMessage: 'Doctor changed',
-    errorMessage: 'Error changing doctor',
+    successMessage: 'Doctor updated',
+    errorMessage: 'Error updating doctor',
     invalidateQueries: [['appointments']],
     invalidateQueriesWithVariables: ({ aid }) => [['appointment', aid]],
   });
