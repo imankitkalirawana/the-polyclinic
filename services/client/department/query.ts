@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Department } from './api';
+import { DepartmentApi } from './api';
 import { CreateDepartmentType, UpdateDepartmentType } from './types';
 import { addToast } from '@heroui/react';
 
@@ -7,7 +7,7 @@ export const useAllDepartments = () =>
   useQuery({
     queryKey: ['departments'],
     queryFn: async () => {
-      const result = await Department.getAll();
+      const result = await DepartmentApi.getAll();
       if (result.success) {
         return result.data;
       }
@@ -19,7 +19,7 @@ export const useDepartmentByDid = (did?: string | null) =>
   useQuery({
     queryKey: ['department', did],
     queryFn: async () => {
-      const result = await Department.getByDid(did);
+      const result = await DepartmentApi.getByDid(did);
       if (result.success) {
         return result.data;
       }
@@ -32,7 +32,7 @@ export const useCreateDepartment = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: CreateDepartmentType) => {
-      const result = await Department.create({
+      const result = await DepartmentApi.create({
         ...data,
         description: data.description || undefined,
         image: data.image || undefined,
@@ -63,7 +63,7 @@ export const useUpdateDepartment = (did: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: UpdateDepartmentType) => {
-      const result = await Department.update(did, {
+      const result = await DepartmentApi.update(did, {
         ...data,
         description: data.description || undefined,
         image: data.image || undefined,
@@ -96,7 +96,7 @@ export const useDeleteDepartment = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (did: string) => {
-      const result = await Department.delete(did);
+      const result = await DepartmentApi.delete(did);
       if (result.success) {
         return result;
       }

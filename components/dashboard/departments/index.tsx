@@ -14,6 +14,7 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  Link,
 } from '@heroui/react';
 import { useAllDepartments, useDeleteDepartment } from '@/services/client/department/query';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
@@ -46,16 +47,21 @@ export default function Departments() {
 
   return (
     <>
-      <div>
+      <div data-testid="dashboard-departments">
         <div className="flex w-full justify-end">
-          <Button color="primary" size="sm" onPress={newDepartment.onOpen}>
+          <Button color="primary" onPress={newDepartment.onOpen}>
             <Icon icon="solar:add-circle-bold-duotone" className="h-4 w-4" />
             New Department
           </Button>
         </div>
         <div className="mt-4 grid grid-cols-3 gap-4">
           {departments?.map((department) => (
-            <Card key={department.did} isFooterBlurred className="h-[300px] w-full">
+            <Card
+              key={department.did}
+              data-testid="dashboard-department"
+              isFooterBlurred
+              className="h-[300px] w-full"
+            >
               <CardHeader className="absolute top-1 z-10 flex-row items-start justify-between">
                 <AvatarGroup
                   isBordered={false}
@@ -118,7 +124,13 @@ export default function Departments() {
                   </p>
                 </div>
                 <div>
-                  <Button radius="full" size="sm" color="primary">
+                  <Button
+                    as={Link}
+                    href={`/dashboard/departments/${department.did}`}
+                    radius="full"
+                    size="sm"
+                    color="primary"
+                  >
                     See Details
                   </Button>
                 </div>

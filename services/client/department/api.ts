@@ -1,7 +1,7 @@
 import { CreateDepartmentType, DepartmentType, UpdateDepartmentType } from './types';
 import { apiRequest } from '@/lib/axios';
 
-export class Department {
+export class DepartmentApi {
   private static API_BASE = '/client/departments';
 
   static async getAll() {
