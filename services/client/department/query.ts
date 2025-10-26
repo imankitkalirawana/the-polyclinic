@@ -37,7 +37,6 @@ export const useCreateDepartment = () => {
         description: data.description || undefined,
         image: data.image || undefined,
         features: data.features || undefined,
-        status: data.status as 'active' | 'inactive',
       });
       if (result.success) {
         return result;
