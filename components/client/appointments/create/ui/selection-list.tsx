@@ -18,7 +18,6 @@ interface SelectionListProps {
   isLoading?: boolean;
   isDisabled?: boolean;
   disabledTitle?: string;
-  emptyMessage?: string;
   className?: string;
   containerClassName?: string;
 }
@@ -30,7 +29,6 @@ export default function SelectionList({
   isLoading = false,
   isDisabled = false,
   disabledTitle,
-  emptyMessage = 'No items found',
   className,
   containerClassName,
 }: SelectionListProps) {
@@ -45,15 +43,7 @@ export default function SelectionList({
   if (!items || items.length === 0) {
     return (
       <div className={cn('flex h-full items-center justify-center', containerClassName)}>
-        <MinimalPlaceholder message="No items found" isLoading={isLoading} />
-      </div>
-    );
-  }
-
-  if (items.length === 0) {
-    return (
-      <div className={cn('flex h-full items-center justify-center', containerClassName)}>
-        <p className="text-sm text-default-500">{emptyMessage}</p>
+        <MinimalPlaceholder message="Looks like the list is empty 😕" isLoading={isLoading} />
       </div>
     );
   }

@@ -1,8 +1,7 @@
 import { useMemo, useState } from 'react';
-import { Button, cn, Kbd } from '@heroui/react';
+import { Button, Chip, cn, Kbd } from '@heroui/react';
 import Fuse from 'fuse.js';
 
-import { CreateAppointmentFormValues } from '../types';
 import { CreateAppointmentDoctorDetails } from './details';
 import { useCreateAppointmentForm } from '../index';
 
@@ -17,11 +16,14 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { useAllDoctors } from '@/services/client/doctor/query';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { APPOINTMENT_TYPES } from '@/services/client/appointment';
+import { useAllDepartments } from '@/services/client/department';
 
 export default function DoctorSelection({ className }: { className?: string }) {
   const { data: doctors, isLoading: isDoctorsLoading } = useAllDoctors();
+  const { data: departments } = useAllDepartments();
   const { watch, setValue } = useCreateAppointmentForm();
   const [search, setSearch] = useState('');
+  const [selectedDepartment, setSelectedDepartment] = useState<string | null>(null);
   const debouncedSearch = useDebounce(search, 500);
 
   const appointment = watch('appointment');
@@ -36,10 +38,13 @@ export default function DoctorSelection({ className }: { className?: string }) {
 
   const filteredDoctors = useMemo(() => {
     if (!doctors) return [];
+    if (selectedDepartment) {
+      return doctors.filter((d) => d.departments?.some((d) => d === selectedDepartment));
+    }
     if (!debouncedSearch.trim() || !fuse) return doctors;
 
     return fuse.search(debouncedSearch).map((result) => result.item);
-  }, [doctors, debouncedSearch, fuse]);
+  }, [doctors, debouncedSearch, fuse, selectedDepartment]);
 
   const doctor = useMemo(() => {
     return doctors?.find((d) => d.uid === appointment.doctorId);
@@ -98,6 +103,30 @@ export default function DoctorSelection({ className }: { className?: string }) {
               onChange={setSearch}
             />
 
+            <div className="mb-4 flex flex-wrap gap-2">
+              <Chip
+                as={Button}
+                variant="flat"
+                radius="sm"
+                onPress={() => setSelectedDepartment(null)}
+                color={selectedDepartment === null ? 'primary' : 'default'}
+              >
+                All Departments
+              </Chip>
+              {departments?.map((department) => (
+                <Chip
+                  as={Button}
+                  key={department.did}
+                  variant="flat"
+                  radius="sm"
+                  onPress={() => setSelectedDepartment(department.did)}
+                  color={selectedDepartment === department.did ? 'primary' : 'default'}
+                >
+                  {department.name}
+                </Chip>
+              ))}
+            </div>
+
             <div className="min-h-0 flex-1">
               <SelectionList
                 items={
@@ -116,7 +145,6 @@ export default function DoctorSelection({ className }: { className?: string }) {
                 }}
                 isDisabled={isDisabled}
                 disabledTitle="Cannot change doctor in follow-up appointments"
-                emptyMessage="No doctors found"
                 containerClassName="h-full"
               />
             </div>
