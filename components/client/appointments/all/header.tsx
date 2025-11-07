@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useSession } from '@/lib/providers/session-provider';
-import { Button, Kbd, Select, SelectItem } from '@heroui/react';
+import { Button, ButtonGroup, Kbd, Select, SelectItem, Tooltip } from '@heroui/react';
 import {
   addDays,
   addMonths,
@@ -21,6 +21,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { allowedRolesToCreateAppointment } from './data';
 import { View, views as Views } from './types';
 import { useKeyPress } from '@/hooks/useKeyPress';
+import { ORGANIZATION_USER_ROLES } from '@/services/common/user';
 
 interface CalendarHeaderProps {
   currentDate: Date;
@@ -182,14 +183,29 @@ export function CalendarHeader({
           )}
         </Select>
         {allowedRolesToCreateAppointment.includes(user?.role || 'patient') && (
-          <Button
-            size="sm"
-            color="primary"
-            startContent={<Icon icon="solar:add-circle-bold-duotone" className="h-4 w-4" />}
-            onPress={onCreateAppointment}
-          >
-            Create
-          </Button>
+          <ButtonGroup size="sm">
+            <Button
+              color="primary"
+              startContent={<Icon icon="solar:add-circle-bold-duotone" className="h-4 w-4" />}
+              onPress={onCreateAppointment}
+            >
+              Book Appointment
+            </Button>
+            {user?.role === ORGANIZATION_USER_ROLES.patient && (
+              <Tooltip
+                content="Book an appointment with AI"
+                className="bg-gradient-to-br from-blue-300/50 via-blue-500/50 via-40% to-purple-500/50 backdrop-blur-sm"
+              >
+                <Button
+                  isIconOnly
+                  radius="full"
+                  className="bg-gradient-to-br from-blue-300/50 via-blue-500/50 via-40% to-purple-500/50"
+                >
+                  <Icon icon="solar:stars-minimalistic-line-duotone" className="h-4 w-4" />
+                </Button>
+              </Tooltip>
+            )}
+          </ButtonGroup>
         )}
       </div>
     </header>
