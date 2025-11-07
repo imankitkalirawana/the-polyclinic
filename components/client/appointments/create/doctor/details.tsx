@@ -69,14 +69,14 @@ export const CreateAppointmentDoctorDetails = ({ doctor }: { doctor?: DoctorType
                   {doctor.designation}
                 </Chip>
               )}
-              {doctor.department && (
+              {doctor.departments && doctor.departments.length > 0 && (
                 <Chip
                   size="sm"
                   color="primary"
                   variant="flat"
                   startContent={<Icon icon="solar:buildings-bold" className="h-3 w-3" />}
                 >
-                  {doctor.department}
+                  {doctor.departments.join(', ')}
                 </Chip>
               )}
             </div>

@@ -23,13 +23,15 @@ import Avatar from 'boring-avatars';
 
 export const renderCopyableText = (text: string) => <CopyText>{text}</CopyText>;
 
-export const renderUser = ({
+export const RenderUser = ({
   name,
+  size = 'md',
   description,
   isCompact,
   classNames,
 }: {
   name: string;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   description?: string | number;
   isCompact?: boolean;
   classNames?: {
@@ -37,17 +39,37 @@ export const renderUser = ({
     description?: string;
     avatar?: string;
   };
-}) => (
-  <Tooltip
-    delay={1000}
-    classNames={{
-      content: 'bg-transparent p-0 shadow-none',
-    }}
-  >
+}) => {
+  const sizeClass: Record<
+    typeof size,
+    {
+      avatar: string;
+      gap: string;
+    }
+  > = {
+    sm: {
+      avatar: 'size-8',
+      gap: 'gap-0',
+    },
+    md: {
+      avatar: 'size-9',
+      gap: 'gap-0.5',
+    },
+    lg: {
+      avatar: 'size-11',
+      gap: 'gap-0.5',
+    },
+    xl: {
+      avatar: 'size-12',
+      gap: 'gap-1',
+    },
+  };
+
+  return (
     <div className="flex items-center gap-2">
-      <Avatar name={name} className={cn(classNames?.avatar)} />
+      <Avatar name={name} className={cn(classNames?.avatar, sizeClass[size].avatar)} />
       {!isCompact && (
-        <div className="flex flex-col gap-0.5">
+        <div className={cn('flex flex-col', sizeClass[size].gap)}>
           <h4 className={cn('text-nowrap text-default-foreground text-small', classNames?.name)}>
             {name}
           </h4>
@@ -57,8 +79,8 @@ export const renderUser = ({
         </div>
       )}
     </div>
-  </Tooltip>
-);
+  );
+};
 
 export const renderDate = ({ date, isTime = false }: { date: Date | string; isTime?: boolean }) => {
   const dateObj = typeof date === 'string' ? new Date(date) : date;

@@ -1,5 +1,5 @@
 import Departments from '@/components/dashboard/departments';
-import { Department } from '@/services/client/department';
+import { DepartmentApi } from '@/services/client/department';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 export default async function DepartmentsPage() {
@@ -7,7 +7,7 @@ export default async function DepartmentsPage() {
   await queryClient.prefetchQuery({
     queryKey: ['departments'],
     queryFn: async () => {
-      const res = await Department.getAll();
+      const res = await DepartmentApi.getAll();
       if (res.success) {
         return res.data;
       }

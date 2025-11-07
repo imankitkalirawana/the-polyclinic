@@ -5,7 +5,6 @@ import { Button, Kbd } from '@heroui/react';
 import { cn } from '@heroui/react';
 import Fuse from 'fuse.js';
 
-import { CreateAppointmentFormValues } from '../types';
 import { CreateAppointmentPatientDetails } from './details';
 import { useCreateAppointmentForm } from '../index';
 
@@ -92,11 +91,6 @@ const PatientSelection = ({ className }: { className?: string }) => {
           }
           selectedId={patientId}
           onSelect={handlePatientSelect}
-          emptyMessage={
-            debouncedSearch.trim()
-              ? `No patients found for "${debouncedSearch}"`
-              : 'No patients found'
-          }
           containerClassName="h-full"
         />
       </div>
