@@ -50,7 +50,6 @@ export default function Users() {
         sortable: true,
         renderCell: (user) =>
           renderUser({
-            avatar: user.image,
             name: user.name,
             description: user.email,
             classNames: {

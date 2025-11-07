@@ -12,7 +12,6 @@ import {
   DropdownSection,
   DropdownTrigger,
   Tooltip,
-  User,
 } from '@heroui/react';
 import { format } from 'date-fns';
 import type React from 'react';
@@ -20,21 +19,23 @@ import { Icon } from '@iconify/react';
 
 import { CopyText } from '@/components/ui/copy';
 import { chipColorMap, ChipColorType } from '@/lib/chip';
+import Avatar from 'boring-avatars';
 
 export const renderCopyableText = (text: string) => <CopyText>{text}</CopyText>;
 
 export const renderUser = ({
-  avatar,
   name,
   description,
+  isCompact,
   classNames,
 }: {
-  avatar?: string | undefined;
-  name: string | undefined;
-  description?: string | number | undefined;
+  name: string;
+  description?: string | number;
+  isCompact?: boolean;
   classNames?: {
     name?: string;
     description?: string;
+    avatar?: string;
   };
 }) => (
   <Tooltip
@@ -43,22 +44,19 @@ export const renderUser = ({
       content: 'bg-transparent p-0 shadow-none',
     }}
   >
-    <User
-      avatarProps={{
-        radius: 'lg',
-        src: avatar,
-        size: avatar ? 'md' : 'sm',
-        name,
-      }}
-      classNames={{
-        name: cn('text-default-foreground', classNames?.name),
-        description: cn('text-default-500', classNames?.description),
-      }}
-      description={description}
-      name={name}
-    >
-      {description}
-    </User>
+    <div className="flex items-center gap-2">
+      <Avatar name={name} className={cn(classNames?.avatar)} />
+      {!isCompact && (
+        <div className="flex flex-col gap-0.5">
+          <h4 className={cn('text-nowrap text-default-foreground text-small', classNames?.name)}>
+            {name}
+          </h4>
+          <p className={cn('text-nowrap text-default-500 text-tiny', classNames?.description)}>
+            {description}
+          </p>
+        </div>
+      )}
+    </div>
   </Tooltip>
 );
 
