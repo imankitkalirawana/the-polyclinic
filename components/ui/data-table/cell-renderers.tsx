@@ -25,12 +25,14 @@ export const renderCopyableText = (text: string) => <CopyText>{text}</CopyText>;
 export const RenderUser = ({
   name,
   size = 'md',
+  variant = 'marble',
   description,
   isCompact,
   classNames,
 }: {
   name?: string | null;
   size?: 'sm' | 'md' | 'lg' | 'xl';
+  variant?: 'bauhaus' | 'beam' | 'geometric' | 'marble' | 'pixel' | 'ring' | 'sunset' | 'abstract';
   description?: string | number | React.ReactNode;
   isCompact?: boolean;
   classNames?: {
@@ -69,6 +71,7 @@ export const RenderUser = ({
       <Avatar
         name={name ?? 'Unknown User'}
         className={cn(classNames?.avatar, sizeClass[size].avatar)}
+        variant={variant}
       />
       {!isCompact && (
         <div className={cn('flex flex-col items-start', sizeClass[size].gap)}>
