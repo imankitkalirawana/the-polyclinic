@@ -185,28 +185,12 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
         <UserDetailsPopover
           uid={appointment.patient.uid}
           name={appointment.patient.name}
-          avatarProps={{
-            src: appointment.patient.image,
-            size: 'sm',
-            name: appointment.patient.name,
-          }}
-          classNames={{
-            description: 'text-default-400 text-tiny',
-          }}
           description={patientDescription}
         />
         {!!appointment.doctor?.uid && (
           <UserDetailsPopover
             uid={appointment.doctor.uid}
             name={appointment.doctor.name}
-            avatarProps={{
-              src: appointment.doctor.image,
-              size: 'sm',
-              name: appointment.doctor.name,
-            }}
-            classNames={{
-              description: 'text-default-400 text-tiny',
-            }}
             description={doctorDescription}
           />
         )}

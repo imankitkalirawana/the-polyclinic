@@ -1,14 +1,8 @@
 import ModeToggle from '@/components/mode-toggle';
+import { RenderUser } from '@/components/ui/data-table/cell-renderers';
 import { useSession } from '@/lib/providers/session-provider';
 import { useLogout } from '@/services/common/auth/query';
-import {
-  Dropdown,
-  DropdownTrigger,
-  Avatar,
-  DropdownMenu,
-  DropdownItem,
-  Button,
-} from '@heroui/react';
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 export default function ProfileDropdown() {
@@ -21,15 +15,7 @@ export default function ProfileDropdown() {
         <Button
           aria-label="Profile"
           className="bg-default-200 pl-1 pr-2"
-          startContent={
-            <Avatar
-              className="bg-primary-500 text-primary-foreground"
-              src={user?.image}
-              name={user?.name || ''}
-              size="sm"
-              radius="sm"
-            />
-          }
+          startContent={<RenderUser isCompact name={user?.name} size="sm" />}
           endContent={<Icon icon="solar:alt-arrow-down-linear" width={18} />}
         >
           {user?.name}

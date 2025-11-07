@@ -30,9 +30,9 @@ export const RenderUser = ({
   isCompact,
   classNames,
 }: {
-  name: string;
+  name?: string | null;
   size?: 'sm' | 'md' | 'lg' | 'xl';
-  description?: string | number;
+  description?: string | number | React.ReactNode;
   isCompact?: boolean;
   classNames?: {
     name?: string;

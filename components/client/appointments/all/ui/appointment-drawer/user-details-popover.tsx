@@ -1,27 +1,20 @@
 import { CellRenderer } from '@/components/ui/cell-renderer';
-import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import { renderChip, RenderUser } from '@/components/ui/data-table/cell-renderers';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { UnifiedUser } from '@/services/common/user';
 import { useUserWithUID } from '@/services/common/user/query';
-import {
-  Avatar,
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Link,
-  Tooltip,
-  User,
-  UserProps,
-} from '@heroui/react';
+import { Button, Card, CardBody, CardFooter, CardHeader, Link, Tooltip } from '@heroui/react';
 
-export const UserDetailsPopover = (
-  user: UserProps & {
-    uid: string;
-  }
-) => {
-  const { data } = useUserWithUID(user.uid);
+export const UserDetailsPopover = ({
+  name,
+  description,
+  uid,
+}: {
+  name: string;
+  description: string;
+  uid: string;
+}) => {
+  const { data } = useUserWithUID(uid);
 
   return (
     <Tooltip
@@ -30,7 +23,9 @@ export const UserDetailsPopover = (
       delay={1000}
       content={<UserDetailsPopoverContent user={data} />}
     >
-      <User {...user} />
+      <span className="inline-block cursor-pointer">
+        <RenderUser name={name} description={description} size="sm" />
+      </span>
     </Tooltip>
   );
 };
@@ -41,13 +36,7 @@ const UserDetailsPopoverContent = ({ user }: { user?: UnifiedUser | null }) => {
   return (
     <Card className="max-w-[300px] border-none bg-transparent" shadow="none">
       <CardHeader className="justify-between gap-2">
-        <div className="flex gap-3">
-          <Avatar isBordered radius="full" size="md" src={user.image} />
-          <div className="flex flex-col items-start justify-center">
-            <h4 className="font-semibold leading-none text-default-600 text-small">{user.name}</h4>
-            {renderChip({ item: user.role })}
-          </div>
-        </div>
+        <RenderUser name={user.name} size="md" description={renderChip({ item: user.role })} />
         <Button
           color="primary"
           radius="full"
