@@ -9,8 +9,12 @@ import { useCreateAppointmentForm } from '../index';
 
 import CustomRadio from '@/components/ui/custom-radio';
 import { cn } from '@/lib/utils';
-import { APPOINTMENT_TYPES } from '@/services/client/appointment';
+import { APPOINTMENT_TYPES, AppointmentTypes } from '@/services/client/appointment';
 import { useKeyPress } from '@/hooks/useKeyPress';
+
+const isValidAppointmentType = (value: string): value is AppointmentTypes => {
+  return Object.values(APPOINTMENT_TYPES).some((type) => type.value === value);
+};
 
 export default function AppointmentType() {
   const { watch, setValue, formState } = useCreateAppointmentForm();
@@ -84,9 +88,11 @@ export default function AppointmentType() {
         orientation="horizontal"
         value={appointment.type}
         onValueChange={(value) => {
-          setValue('appointment.type', value as any);
-          setValue('appointment.previousAppointment', undefined);
-          setValue('appointment.doctorId', undefined);
+          if (isValidAppointmentType(value)) {
+            setValue('appointment.type', value);
+            setValue('appointment.previousAppointment', undefined);
+            setValue('appointment.doctorId', undefined);
+          }
         }}
       >
         {Object.values(APPOINTMENT_TYPES).map((type) => (
