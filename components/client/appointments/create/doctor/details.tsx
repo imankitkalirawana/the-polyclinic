@@ -1,6 +1,7 @@
 import { CellRenderer } from '@/components/ui/cell-renderer';
+import { renderChips, RenderUser } from '@/components/ui/data-table/cell-renderers';
 import { DoctorType } from '@/services/client/doctor';
-import { Avatar, Card, CardBody, CardHeader, Divider, Chip, ScrollShadow } from '@heroui/react';
+import { Card, CardBody, CardHeader, Divider, Chip, ScrollShadow } from '@heroui/react';
 import { Icon } from '@iconify/react';
 
 export const CreateAppointmentDoctorDetails = ({ doctor }: { doctor?: DoctorType | null }) => {
@@ -46,42 +47,11 @@ export const CreateAppointmentDoctorDetails = ({ doctor }: { doctor?: DoctorType
 
       <CardBody as={ScrollShadow} className="min-h-0 flex-1 space-y-2 overflow-y-auto">
         {/* Profile Section */}
-        <div className="flex items-start gap-4">
-          <Avatar
-            src={doctor.image}
-            alt={doctor.name}
-            className="h-16 w-16 flex-shrink-0"
-            name={doctor.name}
-          />
-          <div className="flex flex-1 flex-col gap-2">
-            <div>
-              <h4 className="font-medium text-large">{doctor.name}</h4>
-              <p className="text-default-400 text-small">{doctor.email}</p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {doctor.designation && (
-                <Chip
-                  size="sm"
-                  color="secondary"
-                  variant="flat"
-                  startContent={<Icon icon="solar:user-id-bold" className="h-3 w-3" />}
-                >
-                  {doctor.designation}
-                </Chip>
-              )}
-              {doctor.departments && doctor.departments.length > 0 && (
-                <Chip
-                  size="sm"
-                  color="primary"
-                  variant="flat"
-                  startContent={<Icon icon="solar:buildings-bold" className="h-3 w-3" />}
-                >
-                  {doctor.departments.join(', ')}
-                </Chip>
-              )}
-            </div>
-          </div>
-        </div>
+        <RenderUser
+          name={doctor.name}
+          description={renderChips(doctor.departments ?? [])}
+          size="lg"
+        />
 
         {/* Contact Information */}
         <div>

@@ -11,7 +11,6 @@ import {
   DropdownMenu,
   DropdownSection,
   DropdownTrigger,
-  Tooltip,
 } from '@heroui/react';
 import { format } from 'date-fns';
 import type React from 'react';
@@ -67,9 +66,12 @@ export const RenderUser = ({
 
   return (
     <div className="flex items-center gap-2">
-      <Avatar name={name} className={cn(classNames?.avatar, sizeClass[size].avatar)} />
+      <Avatar
+        name={name ?? 'Unknown User'}
+        className={cn(classNames?.avatar, sizeClass[size].avatar)}
+      />
       {!isCompact && (
-        <div className={cn('flex flex-col', sizeClass[size].gap)}>
+        <div className={cn('flex flex-col items-start', sizeClass[size].gap)}>
           <h4 className={cn('text-nowrap text-default-foreground text-small', classNames?.name)}>
             {name}
           </h4>

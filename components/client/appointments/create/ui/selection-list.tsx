@@ -6,7 +6,6 @@ import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 interface SelectionItem {
   id: string;
-  image?: string;
   title: string;
   subtitle?: string;
 }
@@ -55,7 +54,6 @@ export default function SelectionList({
           <div key={item.id}>
             <SelectionCard
               id={item.id}
-              image={item.image}
               title={item.title}
               subtitle={item.subtitle}
               isSelected={selectedId === item.id}

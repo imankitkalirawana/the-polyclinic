@@ -1,9 +1,9 @@
-import { Avatar, Card } from '@heroui/react';
+import { RenderUser } from '@/components/ui/data-table/cell-renderers';
+import { Card } from '@heroui/react';
 import { cn } from '@heroui/react';
 
 interface SelectionCardProps {
   id: string;
-  image?: string;
   title: string;
   subtitle?: string;
   isSelected: boolean;
@@ -15,7 +15,6 @@ interface SelectionCardProps {
 
 export default function SelectionCard({
   id,
-  image,
   title,
   subtitle,
   isSelected,
@@ -38,11 +37,7 @@ export default function SelectionCard({
       )}
       onPress={() => onSelect(id)}
     >
-      <Avatar src={image} name={title} />
-      <div className="flex flex-col items-start gap-0">
-        <h4 className="text-small">{title}</h4>
-        {subtitle && <p className="text-sm text-default-500">{subtitle}</p>}
-      </div>
+      <RenderUser name={title} description={subtitle} />
     </Card>
   );
 }

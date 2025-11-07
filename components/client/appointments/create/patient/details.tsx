@@ -1,9 +1,10 @@
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { cn } from '@/lib/utils';
-import { Avatar, Card, CardBody, CardHeader, Divider, Chip, ScrollShadow } from '@heroui/react';
+import { Card, CardBody, CardHeader, Divider, Chip, ScrollShadow } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { usePatientByUID } from '@/services/client/patient';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
+import { RenderUser } from '@/components/ui/data-table/cell-renderers';
 
 export const CreateAppointmentPatientDetails = ({ uid }: { uid: string }) => {
   const { isLoading, isError, data: user } = usePatientByUID(uid);
@@ -71,20 +72,8 @@ export const CreateAppointmentPatientDetails = ({ uid }: { uid: string }) => {
 
       <CardBody as={ScrollShadow} className="min-h-0 flex-1 space-y-2 overflow-y-auto">
         {/* Profile Section */}
-        <div className="flex items-start gap-4">
-          <Avatar
-            src={user.image}
-            alt={user.name}
-            className="h-16 w-16 flex-shrink-0"
-            name={user.name}
-          />
-          <div className="flex flex-1 flex-col gap-2">
-            <div>
-              <h4 className="font-medium text-large">{user.name}</h4>
-              <p className="text-default-400 text-small">{user.email}</p>
-            </div>
-          </div>
-        </div>
+
+        <RenderUser name={user.name} description={user.email} size="lg" />
 
         {/* Contact Information */}
         <div>
