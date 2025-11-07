@@ -3,7 +3,6 @@
 import { Button, Chip, Kbd } from '@heroui/react';
 import { format, isPast, isValid } from 'date-fns';
 
-import { CreateAppointmentFormValues } from '../types';
 import CreateAppointmentContentContainer from '../ui/content-container';
 import CreateAppointmentContentHeader from '../ui/header';
 import CreateAppointmentTimeSelection from './time';

@@ -1,7 +1,6 @@
 import { useMemo, useState, useCallback } from 'react';
 import { RadioGroup, ScrollShadow } from '@heroui/react';
 
-import { CreateAppointmentFormValues } from '../types';
 import CreateAppointmentSelectedPreviousAppointment from './appointment';
 import { useCreateAppointmentForm } from '../index';
 

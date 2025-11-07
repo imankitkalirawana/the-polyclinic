@@ -16,7 +16,6 @@ import {
 import { format } from 'date-fns';
 import { Icon } from '@iconify/react';
 
-import { CreateAppointmentFormValues } from '../types';
 import { useCreateAppointmentForm } from '../index';
 
 import Skeleton from '@/components/ui/skeleton';

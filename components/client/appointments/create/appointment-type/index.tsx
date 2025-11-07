@@ -2,7 +2,6 @@
 import { useMemo } from 'react';
 import { Button, Kbd, RadioGroup } from '@heroui/react';
 
-import { CreateAppointmentFormValues } from '../types';
 import CreateAppointmentContentContainer from '../ui/content-container';
 import CreateAppointmentContentHeader from '../ui/header';
 import CreateAppointmentFollowUp from './follow-up';

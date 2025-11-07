@@ -1,6 +1,5 @@
 import { format } from 'date-fns';
 
-import { CreateAppointmentFormValues } from '../types';
 import { useCreateAppointmentForm } from '../index';
 
 import { castData } from '@/lib/utils';
