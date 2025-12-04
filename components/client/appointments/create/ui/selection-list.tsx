@@ -2,10 +2,10 @@ import { ScrollShadow } from '@heroui/react';
 import { cn } from '@heroui/react';
 
 import SelectionCard from './selection-card';
+import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 interface SelectionItem {
   id: string;
-  image?: string;
   title: string;
   subtitle?: string;
 }
@@ -14,9 +14,9 @@ interface SelectionListProps {
   items: SelectionItem[];
   selectedId?: string;
   onSelect: (id: string) => void;
+  isLoading?: boolean;
   isDisabled?: boolean;
   disabledTitle?: string;
-  emptyMessage?: string;
   className?: string;
   containerClassName?: string;
 }
@@ -25,16 +25,24 @@ export default function SelectionList({
   items,
   selectedId,
   onSelect,
+  isLoading = false,
   isDisabled = false,
   disabledTitle,
-  emptyMessage = 'No items found',
   className,
   containerClassName,
 }: SelectionListProps) {
-  if (items.length === 0) {
+  if (isLoading) {
     return (
       <div className={cn('flex h-full items-center justify-center', containerClassName)}>
-        <p className="text-sm text-default-500">{emptyMessage}</p>
+        <MinimalPlaceholder message="Loading items..." />
+      </div>
+    );
+  }
+
+  if (!items || items.length === 0) {
+    return (
+      <div className={cn('flex h-full items-center justify-center', containerClassName)}>
+        <MinimalPlaceholder message="Looks like the list is empty 😕" isLoading={isLoading} />
       </div>
     );
   }
@@ -46,7 +54,6 @@ export default function SelectionList({
           <div key={item.id}>
             <SelectionCard
               id={item.id}
-              image={item.image}
               title={item.title}
               subtitle={item.subtitle}
               isSelected={selectedId === item.id}

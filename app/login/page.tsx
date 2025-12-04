@@ -1,5 +1,6 @@
 'use client';
 import { login } from '@/lib/auth';
+import { tryCatch } from '@/lib/utils';
 import { useState } from 'react';
 
 export default function LoginForm() {
@@ -9,11 +10,12 @@ export default function LoginForm() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      await login({ email, password });
-      // Redirect or update UI
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+    const [result, error] = await tryCatch(login({ email, password }));
+    if (error) {
+      setError(error.message);
+    }
+    if (result) {
+      window.location.href = '/dashboard';
     }
   };
 

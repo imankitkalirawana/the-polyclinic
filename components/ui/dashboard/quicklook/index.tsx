@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback, useMemo } from 'react';
-import { useSession } from '@/providers/session-provider';
+import { useSession } from '@/lib/providers/session-provider';
 import {
   Button,
   cn,
@@ -9,6 +9,7 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
+  // eslint-disable-next-line no-restricted-imports
   Modal,
   ModalBody,
   ModalContent,
@@ -112,7 +113,7 @@ export default function QuickLook<T, A extends string = string, D extends string
               <AsyncButton
                 key={btn.key}
                 {...(({ key, content, ref, onPress, children, ...rest }) => rest)(btn)}
-                fn={async () => {
+                onPress={async () => {
                   if (btn.onPress) {
                     await btn.onPress({} as $FixMe);
                   }
@@ -145,7 +146,7 @@ export default function QuickLook<T, A extends string = string, D extends string
                   btn
                 )}
                 whileSubmitting={btn.whileLoading}
-                fn={async () => {
+                onPress={async () => {
                   if (btn.onPress) {
                     await btn.onPress({} as $FixMe);
                   }

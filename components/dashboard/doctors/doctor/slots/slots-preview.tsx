@@ -202,6 +202,8 @@ export function SlotsPreview({ config, onSlotSelect, selected }: SlotsPreviewPro
                     date.setHours(Math.floor(slot.start / 60));
                     date.setMinutes(slot.start % 60);
 
+                    const isSelected = compareAsc(date, selected ?? new Date()) === 0;
+
                     return (
                       <div
                         key={slotIndex}
@@ -210,8 +212,7 @@ export function SlotsPreview({ config, onSlotSelect, selected }: SlotsPreviewPro
                           {
                             'border-orange-400 bg-orange-400 bg-opacity-30': isDayOverridden,
                             'border-primary-400 bg-primary-400 bg-opacity-30': !isDayOverridden,
-                            'border-primary-500 bg-primary-500 bg-opacity-100 hover:bg-opacity-100':
-                              compareAsc(date, selected ?? new Date()) === 0,
+                            'border-primary-500 bg-primary-500 hover:bg-primary-500': isSelected,
                           }
                         )}
                         style={{
@@ -227,7 +228,7 @@ export function SlotsPreview({ config, onSlotSelect, selected }: SlotsPreviewPro
                             <div
                               className={cn('h-3 w-3 rounded-sm bg-primary-400', {
                                 'bg-orange-400': isDayOverridden,
-                                'bg-primary-100': compareAsc(date, selected ?? new Date()) === 0,
+                                'bg-primary-100': isSelected,
                               })}
                             />
                           </Tooltip>

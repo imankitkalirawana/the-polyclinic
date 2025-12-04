@@ -93,7 +93,7 @@ const Auth: React.FC<AuthProps> = ({ steps, formik, paginate, footer, showFullPa
   if (showFullPage) {
     return (
       <LazyMotion features={domAnimation}>
-        <div className="grid h-screen w-full grid-cols-2 p-4">
+        <div className="grid h-screen w-screen grid-cols-2 overflow-hidden p-4">
           <div className="flex h-full items-center justify-center rounded-large bg-black">
             <BlurIn>
               <Logo className="text-background" />

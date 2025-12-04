@@ -3,17 +3,14 @@
 import React, { useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useSession } from '@/providers/session-provider';
-import { useLogout } from '@/services/common/auth/query';
+import { useSession } from '@/lib/providers/session-provider';
 import {
-  Avatar,
   BreadcrumbItem,
   Breadcrumbs as NextUIBreadcrumbs,
   Button,
   cn,
   ScrollShadow,
-  Spacer,
-  Tooltip,
+  Input,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
 
@@ -23,10 +20,10 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { getSidebarItems } from '@/components/dashboard/sidebar/sidebar-items';
 import Sidebar from '@/components/dashboard/sidebar/sidebar';
 import NotificationsWrapper from '../sections/navbar/notifications';
+import ProfileDropdown from '../sections/navbar/profile-dropdown';
 
 export default function DashboardLayout({ children }: { readonly children: React.ReactNode }) {
   const { user } = useSession();
-  const { mutateAsync, isPending } = useLogout();
 
   const [isHidden, setIsHidden] = useLocalStorage('isDashboardSidebarHidden', true);
 
@@ -73,56 +70,14 @@ export default function DashboardLayout({ children }: { readonly children: React
             isCompact={isHidden}
           />
         </ScrollShadow>
-        <Spacer y={8} />
-        <div
-          className={cn('flex flex-col items-center gap-1 pb-4 pl-2', {
-            'px-2': !isHidden,
-          })}
-        >
-          <Tooltip isDisabled={!isHidden} content="Profile" placement="right">
-            <Button
-              aria-label="Profile"
-              fullWidth
-              className={cn('justify-center text-default-500', {
-                'justify-start text-foreground': !isHidden,
-              })}
-              startContent={<Avatar src={user?.image} name={user?.name || ''} size="sm" />}
-              variant="light"
-              as={Link}
-              href="/dashboard/profile"
-              isIconOnly={isHidden}
-            >
-              {!isHidden && 'Profile'}
-            </Button>
-          </Tooltip>
-          <Tooltip isDisabled={!isHidden} color="danger" content="Log Out" placement="right">
-            <Button
-              aria-label="Log Out"
-              fullWidth
-              className="justify-start text-default-500 data-[hover=true]:text-danger"
-              startContent={
-                <Icon className="w-full rotate-180" icon="solar:logout-bold-duotone" width={24} />
-              }
-              variant="light"
-              color="danger"
-              onPress={async () => {
-                await mutateAsync();
-              }}
-              isLoading={isPending}
-              isIconOnly={isHidden}
-            >
-              {!isHidden && 'Log Out'}
-            </Button>
-          </Tooltip>
-        </div>
       </div>
     );
   }, [isHidden, currentPath, user?.role]);
 
   const header = useMemo(
     () => (
-      <header className="flex items-center justify-between gap-3 rounded-medium border-small border-divider p-4 py-1">
-        <div className="flex items-center gap-3">
+      <header className="flex items-center justify-between gap-3 p-2 py-1">
+        <div className="flex items-center gap-3 rounded-medium bg-default-200 px-3 py-1">
           <Button
             aria-label="Toggle Sidebar"
             isIconOnly
@@ -137,7 +92,7 @@ export default function DashboardLayout({ children }: { readonly children: React
               width={24}
             />
           </Button>
-          <NextUIBreadcrumbs variant="light">
+          <NextUIBreadcrumbs>
             {breadcrumbItems?.map((item, index) => (
               <BreadcrumbItem key={index}>
                 {index !== breadcrumbItems.length - 1 ? (
@@ -151,7 +106,18 @@ export default function DashboardLayout({ children }: { readonly children: React
             ))}
           </NextUIBreadcrumbs>
         </div>
-        <NotificationsWrapper size="sm" />
+        <div>
+          <Input
+            aria-label="Search anything..."
+            placeholder="Search anything..."
+            className="w-64"
+            startContent={<Icon icon="heroicons:magnifying-glass-solid" width={18} />}
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <NotificationsWrapper />
+          <ProfileDropdown />
+        </div>
       </header>
     ),
     [breadcrumbItems, isHidden]
@@ -160,10 +126,10 @@ export default function DashboardLayout({ children }: { readonly children: React
   return (
     <div className="flex h-dvh w-full overflow-hidden">
       {sidebar}
-      <div className="w-[80vw] flex-1 flex-col md:p-2">
+      <div className="flex w-[80vw] flex-1 flex-col md:p-2">
         {header}
-        <main className="h-full w-full overflow-visible">
-          <div className="flex h-[93vh] flex-col gap-4 overflow-hidden p-2">{children}</div>
+        <main className="w-full flex-1 overflow-hidden">
+          <div className="flex h-full flex-col gap-4 overflow-hidden p-2">{children}</div>
         </main>
       </div>
     </div>

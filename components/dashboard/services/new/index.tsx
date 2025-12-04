@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'nextjs-toploader/app';
 import { Button, cn, Input, Select, SelectItem, SelectItemProps, Tooltip } from '@heroui/react';
 import { useFormik } from 'formik';
 import { Icon } from '@iconify/react/dist/iconify.js';

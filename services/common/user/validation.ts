@@ -6,6 +6,7 @@ import {
   USER_STATUSES,
 } from './constants';
 import { GENDERS } from '@/lib/constants';
+import { OrganizationUser, SystemUser } from './types';
 
 export const createUserSchema = z
   .object({
@@ -70,11 +71,11 @@ export const createUserSchema = z
     (data) => {
       if (data.organization) {
         return data.role
-          ? ORGANIZATION_USER_ROLES.includes(data.role as (typeof ORGANIZATION_USER_ROLES)[number])
+          ? Object.values(ORGANIZATION_USER_ROLES).includes(data.role as OrganizationUser['role'])
           : true;
       }
       return data.role
-        ? SYSTEM_USER_ROLE.includes(data.role as (typeof SYSTEM_USER_ROLE)[number])
+        ? Object.values(SYSTEM_USER_ROLE).includes(data.role as SystemUser['role'])
         : true;
     },
     {

@@ -21,7 +21,7 @@ export default function EditableDataTable({ data, onChange }: EditableDataTableP
       data,
     },
     onSubmit: async (values) => {
-      console.log('Updated Table Data:', values.data);
+      console.warn('Updated Table Data:', values.data);
     },
   });
 

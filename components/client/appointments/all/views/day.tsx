@@ -1,7 +1,7 @@
 'use client';
 
 import React, { type MouseEvent, useEffect, useRef } from 'react';
-import { useSession } from '@/providers/session-provider';
+import { useSession } from '@/lib/providers/session-provider';
 import { ScrollShadow, Tooltip } from '@heroui/react';
 import { format, isPast, isSameDay, isToday } from 'date-fns';
 
@@ -17,12 +17,20 @@ import { useAppointmentStore } from '@/store/appointment';
 import { AppointmentType } from '@/services/client/appointment';
 
 interface DayViewProps {
+  isCompact?: boolean;
+  openInNewTab?: boolean;
   appointments: AppointmentType[];
   currentDate: Date;
   onTimeSlotClick: (date: Date) => void;
 }
 
-export function DayView({ appointments, currentDate, onTimeSlotClick }: DayViewProps) {
+export function DayView({
+  isCompact,
+  openInNewTab,
+  appointments,
+  currentDate,
+  onTimeSlotClick,
+}: DayViewProps) {
   const { user } = useSession();
   const ref = useRef<HTMLDivElement>(null);
   const { aid, setIsTooltipOpen } = useAppointmentStore();
@@ -63,17 +71,21 @@ export function DayView({ appointments, currentDate, onTimeSlotClick }: DayViewP
           </div>
         </div>
         <div className="flex flex-1 flex-col p-2">
-          <div className="uppercase tracking-wide text-default-500 text-small">
+          <div
+            className={cn('uppercase tracking-wide text-default-500 text-small', {
+              'text-tiny': isCompact,
+            })}
+          >
             {format(currentDate, 'EEEE')}
           </div>
-          <DateChip date={currentDate} size="lg" className="self-start" />
+          <DateChip date={currentDate} size={isCompact ? 'sm' : 'lg'} className="self-start" />
         </div>
       </div>
 
       {/* Time slots using Grid */}
       <ScrollShadow className="flex-1 overflow-auto">
         <div
-          className="grid h-full"
+          className="grid min-h-0"
           style={{
             gridTemplateColumns: 'auto 1fr', // Time labels, Day content
             gridTemplateRows: `repeat(${displayHours.length}, minmax(80px, auto))`,
@@ -152,12 +164,20 @@ export function DayView({ appointments, currentDate, onTimeSlotClick }: DayViewP
                     <CurrentHourIndicator ref={ref} />
                   )}
                   {appointmentsInHour.slice(0, MAX_APPOINTMENTS_IN_CELL).map((appointment) => (
-                    <AppointmentTriggerItem key={appointment.aid} appointment={appointment} />
+                    <AppointmentTriggerItem
+                      key={appointment.aid}
+                      appointment={appointment}
+                      openInNewTab={openInNewTab}
+                    />
                   ))}
                   {appointmentsInHour.length > MAX_APPOINTMENTS_IN_CELL && (
                     <Tooltip
                       content={
-                        <AppointmentList appointments={appointmentsInHour} date={currentDate} />
+                        <AppointmentList
+                          appointments={appointmentsInHour}
+                          date={currentDate}
+                          openInNewTab={openInNewTab}
+                        />
                       }
                       onOpenChange={setIsTooltipOpen}
                     >

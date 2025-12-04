@@ -19,7 +19,7 @@ type ListItem = {
     | 'email'
     | 'phone'
     | 'specialization'
-    | 'department'
+    | 'departments'
     | 'designation'
     | 'experience'
     | 'education'
@@ -58,8 +58,8 @@ const listItems: ListItem[] = [
     },
   },
   {
-    label: 'Department',
-    value: 'department',
+    label: 'Departments',
+    value: 'departments',
     icon: 'solar:buildings-bold-duotone',
     classNames: {
       icon: 'bg-emerald-100 text-emerald-500',
@@ -139,7 +139,7 @@ export default function DashboardDoctor({ uid }: { uid: string }) {
                 <div className="flex flex-col">
                   <h2 className="text-xl font-medium">{doctor.name}</h2>
                   <p className="text-sm text-default-500">
-                    {doctor.specialization || doctor.department || doctor.department}
+                    {doctor.specialization || doctor.departments?.join(', ') || '-'}
                   </p>
                 </div>
               </div>

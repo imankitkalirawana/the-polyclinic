@@ -1,22 +1,22 @@
 import React from 'react';
-import { Card, CardBody, CardFooter, CardHeader, cn, ScrollShadow } from '@heroui/react';
+import { Card, CardBody, CardFooter, CardHeader, ScrollShadow } from '@heroui/react';
 import { format } from 'date-fns';
 import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs';
 
-import { formatTime } from '../helper';
 import { views } from '../types';
 import DateChip from './date-chip';
-import StatusRenderer from './status-renderer';
 
-import { useAppointmentStore } from '@/store/appointment';
 import { AppointmentType } from '@/services/client/appointment';
+import AppointmentTriggerItem from './appointment-trigger-item';
 
 export default function AppointmentList({
   appointments,
   date,
+  openInNewTab = false,
 }: {
   appointments: AppointmentType[] | null;
   date: Date;
+  openInNewTab?: boolean;
 }) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_currentDate, setCurrentDate] = useQueryState(
@@ -25,7 +25,6 @@ export default function AppointmentList({
   );
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_view, setView] = useQueryState('view', parseAsStringEnum(views));
-  const { setAid } = useAppointmentStore();
 
   return (
     <Card className="flex max-w-xs flex-col shadow-none">
@@ -43,26 +42,11 @@ export default function AppointmentList({
       <CardBody as={ScrollShadow} className="max-h-40 flex-col pt-2">
         {appointments && appointments.length > 0 ? (
           appointments.map((appointment) => (
-            <button
+            <AppointmentTriggerItem
               key={appointment.aid}
-              className={cn(
-                'flex min-h-6 cursor-pointer items-center justify-start gap-1 truncate rounded-lg p-1 text-tiny hover:bg-default-100 md:px-2',
-                appointment.status === 'cancelled' && 'line-through'
-              )}
-              onClick={(e) => {
-                e.stopPropagation();
-                setAid(appointment.aid);
-              }}
-            >
-              <StatusRenderer isDotOnly status={appointment.status} />
-              <div className="hidden font-light sm:block">
-                {formatTime(new Date(appointment.date))}
-              </div>
-              <div className="font-medium">
-                {appointment.patient.name}{' '}
-                {appointment.doctor?.name ? `- ${appointment.doctor.name}` : ''}
-              </div>
-            </button>
+              appointment={appointment}
+              openInNewTab={openInNewTab}
+            />
           ))
         ) : (
           <p className="pb-4 text-center text-default-500 text-small">

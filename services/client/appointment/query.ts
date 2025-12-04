@@ -65,8 +65,8 @@ export const useConfirmAppointment = () => {
 
 export const useCancelAppointment = () => {
   return useGenericMutation({
-    mutationFn: async ({ aid }: { aid: string }) => {
-      const result = await AppointmentApi.cancel(aid);
+    mutationFn: async ({ aid, remarks }: { aid: string; remarks: string }) => {
+      const result = await AppointmentApi.cancel(aid, remarks);
       if (result.success) {
         return result;
       }
@@ -74,6 +74,22 @@ export const useCancelAppointment = () => {
     },
     successMessage: 'Appointment cancelled',
     errorMessage: 'Error cancelling appointment',
+    invalidateQueries: [['appointments']],
+    invalidateQueriesWithVariables: ({ aid }) => [['appointment', aid]],
+  });
+};
+
+export const useChangeDoctorAppointment = () => {
+  return useGenericMutation({
+    mutationFn: async ({ aid, doctorId }: { aid: string; doctorId: string }) => {
+      const result = await AppointmentApi.changeDoctor(aid, doctorId);
+      if (result.success) {
+        return result;
+      }
+      throw new Error(result.message);
+    },
+    successMessage: 'Doctor updated',
+    errorMessage: 'Error updating doctor',
     invalidateQueries: [['appointments']],
     invalidateQueriesWithVariables: ({ aid }) => [['appointment', aid]],
   });
@@ -97,8 +113,8 @@ export const useRescheduleAppointment = () => {
 
 export const useSendReminder = () => {
   return useGenericMutation({
-    mutationFn: async ({ aid }: { aid: string }) => {
-      const result = await AppointmentApi.sendReminder(aid);
+    mutationFn: async ({ aid, emails }: { aid: string; emails: string | string[] }) => {
+      const result = await AppointmentApi.sendReminder(aid, emails);
       if (result.success) {
         return result;
       }

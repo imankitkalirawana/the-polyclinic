@@ -1,51 +1,86 @@
-# TypeScript Coding Standards
+---
+description: Apply when writing TypeScript code, defining types/interfaces, working with type safety, or implementing healthcare data validation with proper typing.
+alwaysApply: false
+---
 
-## General Guidelines
+# TypeScript Standards
 
-- Follow the [TypeScript Style Guide](https://mkosir.github.io/typescript-style-guide/#naming)
-- Use TSDoc comments when documenting APIs, libraries, configurations or reusable code
-- Always use strict TypeScript configuration as defined in [tsconfig.json](mdc:tsconfig.json)
-- Use path aliases defined in tsconfig.json (e.g., `@/*` for root imports)
+## Core Requirements
+
+- Follow [TypeScript Style Guide](https://mkosir.github.io/typescript-style-guide/#naming)
+- Strict mode from [tsconfig.json](mdc:tsconfig.json)
+- **NEVER use `any`** - especially for healthcare data
+- Use `unknown` for external data before validation
+- TSDoc comments for healthcare APIs and compliance-critical code
 
 ## Naming Conventions
 
-- Use PascalCase for components, interfaces, and type definitions
-- Use camelCase for variables, functions, and properties
-- Use UPPER_SNAKE_CASE for constants
-- Use kebab-case for file names and URLs
+- **Components**: PascalCase (`PatientCard`, `AppointmentScheduler`)
+- **Interfaces**: PascalCase (`IPatientData`, `IAppointmentRequest`)
+- **Types**: PascalCase (`AppointmentStatus`, `PatientGender`)
+- **Variables**: camelCase (`patientId`, `appointmentDateTime`)
+- **Functions**: camelCase (`scheduleAppointment`, `validateMedicalData`)
+- **Constants**: UPPER_SNAKE_CASE (`MAX_DAILY_APPOINTMENTS`)
+- **Files**: kebab-case (`patient-management.ts`)
 
-## Type Safety
+## Type Safety for Healthcare
 
-- Avoid using `any` type - use proper TypeScript types
-- Use `unknown` instead of `any` when the type is truly unknown
-- Prefer interfaces over types for object shapes
-- Use union types for variables that can have multiple types
-- Use optional properties (`?`) instead of union with `undefined`
+- **Branded types** for sensitive identifiers (SSN, patient IDs)
+- Union types for medical enums (`'scheduled' | 'confirmed' | 'completed'`)
+- Optional properties (`?`) for non-required fields
+- Generic constraints for healthcare operations
+- Reference patterns: [lib/interface.ts](mdc:lib/interface.ts)
 
-## Import/Export Patterns
+## Component Props
 
-- Use named exports for utilities and components
-- Use default exports for pages and layouts
-- Group imports: React/Next.js, third-party libraries, internal modules, relative imports
-- Use absolute imports with `@/` prefix for internal modules
+```typescript
+interface PatientCardProps {
+  patient: IPatientData;
+  onAppointmentSchedule: (patientId: string) => Promise<void>;
+  showSensitiveData?: boolean;
+}
 
-## Component Patterns
+// Avoid React.FC - use explicit return types
+export function PatientCard({ patient }: PatientCardProps): JSX.Element {
+  // ...
+}
+```
 
-- Use functional components with TypeScript
-- Define proper prop interfaces for all components
-- Use React.FC type sparingly, prefer explicit return types
-- Use proper event handler types (e.g., `React.MouseEvent<HTMLButtonElement>`)
+## Validation & Error Handling
 
-## Error Handling
+- **PRIORITY**: Replace Yup with Zod in [lib/validation.ts](mdc:lib/validation.ts)
+- Comprehensive Zod schemas for healthcare data
+- Typed healthcare exceptions
+- Proper error boundaries
+- Validate medical codes (ICD-10, CPT, NDC)
 
-- Use proper error types and interfaces
-- Implement proper error boundaries
-- Use try-catch blocks with proper typing
+## Import Organization
 
-## Configuration Files
+1. React/Next.js framework
+2. Healthcare third-party libraries
+3. Internal healthcare modules (`@/lib/medical`, `@/services/patient`)
+4. Relative component imports
 
-- Reference [lib/config.ts](mdc:lib/config.ts) for application constants
-- Use environment variables with proper typing
-- Define interfaces for configuration objects
+- Use absolute imports with `@/` prefix
+- Named exports for utilities/components
+- Default exports only for pages/layouts
 
-- Use TSDoc comments when documenting APIs, libraries, configurations or reusable code.
+## API & Service Types
+
+- Define interfaces for all API endpoints
+- Proper request/response types for medical data
+- Generic types for healthcare CRUD operations
+- Reference: [services/](mdc:services/) directory
+
+## Documentation
+
+```typescript
+/**
+ * Schedules a new patient appointment with conflict checking
+ * @param appointmentData - Appointment details to schedule
+ * @param patientId - Unique patient identifier (branded type)
+ * @returns Promise resolving to appointment confirmation
+ * @throws {ValidationError} When appointment data is invalid
+ * @throws {ConflictError} When appointment conflicts exist
+ */
+```

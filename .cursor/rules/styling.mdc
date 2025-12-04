@@ -1,69 +1,13 @@
-# Styling and UI Guidelines
-
-## CSS Framework
-
-- Use Tailwind CSS as the primary styling framework
-- Follow the configuration in [tailwind.config.js](mdc:tailwind.config.js)
-- Use the theme system defined in [components/theme-provider.tsx](mdc:components/theme-provider.tsx)
-- Implement dark/light mode support
-
-## Component Styling
-
-- Use HeroUI components as the base UI library
-- Extend HeroUI components with custom styling when needed
-- Use consistent spacing and sizing scales
-- Implement responsive design patterns
-
-## Color System
-
-- Use the color palette defined in the Tailwind configuration
-- Follow semantic color naming (primary, secondary, success, warning, error)
-- Ensure proper contrast ratios for accessibility
-- Use CSS custom properties for theme colors
-
-## Typography
-
-- Use the Outfit font family as configured in [app/layout.tsx](mdc:app/layout.tsx)
-- Follow consistent font sizing and line heights
-- Use proper heading hierarchy (h1, h2, h3, etc.)
-- Implement responsive typography
-
-## Layout Patterns
-
-- Use CSS Grid and Flexbox for layouts
-- Implement proper spacing between elements
-- Use consistent container widths and max-widths
-- Follow mobile-first responsive design
-
-## Animation and Transitions
-
-- Use Framer Motion for complex animations
-- Use Tailwind's transition utilities for simple animations
-- Implement smooth hover and focus states
-- Use proper easing functions
-
-## Accessibility
-
-- Ensure proper color contrast ratios
-- Use semantic HTML elements
-- Implement proper focus indicators
-- Support keyboard navigation
-
-## Performance
-
-- Use CSS-in-JS sparingly
-- Optimize CSS bundle size
-- Use proper CSS purging with Tailwind
-- Implement critical CSS loading
-
-## Component-Specific Styling
-
-- Use consistent button styles across the application
-- Implement proper form styling and validation states
-- Use consistent card and modal designs
-- Follow the design system for data tables and lists
-  description:
-  globs:
-  alwaysApply: false
-
 ---
+description: Apply when working with Tailwind CSS, styling components, implementing design system, colors, typography, or any UI/UX design tasks.
+alwaysApply: false
+---
+
+# Styling & Design System
+
+## Healthcare Design System
+
+- Tailwind CSS: [tailwind.config.ts](mdc:tailwind.config.ts)
+- HeroUI components with healthcare theme
+- Theme provider: [app/providers.tsx](mdc:app/providers.tsx)
+- Dark/light mode optimized for healthcare environments

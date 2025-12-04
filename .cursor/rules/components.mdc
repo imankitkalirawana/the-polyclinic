@@ -1,70 +1,31 @@
+---
+description: Apply when creating or modifying React components, forms, UI elements, or client-side healthcare interfaces. Essential for component architecture and state management.
+alwaysApply: false
+---
+
 # React Component Guidelines
 
 ## Component Organization
 
-- Organize components in the [components/](mdc:components/) directory
-- Use feature-based organization (e.g., `components/appointments/`, `components/dashboard/`)
-- Separate UI components in `components/ui/` for reusable elements
-- Use index files for clean imports
+- `components/client/appointments/` - Patient-facing
+- `components/dashboard/` - Provider dashboard
+- `components/auth/` - Authentication
+- `components/ui/` - Reusable UI components
+- Separate client/server components for PHI protection
 
-## Component Structure
+## Critical Requirements
 
-- Use functional components with TypeScript
-- Define prop interfaces at the top of the file
-- Use proper naming conventions (PascalCase for components)
-- Keep components focused and single-purpose
+- **PRIORITY**: Migrate all Yup to Zod in [lib/validation.ts](mdc:lib/validation.ts)
+- Use Zustand for global state [store/appointment/](mdc:store/appointment/)
+- Use TanStack Query for server state
+- Use Formik for complex medical forms
+- Use TanStack Table for data tables, Recharts for visualization
+- HeroUI components from [tailwind.config.ts](mdc:tailwind.config.ts)
 
-## State Management
+## PHI Security
 
-- Use React hooks for local state
-- Use Zustand for global state management as configured in [store/](mdc:store/)
-- Use React Query for server state management
-- Avoid prop drilling - use context when needed
-
-## Form Handling
-
-- Use Formik for complex forms as seen in the project
-- Use Zod for form validation
-- If Yup is used somewhere then replace it with Zod
-- Implement proper error handling and user feedback
-- Use controlled components for form inputs
-
-## UI Components
-
-- Use HeroUI components as the primary UI library
-- Follow the design system defined in [components/ui/](mdc:components/ui/)
-- Use consistent spacing, colors, and typography
-- Implement proper accessibility features
-
-## Data Display
-
-- Use TanStack Table for data tables as configured in [components/test/tanstack-table.tsx](mdc:components/test/tanstack-table.tsx)
-- Implement proper loading states and skeletons
-- Use proper data visualization with Recharts
-- Handle empty states gracefully
-
-## Event Handling
-
-- Use proper TypeScript event types
-- Implement proper error boundaries
-- Use async/await for asynchronous operations
-- Provide proper user feedback for actions
-
-## Performance
-
-- Use React.memo for expensive components
-- Implement proper key props for lists
-- Use useCallback and useMemo when appropriate
-- Avoid unnecessary re-renders
-
-## Accessibility
-
-- Use semantic HTML elements
-- Implement proper ARIA attributes
-- Ensure keyboard navigation works
-- Provide proper focus management
-  description:
-  globs:
-  alwaysApply: false
-
----
+- Never store PHI in unencrypted component state
+- Mask sensitive data in display
+- Implement session timeout handling
+- Add audit logging for sensitive operations
+- Use error boundaries to prevent data leakage

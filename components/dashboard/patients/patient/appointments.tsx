@@ -9,7 +9,7 @@ import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import Skeleton from '@/components/ui/skeleton';
 import { castData } from '@/lib/utils';
 import { useAllAppointments } from '@/services/client/appointment/query';
-import { AppointmentType } from '@/services/client/appointment';
+import { APPOINTMENT_TYPES, AppointmentType } from '@/services/client/appointment';
 
 const APPOINTMENTS_PER_PAGE = 6;
 
@@ -68,8 +68,10 @@ export default function Appointments() {
                 isPressable
                 key={appointment.aid}
                 className={cn('flex flex-col gap-2 p-4', {
-                  'border border-danger-100 bg-danger-50': appointment.type === 'emergency',
-                  'border border-blue-100 bg-blue-50': appointment.type === 'follow-up',
+                  'border border-danger-100 bg-danger-50':
+                    appointment.type === APPOINTMENT_TYPES.emergency.value,
+                  'border border-blue-100 bg-blue-50':
+                    appointment.type === APPOINTMENT_TYPES.follow_up.value,
                 })}
               >
                 <CardHeader className="justify-between p-0">

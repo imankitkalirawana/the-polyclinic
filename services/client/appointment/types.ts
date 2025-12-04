@@ -1,5 +1,3 @@
-import { z } from 'zod';
-import { createAppointmentSchema } from '@/services/client/appointment/validation';
 import { $FixMe, Base, Gender } from '@/types';
 import { ValuesOf } from '@/lib/utils';
 import { APPOINTMENT_MODES, APPOINTMENT_STATUSES, APPOINTMENT_TYPES } from './constants';
@@ -7,7 +5,7 @@ import { OrganizationUser } from '@/services/common/user';
 import { ButtonProps } from '@heroui/react';
 
 type PatientInfo = {
-  uid: number;
+  uid: string;
   name: string;
   phone?: string;
   email: string;
@@ -17,7 +15,7 @@ type PatientInfo = {
 };
 
 type DoctorInfo = {
-  uid: number;
+  uid: string;
   name: string;
   email: string;
   phone: string;
@@ -37,6 +35,15 @@ export type AppointmentType = Base & {
     type: AppointmentMode;
     description?: string;
     instructions?: string;
+  };
+  cancellation?: {
+    remarks?: string;
+    date?: string;
+    by?: {
+      name?: string;
+      email?: string;
+      uid?: string;
+    };
   };
   progress?: number;
   data?: Record<string, string>;
@@ -100,5 +107,17 @@ export type AppointmentStatus = ValuesOf<typeof APPOINTMENT_STATUSES>;
 export type AppointmentMode = ValuesOf<typeof APPOINTMENT_MODES>;
 export type AppointmentTypes = ValuesOf<typeof APPOINTMENT_TYPES>[`value`];
 
-// Zod
-export type CreateAppointmentType = z.infer<typeof createAppointmentSchema>;
+export type CreateAppointmentType = {
+  patientId: string;
+  date: Date;
+  type: 'consultation' | 'follow_up' | 'emergency';
+  additionalInfo: {
+    mode: 'online' | 'offline';
+    notes?: string | undefined;
+    symptoms?: string | undefined;
+    description?: string | undefined;
+    instructions?: string | undefined;
+  };
+  doctorId?: string | undefined;
+  previousAppointment?: string | undefined;
+};

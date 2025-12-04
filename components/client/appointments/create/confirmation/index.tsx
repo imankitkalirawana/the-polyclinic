@@ -12,19 +12,18 @@ import {
   ModalHeader,
 } from '@heroui/react';
 import { format } from 'date-fns';
-import { useFormikContext } from 'formik';
 import { Icon } from '@iconify/react';
 
-import { CreateAppointmentFormValues } from '../types';
+import { useCreateAppointmentForm } from '../index';
 
 import Skeleton from '@/components/ui/skeleton';
 import { useUserWithUID } from '@/services/common/user/query';
 import { useDoctorByUID } from '@/services/client/doctor/query';
 
 export default function AppointmentBookingConfirmation() {
-  const { values, setFieldValue, handleSubmit, isSubmitting } =
-    useFormikContext<CreateAppointmentFormValues>();
-  const { appointment } = values;
+  const { watch, setValue, handleSubmit, formState, onSubmit } = useCreateAppointmentForm();
+  const appointment = watch('appointment');
+  const { isSubmitting } = formState;
 
   const { data: patient, isLoading: isPatientLoading } = useUserWithUID(appointment.patientId);
   const { data: doctor, isLoading: isDoctorLoading } = useDoctorByUID(appointment.doctorId);
@@ -34,7 +33,7 @@ export default function AppointmentBookingConfirmation() {
       isOpen
       backdrop="blur"
       scrollBehavior="inside"
-      onOpenChange={() => setFieldValue('meta.showConfirmation', false)}
+      onOpenChange={() => setValue('meta.showConfirmation', false)}
     >
       <ModalContent>
         <ModalHeader className="flex-col items-center border-b border-divider">
@@ -117,7 +116,7 @@ export default function AppointmentBookingConfirmation() {
             fullWidth
             variant="bordered"
             startContent={<Icon icon="solar:pen-line-duotone" />}
-            onPress={() => setFieldValue('meta.showConfirmation', false)}
+            onPress={() => setValue('meta.showConfirmation', false)}
           >
             Edit
           </Button>
@@ -125,7 +124,7 @@ export default function AppointmentBookingConfirmation() {
             fullWidth
             variant="shadow"
             color="primary"
-            onPress={() => handleSubmit()}
+            onPress={() => handleSubmit(onSubmit)()}
             isLoading={isSubmitting}
           >
             Book Now

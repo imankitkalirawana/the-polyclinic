@@ -2,6 +2,14 @@
   "mcpServers": {
     "Sentry": {
       "url": "https://mcp.sentry.dev/mcp/divinely-dot-dev/the-polyclinic"
+    },
+    "healthcare-polyclinic-guidelines": {
+      "command": "npx",
+      "args": [
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/ankitkalirawana/Documents/programming/projects/the-polyclinic/.cursor/rules"
+      ],
+      "description": "Healthcare development guidelines for The Polyclinic application with HIPAA compliance, patient safety, and medical domain best practices"
     }
   }
 }

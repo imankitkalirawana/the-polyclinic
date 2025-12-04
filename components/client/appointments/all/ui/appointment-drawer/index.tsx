@@ -1,7 +1,8 @@
-import React, { memo, useCallback, useMemo } from 'react';
-import Link from 'next/link';
-import { useSession } from '@/providers/session-provider';
+import React, { memo, useMemo } from 'react';
+import { useSession } from '@/lib/providers/session-provider';
 import {
+  addToast,
+  Alert,
   Button,
   ButtonGroup,
   cn,
@@ -13,7 +14,7 @@ import {
   DrawerHeader,
   Dropdown,
   DropdownItem,
-  DropdownMenu,
+  Link,
   DropdownTrigger,
   Modal,
   ModalBody,
@@ -22,7 +23,8 @@ import {
   ModalHeader,
   Skeleton,
   Tooltip,
-  User,
+  DropdownMenu,
+  Card,
 } from '@heroui/react';
 import { format } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -34,12 +36,17 @@ import { CellRenderer } from '@/components/ui/cell-renderer';
 import { renderChip } from '@/components/ui/data-table/cell-renderers';
 import useAppointmentButtonsInDrawer from '@/services/client/appointment/hooks/useAppointmentButton';
 import { useIsMobile } from '@/hooks/useMobile';
-import { CLINIC_INFO } from '@/lib/config';
 import { useAppointmentWithAID } from '@/services/client/appointment/query';
 import { useAppointmentStore } from '@/store/appointment';
-import { AppointmentType } from '@/services/client/appointment';
-import { OrganizationUser } from '@/services/common/user';
+import {
+  APPOINTMENT_STATUSES,
+  APPOINTMENT_TYPES,
+  AppointmentType,
+} from '@/services/client/appointment';
+import { ORGANIZATION_USER_ROLES, OrganizationUser } from '@/services/common/user';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
+import { useClipboard } from '@/hooks/useClipboard';
+import { UserDetailsPopover } from './user-details-popover';
 
 const DRAWER_DELAY = 200;
 
@@ -110,6 +117,9 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
   const { data: previousAppointment, isLoading } = useAppointmentWithAID(
     appointment?.previousAppointment || ''
   );
+  const clipboard = useClipboard({ timeout: 3000 });
+  const { organization } = useSession();
+  const location = organization?.organizationDetails?.location || '';
 
   const patientDescription = useMemo(() => {
     const parts = [`Patient • #${appointment.patient.uid}`];
@@ -136,11 +146,12 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
     const isOnline = appointment.additionalInfo.type === 'online';
 
     return {
+      isOnline,
       icon: isOnline ? 'solar:videocamera-bold-duotone' : 'solar:map-bold-duotone',
       label: isOnline ? 'Online' : 'In-Person',
       meetIcon: isOnline ? 'logos:google-meet' : 'logos:google-maps',
       meetLabel: isOnline ? 'Join with Google Meet' : 'Get Directions to Clinic',
-      meetDescription: isOnline ? 'meet.google.com/yzg-fdrq-sga' : CLINIC_INFO.location.address,
+      meetDescription: isOnline ? 'meet.google.com/yzg-fdrq-sga' : location,
       iconColor: isOnline ? 'text-primary-500' : '',
     };
   }, [appointment.additionalInfo.type]);
@@ -151,54 +162,51 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
   }, [appointment.additionalInfo]);
 
   // Event handlers
-  const handleGetDirections = useCallback(() => {
-    // Implementation for getting directions
-    console.log('Get directions');
-  }, []);
+  const handleGetDirections = () => {
+    if (location) {
+      window.open(location, '_blank');
+    }
+  };
 
-  const handleCopy = useCallback(() => {
-    // Implementation for copying
-    console.log('Copy');
-  }, []);
+  const handleCopy = () => {
+    if (location) {
+      clipboard.copy(location);
+      addToast({
+        title: 'Location copied to clipboard',
+        color: 'success',
+      });
+    }
+  };
 
   return (
     <>
       <div className="flex flex-col items-start gap-1">
         <AppointmentHeading title="PEOPLE" />
-        <User
+        <UserDetailsPopover
+          uid={appointment.patient.uid}
           name={appointment.patient.name}
-          avatarProps={{
-            src: appointment.patient.image,
-            size: 'sm',
-            name: appointment.patient.name,
-          }}
-          classNames={{
-            description: 'text-default-400 text-tiny',
-          }}
           description={patientDescription}
         />
         {!!appointment.doctor?.uid && (
-          <User
+          <UserDetailsPopover
+            uid={appointment.doctor.uid}
             name={appointment.doctor.name}
-            avatarProps={{
-              src: appointment.doctor.image,
-              size: 'sm',
-              name: appointment.doctor.name,
-            }}
-            classNames={{
-              description: 'text-default-400 text-tiny',
-            }}
             description={doctorDescription}
           />
         )}
         {appointment.previousAppointment && (
-          <>
+          <Card
+            isPressable
+            as={Link}
+            href={`/appointments/${appointment.previousAppointment}`}
+            target="_blank"
+            className="mt-2 w-full items-start rounded-small px-2 py-1"
+          >
             <AppointmentHeading
-              className="mt-2"
               title="LINKED APPOINTMENT"
               description={
                 <Link
-                  className="flex items-center gap-0.5 underline hover:text-primary"
+                  className="flex items-center gap-0.5 underline text-small hover:text-primary"
                   href={`/appointments/${appointment.previousAppointment}`}
                   target="_blank"
                 >
@@ -224,36 +232,47 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
                 </div>
               )
             )}
-          </>
+          </Card>
         )}
       </div>
 
-      <Divider className="my-2" />
-
-      <div className="flex flex-col items-start gap-1">
-        <AppointmentHeading
-          title="Appointment Mode"
-          description={
-            <div className="flex items-center gap-1">
-              <Icon
-                icon={appointmentModeContent.icon}
-                className={appointmentModeContent.iconColor}
-                width={12}
+      {(
+        [
+          APPOINTMENT_STATUSES.booked,
+          APPOINTMENT_STATUSES.confirmed,
+          APPOINTMENT_STATUSES.in_progress,
+        ] as AppointmentType['status'][]
+      ).includes(appointment.status) && (
+        <>
+          <Divider className="my-2" />
+          <div className="flex flex-col items-start gap-1">
+            <AppointmentHeading
+              title="Appointment Mode"
+              description={
+                <div className="flex items-center gap-1">
+                  <Icon
+                    icon={appointmentModeContent.icon}
+                    className={appointmentModeContent.iconColor}
+                    width={12}
+                  />
+                  <span className="capitalize">{appointmentModeContent.label}</span>
+                </div>
+              }
+            />
+            {!appointmentModeContent.isOnline && organization?.organizationDetails?.location && (
+              <MeetDirections
+                icon={appointmentModeContent.meetIcon}
+                label={appointmentModeContent.meetLabel}
+                description={appointmentModeContent.meetDescription}
+                onGetDirections={handleGetDirections}
+                onCopy={handleCopy}
               />
-              <span className="capitalize">{appointmentModeContent.label}</span>
-            </div>
-          }
-        />
-        <MeetDirections
-          icon={appointmentModeContent.meetIcon}
-          label={appointmentModeContent.meetLabel}
-          description={appointmentModeContent.meetDescription}
-          onGetDirections={handleGetDirections}
-          onCopy={handleCopy}
-        />
-      </div>
+            )}
+          </div>
+        </>
+      )}
 
-      {hasAdditionalInfo ? (
+      {hasAdditionalInfo || appointment.cancellation?.remarks ? (
         <>
           <Divider className="my-2" />
           <div className="flex flex-col items-start gap-1">
@@ -299,6 +318,14 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
                 className="p-0"
               />
             )}
+            {appointment.cancellation?.remarks && (
+              <CellRenderer
+                label={`Cancelled by ${appointment.cancellation.by?.name} on ${format(new Date(appointment.cancellation.date || ''), 'MMMM d, yyyy')}`}
+                icon="solar:danger-triangle-bold"
+                classNames={{ icon: 'text-warning-500 bg-warning-50' }}
+                value={appointment.cancellation.remarks}
+              />
+            )}
           </div>
         </>
       ) : (
@@ -327,10 +354,14 @@ const AppointmentHeader = memo(
       <div className="flex w-full flex-row items-start justify-between gap-8 rounded-none pr-2">
         <div>
           <div className="flex items-center gap-1">
-            <h2 className="font-medium capitalize text-primary-foreground text-large">
-              #{appointment.aid} - {appointment.type}
+            <h2
+              className={cn('font-medium capitalize text-primary-foreground text-large', {
+                'line-through': appointment.status === APPOINTMENT_STATUSES.cancelled,
+              })}
+            >
+              #{appointment.aid} - {APPOINTMENT_TYPES[appointment.type].label}
             </h2>
-            {appointment.type === 'emergency' && (
+            {appointment.type === APPOINTMENT_TYPES.emergency.value && (
               <Icon icon="solar:danger-triangle-bold" className="animate-pulse text-warning-500" />
             )}
           </div>
@@ -401,7 +432,26 @@ const AppointmentFooter = memo(({ appointment }: { appointment: AppointmentType 
     role: user?.role as OrganizationUser['role'],
   });
 
-  return (
+  return appointment.status === APPOINTMENT_STATUSES.cancelled &&
+    user?.role === ORGANIZATION_USER_ROLES.patient ? (
+    <Alert
+      color="warning"
+      title="Cancelled"
+      description={
+        <>
+          <p>
+            This appointment has been cancelled
+            {appointment.cancellation?.by?.name ? ` by ${appointment.cancellation.by?.name}` : null}
+            , please contact the clinic for more information. or try booking another{' '}
+            <Link href="/appointments/create" underline="always" size="sm">
+              here
+            </Link>
+            .
+          </p>
+        </>
+      }
+    />
+  ) : (
     <div className="flex w-full flex-row items-center justify-center gap-2">
       {buttons.map((button) => {
         const isButtonIconOnly = button.isIconOnly || buttons.length > 3;
@@ -420,7 +470,7 @@ const AppointmentFooter = memo(({ appointment }: { appointment: AppointmentType 
               isIconOnly={isButtonIconOnly}
               fullWidth
               whileSubmitting={button.whileLoading}
-              fn={async () => {
+              onPress={async () => {
                 if (button.onPress) {
                   await button.onPress();
                 }

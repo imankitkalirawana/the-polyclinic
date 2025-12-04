@@ -74,7 +74,6 @@ export const randomColorClass = ({
   const resolvedWeight = weight ?? getRandom(weights);
 
   const result = `${resolvedType}-${resolvedColor}-${resolvedWeight}`;
-  console.log(result);
   return result;
 };
 

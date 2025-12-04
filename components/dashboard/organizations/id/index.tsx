@@ -20,7 +20,7 @@ import UserModal from './create-edit-user';
 import DeleteUserModal from './delete-user-modal';
 import UserStatusToggle from './user-status-toggle';
 import CreateEditOrganizationModal from '../create-edit';
-import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import { renderChip, RenderUser } from '@/components/ui/data-table/cell-renderers';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 export default function Organization({ id }: { id: string }) {
@@ -154,7 +154,7 @@ export default function Organization({ id }: { id: string }) {
                     <CardBody className="p-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
-                          <Avatar src={user.image} name={user.name} size="lg" />
+                          <RenderUser name={user.name} isCompact size="xl" />
                           <div>
                             <h4 className="font-semibold">{user.name}</h4>
                             <p className="text-sm text-default-400">{user.email}</p>

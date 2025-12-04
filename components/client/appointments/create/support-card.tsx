@@ -37,8 +37,8 @@ const SupportCard = React.forwardRef<HTMLDivElement, SupportCardProps>(
           src="https://nextuipro.nyc3.cdn.digitaloceanspaces.com/components-images/avatars/f4d075c1fa8155478e5bb26aaae69fc1.jpg"
         />
       </AvatarGroup>
-      <div className="line-clamp-2 text-left text-tiny font-medium text-default-700">
-        We’re here to answer your questions.
+      <div className="line-clamp-2 text-left font-medium text-default-700 text-tiny">
+        We&apos;re here to answer your questions.
       </div>
       <Button
         isIconOnly

@@ -4,9 +4,10 @@ import { GetAllNotificationsResponse } from './api.types';
 export class Notifications {
   private static API_BASE = '/common/notifications';
 
-  static async getAll() {
+  static async getAll(params?: { status?: 'unread' | 'read' }) {
     return await apiRequest<GetAllNotificationsResponse>({
       url: this.API_BASE,
+      params,
     });
   }
 

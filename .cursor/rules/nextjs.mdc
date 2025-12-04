@@ -1,63 +1,37 @@
-# Next.js App Router Guidelines
+---
+description: Apply when working with Next.js App Router, pages, layouts, routing, middleware, or server/client components in the healthcare application.
+alwaysApply: false
+---
 
-## Project Structure
+# Next.js App Router
 
-- Follow the App Router structure as defined in [app/](mdc:app/) directory
-- Use the layout pattern with [app/layout.tsx](mdc:app/layout.tsx) as the root layout
-- Organize pages under appropriate directories (e.g., `app/dashboard/`, `app/appointments/`)
-- Use dynamic routes with `[param]` syntax for dynamic pages
+## App Structure
+
+- Root layout: [app/layout.tsx](mdc:app/layout.tsx)
+- Routes: `app/dashboard/`, `app/appointments/`, `app/(public)/`, `app/auth/`
+- Dynamic routes: `[param]` with proper sanitization
+- Middleware for route protection and HIPAA compliance
 
 ## Page Components
 
-- Use `page.tsx` files for route pages
-- Use `layout.tsx` files for shared layouts
-- Use `loading.tsx` for loading states
-- Use `error.tsx` for error boundaries
-- Use `not-found.tsx` for 404 pages
+- `page.tsx` - proper data validation
+- `layout.tsx` - role-based access
+- `loading.tsx` - no PHI in loading states
+- `error.tsx` - HIPAA-compliant (no PHI in errors)
+- `not-found.tsx` - secure 404s
 
-## Server vs Client Components
+## Server vs Client
 
-- Default to Server Components unless client-side interactivity is needed
-- Use `'use client'` directive only when necessary
-- Keep client components as small as possible
-- Use Server Actions for form submissions and data mutations
+- **Default to Server Components** (minimize PHI exposure)
+- `'use client'` only for interactive forms/real-time features
+- Never store PHI in client state
+- Server Actions for HIPAA-compliant submissions
+- Server-side validation for all healthcare inputs
+- In [app/](mdc:app/) never use 'use client' directive instead create a folder and component file in [components/](mdc:components/) and hydrate it
 
 ## Data Fetching
 
-- Use Server Components for initial data fetching
-- Use React Query/TanStack Query for client-side data management
-- Implement proper loading and error states
-- Use Suspense boundaries for streaming
-
-## API Routes
-
-- Use App Router API routes in `app/api/` directory
-- Follow RESTful conventions for route naming
-- Use proper HTTP methods (GET, POST, PUT, DELETE)
-- Implement proper error handling and status codes
-
-## Authentication
-
-- Use NextAuth.js as configured in [auth.ts](mdc:auth.ts)
-- Protect routes using middleware
-- Use session data in Server Components when possible
-- Implement proper redirects for unauthenticated users
-
-## Styling
-
-- Use Tailwind CSS for styling
-- Use CSS modules for component-specific styles
-- Follow the theme system defined in [components/theme-provider.tsx](mdc:components/theme-provider.tsx)
-- Use responsive design patterns
-
-## Performance
-
-- Use Next.js Image component for optimized images
-- Implement proper caching strategies
-- Use dynamic imports for code splitting
-- Optimize bundle size with proper tree shaking
-  description:
-  globs:
-  alwaysApply: false
-
----
+- Server Components for initial data with access controls
+- TanStack Query for client-side with cache policies
+- Cache config: [lib/config.ts](mdc:lib/config.ts) `isCaching`
+- Suspense boundaries with privacy considerations

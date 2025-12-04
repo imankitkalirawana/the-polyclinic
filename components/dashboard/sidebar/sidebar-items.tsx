@@ -1,6 +1,5 @@
 import { UnifiedUser } from '@/services/common/user';
 import { type SidebarItem } from './sidebar';
-import { ThemeSwitcher } from '@/components/theme-switcher';
 
 // Extend SidebarItem to include roles
 
@@ -84,6 +83,13 @@ export const sectionItems: SidebarItem[] = [
         title: 'Drugs',
         roles: ['admin'],
       },
+      {
+        key: 'departments',
+        href: '/dashboard/departments',
+        icon: 'solar:hospital-bold-duotone',
+        title: 'Departments',
+        roles: ['admin', 'receptionist', 'patient', 'doctor'],
+      },
     ],
   },
   {
@@ -120,19 +126,19 @@ export const sectionItems: SidebarItem[] = [
       },
     ],
   },
-  {
-    key: 'configure',
-    title: 'Configure',
-    items: [
-      {
-        key: 'theme',
-        href: undefined,
-        icon: 'solar:moon-fog-bold-duotone',
-        title: 'Dark Mode',
-        endContent: <ThemeSwitcher />,
-      },
-    ],
-  },
+  // {
+  //   key: 'configure',
+  //   title: 'Configure',
+  //   items: [
+  //     {
+  //       key: 'theme',
+  //       href: undefined,
+  //       icon: 'solar:moon-fog-bold-duotone',
+  //       title: 'Dark Mode',
+  //       endContent: <ThemeSwitcher />,
+  //     },
+  //   ],
+  // },
 ];
 
 // Function to filter sidebar items based on user role

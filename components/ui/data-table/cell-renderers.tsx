@@ -11,8 +11,6 @@ import {
   DropdownMenu,
   DropdownSection,
   DropdownTrigger,
-  Tooltip,
-  User,
 } from '@heroui/react';
 import { format } from 'date-fns';
 import type React from 'react';
@@ -20,53 +18,85 @@ import { Icon } from '@iconify/react';
 
 import { CopyText } from '@/components/ui/copy';
 import { chipColorMap, ChipColorType } from '@/lib/chip';
+import Avatar from 'boring-avatars';
 
 export const renderCopyableText = (text: string) => <CopyText>{text}</CopyText>;
 
-export const renderUser = ({
-  avatar,
+export const RenderUser = ({
   name,
+  size = 'md',
+  variant = 'marble',
   description,
+  isCompact,
+  classNames,
 }: {
-  avatar?: string | undefined;
-  name: string | undefined;
-  description?: string | number | undefined;
-}) => (
-  <Tooltip
-    delay={1000}
-    classNames={{
-      content: 'bg-transparent p-0 shadow-none',
-    }}
-  >
-    <User
-      avatarProps={{
-        radius: 'lg',
-        src: avatar,
-        size: avatar ? 'md' : 'sm',
-        name,
-      }}
-      classNames={{
-        name: 'text-default-foreground',
-        description: 'text-default-500',
-      }}
-      description={description}
-      name={name}
-    >
-      {description}
-    </User>
-  </Tooltip>
-);
+  name?: string | null;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  variant?: 'bauhaus' | 'beam' | 'geometric' | 'marble' | 'pixel' | 'ring' | 'sunset' | 'abstract';
+  description?: string | number | React.ReactNode;
+  isCompact?: boolean;
+  classNames?: {
+    name?: string;
+    description?: string;
+    avatar?: string;
+  };
+}) => {
+  const sizeClass: Record<
+    typeof size,
+    {
+      avatar: string;
+      gap: string;
+    }
+  > = {
+    sm: {
+      avatar: 'size-8',
+      gap: 'gap-0',
+    },
+    md: {
+      avatar: 'size-9',
+      gap: 'gap-0.5',
+    },
+    lg: {
+      avatar: 'size-11',
+      gap: 'gap-0.5',
+    },
+    xl: {
+      avatar: 'size-12',
+      gap: 'gap-1',
+    },
+  };
+
+  return (
+    <div className="flex items-center gap-2">
+      <Avatar
+        name={name ?? 'Unknown User'}
+        className={cn(classNames?.avatar, sizeClass[size].avatar)}
+        variant={variant}
+      />
+      {!isCompact && (
+        <div className={cn('flex flex-col items-start', sizeClass[size].gap)}>
+          <h4 className={cn('text-nowrap text-default-foreground text-small', classNames?.name)}>
+            {name}
+          </h4>
+          <p className={cn('text-nowrap text-default-500 text-tiny', classNames?.description)}>
+            {description}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export const renderDate = ({ date, isTime = false }: { date: Date | string; isTime?: boolean }) => {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
 
   return (
     <div className="flex flex-col">
-      <p className="text-nowrap text-small capitalize text-default-foreground">
+      <p className="text-nowrap capitalize text-default-foreground text-small">
         {format(dateObj, 'PP')}
       </p>
       {isTime && (
-        <p className="text-nowrap text-tiny capitalize text-default-500">{format(dateObj, 'p')}</p>
+        <p className="text-nowrap capitalize text-default-500 text-tiny">{format(dateObj, 'p')}</p>
       )}
     </div>
   );
@@ -75,7 +105,7 @@ export const renderDate = ({ date, isTime = false }: { date: Date | string; isTi
 export const renderCountry = (name: string, icon: React.ReactNode) => (
   <div className="flex items-center gap-2">
     <div className="h-[16px] w-[16px]">{icon}</div>
-    <p className="text-nowrap text-small text-default-foreground">{name}</p>
+    <p className="text-nowrap text-default-foreground text-small">{name}</p>
   </div>
 );
 
@@ -96,7 +126,7 @@ export const renderChip = ({
     size={size}
     startContent={<span className={cn('size-2 rounded-full', chipColorMap[item]?.text)} />}
   >
-    <span className="capitalize text-default-800">{item?.split('-').join(' ')}</span>
+    <span className="capitalize text-default-800">{item?.replace(/[_-]/g, ' ')}</span>
   </Chip>
 );
 

@@ -1,11 +1,15 @@
 // role based navbar
 
-import { SYSTEM_USER_ROLE, UNIFIED_USER_ROLES } from '@/services/common/user';
+import {
+  ORGANIZATION_USER_ROLES,
+  SYSTEM_USER_ROLE,
+  UNIFIED_USER_ROLES,
+} from '@/services/common/user';
 
 export const navItems = [
   {
     name: 'Home',
-    href: '/home',
+    href: '/',
     roles: [...UNIFIED_USER_ROLES],
   },
   {
@@ -28,19 +32,23 @@ export const navItems = [
             name: 'Users',
             href: '/dashboard/users',
             icon: 'solar:users-group-rounded-bold-duotone',
-            roles: [...SYSTEM_USER_ROLE, 'admin', 'receptionist'] as const,
+            roles: [
+              ...Object.values(SYSTEM_USER_ROLE),
+              ORGANIZATION_USER_ROLES.admin,
+              ORGANIZATION_USER_ROLES.receptionist,
+            ] as const,
           },
           {
             name: 'Drugs',
             href: '/dashboard/drugs',
             icon: 'solar:pills-bold-duotone',
-            roles: ['admin'] as const,
+            roles: [ORGANIZATION_USER_ROLES.admin] as const,
           },
           {
             name: 'Available Slots',
             href: '/dashboard/doctors/slots',
             icon: 'solar:calendar-bold-duotone',
-            roles: ['doctor'] as const,
+            roles: [ORGANIZATION_USER_ROLES.doctor] as const,
           },
         ],
       },
@@ -51,13 +59,13 @@ export const navItems = [
             name: 'Stats',
             href: '/dashboard/admin/stats',
             icon: 'solar:graph-new-bold-duotone',
-            roles: ['superadmin', 'admin'] as const,
+            roles: [SYSTEM_USER_ROLE.superadmin, ORGANIZATION_USER_ROLES.admin] as const,
           },
           {
             name: 'Settings',
             href: '/dashboard/admin/settings',
             icon: 'solar:settings-bold-duotone',
-            roles: ['superadmin', 'admin'] as const,
+            roles: [SYSTEM_USER_ROLE.superadmin, ORGANIZATION_USER_ROLES.admin] as const,
           },
         ],
       },
@@ -67,7 +75,12 @@ export const navItems = [
     name: 'Appointments',
     href: '/appointments',
     thumbnail: '/assets/navbar/appointments.png',
-    roles: ['admin', 'receptionist', 'doctor', 'patient'] as const,
+    roles: [
+      ORGANIZATION_USER_ROLES.admin,
+      ORGANIZATION_USER_ROLES.receptionist,
+      ORGANIZATION_USER_ROLES.doctor,
+      ORGANIZATION_USER_ROLES.patient,
+    ] as const,
     subItems: [
       {
         title: 'Appointments',
@@ -76,7 +89,11 @@ export const navItems = [
             name: 'Create New',
             href: '/appointments/create',
             icon: 'solar:pen-new-round-bold-duotone',
-            roles: ['admin', 'receptionist', 'patient'] as const,
+            roles: [
+              ORGANIZATION_USER_ROLES.admin,
+              ORGANIZATION_USER_ROLES.receptionist,
+              ORGANIZATION_USER_ROLES.patient,
+            ] as const,
           },
         ],
       },
@@ -87,13 +104,23 @@ export const navItems = [
             name: 'My Schedules',
             href: '/appointments?view=schedule',
             icon: 'solar:calendar-bold-duotone',
-            roles: ['admin', 'receptionist', 'patient', 'doctor'] as const,
+            roles: [
+              ORGANIZATION_USER_ROLES.admin,
+              ORGANIZATION_USER_ROLES.receptionist,
+              ORGANIZATION_USER_ROLES.patient,
+              ORGANIZATION_USER_ROLES.doctor,
+            ] as const,
           },
           {
             name: 'All Appointments',
             href: '/appointments?view=month',
             icon: 'solar:clipboard-list-bold-duotone',
-            roles: ['admin', 'receptionist', 'patient', 'doctor'] as const,
+            roles: [
+              ORGANIZATION_USER_ROLES.admin,
+              ORGANIZATION_USER_ROLES.receptionist,
+              ORGANIZATION_USER_ROLES.patient,
+              ORGANIZATION_USER_ROLES.doctor,
+            ] as const,
           },
         ],
       },

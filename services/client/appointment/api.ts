@@ -38,10 +38,19 @@ export class AppointmentApi {
     });
   }
 
-  static async cancel(aid: string) {
+  static async cancel(aid: string, remarks: string) {
     return await apiRequest<AppointmentType>({
       url: `${this.API_BASE}/${aid}/cancel`,
       method: 'PATCH',
+      data: { remarks },
+    });
+  }
+
+  static async changeDoctor(aid: string, doctorId: string) {
+    return await apiRequest<AppointmentType>({
+      url: `${this.API_BASE}/${aid}/change-doctor`,
+      method: 'PATCH',
+      data: { doctorId },
     });
   }
 
@@ -53,10 +62,11 @@ export class AppointmentApi {
     });
   }
 
-  static async sendReminder(aid: string) {
+  static async sendReminder(aid: string, emails: string | string[]) {
     return await apiRequest<{ message: string }>({
       url: `${this.API_BASE}/${aid}/reminder`,
       method: 'POST',
+      data: { emails },
     });
   }
 }

@@ -1,14 +1,15 @@
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { cn } from '@/lib/utils';
-import { Avatar, Card, CardBody, CardHeader, Divider, Chip, ScrollShadow } from '@heroui/react';
+import { Card, CardBody, CardHeader, Divider, Chip, ScrollShadow } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { usePatientByUID } from '@/services/client/patient';
-import MinimalLoader from '@/components/ui/minimal-placeholder';
+import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
+import { RenderUser } from '@/components/ui/data-table/cell-renderers';
 
 export const CreateAppointmentPatientDetails = ({ uid }: { uid: string }) => {
   const { isLoading, isError, data: user } = usePatientByUID(uid);
 
-  if (isLoading) return <MinimalLoader message="Loading patient details..." />;
+  if (isLoading) return <MinimalPlaceholder message="Loading patient details..." />;
 
   if (isError)
     return (
@@ -71,20 +72,8 @@ export const CreateAppointmentPatientDetails = ({ uid }: { uid: string }) => {
 
       <CardBody as={ScrollShadow} className="min-h-0 flex-1 space-y-2 overflow-y-auto">
         {/* Profile Section */}
-        <div className="flex items-start gap-4">
-          <Avatar
-            src={user.image}
-            alt={user.name}
-            className="h-16 w-16 flex-shrink-0"
-            name={user.name}
-          />
-          <div className="flex flex-1 flex-col gap-2">
-            <div>
-              <h4 className="font-medium text-large">{user.name}</h4>
-              <p className="text-default-400 text-small">{user.email}</p>
-            </div>
-          </div>
-        </div>
+
+        <RenderUser name={user.name} description={user.email} size="lg" />
 
         {/* Contact Information */}
         <div>
@@ -96,18 +85,18 @@ export const CreateAppointmentPatientDetails = ({ uid }: { uid: string }) => {
               value={user.email}
               classNames={{
                 icon: 'text-blue-500 bg-blue-100',
-                value: 'text-black',
               }}
             />
-            <CellRenderer
-              icon="solar:phone-bold-duotone"
-              label="Phone Number"
-              value={user.phone}
-              classNames={{
-                icon: 'text-green-500 bg-green-100',
-                value: 'text-black',
-              }}
-            />
+            {!!user.phone && (
+              <CellRenderer
+                icon="solar:phone-bold-duotone"
+                label="Phone Number"
+                value={user.phone}
+                classNames={{
+                  icon: 'text-green-500 bg-green-100',
+                }}
+              />
+            )}
           </div>
         </div>
 

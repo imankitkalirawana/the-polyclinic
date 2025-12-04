@@ -123,7 +123,7 @@ export function UserQuickLook() {
     },
     {
       label: 'Role',
-      value: () => (user.role === 'admin' ? 'doctor' : 'Nurse'),
+      value: () => renderChip({ item: user.role }),
       icon: 'solar:map-point-bold-duotone',
       classNames: { icon: 'text-teal-500 bg-teal-50' },
     },

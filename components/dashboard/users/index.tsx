@@ -3,6 +3,7 @@
 import React, { useMemo } from 'react';
 import { useRouter } from 'nextjs-toploader/app';
 import { Button, DropdownItem, DropdownMenu, Selection, useDisclosure } from '@heroui/react';
+// eslint-disable-next-line no-restricted-imports
 import { toast } from 'sonner';
 
 import { UserQuickLook } from './quicklook';
@@ -14,7 +15,7 @@ import {
   renderChip,
   renderCopyableText,
   renderDate,
-  renderUser,
+  RenderUser,
 } from '@/components/ui/data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 import { useAllUsers, useDeleteUser } from '@/services/common/user/query';
@@ -47,12 +48,16 @@ export default function Users() {
         name: 'Name',
         uid: 'name',
         sortable: true,
-        renderCell: (user) =>
-          renderUser({
-            avatar: user.image,
-            name: user.name,
-            description: user.email,
-          }),
+        renderCell: (user) => (
+          <RenderUser
+            size="md"
+            name={user.name}
+            description={user.email}
+            classNames={{
+              description: 'lowercase',
+            }}
+          />
+        ),
       },
       {
         name: 'Email',

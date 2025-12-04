@@ -13,7 +13,7 @@ import {
   renderActions,
   renderCopyableText,
   renderDate,
-  renderUser,
+  RenderUser,
 } from '@/components/ui/data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
 import { castData } from '@/lib/utils';
@@ -59,12 +59,7 @@ export default function Doctors() {
         name: 'Name',
         uid: 'name',
         sortable: true,
-        renderCell: (doctor) =>
-          renderUser({
-            avatar: doctor.image,
-            name: doctor.name,
-            description: doctor.email,
-          }),
+        renderCell: (doctor) => <RenderUser name={doctor.name} description={doctor.email} />,
       },
       {
         name: 'Email',

@@ -64,10 +64,24 @@
             "name": "next/navigation",
             "importNames": ["useRouter"],
             "message": "Please import useRouter from \"nextjs-toploader/app\" instead of using \"useRouter\" from next/navigation."
+          },
+          {
+            "name": "@heroui/react",
+            "importNames": ["Modal"],
+            "message": "Please import Modal from \"@/components/ui/modal\" instead of using \"Modal\" from @heroui/react."
+          },
+          {
+            "name": "yup",
+            "message": "Please use zod instead of yup."
+          },
+          {
+            "name": "formik",
+            "message": "Please use react-hook-form instead of formik."
           }
         ]
       }
     ]
+
     // "simple-import-sort/imports": [
     //   "warn",
     //   {

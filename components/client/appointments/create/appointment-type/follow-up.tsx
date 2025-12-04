@@ -1,9 +1,8 @@
 import { useMemo, useState, useCallback } from 'react';
 import { RadioGroup, ScrollShadow } from '@heroui/react';
-import { useFormikContext } from 'formik';
 
-import { CreateAppointmentFormValues } from '../types';
 import CreateAppointmentSelectedPreviousAppointment from './appointment';
+import { useCreateAppointmentForm } from '../index';
 
 import CustomRadio from '@/components/ui/custom-radio';
 import { AppointmentType } from '@/services/client/appointment';
@@ -11,12 +10,12 @@ import { useDebounce } from '@/hooks/useDebounce';
 import Fuse from 'fuse.js';
 import { SearchInput } from '../ui';
 import { usePreviousAppointments } from '@/services/client/patient';
-import MinimalLoader from '@/components/ui/minimal-placeholder';
+import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { format } from 'date-fns';
 
 function PreviousAppointments({ appointments }: { appointments: AppointmentType[] }) {
-  const { values, setFieldValue } = useFormikContext<CreateAppointmentFormValues>();
-  const { appointment } = values;
+  const { watch, setValue } = useCreateAppointmentForm();
+  const appointment = watch('appointment');
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
 
@@ -39,11 +38,11 @@ function PreviousAppointments({ appointments }: { appointments: AppointmentType[
     (value: string) => {
       const selectedAppointment = appointments.find((apt) => apt.aid.toString() === value);
       if (selectedAppointment?.doctor?.uid) {
-        setFieldValue('appointment.doctorId', selectedAppointment.doctor.uid);
+        setValue('appointment.doctorId', selectedAppointment.doctor.uid);
       }
-      setFieldValue('appointment.previousAppointment', value);
+      setValue('appointment.previousAppointment', value);
     },
-    [appointments, setFieldValue]
+    [appointments, setValue]
   );
 
   return (
@@ -89,13 +88,13 @@ function PreviousAppointments({ appointments }: { appointments: AppointmentType[
 }
 
 export default function CreateAppointmentFollowUp() {
-  const { values } = useFormikContext<CreateAppointmentFormValues>();
-  const { appointment } = values;
+  const { watch } = useCreateAppointmentForm();
+  const appointment = watch('appointment');
 
   const { data: appointments, isLoading } = usePreviousAppointments(appointment.patientId);
 
   if (isLoading) {
-    return <MinimalLoader message="Loading previous appointments..." />;
+    return <MinimalPlaceholder message="Loading previous appointments..." />;
   }
 
   if (!appointments || appointments.length === 0) {

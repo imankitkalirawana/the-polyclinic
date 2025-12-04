@@ -1,34 +1,16 @@
 import React from 'react';
 
-import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
-import { $FixMe } from '@/types';
-import CancelDeleteAppointment from '@/components/client/appointments/ui/cancel-delete';
-import RescheduleAppointment from '@/components/client/appointments/ui/reschedule-modal';
-import { AppointmentType, ButtonConfig } from '@/services/client/appointment';
+import { APPOINTMENT_STATUSES, AppointmentType, ButtonConfig } from '@/services/client/appointment';
 import { useAppointmentActions } from './hooks/useAppointmentActions';
+import RescheduleAppointment from '@/services/client/appointment/components/reschedule-modal';
+import CancelModal from './components/cancel-modal';
+import { ORGANIZATION_USER_ROLES, OrganizationUser } from '@/services/common/user';
+import ChangeDoctorModal from './components/change-doctor-modal';
 
 export const createAppointmentButtonConfigs = (actions: {
   handleConfirm: (appointment: AppointmentType) => Promise<void>;
-  handleCancel: (appointment: AppointmentType) => Promise<void>;
   handleReminder: (appointment: AppointmentType) => Promise<void>;
 }): ButtonConfig[] => [
-  {
-    key: 'add-to-calendar',
-    label: 'Add to Calendar',
-    icon: 'solar:calendar-add-bold-duotone',
-    color: 'default',
-    variant: 'flat',
-    position: 'left',
-    visibilityRules: {
-      statuses: ['confirmed', 'in-progress'],
-      roles: ['patient', 'doctor'],
-    },
-    action: {
-      type: 'store-action',
-      payload: 'add-to-calendar',
-    },
-    content: AddToCalendar,
-  },
   {
     key: 'cancel',
     label: 'Cancel Appointment',
@@ -38,15 +20,43 @@ export const createAppointmentButtonConfigs = (actions: {
     position: 'right',
     isIconOnly: true,
     visibilityRules: {
-      statuses: ['confirmed', 'in-progress', 'on-hold', 'overdue'],
-      roles: ['patient', 'receptionist', 'admin', 'doctor'],
-      custom: (appointment) => appointment.status !== 'in-progress',
+      statuses: [
+        APPOINTMENT_STATUSES.confirmed,
+        APPOINTMENT_STATUSES.in_progress,
+        APPOINTMENT_STATUSES.on_hold,
+        APPOINTMENT_STATUSES.overdue,
+      ],
+      roles: [
+        ORGANIZATION_USER_ROLES.patient,
+        ORGANIZATION_USER_ROLES.receptionist,
+        ORGANIZATION_USER_ROLES.admin,
+        ORGANIZATION_USER_ROLES.doctor,
+      ],
+      custom: (appointment) => appointment.status !== APPOINTMENT_STATUSES.in_progress,
     },
     action: {
       type: 'store-action',
       payload: 'cancel',
     },
-    content: () => <CancelDeleteAppointment type="cancel" />,
+    content: () => <CancelModal />,
+  },
+  {
+    key: 'decline',
+    label: 'Decline',
+    icon: 'solar:minus-circle-bold-duotone',
+    color: 'danger',
+    variant: 'flat',
+    position: 'left',
+    visibilityRules: {
+      statuses: [APPOINTMENT_STATUSES.booked],
+      roles: [ORGANIZATION_USER_ROLES.admin, ORGANIZATION_USER_ROLES.doctor],
+      custom: (appointment) => appointment.doctor?.uid !== undefined,
+    },
+    action: {
+      type: 'store-action',
+      payload: 'decline',
+    },
+    content: () => <CancelModal />,
   },
   {
     key: 'reminder',
@@ -58,8 +68,17 @@ export const createAppointmentButtonConfigs = (actions: {
     isIconOnly: true,
     whileLoading: 'Sending...',
     visibilityRules: {
-      statuses: ['confirmed', 'in-progress', 'on-hold', 'overdue'],
-      roles: ['doctor', 'receptionist', 'admin'],
+      statuses: [
+        APPOINTMENT_STATUSES.confirmed,
+        APPOINTMENT_STATUSES.in_progress,
+        APPOINTMENT_STATUSES.on_hold,
+        APPOINTMENT_STATUSES.overdue,
+      ],
+      roles: [
+        ORGANIZATION_USER_ROLES.doctor,
+        ORGANIZATION_USER_ROLES.receptionist,
+        ORGANIZATION_USER_ROLES.admin,
+      ],
     },
     action: {
       type: 'async-function',
@@ -67,20 +86,41 @@ export const createAppointmentButtonConfigs = (actions: {
     },
   },
   {
-    key: 'decline',
-    label: 'Decline',
-    icon: 'solar:close-circle-line-duotone',
-    color: 'danger',
+    key: 'change-doctor',
+    label: 'Change Doctor',
+    icon: 'solar:stethoscope-bold-duotone',
+    color: 'warning',
     variant: 'flat',
-    position: 'right',
+    position: 'left',
+    isIconOnly: true,
     visibilityRules: {
-      statuses: ['booked'],
-      roles: ['doctor', 'admin'],
+      statuses: [APPOINTMENT_STATUSES.booked, APPOINTMENT_STATUSES.confirmed],
+      roles: [ORGANIZATION_USER_ROLES.receptionist, ORGANIZATION_USER_ROLES.admin],
+      custom: (appointment) => appointment.doctor?.uid !== undefined,
     },
     action: {
-      type: 'async-function',
-      handler: actions.handleCancel,
+      type: 'store-action',
+      payload: 'change-doctor',
     },
+    content: () => <ChangeDoctorModal type="change-doctor" />,
+  },
+  {
+    key: 'assign-doctor',
+    label: 'Assign a doctor',
+    icon: 'solar:user-plus-bold-duotone',
+    color: 'primary',
+    variant: 'flat',
+    position: 'left',
+    visibilityRules: {
+      statuses: [APPOINTMENT_STATUSES.booked],
+      roles: [ORGANIZATION_USER_ROLES.receptionist, ORGANIZATION_USER_ROLES.admin],
+      custom: (appointment) => !appointment.doctor?.uid,
+    },
+    action: {
+      type: 'store-action',
+      payload: 'assign-doctor',
+    },
+    content: () => <ChangeDoctorModal type="assign-doctor" />,
   },
   {
     key: 'reschedule',
@@ -91,12 +131,25 @@ export const createAppointmentButtonConfigs = (actions: {
     isIconOnly: true,
     position: 'right',
     visibilityRules: {
-      statuses: ['booked', 'confirmed', 'in-progress', 'on-hold', 'overdue'],
-      roles: ['patient', 'doctor', 'receptionist', 'admin'],
+      statuses: [
+        APPOINTMENT_STATUSES.booked,
+        APPOINTMENT_STATUSES.confirmed,
+        APPOINTMENT_STATUSES.in_progress,
+        APPOINTMENT_STATUSES.on_hold,
+        APPOINTMENT_STATUSES.overdue,
+      ],
+      roles: [
+        ORGANIZATION_USER_ROLES.patient,
+        ORGANIZATION_USER_ROLES.doctor,
+        ORGANIZATION_USER_ROLES.receptionist,
+        ORGANIZATION_USER_ROLES.admin,
+      ],
       custom: (appointment) =>
-        appointment.status === 'booked' ||
-        appointment.status === 'confirmed' ||
-        appointment.status === 'overdue',
+        [
+          APPOINTMENT_STATUSES.booked,
+          APPOINTMENT_STATUSES.confirmed,
+          APPOINTMENT_STATUSES.overdue,
+        ].some((status) => status === appointment.status),
     },
     action: {
       type: 'store-action',
@@ -107,13 +160,14 @@ export const createAppointmentButtonConfigs = (actions: {
   {
     key: 'accept',
     label: 'Accept',
-    icon: 'solar:check-circle-line-duotone',
+    icon: 'solar:check-circle-bold-duotone',
     color: 'success',
     variant: 'flat',
     position: 'left',
     visibilityRules: {
-      statuses: ['booked'],
-      roles: ['doctor', 'admin'],
+      statuses: [APPOINTMENT_STATUSES.booked],
+      roles: [ORGANIZATION_USER_ROLES.doctor, ORGANIZATION_USER_ROLES.admin],
+      custom: (appointment) => appointment.doctor?.uid !== undefined,
     },
     action: {
       type: 'async-function',
@@ -128,8 +182,12 @@ export const createAppointmentButtonConfigs = (actions: {
     variant: 'flat',
     position: 'right',
     visibilityRules: {
-      statuses: ['confirmed', 'in-progress', 'on-hold'],
-      roles: ['doctor', 'admin'],
+      statuses: [
+        APPOINTMENT_STATUSES.confirmed,
+        APPOINTMENT_STATUSES.in_progress,
+        APPOINTMENT_STATUSES.on_hold,
+      ],
+      roles: [ORGANIZATION_USER_ROLES.doctor, ORGANIZATION_USER_ROLES.admin],
     },
     action: {
       type: 'navigation',
@@ -140,11 +198,10 @@ export const createAppointmentButtonConfigs = (actions: {
 ];
 
 export const useAppointmentButtonConfigs = () => {
-  const { handleConfirm, handleCancel, handleReminder } = useAppointmentActions();
+  const { handleConfirm, handleReminder } = useAppointmentActions();
 
   return createAppointmentButtonConfigs({
     handleConfirm,
-    handleCancel,
     handleReminder,
   });
 };
@@ -152,7 +209,7 @@ export const useAppointmentButtonConfigs = () => {
 export const isButtonVisible = (
   config: ButtonConfig,
   appointment: AppointmentType | null,
-  role: $FixMe['role']
+  role: OrganizationUser['role']
 ): boolean => {
   if (!appointment) return false;
 

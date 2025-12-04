@@ -77,3 +77,50 @@ export function withZodSchema<T>(schema: z.ZodSchema<T>) {
     }
   };
 }
+
+type SuccessResult<T> = readonly [T, null];
+type ErrorResult<E = Error> = readonly [null, E];
+
+type Result<T, E = Error> = SuccessResult<T> | ErrorResult<E>;
+
+export async function tryCatch<T, E = Error>(promise: Promise<T>): Promise<Result<T, E>> {
+  try {
+    const data = await promise;
+    return [data, null] as const;
+  } catch (error) {
+    process.env.NODE_ENV !== 'production' && console.error('error', error);
+    return [null, error as E] as const;
+  }
+}
+
+export function extractFirstName(fullName: string): string {
+  let cleaned = fullName.trim().replace(/\s+/g, ' ');
+
+  const titles = ['mr', 'mrs', 'ms', 'miss', 'dr', 'prof', 'sir', 'madam'];
+  const regex = new RegExp(`^((?:${titles.join('|')})\\.?\\s+)+`, 'i');
+
+  const isDoctor = /^((dr)\.?)/i.test(cleaned);
+
+  cleaned = cleaned.replace(regex, '').trim();
+
+  const firstName = cleaned.split(' ')[0];
+
+  const formattedFirst = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+
+  return isDoctor ? `Dr. ${formattedFirst}` : formattedFirst;
+}
+
+/**
+ * Converts strings like "on_hold" or "on-hold" to "On Hold"
+ * Handles underscores, hyphens, and mixed casing.
+ */
+export function formatLabel(text: string): string {
+  if (!text) return '';
+
+  return text
+    .toLowerCase()
+    .replace(/[_-]+/g, ' ')
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
