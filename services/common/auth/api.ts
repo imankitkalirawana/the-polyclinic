@@ -9,7 +9,7 @@ import { RegistrationResponse, VerifyOTPResponse } from './types';
 import { apiRequest } from '@/lib/axios';
 
 export class AuthApi {
-  static baseUrl = '/auth';
+  private static baseUrl = '/auth';
 
   static async login(data: LoginRequest) {
     return await apiRequest<{ token: string }>({
@@ -35,9 +35,9 @@ export class AuthApi {
     });
   }
 
-  static async verifyEmail(data: { email: string }) {
+  static async checkEmail(data: { email: string }) {
     return await apiRequest<{ exists: boolean }>({
-      url: `${this.baseUrl}/verify-email`,
+      url: `${this.baseUrl}/check-email`,
       method: 'POST',
       data,
     });

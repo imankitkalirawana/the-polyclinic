@@ -26,7 +26,7 @@ serverAxios.interceptors.request.use(async (config) => {
   const subdomain = await getSubdomain();
 
   if (subdomain) {
-    config.headers.set('x-organization', subdomain);
+    config.headers.set('x-tenant-slug', subdomain);
   }
 
   if (token) {
