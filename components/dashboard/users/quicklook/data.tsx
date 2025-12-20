@@ -6,7 +6,7 @@ import { ActionType, DropdownKeyType } from '../types';
 
 import { PermissionProps } from '@/components/ui/dashboard/quicklook/types';
 import { UnifiedUser } from '@/services/common/user';
-import { RenderUser } from '@/components/ui/data-table/cell-renderers';
+import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
   doctor: ['cancel', 'reschedule', 'reminder', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],

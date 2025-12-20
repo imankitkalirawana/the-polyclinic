@@ -7,9 +7,9 @@ import { Button, DropdownItem, DropdownMenu, Selection } from '@heroui/react';
 import { EmailQuickLook } from './quicklook';
 import { useEmailStore } from './store';
 
-import { Table } from '@/components/ui/data-table';
-import { renderActions, renderDate } from '@/components/ui/data-table/cell-renderers';
-import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
+import { Table } from '@/components/ui/static-data-table';
+import { renderActions, renderDate } from '@/components/ui/static-data-table/cell-renderers';
+import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
 import { useAllEmails } from '@/services/client/email/query';
 import { EmailType } from '@/services/client/email/types';
 

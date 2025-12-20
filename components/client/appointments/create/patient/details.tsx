@@ -4,7 +4,7 @@ import { Card, CardBody, CardHeader, Divider, Chip, ScrollShadow } from '@heroui
 import { Icon } from '@iconify/react';
 import { usePatientByUID } from '@/services/client/patient';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
-import { RenderUser } from '@/components/ui/data-table/cell-renderers';
+import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 
 export const CreateAppointmentPatientDetails = ({ uid }: { uid: string }) => {
   const { isLoading, isError, data: user } = usePatientByUID(uid);

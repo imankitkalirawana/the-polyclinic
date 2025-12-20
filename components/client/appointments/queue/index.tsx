@@ -11,6 +11,7 @@ import { formatDate } from 'date-fns';
 import { useState } from 'react';
 import NextQueues from './next-queues';
 import PrescriptionPanel from './priscription-panel';
+import Medicines from './medicines';
 
 export default function Queues() {
   const { data } = useAllAppointmentQueues();
@@ -133,6 +134,7 @@ export default function Queues() {
             </AccordionItem>
           </Accordion>
           <PrescriptionPanel />
+          <Medicines />
         </div>
         <div className="flex justify-end gap-2 p-2 px-4">
           {currentQueue.status === QueueStatus.BOOKED ? (

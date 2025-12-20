@@ -23,7 +23,7 @@ import { UpdateUser, updateUserSchema } from '@/services/common/user';
 import { withZodSchema } from '@/lib/utils';
 import { GENDERS } from '@/lib/constants';
 import { useQueryState } from 'nuqs';
-import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
 
 export default function NewUser({
   uid,

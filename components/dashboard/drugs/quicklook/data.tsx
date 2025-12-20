@@ -14,7 +14,7 @@ import ActivityTimeline from '../../../ui/activity/timeline';
 import { ActionType, DropdownKeyType } from '../types';
 
 import { PermissionProps } from '@/components/ui/dashboard/quicklook/types';
-import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
 import { DrugType } from '@/services/client/drug/types';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {

@@ -405,7 +405,7 @@ export function Table<T extends TableItem>({
 
           <Divider className="h-5" orientation="vertical" />
 
-          <div className="whitespace-nowrap text-small text-default-800">
+          <div className="whitespace-nowrap text-default-800 text-small">
             {isAll(selectedKeys)
               ? 'All items selected'
               : `${selectedKeys.size > 0 ? `${selectedKeys.size} Selected` : ''}`}
@@ -459,7 +459,7 @@ export function Table<T extends TableItem>({
           size="sm"
         />
         <div className="flex items-center justify-end gap-6">
-          <span className="text-small text-default-400">
+          <span className="text-default-400 text-small">
             {isAll(selectedKeys)
               ? 'All items selected'
               : `${selectedKeys.size} of ${sortedItems.length} selected`}
