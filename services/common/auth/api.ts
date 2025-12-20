@@ -9,14 +9,16 @@ import { RegistrationResponse, VerifyOTPResponse } from './types';
 import { apiRequest } from '@/lib/axios';
 
 export class AuthApi {
-  private static baseUrl = '/auth';
+  private static baseUrl = '/client/auth';
 
   static async login(data: LoginRequest) {
-    return await apiRequest<{ token: string }>({
+    const res = await apiRequest<{ token: string }>({
       url: `${this.baseUrl}/login`,
       method: 'POST',
       data,
     });
+    console.log('res', res);
+    return res;
   }
 
   static async sendOTP(data: SendOTPRequest) {

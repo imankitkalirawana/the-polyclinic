@@ -11,12 +11,12 @@ export const SYSTEM_USER_ROLE = {
 } as const;
 
 export const ORGANIZATION_USER_ROLES = {
-  admin: 'admin',
-  doctor: 'doctor',
-  nurse: 'nurse',
-  patient: 'patient',
-  receptionist: 'receptionist',
-  pharmacist: 'pharmacist',
+  admin: 'ADMIN',
+  doctor: 'DOCTOR',
+  nurse: 'NURSE',
+  patient: 'PATIENT',
+  receptionist: 'RECEPTIONIST',
+  pharmacist: 'PHARMACIST',
 } as const;
 
 export const UNIFIED_USER_ROLES = [
