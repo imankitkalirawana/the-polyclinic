@@ -515,3 +515,41 @@
 .ql-tooltip {
   display: none;
 }
+
+/* TipTap editor styles */
+.ProseMirror {
+  padding: 0;
+}
+
+/* BULLET LIST */
+.ProseMirror ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin: 0.5rem 0;
+}
+
+/* NUMBERED LIST */
+.ProseMirror ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin: 0.5rem 0;
+}
+
+.ProseMirror li {
+  margin: 0.25rem 0;
+}
+
+/* TEXT ALIGNMENT */
+.ProseMirror p[style*='text-align'],
+.ProseMirror h1[style*='text-align'],
+.ProseMirror h2[style*='text-align'],
+.ProseMirror h3[style*='text-align'],
+.ProseMirror h4[style*='text-align'],
+.ProseMirror h5[style*='text-align'],
+.ProseMirror h6[style*='text-align'] {
+  text-align: inherit;
+}
+
+.ProseMirror {
+  min-height: 180px;
+}
