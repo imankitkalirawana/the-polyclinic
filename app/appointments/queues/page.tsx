@@ -7,7 +7,10 @@ export default async function QueuePage() {
   await queryClient.prefetchQuery({
     queryKey: ['appointment-queues'],
     queryFn: async () => {
-      const result = await AppointmentQueueApi.getAll();
+      const result = await AppointmentQueueApi.getQueueForDoctor(
+        '50c99b05-f917-48ea-9f4c-d3b2701e41a2',
+        2
+      );
       if (result.success) {
         return result.data;
       }

@@ -40,7 +40,7 @@ export type AppointmentQueueType = {
   status: QueueStatus;
   patient: PatientInfo;
   doctor: DoctorInfo;
-  bookedBy: BookedByUser;
+  bookedByUser: BookedByUser;
   createdAt: string;
   updatedAt: string;
 };
