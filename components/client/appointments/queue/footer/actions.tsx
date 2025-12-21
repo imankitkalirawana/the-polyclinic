@@ -28,14 +28,14 @@ export default function QueueFooterActions({
   const isSkipButton = [
     QueueStatus.BOOKED,
     QueueStatus.CALLED,
+    QueueStatus.SKIPPED,
     QueueStatus.IN_CONSULTATION,
   ].includes(currentQueue.status);
   const isCallButton = currentQueue.status === QueueStatus.BOOKED;
   const isClockInButton = currentQueue.status === QueueStatus.CALLED;
   const isCompleteButton = currentQueue.status === QueueStatus.IN_CONSULTATION;
-  const isNextButton = [QueueStatus.COMPLETED, QueueStatus.SKIPPED, QueueStatus.CANCELLED].includes(
-    currentQueue.status
-  );
+  const isNextButton = [QueueStatus.COMPLETED, QueueStatus.CANCELLED].includes(currentQueue.status);
+  const isRecallButton = [QueueStatus.SKIPPED, QueueStatus.CALLED].includes(currentQueue.status);
 
   return (
     <div className="flex items-center gap-2">
@@ -48,16 +48,18 @@ export default function QueueFooterActions({
               queueId: currentQueue.id,
               _doctorId: currentQueue.doctor.id,
               _sequenceNumber: _sequenceNumber ?? '0',
+            }).then(() => {
+              setSequenceNumber((currentQueue.sequenceNumber + 1).toString());
             })
           }
         >
           Skip
         </Button>
       )}
-      {isCallButton && (
+      {(isCallButton || isRecallButton) && (
         <Button
           isLoading={isCallPending}
-          variant="shadow"
+          variant={isRecallButton ? 'flat' : 'shadow'}
           color="primary"
           onPress={() =>
             mutateCall({
@@ -67,7 +69,7 @@ export default function QueueFooterActions({
             })
           }
         >
-          Call
+          {isRecallButton ? 'Recall' : 'Call'}
         </Button>
       )}
       {isClockInButton && (

@@ -49,6 +49,10 @@ export const useCallPatient = () => {
     invalidateQueriesWithVariables(variables) {
       return [['queue-for-doctor', variables._doctorId, variables._sequenceNumber.toString()]];
     },
+    onSuccess: () => {
+      const audio = new Audio('/assets/audio/desk-bell.mp3');
+      audio.play();
+    },
   });
 };
 
