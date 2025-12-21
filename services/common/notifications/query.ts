@@ -17,8 +17,8 @@ export const useAllNotifications = (status?: 'unread' | 'read') =>
     refetchInterval: 30 * 1000, // 30 seconds
   });
 
-export const useMarkAsRead = () => {
-  return useGenericMutation({
+export const useMarkAsRead = () =>
+  useGenericMutation({
     mutationFn: async ({ notificationIds }: { notificationIds: string[] }) => {
       const res = await Notifications.markAsRead(notificationIds);
       if (res.success) {
@@ -31,4 +31,3 @@ export const useMarkAsRead = () => {
     errorMessage: 'Error marking notifications as read',
     invalidateQueries: [['notifications']],
   });
-};

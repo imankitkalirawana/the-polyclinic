@@ -6,12 +6,15 @@ import Underline from '@tiptap/extension-underline';
 import EditorToolbar from './editor-toolbar';
 import TextAlign from '@tiptap/extension-text-align';
 import Strike from '@tiptap/extension-strike';
+import { cn } from '@/lib/utils';
 
 export default function Editor({
   content,
+  className,
   onChange,
 }: {
   content?: string;
+  className?: string;
   onChange: (html: string) => void;
 }) {
   const editor = useEditor({
@@ -33,7 +36,7 @@ export default function Editor({
   if (!editor) return null;
 
   return (
-    <div className="rounded-small bg-default-100">
+    <div className={cn('rounded-small bg-default-100', className)}>
       <EditorToolbar editor={editor} />
       <EditorContent editor={editor} className="p-4" />
     </div>

@@ -11,6 +11,7 @@ export enum QueueStatus {
 
 export type PatientInfo = {
   id: string;
+  userId: string;
   name: string;
   phone?: string;
   email: string;
@@ -21,6 +22,7 @@ export type PatientInfo = {
 
 export type DoctorInfo = {
   id: string;
+  userId: string;
   name: string;
   email: string;
   phone?: string;
@@ -28,7 +30,7 @@ export type DoctorInfo = {
   seating?: string;
 };
 
-export type BookedByUser = {
+export type UserInfo = {
   id: string;
   email: string;
   name: string;
@@ -37,10 +39,14 @@ export type BookedByUser = {
 export type AppointmentQueueType = {
   id: string;
   sequenceNumber: number;
+  title: string;
+  notes: string;
+  prescription: string;
   status: QueueStatus;
   patient: PatientInfo;
   doctor: DoctorInfo;
-  bookedByUser: BookedByUser;
+  bookedByUser: UserInfo;
+  completedByUser: UserInfo;
   createdAt: string;
   updatedAt: string;
 };

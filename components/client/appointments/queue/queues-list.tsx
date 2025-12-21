@@ -1,17 +1,29 @@
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { cn } from '@/lib/utils';
 import { AppointmentQueueType, QueueStatus } from '@/services/client/appointment/queue/types';
-import { Accordion, AccordionItem, Card, CardHeader, CardBody, ScrollShadow } from '@heroui/react';
+import {
+  Accordion,
+  AccordionItem,
+  Card,
+  CardHeader,
+  CardBody,
+  ScrollShadow,
+  Button,
+} from '@heroui/react';
+import { Icon } from '@iconify/react/dist/iconify.js';
 import Avatar from 'boring-avatars';
 import { formatDate } from 'date-fns';
 import { useState } from 'react';
+import { getQueueStatusColor } from './helper';
 
 export default function QueuesList({
   queues,
   className,
+  onSelect,
 }: {
   queues: AppointmentQueueType[];
   className?: string;
+  onSelect?: (sequenceNumber: string | number) => void;
 }) {
   const [selectedKeys, setSelectedKeys] = useState(new Set(['']));
 
@@ -34,13 +46,11 @@ export default function QueuesList({
                 <Card
                   key={queue.id}
                   className={cn(
-                    'rounded-small border border-l-5 border-divider border-l-default bg-default-50 shadow-none transition-all',
+                    'group rounded-small border border-l-5 border-divider border-l-default bg-default-50 shadow-none transition-all',
                     {
                       'rounded-b-none border-b-0': selectedKeys.has(queue.id),
-                      'border-l-success': queue.status === QueueStatus.COMPLETED,
-                      'border-l-warning': queue.status === QueueStatus.SKIPPED,
-                      'border-l-danger': queue.status === QueueStatus.CANCELLED,
-                    }
+                    },
+                    getQueueStatusColor(queue.status)
                   )}
                 >
                   <CardHeader className="justify-between">
@@ -51,6 +61,15 @@ export default function QueuesList({
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
+                      <Button
+                        variant="flat"
+                        className="opacity-0 transition-all group-hover:opacity-100"
+                        size="sm"
+                        onPress={() => onSelect?.(queue.sequenceNumber)}
+                        endContent={<Icon icon="solar:arrow-right-line-duotone" width={16} />}
+                      >
+                        View
+                      </Button>
                       <span className="font-bold text-primary-500 text-large">
                         {queue.sequenceNumber}
                       </span>
@@ -80,11 +99,7 @@ export default function QueuesList({
               <div
                 className={cn(
                   'rounded-b-small border border-l-5 border-t-0 border-divider border-l-default p-4',
-                  {
-                    'border-l-success': queue.status === QueueStatus.COMPLETED,
-                    'border-l-warning': queue.status === QueueStatus.SKIPPED,
-                    'border-l-danger': queue.status === QueueStatus.CANCELLED,
-                  }
+                  getQueueStatusColor(queue.status)
                 )}
               >
                 <div className="grid w-full grid-cols-2 gap-2">
@@ -106,6 +121,17 @@ export default function QueuesList({
                       </div>
                     </>
                   )}
+
+                  <div className="flex flex-col">
+                    <span className="text-default-500 text-tiny">Phone</span>
+                    <p className="capitalize text-small">{queue.patient.phone || '-'}</p>
+                  </div>
+
+                  <div className="flex flex-col">
+                    <span className="text-default-500 text-tiny">Email</span>
+                    <p className="lowercase text-small">{queue.patient.email || '-'}</p>
+                  </div>
+
                   <div className="flex flex-col">
                     <span className="text-default-500 text-tiny">Booked At</span>
                     <p className="capitalize text-small">
@@ -114,8 +140,19 @@ export default function QueuesList({
                   </div>
                   <div className="flex flex-col">
                     <span className="text-default-500 text-tiny">Booked By</span>
-                    <p className="capitalize text-small">{queue.bookedByUser.name}</p>
+                    <p className="capitalize text-small">
+                      {queue.bookedByUser.id === queue.patient.userId
+                        ? 'Self'
+                        : queue.bookedByUser.name}
+                    </p>
                   </div>
+
+                  {queue.notes && (
+                    <div className="col-span-full flex flex-col">
+                      <span className="text-default-500 text-tiny">Patient Note</span>
+                      <p className="capitalize text-small">{queue.notes}</p>
+                    </div>
+                  )}
                 </div>
               </div>
             </AccordionItem>

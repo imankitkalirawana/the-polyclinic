@@ -9,12 +9,14 @@ import {
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import QueuesList from './queues-list';
+import { useQueryState } from 'nuqs';
 
 export default function PreviousQueues({
   previousQueues,
 }: {
   previousQueues: AppointmentQueueType[];
 }) {
+  const [_sequenceNumber, setSequenceNumber] = useQueryState('sequenceNumber');
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
@@ -36,7 +38,11 @@ export default function PreviousQueues({
             <>
               <DrawerHeader className="flex flex-col gap-1">Previous Appointments</DrawerHeader>
               <DrawerBody className="p-0">
-                <QueuesList queues={previousQueues} className="w-full" />
+                <QueuesList
+                  queues={previousQueues}
+                  className="w-full"
+                  onSelect={(sequenceNumber) => setSequenceNumber(sequenceNumber.toString())}
+                />
               </DrawerBody>
             </>
           )}

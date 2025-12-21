@@ -1,160 +1,97 @@
 'use client';
 
-import { CellRenderer } from '@/components/ui/cell-renderer';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
-import { cn } from '@/lib/utils';
 import { useQueueForDoctor } from '@/services/client/appointment/queue/query';
 import { QueueStatus } from '@/services/client/appointment/queue/types';
-import { Accordion, AccordionItem, Button, ScrollShadow } from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import { formatDate } from 'date-fns';
-import { useState } from 'react';
-import PrescriptionPanel from './priscription-panel';
+import { ScrollShadow } from '@heroui/react';
+import PrescriptionPanel, {
+  prescriptionFormSchema,
+  type PrescriptionFormSchema,
+} from './priscription-panel';
 import Medicines from './medicines';
 import PreviousQueues from './previous-queues';
 import QueuesList from './queues-list';
+import { useQueryState } from 'nuqs';
+import DetailsHeader from './details-header';
+import QueueFooter from './footer';
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import DataItem from '@/components/ui/data-item';
 
 export default function Queues() {
-  const { data } = useQueueForDoctor('50c99b05-f917-48ea-9f4c-d3b2701e41a2', 2);
-  const [selectedKeys, setSelectedKeys] = useState(new Set(['']));
+  const [sequenceNumber, setSequenceNumber] = useQueryState('sequenceNumber');
 
-  if (!data) {
+  const { data, isLoading } = useQueueForDoctor(
+    '50c99b05-f917-48ea-9f4c-d3b2701e41a2',
+    sequenceNumber ?? undefined
+  );
+
+  // Initialize prescription form with FormProvider
+  const prescriptionForm = useForm<PrescriptionFormSchema>({
+    resolver: zodResolver(prescriptionFormSchema),
+    defaultValues: {
+      title: '',
+      prescription: '',
+    },
+    mode: 'onChange',
+  });
+
+  if (!data && !isLoading) {
     return <MinimalPlaceholder message="No queues found" isLoading={false} />;
   }
 
-  const currentQueue = data.current;
-  const nextQueues = data.next;
-  const previousQueues = data.previous;
+  const currentQueue = data?.current;
+  const nextQueues = data?.next;
+  const previousQueues = data?.previous;
 
   return (
-    <div
-      className="flex h-[calc(100vh-58px)] divide-x-1 divide-divider"
-      data-test-id="appointment-queues"
-    >
-      {currentQueue ? (
-        <div
-          className="flex w-3/4 flex-col justify-between divide-y-1 divide-divider"
-          data-test-id="current-queue"
-        >
-          <div className="flex items-center justify-start gap-8 p-4">
-            <div className="aspect-square">
-              <h2 className="text-7xl font-bold text-primary">{currentQueue.sequenceNumber}</h2>
-            </div>
-            <div className="grid w-full grid-cols-3 gap-2">
-              <CellRenderer
-                icon="solar:user-bold-duotone"
-                label="Name"
-                value={currentQueue.patient.name}
-                className="p-0"
-                classNames={{
-                  icon: 'text-blue-500 bg-blue-100',
-                }}
-              />
-              {currentQueue.patient.gender && (
-                <CellRenderer
-                  icon="solar:men-bold-duotone"
-                  label="Gender"
-                  value={currentQueue.patient.gender}
-                  className="p-0"
-                  classNames={{
-                    icon: 'text-green-500 bg-green-100',
-                  }}
-                />
+    <FormProvider {...prescriptionForm}>
+      <div
+        className="flex h-[calc(100vh-58px)] divide-x-1 divide-divider"
+        data-test-id="appointment-queues"
+      >
+        <div className="flex w-3/4 flex-col justify-start" data-test-id="current-queue">
+          {currentQueue ? (
+            <>
+              <DetailsHeader currentQueue={currentQueue} />
+              {currentQueue.status === QueueStatus.IN_CONSULTATION && (
+                <ScrollShadow className="h-full">
+                  <PrescriptionPanel />
+                  <Medicines />
+                </ScrollShadow>
               )}
-              {currentQueue.patient.age && (
-                <CellRenderer
-                  icon="solar:user-bold-duotone"
-                  label="Age"
-                  value={`${currentQueue.patient.age} ${currentQueue.patient.age === 1 ? 'year' : 'years'}`}
-                  className="p-0"
-                  classNames={{
-                    icon: 'text-red-500 bg-red-100',
-                  }}
-                />
-              )}
-              {currentQueue.patient.phone && (
-                <CellRenderer
-                  icon="solar:phone-rounded-bold-duotone"
-                  label="Phone"
-                  value={currentQueue.patient.phone}
-                  className="p-0"
-                  classNames={{
-                    icon: 'text-cyan-500 bg-cyan-100',
-                  }}
-                />
-              )}
-              {currentQueue.patient.email && (
-                <CellRenderer
-                  icon="solar:letter-bold-duotone"
-                  label="Email"
-                  value={currentQueue.patient.email}
-                  className="p-0"
-                  classNames={{
-                    icon: 'text-yellow-500 bg-yellow-100',
-                  }}
-                />
-              )}
-              <CellRenderer
-                icon="solar:clock-circle-bold-duotone"
-                label="Booked At"
-                value={formatDate(new Date(currentQueue.createdAt), 'PPp')}
-                className="p-0"
-                classNames={{
-                  icon: 'text-pink-500 bg-pink-100',
-                }}
-              />
-            </div>
-          </div>
-          <Accordion
-            hideIndicator
-            selectedKeys={selectedKeys}
-            onSelectionChange={(keys) => setSelectedKeys(keys as Set<string>)}
-            className="border-b border-divider bg-default-100"
-            itemClasses={{
-              trigger: 'py-0.5',
-            }}
-          >
-            <AccordionItem
-              key="view-more-details"
-              aria-label="More details"
-              title={
-                <div className="flex w-full items-center justify-center gap-1 py-0.5 text-center text-small">
-                  <span>View more details</span>
-                  <Icon
-                    icon="solar:alt-arrow-down-line-duotone"
-                    className={cn(
-                      'transition-transform duration-300',
-                      selectedKeys.has('view-more-details') ? 'rotate-180' : ''
-                    )}
-                    width="18"
-                  />
+
+              {currentQueue.status === QueueStatus.COMPLETED && (
+                <div className="flex flex-col gap-4 p-4">
+                  <DataItem label="Title" value={currentQueue.title} />
+                  <div className="flex flex-col">
+                    <span className="text-default-500 text-tiny">Prescription</span>
+                    <div
+                      className="ProseMirror text-small"
+                      dangerouslySetInnerHTML={{ __html: currentQueue.prescription }}
+                    />
+                  </div>
                 </div>
-              }
-            >
-              Hello
-            </AccordionItem>
-          </Accordion>
-          <ScrollShadow className="h-full">
-            <PrescriptionPanel />
-            <Medicines />
-          </ScrollShadow>
-          <div className="flex justify-end gap-2 p-2 px-4">
-            {currentQueue?.status === QueueStatus.BOOKED ? (
-              <Button color="primary">Call Patient</Button>
-            ) : (
-              <div className="flex w-full justify-between">
-                <Button variant="bordered">Skip</Button>
-                <Button color="primary">Mark as Completed</Button>
-              </div>
-            )}
-          </div>
+              )}
+            </>
+          ) : (
+            <MinimalPlaceholder message="Nothing to show here" isLoading={false} />
+          )}
+
+          <QueueFooter
+            previousQueues={previousQueues ?? []}
+            currentQueue={currentQueue}
+            nextQueues={nextQueues ?? []}
+          />
         </div>
-      ) : (
-        <MinimalPlaceholder message="Nothing to show here" isLoading={false} />
-      )}
-      {/* next queues */}
-      <QueuesList queues={nextQueues} />
-      <PreviousQueues previousQueues={previousQueues} />
-    </div>
+
+        {/* next queues */}
+        <QueuesList
+          queues={nextQueues ?? []}
+          onSelect={(sequenceNumber) => setSequenceNumber(sequenceNumber.toString())}
+        />
+        <PreviousQueues previousQueues={previousQueues ?? []} />
+      </div>
+    </FormProvider>
   );
 }
