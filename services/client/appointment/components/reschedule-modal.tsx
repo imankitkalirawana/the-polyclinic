@@ -84,7 +84,7 @@ export default function RescheduleAppointment() {
       size={appointment?.doctor?.uid ? '5xl' : '3xl'}
       title="Reschedule Appointment"
       subtitle={
-        user?.role === 'patient'
+        user?.role === 'PATIENT'
           ? 'Request a new appointment time for your appointment'
           : 'Choose a new appointment time for the patient'
       }

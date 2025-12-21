@@ -15,7 +15,7 @@ export const useAppointmentActions = () => {
   const handleReminder = async (appointment: AppointmentType) => {
     let emails: string[] = [];
 
-    if (role === 'doctor') {
+    if (role === 'DOCTOR') {
       emails = [appointment.patient.email];
     } else {
       emails = [appointment.patient.email, appointment.doctor?.email || ''];

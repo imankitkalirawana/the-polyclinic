@@ -165,7 +165,7 @@ export default function Organization({ id }: { id: string }) {
                               {renderChip({
                                 item: user.status,
                               })}
-                              {user.role !== 'admin' && (
+                              {user.role !== 'ADMIN' && (
                                 <UserStatusToggle organization={organization} user={user} />
                               )}
                             </div>
@@ -185,7 +185,7 @@ export default function Organization({ id }: { id: string }) {
                             size="sm"
                             startContent={<Icon icon="solar:eye-line-duotone" />}
                           />
-                          {user.role !== 'admin' && (
+                          {user.role !== 'ADMIN' && (
                             <Button
                               isIconOnly
                               variant="flat"
