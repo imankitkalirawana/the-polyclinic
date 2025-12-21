@@ -6,7 +6,7 @@ import Underline from '@tiptap/extension-underline';
 import EditorToolbar from './editor-toolbar';
 import TextAlign from '@tiptap/extension-text-align';
 import Strike from '@tiptap/extension-strike';
-import { cn } from '@/lib/utils';
+import { cn } from '@heroui/react';
 
 export default function Editor({
   content,

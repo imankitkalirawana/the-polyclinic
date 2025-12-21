@@ -4,7 +4,7 @@ import { VirtualItem } from '@tanstack/react-virtual';
 
 import { TABLE_THEME } from '../constants';
 import { getCommonPinningStyles, getIsLastColumnPinned } from '../utils';
-import { cn } from '@/lib/utils';
+import { cn } from '@heroui/react';
 
 type TableRowProps<TData extends RowData> = {
   row: Row<TData>;

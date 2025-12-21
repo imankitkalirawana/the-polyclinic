@@ -22,7 +22,7 @@ import AppointmentTriggerItem from '../ui/appointment-trigger-item';
 import DateChip from '../ui/date-chip';
 
 import { TIMINGS } from '@/lib/config';
-import { cn } from '@/lib/utils';
+import { cn } from '@heroui/react';
 import { useAppointmentStore } from '@/store/appointment';
 import { AppointmentType } from '@/services/client/appointment';
 

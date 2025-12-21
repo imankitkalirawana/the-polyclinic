@@ -10,7 +10,8 @@ import {
 } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import { cn, tryCatch } from '@/lib/utils';
+import { cn } from '@heroui/react';
+import { tryCatch } from '@/lib/utils';
 import { $FixMe } from '@/types';
 import { AuthApi } from '@/services/common/auth/api';
 

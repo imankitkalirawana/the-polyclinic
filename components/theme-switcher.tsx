@@ -6,7 +6,7 @@ import type { JSX } from 'react';
 import React, { useEffect, useState } from 'react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@heroui/react';
 
 function ThemeOption({
   icon,

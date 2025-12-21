@@ -1,5 +1,5 @@
 import { CellRenderer } from '@/components/ui/cell-renderer';
-import { cn } from '@/lib/utils';
+import { cn } from '@heroui/react';
 import { Card, CardBody, CardHeader, Divider, Chip, ScrollShadow } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { usePatientByUID } from '@/services/client/patient';

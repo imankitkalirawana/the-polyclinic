@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { CellContext, RowData } from '@tanstack/react-table';
-import { cn } from '@/lib/utils';
+import { cn } from '@heroui/react';
 import { Autocomplete, AutocompleteItem } from '@heroui/react';
 import type { Key } from 'react';
 

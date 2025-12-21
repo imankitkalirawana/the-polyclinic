@@ -15,7 +15,7 @@ import { CreateAppointmentSidebar } from './sidebar';
 import { CreateAppointmentFormValues } from './types';
 
 import { useCreateAppointment } from '@/services/client/appointment/query';
-import { cn } from '@/lib/utils';
+import { cn } from '@heroui/react';
 import { useKeyPress } from '@/hooks/useKeyPress';
 
 const contentMap: Record<number, React.ReactNode> = {

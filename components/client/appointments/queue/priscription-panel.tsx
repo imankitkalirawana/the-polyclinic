@@ -4,7 +4,7 @@ import { Input } from '@heroui/react';
 import Editor from '@/components/ui/text-editor/editor';
 import { useFormContext } from 'react-hook-form';
 import { z } from 'zod';
-import { cn } from '@/lib/utils';
+import { cn } from '@heroui/react';
 
 export const prescriptionFormSchema = z.object({
   title: z.string().min(1, 'Title is required'),

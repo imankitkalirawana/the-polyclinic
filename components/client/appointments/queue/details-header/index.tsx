@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@heroui/react';
 import { getQueueStatusColor } from '../helper';
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { Accordion, AccordionItem, Chip } from '@heroui/react';

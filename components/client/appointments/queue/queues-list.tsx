@@ -1,5 +1,5 @@
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
-import { cn } from '@/lib/utils';
+import { cn } from '@heroui/react';
 import { AppointmentQueueType, QueueStatus } from '@/services/client/appointment/queue/types';
 import {
   Accordion,

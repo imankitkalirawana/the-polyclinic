@@ -12,7 +12,7 @@ import { CurrentHourIndicator } from '../ui/current-hour-indicator';
 import DateChip from '../ui/date-chip';
 
 import { TIMINGS } from '@/lib/config'; // Assuming this provides start/end hours
-import { cn } from '@/lib/utils';
+import { cn } from '@heroui/react';
 import { useAppointmentStore } from '@/store/appointment';
 import { AppointmentType } from '@/services/client/appointment';
 
