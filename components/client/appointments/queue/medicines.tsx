@@ -79,7 +79,19 @@ export default function Medicines() {
         accessorKey: 'medicine',
         size: 200,
         cell: (props) => (
-          <EditableCell {...props} columnType="text" canEdit placeholder="Enter medicine name" />
+          <EditableCell
+            {...props}
+            columnType="select"
+            options={[
+              { label: 'Paracetamol 500mg', value: 'paracetamol' },
+              { label: 'Amoxicillin 250mg', value: 'amoxicillin' },
+              { label: 'Ibuprofen 400mg', value: 'ibuprofen' },
+              { label: 'Cetirizine 10mg', value: 'cetirizine' },
+              { label: 'Omeprazole 20mg', value: 'omeprazole' },
+            ]}
+            canEdit
+            placeholder="Enter medicine name"
+          />
         ),
         meta: {
           columnKey: 'medicine',

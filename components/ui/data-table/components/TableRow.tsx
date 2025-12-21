@@ -4,21 +4,7 @@ import { VirtualItem } from '@tanstack/react-virtual';
 
 import { TABLE_THEME } from '../constants';
 import { getCommonPinningStyles, getIsLastColumnPinned } from '../utils';
-import {
-  tableRowClasses,
-  tableBodyCellClasses,
-  tableBodyCellContentClasses,
-  lastLeftPinnedCellWithShadowClasses,
-  cellFilteredClasses,
-  cellSelectedClasses,
-  cellSelectionDraggerClasses,
-  cellBetweenClasses,
-  cellEndClasses,
-  cellEndDownClasses,
-  cellEndUpClasses,
-  cellSelectableClasses,
-  cellInvalidClasses,
-} from './styles';
+import { cn } from '@/lib/utils';
 
 type TableRowProps<TData extends RowData> = {
   row: Row<TData>;
@@ -71,7 +57,7 @@ const TableRow = <TData extends RowData>({
   return (
     <>
       <div
-        className={tableRowClasses}
+        className="group flex h-full flex-row"
         role="row"
         key={row.id}
         style={style}
@@ -101,22 +87,6 @@ const TableRow = <TData extends RowData>({
 
           const isCellColumnFiltered = cell.column.columnDef.meta?.isFiltered;
 
-          const cellClassName = [
-            tableBodyCellClasses,
-            getIsLastColumnPinned(column) &&
-              isHorizontalScrollPresent &&
-              lastLeftPinnedCellWithShadowClasses,
-            isOriginForAutoFill && cellSelectedClasses,
-            isCellBetweenAutoFillRange && cellBetweenClasses,
-            isEndDown && `${cellEndClasses} ${cellEndDownClasses}`,
-            isEndUp && `${cellEndClasses} ${cellEndUpClasses}`,
-            isCellSelectable && cellSelectableClasses,
-            !isCellEditable && !(isCellSelectable && isOriginForAutoFill) && cellInvalidClasses,
-            isCellColumnFiltered && cellFilteredClasses,
-          ]
-            .filter(Boolean)
-            .join(' ');
-
           return (
             <div
               role="cell"
@@ -129,7 +99,20 @@ const TableRow = <TData extends RowData>({
                   cell.setToggleAutoFillOriginCell();
                 }
               }}
-              className={cellClassName}
+              className={cn(
+                'relative flex items-center p-3 shadow-[0_-2px_0_0_theme(colors.neutral.100)_inset]',
+                {
+                  'relative after:pointer-events-none after:absolute after:bottom-0 after:right-0 after:top-0 after:w-[30px] after:translate-x-full after:shadow-[rgba(5,5,5,0.06)_10px_0px_8px_-6px_inset] after:content-[""]':
+                    getIsLastColumnPinned(column) && isHorizontalScrollPresent,
+                  'border border-primary': isOriginForAutoFill,
+                  'border-l border-r border-dashed border-primary': isCellBetweenAutoFillRange,
+                  'border-b border-l border-r border-dashed border-primary': isEndDown,
+                  'border-l border-r border-t border-dashed border-primary': isEndUp,
+                  'cursor-pointer': isCellSelectable,
+                  'border-danger': !isCellEditable && !(isCellSelectable && isOriginForAutoFill),
+                  '!bg-default-100': isCellColumnFiltered,
+                }
+              )}
               style={{
                 width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
                 ...getCommonPinningStyles(column),
@@ -138,14 +121,14 @@ const TableRow = <TData extends RowData>({
                   : 'white',
               }}
             >
-              <div className={tableBodyCellContentClasses}>
+              <div className="w-full">
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </div>
               {isOriginForAutoFill ? (
                 <div
                   ref={draggerRef}
                   data-testid="cell-selection-dragger"
-                  className={cellSelectionDraggerClasses}
+                  className="absolute bottom-0 right-0 h-2.5 w-2.5 cursor-cell bg-primary"
                   onPointerDown={handlePointerDownOnDragger}
                 />
               ) : null}

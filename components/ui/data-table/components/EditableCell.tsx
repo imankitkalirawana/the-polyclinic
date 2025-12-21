@@ -3,8 +3,10 @@
 import { useState, useEffect } from 'react';
 import { CellContext, RowData } from '@tanstack/react-table';
 import { cn } from '@/lib/utils';
+import { Autocomplete, AutocompleteItem } from '@heroui/react';
+import type { Key } from 'react';
 
-export type ColumnType = 'text' | 'number' | 'textarea' | 'email' | 'url';
+export type ColumnType = 'text' | 'number' | 'textarea' | 'email' | 'url' | 'select';
 
 export interface EditableCellProps<TData extends RowData> extends CellContext<TData, unknown> {
   columnType?: ColumnType;
@@ -12,6 +14,7 @@ export interface EditableCellProps<TData extends RowData> extends CellContext<TD
   placeholder?: string;
   className?: string;
   inputClassName?: string;
+  options?: { label: string; value: string }[];
 }
 
 export function EditableCell<TData extends RowData>({
@@ -24,6 +27,7 @@ export function EditableCell<TData extends RowData>({
   placeholder,
   className,
   inputClassName,
+  options,
 }: EditableCellProps<TData>) {
   const initialValue = getValue() as string;
   const [value, setValue] = useState(initialValue);
@@ -66,8 +70,10 @@ export function EditableCell<TData extends RowData>({
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && columnType !== 'textarea') {
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    if (e.key === 'Enter' && columnType !== 'textarea' && columnType !== 'select') {
       e.currentTarget.blur();
     } else if (e.key === 'Escape') {
       setValue(initialValue);
@@ -107,12 +113,45 @@ export function EditableCell<TData extends RowData>({
       return <input {...commonProps} type="url" />;
     }
 
+    if (columnType === 'select') {
+      const handleSelectionChange = (key: Key | null) => {
+        if (key) {
+          setValue(key as string);
+          // Use requestAnimationFrame to allow the selection to complete before closing
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              onBlur();
+            });
+          });
+        }
+      };
+
+      return (
+        <Autocomplete
+          selectedKey={value || null}
+          onSelectionChange={handleSelectionChange}
+          onKeyDown={handleKeyDown}
+          autoFocus
+          className={cn('w-full pl-3 text-sm')}
+          items={options}
+        >
+          {(item) => <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>}
+        </Autocomplete>
+      );
+    }
+
     return <input {...commonProps} type="text" />;
   };
 
   if (isEditing && canEdit) {
     return <div className={className}>{renderInput()}</div>;
   }
+
+  // For select type, display label instead of value
+  const displayValue =
+    columnType === 'select' && options && value
+      ? options.find((opt) => opt.value === value)?.label || value
+      : value || placeholder || ' ';
 
   return (
     <div
@@ -126,7 +165,7 @@ export function EditableCell<TData extends RowData>({
         className
       )}
     >
-      <span className="text-sm">{value || placeholder || ' '}</span>
+      <span className="whitespace-nowrap text-sm">{displayValue}</span>
     </div>
   );
 }

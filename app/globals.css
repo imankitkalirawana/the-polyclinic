@@ -438,13 +438,10 @@
   }
 }
 
-.no-scrollbar {
-  scrollbar-width: none; /* For Firefox */
-  -ms-overflow-style: none; /* For Internet Explorer and Edge */
-}
+/* adjust scrollbar width globally */
 
-.no-scrollbar::-webkit-scrollbar {
-  display: none; /* For Chrome, Safari, and Opera */
+* {
+  scrollbar-width: thin;
 }
 
 .tbl td,

@@ -6,7 +6,6 @@ import { DATA_TABLE_DEFAULTS } from '../constants';
 import { useColumnVirtualizer, useScrollWhenPointerOnEdges } from '../hooks';
 import TableHeader from './TableHeader';
 import TableRow from './TableRow';
-import { dataTableWrapperClasses, tableClasses, tableBodyClasses } from './styles';
 import MinimalPlaceholder from '../../minimal-placeholder';
 
 type DataTableProps<TData extends RowData> = {
@@ -115,11 +114,11 @@ const DataTable = <TData extends RowData>({
       onPointerEnter={(e) => {
         internalTableContainerRef.current?.releasePointerCapture(e.pointerId);
       }}
-      className={`data-table-wrapper table-wrapper ${dataTableWrapperClasses}`}
+      className="relative flex-1 overflow-auto rounded-t-md border-l border-t"
     >
       <div
         role="table"
-        className={tableClasses}
+        className="flex flex-col rounded-t-md"
         style={{
           width: table.getTotalSize(),
         }}
@@ -134,7 +133,7 @@ const DataTable = <TData extends RowData>({
         />
 
         <div
-          className={`table-body ${tableBodyClasses}`}
+          className="flex flex-col bg-white"
           style={{
             height: isTableEmpty
               ? tableBodyHeightWithoutHeaderCells
