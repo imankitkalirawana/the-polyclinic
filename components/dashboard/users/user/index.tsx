@@ -30,16 +30,16 @@ export default function UserCard({ uid }: { uid: string }) {
   }
 
   const actionButton: Record<OrganizationUser['role'], React.ReactNode> = {
-    admin: null,
-    receptionist: null,
-    nurse: null,
-    pharmacist: null,
-    patient: (
+    ADMIN: null,
+    RECEPTIONIST: null,
+    NURSE: null,
+    PHARMACIST: null,
+    PATIENT: (
       <Button as={Link} href={`/appointments?uid=${user.uid}`} variant="flat" color="secondary">
         Book Appointment
       </Button>
     ),
-    doctor: (
+    DOCTOR: (
       <Button as={Link} href={`/dashboard/doctors/${user.uid}`} variant="flat" color="secondary">
         View Doctor
       </Button>
