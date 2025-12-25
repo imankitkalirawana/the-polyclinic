@@ -4,6 +4,7 @@ import { AppointmentQueueType, QueueStatus } from '@/services/client/appointment
 import {
   Accordion,
   AccordionItem,
+  Avatar as HerouiAvatar,
   Card,
   CardHeader,
   CardBody,
@@ -55,7 +56,11 @@ export default function QueuesList({
                 >
                   <CardHeader className="justify-between">
                     <div className="flex items-center gap-3">
-                      <Avatar name={queue.patient.name} size={30} />
+                      {queue.patient.image ? (
+                        <HerouiAvatar src={queue.patient.image} size="sm" />
+                      ) : (
+                        <Avatar name={queue.patient.name} size={30} />
+                      )}
                       <span className="font-medium text-default-500 text-small">
                         {queue.patient.name}
                       </span>
