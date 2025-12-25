@@ -49,4 +49,6 @@ export type AppointmentQueueType = {
   completedByUser: UserInfo;
   createdAt: string;
   updatedAt: string;
+  previousQueueId?: string;
+  nextQueueId?: string;
 };

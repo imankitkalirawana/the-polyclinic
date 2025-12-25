@@ -15,7 +15,7 @@ export default function QueueFooterActions({
 }: {
   currentQueue: AppointmentQueueType;
 }) {
-  const [_sequenceNumber, setSequenceNumber] = useQueryState('sequenceNumber');
+  const [_queueId, setQueueId] = useQueryState('id');
   const { mutateAsync: mutateCall, isPending: isCallPending } = useCallPatient();
   const { mutateAsync: mutateClockIn, isPending: isClockInPending } = useClockInPatient();
   const { mutateAsync: mutateSkip, isPending: isSkipPending } = useSkipPatient();
@@ -47,9 +47,10 @@ export default function QueueFooterActions({
             mutateSkip({
               queueId: currentQueue.id,
               _doctorId: currentQueue.doctor.id,
-              _sequenceNumber: _sequenceNumber ?? '0',
+              // TODO: Fix this
+              _queueId: _queueId ?? '',
             }).then(() => {
-              setSequenceNumber((currentQueue.sequenceNumber + 1).toString());
+              setQueueId(currentQueue.nextQueueId ?? null);
             })
           }
         >
@@ -65,7 +66,8 @@ export default function QueueFooterActions({
             mutateCall({
               queueId: currentQueue.id,
               _doctorId: currentQueue.doctor.id,
-              _sequenceNumber: _sequenceNumber ?? '0',
+              // TODO: Fix this
+              _queueId: _queueId ?? '',
             })
           }
         >
@@ -81,7 +83,8 @@ export default function QueueFooterActions({
             mutateClockIn({
               queueId: currentQueue.id,
               _doctorId: currentQueue.doctor.id,
-              _sequenceNumber: _sequenceNumber ?? '0',
+              // TODO: Fix this
+              _queueId: _queueId ?? '',
             })
           }
         >
@@ -104,7 +107,8 @@ export default function QueueFooterActions({
             await mutateComplete({
               queueId: currentQueue.id,
               _doctorId: currentQueue.doctor.id,
-              _sequenceNumber: _sequenceNumber ?? '0',
+              // TODO: Fix this
+              _queueId: _queueId ?? '',
               data,
             });
 
@@ -118,7 +122,11 @@ export default function QueueFooterActions({
         <Button
           variant="shadow"
           color="primary"
-          onPress={() => setSequenceNumber((currentQueue.sequenceNumber + 1).toString())}
+          onPress={() => {
+            if (currentQueue.nextQueueId) {
+              setQueueId(currentQueue.nextQueueId);
+            }
+          }}
         >
           Next Appointment
         </Button>

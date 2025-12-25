@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { AppointmentQueueApi } from './api';
 import { useGenericMutation } from '@/services/useGenericMutation';
 import { PrescriptionFormSchema } from '@/components/client/appointments/queue/priscription-panel';
+import { useQueryState } from 'nuqs';
 
 export const useAllAppointmentQueues = () => {
   return useQuery({
@@ -16,11 +17,11 @@ export const useAllAppointmentQueues = () => {
   });
 };
 
-export const useQueueForDoctor = (doctorId: string, sequenceNumber?: string) => {
+export const useQueueForDoctor = (doctorId: string, queueId?: string | null) => {
   return useQuery({
-    queryKey: ['queue-for-doctor', doctorId, sequenceNumber],
+    queryKey: ['queue-for-doctor', doctorId, queueId],
     queryFn: async () => {
-      const result = await AppointmentQueueApi.getQueueForDoctor(doctorId, sequenceNumber);
+      const result = await AppointmentQueueApi.getQueueForDoctor(doctorId, queueId);
       if (result.success) {
         return result.data;
       }
@@ -34,11 +35,11 @@ export const useCallPatient = () => {
     mutationFn: async ({
       queueId,
       _doctorId,
-      _sequenceNumber,
+      _queueId,
     }: {
       queueId: string;
       _doctorId: string;
-      _sequenceNumber: string;
+      _queueId: string;
     }) => {
       const res = await AppointmentQueueApi.call(queueId);
       if (res.success) {
@@ -47,7 +48,7 @@ export const useCallPatient = () => {
       throw new Error(res.message);
     },
     invalidateQueriesWithVariables(variables) {
-      return [['queue-for-doctor', variables._doctorId, variables._sequenceNumber.toString()]];
+      return [['queue-for-doctor', variables._doctorId, variables._queueId]];
     },
     onSuccess: () => {
       const audio = new Audio('/assets/audio/desk-bell.mp3');
@@ -61,11 +62,11 @@ export const useSkipPatient = () => {
     mutationFn: async ({
       queueId,
       _doctorId,
-      _sequenceNumber,
+      _queueId,
     }: {
       queueId: string;
       _doctorId: string;
-      _sequenceNumber: string;
+      _queueId: string;
     }) => {
       const res = await AppointmentQueueApi.skip(queueId);
       if (res.success) {
@@ -74,7 +75,7 @@ export const useSkipPatient = () => {
       throw new Error(res.message);
     },
     invalidateQueriesWithVariables(variables) {
-      return [['queue-for-doctor', variables._doctorId, variables._sequenceNumber.toString()]];
+      return [['queue-for-doctor', variables._doctorId, variables._queueId]];
     },
   });
 };
@@ -84,11 +85,11 @@ export const useClockInPatient = () => {
     mutationFn: async ({
       queueId,
       _doctorId,
-      _sequenceNumber,
+      _queueId,
     }: {
       queueId: string;
       _doctorId: string;
-      _sequenceNumber: string;
+      _queueId: string;
     }) => {
       const res = await AppointmentQueueApi.clockIn(queueId);
       if (res.success) {
@@ -97,23 +98,24 @@ export const useClockInPatient = () => {
       throw new Error(res.message);
     },
     invalidateQueriesWithVariables(variables) {
-      return [['queue-for-doctor', variables._doctorId, variables._sequenceNumber.toString()]];
+      return [['queue-for-doctor', variables._doctorId, variables._queueId]];
     },
   });
 };
 
 export const useCompletePatient = () => {
+  const [_queueId] = useQueryState('id');
   return useGenericMutation({
     mutationFn: async ({
       queueId,
       data,
       _doctorId,
-      _sequenceNumber,
+      _queueId,
     }: {
       queueId: string;
       data: PrescriptionFormSchema;
       _doctorId: string;
-      _sequenceNumber: string;
+      _queueId: string;
     }) => {
       const res = await AppointmentQueueApi.complete(queueId, data);
       if (res.success) {
@@ -122,7 +124,7 @@ export const useCompletePatient = () => {
       throw new Error(res.message);
     },
     invalidateQueriesWithVariables(variables) {
-      return [['queue-for-doctor', variables._doctorId, variables._sequenceNumber.toString()]];
+      return [['queue-for-doctor', variables._doctorId, variables._queueId]];
     },
   });
 };

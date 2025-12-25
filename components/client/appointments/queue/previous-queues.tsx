@@ -16,8 +16,10 @@ export default function PreviousQueues({
 }: {
   previousQueues: AppointmentQueueType[];
 }) {
-  const [_sequenceNumber, setSequenceNumber] = useQueryState('sequenceNumber');
+  const [_queueId, setQueueId] = useQueryState('id');
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  console.log({ isOpen });
 
   return (
     <>
@@ -25,10 +27,14 @@ export default function PreviousQueues({
         <Tooltip delay={1000} content="View previous appointments" placement="right">
           <button
             className="flex h-20 w-10 items-center justify-center rounded-r-small bg-primary text-primary-foreground shadow-lg transition-all hover:bg-primary-600"
-            onClick={onOpen}
+            onClick={() => {
+              console.log('clicked');
+              onOpen();
+            }}
             aria-label="Open previous queues"
           >
-            <Icon icon="solar:history-bold-duotone" width={20} />
+            Hello
+            {/* <Icon icon="solar:history-bold-duotone" width={20} /> */}
           </button>
         </Tooltip>
       </div>
@@ -41,7 +47,7 @@ export default function PreviousQueues({
                 <QueuesList
                   queues={previousQueues}
                   className="w-full"
-                  onSelect={(sequenceNumber) => setSequenceNumber(sequenceNumber.toString())}
+                  onSelect={(queueId) => setQueueId(queueId)}
                 />
               </DrawerBody>
             </>

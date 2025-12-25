@@ -23,7 +23,7 @@ export default function QueuesList({
 }: {
   queues: AppointmentQueueType[];
   className?: string;
-  onSelect?: (sequenceNumber: string | number) => void;
+  onSelect?: (queueId: string) => void;
 }) {
   const [selectedKeys, setSelectedKeys] = useState(new Set(['']));
 
@@ -65,7 +65,7 @@ export default function QueuesList({
                         variant="flat"
                         className="opacity-0 transition-all group-hover:opacity-100"
                         size="sm"
-                        onPress={() => onSelect?.(queue.sequenceNumber)}
+                        onPress={() => onSelect?.(queue.id)}
                         endContent={<Icon icon="solar:arrow-right-line-duotone" width={16} />}
                       >
                         View

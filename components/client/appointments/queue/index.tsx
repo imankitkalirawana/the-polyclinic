@@ -19,11 +19,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import DataItem from '@/components/ui/data-item';
 
 export default function Queues() {
-  const [sequenceNumber, setSequenceNumber] = useQueryState('sequenceNumber');
+  const [queueId, setQueueId] = useQueryState('id');
 
   const { data, isLoading } = useQueueForDoctor(
     '50c99b05-f917-48ea-9f4c-d3b2701e41a2',
-    sequenceNumber ?? undefined
+    queueId ?? null
   );
 
   // Initialize prescription form with FormProvider
@@ -78,18 +78,11 @@ export default function Queues() {
             <MinimalPlaceholder message="Nothing to show here" isLoading={false} />
           )}
 
-          <QueueFooter
-            previousQueues={previousQueues ?? []}
-            currentQueue={currentQueue}
-            nextQueues={nextQueues ?? []}
-          />
+          <QueueFooter currentQueue={currentQueue} />
         </div>
 
         {/* next queues */}
-        <QueuesList
-          queues={nextQueues ?? []}
-          onSelect={(sequenceNumber) => setSequenceNumber(sequenceNumber.toString())}
-        />
+        <QueuesList queues={nextQueues ?? []} onSelect={(queueId) => setQueueId(queueId)} />
         <PreviousQueues previousQueues={previousQueues ?? []} />
       </div>
     </FormProvider>

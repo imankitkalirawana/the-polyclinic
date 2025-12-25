@@ -11,14 +11,14 @@ export class AppointmentQueueApi {
     });
   }
 
-  static async getQueueForDoctor(doctorId: string, sequenceNumber?: string) {
+  static async getQueueForDoctor(doctorId: string, queueId?: string | null) {
     return await apiRequest<{
       previous: AppointmentQueueType[];
       current: AppointmentQueueType | null;
       next: AppointmentQueueType[];
     }>({
       url: `${this.API_BASE}/doctor/${doctorId}/queue`,
-      params: { sequenceNumber },
+      params: { id: queueId },
     });
   }
 
