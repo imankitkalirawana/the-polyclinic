@@ -3,13 +3,12 @@
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { useQueueForDoctor } from '@/services/client/appointment/queue/query';
 import { QueueStatus } from '@/services/client/appointment/queue/types';
-import { ScrollShadow } from '@heroui/react';
+import { Button, Chip, ScrollShadow, Tab, Tabs, Tooltip } from '@heroui/react';
 import PrescriptionPanel, {
   prescriptionFormSchema,
   type PrescriptionFormSchema,
 } from './priscription-panel';
 import Medicines from './medicines';
-import PreviousQueues from './previous-queues';
 import QueuesList from './queues-list';
 import { useQueryState } from 'nuqs';
 import DetailsHeader from './details-header';
@@ -17,9 +16,19 @@ import QueueFooter from './footer';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import DataItem from '@/components/ui/data-item';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import { useState, useMemo } from 'react';
 
 export default function Queues() {
   const [queueId, setQueueId] = useQueryState('id');
+  const [showNextQueues, setShowNextQueues] = useLocalStorage('show-next-queues', true);
+  const [selectedFilters, setSelectedFilters] = useState({
+    booked: false,
+    skipped: false,
+    completed: false,
+    cancelled: false,
+  });
 
   const { data, isLoading } = useQueueForDoctor(
     '50c99b05-f917-48ea-9f4c-d3b2701e41a2',
@@ -36,21 +45,47 @@ export default function Queues() {
     mode: 'onChange',
   });
 
-  if (!data && !isLoading) {
-    return <MinimalPlaceholder message="No queues found" isLoading={false} />;
-  }
-
   const currentQueue = data?.current;
   const nextQueues = data?.next;
   const previousQueues = data?.previous;
 
+  const filteredNextQueues = useMemo(() => {
+    const queues = nextQueues ?? [];
+    const { booked, skipped } = selectedFilters;
+
+    if (!booked && !skipped) return queues;
+
+    return queues.filter(
+      (queue) =>
+        (booked && queue.status === QueueStatus.BOOKED) ||
+        (skipped && queue.status === QueueStatus.SKIPPED)
+    );
+  }, [nextQueues, selectedFilters]);
+
+  const filteredPreviousQueues = useMemo(() => {
+    const queues = previousQueues ?? [];
+    const { completed, cancelled } = selectedFilters;
+
+    if (!completed && !cancelled) return queues;
+
+    return queues.filter(
+      (queue) =>
+        (completed && queue.status === QueueStatus.COMPLETED) ||
+        (cancelled && queue.status === QueueStatus.CANCELLED)
+    );
+  }, [previousQueues, selectedFilters]);
+
+  if (!data && !isLoading) {
+    return <MinimalPlaceholder message="No queues found" isLoading={false} />;
+  }
+
   return (
     <FormProvider {...prescriptionForm}>
       <div
-        className="flex h-[calc(100vh-58px)] divide-x-1 divide-divider"
+        className="relative flex h-[calc(100vh-58px)] divide-x-1 divide-divider"
         data-test-id="appointment-queues"
       >
-        <div className="flex w-3/4 flex-col justify-start" data-test-id="current-queue">
+        <div className="relative flex w-full flex-col justify-start" data-test-id="current-queue">
           {currentQueue ? (
             <>
               <DetailsHeader currentQueue={currentQueue} />
@@ -79,11 +114,99 @@ export default function Queues() {
           )}
 
           <QueueFooter currentQueue={currentQueue} />
+          <div className="absolute right-0 top-14">
+            <Tooltip content="Show next appointments" placement="left">
+              <Button
+                isIconOnly
+                radius="full"
+                size="sm"
+                variant="flat"
+                onPress={() => setShowNextQueues(!showNextQueues)}
+              >
+                {showNextQueues ? (
+                  <Icon icon="heroicons:chevron-right" />
+                ) : (
+                  <Icon icon="heroicons:chevron-left" />
+                )}
+              </Button>
+            </Tooltip>
+          </div>
         </div>
 
         {/* next queues */}
-        <QueuesList queues={nextQueues ?? []} onSelect={(queueId) => setQueueId(queueId)} />
-        <PreviousQueues previousQueues={previousQueues ?? []} />
+        {showNextQueues && (
+          <div className="h-full w-full max-w-[400px] overflow-hidden" data-test-id="next-queues">
+            <Tabs
+              aria-label="Queues"
+              classNames={{
+                panel: 'h-full overflow-hidden',
+                base: 'px-2 pt-2',
+              }}
+            >
+              <Tab key="upcoming" title="Upcoming">
+                <div className="flex items-center gap-2 px-2 pb-2">
+                  <Chip
+                    as={Button}
+                    size="sm"
+                    variant={selectedFilters.booked ? 'solid' : 'bordered'}
+                    onPress={() =>
+                      setSelectedFilters((prev) => ({ ...prev, booked: !prev.booked }))
+                    }
+                  >
+                    Booked
+                  </Chip>
+                  <Chip
+                    as={Button}
+                    size="sm"
+                    variant={selectedFilters.skipped ? 'solid' : 'bordered'}
+                    color="warning"
+                    onPress={() =>
+                      setSelectedFilters((prev) => ({ ...prev, skipped: !prev.skipped }))
+                    }
+                  >
+                    Skipped
+                  </Chip>
+                </div>
+                <QueuesList
+                  queues={filteredNextQueues}
+                  onSelect={(queueId) => setQueueId(queueId)}
+                  className="w-full"
+                />
+              </Tab>
+              <Tab key="completed" title="Completed">
+                <div className="flex items-center gap-2 px-2 pb-2">
+                  <Chip
+                    as={Button}
+                    size="sm"
+                    color="success"
+                    variant={selectedFilters.completed ? 'solid' : 'bordered'}
+                    onPress={() =>
+                      setSelectedFilters((prev) => ({ ...prev, completed: !prev.completed }))
+                    }
+                  >
+                    Completed
+                  </Chip>
+                  <Chip
+                    as={Button}
+                    size="sm"
+                    variant={selectedFilters.cancelled ? 'solid' : 'bordered'}
+                    color="danger"
+                    onPress={() =>
+                      setSelectedFilters((prev) => ({ ...prev, cancelled: !prev.cancelled }))
+                    }
+                  >
+                    Cancelled
+                  </Chip>
+                </div>
+                <QueuesList
+                  queues={filteredPreviousQueues}
+                  onSelect={(queueId) => setQueueId(queueId)}
+                  className="w-full"
+                />
+              </Tab>
+            </Tabs>
+          </div>
+        )}
       </div>
     </FormProvider>
   );

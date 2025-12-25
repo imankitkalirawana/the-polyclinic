@@ -1,7 +1,8 @@
 import { AppointmentQueueType } from '@/services/client/appointment/queue/types';
-import { Button } from '@heroui/react';
+import { Button, cn } from '@heroui/react';
 import { useQueryState } from 'nuqs';
 import QueueFooterActions from './actions';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 export default function QueueFooter({
   currentQueue,
@@ -9,13 +10,21 @@ export default function QueueFooter({
   currentQueue?: AppointmentQueueType | null;
 }) {
   const [queueId, setQueueId] = useQueryState('id');
+  const [showNextQueues] = useLocalStorage('show-next-queues', true);
 
   const handleGoToCurrent = () => {
     setQueueId(null);
   };
 
   return (
-    <div className="fixed bottom-0 left-0 z-10 flex w-3/4 justify-between gap-2 border-t border-divider bg-background p-2 px-4">
+    <div
+      className={cn(
+        'fixed bottom-0 left-0 z-10 flex w-full max-w-[calc(100%-400px)] justify-between gap-2 border-t border-divider bg-background p-2 px-4',
+        {
+          'max-w-full': !showNextQueues,
+        }
+      )}
+    >
       <Button
         variant={queueId ? 'flat' : 'solid'}
         color={queueId ? 'primary' : 'default'}

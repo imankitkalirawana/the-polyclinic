@@ -28,7 +28,7 @@ export default function QueuesList({
   const [selectedKeys, setSelectedKeys] = useState(new Set(['']));
 
   return (
-    <ScrollShadow className={cn('h-[calc(100vh-58px)] w-1/4 p-2', className)}>
+    <ScrollShadow className={cn('h-full w-full pb-20', className)}>
       {queues.length > 0 ? (
         <Accordion
           hideIndicator
@@ -75,24 +75,22 @@ export default function QueuesList({
                       </span>
                     </div>
                   </CardHeader>
-                  {queue.status !== QueueStatus.COMPLETED && (
-                    <CardBody className="grid w-full grid-cols-2 gap-2">
-                      <div className="flex flex-col">
-                        <span className="text-default-500 text-tiny">Age</span>
-                        <p className="capitalize text-small">
-                          {queue.patient.age
-                            ? `${queue.patient.age} ${queue.patient.age === 1 ? 'year' : 'years'}`
-                            : '-'}
-                        </p>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-default-500 text-tiny">Gender</span>
-                        <p className="capitalize text-small">
-                          {queue.patient.gender ? `${queue.patient.gender.toLowerCase()}` : '-'}
-                        </p>
-                      </div>
-                    </CardBody>
-                  )}
+                  <CardBody className="grid w-full grid-cols-2 gap-2">
+                    <div className="flex flex-col">
+                      <span className="text-default-500 text-tiny">Age</span>
+                      <p className="capitalize text-small">
+                        {queue.patient.age
+                          ? `${queue.patient.age} ${queue.patient.age === 1 ? 'year' : 'years'}`
+                          : '-'}
+                      </p>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-default-500 text-tiny">Gender</span>
+                      <p className="capitalize text-small">
+                        {queue.patient.gender ? `${queue.patient.gender.toLowerCase()}` : '-'}
+                      </p>
+                    </div>
+                  </CardBody>
                 </Card>
               }
             >
