@@ -217,7 +217,7 @@ export const createAuthProvider = (flowType: FlowType) =>
       }
 
       if (values.page === 1) {
-        const res = await AuthApi.verifyEmail({ email: values.email });
+        const res = await AuthApi.checkEmail({ email: values.email });
         if (!res?.data?.exists) {
           setFieldError('email', 'Email does not exist');
         } else {

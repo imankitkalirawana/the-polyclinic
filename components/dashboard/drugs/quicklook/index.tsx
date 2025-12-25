@@ -9,7 +9,7 @@ import { permissions, sidebarContent } from './data';
 
 import QuickLook from '@/components/ui/dashboard/quicklook';
 import { ButtonProps, DropdownItemProps } from '@/components/ui/dashboard/quicklook/types';
-import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
 import { DrugType } from '@/services/client/drug/types';
 
 export function DrugQuickLook() {

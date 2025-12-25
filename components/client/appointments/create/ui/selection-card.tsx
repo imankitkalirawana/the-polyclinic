@@ -1,4 +1,4 @@
-import { RenderUser } from '@/components/ui/data-table/cell-renderers';
+import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import { Card } from '@heroui/react';
 import { cn } from '@heroui/react';
 

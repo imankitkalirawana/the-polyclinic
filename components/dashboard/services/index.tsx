@@ -10,14 +10,14 @@ import { toast } from 'sonner';
 import { ServiceQuickLook } from './quicklook';
 import { useServiceStore } from './store';
 
-import { Table } from '@/components/ui/data-table';
+import { Table } from '@/components/ui/static-data-table';
 import {
   renderActions,
   renderChip,
   renderCopyableText,
   renderDate,
-} from '@/components/ui/data-table/cell-renderers';
-import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
+} from '@/components/ui/static-data-table/cell-renderers';
+import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
 import { CLINIC_INFO } from '@/lib/config';
 import { useAllServices, useDeleteService } from '@/services/client/service/query';
 import { ServiceType } from '@/services/client/service/types';

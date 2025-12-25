@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import ReactQuill from 'react-quill';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@heroui/react';
 
 interface Props {
   value?: string;
@@ -39,7 +39,7 @@ export default function QuillInput({
       >
         <label
           htmlFor={id}
-          className={cn('text-small text-default-500 transition-all', {
+          className={cn('text-default-500 transition-all text-small', {
             'text-tiny': isFocused || value,
           })}
         >
@@ -57,7 +57,7 @@ export default function QuillInput({
           onBlur={() => setIsFocused(false)}
         />
       </div>
-      <p className="pl-2 text-tiny text-default-400">{description}</p>
+      <p className="pl-2 text-default-400 text-tiny">{description}</p>
     </div>
   );
 }

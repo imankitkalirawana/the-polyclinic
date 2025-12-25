@@ -14,14 +14,14 @@ import ActivityTimeline from '../../../ui/activity/timeline';
 import { ActionType, DropdownKeyType } from '../types';
 
 import { PermissionProps } from '@/components/ui/dashboard/quicklook/types';
-import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
 import { DrugType } from '@/services/client/drug/types';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
-  doctor: ['cancel', 'reschedule', 'reminder', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
-  admin: 'all',
-  nurse: ['cancel', 'reschedule'],
-  receptionist: ['cancel', 'reschedule', 'reminder'],
+  DOCTOR: ['cancel', 'reschedule', 'reminder', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
+  ADMIN: 'all',
+  NURSE: ['cancel', 'reschedule'],
+  RECEPTIONIST: ['cancel', 'reschedule', 'reminder'],
 };
 
 export const content = (drug: DrugType) => [

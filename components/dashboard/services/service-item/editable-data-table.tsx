@@ -8,7 +8,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 
 import 'react-quill/dist/quill.snow.css';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@heroui/react';
 
 interface EditableDataTableProps {
   data: Record<string, string>;

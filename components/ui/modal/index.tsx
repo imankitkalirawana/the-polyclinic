@@ -12,7 +12,7 @@ import {
   ScrollShadow,
 } from '@heroui/react';
 import AsyncButton from '../buttons/async-button';
-import { cn } from '@/lib/utils';
+import { cn } from '@heroui/react';
 
 const isLargerThan3xl = (size?: string) => /^(5xl|4xl|full)$/.test(size ?? '');
 

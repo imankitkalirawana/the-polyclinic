@@ -53,23 +53,23 @@ export const chipColorMap: Record<
     text: 'bg-red-500',
     bg: 'bg-red-100',
   },
-  admin: {
+  ADMIN: {
     text: 'bg-red-500',
     bg: 'bg-red-100',
   },
-  doctor: {
+  DOCTOR: {
     text: 'bg-blue-500',
     bg: 'bg-blue-100',
   },
-  nurse: {
+  NURSE: {
     text: 'bg-amber-500',
     bg: 'bg-amber-100',
   },
-  receptionist: {
+  RECEPTIONIST: {
     text: 'bg-yellow-500',
     bg: 'bg-yellow-100',
   },
-  pharmacist: {
+  PHARMACIST: {
     text: 'bg-purple-500',
     bg: 'bg-purple-100',
   },
@@ -121,7 +121,7 @@ export const chipColorMap: Record<
     text: 'bg-yellow-500',
     bg: 'bg-yellow-100',
   },
-  patient: {
+  PATIENT: {
     text: 'bg-emerald-500',
     bg: 'bg-emerald-100',
   },

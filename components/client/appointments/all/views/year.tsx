@@ -19,7 +19,7 @@ import {
 import { weekdays } from '../data';
 import AppointmentList from '../ui/appointment-list';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@heroui/react';
 import { useAppointmentStore } from '@/store/appointment';
 import { AppointmentType } from '@/services/client/appointment';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@heroui/react';
 
 export type CellValueProps = React.HTMLAttributes<HTMLDivElement> & {
   label: string;

@@ -5,7 +5,7 @@ import { Button, ButtonGroup, Card, CardBody, CardFooter, CardHeader, cn } from 
 import { format } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
 import Skeleton from '@/components/ui/skeleton';
 import { castData } from '@/lib/utils';
 import { useAllAppointments } from '@/services/client/appointment/query';

@@ -1,5 +1,5 @@
 import { CellRenderer } from '@/components/ui/cell-renderer';
-import { renderChip, RenderUser } from '@/components/ui/data-table/cell-renderers';
+import { renderChip, RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { UnifiedUser } from '@/services/common/user';
 import { useUserWithUID } from '@/services/common/user/query';

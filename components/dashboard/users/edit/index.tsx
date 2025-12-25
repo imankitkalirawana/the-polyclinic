@@ -23,7 +23,7 @@ import { UpdateUser, updateUserSchema } from '@/services/common/user';
 import { withZodSchema } from '@/lib/utils';
 import { GENDERS } from '@/lib/constants';
 import { useQueryState } from 'nuqs';
-import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
 
 export default function NewUser({
   uid,
@@ -72,7 +72,7 @@ export default function NewUser({
           </p>
         </div>
         {renderChip({
-          item: user?.role || 'patient',
+          item: user?.role || 'PATIENT',
         })}
       </CardHeader>
       <CardBody>
@@ -80,7 +80,7 @@ export default function NewUser({
           <Input
             isRequired
             label="Name"
-            placeholder={formik.values.role === 'doctor' ? 'eg. Dr. John Doe' : 'eg. John Doe'}
+            placeholder={formik.values.role === 'DOCTOR' ? 'eg. Dr. John Doe' : 'eg. John Doe'}
             name="name"
             value={formik.values.name}
             onChange={formik.handleChange}
@@ -115,7 +115,7 @@ export default function NewUser({
 
           {/* Patients fields */}
 
-          {formik.values.role === 'patient' && (
+          {formik.values.role === 'PATIENT' && (
             <>
               <Select
                 label="Gender"
@@ -159,7 +159,7 @@ export default function NewUser({
 
           {/* Doctor Fields */}
 
-          {formik.values.role === 'doctor' && (
+          {formik.values.role === 'DOCTOR' && (
             <>
               <Input
                 label="Specialization"

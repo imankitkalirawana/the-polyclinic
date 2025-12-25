@@ -22,7 +22,7 @@ import RescheduleAppointment from '@/services/client/appointment/components/resc
 import ActivityTimeline from '@/components/ui/activity/timeline';
 import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
 import { CellRenderer } from '@/components/ui/cell-renderer';
-import { renderChip } from '@/components/ui/data-table/cell-renderers';
+import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
 import NoResults from '@/components/ui/no-results';
 import { useAppointmentWithAID } from '@/services/client/appointment/query';
 import { useAppointmentStore } from '@/store/appointment';

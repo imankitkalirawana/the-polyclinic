@@ -42,7 +42,7 @@ export function CellRenderer({
           <Icon icon={icon} width={iconSize} />
         </div>
         <div
-          className={cn('flex w-full flex-col gap-1', {
+          className={cn('flex w-full flex-col gap-0.5', {
             'flex-row items-center justify-between': direction === 'horizontal',
           })}
         >

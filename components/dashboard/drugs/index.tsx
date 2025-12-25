@@ -7,14 +7,14 @@ import { Button, DropdownItem, DropdownMenu, Selection } from '@heroui/react';
 import { DrugQuickLook } from './quicklook';
 import { useDrugStore } from './store';
 
-import { Table } from '@/components/ui/data-table';
+import { Table } from '@/components/ui/static-data-table';
 import {
   renderActions,
   renderChip,
   renderCopyableText,
   renderDate,
-} from '@/components/ui/data-table/cell-renderers';
-import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
+} from '@/components/ui/static-data-table/cell-renderers';
+import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
 import { useAllDrugs } from '@/services/client/drug/query';
 import { DrugType } from '@/services/client/drug/types';
 

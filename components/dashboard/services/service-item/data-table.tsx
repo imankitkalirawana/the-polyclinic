@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@heroui/react';
 
 interface DataTableProps {
   data: Record<string, string>;

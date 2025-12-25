@@ -8,14 +8,14 @@ import { toast } from 'sonner';
 import { UserQuickLook } from './quicklook';
 import { usePatientStore } from './store';
 
-import { Table } from '@/components/ui/data-table';
+import { Table } from '@/components/ui/static-data-table';
 import {
   renderActions,
   renderCopyableText,
   renderDate,
   RenderUser,
-} from '@/components/ui/data-table/cell-renderers';
-import type { ColumnDef, FilterDef } from '@/components/ui/data-table/types';
+} from '@/components/ui/static-data-table/cell-renderers';
+import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
 import { castData } from '@/lib/utils';
 import { PatientType } from '@/services/client/patient';
 import { useDeleteUser } from '@/services/common/user/query';

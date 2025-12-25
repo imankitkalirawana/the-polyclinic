@@ -1,5 +1,5 @@
 'use client';
-import { cn } from '@/lib/utils';
+import { cn } from '@heroui/react';
 import { AnimatePresence, motion } from 'motion/react';
 import type { TargetAndTransition, Transition, Variant, Variants } from 'motion/react';
 import React from 'react';

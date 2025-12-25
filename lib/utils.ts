@@ -1,5 +1,3 @@
-import { type ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
 import { faker } from '@faker-js/faker';
 import { z } from 'zod';
 
@@ -7,10 +5,6 @@ export const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http'
 export const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'thepolyclinic.app';
 
 export const excludedSubdomains = ['www', 'staging', 'api'];
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
 
 export type ValuesOf<T> = T extends readonly unknown[] ? T[number] : T[keyof T];
 

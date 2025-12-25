@@ -1,59 +1,29 @@
-import type { Selection, SortDescriptor } from '@heroui/react';
-import type React from 'react';
+import { RowData } from '@tanstack/react-table';
 
-import type { $FixMe } from '@/types';
+import { CellAutoFillState } from './custom-features/cellAutoFill';
 
-export type TableItem = Record<string, $FixMe>;
+/**
+ * Uses declaration merging to add our new feature APIs and state types to TanStack Table's existing types.
+ * Note: This affect global namespace for @tanstack/react-table types
+ */
+declare module '@tanstack/react-table' {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  interface ColumnMeta<TData extends RowData, TValue> {
+    columnKey: string;
+    columnName: string;
+    columnType?: string;
+    isAutoFillAbleColumn?: boolean;
+    isFiltered?: boolean;
+  }
 
-export interface ColumnDef<T extends TableItem> {
-  name: string;
-  uid: string;
-  sortable?: boolean;
-  filterable?: boolean;
-  info?: string;
-  sortDirection?: 'ascending' | 'descending';
-  renderCell?: (item: T, columnKey: string) => React.ReactNode;
-}
-
-export interface FilterOpt {
-  label: string;
-  value: string;
-}
-
-export interface FilterDef<T extends TableItem> {
-  name: string;
-  key: string;
-  options: FilterOpt[];
-  filterFn: (item: T, value: string) => boolean;
-}
-
-export interface TableProps<T extends TableItem> {
-  uniqueKey: string;
-  isLoading?: boolean;
-  data: T[];
-  columns: ColumnDef<T>[];
-  initialVisibleColumns?: string[];
-  keyField: keyof T;
-  filters?: FilterDef<T>[];
-  searchField?: keyof T | ((item: T, searchValue: string) => boolean);
-  endContent?: () => React.ReactNode;
-  renderSelectedActions?: (selectedKeys: Selection) => React.ReactNode;
-  onRowAction?: (row: string | number | bigint) => void;
-  rowsPerPage?: number;
-  initialSortDescriptor?: SortDescriptor;
-  selectedKeys?: Selection;
-  onSelectionChange?: (keys: Selection) => void;
-  isError?: boolean;
-  errorMessage?: string;
-}
-
-export interface TableState {
-  key: string;
-  filterValue: string;
-  selectedKeys: Selection;
-  visibleColumns: Selection;
-  page: number;
-  sortDescriptor: SortDescriptor;
-  rowsPerPage: number;
-  filterValues: Record<string, string>;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  interface TableMeta<TData extends RowData> {
+    rowHeight: number;
+    getIsCellSelectable?: <TValue = unknown>(cell: Cell<TData, TValue>) => boolean;
+    getIsCellEditable?: <TValue = unknown>(cell: Cell<TData, TValue>) => boolean;
+    handleUpdateCellAutoFill?: (cellAutoFillState: CellAutoFillState, table: Table<TData>) => void;
+    hoveredRowId?: string | null;
+    setHoveredRowId?: (rowId: string | null) => void;
+    [key: string]: unknown; // Allow any additional properties
+  }
 }

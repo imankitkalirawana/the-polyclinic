@@ -20,7 +20,7 @@ import UserModal from './create-edit-user';
 import DeleteUserModal from './delete-user-modal';
 import UserStatusToggle from './user-status-toggle';
 import CreateEditOrganizationModal from '../create-edit';
-import { renderChip, RenderUser } from '@/components/ui/data-table/cell-renderers';
+import { renderChip, RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 export default function Organization({ id }: { id: string }) {
@@ -165,7 +165,7 @@ export default function Organization({ id }: { id: string }) {
                               {renderChip({
                                 item: user.status,
                               })}
-                              {user.role !== 'admin' && (
+                              {user.role !== 'ADMIN' && (
                                 <UserStatusToggle organization={organization} user={user} />
                               )}
                             </div>
@@ -185,7 +185,7 @@ export default function Organization({ id }: { id: string }) {
                             size="sm"
                             startContent={<Icon icon="solar:eye-line-duotone" />}
                           />
-                          {user.role !== 'admin' && (
+                          {user.role !== 'ADMIN' && (
                             <Button
                               isIconOnly
                               variant="flat"

@@ -42,7 +42,20 @@ export default function Departments() {
   }
 
   if (!departments || departments.length === 0) {
-    return <MinimalPlaceholder message="No departments found" isLoading={false} />;
+    return (
+      <>
+        <MinimalPlaceholder
+          message="No departments found"
+          isLoading={false}
+          withButton={true}
+          buttonProps={{
+            onPress: newDepartment.onOpen,
+            children: 'Create a new department',
+          }}
+        />
+        {newDepartment.isOpen && <NewDepartment onClose={newDepartment.onClose} mode="create" />}
+      </>
+    );
   }
 
   return (

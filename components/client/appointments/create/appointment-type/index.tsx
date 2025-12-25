@@ -8,7 +8,7 @@ import CreateAppointmentFollowUp from './follow-up';
 import { useCreateAppointmentForm } from '../index';
 
 import CustomRadio from '@/components/ui/custom-radio';
-import { cn } from '@/lib/utils';
+import { cn } from '@heroui/react';
 import { APPOINTMENT_TYPES, AppointmentTypes } from '@/services/client/appointment';
 import { useKeyPress } from '@/hooks/useKeyPress';
 

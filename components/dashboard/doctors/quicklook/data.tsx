@@ -17,11 +17,11 @@ import { avatars } from '@/lib/avatar';
 import { DoctorType } from '@/services/client/doctor';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
-  doctor: ['cancel', 'reschedule', 'reminder', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
-  patient: ['cancel', 'reschedule', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
-  admin: 'all',
-  nurse: ['cancel', 'reschedule'],
-  receptionist: ['cancel', 'reschedule', 'reminder'],
+  DOCTOR: ['cancel', 'reschedule', 'reminder', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
+  PATIENT: ['cancel', 'reschedule', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
+  ADMIN: 'all',
+  NURSE: ['cancel', 'reschedule'],
+  RECEPTIONIST: ['cancel', 'reschedule', 'reminder'],
 };
 export const sidebarContent = (doctor: DoctorType) => (
   <>
