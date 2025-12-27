@@ -11,7 +11,7 @@ import {
   CreateAppointmentContentHeader,
   SearchInput,
   SelectionList,
-} from '../ui';
+} from '@/components/client/appointments/(common)';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useAllDoctors } from '@/services/client/doctor/query';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';

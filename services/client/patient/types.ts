@@ -13,14 +13,15 @@ export interface NewPatientFormValues {
 }
 
 export interface PatientType extends Base {
-  uid: string;
+  id: string;
+  userid: string;
   name: string;
   email: string;
-  image: string;
+  image?: string | null;
   phone: string;
-  gender: Gender;
+  gender?: Gender;
   age?: number;
-  address: string;
+  address?: string | null;
 }
 
 export type CreatePatient = z.infer<typeof createPatientSchema>;

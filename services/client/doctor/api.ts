@@ -3,18 +3,21 @@ import { apiRequest } from '@/lib/axios';
 
 export class Doctor {
   private static API_BASE = '/client/doctors';
-  static async getAll() {
+  static async getAll(search?: string) {
     return await apiRequest<DoctorType[]>({
       url: this.API_BASE,
+      params: {
+        search,
+      },
     });
   }
 
-  static async getByUID(uid?: string | null) {
-    if (!uid) {
-      return { success: false, message: 'UID is required', data: null };
+  static async getById(id?: string | null) {
+    if (!id) {
+      return { success: false, message: 'ID is required', data: null };
     }
     return await apiRequest<DoctorType>({
-      url: `${this.API_BASE}/${uid}`,
+      url: `${this.API_BASE}/${id}`,
     });
   }
 }

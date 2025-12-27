@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { Patient } from './api';
+import { PatientApi } from './api';
 
-export const useAllPatients = () =>
+export const useAllPatients = (search?: string) =>
   useQuery({
-    queryKey: ['patients'],
+    queryKey: ['patients', search],
     queryFn: async () => {
-      const result = await Patient.getAll();
+      const result = await PatientApi.getAll(search);
       if (result.success) {
         return result.data;
       }
@@ -13,24 +13,24 @@ export const useAllPatients = () =>
     },
   });
 
-export const usePatientByUID = (uid?: string | null) =>
+export const usePatientById = (id?: string | null) =>
   useQuery({
-    queryKey: ['patient', uid],
+    queryKey: ['patient', id],
     queryFn: async () => {
-      const result = await Patient.getByUID(uid);
+      const result = await PatientApi.getById(id);
       if (result.success) {
         return result.data;
       }
       throw new Error(result.message);
     },
-    enabled: !!uid,
+    enabled: !!id,
   });
 
 export const usePreviousAppointments = (uid?: string | null) =>
   useQuery({
     queryKey: ['previous-appointments', uid],
     queryFn: async () => {
-      const result = await Patient.getPreviousAppointments(uid);
+      const result = await PatientApi.getPreviousAppointments(uid);
       if (result.success) {
         return result.data;
       }

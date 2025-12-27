@@ -3,8 +3,6 @@
 import { Button, Chip, Kbd } from '@heroui/react';
 import { format, isPast, isValid } from 'date-fns';
 
-import CreateAppointmentContentContainer from '../ui/content-container';
-import CreateAppointmentContentHeader from '../ui/header';
 import CreateAppointmentTimeSelection from './time';
 import { useCreateAppointmentForm } from '../index';
 
@@ -12,6 +10,10 @@ import { SlotsPreview } from '@/components/dashboard/doctors/doctor/slots/slots-
 import { useKeyPress } from '@/hooks/useKeyPress';
 import { useSlotsByUID } from '@/services/client/doctor';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
+import {
+  CreateAppointmentContentContainer,
+  CreateAppointmentContentHeader,
+} from '@/components/client/appointments/(common)';
 
 function AvailabilityChip({ date }: { date: Date | undefined }) {
   if (!date || !isValid(date)) {

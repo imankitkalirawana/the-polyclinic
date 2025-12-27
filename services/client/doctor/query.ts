@@ -4,11 +4,11 @@ import { Doctor, DoctorSlots } from './api';
 import { SlotConfig } from './types';
 import { addToast } from '@heroui/react';
 
-export const useAllDoctors = () =>
+export const useAllDoctors = (search?: string) =>
   useQuery({
-    queryKey: ['doctors'],
+    queryKey: ['doctors', search],
     queryFn: async () => {
-      const result = await Doctor.getAll();
+      const result = await Doctor.getAll(search);
       if (result.success) {
         return result.data;
       }
@@ -16,17 +16,17 @@ export const useAllDoctors = () =>
     },
   });
 
-export const useDoctorByUID = (uid?: string | null) =>
+export const useDoctorById = (id?: string | null) =>
   useQuery({
-    queryKey: ['doctor', uid],
+    queryKey: ['doctor', id],
     queryFn: async () => {
-      const result = await Doctor.getByUID(uid);
+      const result = await Doctor.getById(id);
       if (result.success) {
         return result.data;
       }
       throw new Error(result.message);
     },
-    enabled: !!uid,
+    enabled: !!id,
   });
 
 // Slots

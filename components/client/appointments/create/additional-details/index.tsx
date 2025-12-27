@@ -1,7 +1,7 @@
 import { Button, Input, Kbd, Select, SelectItem, Textarea } from '@heroui/react';
 
-import CreateAppointmentContentContainer from '../ui/content-container';
-import CreateAppointmentContentHeader from '../ui/header';
+import CreateAppointmentContentContainer from '../../(common)/content-container';
+import CreateAppointmentContentHeader from '../../(common)/header';
 import { useCreateAppointmentForm } from '../index';
 import { useKeyPress } from '@/hooks/useKeyPress';
 

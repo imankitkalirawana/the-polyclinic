@@ -1,15 +1,17 @@
 import { Progress } from '@heroui/react';
 
-import { steps } from './data';
-import VerticalSteps from './vertical-steps';
+import { CREATE_APPOINTMENT_STEPS } from './data';
+import VerticalSteps, { VerticalCollapsibleStepProps } from './vertical-steps';
 
 import { APP_INFO } from '@/lib/config';
 
 export const CreateAppointmentSidebar = ({
   currentStep,
+  steps = CREATE_APPOINTMENT_STEPS,
   setCurrentStep,
 }: {
   currentStep: number;
+  steps?: VerticalCollapsibleStepProps[];
   setCurrentStep: (step: number) => void;
 }) => {
   return (
@@ -18,7 +20,7 @@ export const CreateAppointmentSidebar = ({
         <h1 className="mb-2 text-xl font-medium" id="getting-started">
           {APP_INFO.name}
         </h1>
-        <p className="mb-5 text-small text-default-500">{APP_INFO.description}</p>
+        <p className="mb-5 text-default-500 text-small">{APP_INFO.description}</p>
       </div>
       <Progress
         classNames={{

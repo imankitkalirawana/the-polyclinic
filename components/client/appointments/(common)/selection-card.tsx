@@ -6,7 +6,7 @@ interface SelectionCardProps {
   id: string;
   title: string;
   subtitle?: string;
-  isSelected: boolean;
+  isSelected?: boolean;
   isDisabled?: boolean;
   disabledTitle?: string;
   onSelect: (id: string) => void;
@@ -29,7 +29,7 @@ export default function SelectionCard({
       isDisabled={isDisabled}
       title={isDisabled ? disabledTitle : undefined}
       className={cn(
-        'flex h-full min-h-16 w-full flex-row items-center justify-start gap-4 border-2 border-divider px-4 py-4 shadow-none',
+        'flex w-full flex-row items-center justify-start gap-4 border-2 border-divider px-4 py-4 shadow-none',
         {
           'border-primary': isSelected,
         },

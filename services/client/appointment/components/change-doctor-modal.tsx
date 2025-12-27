@@ -2,7 +2,7 @@ import Modal from '@/components/ui/modal';
 import { useAppointmentStore } from '@/store/appointment';
 import { useChangeDoctorAppointment } from '../query';
 import { useAllDoctors, DoctorType } from '@/services/client/doctor';
-import { SelectionList } from '@/components/client/appointments/create/ui';
+import { SelectionList } from '@/components/client/appointments/(common)';
 import { useState } from 'react';
 
 export default function ChangeDoctorModal({ type }: { type: 'change-doctor' | 'assign-doctor' }) {
