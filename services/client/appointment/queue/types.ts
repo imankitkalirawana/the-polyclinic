@@ -36,7 +36,26 @@ export type UserInfo = {
   name: string;
 };
 
-export type AppointmentQueueType = {
+export type PaymentMode = 'RAZORPAY' | 'CASH';
+
+export type AppointmentQueueRequest = {
+  patientId: string;
+  doctorId: string;
+  paymentMode: PaymentMode;
+  notes?: string | null;
+};
+
+export type CreateAppointmentQueueFormValues = {
+  appointment: AppointmentQueueRequest;
+  meta: {
+    currentStep: number;
+    showConfirmation: boolean;
+    showReceipt: boolean;
+    createNewPatient: boolean;
+  };
+};
+
+export type AppointmentQueueResponse = {
   id: string;
   sequenceNumber: number;
   title: string;

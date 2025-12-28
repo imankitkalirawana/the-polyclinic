@@ -79,6 +79,7 @@
     "prettier-eslint-cli": "^8.0.1",
     "prettier-plugin-tailwindcss": "^0.6.8",
     "puppeteer": "^24.1.1",
+    "razorpay": "^2.9.6",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hook-form": "^7.65.0",
@@ -131,8 +132,8 @@
     "onlyBuiltDependencies": [
       "@heroui/shared-utils",
       "@sentry/cli",
-      "@tsparticles/engine",
       "core-js",
+      "esbuild",
       "puppeteer",
       "sharp",
       "unrs-resolver",

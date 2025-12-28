@@ -4,12 +4,12 @@ import { DoctorType, useAllDoctors } from '@/services/client/doctor';
 import { addToast, Button, Card, Chip, cn } from '@heroui/react';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { CreateAppointmentFormValues } from '../types';
 import {
   CreateAppointmentContentContainer,
   CreateAppointmentContentHeader,
   SearchInput,
 } from '../../../(common)';
+import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/types';
 
 export default function DoctorSelection() {
   const [search, setSearch] = useState('');
@@ -17,7 +17,7 @@ export default function DoctorSelection() {
   const debouncedSearch = useDebounce(search, 500);
 
   const { data: doctors } = useAllDoctors(debouncedSearch);
-  const form = useFormContext<CreateAppointmentFormValues>();
+  const form = useFormContext<CreateAppointmentQueueFormValues>();
 
   const doctorId = form.watch('appointment.doctorId');
 

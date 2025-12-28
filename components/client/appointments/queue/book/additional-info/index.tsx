@@ -1,13 +1,13 @@
 import { useFormContext } from 'react-hook-form';
-import { CreateAppointmentFormValues } from '../types';
 import {
   CreateAppointmentContentContainer,
   CreateAppointmentContentHeader,
 } from '../../../(common)';
 import { Button, Textarea } from '@heroui/react';
+import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/types';
 
 export default function AdditionalInfo() {
-  const form = useFormContext<CreateAppointmentFormValues>();
+  const form = useFormContext<CreateAppointmentQueueFormValues>();
   const notes = form.watch('appointment.notes');
 
   return (

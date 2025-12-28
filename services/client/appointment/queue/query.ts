@@ -3,6 +3,7 @@ import { AppointmentQueueApi } from './api';
 import { useGenericMutation } from '@/services/useGenericMutation';
 import { PrescriptionFormSchema } from '@/components/client/appointments/queue/priscription-panel';
 import { useQueryState } from 'nuqs';
+import { AppointmentQueueRequest } from './types';
 
 export const useAllAppointmentQueues = () => {
   return useQuery({
@@ -26,6 +27,18 @@ export const useQueueForDoctor = (doctorId: string, queueId?: string | null) => 
         return result.data;
       }
       throw new Error(result.message);
+    },
+  });
+};
+
+export const useCreateAppointmentQueue = () => {
+  return useGenericMutation({
+    mutationFn: async (data: AppointmentQueueRequest) => {
+      const res = await AppointmentQueueApi.create(data);
+      if (res.success) {
+        return res;
+      }
+      throw new Error(res.message);
     },
   });
 };

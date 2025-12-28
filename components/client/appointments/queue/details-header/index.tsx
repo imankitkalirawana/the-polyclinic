@@ -4,12 +4,16 @@ import { CellRenderer } from '@/components/ui/cell-renderer';
 import { Accordion, AccordionItem, Chip } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { formatDate } from 'date-fns';
-import { AppointmentQueueType } from '@/services/client/appointment/queue/types';
+import { AppointmentQueueResponse } from '@/services/client/appointment/queue/types';
 import { useEffect, useState } from 'react';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import DataItem from '@/components/ui/data-item';
 
-export default function DetailsHeader({ currentQueue }: { currentQueue: AppointmentQueueType }) {
+export default function DetailsHeader({
+  currentQueue,
+}: {
+  currentQueue: AppointmentQueueResponse;
+}) {
   const [selectedKeys, setSelectedKeys] = useState(new Set(['']));
   const [isDetailsOpen, setIsDetailsOpen] = useLocalStorage('is-queue-details-open', false);
 

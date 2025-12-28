@@ -4,13 +4,13 @@ import {
   CreateAppointmentContentHeader,
 } from '../../../(common)';
 import { useFormContext } from 'react-hook-form';
-import { CreateAppointmentFormValues } from '../types';
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { useDoctorById } from '@/services/client/doctor/query';
 import { usePatientById } from '@/services/client/patient/query';
+import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/types';
 
 export default function AppointmentSummary() {
-  const form = useFormContext<CreateAppointmentFormValues>();
+  const form = useFormContext<CreateAppointmentQueueFormValues>();
   const appointment = form.watch('appointment');
 
   const { data: doctor } = useDoctorById(appointment.doctorId);

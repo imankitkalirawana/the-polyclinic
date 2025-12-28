@@ -3,11 +3,11 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { CreateAppointmentSidebar } from '../../create/sidebar';
 import { BOOK_QUEUE_APPOINTMENT_STEPS } from '../../create/data';
 import PatientSelection from './patient';
-import { CreateAppointmentFormValues } from './types';
 import DoctorSelection from './doctor';
 import AdditionalInfo from './additional-info';
 import PaymentConfirmation from './payment';
 import AppointmentSummary from './summary';
+import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/types';
 
 const contentMap: Record<number, React.ReactNode> = {
   0: <PatientSelection />,
@@ -18,7 +18,7 @@ const contentMap: Record<number, React.ReactNode> = {
 };
 
 export default function BookQueueAppointment() {
-  const form = useForm<CreateAppointmentFormValues>({
+  const form = useForm<CreateAppointmentQueueFormValues>({
     defaultValues: {
       appointment: {
         patientId: '',
@@ -34,14 +34,10 @@ export default function BookQueueAppointment() {
     },
   });
 
-  const onSubmit = async (values: CreateAppointmentFormValues) => {
-    console.log(values);
-  };
-
   const currentStep = form.watch('meta.currentStep');
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1">
+    <form className="flex-1">
       <FormProvider {...form}>
         <div className="flex h-[calc(100vh-3.75rem)]">
           <CreateAppointmentSidebar

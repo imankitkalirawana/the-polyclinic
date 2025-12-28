@@ -83,7 +83,7 @@ const PatientSelection = ({ className }: { className?: string }) => {
         <SelectionList
           items={
             filteredPatients?.map((patient) => ({
-              id: patient.uid,
+              id: patient.id,
               image: patient.image,
               title: patient.name,
               subtitle: patient.email,

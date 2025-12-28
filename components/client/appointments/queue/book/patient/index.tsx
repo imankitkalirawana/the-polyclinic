@@ -15,11 +15,11 @@ import {
 } from '@/components/client/appointments/(common)';
 import { PatientType, useAllPatients } from '@/services/client/patient';
 import { useFormContext } from 'react-hook-form';
-import { CreateAppointmentFormValues } from '../types';
 import { useState } from 'react';
 import { useDebounce } from '@/hooks/useDebounce';
 import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/types';
 
 export default function PatientSelection() {
   const [search, setSearch] = useState('');
@@ -27,7 +27,7 @@ export default function PatientSelection() {
   const debouncedSearch = useDebounce(search, 500);
 
   const { data: patients } = useAllPatients(debouncedSearch);
-  const form = useFormContext<CreateAppointmentFormValues>();
+  const form = useFormContext<CreateAppointmentQueueFormValues>();
 
   const patientId = form.watch('appointment.patientId');
 
