@@ -18,6 +18,20 @@ export const useAllAppointmentQueues = () => {
   });
 };
 
+export const useAppointmentQueueById = (appointmentId: string | null) => {
+  return useQuery({
+    queryKey: ['appointment-queue', appointmentId],
+    queryFn: async () => {
+      const result = await AppointmentQueueApi.getById(appointmentId);
+      if (result.success) {
+        return result.data;
+      }
+      throw new Error(result.message);
+    },
+    enabled: !!appointmentId,
+  });
+};
+
 export const useQueueForDoctor = (doctorId: string, queueId?: string | null) => {
   return useQuery({
     queryKey: ['queue-for-doctor', doctorId, queueId],

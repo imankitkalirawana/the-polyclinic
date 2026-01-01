@@ -1,6 +1,8 @@
 import { Gender } from '@/types';
 
 export enum QueueStatus {
+  PAYMENT_PENDING = 'PAYMENT_PENDING',
+  PAYMENT_FAILED = 'PAYMENT_FAILED',
   BOOKED = 'BOOKED',
   CALLED = 'CALLED',
   IN_CONSULTATION = 'IN_CONSULTATION',
@@ -46,13 +48,19 @@ export type AppointmentQueueRequest = {
 };
 
 export type CreateAppointmentQueueFormValues = {
-  appointment: AppointmentQueueRequest;
+  appointment: AppointmentQueueRequest & { id: string | null };
   meta: {
     currentStep: number;
     showConfirmation: boolean;
     showReceipt: boolean;
     createNewPatient: boolean;
   };
+};
+
+export type VerifyPaymentRequest = {
+  orderId: string;
+  paymentId: string;
+  signature: string;
 };
 
 export type AppointmentQueueResponse = {

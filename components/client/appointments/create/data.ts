@@ -43,13 +43,11 @@ export const BOOK_QUEUE_APPOINTMENT_STEPS = [
     details: ['Please provide additional details for your appointment.'],
   },
   {
-    title: 'Appointment Summary',
-    description: 'Please review the details of your appointment.',
-    details: ['Please review the details of your appointment.'],
-  },
-  {
-    title: 'Payment',
-    description: 'Please provide payment to confirm your appointment.',
-    details: ['Pay via UPI, Bank Transfer, or Cash.'],
+    title: 'Review and Pay',
+    description: 'Check details and pay',
+    details: [
+      'Please review the details of your appointment.',
+      'Pay via UPI, Bank Transfer, or Cash.',
+    ],
   },
 ];

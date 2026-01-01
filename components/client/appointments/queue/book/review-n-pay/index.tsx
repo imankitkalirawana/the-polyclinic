@@ -1,4 +1,4 @@
-import { Button, Divider } from '@heroui/react';
+import { Divider } from '@heroui/react';
 import {
   CreateAppointmentContentContainer,
   CreateAppointmentContentHeader,
@@ -8,8 +8,9 @@ import { CellRenderer } from '@/components/ui/cell-renderer';
 import { useDoctorById } from '@/services/client/doctor/query';
 import { usePatientById } from '@/services/client/patient/query';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/types';
+import PaymentFooter from './payment-footer';
 
-export default function AppointmentSummary() {
+export default function ReviewAndPay() {
   const form = useFormContext<CreateAppointmentQueueFormValues>();
   const appointment = form.watch('appointment');
 
@@ -20,23 +21,11 @@ export default function AppointmentSummary() {
     <CreateAppointmentContentContainer
       header={
         <CreateAppointmentContentHeader
-          title="Appointment Summary"
-          description="Please review the details of your appointment"
+          title="Review and Pay"
+          description="Please review the details of your appointment and pay to confirm your appointment"
         />
       }
-      footer={
-        <>
-          <Button
-            variant="shadow"
-            color="primary"
-            radius="full"
-            onPress={() => form.setValue('meta.currentStep', 4)}
-            // endContent={<Kbd keys={['enter']} className="bg-transparent text-primary-foreground" />}
-          >
-            Next
-          </Button>
-        </>
-      }
+      footer={<PaymentFooter />}
     >
       <div className="grid grid-cols-2 gap-2">
         <div className="col-span-full flex items-center gap-2">

@@ -1,5 +1,5 @@
 import { apiRequest } from '@/lib/axios';
-import { AppointmentQueueResponse } from './types';
+import { AppointmentQueueResponse, VerifyPaymentRequest } from './types';
 import { PrescriptionFormSchema } from '@/components/client/appointments/queue/priscription-panel';
 import { AppointmentQueueRequest } from './types';
 
@@ -12,12 +12,30 @@ export class AppointmentQueueApi {
     });
   }
 
+  static async getById(queueId: string | null) {
+    if (!queueId) {
+      throw new Error('Queue ID is required');
+    }
+    return await apiRequest<AppointmentQueueResponse>({
+      url: `${this.API_BASE}/${queueId}`,
+    });
+  }
+
   // create appointment queue
   static async create(data: AppointmentQueueRequest) {
     return await apiRequest<
       AppointmentQueueResponse & { orderId: string; amount: number; currency: string }
     >({
       url: `${this.API_BASE}`,
+      method: 'POST',
+      data,
+    });
+  }
+
+  // verify payment
+  static async verifyPayment(data: VerifyPaymentRequest) {
+    return await apiRequest<{ success: boolean; message: string }>({
+      url: `${this.API_BASE}/verify-payment`,
       method: 'POST',
       data,
     });

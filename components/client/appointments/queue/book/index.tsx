@@ -5,22 +5,22 @@ import { BOOK_QUEUE_APPOINTMENT_STEPS } from '../../create/data';
 import PatientSelection from './patient';
 import DoctorSelection from './doctor';
 import AdditionalInfo from './additional-info';
-import PaymentConfirmation from './payment';
-import AppointmentSummary from './summary';
+import ReviewAndPay from './review-n-pay';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/types';
+import AppointmentQueueReceipt from './receipt';
 
 const contentMap: Record<number, React.ReactNode> = {
   0: <PatientSelection />,
   1: <DoctorSelection />,
   2: <AdditionalInfo />,
-  3: <AppointmentSummary />,
-  4: <PaymentConfirmation />,
+  3: <ReviewAndPay />,
 };
 
 export default function BookQueueAppointment() {
   const form = useForm<CreateAppointmentQueueFormValues>({
     defaultValues: {
       appointment: {
+        id: null,
         patientId: '',
         doctorId: '',
         notes: null,
@@ -37,7 +37,7 @@ export default function BookQueueAppointment() {
   const currentStep = form.watch('meta.currentStep');
 
   return (
-    <form className="flex-1">
+    <form className="flex-1" onSubmit={(e) => e.preventDefault()}>
       <FormProvider {...form}>
         <div className="flex h-[calc(100vh-3.75rem)]">
           <CreateAppointmentSidebar
@@ -47,6 +47,7 @@ export default function BookQueueAppointment() {
           />
           {contentMap[currentStep]}
         </div>
+        {form.watch('meta.showReceipt') && <AppointmentQueueReceipt />}
       </FormProvider>
     </form>
   );

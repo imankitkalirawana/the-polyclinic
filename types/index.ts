@@ -43,3 +43,35 @@ export interface CityProps {
 }
 
 export type VerificationType = 'register' | 'reset-password' | 'verify-email';
+
+export interface RazorpayPaymentResponse {
+  razorpay_payment_id: string;
+  razorpay_order_id: string;
+  razorpay_signature: string;
+}
+
+export interface RazorpayOptions {
+  key: string;
+  amount: number;
+  currency: string;
+  name: string;
+  order_id: string;
+  handler: (response: RazorpayPaymentResponse) => void | Promise<void>;
+  modal?: {
+    onDismiss?: () => void;
+  };
+  payment?: {
+    failed?: (response: {
+      error: { code: string; description: string; source: string; step: string; reason: string };
+    }) => void;
+  };
+}
+
+declare global {
+  interface Window {
+    Razorpay: new (options: RazorpayOptions) => {
+      open: () => void;
+      on: (event: string, handler: (response: unknown) => void) => void;
+    };
+  }
+}
