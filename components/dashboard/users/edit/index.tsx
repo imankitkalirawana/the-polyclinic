@@ -18,7 +18,7 @@ import {
 } from '@heroui/react';
 import { useFormik } from 'formik';
 
-import { useUpdateUser, useUserWithUID } from '@/services/common/user/query';
+import { useUpdateUser, useUserWithUID } from '@/services/common/user/user.query';
 import { UpdateUser, updateUserSchema } from '@/services/common/user';
 import { withZodSchema } from '@/lib/utils';
 import { GENDERS } from '@/lib/constants';

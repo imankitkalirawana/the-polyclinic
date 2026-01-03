@@ -2,7 +2,7 @@ import { CellRenderer } from '@/components/ui/cell-renderer';
 import { renderChip, RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { UnifiedUser } from '@/services/common/user';
-import { useUserWithUID } from '@/services/common/user/query';
+import { useUserWithUID } from '@/services/common/user/user.query';
 import { Button, Card, CardBody, CardFooter, CardHeader, Link, Tooltip } from '@heroui/react';
 
 export const UserDetailsPopover = ({

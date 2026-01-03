@@ -20,9 +20,12 @@ import {
 import { Icon } from '@iconify/react';
 
 import NotificationItem from './notification-item';
-import { Notification } from '@/services/common/notifications/types';
-import { useAllNotifications, useMarkAsRead } from '@/services/common/notifications/query';
-import { GetAllNotificationsResponse } from '@/services/common/notifications/api.types';
+import { Notification } from '@/services/common/notifications/notifications.types';
+import {
+  useAllNotifications,
+  useMarkAsRead,
+} from '@/services/common/notifications/notifications.query';
+import { GetAllNotificationsResponse } from '@/services/common/notifications/notifications.types';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 enum NotificationTabs {

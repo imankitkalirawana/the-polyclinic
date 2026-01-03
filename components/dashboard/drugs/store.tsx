@@ -5,7 +5,7 @@ import { create } from 'zustand';
 
 import { ActionType } from './types';
 
-import { DrugType } from '@/services/client/drug/types';
+import { DrugType } from '@/services/client/drug/drug.types';
 
 interface DrugStoreState {
   selected: DrugType | null;

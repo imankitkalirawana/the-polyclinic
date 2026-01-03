@@ -24,8 +24,8 @@ import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
 import NoResults from '@/components/ui/no-results';
-import { useAppointmentWithAID } from '@/services/client/appointment/query';
-import { useAppointmentStore } from '@/store/appointment';
+import { useAppointmentWithAID } from '@/services/client/appointment/appointment.query';
+import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 export default function Appointment({ aid }: { aid: string }) {

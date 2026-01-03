@@ -17,8 +17,8 @@ import { Icon } from '@iconify/react';
 import { useCreateAppointmentForm } from '../index';
 
 import Skeleton from '@/components/ui/skeleton';
-import { useUserWithUID } from '@/services/common/user/query';
-import { useDoctorByUID } from '@/services/client/doctor/query';
+import { useUserWithUID } from '@/services/common/user/user.query';
+import { useDoctorByUID } from '@/services/client/doctor/doctor.query';
 
 export default function AppointmentBookingConfirmation() {
   const { watch, setValue, handleSubmit, formState, onSubmit } = useCreateAppointmentForm();

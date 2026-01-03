@@ -14,7 +14,7 @@ import AppointmentBookingReceipt from './receipt';
 import { CreateAppointmentSidebar } from './sidebar';
 import { CreateAppointmentFormValues } from './types';
 
-import { useCreateAppointment } from '@/services/client/appointment/query';
+import { useCreateAppointment } from '@/services/client/appointment/appointment.query';
 import { cn } from '@heroui/react';
 import { useKeyPress } from '@/hooks/useKeyPress';
 

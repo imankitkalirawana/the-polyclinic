@@ -9,8 +9,8 @@ import { AuthContextType, FlowType } from './types';
 import { login } from '@/lib/auth';
 import { $FixMe } from '@/types';
 import { useSubdomain } from '@/hooks/useSubDomain';
-import { AuthApi } from '@/services/common/auth/api';
-import { useLogin as useLoginQuery } from '@/services/common/auth/query';
+import { AuthApi } from '@/services/common/auth/auth.api';
+import { useLogin as useLoginQuery } from '@/services/common/auth/auth.query';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 

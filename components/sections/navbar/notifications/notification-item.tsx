@@ -8,9 +8,9 @@ import {
   Notification,
   NotificationAction,
   NotificationType,
-} from '@/services/common/notifications/types';
+} from '@/services/common/notifications/notifications.types';
 import { formatDistanceToNow } from 'date-fns';
-import { useMarkAsRead } from '@/services/common/notifications/query';
+import { useMarkAsRead } from '@/services/common/notifications/notifications.query';
 import { useNotificationHandler } from '@/services/common/notifications/hooks/useNotificationHandler';
 import ReactMarkdown from 'react-markdown';
 

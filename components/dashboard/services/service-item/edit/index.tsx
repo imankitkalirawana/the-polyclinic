@@ -24,9 +24,9 @@ import NoResults from '@/components/ui/no-results';
 import QuillInput from '@/components/ui/quill-input';
 import { ServiceStatuses, ServiceTypes } from '@/lib/interface';
 import { serviceValidationSchema } from '@/lib/validation';
-import { useServiceWithUID, useUpdateService } from '@/services/client/service/query';
+import { useServiceWithUID, useUpdateService } from '@/services/client/service/service.query';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
-import { ServiceType } from '@/services/client/service/types';
+import { ServiceType } from '@/services/client/service/service.types';
 
 export default function EditService({ uid }: { uid: string }) {
   const updateService = useUpdateService();

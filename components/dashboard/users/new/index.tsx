@@ -25,7 +25,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { GENDERS } from '@/lib/constants';
 import { generateEmail, generatePhoneNumber, toTitleCase } from '@/lib/utils';
 
-import { useCreateUser } from '@/services/common/user/query';
+import { useCreateUser } from '@/services/common/user/user.query';
 import {
   CreateUser,
   createUserSchema,

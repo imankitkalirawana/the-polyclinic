@@ -36,8 +36,8 @@ import { CellRenderer } from '@/components/ui/cell-renderer';
 import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
 import useAppointmentButtonsInDrawer from '@/services/client/appointment/hooks/useAppointmentButton';
 import { useIsMobile } from '@/hooks/useMobile';
-import { useAppointmentWithAID } from '@/services/client/appointment/query';
-import { useAppointmentStore } from '@/store/appointment';
+import { useAppointmentWithAID } from '@/services/client/appointment/appointment.query';
+import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
 import {
   APPOINTMENT_STATUSES,
   APPOINTMENT_TYPES,

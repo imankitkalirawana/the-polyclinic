@@ -13,7 +13,7 @@ import {
   SelectionList,
 } from '@/components/client/appointments/(common)';
 import { useDebounce } from '@/hooks/useDebounce';
-import { useAllDoctors } from '@/services/client/doctor/query';
+import { useAllDoctors } from '@/services/client/doctor/doctor.query';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { APPOINTMENT_TYPES } from '@/services/client/appointment';
 import { useAllDepartments } from '@/services/client/department';

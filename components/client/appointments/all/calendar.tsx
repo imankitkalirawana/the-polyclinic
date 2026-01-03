@@ -15,7 +15,7 @@ import { views } from './types';
 
 import CreateAppointment from '@/components/client/appointments/create';
 import { AppointmentType } from '@/services/client/appointment';
-import { useAppointmentStore } from '@/store/appointment';
+import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
 
 interface CalendarProps {
   appointments: AppointmentType[];

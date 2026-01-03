@@ -7,8 +7,8 @@ import { addToast, Button, DropdownItem, DropdownMenu, Selection } from '@heroui
 import { Table } from '@/components/ui/static-data-table';
 import { renderActions, renderDate } from '@/components/ui/static-data-table/cell-renderers';
 import type { ColumnDef } from '@/components/ui/static-data-table/types';
-import { useAllNewsletters } from '@/services/client/newsletters/query';
-import { NewsletterType } from '@/services/client/newsletters/types';
+import { useAllNewsletters } from '@/services/client/newsletters/newsletter.query';
+import { NewsletterType } from '@/services/client/newsletters/newsletter.types';
 
 const INITIAL_VISIBLE_COLUMNS = ['email', 'updatedAt', 'createdAt'];
 

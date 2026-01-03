@@ -1,7 +1,7 @@
 'use client';
-import { OrganizationType } from '@/services/system/organization/types';
+import { OrganizationType } from '@/services/system/organization/organization.types';
 import { OrganizationUser } from '@/services/common/user';
-import { useDeleteUser } from '@/services/common/user/query';
+import { useDeleteUser } from '@/services/common/user/user.query';
 import Modal from '@/components/ui/modal';
 import { Alert } from '@heroui/react';
 

@@ -1,7 +1,7 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 import Drugs from '@/components/dashboard/drugs';
-import { DrugApi } from '@/services/client/drug/api';
+import { DrugApi } from '@/services/client/drug/drug.api';
 
 export default async function Page() {
   const queryClient = new QueryClient();

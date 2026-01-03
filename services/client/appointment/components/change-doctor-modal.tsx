@@ -1,6 +1,6 @@
 import Modal from '@/components/ui/modal';
-import { useAppointmentStore } from '@/store/appointment';
-import { useChangeDoctorAppointment } from '../query';
+import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
+import { useChangeDoctorAppointment } from '../appointment.query';
 import { useAllDoctors, DoctorType } from '@/services/client/doctor';
 import { SelectionList } from '@/components/client/appointments/(common)';
 import { useState } from 'react';

@@ -13,7 +13,7 @@ import DateChip from '../ui/date-chip';
 
 import { TIMINGS } from '@/lib/config'; // Assuming this provides start/end hours
 import { cn } from '@heroui/react';
-import { useAppointmentStore } from '@/store/appointment';
+import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
 import { AppointmentType } from '@/services/client/appointment';
 
 interface DayViewProps {

@@ -16,4 +16,4 @@ export {
   type VerifyOTPRequest,
   type ResetPasswordRequest,
   type LoginRequest,
-} from './validation';
+} from './auth.validation';

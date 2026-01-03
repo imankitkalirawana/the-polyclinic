@@ -23,7 +23,7 @@ import DateChip from '../ui/date-chip';
 
 import { TIMINGS } from '@/lib/config';
 import { cn } from '@heroui/react';
-import { useAppointmentStore } from '@/store/appointment';
+import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
 import { AppointmentType } from '@/services/client/appointment';
 
 interface WeekViewProps {

@@ -1,6 +1,6 @@
 import { useSession } from '@/lib/providers/session-provider';
-import { useConfirmAppointment, useSendReminder } from '../query';
-import { AppointmentType } from '../types';
+import { useConfirmAppointment, useSendReminder } from '../appointment.query';
+import { AppointmentType } from '../appointment.types';
 
 export const useAppointmentActions = () => {
   const confirmMutation = useConfirmAppointment();

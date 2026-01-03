@@ -18,7 +18,7 @@ import {
   RenderUser,
 } from '@/components/ui/static-data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
-import { useAllUsers, useDeleteUser } from '@/services/common/user/query';
+import { useAllUsers, useDeleteUser } from '@/services/common/user/user.query';
 import { UnifiedUser } from '@/services/common/user';
 
 const INITIAL_VISIBLE_COLUMNS = ['image', 'uid', 'name', 'email', 'role', 'createdAt'];

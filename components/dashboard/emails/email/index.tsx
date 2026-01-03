@@ -5,8 +5,8 @@ import { format } from 'date-fns';
 
 import NoResults from '@/components/ui/no-results';
 import { castData } from '@/lib/utils';
-import { useEmailWithID } from '@/services/client/email/query';
-import { EmailType } from '@/services/client/email/types';
+import { useEmailWithID } from '@/services/client/email/email.query';
+import { EmailType } from '@/services/client/email/email.types';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 export default function Email({ id }: { id: string }) {

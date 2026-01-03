@@ -5,7 +5,7 @@ import { create } from 'zustand';
 
 import { ActionType } from './types';
 
-import { EmailType } from '@/services/client/email/types';
+import { EmailType } from '@/services/client/email/email.types';
 
 interface EmailStoreState {
   selected: EmailType | null;

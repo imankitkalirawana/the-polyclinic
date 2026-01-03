@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { apiRequest } from '@/lib/axios';
-import { Notification, NotificationAction } from '../types';
-import { useMarkAsRead } from '../query';
+import { Notification, NotificationAction } from '../notifications.types';
+import { useMarkAsRead } from '../notifications.query';
 
 export function useNotificationHandler() {
   const [isLoading, setIsLoading] = useState(false);

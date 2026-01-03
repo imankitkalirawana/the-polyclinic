@@ -4,7 +4,7 @@ import { cn } from '@heroui/react';
 import { formatTime } from '../helper';
 import StatusRenderer from './status-renderer';
 
-import { useAppointmentStore } from '@/store/appointment';
+import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
 import {
   APPOINTMENT_STATUSES,
   APPOINTMENT_TYPES,

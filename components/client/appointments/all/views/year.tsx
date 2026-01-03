@@ -20,7 +20,7 @@ import { weekdays } from '../data';
 import AppointmentList from '../ui/appointment-list';
 
 import { cn } from '@heroui/react';
-import { useAppointmentStore } from '@/store/appointment';
+import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
 import { AppointmentType } from '@/services/client/appointment';
 
 interface YearViewProps {

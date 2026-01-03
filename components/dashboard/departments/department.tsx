@@ -2,7 +2,7 @@
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import NoResults from '@/components/ui/no-results';
 import { useDepartmentByDid } from '@/services/client/department';
-import { DoctorType } from '@/services/client/doctor/types';
+import { DoctorType } from '@/services/client/doctor/doctor.types';
 import { Avatar, AvatarGroup, Button, Card, Image } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 

@@ -7,7 +7,7 @@ import { Button, Card, CardBody, CardFooter, CardHeader, ScrollShadow } from '@h
 import CellValue from '@/components/ui/cell-value';
 
 import { castData } from '@/lib/utils';
-import { useUserWithUID } from '@/services/common/user/query';
+import { useUserWithUID } from '@/services/common/user/user.query';
 import { OrganizationUser, UnifiedUser } from '@/services/common/user';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { format } from 'date-fns';

@@ -18,7 +18,7 @@ import {
 import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
 import { castData } from '@/lib/utils';
 import { PatientType } from '@/services/client/patient';
-import { useDeleteUser } from '@/services/common/user/query';
+import { useDeleteUser } from '@/services/common/user/user.query';
 import { useSubdomain } from '@/hooks/useSubDomain';
 import { useAllPatients } from '@/services/client/patient';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';

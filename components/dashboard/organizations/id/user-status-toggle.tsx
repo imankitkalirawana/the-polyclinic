@@ -1,8 +1,8 @@
 'use client';
 import { Spinner, Switch } from '@heroui/react';
-import { OrganizationType } from '@/services/system/organization/types';
+import { OrganizationType } from '@/services/system/organization/organization.types';
 import { OrganizationUser } from '@/services/common/user';
-import { useUpdateUser } from '@/services/common/user/query';
+import { useUpdateUser } from '@/services/common/user/user.query';
 
 interface UserStatusToggleProps {
   organization: OrganizationType;

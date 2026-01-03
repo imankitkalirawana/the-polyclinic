@@ -9,7 +9,7 @@ import Appointments from './appointments';
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { castData } from '@/lib/utils';
 import { DoctorType } from '@/services/client/doctor';
-import { useDoctorByUID } from '@/services/client/doctor/query';
+import { useDoctorByUID } from '@/services/client/doctor/doctor.query';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 type ListItem = {
