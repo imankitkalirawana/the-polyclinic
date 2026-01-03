@@ -1,7 +1,7 @@
 import { apiRequest } from '@/lib/axios';
-import { AppointmentQueueResponse, PaymentDetails, VerifyPaymentRequest } from './types';
+import { AppointmentQueueResponse, PaymentDetails, VerifyPaymentRequest } from './queue.types';
 import { PrescriptionFormSchema } from '@/components/client/appointments/queue/priscription-panel';
-import { AppointmentQueueRequest } from './types';
+import { AppointmentQueueRequest } from './queue.types';
 
 export class AppointmentQueueApi {
   private static API_BASE = '/client/appointments/queue';

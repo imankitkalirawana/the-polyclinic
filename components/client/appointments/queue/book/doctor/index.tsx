@@ -9,7 +9,7 @@ import {
   CreateAppointmentContentHeader,
   SearchInput,
 } from '../../../(common)';
-import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/types';
+import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
 
 export default function DoctorSelection() {
   const [search, setSearch] = useState('');

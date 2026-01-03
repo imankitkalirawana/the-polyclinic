@@ -3,11 +3,11 @@ import { getQueueStatusColor } from '../helper';
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { Accordion, AccordionItem, Chip } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { formatDate } from 'date-fns';
-import { AppointmentQueueResponse } from '@/services/client/appointment/queue/types';
+import { AppointmentQueueResponse } from '@/services/client/appointment/queue/queue.types';
 import { useEffect, useState } from 'react';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import DataItem from '@/components/ui/data-item';
+import { formatDate } from 'date-fns';
 
 export default function DetailsHeader({
   currentQueue,
@@ -40,6 +40,15 @@ export default function DetailsHeader({
           <h2 className="text-7xl font-bold text-primary">{currentQueue.sequenceNumber}</h2>
         </div>
         <div className="grid w-full grid-cols-3 gap-2">
+          <CellRenderer
+            icon="solar:key-minimalistic-bold-duotone"
+            label="Reference Number"
+            value={currentQueue.referenceNumber}
+            className="p-0"
+            classNames={{
+              icon: 'text-pink-500 bg-pink-100',
+            }}
+          />
           <CellRenderer
             icon="solar:user-bold-duotone"
             label="Name"
@@ -93,15 +102,6 @@ export default function DetailsHeader({
               }}
             />
           )}
-          <CellRenderer
-            icon="solar:clock-circle-bold-duotone"
-            label="Booked At"
-            value={formatDate(new Date(currentQueue.createdAt), 'PPp')}
-            className="p-0"
-            classNames={{
-              icon: 'text-pink-500 bg-pink-100',
-            }}
-          />
         </div>
       </div>
       <Accordion
@@ -134,16 +134,16 @@ export default function DetailsHeader({
             </div>
           }
         >
-          {/* <div className="p-4">
-            <p className="text-default-500 text-tiny">Patient Note</p>
-            <p className="capitalize text-small">
-              {currentQueue.notes || 'No additional information provided.'}
-            </p>
-          </div> */}
-          <DataItem
-            label="Patient Note"
-            value={currentQueue.notes || 'No additional information provided.'}
-          />
+          <div className="flex flex-col gap-2">
+            <DataItem
+              label="Booked At"
+              value={formatDate(new Date(currentQueue.createdAt), 'PPp')}
+            />
+            <DataItem
+              label="Patient Note"
+              value={currentQueue.notes || 'No additional information provided.'}
+            />
+          </div>
         </AccordionItem>
       </Accordion>
     </div>

@@ -6,7 +6,7 @@ import PatientSelection from './patient';
 import DoctorSelection from './doctor';
 import AdditionalInfo from './additional-info';
 import ReviewAndPay from './review-n-pay';
-import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/types';
+import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
 import AppointmentQueueReceipt from './receipt';
 
 const contentMap: Record<number, React.ReactNode> = {

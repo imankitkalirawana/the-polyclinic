@@ -1,6 +1,9 @@
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { cn } from '@heroui/react';
-import { AppointmentQueueResponse, QueueStatus } from '@/services/client/appointment/queue/types';
+import {
+  AppointmentQueueResponse,
+  QueueStatus,
+} from '@/services/client/appointment/queue/queue.types';
 import {
   Accordion,
   AccordionItem,

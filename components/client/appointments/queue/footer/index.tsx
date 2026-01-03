@@ -1,4 +1,4 @@
-import { AppointmentQueueResponse } from '@/services/client/appointment/queue/types';
+import { AppointmentQueueResponse } from '@/services/client/appointment/queue/queue.types';
 import { Button, cn } from '@heroui/react';
 import { useQueryState } from 'nuqs';
 import QueueFooterActions from './actions';

@@ -1,5 +1,5 @@
 import Queues from '@/components/client/appointments/queue';
-import { AppointmentQueueApi } from '@/services/client/appointment/queue/api';
+import { AppointmentQueueApi } from '@/services/client/appointment/queue/queue.api';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { loadSearchParams } from './search-params';
 import { SearchParams } from 'nuqs/server';

@@ -4,7 +4,7 @@ import {
   CreateAppointmentContentHeader,
 } from '../../../(common)';
 import { Button, Textarea } from '@heroui/react';
-import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/types';
+import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
 
 export default function AdditionalInfo() {
   const form = useFormContext<CreateAppointmentQueueFormValues>();

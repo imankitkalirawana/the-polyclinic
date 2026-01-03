@@ -3,8 +3,11 @@ import {
   useClockInPatient,
   useSkipPatient,
   useCompletePatient,
-} from '@/services/client/appointment/queue/query';
-import { AppointmentQueueResponse, QueueStatus } from '@/services/client/appointment/queue/types';
+} from '@/services/client/appointment/queue/queue.query';
+import {
+  AppointmentQueueResponse,
+  QueueStatus,
+} from '@/services/client/appointment/queue/queue.types';
 import { Button } from '@heroui/react';
 import { useQueryState } from 'nuqs';
 import { useFormContext } from 'react-hook-form';
@@ -46,9 +49,6 @@ export default function QueueFooterActions({
           onPress={() =>
             mutateSkip({
               queueId: currentQueue.id,
-              _doctorId: currentQueue.doctor.id,
-              // TODO: Fix this
-              _queueId: _queueId ?? '',
             }).then(() => {
               setQueueId(currentQueue.nextQueueId ?? null);
             })
@@ -65,9 +65,6 @@ export default function QueueFooterActions({
           onPress={() =>
             mutateCall({
               queueId: currentQueue.id,
-              _doctorId: currentQueue.doctor.id,
-              // TODO: Fix this
-              _queueId: _queueId ?? '',
             })
           }
         >
@@ -82,9 +79,6 @@ export default function QueueFooterActions({
           onPress={() =>
             mutateClockIn({
               queueId: currentQueue.id,
-              _doctorId: currentQueue.doctor.id,
-              // TODO: Fix this
-              _queueId: _queueId ?? '',
             })
           }
         >
@@ -106,9 +100,6 @@ export default function QueueFooterActions({
 
             await mutateComplete({
               queueId: currentQueue.id,
-              _doctorId: currentQueue.doctor.id,
-              // TODO: Fix this
-              _queueId: _queueId ?? '',
               data,
             });
 

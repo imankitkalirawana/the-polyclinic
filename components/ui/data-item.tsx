@@ -21,7 +21,7 @@ export default function DataItem({
   return (
     <div className={cn('flex flex-col', className)}>
       <span className={cn('text-default-500 text-tiny', classNames?.label)}>{label}</span>
-      <p className={cn('capitalize text-small', classNames?.value)}>{value}</p>
+      <p className={cn('text-small', classNames?.value)}>{value}</p>
     </div>
   );
 }

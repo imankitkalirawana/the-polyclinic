@@ -7,7 +7,7 @@ import { useFormContext } from 'react-hook-form';
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { useDoctorById } from '@/services/client/doctor/query';
 import { usePatientById } from '@/services/client/patient/query';
-import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/types';
+import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
 import PaymentFooter from './payment-footer';
 
 export default function ReviewAndPay() {

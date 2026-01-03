@@ -1,9 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { AppointmentQueueApi } from './api';
+import { AppointmentQueueApi } from './queue.api';
 import { useGenericMutation } from '@/services/useGenericMutation';
 import { PrescriptionFormSchema } from '@/components/client/appointments/queue/priscription-panel';
-import { useQueryState } from 'nuqs';
-import { AppointmentQueueRequest } from './types';
+import { AppointmentQueueRequest } from './queue.types';
 import { saveAs } from 'file-saver';
 
 export const useAllAppointmentQueues = () => {
@@ -77,6 +76,13 @@ export const useCreateAppointmentQueue = () => {
   });
 };
 
+const invalidateQueueForDoctor = (doctorId?: string | null, queueId?: string | null) => {
+  return [
+    ['queue-for-doctor', doctorId, queueId],
+    ['queue-for-doctor', doctorId, null],
+  ];
+};
+
 export const useCallPatient = () => {
   return useGenericMutation({
     mutationFn: async ({ queueId }: { queueId: string }) => {
@@ -87,13 +93,7 @@ export const useCallPatient = () => {
       throw new Error(res.message);
     },
     invalidateQueriesWithVariables({ variables, data }) {
-      const queriesToInvalidate = [
-        ['queue-for-doctor', data?.doctor?.id, variables?.queueId],
-        ['queue-for-doctor', data?.doctor?.id, null],
-      ];
-      console.log('data', data);
-      console.log(queriesToInvalidate);
-      return queriesToInvalidate;
+      return invalidateQueueForDoctor(data?.doctor?.id, variables?.queueId);
     },
     onSuccess: () => {
       const audio = new Audio('/assets/audio/desk-bell.mp3');
@@ -104,72 +104,45 @@ export const useCallPatient = () => {
 
 export const useSkipPatient = () => {
   return useGenericMutation({
-    mutationFn: async ({
-      queueId,
-      _doctorId,
-      _queueId,
-    }: {
-      queueId: string;
-      _doctorId: string;
-      _queueId: string;
-    }) => {
+    mutationFn: async ({ queueId }: { queueId: string }) => {
       const res = await AppointmentQueueApi.skip(queueId);
       if (res.success) {
         return res;
       }
       throw new Error(res.message);
     },
-    invalidateQueriesWithVariables({ variables }) {
-      return [['queue-for-doctor', variables?._doctorId, variables?._queueId]];
+    invalidateQueriesWithVariables({ variables, data }) {
+      return invalidateQueueForDoctor(data?.doctor?.id, variables?.queueId);
     },
   });
 };
 
 export const useClockInPatient = () => {
   return useGenericMutation({
-    mutationFn: async ({
-      queueId,
-      _doctorId,
-      _queueId,
-    }: {
-      queueId: string;
-      _doctorId: string;
-      _queueId: string;
-    }) => {
+    mutationFn: async ({ queueId }: { queueId: string }) => {
       const res = await AppointmentQueueApi.clockIn(queueId);
       if (res.success) {
         return res;
       }
       throw new Error(res.message);
     },
-    invalidateQueriesWithVariables({ variables }) {
-      return [['queue-for-doctor', variables?._doctorId, variables?._queueId]];
+    invalidateQueriesWithVariables({ variables, data }) {
+      return invalidateQueueForDoctor(data?.doctor?.id, variables?.queueId);
     },
   });
 };
 
 export const useCompletePatient = () => {
-  const [_queueId] = useQueryState('id');
   return useGenericMutation({
-    mutationFn: async ({
-      queueId,
-      data,
-      _doctorId,
-      _queueId,
-    }: {
-      queueId: string;
-      data: PrescriptionFormSchema;
-      _doctorId: string;
-      _queueId: string;
-    }) => {
+    mutationFn: async ({ queueId, data }: { queueId: string; data: PrescriptionFormSchema }) => {
       const res = await AppointmentQueueApi.complete(queueId, data);
       if (res.success) {
         return res;
       }
       throw new Error(res.message);
     },
-    invalidateQueriesWithVariables({ variables }) {
-      return [['queue-for-doctor', variables?._doctorId, null]];
+    invalidateQueriesWithVariables({ variables, data }) {
+      return invalidateQueueForDoctor(data?.doctor?.id, variables?.queueId);
     },
   });
 };

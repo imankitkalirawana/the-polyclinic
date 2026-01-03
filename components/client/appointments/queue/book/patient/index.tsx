@@ -19,8 +19,8 @@ import { useState } from 'react';
 import { useDebounce } from '@/hooks/useDebounce';
 import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/types';
-import { useDownloadReceipt } from '@/services/client/appointment/queue/query';
+import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
+import { useDownloadReceipt } from '@/services/client/appointment/queue/queue.query';
 
 export default function PatientSelection() {
   const [search, setSearch] = useState('');

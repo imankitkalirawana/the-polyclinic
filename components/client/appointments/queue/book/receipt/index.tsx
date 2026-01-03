@@ -17,9 +17,9 @@ import { Icon } from '@iconify/react';
 import {
   useAppointmentQueueById,
   useDownloadReceipt,
-} from '@/services/client/appointment/queue/query';
+} from '@/services/client/appointment/queue/queue.query';
 import { useFormContext } from 'react-hook-form';
-import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/types';
+import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
 import { useSession } from '@/lib/providers/session-provider';
 import { formatDate } from 'date-fns';
 

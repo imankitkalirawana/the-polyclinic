@@ -1,4 +1,4 @@
-import { QueueStatus } from '@/services/client/appointment/queue/types';
+import { QueueStatus } from '@/services/client/appointment/queue/queue.types';
 
 export const getQueueStatusColor = (status: QueueStatus) => {
   return {

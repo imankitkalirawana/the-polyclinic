@@ -1,8 +1,8 @@
 'use client';
 
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
-import { useQueueForDoctor } from '@/services/client/appointment/queue/query';
-import { QueueStatus } from '@/services/client/appointment/queue/types';
+import { useQueueForDoctor } from '@/services/client/appointment/queue/queue.query';
+import { QueueStatus } from '@/services/client/appointment/queue/queue.types';
 import { Button, Chip, ScrollShadow, Tab, Tabs, Tooltip } from '@heroui/react';
 import PrescriptionPanel, {
   prescriptionFormSchema,
@@ -15,10 +15,10 @@ import DetailsHeader from './details-header';
 import QueueFooter from './footer';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import DataItem from '@/components/ui/data-item';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useState, useMemo } from 'react';
+import CompletedAppointmentQueue from './completed';
 
 export default function Queues() {
   const [queueId, setQueueId] = useQueryState('id');
@@ -97,16 +97,7 @@ export default function Queues() {
               )}
 
               {currentQueue.status === QueueStatus.COMPLETED && (
-                <div className="flex flex-col gap-4 p-4">
-                  <DataItem label="Title" value={currentQueue.title} />
-                  <div className="flex flex-col">
-                    <span className="text-default-500 text-tiny">Prescription</span>
-                    <div
-                      className="ProseMirror text-small"
-                      dangerouslySetInnerHTML={{ __html: currentQueue.prescription }}
-                    />
-                  </div>
-                </div>
+                <CompletedAppointmentQueue currentQueue={currentQueue} />
               )}
             </>
           ) : (

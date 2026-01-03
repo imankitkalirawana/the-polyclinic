@@ -1,5 +1,5 @@
-import { AppointmentQueueApi } from '@/services/client/appointment/queue/api';
-import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/types';
+import { AppointmentQueueApi } from '@/services/client/appointment/queue/queue.api';
+import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
 import { RazorpayOptions, RazorpayPaymentResponse } from '@/types';
 import { loadRazorpay } from '@/utils/loadRazorpay';
 import { addToast, Alert, Button } from '@heroui/react';
