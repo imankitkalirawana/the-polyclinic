@@ -20,7 +20,7 @@ export default function BookQueueAppointment() {
   const form = useForm<CreateAppointmentQueueFormValues>({
     defaultValues: {
       appointment: {
-        id: null,
+        queueId: null,
         patientId: '',
         doctorId: '',
         notes: null,

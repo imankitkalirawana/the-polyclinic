@@ -18,7 +18,7 @@ import { useCreateAppointmentForm } from '../index';
 
 import Skeleton from '@/components/ui/skeleton';
 import { useUserWithUID } from '@/services/common/user/user.query';
-import { useDoctorByUID } from '@/services/client/doctor/doctor.query';
+import { useDoctorById } from '@/services/client/doctor/doctor.query';
 
 export default function AppointmentBookingConfirmation() {
   const { watch, setValue, handleSubmit, formState, onSubmit } = useCreateAppointmentForm();
@@ -26,7 +26,7 @@ export default function AppointmentBookingConfirmation() {
   const { isSubmitting } = formState;
 
   const { data: patient, isLoading: isPatientLoading } = useUserWithUID(appointment.patientId);
-  const { data: doctor, isLoading: isDoctorLoading } = useDoctorByUID(appointment.doctorId);
+  const { data: doctor, isLoading: isDoctorLoading } = useDoctorById(appointment.doctorId);
 
   return (
     <Modal

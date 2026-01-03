@@ -14,7 +14,7 @@ export default function ChangeDoctorModal({ type }: { type: 'change-doctor' | 'a
 
   const handleSubmit = async () => {
     if (!aid || !selectedDoctor) return;
-    await changeDoctor({ aid, doctorId: selectedDoctor.uid }).then(() => {
+    await changeDoctor({ aid, doctorId: selectedDoctor.id }).then(() => {
       setAction(null);
     });
   };
@@ -27,13 +27,13 @@ export default function ChangeDoctorModal({ type }: { type: 'change-doctor' | 'a
           items={
             doctors?.map((doctor) => ({
               title: doctor.name,
-              id: doctor.uid,
+              id: doctor.id,
               subtitle: doctor.designation,
               image: doctor.image,
             })) || []
           }
-          selectedId={selectedDoctor?.uid}
-          onSelect={(doctorUID) => setSelectedDoctor(doctors?.find((d) => d.uid === doctorUID))}
+          selectedId={selectedDoctor?.id}
+          onSelect={(doctorId) => setSelectedDoctor(doctors?.find((d) => d.id === doctorId))}
         />
       </div>
     );

@@ -46,7 +46,7 @@ function generateSlots(start: number, end: number, interval: number): Slot[] {
   return slots;
 }
 
-export default function AppointmentSlots({ uid }: { uid: string }) {
+export default function AppointmentSlots({ id }: { id: string }) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
 
@@ -66,7 +66,7 @@ export default function AppointmentSlots({ uid }: { uid: string }) {
             variant="light"
             size="sm"
             as={Link}
-            href={`/dashboard/doctors/${uid}/slots`}
+            href={`/dashboard/doctors/${id}/slots`}
           >
             <Icon icon="solar:settings-minimalistic-linear" width={20} />
           </Button>

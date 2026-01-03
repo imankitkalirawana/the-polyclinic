@@ -38,7 +38,7 @@ export const CreateAppointmentDoctorDetails = ({ doctor }: { doctor?: DoctorType
             </div>
           </div>
           <Chip color="primary" radius="sm" variant="flat">
-            #{doctor.uid}
+            #{doctor.id}
           </Chip>
         </div>
       </CardHeader>

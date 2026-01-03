@@ -43,9 +43,9 @@ export default function Patients() {
     () => [
       {
         name: 'User ID',
-        uid: 'uid',
+        uid: 'id',
         sortable: true,
-        renderCell: (patient) => renderCopyableText(patient.uid.toString()),
+        renderCell: (patient) => renderCopyableText(patient.id.toString()),
       },
       {
         name: 'Name',
@@ -98,10 +98,10 @@ export default function Patients() {
         sortable: false,
         renderCell: (patient) =>
           renderActions({
-            onView: () => router.push(`/dashboard/patients/${patient.uid}`),
-            onEdit: () => router.push(`/dashboard/patients/${patient.uid}/edit`),
-            key: patient.uid,
-            onDelete: () => handleDelete(patient.uid),
+            onView: () => router.push(`/dashboard/patients/${patient.id}`),
+            onEdit: () => router.push(`/dashboard/patients/${patient.id}/edit`),
+            key: patient.id,
+            onDelete: () => handleDelete(patient.id),
           }),
       },
     ],
@@ -228,12 +228,12 @@ export default function Patients() {
         data={patients}
         columns={columns}
         initialVisibleColumns={INITIAL_VISIBLE_COLUMNS}
-        keyField="uid"
+        keyField="id"
         filters={filters}
         searchField={(patient, searchValue) =>
           patient.name.toLowerCase().includes(searchValue.toLowerCase()) ||
           patient.email.toLowerCase().includes(searchValue.toLowerCase()) ||
-          patient.uid.toString().includes(searchValue) ||
+          patient.id.toString().includes(searchValue) ||
           (patient.phone ? patient.phone.toLowerCase().includes(searchValue.toLowerCase()) : false)
         }
         endContent={endContent}
@@ -243,7 +243,7 @@ export default function Patients() {
           direction: 'descending',
         }}
         onRowAction={(row) => {
-          const patient = patients.find((patient) => patient.uid == row);
+          const patient = patients.find((patient) => patient.id == row);
           if (patient) {
             setSelected(patient);
           }

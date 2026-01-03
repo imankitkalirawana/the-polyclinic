@@ -11,7 +11,7 @@ import {
 import { Button } from '@heroui/react';
 import { useQueryState } from 'nuqs';
 import { useFormContext } from 'react-hook-form';
-import { type PrescriptionFormSchema } from '../priscription-panel';
+import { type PrescriptionFormSchema } from '../prescription-panel';
 
 export default function QueueFooterActions({
   currentQueue,

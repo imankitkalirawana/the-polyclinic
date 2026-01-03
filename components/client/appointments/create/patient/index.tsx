@@ -32,7 +32,7 @@ const PatientSelection = ({ className }: { className?: string }) => {
   const fuse = useMemo(() => {
     if (!allPatients) return null;
     return new Fuse(allPatients, {
-      keys: ['name', 'email', 'phone', 'uid'],
+      keys: ['name', 'email', 'phone', 'id'],
       threshold: 0.3,
     });
   }, [allPatients]);
@@ -127,13 +127,13 @@ const PatientSelection = ({ className }: { className?: string }) => {
           </Button>
         </>
       }
-      endContent={<CreateAppointmentPatientDetails uid={patientId ?? ''} />}
+      endContent={<CreateAppointmentPatientDetails id={patientId ?? ''} />}
     >
       <div className={cn('flex h-full w-full flex-col', className)}>
         <SearchInput
           key="patient-search-input"
           value={search}
-          placeholder="Search by name, email, phone, or UID"
+          placeholder="Search by name, email, phone, or ID"
           onChange={setSearch}
         />
         {renderContent()}

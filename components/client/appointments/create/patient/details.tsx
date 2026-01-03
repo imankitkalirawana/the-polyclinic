@@ -1,13 +1,12 @@
 import { CellRenderer } from '@/components/ui/cell-renderer';
-import { cn } from '@heroui/react';
 import { Card, CardBody, CardHeader, Divider, Chip, ScrollShadow } from '@heroui/react';
 import { Icon } from '@iconify/react';
-import { usePatientByUID } from '@/services/client/patient';
+import { useUserWithUID } from '@/services/common/user/user.query';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 
-export const CreateAppointmentPatientDetails = ({ uid }: { uid: string }) => {
-  const { isLoading, isError, data: user } = usePatientByUID(uid);
+export const CreateAppointmentPatientDetails = ({ id }: { id: string }) => {
+  const { isLoading, isError, data: user } = useUserWithUID(id);
 
   if (isLoading) return <MinimalPlaceholder message="Loading patient details..." />;
 
@@ -63,7 +62,7 @@ export const CreateAppointmentPatientDetails = ({ uid }: { uid: string }) => {
             </div>
           </div>
           <Chip color="primary" radius="sm" variant="flat">
-            #{user.uid}
+            #{user.id}
           </Chip>
         </div>
       </CardHeader>
@@ -99,67 +98,6 @@ export const CreateAppointmentPatientDetails = ({ uid }: { uid: string }) => {
             )}
           </div>
         </div>
-
-        {(user.age || user.gender) && (
-          <>
-            <Divider />
-            <div className="space-y-2">
-              <h5 className="font-medium text-default-foreground text-medium">
-                Personal Information
-              </h5>
-              <div className="grid gap-3">
-                {user.age && (
-                  <CellRenderer
-                    icon="solar:calendar-bold-duotone"
-                    label="Date of Birth"
-                    value={user.age}
-                    classNames={{
-                      icon: 'text-rose-500 bg-rose-100',
-                    }}
-                  />
-                )}
-
-                {user.gender && (
-                  <CellRenderer
-                    icon="solar:users-group-rounded-bold-duotone"
-                    label="Gender"
-                    value={user.gender}
-                    classNames={{
-                      icon: cn('text-purple-500 bg-purple-100', {
-                        'text-blue-500 bg-blue-100': user.gender === 'male',
-                        'text-pink-500 bg-pink-100': user.gender === 'female',
-                      }),
-                    }}
-                  />
-                )}
-              </div>
-            </div>
-          </>
-        )}
-
-        {/* Address Information */}
-        {user.address && (
-          <>
-            <Divider />
-            <div>
-              <h5 className="font-medium text-default-foreground text-medium">
-                Address Information
-              </h5>
-              <div className="space-y-3">
-                {user.address && (
-                  <CellRenderer
-                    icon="solar:map-point-bold-duotone"
-                    label="Address"
-                    value={user.address}
-                    classNames={{
-                      icon: 'text-orange-500 bg-orange-100',
-                    }}
-                  />
-                )}
-              </div>
-            </div>
-          </>
-        )}
       </CardBody>
     </Card>
   );

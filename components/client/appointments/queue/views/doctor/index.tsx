@@ -7,7 +7,7 @@ import { Button, Chip, ScrollShadow, Tab, Tabs, Tooltip } from '@heroui/react';
 import PrescriptionPanel, {
   prescriptionFormSchema,
   type PrescriptionFormSchema,
-} from './priscription-panel';
+} from './prescription-panel';
 import Medicines from './medicines';
 import QueuesList from './queues-list';
 import { useQueryState } from 'nuqs';
@@ -20,7 +20,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { useState, useMemo } from 'react';
 import CompletedAppointmentQueue from './completed';
 
-export default function Queues() {
+export default function QueuesDoctorView() {
   const [queueId, setQueueId] = useQueryState('id');
   const [showNextQueues, setShowNextQueues] = useLocalStorage('show-next-queues', true);
   const [selectedFilters, setSelectedFilters] = useState({

@@ -31,7 +31,7 @@ export default function DoctorSelection({ className }: { className?: string }) {
   const fuse = useMemo(() => {
     if (!doctors) return null;
     return new Fuse(doctors, {
-      keys: ['name', 'email', 'phone', 'department', 'designation', 'uid'],
+      keys: ['name', 'email', 'phone', 'department', 'designation', 'id'],
       threshold: 0.3,
     });
   }, [doctors]);
@@ -47,7 +47,7 @@ export default function DoctorSelection({ className }: { className?: string }) {
   }, [doctors, debouncedSearch, fuse, selectedDepartment]);
 
   const doctor = useMemo(() => {
-    return doctors?.find((d) => d.uid === appointment.doctorId);
+    return doctors?.find((d) => d.id === appointment.doctorId);
   }, [doctors, appointment.doctorId]);
 
   const isDisabled = useMemo(() => {
@@ -131,7 +131,7 @@ export default function DoctorSelection({ className }: { className?: string }) {
               <SelectionList
                 items={
                   filteredDoctors?.map((doctor) => ({
-                    id: doctor.uid,
+                    id: doctor.id,
                     image: doctor.image,
                     title: doctor.name,
                     subtitle: doctor.designation,

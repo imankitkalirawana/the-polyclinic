@@ -9,7 +9,7 @@ import Appointments from './appointments';
 import { CellRenderer } from '@/components/ui/cell-renderer';
 import { castData } from '@/lib/utils';
 import { DoctorType } from '@/services/client/doctor';
-import { useDoctorByUID } from '@/services/client/doctor/doctor.query';
+import { useDoctorById } from '@/services/client/doctor/doctor.query';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 type ListItem = {
@@ -92,8 +92,8 @@ const listItems: ListItem[] = [
   },
 ];
 
-export default function DashboardDoctor({ uid }: { uid: string }) {
-  const { data, isError, isLoading } = useDoctorByUID(uid);
+export default function DashboardDoctor({ id }: { id: string }) {
+  const { data, isError, isLoading } = useDoctorById(id);
 
   const doctor = castData<DoctorType>(data);
 
@@ -221,7 +221,7 @@ export default function DashboardDoctor({ uid }: { uid: string }) {
           </div>
         </Card>
         <Appointments />
-        <AppointmentSlots uid={uid} />
+        <AppointmentSlots id={id} />
       </div>
     </div>
   );

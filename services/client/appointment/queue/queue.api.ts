@@ -1,6 +1,6 @@
 import { apiRequest } from '@/lib/axios';
 import { AppointmentQueueResponse, PaymentDetails, VerifyPaymentRequest } from './queue.types';
-import { PrescriptionFormSchema } from '@/components/client/appointments/queue/priscription-panel';
+import { PrescriptionFormSchema } from '@/components/client/appointments/queue/views/doctor/prescription-panel';
 import { AppointmentQueueRequest } from './queue.types';
 
 export class AppointmentQueueApi {
@@ -39,7 +39,10 @@ export class AppointmentQueueApi {
     });
   }
 
-  static async getQueueForDoctor(doctorId: string, queueId?: string | null) {
+  static async getQueueForDoctor(doctorId?: string | null, queueId?: string | null) {
+    if (!doctorId) {
+      throw new Error('Doctor ID is required');
+    }
     return await apiRequest<{
       previous: AppointmentQueueResponse[];
       current: AppointmentQueueResponse | null;

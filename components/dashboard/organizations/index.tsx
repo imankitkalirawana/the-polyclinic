@@ -43,7 +43,7 @@ export default function OrganizationsDashboard() {
             </CardBody>
           </Card>
         ) : (
-          organizations?.map((org) => <OrganizationCard key={org._id} org={org} />)
+          organizations?.map((org) => <OrganizationCard key={org.id} org={org} />)
         )}
       </div>
 
@@ -75,7 +75,7 @@ function OrganizationCard({ org }: { org: OrganizationType }) {
 
   return (
     <>
-      <Card key={org._id}>
+      <Card key={org.id}>
         <CardBody className="p-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">

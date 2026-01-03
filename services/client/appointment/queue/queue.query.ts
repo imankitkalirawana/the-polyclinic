@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { AppointmentQueueApi } from './queue.api';
 import { useGenericMutation } from '@/services/useGenericMutation';
-import { PrescriptionFormSchema } from '@/components/client/appointments/queue/priscription-panel';
+import { PrescriptionFormSchema } from '@/components/client/appointments/queue/views/doctor/prescription-panel';
 import { AppointmentQueueRequest } from './queue.types';
 import { saveAs } from 'file-saver';
 

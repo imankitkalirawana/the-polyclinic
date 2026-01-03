@@ -1,8 +1,10 @@
-import Queues from '@/components/client/appointments/queue';
+import QueuesDoctorView from '@/components/client/appointments/queue/views/doctor';
 import { AppointmentQueueApi } from '@/services/client/appointment/queue/queue.api';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { loadSearchParams } from './search-params';
 import { SearchParams } from 'nuqs/server';
+import { getServerSession } from '@/lib/serverAuth';
+import { Role } from '@/services/common/user';
 
 type PageProps = {
   searchParams: Promise<SearchParams>;
@@ -11,14 +13,24 @@ type PageProps = {
 export default async function QueuePage({ searchParams }: PageProps) {
   const { id } = await loadSearchParams(searchParams);
 
+  const session = await getServerSession();
+  const isDoctor = session?.user?.role === Role.DOCTOR;
+
+  const queryKey = isDoctor
+    ? ['queue-for-doctor', session?.user?.id, id]
+    : ['appointment-queues', id];
+
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
-    queryKey: ['queue-for-doctor', '50c99b05-f917-48ea-9f4c-d3b2701e41a2', id],
+    queryKey,
     queryFn: async () => {
-      const result = await AppointmentQueueApi.getQueueForDoctor(
-        '50c99b05-f917-48ea-9f4c-d3b2701e41a2',
-        id
-      );
+      let result;
+      if (isDoctor) {
+        result = await AppointmentQueueApi.getQueueForDoctor(session?.user?.id, id);
+      } else {
+        result = await AppointmentQueueApi.getAll();
+      }
+
       if (result.success) {
         return result.data;
       }
@@ -28,7 +40,7 @@ export default async function QueuePage({ searchParams }: PageProps) {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <Queues />
+      <QueuesDoctorView />
     </HydrationBoundary>
   );
 }

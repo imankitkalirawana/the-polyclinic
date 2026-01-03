@@ -51,9 +51,9 @@ export default function Doctors() {
     () => [
       {
         name: 'User ID',
-        uid: 'uid',
+        uid: 'id',
         sortable: true,
-        renderCell: (doctor) => renderCopyableText(doctor.uid.toString()),
+        renderCell: (doctor) => renderCopyableText(doctor.id.toString()),
       },
       {
         name: 'Name',
@@ -106,10 +106,10 @@ export default function Doctors() {
         sortable: false,
         renderCell: (doctor) =>
           renderActions({
-            onView: () => router.push(`/dashboard/doctors/${doctor.uid}`),
-            onEdit: () => router.push(`/dashboard/doctors/${doctor.uid}/edit`),
-            key: doctor.uid,
-            onDelete: () => handleDelete(doctor.uid),
+            onView: () => router.push(`/dashboard/doctors/${doctor.id}`),
+            onEdit: () => router.push(`/dashboard/doctors/${doctor.id}/edit`),
+            key: doctor.id,
+            onDelete: () => handleDelete(doctor.id),
           }),
       },
     ],
@@ -234,12 +234,12 @@ export default function Doctors() {
         data={doctors}
         columns={columns}
         initialVisibleColumns={INITIAL_VISIBLE_COLUMNS}
-        keyField="uid"
+        keyField="id"
         filters={filters}
         searchField={(doctor, searchValue) =>
           doctor.name.toLowerCase().includes(searchValue.toLowerCase()) ||
           doctor.email.toLowerCase().includes(searchValue.toLowerCase()) ||
-          doctor.uid.toString().includes(searchValue) ||
+          doctor.id.toString().includes(searchValue) ||
           (doctor.phone ? doctor.phone.toLowerCase().includes(searchValue.toLowerCase()) : false)
         }
         endContent={endContent}
@@ -249,7 +249,7 @@ export default function Doctors() {
           direction: 'descending',
         }}
         onRowAction={(row) => {
-          const doctor = doctors.find((doctor) => doctor.uid == row);
+          const doctor = doctors.find((doctor) => doctor.id == row);
           if (doctor) {
             setSelected(doctor);
           }
