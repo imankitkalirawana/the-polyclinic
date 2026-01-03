@@ -17,6 +17,8 @@ export default function ReviewAndPay() {
   const { data: doctor } = useDoctorById(appointment.doctorId);
   const { data: patient } = usePatientById(appointment.patientId);
 
+  console.log('doctor', doctor);
+
   return (
     <CreateAppointmentContentContainer
       header={

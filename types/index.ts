@@ -5,7 +5,7 @@ import { ValuesOf } from '@/lib/utils';
 export type $FixMe = any;
 
 export type Base = {
-  _id: string;
+  id: string;
   createdAt: Date;
   updatedAt: Date;
   createdBy: string;

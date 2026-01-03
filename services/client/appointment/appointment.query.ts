@@ -59,7 +59,7 @@ export const useConfirmAppointment = () => {
     successMessage: 'Appointment confirmed',
     errorMessage: 'Error confirming appointment',
     invalidateQueries: [['appointments']],
-    invalidateQueriesWithVariables: ({ aid }) => [['appointment', aid]],
+    invalidateQueriesWithVariables: ({ variables }) => [['appointment', variables?.aid]],
   });
 };
 
@@ -75,7 +75,7 @@ export const useCancelAppointment = () => {
     successMessage: 'Appointment cancelled',
     errorMessage: 'Error cancelling appointment',
     invalidateQueries: [['appointments']],
-    invalidateQueriesWithVariables: ({ aid }) => [['appointment', aid]],
+    invalidateQueriesWithVariables: ({ variables }) => [['appointment', variables?.aid]],
   });
 };
 
@@ -91,7 +91,7 @@ export const useChangeDoctorAppointment = () => {
     successMessage: 'Doctor updated',
     errorMessage: 'Error updating doctor',
     invalidateQueries: [['appointments']],
-    invalidateQueriesWithVariables: ({ aid }) => [['appointment', aid]],
+    invalidateQueriesWithVariables: ({ variables }) => [['appointment', variables?.aid]],
   });
 };
 
@@ -107,7 +107,7 @@ export const useRescheduleAppointment = () => {
     successMessage: 'Appointment rescheduled',
     errorMessage: 'Error rescheduling appointment',
     invalidateQueries: [['appointments']],
-    invalidateQueriesWithVariables: ({ aid }) => [['appointment', aid]],
+    invalidateQueriesWithVariables: ({ variables }) => [['appointment', variables?.aid]],
   });
 };
 

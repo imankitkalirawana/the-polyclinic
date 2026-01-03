@@ -39,6 +39,7 @@ export default function QueueFooterActions({
   const isCompleteButton = currentQueue.status === QueueStatus.IN_CONSULTATION;
   const isNextButton = [QueueStatus.COMPLETED, QueueStatus.CANCELLED].includes(currentQueue.status);
   const isRecallButton = [QueueStatus.SKIPPED, QueueStatus.CALLED].includes(currentQueue.status);
+  const isEditButton = currentQueue.status === QueueStatus.COMPLETED;
 
   return (
     <div className="flex items-center gap-2">
@@ -55,6 +56,11 @@ export default function QueueFooterActions({
           }
         >
           Skip
+        </Button>
+      )}
+      {isEditButton && (
+        <Button variant="flat" onPress={() => console.log('edit')}>
+          Edit
         </Button>
       )}
       {(isCallButton || isRecallButton) && (

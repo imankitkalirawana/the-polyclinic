@@ -20,7 +20,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
-import { useDownloadReceipt } from '@/services/client/appointment/queue/queue.query';
+import NewPatient from './new-patient';
 
 export default function PatientSelection() {
   const [search, setSearch] = useState('');
@@ -29,7 +29,6 @@ export default function PatientSelection() {
 
   const { data: patients } = useAllPatients(debouncedSearch);
   const form = useFormContext<CreateAppointmentQueueFormValues>();
-  const { mutate: downloadReceipt, isPending: isDownloadReceiptPending } = useDownloadReceipt();
 
   const patientId = form.watch('appointment.patientId');
 
@@ -69,11 +68,9 @@ export default function PatientSelection() {
             variant="light"
             color="primary"
             radius="full"
-            isLoading={isDownloadReceiptPending}
-            // onPress={() => setValue('meta.createNewPatient', true)}
-            onPress={() => downloadReceipt('302732a2-49de-4d18-a51a-93dd87f11449')}
+            onPress={() => form.setValue('meta.createNewPatient', true)}
           >
-            Download Receipt
+            Create New Patient
           </Button>
         </>
       }
@@ -98,6 +95,16 @@ export default function PatientSelection() {
           />
         ))}
       </div>
+      {form.watch('meta.createNewPatient') && (
+        <NewPatient
+          onClose={() => form.setValue('meta.createNewPatient', false)}
+          onSuccess={(id) => {
+            form.setValue('appointment.patientId', id);
+            form.setValue('meta.createNewPatient', false);
+            form.setValue('meta.currentStep', 1);
+          }}
+        />
+      )}
     </CreateAppointmentContentContainer>
   );
 }

@@ -5,7 +5,7 @@ import {
   SendOTPRequest,
   VerifyOTPRequest,
 } from '@/services/common/auth';
-import { RegistrationResponse, VerifyOTPResponse } from './types';
+import { RegistrationResponse, VerifyOTPResponse } from './auth.types';
 import { apiRequest } from '@/lib/axios';
 
 export class AuthApi {

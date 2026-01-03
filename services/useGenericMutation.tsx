@@ -36,7 +36,7 @@ interface MutationConfig<TData extends ApiResponse, TVariables, TError = Error> 
  */
 
 export const useGenericMutation = <TData extends ApiResponse, TVariables, TError = Error>({
-  showToast = true,
+  showToast = false,
   mutationFn,
   successMessage,
   errorMessage,

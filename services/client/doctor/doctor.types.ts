@@ -1,7 +1,6 @@
 import { Base } from '@/types';
 
 export interface DoctorType extends Base {
-  id: string;
   userid: string;
   name: string;
   email: string;

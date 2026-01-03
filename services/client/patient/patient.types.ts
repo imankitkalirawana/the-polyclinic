@@ -1,19 +1,8 @@
 import { z } from 'zod';
-import { createPatientSchema } from './patient.validation';
+import { newPatientSchema } from './patient.validation';
 import { Base, Gender } from '@/types';
 
-// TODO: Remove this
-export interface NewPatientFormValues {
-  name: string;
-  email: string;
-  phone: string;
-  gender: Gender;
-  age?: number;
-  address?: string;
-}
-
 export interface PatientType extends Base {
-  id: string;
   userid: string;
   name: string;
   email: string;
@@ -24,4 +13,4 @@ export interface PatientType extends Base {
   address?: string | null;
 }
 
-export type CreatePatient = z.infer<typeof createPatientSchema>;
+export type NewPatientRequest = z.infer<typeof newPatientSchema>;

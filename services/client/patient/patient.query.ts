@@ -1,5 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { PatientApi } from './patient.api';
+import { useGenericMutation } from '@/services/useGenericMutation';
+import { NewPatientRequest } from './patient.types';
 
 export const useAllPatients = (search?: string) =>
   useQuery({
@@ -37,4 +39,17 @@ export const usePreviousAppointments = (uid?: string | null) =>
       throw new Error(result.message);
     },
     enabled: !!uid,
+  });
+
+export const useCreatePatient = () =>
+  useGenericMutation({
+    mutationFn: async (data: NewPatientRequest) => {
+      const result = await PatientApi.create(data);
+      if (result.success) {
+        return result;
+      }
+      throw new Error(result.message);
+    },
+    showToast: true,
+    invalidateQueries: [['patients']],
   });

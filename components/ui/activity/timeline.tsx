@@ -6,7 +6,7 @@ import { format, isToday, isYesterday } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 import type { $FixMe } from '@/types';
-import { ActivityLogType, Schema } from '@/services/common/activity/types';
+import { ActivityLogType, Schema } from '@/services/common/activity/activity.types';
 import MinimalPlaceholder from '../minimal-placeholder';
 
 const isDate = (value: $FixMe) =>

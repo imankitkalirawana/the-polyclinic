@@ -12,6 +12,7 @@ export default function SearchInput({
   return (
     <div className="mb-4 flex-shrink-0">
       <Input
+        className="max-w-sm"
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}

@@ -6,7 +6,7 @@ import {
   NOTIFICATION_STATUSES,
   NOTIFICATION_PRIORITIES,
 } from './notifications.constants';
-import { createNotificationSchema, updateNotificationSchema } from './validation';
+import { createNotificationSchema, updateNotificationSchema } from './notifications.validation';
 import { AxiosRequestConfig } from 'axios';
 import { ButtonProps } from '@heroui/react';
 
