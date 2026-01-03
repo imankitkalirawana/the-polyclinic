@@ -2,7 +2,7 @@ import { AppointmentQueueApi } from '@/services/client/appointment/queue/api';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/types';
 import { RazorpayOptions, RazorpayPaymentResponse } from '@/types';
 import { loadRazorpay } from '@/utils/loadRazorpay';
-import { addToast, Button } from '@heroui/react';
+import { addToast, Alert, Button } from '@heroui/react';
 import { useState, useRef, useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -50,7 +50,7 @@ export default function PaymentFooter() {
         color: 'success',
       });
 
-      form.setValue('appointment.id', createAppointmentResponse.data.id);
+      form.setValue('appointment.queueId', createAppointmentResponse.data.id);
       form.setValue('meta.showReceipt', true);
     } catch (err) {
       setStatus('failed');
@@ -89,18 +89,20 @@ export default function PaymentFooter() {
         return;
       }
 
+      form.setValue('appointment.queueId', createAppointmentResponse.data.id);
+
       const razorpayKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY || 'rzp_test_RwXKuh4eV9Pxy6';
 
       const options: RazorpayOptions = {
         key: razorpayKey,
-        amount: createAppointmentResponse.data.amount,
-        currency: createAppointmentResponse.data.currency,
+        amount: createAppointmentResponse.data.payment.amount,
+        currency: createAppointmentResponse.data.payment.currency,
         name: 'The Polyclinic',
-        order_id: createAppointmentResponse.data.orderId,
+        order_id: createAppointmentResponse.data.payment.orderId,
         handler: async function (response: RazorpayPaymentResponse) {
           try {
             const verificationResponse = await AppointmentQueueApi.verifyPayment({
-              orderId: createAppointmentResponse.data?.orderId ?? '',
+              orderId: createAppointmentResponse.data?.payment.orderId ?? '',
               paymentId: response.razorpay_payment_id,
               signature: response.razorpay_signature,
             });
@@ -120,7 +122,6 @@ export default function PaymentFooter() {
             });
 
             form.setValue('meta.showReceipt', true);
-            form.setValue('appointment.id', createAppointmentResponse.data?.id || null);
           } catch (err) {
             setStatus('failed');
             setError(err instanceof Error ? err.message : 'Payment verification failed');
@@ -169,6 +170,13 @@ export default function PaymentFooter() {
           <span>100</span>
         </div>
       </div>
+      {error && (
+        <div>
+          <Alert hideIcon color="danger" className="py-0 text-small">
+            <p dangerouslySetInnerHTML={{ __html: error }} />
+          </Alert>
+        </div>
+      )}
       <div className="flex gap-2">
         <Button
           isLoading={status === 'loading'}
@@ -191,8 +199,6 @@ export default function PaymentFooter() {
           Pay online
         </Button>
       </div>
-
-      {error && <span className="max-w-80 text-center text-danger text-tiny">{error}</span>}
     </div>
   );
 }

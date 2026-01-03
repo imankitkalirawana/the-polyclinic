@@ -41,6 +41,7 @@ export type UserInfo = {
 export type PaymentMode = 'RAZORPAY' | 'CASH';
 
 export type AppointmentQueueRequest = {
+  queueId?: string | null;
   patientId: string;
   doctorId: string;
   paymentMode: PaymentMode;
@@ -48,7 +49,7 @@ export type AppointmentQueueRequest = {
 };
 
 export type CreateAppointmentQueueFormValues = {
-  appointment: AppointmentQueueRequest & { id: string | null };
+  appointment: AppointmentQueueRequest & { queueId?: string | null };
   meta: {
     currentStep: number;
     showConfirmation: boolean;
@@ -63,8 +64,12 @@ export type VerifyPaymentRequest = {
   signature: string;
 };
 
+export type PaymentDetails = { payment: { orderId: string; amount: number; currency: string } };
+
 export type AppointmentQueueResponse = {
   id: string;
+  referenceNumber: string;
+  paymentMode: PaymentMode;
   sequenceNumber: number;
   title: string;
   notes: string;

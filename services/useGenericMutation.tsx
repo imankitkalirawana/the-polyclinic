@@ -8,7 +8,13 @@ interface MutationConfig<TData extends ApiResponse, TVariables, TError = Error> 
   successMessage?: string;
   errorMessage?: string;
   invalidateQueries?: string[][];
-  invalidateQueriesWithVariables?: (variables: TVariables) => string[][];
+  invalidateQueriesWithVariables?: ({
+    variables,
+    data,
+  }: {
+    variables?: TVariables | null;
+    data?: TData['data'] | null;
+  }) => (string | null | undefined)[][];
   onSuccess?: (data: TData, variables: TVariables) => void;
   onError?: (error: TError, variables: TVariables) => void;
   toastProps?: Record<string, unknown>;
@@ -52,7 +58,7 @@ export const useGenericMutation = <TData extends ApiResponse, TVariables, TError
 
       // Invalidate dynamic queries with variables
       if (invalidateQueriesWithVariables) {
-        const dynamicQueries = invalidateQueriesWithVariables(variables);
+        const dynamicQueries = invalidateQueriesWithVariables({ variables, data: result.data });
         dynamicQueries.forEach((queryKey) => {
           queryClient.invalidateQueries({ queryKey });
         });

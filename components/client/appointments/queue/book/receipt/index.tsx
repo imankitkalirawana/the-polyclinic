@@ -2,7 +2,6 @@
 
 import React from 'react';
 import {
-  addToast,
   Button,
   Divider,
   Link,
@@ -15,20 +14,23 @@ import {
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
 
-import { useAppointmentQueueById } from '@/services/client/appointment/queue/query';
-import { useFormContext } from 'react-hook-form';
 import {
-  CreateAppointmentQueueFormValues,
-  QueueStatus,
-} from '@/services/client/appointment/queue/types';
+  useAppointmentQueueById,
+  useDownloadReceipt,
+} from '@/services/client/appointment/queue/query';
+import { useFormContext } from 'react-hook-form';
+import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/types';
 import { useSession } from '@/lib/providers/session-provider';
+import { formatDate } from 'date-fns';
 
 export default function AppointmentQueueReceipt() {
   const form = useFormContext<CreateAppointmentQueueFormValues>();
   const { user } = useSession();
-  const appointmentId = form.watch('appointment.id');
+  const appointmentId = form.watch('appointment.queueId');
   const { data: appointment, isLoading: isAppointmentLoading } =
     useAppointmentQueueById(appointmentId);
+
+  const { mutate: downloadReceipt, isPending: isDownloadReceiptPending } = useDownloadReceipt();
 
   if (isAppointmentLoading) {
     return <Skeleton className="h-4 w-24" />;
@@ -74,12 +76,16 @@ export default function AppointmentQueueReceipt() {
             <div className="flex w-full items-center justify-between text-small">
               <p className="text-default-500 text-tiny">Reference Number</p>
               {/* only last 6 digits of the appointment id */}
-              <p className="font-medium uppercase">{appointment?.id.slice(-6)}</p>
+              <p className="font-medium uppercase">{appointment?.referenceNumber}</p>
             </div>
             <div className="flex w-full items-center justify-between text-small">
               <p className="text-default-500 text-tiny">Payment Mode</p>
+              <p className="font-medium">{appointment?.paymentMode}</p>
+            </div>
+            <div className="flex w-full items-center justify-between text-small">
+              <p className="text-default-500 text-tiny">Booked On</p>
               <p className="font-medium">
-                {appointment?.status === QueueStatus.PAYMENT_PENDING ? 'Cash' : 'Online'}
+                {formatDate(new Date(appointment?.createdAt || ''), 'EEEE, MMMM d, yyyy')}
               </p>
             </div>
           </div>
@@ -107,12 +113,9 @@ export default function AppointmentQueueReceipt() {
             fullWidth
             variant="bordered"
             startContent={<Icon icon="solar:cloud-download-bold-duotone" width={18} />}
+            isLoading={isDownloadReceiptPending}
             onPress={() => {
-              addToast({
-                title: 'Downloading receipt',
-                description: 'Please wait while we download the receipt',
-                color: 'success',
-              });
+              downloadReceipt(appointmentId || '');
             }}
           >
             Download Receipt

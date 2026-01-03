@@ -4,6 +4,7 @@ import { useGenericMutation } from '@/services/useGenericMutation';
 import { PrescriptionFormSchema } from '@/components/client/appointments/queue/priscription-panel';
 import { useQueryState } from 'nuqs';
 import { AppointmentQueueRequest } from './types';
+import { saveAs } from 'file-saver';
 
 export const useAllAppointmentQueues = () => {
   return useQuery({
@@ -18,7 +19,7 @@ export const useAllAppointmentQueues = () => {
   });
 };
 
-export const useAppointmentQueueById = (appointmentId: string | null) => {
+export const useAppointmentQueueById = (appointmentId?: string | null) => {
   return useQuery({
     queryKey: ['appointment-queue', appointmentId],
     queryFn: async () => {
@@ -45,6 +46,25 @@ export const useQueueForDoctor = (doctorId: string, queueId?: string | null) => 
   });
 };
 
+// download receipt
+export const useDownloadReceipt = () => {
+  return useGenericMutation({
+    mutationFn: async (appointmentId: string) => {
+      const result = await AppointmentQueueApi.downloadReceipt(appointmentId);
+      if (result.success) {
+        return result;
+      }
+      throw new Error(result.message);
+    },
+    onSuccess: (data) => {
+      if (!data.data) {
+        return;
+      }
+      saveAs(data.data, 'receipt.pdf');
+    },
+  });
+};
+
 export const useCreateAppointmentQueue = () => {
   return useGenericMutation({
     mutationFn: async (data: AppointmentQueueRequest) => {
@@ -59,23 +79,21 @@ export const useCreateAppointmentQueue = () => {
 
 export const useCallPatient = () => {
   return useGenericMutation({
-    mutationFn: async ({
-      queueId,
-      _doctorId,
-      _queueId,
-    }: {
-      queueId: string;
-      _doctorId: string;
-      _queueId: string;
-    }) => {
+    mutationFn: async ({ queueId }: { queueId: string }) => {
       const res = await AppointmentQueueApi.call(queueId);
       if (res.success) {
         return res;
       }
       throw new Error(res.message);
     },
-    invalidateQueriesWithVariables(variables) {
-      return [['queue-for-doctor', variables._doctorId, variables._queueId]];
+    invalidateQueriesWithVariables({ variables, data }) {
+      const queriesToInvalidate = [
+        ['queue-for-doctor', data?.doctor?.id, variables?.queueId],
+        ['queue-for-doctor', data?.doctor?.id, null],
+      ];
+      console.log('data', data);
+      console.log(queriesToInvalidate);
+      return queriesToInvalidate;
     },
     onSuccess: () => {
       const audio = new Audio('/assets/audio/desk-bell.mp3');
@@ -101,8 +119,8 @@ export const useSkipPatient = () => {
       }
       throw new Error(res.message);
     },
-    invalidateQueriesWithVariables(variables) {
-      return [['queue-for-doctor', variables._doctorId, variables._queueId]];
+    invalidateQueriesWithVariables({ variables }) {
+      return [['queue-for-doctor', variables?._doctorId, variables?._queueId]];
     },
   });
 };
@@ -124,8 +142,8 @@ export const useClockInPatient = () => {
       }
       throw new Error(res.message);
     },
-    invalidateQueriesWithVariables(variables) {
-      return [['queue-for-doctor', variables._doctorId, variables._queueId]];
+    invalidateQueriesWithVariables({ variables }) {
+      return [['queue-for-doctor', variables?._doctorId, variables?._queueId]];
     },
   });
 };
@@ -150,8 +168,8 @@ export const useCompletePatient = () => {
       }
       throw new Error(res.message);
     },
-    invalidateQueriesWithVariables(variables) {
-      return [['queue-for-doctor', variables._doctorId, variables._queueId]];
+    invalidateQueriesWithVariables({ variables }) {
+      return [['queue-for-doctor', variables?._doctorId, null]];
     },
   });
 };

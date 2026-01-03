@@ -20,6 +20,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/types';
+import { useDownloadReceipt } from '@/services/client/appointment/queue/query';
 
 export default function PatientSelection() {
   const [search, setSearch] = useState('');
@@ -28,6 +29,7 @@ export default function PatientSelection() {
 
   const { data: patients } = useAllPatients(debouncedSearch);
   const form = useFormContext<CreateAppointmentQueueFormValues>();
+  const { mutate: downloadReceipt, isPending: isDownloadReceiptPending } = useDownloadReceipt();
 
   const patientId = form.watch('appointment.patientId');
 
@@ -67,9 +69,11 @@ export default function PatientSelection() {
             variant="light"
             color="primary"
             radius="full"
+            isLoading={isDownloadReceiptPending}
             // onPress={() => setValue('meta.createNewPatient', true)}
+            onPress={() => downloadReceipt('302732a2-49de-4d18-a51a-93dd87f11449')}
           >
-            Create New Patient
+            Download Receipt
           </Button>
         </>
       }

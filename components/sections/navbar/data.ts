@@ -95,6 +95,17 @@ export const navItems = [
               ORGANIZATION_USER_ROLES.patient,
             ] as const,
           },
+          {
+            name: 'Generate Token',
+            href: '/appointments/queues/book',
+            icon: 'solar:clipboard-list-bold-duotone',
+            roles: [
+              ORGANIZATION_USER_ROLES.patient,
+              ORGANIZATION_USER_ROLES.doctor,
+              ORGANIZATION_USER_ROLES.receptionist,
+              ORGANIZATION_USER_ROLES.admin,
+            ] as const,
+          },
         ],
       },
       {
@@ -114,6 +125,17 @@ export const navItems = [
           {
             name: 'All Appointments',
             href: '/appointments?view=month',
+            icon: 'solar:clipboard-list-bold-duotone',
+            roles: [
+              ORGANIZATION_USER_ROLES.admin,
+              ORGANIZATION_USER_ROLES.receptionist,
+              ORGANIZATION_USER_ROLES.patient,
+              ORGANIZATION_USER_ROLES.doctor,
+            ] as const,
+          },
+          {
+            name: 'Token Appointments',
+            href: '/appointments/queues',
             icon: 'solar:clipboard-list-bold-duotone',
             roles: [
               ORGANIZATION_USER_ROLES.admin,
