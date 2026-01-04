@@ -109,24 +109,14 @@ export const renderCountry = (name: string, icon: React.ReactNode) => (
   </div>
 );
 
-export const renderChip = ({
-  item,
-  size,
-  richColor,
-}: {
-  item: ChipColorType;
-  size?: ChipProps['size'];
-  richColor?: boolean;
-}) => (
+export const renderChip = ({ item, size }: { item: ChipColorType; size?: ChipProps['size'] }) => (
   <Chip
-    className={cn(
-      'flex w-fit items-center gap-[2px] rounded-lg px-2 py-1',
-      richColor ? chipColorMap[item].bg : 'bg-default-100'
-    )}
+    className={cn('flex w-fit items-center', chipColorMap[item])}
+    radius="full"
+    variant="flat"
     size={size}
-    startContent={<span className={cn('size-2 rounded-full', chipColorMap[item]?.text)} />}
   >
-    <span className="capitalize text-default-800">{item?.replace(/[_-]/g, ' ')}</span>
+    <span className="capitalize">{item?.replace(/[_-]/g, ' ').toLowerCase()}</span>
   </Chip>
 );
 

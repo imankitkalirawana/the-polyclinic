@@ -78,7 +78,7 @@ export type AppointmentQueueResponse = {
   patient: PatientInfo;
   doctor: DoctorInfo;
   bookedByUser: UserInfo;
-  completedByUser: UserInfo;
+  completedByUser?: UserInfo;
   createdAt: string;
   updatedAt: string;
   previousQueueId?: string;

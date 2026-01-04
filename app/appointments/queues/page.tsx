@@ -5,6 +5,7 @@ import { loadSearchParams } from './search-params';
 import { SearchParams } from 'nuqs/server';
 import { getServerSession } from '@/lib/serverAuth';
 import { Role } from '@/services/common/user';
+import DefaultQueueView from '@/components/client/appointments/queue/views/default';
 
 type PageProps = {
   searchParams: Promise<SearchParams>;
@@ -40,7 +41,7 @@ export default async function QueuePage({ searchParams }: PageProps) {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <QueuesDoctorView />
+      {isDoctor ? <QueuesDoctorView /> : <DefaultQueueView />}
     </HydrationBoundary>
   );
 }
