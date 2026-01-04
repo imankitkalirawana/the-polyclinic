@@ -1,6 +1,7 @@
 import RichColorCell from '@/components/ui/cell/rich-color';
 import QuickLook from '@/components/ui/quicklook';
 import { AppointmentQueueResponse } from '@/services/client/appointment/queue/queue.types';
+import QueueActivityLogs from './activity-logs';
 
 interface QueueQuickLookProps {
   queue: AppointmentQueueResponse;
@@ -25,17 +26,11 @@ export default function QueueQuickLook({ queue, onClose }: QueueQuickLookProps) 
     </>
   );
 
-  const sidebarContent = (
-    <div>
-      <h1>Sidebar</h1>
-    </div>
-  );
-
   return (
     <QuickLook
       title={`Appointment Token #${queue.sequenceNumber}`}
       content={content}
-      sidebarContent={sidebarContent}
+      sidebarContent={<QueueActivityLogs queueId={queue.id} />}
       footerLeft={<div>Footer Left</div>}
       footerRight={<div>Footer Right</div>}
       onClose={onClose}

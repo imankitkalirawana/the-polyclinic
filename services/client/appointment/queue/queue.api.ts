@@ -2,6 +2,7 @@ import { apiRequest } from '@/lib/axios';
 import { AppointmentQueueResponse, PaymentDetails, VerifyPaymentRequest } from './queue.types';
 import { PrescriptionFormSchema } from '@/components/client/appointments/queue/views/doctor/prescription-panel';
 import { AppointmentQueueRequest } from './queue.types';
+import { ActivityLogResponse } from '@/services/common/activity/activity.types';
 
 export class AppointmentQueueApi {
   private static API_BASE = '/client/appointments/queue';
@@ -18,6 +19,15 @@ export class AppointmentQueueApi {
     }
     return await apiRequest<AppointmentQueueResponse>({
       url: `${this.API_BASE}/${queueId}`,
+    });
+  }
+
+  static async getActivityLogs(queueId?: string | null) {
+    if (!queueId) {
+      throw new Error('Queue ID is required');
+    }
+    return await apiRequest<ActivityLogResponse[]>({
+      url: `${this.API_BASE}/${queueId}/activity-logs`,
     });
   }
 

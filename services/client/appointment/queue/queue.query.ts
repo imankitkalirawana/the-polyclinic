@@ -45,6 +45,20 @@ export const useQueueForDoctor = (doctorId: string, queueId?: string | null) => 
   });
 };
 
+export const useQueueActivityLogs = (queueId?: string | null) => {
+  return useQuery({
+    queryKey: ['queue-activity-logs', queueId],
+    queryFn: async () => {
+      const result = await AppointmentQueueApi.getActivityLogs(queueId);
+      if (result.success) {
+        return result.data;
+      }
+      throw new Error(result.message);
+    },
+    enabled: !!queueId,
+  });
+};
+
 // download receipt
 export const useDownloadReceipt = () => {
   return useGenericMutation({

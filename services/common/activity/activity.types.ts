@@ -30,3 +30,37 @@ export interface ActivityLogType {
   createdAt: Date;
   updatedAt?: Date;
 }
+
+export enum ActivityAction {
+  CREATED = 'CREATED',
+  UPDATED = 'UPDATED',
+  STATUS_CHANGED = 'STATUS_CHANGED',
+  DELETED = 'DELETED',
+  SOFT_DELETED = 'SOFT_DELETED',
+}
+
+export enum ActorType {
+  USER = 'USER',
+  SYSTEM = 'SYSTEM',
+}
+
+export interface ChangedField {
+  before: unknown;
+  after: unknown;
+}
+
+export interface ActivityLogResponse {
+  id: string;
+  entityType: string;
+  entityId: string;
+  module: string;
+  action: ActivityAction;
+  changedFields: Record<string, ChangedField> | null;
+  previousData: Record<string, unknown> | null;
+  newData: Record<string, unknown> | null;
+  actorType: ActorType;
+  actorId: string | null;
+  actorRole: string | null;
+  description: string | null;
+  createdAt: string;
+}
