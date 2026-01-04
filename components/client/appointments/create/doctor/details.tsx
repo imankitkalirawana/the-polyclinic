@@ -1,4 +1,4 @@
-import { CellRenderer } from '@/components/ui/cell-renderer';
+import { CellRenderer } from '@/components/ui/cell/rich-color/cell-renderer';
 import { renderChips, RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import { DoctorType } from '@/services/client/doctor';
 import { Card, CardBody, CardHeader, Divider, Chip, ScrollShadow } from '@heroui/react';

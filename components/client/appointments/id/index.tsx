@@ -21,7 +21,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import RescheduleAppointment from '@/services/client/appointment/components/reschedule-modal'; // Ensure this path is correct
 import ActivityTimeline from '@/components/ui/activity/timeline';
 import AddToCalendar from '@/components/ui/appointments/add-to-calendar';
-import { CellRenderer } from '@/components/ui/cell-renderer';
+import { CellRenderer } from '@/components/ui/cell/rich-color/cell-renderer';
 import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
 import NoResults from '@/components/ui/no-results';
 import { useAppointmentWithAID } from '@/services/client/appointment/appointment.query';

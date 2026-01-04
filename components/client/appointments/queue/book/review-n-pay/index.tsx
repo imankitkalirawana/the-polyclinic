@@ -4,7 +4,7 @@ import {
   CreateAppointmentContentHeader,
 } from '../../../(common)';
 import { useFormContext } from 'react-hook-form';
-import { CellRenderer } from '@/components/ui/cell-renderer';
+import { CellRenderer } from '@/components/ui/cell/rich-color/cell-renderer';
 import { useDoctorById } from '@/services/client/doctor/doctor.query';
 import { usePatientById } from '@/services/client/patient/patient.query';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';

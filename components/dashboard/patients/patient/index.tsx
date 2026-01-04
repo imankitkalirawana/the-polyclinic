@@ -6,7 +6,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import AppointmentSlots from './appointment-slots';
 import Appointments from './appointments';
 
-import { CellRenderer } from '@/components/ui/cell-renderer';
+import { CellRenderer } from '@/components/ui/cell/rich-color/cell-renderer';
 import { castData } from '@/lib/utils';
 import { DoctorType } from '@/services/client/doctor';
 import { useDoctorById } from '@/services/client/doctor/doctor.query';

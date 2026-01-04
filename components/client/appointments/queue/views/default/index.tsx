@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'nextjs-toploader/app';
 import { Button, DropdownItem, DropdownMenu, Selection, useDisclosure } from '@heroui/react';
 import { toast } from 'sonner';
@@ -24,6 +24,7 @@ import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { useAllAppointmentQueues } from '@/services/client/appointment/queue/queue.query';
 import { AppointmentQueueResponse } from '@/services/client/appointment/queue/queue.types';
 import Link from 'next/link';
+import QueueQuickLook from './quicklook';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'sequenceNumber',
@@ -37,9 +38,9 @@ const INITIAL_VISIBLE_COLUMNS = [
 export default function DefaultQueueView() {
   const router = useRouter();
   const deleteModal = useDisclosure();
-  // const { setSelected } = useDoctorStore();
   const deleteDoctor = useDeleteUser();
   const organization = useSubdomain();
+  const [selectedQueue, setSelectedQueue] = useState<AppointmentQueueResponse | null>(null);
 
   const { data: queues, isLoading, isError, error } = useAllAppointmentQueues();
 
@@ -270,21 +271,17 @@ export default function DefaultQueueView() {
           column: 'createdAt',
           direction: 'descending',
         }}
-        // onRowAction={(row) => {
-        //   const doctor = doctors.find((doctor) => doctor.id == row);
-        //   if (doctor) {
-        //     setSelected(doctor);
-        //   }
-        // }}
+        onRowAction={(row) => {
+          const queue = queues.find((queue) => queue.id == row);
+          if (queue) {
+            setSelectedQueue(queue);
+          }
+        }}
       />
 
-      {/* {quickLook.isOpen && quickLookItem && (
-        <QuickLook
-          onClose={quickLook.onClose}
-          item={quickLookItem as DoctorType}
-        />
-      )} */}
-      {/* <UserQuickLook /> */}
+      {!!selectedQueue && (
+        <QueueQuickLook queue={selectedQueue} onClose={() => setSelectedQueue(null)} />
+      )}
     </>
   );
 }

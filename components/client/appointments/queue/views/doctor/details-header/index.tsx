@@ -1,6 +1,6 @@
 import { cn } from '@heroui/react';
 import { getQueueStatusColor } from '../helper';
-import { CellRenderer } from '@/components/ui/cell-renderer';
+import { CellRenderer } from '@/components/ui/cell/rich-color/cell-renderer';
 import { Accordion, AccordionItem, Chip } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { AppointmentQueueResponse } from '@/services/client/appointment/queue/queue.types';

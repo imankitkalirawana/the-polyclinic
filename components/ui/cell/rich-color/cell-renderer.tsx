@@ -5,7 +5,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 export interface CellRendererProps {
   label?: string;
   value: string | React.ReactNode;
-  icon: string;
+  icon?: string;
   classNames?: {
     icon?: string;
     label?: string;
@@ -38,9 +38,11 @@ export function CellRenderer({
       )}
     >
       <div className={cn('flex items-center gap-2 text-small')}>
-        <div className={cn('rounded-small p-[5px]', classNames?.icon)}>
-          <Icon icon={icon} width={iconSize} />
-        </div>
+        {!!icon && (
+          <div className={cn('rounded-small p-[5px]', classNames?.icon)}>
+            <Icon icon={icon} width={iconSize} />
+          </div>
+        )}
         <div
           className={cn('flex w-full flex-col gap-0.5', {
             'flex-row items-center justify-between': direction === 'horizontal',
