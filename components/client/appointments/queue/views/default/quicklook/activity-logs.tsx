@@ -1,4 +1,6 @@
+import ActivityTimeline from '@/components/ui/activity/timeline';
 import { useQueueActivityLogs } from '@/services/client/appointment/queue/queue.query';
+import React from 'react';
 
 export default function QueueActivityLogs({ queueId }: { queueId: string }) {
   const { data, isLoading } = useQueueActivityLogs(queueId);
@@ -8,5 +10,5 @@ export default function QueueActivityLogs({ queueId }: { queueId: string }) {
   if (!data) {
     return <div>No data found</div>;
   }
-  return <div>{JSON.stringify(data)}</div>;
+  return <ActivityTimeline activities={data} />;
 }

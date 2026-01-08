@@ -45,8 +45,16 @@ export enum ActorType {
 }
 
 export interface ChangedField {
-  before: unknown;
-  after: unknown;
+  before: string | number | boolean | null | undefined;
+  after: string | number | boolean | null | undefined;
+}
+
+export interface Actor {
+  id: string;
+  name: string;
+  email: string;
+  image: string;
+  type: ActorType;
 }
 
 export interface ActivityLogResponse {
@@ -58,9 +66,7 @@ export interface ActivityLogResponse {
   changedFields: Record<string, ChangedField> | null;
   previousData: Record<string, unknown> | null;
   newData: Record<string, unknown> | null;
-  actorType: ActorType;
-  actorId: string | null;
-  actorRole: string | null;
   description: string | null;
   createdAt: string;
+  actor: Actor;
 }

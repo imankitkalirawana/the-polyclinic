@@ -94,6 +94,7 @@ const invalidateQueueForDoctor = (doctorId?: string | null, queueId?: string | n
   return [
     ['queue-for-doctor', doctorId, queueId],
     ['queue-for-doctor', doctorId, null],
+    ['queue-activity-logs', queueId],
   ];
 };
 
@@ -107,7 +108,8 @@ export const useCallPatient = () => {
       throw new Error(res.message);
     },
     invalidateQueriesWithVariables({ variables, data }) {
-      return invalidateQueueForDoctor(data?.doctor?.id, variables?.queueId);
+      const keys = invalidateQueueForDoctor(data?.doctor?.id, variables?.queueId);
+      return keys;
     },
     onSuccess: () => {
       const audio = new Audio('/assets/audio/desk-bell.mp3');
@@ -126,7 +128,8 @@ export const useSkipPatient = () => {
       throw new Error(res.message);
     },
     invalidateQueriesWithVariables({ variables, data }) {
-      return invalidateQueueForDoctor(data?.doctor?.id, variables?.queueId);
+      const keys = invalidateQueueForDoctor(data?.doctor?.id, variables?.queueId);
+      return keys;
     },
   });
 };
@@ -141,7 +144,9 @@ export const useClockInPatient = () => {
       throw new Error(res.message);
     },
     invalidateQueriesWithVariables({ variables, data }) {
-      return invalidateQueueForDoctor(data?.doctor?.id, variables?.queueId);
+      const keys = invalidateQueueForDoctor(data?.doctor?.id, variables?.queueId);
+      console.log('invalid', keys);
+      return keys;
     },
   });
 };

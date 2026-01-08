@@ -43,7 +43,14 @@ export default function QuickLook({
             </div>
             {content}
           </div>
-          <div className={cn('divide-y divide-divider', classNames?.sidebar)}>{sidebarContent}</div>
+          <div
+            className={cn(
+              'h-full divide-y divide-divider overflow-y-auto overflow-x-hidden',
+              classNames?.sidebar
+            )}
+          >
+            {sidebarContent}
+          </div>
         </ModalBody>
         <ModalFooter className={cn('justify-between border-t border-divider', classNames?.footer)}>
           <div className={cn('flex items-center gap-2', classNames?.footerLeft)}>{footerLeft}</div>
