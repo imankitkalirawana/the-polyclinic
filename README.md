@@ -1,3 +1,5 @@
+Server side source code: https://github.com/imankitkalirawana/the-polyclinic-api
+
 # The Polyclinic - Healthcare Management System
 
 A comprehensive, multi-tenant healthcare management system built with Next.js 15, featuring appointment scheduling, user management, drug inventory tracking, and organization management.
