@@ -25,10 +25,10 @@ The Polyclinic is a full-stack healthcare management platform designed to stream
 ### Technology Stack
 
 - **Frontend**: Next.js 15 (App Router), React 19, TypeScript
-- **UI Framework**: HeroUI (NextUI), Tailwind CSS
-- **Backend**: Next.js API Routes, Server Actions
-- **Database**: MongoDB with Mongoose ODM
-- **Authentication**: NextAuth.js with OTP verification
+- **UI Framework**: HeroUI (formerly NextUI), Tailwind CSS
+- **Backend**: Nest.js
+- **Database**: Postgres, MongoDB (for caching)
+- **Authentication**: Session based JWT authentication
 - **State Management**: React Query (TanStack Query), Zustand
 - **Email**: Nodemailer with custom templates
 - **Deployment**: Docker, Vercel-ready
@@ -40,12 +40,6 @@ The Polyclinic is a full-stack healthcare management platform designed to stream
 ```
 the-polyclinic/
 ├── app/                          # Next.js App Router
-│   ├── api/                     # API routes
-│   │   ├── auth/                # Authentication endpoints
-│   │   └── v1/                  # Versioned API endpoints
-│   │       ├── client/          # Client-facing APIs
-│   │       ├── common/          # Shared APIs
-│   │       └── system/          # System/admin APIs
 │   ├── auth/                    # Authentication pages
 │   ├── dashboard/               # Admin dashboard
 │   ├── appointments/            # Appointment management
@@ -67,14 +61,6 @@ the-polyclinic/
 ├── docs/                        # Documentation
 └── public/                      # Static assets
 ```
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-- Node.js 18+
-- MongoDB 4.4+
-- pnpm (recommended) or npm
 
 ### Installation
 
