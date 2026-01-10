@@ -9,7 +9,7 @@ export const useAppointmentActions = () => {
   const role = user?.role;
 
   const handleConfirm = async (appointment: AppointmentType) => {
-    await confirmMutation.mutateAsync({ aid: appointment.aid.toString() });
+    await confirmMutation.mutateAsync(appointment.aid);
   };
 
   const handleReminder = async (appointment: AppointmentType) => {

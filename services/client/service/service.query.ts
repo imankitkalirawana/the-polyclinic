@@ -1,100 +1,42 @@
-import { addToast } from '@heroui/react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-
 import { ServiceApi } from '@/services/client/service/service.api';
 import { ServiceType } from '@/services/client/service/service.types';
 
+import { useGenericQuery } from '@/services/useGenericQuery';
+import { useGenericMutation } from '@/services/useGenericMutation';
+
 export const useAllServices = () =>
-  useQuery({
+  useGenericQuery({
     queryKey: ['services'],
-    queryFn: async () => {
-      const result = await ServiceApi.getAll();
-      if (result.success) {
-        return result.data;
-      }
-      throw new Error(result.message);
-    },
+    queryFn: () => ServiceApi.getAll(),
   });
 
 export const useServiceWithUID = (uid: string) =>
-  useQuery({
+  useGenericQuery({
     queryKey: ['service', uid],
-    queryFn: async () => {
-      const result = await ServiceApi.getByUID(uid);
-      if (result.success) {
-        return result.data;
-      }
-      throw new Error(result.message);
-    },
+    queryFn: () => ServiceApi.getByUID(uid),
     enabled: !!uid,
   });
 
 export const useCreateService = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (data: ServiceType) => {
-      const result = await ServiceApi.create(data);
-      if (result.success) {
-        return result;
-      }
-      throw new Error(result.message);
-    },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['services'] });
-      addToast({
-        title: data.message,
-        color: 'success',
-      });
-    },
-    onError: (error) => {
-      addToast({
-        title: error.message,
-        color: 'danger',
-      });
-    },
+  return useGenericMutation({
+    mutationFn: (data: ServiceType) => ServiceApi.create(data),
+    invalidateQueries: [['services']],
   });
 };
 
 export const useUpdateService = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (data: ServiceType) => {
-      const result = await ServiceApi.update(data.uniqueId, data);
-      if (result.success) {
-        return result;
-      }
-      throw new Error(result.message);
-    },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({
-        queryKey: ['service', data.data?.uniqueId],
-      });
-      addToast({
-        title: data.message,
-        color: 'success',
-      });
-    },
-    onError: (error) => {
-      addToast({
-        title: error.message,
-        color: 'danger',
-      });
-    },
+  return useGenericMutation({
+    mutationFn: (data: ServiceType) => ServiceApi.update(data.uniqueId, data),
+    invalidateQueriesWithVariables: ({ variables }) => [
+      ['services'],
+      ['service', variables?.uniqueId],
+    ],
   });
 };
 
 export const useDeleteService = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (uid: string) => {
-      const result = await ServiceApi.delete(uid);
-      if (result.success) {
-        return result;
-      }
-      throw new Error(result.message);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['services'] });
-    },
+  return useGenericMutation({
+    mutationFn: (uid: string) => ServiceApi.delete(uid),
+    invalidateQueries: [['services']],
   });
 };

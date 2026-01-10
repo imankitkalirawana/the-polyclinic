@@ -1,33 +1,20 @@
-import { useQuery } from '@tanstack/react-query';
-
 import { AppointmentApi } from '@/services/client/appointment/appointment.api';
 import { useGenericMutation } from '../../useGenericMutation';
+import { useGenericQuery } from '../../useGenericQuery';
 
 import { CreateAppointmentType } from './appointment.types';
 
 export const useAllAppointments = () =>
-  useQuery({
+  useGenericQuery({
     queryKey: ['appointments'],
-    queryFn: async () => {
-      const result = await AppointmentApi.getAll();
-      if (result.success) {
-        return result.data;
-      }
-      throw new Error(result.message);
-    },
+    queryFn: () => AppointmentApi.getAll(),
     initialData: [],
   });
 
 export const useAppointmentWithAID = (aid?: string | null) =>
-  useQuery({
+  useGenericQuery({
     queryKey: ['appointment', aid],
-    queryFn: async () => {
-      const result = await AppointmentApi.getById(aid);
-      if (result.success) {
-        return result.data;
-      }
-      throw new Error(result.message);
-    },
+    queryFn: () => AppointmentApi.getById(aid),
     enabled: !!aid,
   });
 
@@ -35,45 +22,23 @@ export const useAppointmentWithAID = (aid?: string | null) =>
 
 export const useCreateAppointment = () => {
   return useGenericMutation({
-    mutationFn: async (appointment: CreateAppointmentType) => {
-      const result = await AppointmentApi.create(appointment);
-      if (result.success) {
-        return result;
-      }
-      throw new Error(result.message);
-    },
-    successMessage: 'Appointment created',
+    mutationFn: (appointment: CreateAppointmentType) => AppointmentApi.create(appointment),
     invalidateQueries: [['appointments']],
   });
 };
 
 export const useConfirmAppointment = () => {
   return useGenericMutation({
-    mutationFn: async ({ aid }: { aid: string }) => {
-      const result = await AppointmentApi.confirm(aid);
-      if (result.success) {
-        return result;
-      }
-      throw new Error(result.message);
-    },
-    successMessage: 'Appointment confirmed',
-    errorMessage: 'Error confirming appointment',
+    mutationFn: (aid: string) => AppointmentApi.confirm(aid),
     invalidateQueries: [['appointments']],
-    invalidateQueriesWithVariables: ({ variables }) => [['appointment', variables?.aid]],
+    invalidateQueriesWithVariables: ({ variables }) => [['appointment', variables]],
   });
 };
 
 export const useCancelAppointment = () => {
   return useGenericMutation({
-    mutationFn: async ({ aid, remarks }: { aid: string; remarks: string }) => {
-      const result = await AppointmentApi.cancel(aid, remarks);
-      if (result.success) {
-        return result;
-      }
-      throw new Error(result.message);
-    },
-    successMessage: 'Appointment cancelled',
-    errorMessage: 'Error cancelling appointment',
+    mutationFn: ({ aid, remarks }: { aid: string; remarks: string }) =>
+      AppointmentApi.cancel(aid, remarks),
     invalidateQueries: [['appointments']],
     invalidateQueriesWithVariables: ({ variables }) => [['appointment', variables?.aid]],
   });
@@ -81,15 +46,8 @@ export const useCancelAppointment = () => {
 
 export const useChangeDoctorAppointment = () => {
   return useGenericMutation({
-    mutationFn: async ({ aid, doctorId }: { aid: string; doctorId: string }) => {
-      const result = await AppointmentApi.changeDoctor(aid, doctorId);
-      if (result.success) {
-        return result;
-      }
-      throw new Error(result.message);
-    },
-    successMessage: 'Doctor updated',
-    errorMessage: 'Error updating doctor',
+    mutationFn: ({ aid, doctorId }: { aid: string; doctorId: string }) =>
+      AppointmentApi.changeDoctor(aid, doctorId),
     invalidateQueries: [['appointments']],
     invalidateQueriesWithVariables: ({ variables }) => [['appointment', variables?.aid]],
   });
@@ -97,15 +55,8 @@ export const useChangeDoctorAppointment = () => {
 
 export const useRescheduleAppointment = () => {
   return useGenericMutation({
-    mutationFn: async ({ aid, date }: { aid: string; date: string }) => {
-      const result = await AppointmentApi.reschedule(aid, date);
-      if (result.success) {
-        return result;
-      }
-      throw new Error(result.message);
-    },
-    successMessage: 'Appointment rescheduled',
-    errorMessage: 'Error rescheduling appointment',
+    mutationFn: ({ aid, date }: { aid: string; date: string }) =>
+      AppointmentApi.reschedule(aid, date),
     invalidateQueries: [['appointments']],
     invalidateQueriesWithVariables: ({ variables }) => [['appointment', variables?.aid]],
   });
@@ -113,14 +64,7 @@ export const useRescheduleAppointment = () => {
 
 export const useSendReminder = () => {
   return useGenericMutation({
-    mutationFn: async ({ aid, emails }: { aid: string; emails: string | string[] }) => {
-      const result = await AppointmentApi.sendReminder(aid, emails);
-      if (result.success) {
-        return result;
-      }
-      throw new Error(result.message);
-    },
-    successMessage: 'Reminder sent',
-    errorMessage: 'Error sending reminder',
+    mutationFn: ({ aid, emails }: { aid: string; emails: string | string[] }) =>
+      AppointmentApi.sendReminder(aid, emails),
   });
 };

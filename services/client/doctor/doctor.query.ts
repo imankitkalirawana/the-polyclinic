@@ -1,71 +1,34 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Doctor, DoctorSlots } from './doctor.api';
+import { useGenericQuery } from '@/services/useGenericQuery';
+import { useGenericMutation } from '@/services/useGenericMutation';
 
 import { SlotConfig } from './doctor.types';
-import { addToast } from '@heroui/react';
 
 export const useAllDoctors = (search?: string) =>
-  useQuery({
+  useGenericQuery({
     queryKey: ['doctors', search],
-    queryFn: async () => {
-      const result = await Doctor.getAll(search);
-      if (result.success) {
-        return result.data;
-      }
-      throw new Error(result.message);
-    },
+    queryFn: () => Doctor.getAll(search),
   });
 
 export const useDoctorById = (id?: string | null) =>
-  useQuery({
+  useGenericQuery({
     queryKey: ['doctor', id],
-    queryFn: async () => {
-      const result = await Doctor.getById(id);
-      if (result.success) {
-        return result.data;
-      }
-      throw new Error(result.message);
-    },
+    queryFn: () => Doctor.getById(id),
     enabled: !!id,
   });
 
 // Slots
 
 export const useSlotsByUID = (uid: string) =>
-  useQuery({
+  useGenericQuery({
     queryKey: ['slots', uid],
-    queryFn: async () => {
-      const result = await DoctorSlots.getSlotsByUID(uid);
-      if (result.success) {
-        return result.data;
-      }
-      throw new Error(result.message);
-    },
+    queryFn: () => DoctorSlots.getSlotsByUID(uid),
     enabled: !!uid,
   });
 
 export const useUpdateSlots = (uid: string) => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (slot: SlotConfig) => {
-      const result = await DoctorSlots.updateSlotsByUID(uid, slot);
-      if (result.success) {
-        return result;
-      }
-      throw new Error(result.message);
-    },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['slots', uid] });
-      addToast({
-        title: data.message,
-        color: 'success',
-      });
-    },
-    onError: (error: Error) => {
-      addToast({
-        title: error.message,
-        color: 'danger',
-      });
-    },
+  return useGenericMutation({
+    mutationFn: (slot: SlotConfig) => DoctorSlots.updateSlotsByUID(uid, slot),
+    invalidateQueries: [['slots', uid]],
   });
 };

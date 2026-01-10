@@ -1,21 +1,20 @@
-import { apiRequest } from '@/lib/axios';
-import { GetAllNotificationsResponse } from './notifications.types';
-
 export class Notifications {
   private static API_BASE = '/common/notifications';
 
-  static async getAll(params?: { status?: 'unread' | 'read' }) {
-    return await apiRequest<GetAllNotificationsResponse>({
-      url: this.API_BASE,
-      params,
+  static async getAll(_params?: { status?: 'unread' | 'read' }) {
+    // return dummy data
+    return Promise.resolve({
+      success: true,
+      data: [],
+      message: 'Notifications fetched successfully',
     });
   }
 
-  static async markAsRead(notificationIds: string[]) {
-    return await apiRequest({
-      url: `${this.API_BASE}/mark-as-read`,
-      method: 'POST',
-      data: { notificationIds },
+  static async markAsRead(_notificationIds: string[]) {
+    return Promise.resolve({
+      success: true,
+      data: null,
+      message: 'Notifications marked as read',
     });
   }
 }
