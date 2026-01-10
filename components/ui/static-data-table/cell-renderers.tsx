@@ -20,7 +20,11 @@ import { CopyText } from '@/components/ui/copy';
 import { chipColorMap, ChipColorType } from '@/lib/chip';
 import Avatar from 'boring-avatars';
 
-export const renderCopyableText = (text: string) => <CopyText>{text}</CopyText>;
+/**
+ * @deprecated Avoid using this .
+ * Use the `CopyText` component instead.
+ */
+export const renderCopyableText = (text: string | null | undefined) => <CopyText>{text}</CopyText>;
 
 export const RenderUser = ({
   name,

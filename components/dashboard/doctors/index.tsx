@@ -11,7 +11,6 @@ import { useDoctorStore } from './store';
 import { Table } from '@/components/ui/static-data-table';
 import {
   renderActions,
-  renderCopyableText,
   renderDate,
   RenderUser,
 } from '@/components/ui/static-data-table/cell-renderers';
@@ -20,16 +19,16 @@ import { castData } from '@/lib/utils';
 import { DoctorType } from '@/services/client/doctor';
 import { useAllDoctors } from '@/services/client/doctor/doctor.query';
 import { useDeleteUser } from '@/services/common/user/user.query';
-import { useSubdomain } from '@/hooks/useSubDomain';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
+import Link from 'next/link';
+import { CopyText } from '@/components/ui/copy';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'image',
-  'uid',
   'name',
   'email',
   'seating',
-  'designation',
+  'specialization',
   'createdAt',
 ];
 
@@ -38,23 +37,16 @@ export default function Doctors() {
   const deleteModal = useDisclosure();
   const { setSelected } = useDoctorStore();
   const deleteDoctor = useDeleteUser();
-  const organization = useSubdomain();
 
   const { data, isLoading, isError, error } = useAllDoctors();
 
-  const handleDelete = async (uid: string) => {
-    await deleteDoctor.mutateAsync({ uid, organization });
+  const handleDelete = async (id: string) => {
+    await deleteDoctor.mutateAsync(id);
   };
 
   // Define columns with render functions
   const columns: ColumnDef<DoctorType>[] = useMemo(
     () => [
-      {
-        name: 'User ID',
-        uid: 'id',
-        sortable: true,
-        renderCell: (doctor) => renderCopyableText(doctor.id.toString()),
-      },
       {
         name: 'Name',
         uid: 'name',
@@ -65,33 +57,25 @@ export default function Doctors() {
         name: 'Email',
         uid: 'email',
         sortable: true,
-        renderCell: (doctor) => (
-          <div className="truncate lowercase text-default-foreground">{doctor.email}</div>
-        ),
+        renderCell: (doctor) => <CopyText>{doctor.email}</CopyText>,
       },
       {
         name: 'Phone',
         uid: 'phone',
         sortable: true,
-        renderCell: (doctor) => (
-          <div className="truncate text-default-foreground">{doctor.phone || 'N/A'}</div>
-        ),
+        renderCell: (doctor) => <CopyText>{doctor.phone}</CopyText>,
       },
       {
-        name: 'Designation',
-        uid: 'designation',
+        name: 'Specialization',
+        uid: 'specialization',
         sortable: true,
-        renderCell: (doctor) => (
-          <div className="truncate text-default-foreground">{doctor.designation || 'N/A'}</div>
-        ),
+        renderCell: (doctor) => <CopyText>{doctor.specialization}</CopyText>,
       },
       {
         name: 'Seating',
         uid: 'seating',
         sortable: true,
-        renderCell: (doctor) => (
-          <div className="truncate text-default-foreground">{doctor.seating || 'N/A'}</div>
-        ),
+        renderCell: (doctor) => <CopyText>{doctor.seating}</CopyText>,
       },
       {
         name: 'Created At',
@@ -109,7 +93,7 @@ export default function Doctors() {
             onView: () => router.push(`/dashboard/doctors/${doctor.id}`),
             onEdit: () => router.push(`/dashboard/doctors/${doctor.id}/edit`),
             key: doctor.id,
-            onDelete: () => handleDelete(doctor.id),
+            onDelete: () => handleDelete(doctor.userid),
           }),
       },
     ],
@@ -162,7 +146,8 @@ export default function Doctors() {
     <Button
       color="primary"
       size="sm"
-      onPress={() => router.push('/dashboard/users/new?redirectUrl=/dashboard/doctors&role=doctor')}
+      as={Link}
+      href="/dashboard/users/new?redirectUrl=/dashboard/doctors&role=DOCTOR"
     >
       New Doctor
     </Button>

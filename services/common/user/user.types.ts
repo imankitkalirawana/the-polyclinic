@@ -10,14 +10,12 @@ export interface AuthUser {
     email: string;
     role: UnifiedUser['role'];
     id: string;
-    uid: string;
     image: string;
   };
   expires?: string;
 }
 
 type UserBase = Base & {
-  uid: string;
   email: string;
   name: string;
   status: UserStatus;

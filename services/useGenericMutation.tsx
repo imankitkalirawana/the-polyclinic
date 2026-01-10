@@ -36,7 +36,7 @@ interface MutationConfig<TData extends ApiResponse, TVariables, TError = Error> 
  */
 
 export const useGenericMutation = <TData extends ApiResponse, TVariables, TError = Error>({
-  showToast = false,
+  showToast = true,
   mutationFn,
   successMessage,
   errorMessage,
@@ -49,23 +49,29 @@ export const useGenericMutation = <TData extends ApiResponse, TVariables, TError
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn,
+    mutationFn: async (variables: TVariables) => {
+      const result = await mutationFn(variables);
+      if (!result.success) {
+        throw new Error(result.message);
+      }
+      return result;
+    },
     onSuccess: (result, variables) => {
       // Invalidate static queries
       invalidateQueries.forEach((queryKey) => {
-        queryClient.invalidateQueries({ queryKey });
+        queryClient.invalidateQueries(queryKey ? { queryKey } : undefined);
       });
 
       // Invalidate dynamic queries with variables
       if (invalidateQueriesWithVariables) {
         const dynamicQueries = invalidateQueriesWithVariables({ variables, data: result.data });
         dynamicQueries.forEach((queryKey) => {
-          queryClient.invalidateQueries({ queryKey });
+          queryClient.invalidateQueries(queryKey ? { queryKey } : undefined);
         });
       }
 
       // Show success toast
-      if (showToast) {
+      if (showToast && (result.message || successMessage)) {
         addToast({
           title: successMessage,
           description: result.message,
@@ -79,7 +85,7 @@ export const useGenericMutation = <TData extends ApiResponse, TVariables, TError
     },
     onError: (error, variables) => {
       // Show error toast
-      if (showToast) {
+      if (showToast && (error.message || errorMessage)) {
         addToast({
           title: errorMessage,
           description: error instanceof Error ? error.message : String(error),

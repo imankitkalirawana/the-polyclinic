@@ -41,6 +41,7 @@ export default function NewPatient({
       <div className="grid grid-cols-2 gap-2">
         <Input
           {...register('name')}
+          autoFocus
           isRequired
           label="Name"
           isInvalid={!!errors.name}

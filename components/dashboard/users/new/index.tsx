@@ -106,6 +106,10 @@ export default function NewUser({ organization }: { organization?: string | null
 
   const roles = getRolesByAccess(SYSTEM_USER_ROLE.moderator, organization);
 
+  const isDoctor =
+    formik.values.role === ORGANIZATION_USER_ROLES.doctor &&
+    user?.role === ORGANIZATION_USER_ROLES.admin;
+
   return (
     <Card
       className="bg-transparent p-2 shadow-none"
@@ -139,11 +143,7 @@ export default function NewUser({ organization }: { organization?: string | null
           <Input
             isRequired
             label="Name"
-            placeholder={
-              formik.values.role === ORGANIZATION_USER_ROLES.doctor
-                ? 'eg. Dr. John Doe'
-                : 'eg. John Doe'
-            }
+            placeholder={isDoctor ? 'eg. Dr. John Doe' : 'eg. John Doe'}
             name="name"
             value={formik.values.name}
             onChange={formik.handleChange}
@@ -278,7 +278,7 @@ export default function NewUser({ organization }: { organization?: string | null
 
           {/* Doctor Fields */}
 
-          {formik.values.role === ORGANIZATION_USER_ROLES.doctor && (
+          {isDoctor && (
             <>
               <Input
                 label="Specialization"

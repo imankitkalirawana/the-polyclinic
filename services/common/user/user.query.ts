@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { CreateUser, UpdateUser } from './user.types';
 import { User } from './user.api';
+import { useGenericMutation } from '@/services/useGenericMutation';
 
 export const useAllUsers = () =>
   useQuery({
@@ -40,17 +41,17 @@ export const useLinkedUsers = () =>
     },
   });
 
-export const useUserWithUID = (uid?: string) =>
+export const useUserWithID = (id?: string) =>
   useQuery({
-    queryKey: ['user', uid],
+    queryKey: ['user', id],
     queryFn: async () => {
-      const res = await User.getByUID(uid);
+      const res = await User.getByID(id);
       if (res.success) {
         return res.data;
       }
       throw new Error(res.message);
     },
-    enabled: !!uid,
+    enabled: !!id,
   });
 
 export const useCreateUser = () => {
@@ -66,9 +67,8 @@ export const useCreateUser = () => {
       error.message = res.errors?.join(', ') || res.message;
       throw error;
     },
-    onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['users'] });
-      queryClient.invalidateQueries({ queryKey: ['organizations', variables.organization] });
+    onSuccess: (data) => {
+      queryClient.invalidateQueries();
 
       addToast({
         title: data.message,
@@ -88,8 +88,8 @@ export const useCreateUser = () => {
 export const useUpdateUser = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ uid, data }: { uid: string; data: UpdateUser }) => {
-      const res = await User.update(uid, data);
+    mutationFn: async ({ id, data }: { id: string; data: UpdateUser }) => {
+      const res = await User.update(id, data);
       if (res.success) {
         return res;
       }
@@ -113,30 +113,8 @@ export const useUpdateUser = () => {
 };
 
 export const useDeleteUser = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async ({ uid, organization }: { uid: string; organization?: string | null }) => {
-      const res = await User.delete(uid, organization);
-      if (res.success) {
-        return res;
-      }
-      throw new Error(res.message);
-    },
-    onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['users'] });
-      queryClient.invalidateQueries({ queryKey: ['doctors'] });
-      queryClient.invalidateQueries({ queryKey: ['patients'] });
-      queryClient.invalidateQueries({ queryKey: ['organizations', variables.organization] });
-      addToast({
-        title: 'User deleted successfully',
-        color: 'success',
-      });
-    },
-    onError: (error) => {
-      addToast({
-        title: error.message,
-        color: 'danger',
-      });
-    },
+  return useGenericMutation({
+    mutationFn: (id: string) => User.delete(id),
+    invalidateQueries: [],
   });
 };

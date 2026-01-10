@@ -2,17 +2,17 @@ import { apiRequest } from '@/lib/axios';
 import { CreateUser, UnifiedUser, UpdateUser } from './user.types';
 
 export class User {
-  private static API_BASE = '/common/users';
+  private static API_BASE = '/client/users';
 
   static async getSelf() {
     return await apiRequest<UnifiedUser>({
-      url: '/users/self',
+      url: `${this.API_BASE}/self`,
     });
   }
 
   static async getLinked() {
     return await apiRequest<UnifiedUser[]>({
-      url: '/users/linked',
+      url: `${this.API_BASE}/linked`,
     });
   }
 
@@ -22,12 +22,12 @@ export class User {
     });
   }
 
-  static async getByUID(uid?: string | null) {
-    if (!uid) {
-      return { success: false, message: 'UID is required', data: null };
+  static async getByID(id?: string | null) {
+    if (!id) {
+      return { success: false, message: 'User ID is required', data: null };
     }
     return await apiRequest<UnifiedUser>({
-      url: `${this.API_BASE}/${uid}`,
+      url: `${this.API_BASE}/${id}`,
     });
   }
 
@@ -39,19 +39,18 @@ export class User {
     });
   }
 
-  static async update(uid: string, data: UpdateUser) {
+  static async update(id: string, data: UpdateUser) {
     return await apiRequest<UnifiedUser>({
-      url: `${this.API_BASE}/${uid}`,
+      url: `${this.API_BASE}/${id}`,
       method: 'PUT',
       data,
     });
   }
 
-  static async delete(uid: string, organization?: string | null) {
+  static async delete(id: string) {
     return await apiRequest({
-      url: `${this.API_BASE}/${uid}`,
+      url: `${this.API_BASE}/${id}/delete`,
       method: 'DELETE',
-      data: { organization },
     });
   }
 }

@@ -13,7 +13,6 @@ import { Table } from '@/components/ui/static-data-table';
 import {
   renderActions,
   renderChip,
-  renderCopyableText,
   renderDate,
   RenderUser,
 } from '@/components/ui/static-data-table/cell-renderers';
@@ -21,7 +20,7 @@ import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/typ
 import { useAllUsers, useDeleteUser } from '@/services/common/user/user.query';
 import { UnifiedUser } from '@/services/common/user';
 
-const INITIAL_VISIBLE_COLUMNS = ['image', 'uid', 'name', 'email', 'role', 'createdAt'];
+const INITIAL_VISIBLE_COLUMNS = ['image', 'name', 'email', 'role', 'createdAt'];
 
 export default function Users() {
   const router = useRouter();
@@ -31,19 +30,13 @@ export default function Users() {
 
   const { data, isLoading, isError, error } = useAllUsers();
 
-  const handleDelete = async (uid: string) => {
-    await deleteUser.mutateAsync({ uid });
+  const handleDelete = async (id: string) => {
+    await deleteUser.mutateAsync(id);
   };
 
   // Define columns with render functions
   const columns: ColumnDef<UnifiedUser>[] = useMemo(
     () => [
-      {
-        name: 'User ID',
-        uid: 'uid',
-        sortable: true,
-        renderCell: (user) => renderCopyableText(user.uid.toString()),
-      },
       {
         name: 'Name',
         uid: 'name',
@@ -106,10 +99,10 @@ export default function Users() {
         sortable: false,
         renderCell: (user) =>
           renderActions({
-            onView: () => router.push(`/dashboard/users/${user.uid}`),
-            onEdit: () => router.push(`/dashboard/users/${user.uid}/edit`),
-            key: user.uid,
-            onDelete: () => handleDelete(user.uid),
+            onView: () => router.push(`/dashboard/users/${user.id}`),
+            onEdit: () => router.push(`/dashboard/users/${user.id}/edit`),
+            key: user.id,
+            onDelete: () => handleDelete(user.id),
           }),
       },
     ],
@@ -255,12 +248,12 @@ export default function Users() {
         data={users}
         columns={columns}
         initialVisibleColumns={INITIAL_VISIBLE_COLUMNS}
-        keyField="uid"
+        keyField="id"
         filters={filters}
         searchField={(user, searchValue) =>
           user.name.toLowerCase().includes(searchValue.toLowerCase()) ||
           user.email.toLowerCase().includes(searchValue.toLowerCase()) ||
-          user.uid.toString().includes(searchValue) ||
+          user.id.toString().includes(searchValue) ||
           (user.phone ? user.phone.toLowerCase().includes(searchValue.toLowerCase()) : false)
         }
         endContent={endContent}
@@ -270,7 +263,7 @@ export default function Users() {
           direction: 'descending',
         }}
         onRowAction={(row) => {
-          const user = users.find((user) => user.uid == row);
+          const user = users.find((user) => user.id == row);
           if (user) {
             setSelected(user);
           }
