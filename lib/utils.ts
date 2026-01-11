@@ -30,11 +30,11 @@ export function generatePhoneNumber(): string {
   return phoneNumber;
 }
 
-export function generateEmail(name: string) {
+export function generateEmail(name: string, provider = 'thepolyclinic.app') {
   return faker.internet
     .email({
       firstName: name,
-      provider: 'thepolyclinic.app',
+      provider,
     })
     .toLowerCase();
 }

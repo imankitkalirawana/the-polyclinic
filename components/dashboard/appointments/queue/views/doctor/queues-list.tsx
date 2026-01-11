@@ -133,9 +133,9 @@ export default function QueuesList({
                     <p className="capitalize text-small">{queue.patient.phone || '-'}</p>
                   </div>
 
-                  <div className="flex flex-col">
+                  <div title={queue.patient.email} className="flex flex-col">
                     <span className="text-default-500 text-tiny">Email</span>
-                    <p className="lowercase text-small">{queue.patient.email || '-'}</p>
+                    <p className="truncate lowercase text-small">{queue.patient.email || '-'}</p>
                   </div>
 
                   <div className="flex flex-col">

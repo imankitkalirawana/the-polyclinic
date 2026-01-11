@@ -43,10 +43,10 @@ import {
   APPOINTMENT_TYPES,
   AppointmentType,
 } from '@/services/client/appointment';
-import { ORGANIZATION_USER_ROLES, OrganizationUser } from '@/services/common/user';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { useClipboard } from '@/hooks/useClipboard';
 import { UserDetailsPopover } from './user-details-popover';
+import { Role } from '@/services/common/user/user.constants';
 
 const DRAWER_DELAY = 200;
 
@@ -429,11 +429,10 @@ const AppointmentFooter = memo(({ appointment }: { appointment: AppointmentType 
   const { user } = useSession();
   const buttons = useAppointmentButtonsInDrawer({
     selected: appointment,
-    role: user?.role as OrganizationUser['role'],
+    role: user?.role as Role,
   });
 
-  return appointment.status === APPOINTMENT_STATUSES.cancelled &&
-    user?.role === ORGANIZATION_USER_ROLES.patient ? (
+  return appointment.status === APPOINTMENT_STATUSES.cancelled && user?.role === Role.PATIENT ? (
     <Alert
       color="warning"
       title="Cancelled"

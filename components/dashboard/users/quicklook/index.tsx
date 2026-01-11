@@ -9,7 +9,8 @@ import { permissions, sidebarContent } from './data';
 import QuickLook from '@/components/ui/dashboard/quicklook';
 import { ButtonProps, DropdownItemProps } from '@/components/ui/dashboard/quicklook/types';
 import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
-import { UnifiedUser } from '@/services/common/user';
+import { UserType } from '@/services/common/user/user.types';
+import { UserStatus } from '@/services/common/user/user.constants';
 
 export function UserQuickLook() {
   const { selected, setSelected, setAction, action } = useUserStore();
@@ -38,10 +39,9 @@ export function UserQuickLook() {
         variant: 'flat',
         position: 'right',
         isHidden:
-          selected?.status === 'active' ||
-          selected?.status === 'inactive' ||
-          selected?.status === 'blocked' ||
-          selected?.status === 'deleted',
+          selected?.status === UserStatus.ACTIVE ||
+          selected?.status === UserStatus.INACTIVE ||
+          selected?.status === UserStatus.BLOCKED,
         onPress: async () => {
           await new Promise((resolve) => setTimeout(resolve, 2000));
           addToast({
@@ -96,7 +96,7 @@ export function UserQuickLook() {
     [selected]
   );
 
-  const content = (user: UnifiedUser) => [
+  const content = (user: UserType) => [
     {
       label: 'User ID',
       value: () => user.id,

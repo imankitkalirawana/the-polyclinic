@@ -5,7 +5,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { ActionType, DropdownKeyType } from '../types';
 
 import { PermissionProps } from '@/components/ui/dashboard/quicklook/types';
-import { UnifiedUser } from '@/services/common/user';
+import { UserType } from '@/services/common/user/user.types';
 import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
@@ -15,7 +15,7 @@ export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
   NURSE: ['cancel', 'reschedule'],
   RECEPTIONIST: ['cancel', 'reschedule', 'reminder'],
 };
-export const sidebarContent = (user: UnifiedUser) => (
+export const sidebarContent = (user: UserType) => (
   <>
     <div className="flex flex-col items-center gap-2 p-4">
       <RenderUser name={user.name} description={user.email} size="xl" />

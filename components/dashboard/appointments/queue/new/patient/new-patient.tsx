@@ -1,11 +1,12 @@
 import Modal from '@/components/ui/modal';
-import { useForm } from 'react-hook-form';
-import { NewPatientRequest } from '@/services/client/patient/patient.types';
-import { Input, NumberInput, Select, SelectItem } from '@heroui/react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { newPatientSchema } from '@/services/client/patient/patient.validation';
-import { GENDERS } from '@/lib/constants';
-import { useCreatePatient } from '@/services/client/patient/patient.query';
+import { CreateUserRequest } from '@/services/common/user/user.types';
+import { createUserSchema } from '@/services/common/user/user.validation';
+import { useCreateUser } from '@/services/common/user/user.query';
+import NewUserForm from '@/components/dashboard/users/new/new-user-form';
+import { Role } from '@/services/common/user/user.constants';
+import { addToast } from '@heroui/react';
 
 export default function NewPatient({
   onClose,
@@ -14,81 +15,34 @@ export default function NewPatient({
   onClose: () => void;
   onSuccess?: (id: string) => void;
 }) {
-  const form = useForm<NewPatientRequest>({
-    resolver: zodResolver(newPatientSchema),
+  const form = useForm<CreateUserRequest>({
+    resolver: zodResolver(createUserSchema),
+    defaultValues: {
+      role: Role.PATIENT,
+    },
   });
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = form;
+  const { mutateAsync: createUser } = useCreateUser({ showToast: false });
 
-  const { mutate: createPatient } = useCreatePatient();
-
-  const onSubmit = (data: NewPatientRequest) => {
-    createPatient(data, {
-      onSuccess: (result) => {
-        if (result.success && result.data?.id) {
-          onSuccess?.(result.data.id);
-        }
-      },
+  const onSubmit = async (data: CreateUserRequest) => {
+    await createUser(data).then((response) => {
+      if (response.data?.linked_id) {
+        onSuccess?.(response.data.linked_id);
+      } else {
+        addToast({
+          title: 'An error occurred',
+          description: 'Failed to create patient. Please try again later.',
+          color: 'danger',
+        });
+      }
     });
   };
 
   const renderBody = () => {
     return (
-      <div className="grid grid-cols-2 gap-2">
-        <Input
-          {...register('name')}
-          autoFocus
-          isRequired
-          label="Name"
-          isInvalid={!!errors.name}
-          errorMessage={errors.name?.message}
-        />
-        <Input
-          {...register('phone')}
-          isRequired
-          label="Phone"
-          isInvalid={!!errors.phone}
-          errorMessage={errors.phone?.message}
-        />
-        <Select
-          {...register('gender')}
-          isRequired
-          disallowEmptySelection
-          label="Gender"
-          isInvalid={!!errors.gender}
-          errorMessage={errors.gender?.message}
-        >
-          {GENDERS.map((gender) => (
-            <SelectItem key={gender} className="capitalize">
-              {gender.toLowerCase()}
-            </SelectItem>
-          ))}
-        </Select>
-        {/* @ts-ignore */}
-        <NumberInput
-          {...register('age', { valueAsNumber: true })}
-          label="Age"
-          isInvalid={!!errors.age}
-          errorMessage={errors.age?.message}
-        />
-        <Input
-          {...register('email')}
-          label="Email (Optional)"
-          isInvalid={!!errors.email}
-          errorMessage={errors.email?.message}
-        />
-
-        <Input
-          {...register('address')}
-          label="Address"
-          isInvalid={!!errors.address}
-          errorMessage={errors.address?.message}
-        />
-      </div>
+      <FormProvider {...form}>
+        <NewUserForm lockRole />
+      </FormProvider>
     );
   };
 
@@ -104,7 +58,7 @@ export default function NewPatient({
         children: 'Create',
         whileSubmitting: 'Creating patient...',
       }}
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={form.handleSubmit(onSubmit)}
     />
   );
 }

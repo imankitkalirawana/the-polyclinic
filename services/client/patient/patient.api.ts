@@ -1,4 +1,4 @@
-import { NewPatientRequest, PatientType } from './patient.types';
+import { PatientType } from './patient.types';
 import { AppointmentType } from '../appointment';
 import { apiRequest } from '@/lib/axios';
 
@@ -30,14 +30,6 @@ export class PatientApi {
 
     return await apiRequest<AppointmentType[]>({
       url: `${this.API_BASE}/${uid}/appointments`,
-    });
-  }
-
-  static async create(data: NewPatientRequest) {
-    return await apiRequest<PatientType>({
-      url: this.API_BASE,
-      method: 'POST',
-      data,
     });
   }
 }

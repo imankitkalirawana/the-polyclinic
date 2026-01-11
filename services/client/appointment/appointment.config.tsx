@@ -4,7 +4,7 @@ import { APPOINTMENT_STATUSES, AppointmentType, ButtonConfig } from '@/services/
 import { useAppointmentActions } from './hooks/useAppointmentActions';
 import RescheduleAppointment from '@/services/client/appointment/components/reschedule-modal';
 import CancelModal from './components/cancel-modal';
-import { ORGANIZATION_USER_ROLES, OrganizationUser } from '@/services/common/user';
+import { Role } from '@/services/common/user/user.constants';
 import ChangeDoctorModal from './components/change-doctor-modal';
 
 export const createAppointmentButtonConfigs = (actions: {
@@ -26,12 +26,7 @@ export const createAppointmentButtonConfigs = (actions: {
         APPOINTMENT_STATUSES.on_hold,
         APPOINTMENT_STATUSES.overdue,
       ],
-      roles: [
-        ORGANIZATION_USER_ROLES.patient,
-        ORGANIZATION_USER_ROLES.receptionist,
-        ORGANIZATION_USER_ROLES.admin,
-        ORGANIZATION_USER_ROLES.doctor,
-      ],
+      roles: [Role.PATIENT, Role.RECEPTIONIST, Role.ADMIN, Role.DOCTOR],
       custom: (appointment) => appointment.status !== APPOINTMENT_STATUSES.in_progress,
     },
     action: {
@@ -49,7 +44,7 @@ export const createAppointmentButtonConfigs = (actions: {
     position: 'left',
     visibilityRules: {
       statuses: [APPOINTMENT_STATUSES.booked],
-      roles: [ORGANIZATION_USER_ROLES.admin, ORGANIZATION_USER_ROLES.doctor],
+      roles: [Role.ADMIN, Role.DOCTOR],
       custom: (appointment) => appointment.doctor?.uid !== undefined,
     },
     action: {
@@ -74,11 +69,7 @@ export const createAppointmentButtonConfigs = (actions: {
         APPOINTMENT_STATUSES.on_hold,
         APPOINTMENT_STATUSES.overdue,
       ],
-      roles: [
-        ORGANIZATION_USER_ROLES.doctor,
-        ORGANIZATION_USER_ROLES.receptionist,
-        ORGANIZATION_USER_ROLES.admin,
-      ],
+      roles: [Role.DOCTOR, Role.RECEPTIONIST, Role.ADMIN],
     },
     action: {
       type: 'async-function',
@@ -95,7 +86,7 @@ export const createAppointmentButtonConfigs = (actions: {
     isIconOnly: true,
     visibilityRules: {
       statuses: [APPOINTMENT_STATUSES.booked, APPOINTMENT_STATUSES.confirmed],
-      roles: [ORGANIZATION_USER_ROLES.receptionist, ORGANIZATION_USER_ROLES.admin],
+      roles: [Role.RECEPTIONIST, Role.ADMIN],
       custom: (appointment) => appointment.doctor?.uid !== undefined,
     },
     action: {
@@ -113,7 +104,7 @@ export const createAppointmentButtonConfigs = (actions: {
     position: 'left',
     visibilityRules: {
       statuses: [APPOINTMENT_STATUSES.booked],
-      roles: [ORGANIZATION_USER_ROLES.receptionist, ORGANIZATION_USER_ROLES.admin],
+      roles: [Role.RECEPTIONIST, Role.ADMIN],
       custom: (appointment) => !appointment.doctor?.uid,
     },
     action: {
@@ -138,12 +129,7 @@ export const createAppointmentButtonConfigs = (actions: {
         APPOINTMENT_STATUSES.on_hold,
         APPOINTMENT_STATUSES.overdue,
       ],
-      roles: [
-        ORGANIZATION_USER_ROLES.patient,
-        ORGANIZATION_USER_ROLES.doctor,
-        ORGANIZATION_USER_ROLES.receptionist,
-        ORGANIZATION_USER_ROLES.admin,
-      ],
+      roles: [Role.PATIENT, Role.DOCTOR, Role.RECEPTIONIST, Role.ADMIN],
       custom: (appointment) =>
         [
           APPOINTMENT_STATUSES.booked,
@@ -166,7 +152,7 @@ export const createAppointmentButtonConfigs = (actions: {
     position: 'left',
     visibilityRules: {
       statuses: [APPOINTMENT_STATUSES.booked],
-      roles: [ORGANIZATION_USER_ROLES.doctor, ORGANIZATION_USER_ROLES.admin],
+      roles: [Role.DOCTOR, Role.ADMIN],
       custom: (appointment) => appointment.doctor?.uid !== undefined,
     },
     action: {
@@ -187,7 +173,7 @@ export const createAppointmentButtonConfigs = (actions: {
         APPOINTMENT_STATUSES.in_progress,
         APPOINTMENT_STATUSES.on_hold,
       ],
-      roles: [ORGANIZATION_USER_ROLES.doctor, ORGANIZATION_USER_ROLES.admin],
+      roles: [Role.DOCTOR, Role.ADMIN],
     },
     action: {
       type: 'navigation',
@@ -209,7 +195,7 @@ export const useAppointmentButtonConfigs = () => {
 export const isButtonVisible = (
   config: ButtonConfig,
   appointment: AppointmentType | null,
-  role: OrganizationUser['role']
+  role: Role
 ): boolean => {
   if (!appointment) return false;
 

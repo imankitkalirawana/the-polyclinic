@@ -2,18 +2,13 @@ import { unauthorized } from 'next/navigation';
 
 import { getServerSession } from '@/lib/serverAuth';
 import NewAppointment from '@/components/dashboard/appointments/create';
-import { ORGANIZATION_USER_ROLES, OrganizationUser } from '@/services/common/user';
+import { Role } from '@/services/common/user/user.constants';
 
 export default async function NewAppointmentPage() {
   const session = await getServerSession();
-  const ALLOWED_ROLES: OrganizationUser['role'][] = [
-    ORGANIZATION_USER_ROLES.admin,
-    ORGANIZATION_USER_ROLES.receptionist,
-    ORGANIZATION_USER_ROLES.doctor,
-    ORGANIZATION_USER_ROLES.patient,
-  ];
+  const ALLOWED_ROLES: Role[] = [Role.ADMIN, Role.RECEPTIONIST, Role.DOCTOR, Role.PATIENT];
 
-  if (!session || !ALLOWED_ROLES.includes(session.user?.role as OrganizationUser['role'])) {
+  if (!session?.user || !ALLOWED_ROLES.includes(session.user?.role)) {
     return unauthorized();
   }
 

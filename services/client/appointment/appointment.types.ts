@@ -5,7 +5,7 @@ import {
   APPOINTMENT_STATUSES,
   APPOINTMENT_TYPES,
 } from './appointment.constants';
-import { OrganizationUser } from '@/services/common/user';
+import { Role } from '@/services/common/user/user.constants';
 import { ButtonProps } from '@heroui/react';
 
 type PatientInfo = {
@@ -78,8 +78,8 @@ export type ButtonConfig = {
   whileLoading?: string;
   visibilityRules: {
     statuses?: AppointmentType['status'][];
-    roles?: OrganizationUser['role'][];
-    custom?: (appointment: AppointmentType, role: OrganizationUser['role']) => boolean;
+    roles?: Role[];
+    custom?: (appointment: AppointmentType, role: Role) => boolean;
   };
   action: {
     type: 'store-action' | 'async-function' | 'navigation';

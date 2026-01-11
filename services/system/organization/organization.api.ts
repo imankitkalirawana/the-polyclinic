@@ -1,4 +1,4 @@
-import { OrganizationUser } from '@/services/common/user';
+import { UserType } from '@/services/common/user/user.types';
 import {
   CreateOrganizationType,
   OrganizationType,
@@ -19,7 +19,7 @@ export class OrganizationApi {
   static async getById(organizationId: string) {
     return await apiRequest<{
       organization: OrganizationType;
-      users: OrganizationUser[];
+      users: UserType[];
     }>({
       url: `${this.API_BASE}/${organizationId}`,
     });

@@ -15,6 +15,7 @@ import { TIMINGS } from '@/lib/config'; // Assuming this provides start/end hour
 import { cn } from '@heroui/react';
 import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
 import { AppointmentType } from '@/services/client/appointment';
+import { Role } from '@/services/common/user/user.constants';
 
 interface DayViewProps {
   isCompact?: boolean;
@@ -36,7 +37,7 @@ export function DayView({
   const { aid, setIsTooltipOpen } = useAppointmentStore();
 
   const isAllowedToCreateAppointment = allowedRolesToCreateAppointment.includes(
-    user?.role || 'patient'
+    user?.role || Role.PATIENT
   );
 
   const displayHours = Array.from(

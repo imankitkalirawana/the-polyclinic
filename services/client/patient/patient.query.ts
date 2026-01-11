@@ -1,7 +1,5 @@
 import { PatientApi } from './patient.api';
-import { useGenericMutation } from '@/services/useGenericMutation';
 import { useGenericQuery } from '@/services/useGenericQuery';
-import { NewPatientRequest } from './patient.types';
 
 export const useAllPatients = (search?: string) =>
   useGenericQuery({
@@ -21,10 +19,4 @@ export const usePreviousAppointments = (uid?: string | null) =>
     queryKey: ['previous-appointments', uid],
     queryFn: () => PatientApi.getPreviousAppointments(uid),
     enabled: !!uid,
-  });
-
-export const useCreatePatient = () =>
-  useGenericMutation({
-    mutationFn: (data: NewPatientRequest) => PatientApi.create(data),
-    invalidateQueries: [['patients']],
   });

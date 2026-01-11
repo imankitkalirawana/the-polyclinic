@@ -1,7 +1,7 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 import UserCard from '@/components/dashboard/users/user';
-import { User } from '@/services/common/user';
+import { UserApi } from '@/services/common/user/user.api';
 
 interface Props {
   params: Promise<{
@@ -15,7 +15,7 @@ export default async function Page(props: Props) {
   await queryClient.prefetchQuery({
     queryKey: ['user', params.id],
     queryFn: async () => {
-      const res = await User.getByID(params.id);
+      const res = await UserApi.getByID(params.id);
       if (res.success) {
         return res.data;
       }

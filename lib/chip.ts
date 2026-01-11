@@ -1,12 +1,12 @@
 import { AppointmentType } from '@/services/client/appointment';
-import { UnifiedUser } from '@/services/common/user';
+import { Role, UserStatus } from '@/services/common/user/user.constants';
 import { DrugStatus } from '@/services/client/drug/drug.types';
 import { ServiceStatus, ServiceTypes } from '@/services/client/service/service.types';
 import { QueueStatus } from '@/services/client/appointment/queue/queue.types';
 
 export type ChipColorType =
-  | UnifiedUser['role']
-  | UnifiedUser['status']
+  | Role
+  | UserStatus
   | ServiceStatus
   | ServiceTypes
   | DrugStatus
@@ -15,21 +15,17 @@ export type ChipColorType =
 
 export const chipColorMap: Record<ChipColorType, string> = {
   /* for status */
-  active: 'bg-green-100 text-green-700',
-  inactive: 'bg-gray-100 text-gray-700',
-  blocked: 'bg-pink-100 text-pink-700',
+  BLOCKED: 'bg-pink-100 text-pink-700',
+  ACTIVE: 'bg-green-100 text-green-700',
+  INACTIVE: 'bg-red-100 text-red-700',
   available: 'bg-green-100 text-green-700',
   unavailable: 'bg-red-100 text-red-700',
 
   /* for roles */
-  superadmin: 'bg-red-100 text-red-700',
-  moderator: 'bg-red-100 text-red-700',
-  ops: 'bg-red-100 text-red-700',
   ADMIN: 'bg-red-100 text-red-700',
   DOCTOR: 'bg-blue-100 text-blue-700',
   NURSE: 'bg-amber-100 text-amber-700',
   RECEPTIONIST: 'bg-yellow-100 text-yellow-700',
-  PHARMACIST: 'bg-purple-100 text-purple-700',
 
   /* for appointment status */
   overdue: 'bg-red-100 text-red-700',

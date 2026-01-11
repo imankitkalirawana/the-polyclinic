@@ -4,7 +4,7 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 import { loadSearchParams } from './search-params';
 import { SearchParams } from 'nuqs/server';
 import { getServerSession } from '@/lib/serverAuth';
-import { Role } from '@/services/common/user';
+import { Role } from '@/services/common/user/user.constants';
 import DefaultQueueView from '@/components/dashboard/appointments/queue/views/default';
 
 type PageProps = {

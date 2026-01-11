@@ -1,11 +1,11 @@
-import { UnifiedUser } from '@/services/common/user';
+import { Role } from '@/services/common/user/user.constants';
 import { OrganizationType } from '@/services/system/organization';
 
-export interface SessionUser {
+interface SessionUser {
   id: string;
   email: string;
   name: string;
-  role: UnifiedUser['role'];
+  role: Role;
   image: string;
   organization: string | null;
   phone: string;

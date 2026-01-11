@@ -22,6 +22,11 @@ import Sidebar from '@/components/dashboard/sidebar/sidebar';
 import NotificationsWrapper from '../sections/navbar/notifications';
 import ProfileDropdown from '../sections/navbar/profile-dropdown';
 
+export const SIDEBAR_WIDTHS = {
+  expanded: 288,
+  collapsed: 64,
+};
+
 export default function DashboardLayout({ children }: { readonly children: React.ReactNode }) {
   const { user } = useSession();
 
@@ -45,11 +50,12 @@ export default function DashboardLayout({ children }: { readonly children: React
 
     return (
       <div
+        style={{
+          width: isHidden ? SIDEBAR_WIDTHS.collapsed : SIDEBAR_WIDTHS.expanded,
+          maxWidth: isHidden ? SIDEBAR_WIDTHS.collapsed : SIDEBAR_WIDTHS.expanded,
+        }}
         className={cn(
-          'relative flex h-full w-72 max-w-[288px] flex-1 flex-col !border-r-small border-divider transition-all duration-250 ease-in-out',
-          {
-            'max-w-16': isHidden,
-          }
+          'relative flex h-full flex-1 flex-col !border-r-small border-divider transition-all duration-250 ease-in-out'
         )}
       >
         <div

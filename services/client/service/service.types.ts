@@ -1,8 +1,8 @@
 import { Base } from '@/lib/interface';
 
 export enum ServiceStatus {
-  active = 'active',
-  inactive = 'inactive',
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
 }
 
 export enum ServiceTypes {

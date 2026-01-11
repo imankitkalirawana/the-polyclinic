@@ -19,7 +19,9 @@ import {
 import { useFormik } from 'formik';
 
 import { useUpdateUser, useUserWithID } from '@/services/common/user/user.query';
-import { UpdateUser, updateUserSchema } from '@/services/common/user';
+import { UpdateUserRequest } from '@/services/common/user/user.types';
+import { updateUserSchema } from '@/services/common/user/user.validation';
+import { Role } from '@/services/common/user/user.constants';
 import { withZodSchema } from '@/lib/utils';
 import { GENDERS } from '@/lib/constants';
 import { useQueryState } from 'nuqs';
@@ -40,7 +42,7 @@ export default function NewUser({
   const { data: user } = useUserWithID(id);
   const updateUser = useUpdateUser();
 
-  const formik = useFormik<UpdateUser>({
+  const formik = useFormik<UpdateUserRequest>({
     initialValues: {
       ...user,
       organization,
@@ -72,7 +74,7 @@ export default function NewUser({
           </p>
         </div>
         {renderChip({
-          item: user?.role || 'PATIENT',
+          item: user?.role || Role.PATIENT,
         })}
       </CardHeader>
       <CardBody>

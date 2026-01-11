@@ -1,12 +1,6 @@
 import { z } from 'zod';
-import {
-  ORGANIZATION_USER_ROLES,
-  SYSTEM_USER_ROLE,
-  UNIFIED_USER_ROLES,
-  USER_STATUSES,
-} from './user.constants';
+import { Role, UserStatus } from './user.constants';
 import { GENDERS } from '@/lib/constants';
-import { OrganizationUser, SystemUser } from './user.types';
 
 export const createUserSchema = z
   .object({
@@ -40,7 +34,7 @@ export const createUserSchema = z
 
     organization: z.string().trim().optional().or(z.literal('')).nullable(),
 
-    role: z.enum(UNIFIED_USER_ROLES, {
+    role: z.enum(Role, {
       error: 'Invalid role selected.',
     }),
 
@@ -70,13 +64,9 @@ export const createUserSchema = z
   .refine(
     (data) => {
       if (data.organization) {
-        return data.role
-          ? Object.values(ORGANIZATION_USER_ROLES).includes(data.role as OrganizationUser['role'])
-          : true;
+        return data.role ? Object.values(Role).includes(data.role as Role) : true;
       }
-      return data.role
-        ? Object.values(SYSTEM_USER_ROLE).includes(data.role as SystemUser['role'])
-        : true;
+      return data.role ? Object.values(Role).includes(data.role as Role) : true;
     },
     {
       message: 'Role does not match the selected organization type.',
@@ -86,8 +76,8 @@ export const createUserSchema = z
 
 export const updateUserSchema = createUserSchema.partial().extend({
   status: z
-    .enum(USER_STATUSES, {
-      error: "Invalid status. Allowed values are: 'active', 'inactive', or 'blocked'.",
+    .enum(UserStatus, {
+      error: 'Invalid status. Allowed values are: ACTIVE, INACTIVE, or BLOCKED.',
     })
     .optional(),
 });
