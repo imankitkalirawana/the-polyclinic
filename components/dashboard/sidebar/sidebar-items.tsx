@@ -218,7 +218,7 @@ export const getSidebarItems = (userRole?: Role | null): SidebarItem[] => {
       ...section,
       items: section.items
         ?.map((item) => filterItem(item, userRole))
-        .filter((item) => item !== null),
+        .filter((item): item is SidebarItem => item !== null),
     }))
     .filter((section) => section.items && section.items.length > 0);
 };
