@@ -15,7 +15,10 @@ export const CreateAppointmentSidebar = ({
   setCurrentStep: (step: number) => void;
 }) => {
   return (
-    <section className="flex h-full w-full max-w-sm flex-col overflow-hidden border-r border-divider p-4">
+    <section
+      data-test-id="create-appointment-sidebar"
+      className="flex h-full w-full max-w-sm flex-col overflow-hidden border-r border-divider pr-4"
+    >
       <div>
         <h1 className="mb-2 text-xl font-medium" id="getting-started">
           {APP_INFO.name}

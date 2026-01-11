@@ -30,7 +30,10 @@ export default function CreateAppointmentContentContainer({
         className
       )}
     >
-      <div className="relative flex h-full flex-col justify-between overflow-hidden border-r border-divider">
+      <div
+        data-test-id="create-appointment-content-container"
+        className="relative flex h-full flex-col justify-between overflow-hidden"
+      >
         {/* Main content area with proper flex handling */}
         <div className="flex h-full min-h-0 flex-col gap-4 overflow-hidden p-4">
           {header && <div className="flex-shrink-0">{header}</div>}

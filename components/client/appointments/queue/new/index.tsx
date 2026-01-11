@@ -16,7 +16,7 @@ const contentMap: Record<number, React.ReactNode> = {
   3: <ReviewAndPay />,
 };
 
-export default function BookQueueAppointment() {
+export default function NewQueueAppointment() {
   const form = useForm<CreateAppointmentQueueFormValues>({
     defaultValues: {
       appointment: {

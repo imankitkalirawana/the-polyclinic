@@ -1,10 +1,10 @@
 import { unauthorized } from 'next/navigation';
 
 import { getServerSession } from '@/lib/serverAuth';
-import CreateAppointment from '@/components/client/appointments/create';
+import NewAppointment from '@/components/client/appointments/create';
 import { ORGANIZATION_USER_ROLES, OrganizationUser } from '@/services/common/user';
 
-export default async function CreateAppointmentPage() {
+export default async function NewAppointmentPage() {
   const session = await getServerSession();
   const ALLOWED_ROLES: OrganizationUser['role'][] = [
     ORGANIZATION_USER_ROLES.admin,
@@ -17,5 +17,5 @@ export default async function CreateAppointmentPage() {
     return unauthorized();
   }
 
-  return <CreateAppointment />;
+  return <NewAppointment />;
 }

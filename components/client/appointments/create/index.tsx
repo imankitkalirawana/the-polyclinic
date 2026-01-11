@@ -40,7 +40,7 @@ export const useCreateAppointmentForm = () => {
   return context;
 };
 
-export default function CreateAppointment({ date, isModal }: { date?: Date; isModal?: boolean }) {
+export default function NewAppointment({ date, isModal }: { date?: Date; isModal?: boolean }) {
   const createAppointment = useCreateAppointment();
 
   const form = useForm<CreateAppointmentFormValues>({
