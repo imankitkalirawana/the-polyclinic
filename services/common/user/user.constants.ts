@@ -34,9 +34,6 @@ export const UNIFIED_USER_ROLES = [
 ] as const;
 
 export enum Role {
-  SUPERADMIN = 'SUPERADMIN',
-  MODERATOR = 'MODERATOR',
-  OPS = 'OPS',
   ADMIN = 'ADMIN',
   PATIENT = 'PATIENT',
   DOCTOR = 'DOCTOR',

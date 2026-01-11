@@ -21,7 +21,7 @@ import NewUserFormInputs from './new-user-form-inputs';
 export default function NewUser() {
   const router = useRouter();
   const { user } = useSession();
-  const createUser = useCreateUser();
+  const { mutateAsync: createUser, isPending: isCreatingUser } = useCreateUser();
 
   const [redirectUrl] = useQueryState('redirectUrl', {
     defaultValue: '/dashboard/users',
@@ -47,8 +47,11 @@ export default function NewUser() {
   const canAutofill = user?.role === Role.ADMIN;
 
   const onSubmit = async (values: CreateUser) => {
-    await createUser.mutateAsync(values);
-    router.push(redirectUrl);
+    await createUser(values, {
+      onSuccess: () => {
+        router.push(redirectUrl);
+      },
+    });
   };
 
   return (
@@ -80,9 +83,8 @@ export default function NewUser() {
         <Button
           color="primary"
           radius="full"
-          isLoading={createUser.isPending}
-          onPress={() => form.handleSubmit(onSubmit)}
-          type="submit"
+          isLoading={isCreatingUser}
+          onPress={() => form.handleSubmit(onSubmit)()}
         >
           Create User
         </Button>

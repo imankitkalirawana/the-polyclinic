@@ -1,55 +1,131 @@
-import { Input, Textarea } from '@heroui/react';
+import { Input, NumberInput, Textarea } from '@heroui/react';
 import { CreateUser } from '@/services/common/user';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, Controller } from 'react-hook-form';
 
 export default function DoctorFields() {
   const form = useFormContext<CreateUser>();
-  const {
-    register,
-    formState: { errors },
-  } = form;
+  const { control } = form;
 
   return (
     <>
-      <Input
-        label="Specialization"
-        placeholder="eg. Cardiologist"
-        {...register('specialization')}
-        isInvalid={!!errors.specialization}
-        errorMessage={errors.specialization?.message}
+      <Controller
+        name="specialization"
+        control={control}
+        render={({ field, fieldState }) => (
+          <Input
+            {...field}
+            value={field.value ?? ''}
+            label="Specialization"
+            placeholder="eg. Cardiologist"
+            isInvalid={!!fieldState.error}
+            errorMessage={fieldState.error?.message}
+          />
+        )}
       />
 
-      <Input
-        label="Department"
-        placeholder="eg. Cardiology"
-        {...register('department')}
-        isInvalid={!!errors.department}
-        errorMessage={errors.department?.message}
+      <Controller
+        name="department"
+        control={control}
+        render={({ field, fieldState }) => (
+          <Input
+            {...field}
+            value={field.value ?? ''}
+            label="Department"
+            placeholder="eg. Cardiology"
+            isInvalid={!!fieldState.error}
+            errorMessage={fieldState.error?.message}
+          />
+        )}
       />
 
-      <Input
-        label="Seating"
-        placeholder="eg. Room No, Floor"
-        {...register('seating')}
-        isInvalid={!!errors.seating}
-        errorMessage={errors.seating?.message}
+      <Controller
+        name="seating"
+        control={control}
+        render={({ field, fieldState }) => (
+          <Input
+            {...field}
+            value={field.value ?? ''}
+            label="Seating"
+            placeholder="eg. Room No, Floor"
+            isInvalid={!!fieldState.error}
+            errorMessage={fieldState.error?.message}
+          />
+        )}
       />
 
-      <Input
-        label="Education"
-        placeholder="eg. MBBS, MD"
-        {...register('education')}
-        isInvalid={!!errors.education}
-        errorMessage={errors.education?.message}
+      <Controller
+        name="education"
+        control={control}
+        render={({ field, fieldState }) => (
+          <Input
+            {...field}
+            value={field.value ?? ''}
+            label="Education"
+            placeholder="eg. MBBS, MD"
+            isInvalid={!!fieldState.error}
+            errorMessage={fieldState.error?.message}
+          />
+        )}
+      />
+      <Controller
+        name="designation"
+        control={control}
+        render={({ field, fieldState }) => (
+          <Input
+            {...field}
+            value={field.value ?? ''}
+            label="Designation"
+            placeholder="eg. Cardiologist"
+            isInvalid={!!fieldState.error}
+            errorMessage={fieldState.error?.message}
+          />
+        )}
       />
 
-      <Textarea
-        className="col-span-2"
-        label="Biography"
-        placeholder="eg. Experienced cardiologist"
-        {...register('biography')}
-        isInvalid={!!errors.biography}
-        errorMessage={errors.biography?.message}
+      <Controller
+        name="experience"
+        control={control}
+        render={({ field, fieldState }) => (
+          <NumberInput
+            {...field}
+            value={field.value || undefined}
+            label="Experience"
+            placeholder="eg. 10"
+            isInvalid={!!fieldState.error}
+            errorMessage={fieldState.error?.message}
+            endContent={<span className="text-default-500">years</span>}
+          />
+        )}
+      />
+
+      <Controller
+        name="education"
+        control={control}
+        render={({ field, fieldState }) => (
+          <Input
+            {...field}
+            value={field.value ?? ''}
+            label="Education"
+            placeholder="eg. MBBS, MD"
+            isInvalid={!!fieldState.error}
+            errorMessage={fieldState.error?.message}
+          />
+        )}
+      />
+
+      <Controller
+        name="biography"
+        control={control}
+        render={({ field, fieldState }) => (
+          <Textarea
+            {...field}
+            value={field.value ?? ''}
+            label="Biography"
+            placeholder="eg. Experienced cardiologist"
+            isInvalid={!!fieldState.error}
+            errorMessage={fieldState.error?.message}
+          />
+        )}
       />
     </>
   );

@@ -8,12 +8,14 @@ import { useSession } from '@/lib/providers/session-provider';
 export default function CommonFields() {
   const form = useFormContext<CreateUser>();
   const { user } = useSession();
+
   const {
     watch,
     setValue,
     control,
     formState: { errors },
   } = form;
+
   const name = watch('name');
 
   return (
@@ -74,6 +76,13 @@ export default function CommonFields() {
           <Select
             {...field}
             isRequired
+            selectedKeys={field.value ? [field.value] : []}
+            onSelectionChange={(keys) => {
+              const selectedRole = Array.from(keys)[0];
+              if (typeof selectedRole === 'string') {
+                field.onChange(selectedRole as Role);
+              }
+            }}
             disallowEmptySelection
             label="Role"
             placeholder="Select Role"
