@@ -19,8 +19,10 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useState, useMemo } from 'react';
 import CompletedAppointmentQueue from './completed';
+import { useSession } from '@/lib/providers/session-provider';
 
 export default function QueuesDoctorView() {
+  const session = useSession();
   const [queueId, setQueueId] = useQueryState('id');
   const [showNextQueues, setShowNextQueues] = useLocalStorage('show-next-queues', true);
   const [selectedFilters, setSelectedFilters] = useState({
@@ -30,10 +32,7 @@ export default function QueuesDoctorView() {
     cancelled: false,
   });
 
-  const { data, isLoading } = useQueueForDoctor(
-    '50c99b05-f917-48ea-9f4c-d3b2701e41a2',
-    queueId ?? null
-  );
+  const { data, isLoading } = useQueueForDoctor(session?.user?.doctorId, queueId);
 
   // Initialize prescription form with FormProvider
   const prescriptionForm = useForm<PrescriptionFormSchema>({

@@ -178,7 +178,7 @@ export default function DefaultQueueView() {
 
   // Render top bar
   const endContent = () => (
-    <Button color="primary" size="sm" as={Link} href="/appointments/queues/book">
+    <Button color="primary" size="sm" as={Link} href="/dashboard/queues/new">
       New Appointment
     </Button>
   );

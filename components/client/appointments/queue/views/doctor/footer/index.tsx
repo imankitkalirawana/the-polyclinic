@@ -18,8 +18,9 @@ export default function QueueFooter({
 
   return (
     <div
+      data-test-id="queue-footer"
       className={cn(
-        'fixed bottom-0 left-0 z-10 flex w-full max-w-[calc(100%-400px)] justify-between gap-2 border-t border-divider bg-background p-2 px-4',
+        'absolute bottom-0 left-0 z-10 flex w-full justify-between gap-2 border-t border-divider bg-background p-2 px-4',
         {
           'max-w-full': !showNextQueues,
         }
