@@ -13,7 +13,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { cn } from '@heroui/react';
 import { tryCatch } from '@/lib/utils';
 import { $FixMe } from '@/types';
-import { AuthApi } from '@/services/common/auth/api';
+import { AuthApi } from '@/services/common/auth/auth.api';
 
 // Input component with consistent styling for auth forms
 export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => (

@@ -1,12 +1,12 @@
 'use client';
 
 import { Button, Card, CardBody, Spinner, Switch, useDisclosure } from '@heroui/react';
-import { OrganizationType } from '@/services/system/organization/types';
+import { OrganizationType } from '@/services/system/organization/organization.types';
 import {
   useOrganizations,
   useDeleteOrganization,
   useUpdateOrganization,
-} from '@/services/system/organization/query';
+} from '@/services/system/organization/organization.query';
 import { formatDate } from 'date-fns';
 import CreateEditOrganizationModal from './create-edit';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -43,7 +43,7 @@ export default function OrganizationsDashboard() {
             </CardBody>
           </Card>
         ) : (
-          organizations?.map((org) => <OrganizationCard key={org._id} org={org} />)
+          organizations?.map((org) => <OrganizationCard key={org.id} org={org} />)
         )}
       </div>
 
@@ -75,7 +75,7 @@ function OrganizationCard({ org }: { org: OrganizationType }) {
 
   return (
     <>
-      <Card key={org._id}>
+      <Card key={org.id}>
         <CardBody className="p-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">

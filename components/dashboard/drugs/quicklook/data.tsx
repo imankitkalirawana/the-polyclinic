@@ -15,7 +15,7 @@ import { ActionType, DropdownKeyType } from '../types';
 
 import { PermissionProps } from '@/components/ui/dashboard/quicklook/types';
 import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
-import { DrugType } from '@/services/client/drug/types';
+import { DrugType } from '@/services/client/drug/drug.types';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
   DOCTOR: ['cancel', 'reschedule', 'reminder', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
@@ -152,7 +152,7 @@ export const sidebarContent = (drug: DrugType) => (
         </div>
       </Tab>
       <Tab title="Activity" key="activity">
-        <ActivityTimeline />
+        <ActivityTimeline activities={[]} />
       </Tab>
     </Tabs>
   </>

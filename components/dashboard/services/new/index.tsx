@@ -10,8 +10,8 @@ import QuillInput from '@/components/ui/quill-input';
 import ReactQuill from '@/components/ui/react-quill';
 import { ServiceStatuses, ServiceTypes } from '@/lib/interface';
 import { serviceValidationSchema } from '@/lib/validation';
-import { useCreateService } from '@/services/client/service/query';
-import { ServiceType } from '@/services/client/service/types';
+import { useCreateService } from '@/services/client/service/service.query';
+import { ServiceType } from '@/services/client/service/service.types';
 
 export default function NewService() {
   const router = useRouter();

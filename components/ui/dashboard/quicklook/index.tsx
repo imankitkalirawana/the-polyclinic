@@ -22,7 +22,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { QuickLookProps } from './types';
 
 import AsyncButton from '@/components/ui/buttons/async-button';
-import { CellRenderer } from '@/components/ui/cell-renderer';
+import { CellRenderer } from '@/components/ui/cell/rich-color/cell-renderer';
 import { Title } from '@/components/ui/typography/modal';
 import { $FixMe } from '@/types';
 

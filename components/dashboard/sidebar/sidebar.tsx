@@ -8,7 +8,17 @@ import {
   type ListboxSectionProps,
   type Selection,
 } from '@heroui/react';
-import { cn, Link, Listbox, ListboxItem, ListboxSection, Tooltip } from '@heroui/react';
+import {
+  cn,
+  Link,
+  Listbox,
+  ListboxItem,
+  ListboxSection,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Tooltip,
+} from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { UnifiedUser } from '@/services/common/user';
 // import Link from 'next/link';
@@ -124,13 +134,51 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
             title={isCompact || isNestType ? null : item.title}
             aria-label={item.title}
           >
-            {isCompact ? (
+            {isCompact && isNestType && item.items && item.items.length > 0 ? (
+              <Popover placement="right" showArrow>
+                <PopoverTrigger>
+                  <div
+                    data-test-id="sidebar-item-icon"
+                    className="flex aspect-square w-full items-center justify-center"
+                  >
+                    {item.icon ? (
+                      <Icon
+                        className={cn(
+                          'text-default-500 group-data-[selected=true]:text-primary-500',
+                          iconClassName
+                        )}
+                        icon={item.icon}
+                        width={24}
+                      />
+                    ) : (
+                      (item.startContent ?? null)
+                    )}
+                  </div>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <div className="w-full px-2 py-1 text-foreground-500 text-tiny">{item.title}</div>
+                  <Listbox aria-label="nested-list" items={item.items} variant="flat">
+                    {item.items.map((subItem) => (
+                      <ListboxItem
+                        key={subItem.key}
+                        as={Link}
+                        href={subItem.href}
+                        startContent={subItem.icon ? <Icon icon={subItem.icon} width={24} /> : null}
+                        className="text-default-500"
+                      >
+                        {subItem.title}
+                      </ListboxItem>
+                    ))}
+                  </Listbox>
+                </PopoverContent>
+              </Popover>
+            ) : isCompact ? (
               <Tooltip content={item.title} placement="right">
                 <div className="flex w-full items-center justify-center">
                   {item.icon ? (
                     <Icon
                       className={cn(
-                        'text-default-500 group-data-[selected=true]:text-foreground',
+                        'text-default-500 group-data-[selected=true]:text-primary-500',
                         iconClassName
                       )}
                       icon={item.icon}
@@ -143,7 +191,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
               </Tooltip>
             ) : null}
             {!isCompact && isNestType ? (
-              <Accordion className="p-0">
+              <Accordion className="p-0" variant="light" selectionMode="single">
                 <AccordionItem
                   key={item.key}
                   aria-label={item.title}
@@ -157,13 +205,13 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
                       <div className="flex h-11 items-center gap-2 px-2 py-1.5">
                         <Icon
                           className={cn(
-                            'text-default-500 group-data-[selected=true]:text-foreground',
+                            'text-default-500 group-data-[selected=true]:text-primary-500',
                             iconClassName
                           )}
                           icon={item.icon}
                           width={24}
                         />
-                        <span className="text-small font-medium text-default-500 group-data-[selected=true]:text-foreground">
+                        <span className="font-medium text-default-500 text-small group-data-[selected=true]:text-primary-500">
                           {item.title}
                         </span>
                       </div>
@@ -215,7 +263,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
               isCompact ? null : item.icon ? (
                 <Icon
                   className={cn(
-                    'text-default-500 group-data-[selected=true]:text-foreground',
+                    'text-default-500 group-data-[selected=true]:text-primary-500',
                     iconClassName
                   )}
                   icon={item.icon}
@@ -225,6 +273,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
                 (item.startContent ?? null)
               )
             }
+            className="text-default-500"
             title={isCompact ? null : item.title}
           >
             {isCompact ? (
@@ -233,7 +282,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
                   {item.icon ? (
                     <Icon
                       className={cn(
-                        'text-default-500 group-data-[selected=true]:text-foreground',
+                        'text-default-500 group-data-[selected=true]:text-primary-500',
                         iconClassName
                       )}
                       icon={item.icon}
@@ -270,7 +319,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
             itemClasses?.base
           ),
           title: cn(
-            'text-small font-medium text-default-500 group-data-[selected=true]:text-foreground',
+            'text-small font-medium text-default-500 group-data-[selected=true]:text-primary-500',
             itemClasses?.title
           ),
         }}

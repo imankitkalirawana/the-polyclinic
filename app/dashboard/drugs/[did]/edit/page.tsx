@@ -1,7 +1,7 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 import EditDrug from '@/components/dashboard/drugs/drug/edit';
-import { DrugApi } from '@/services/client/drug/api';
+import { DrugApi } from '@/services/client/drug/drug.api';
 
 interface Props {
   params: Promise<{

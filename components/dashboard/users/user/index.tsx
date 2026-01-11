@@ -7,13 +7,13 @@ import { Button, Card, CardBody, CardFooter, CardHeader, ScrollShadow } from '@h
 import CellValue from '@/components/ui/cell-value';
 
 import { castData } from '@/lib/utils';
-import { useUserWithUID } from '@/services/common/user/query';
+import { useUserWithID } from '@/services/common/user/user.query';
 import { OrganizationUser, UnifiedUser } from '@/services/common/user';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { format } from 'date-fns';
 
-export default function UserCard({ uid }: { uid: string }) {
-  const { data, isError, isLoading } = useUserWithUID(uid);
+export default function UserCard({ id }: { id: string }) {
+  const { data, isError, isLoading } = useUserWithID(id);
 
   const user = castData<UnifiedUser>(data);
 
@@ -35,12 +35,12 @@ export default function UserCard({ uid }: { uid: string }) {
     NURSE: null,
     PHARMACIST: null,
     PATIENT: (
-      <Button as={Link} href={`/appointments?uid=${user.uid}`} variant="flat" color="secondary">
+      <Button as={Link} href={`/appointments?id=${user.id}`} variant="flat" color="secondary">
         Book Appointment
       </Button>
     ),
     DOCTOR: (
-      <Button as={Link} href={`/dashboard/doctors/${user.uid}`} variant="flat" color="secondary">
+      <Button as={Link} href={`/dashboard/doctors/${user.id}`} variant="flat" color="secondary">
         View Doctor
       </Button>
     ),
@@ -52,7 +52,7 @@ export default function UserCard({ uid }: { uid: string }) {
           <p className="text-large">Personal Details</p>
           <p className="text-default-500 text-small">Manage your personal details</p>
         </div>
-        <Button as={Link} href={`/dashboard/users/${user.uid}/edit`}>
+        <Button as={Link} href={`/dashboard/users/${user.id}/edit`}>
           Edit
         </Button>
       </CardHeader>

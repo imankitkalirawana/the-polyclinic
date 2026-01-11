@@ -15,7 +15,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toTitleCase } from '@/lib/utils';
-import { useCreateUser, useUpdateUser } from '@/services/common/user/query';
+import { useCreateUser, useUpdateUser } from '@/services/common/user/user.query';
 
 interface UserModalProps {
   isOpen: boolean;
@@ -45,7 +45,7 @@ export default function UserModal({ isOpen, onClose, organization, mode, user }:
   const onSubmit = async (values: CreateUser | UpdateUser) => {
     if (isEdit && user) {
       await updateUser.mutateAsync({
-        uid: user.uid,
+        id: user.id,
         data: values as UpdateUser,
       });
     } else {

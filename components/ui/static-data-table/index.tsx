@@ -392,7 +392,9 @@ export function Table<T extends TableItem>({
                 <DropdownMenu
                   disallowEmptySelection
                   aria-label="Columns"
-                  items={columns.filter((c) => c.uid !== 'actions')}
+                  items={columns
+                    .filter((c) => c.uid !== 'actions')
+                    .sort((a, b) => a.name.localeCompare(b.name))}
                   selectedKeys={state.visibleColumns}
                   selectionMode="multiple"
                   onSelectionChange={(keys) => updateState({ visibleColumns: keys })}

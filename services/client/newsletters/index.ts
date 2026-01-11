@@ -1,1 +1,1 @@
-export * from './query';
+export * from './newsletter.query';

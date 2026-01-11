@@ -6,11 +6,15 @@ import { useFormik } from 'formik';
 import { useQueryState } from 'nuqs';
 import * as Yup from 'yup';
 import { AuthContextType, FlowType } from './types';
-import { login } from '@/lib/auth';
 import { $FixMe } from '@/types';
-import { useSubdomain } from '@/hooks/useSubDomain';
-import { AuthApi } from '@/services/common/auth/api';
-import { useLogin as useLoginQuery } from '@/services/common/auth/query';
+import { AuthApi } from '@/services/common/auth/auth.api';
+import {
+  useForgotPassword,
+  useLogin as useLoginQuery,
+  useSendOTP,
+  useVerifyOTP,
+} from '@/services/common/auth/auth.query';
+import { OtpType } from '@/services/common/auth/auth.constants';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -18,9 +22,12 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const createAuthProvider = (flowType: FlowType) =>
   function AuthProvider({ children }: { children: React.ReactNode }) {
     const [email] = useQueryState('email');
-    const subdomain = useSubdomain();
+    const { mutateAsync: sendOTP } = useSendOTP();
+    const { mutateAsync: verifyOTP } = useVerifyOTP();
+    const { mutateAsync: forgotPassword } = useForgotPassword();
+
     const [token, setToken] = useState<string | null>(null);
-    const { mutateAsync } = useLoginQuery();
+    const { mutateAsync: login } = useLoginQuery();
 
     // Initial values based on flow type
     const getInitialValues = () => {
@@ -153,7 +160,7 @@ export const createAuthProvider = (flowType: FlowType) =>
           case 'login':
             return handleLoginSubmit(values, { setFieldError });
           case 'forgot-password':
-            return handleForgotPasswordSubmit(values, { setFieldError });
+            return handleForgotPasswordSubmit(values);
           default:
         }
       } catch (error) {
@@ -174,8 +181,7 @@ export const createAuthProvider = (flowType: FlowType) =>
       } else if (values.page === 2) {
         await AuthApi.sendOTP({
           email: values.email,
-          type: 'register',
-          subdomain,
+          type: OtpType.registration,
         })
           .then(() => {
             paginate(1);
@@ -191,9 +197,8 @@ export const createAuthProvider = (flowType: FlowType) =>
         //  Verify OTP here
         const res = await AuthApi.verifyOTP({
           email: values.email,
-          otp: values.otp,
-          type: 'register',
-          subdomain,
+          code: values.otp,
+          type: OtpType.registration,
         });
 
         if (res.success) {
@@ -203,7 +208,7 @@ export const createAuthProvider = (flowType: FlowType) =>
           setFieldError('otp', res.message);
         }
       } else if (values.page === 4) {
-        await mutateAsync({
+        await login({
           email: values.email,
           password: values.password,
         });
@@ -224,7 +229,7 @@ export const createAuthProvider = (flowType: FlowType) =>
           paginate(1);
         }
       } else if (values.page === 2) {
-        await mutateAsync({
+        await login({
           email: values.email,
           password: values.password,
         });
@@ -232,66 +237,31 @@ export const createAuthProvider = (flowType: FlowType) =>
     };
 
     // Forgot password flow
-    const handleForgotPasswordSubmit = async (values: $FixMe, { setFieldError }: $FixMe) => {
+    const handleForgotPasswordSubmit = async (values: $FixMe) => {
       if (values.page === 0) {
-        await AuthApi.sendOTP({
+        await sendOTP({
           email: values.email,
-          type: 'reset-password',
-          subdomain,
-        })
-          .then(() => {
-            paginate(1);
-          })
-          .catch((error) => {
-            addToast({
-              title: 'An error occurred',
-              description: error instanceof Error ? error.message : 'Please try again later.',
-              color: 'danger',
-            });
-          });
-      } else if (values.page === 1) {
-        const res = await AuthApi.verifyOTP({
-          email: values.email,
-          otp: values.otp,
-          type: 'reset-password',
-          subdomain,
-        });
-
-        if (res.success) {
-          setToken(res.data?.token ?? null);
+          type: OtpType.forgotPassword,
+        }).then(() => {
           paginate(1);
-        } else {
-          setFieldError('otp', res.message);
-        }
-      } else if (values.page === 2) {
-        const res = await AuthApi.resetPassword({
-          email: values.email,
-          password: values.newPassword,
-          subdomain: subdomain ?? '',
-          token: token ?? '',
         });
-
-        if (res.success) {
-          const result = await login({
-            email: values.email,
-            password: values.newPassword,
-          });
-
-          if (result.success) {
-            window.location.href = '/dashboard';
-          } else {
-            addToast({
-              title: result.message,
-              color: 'danger',
+      } else if (values.page === 1) {
+        await verifyOTP({
+          email: values.email,
+          code: values.otp,
+          type: OtpType.forgotPassword,
+        }).then(() => {
+          paginate(1);
+        });
+      } else if (values.page === 2) {
+        await forgotPassword({ email: values.email, password: values.newPassword }).then(
+          async () => {
+            await login({
+              email: values.email,
+              password: values.newPassword,
             });
           }
-        } else {
-          addToast({
-            title: res.message,
-            description: res.errors?.[0],
-            color: 'danger',
-          });
-        }
+        );
       }
     };
 

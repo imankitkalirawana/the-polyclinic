@@ -2,7 +2,7 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 
 import { getServerSession } from '@/lib/serverAuth';
 import ServiceViewItem from '@/components/dashboard/services/service-item';
-import { ServiceApi } from '@/services/client/service/api';
+import { ServiceApi } from '@/services/client/service/service.api';
 import { AuthUser } from '@/services/common/user';
 
 interface Props {

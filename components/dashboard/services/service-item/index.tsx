@@ -9,7 +9,7 @@ import { CircleChartCard } from './graph';
 
 import NoResults from '@/components/ui/no-results';
 import { convertMinutesToHoursAndMinutes } from '@/lib/utility';
-import { useServiceWithUID } from '@/services/client/service/query';
+import { useServiceWithUID } from '@/services/client/service/service.query';
 import { AuthUser } from '@/services/common/user';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { format } from 'date-fns';

@@ -1,5 +1,5 @@
 import { UnifiedUser } from '@/services/common/user';
-import { type SidebarItem } from './sidebar';
+import { type SidebarItem, SidebarItemType } from './sidebar';
 
 // Extend SidebarItem to include roles
 
@@ -17,10 +17,45 @@ export const sectionItems: SidebarItem[] = [
       },
       {
         key: 'appointments',
-        href: '/dashboard/appointments',
+        type: SidebarItemType.Nest,
         icon: 'solar:calendar-bold-duotone',
         title: 'Appointments',
         roles: ['ADMIN', 'RECEPTIONIST', 'DOCTOR', 'PATIENT'],
+        items: [
+          {
+            key: 'book-appointment',
+            href: '/dashboard/appointments/create',
+            title: 'New Appointment',
+            roles: ['ADMIN', 'RECEPTIONIST', 'DOCTOR', 'PATIENT'],
+          },
+          {
+            key: 'all-appointments',
+            href: '/dashboard/appointments?view=month',
+            title: 'All Appointments',
+            roles: ['ADMIN', 'RECEPTIONIST', 'DOCTOR', 'PATIENT'],
+          },
+        ],
+      },
+      {
+        key: 'queues',
+        type: SidebarItemType.Nest,
+        icon: 'ph:coins-duotone',
+        title: 'Token Appointments',
+        roles: ['ADMIN', 'RECEPTIONIST', 'DOCTOR', 'PATIENT'],
+        items: [
+          {
+            key: 'book-queue',
+            href: '/dashboard/queues/new',
+            title: 'Book New Appointment',
+            roles: ['ADMIN', 'RECEPTIONIST', 'DOCTOR', 'PATIENT'],
+          },
+          {
+            key: 'all-queues',
+            href: '/dashboard/queues',
+            title: 'All Appointments',
+            roles: ['ADMIN', 'RECEPTIONIST', 'DOCTOR', 'PATIENT'],
+          },
+        ],
       },
       {
         key: 'analytics',

@@ -15,8 +15,8 @@ import {
   renderDate,
 } from '@/components/ui/static-data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
-import { useAllDrugs } from '@/services/client/drug/query';
-import { DrugType } from '@/services/client/drug/types';
+import { useAllDrugs } from '@/services/client/drug/drug.query';
+import { DrugType } from '@/services/client/drug/drug.types';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'did',

@@ -18,7 +18,7 @@ import {
 } from '@heroui/react';
 import { useFormik } from 'formik';
 
-import { useUpdateUser, useUserWithUID } from '@/services/common/user/query';
+import { useUpdateUser, useUserWithID } from '@/services/common/user/user.query';
 import { UpdateUser, updateUserSchema } from '@/services/common/user';
 import { withZodSchema } from '@/lib/utils';
 import { GENDERS } from '@/lib/constants';
@@ -26,10 +26,10 @@ import { useQueryState } from 'nuqs';
 import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
 
 export default function NewUser({
-  uid,
+  id,
   organization,
 }: {
-  uid: string;
+  id: string;
   organization?: string | null;
 }) {
   const router = useRouter();
@@ -37,7 +37,7 @@ export default function NewUser({
     defaultValue: '/dashboard/users',
   });
 
-  const { data: user } = useUserWithUID(uid);
+  const { data: user } = useUserWithID(id);
   const updateUser = useUpdateUser();
 
   const formik = useFormik<UpdateUser>({
@@ -48,7 +48,7 @@ export default function NewUser({
     validate: withZodSchema(updateUserSchema),
     onSubmit: async (values) => {
       await updateUser.mutateAsync({
-        uid,
+        id,
         data: values,
       });
       router.push(redirectUrl);

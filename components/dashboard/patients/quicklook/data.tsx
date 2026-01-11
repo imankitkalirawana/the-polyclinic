@@ -69,9 +69,9 @@ export const sidebarContent = (patient: PatientType) => (
               <div className="rounded-medium bg-orange-200 p-[5px] text-orange-400">
                 <Icon icon="solar:hashtag-circle-bold" width="24" />
               </div>
-              <span className="capitalize text-default-400">UID</span>
+              <span className="capitalize text-default-400">ID</span>
             </div>
-            <span className="capitalize text-default-foreground">{patient.uid}</span>
+            <span className="capitalize text-default-foreground">{patient.id}</span>
           </div>
           <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20" />
           <div className="flex items-center justify-between gap-4 text-small">

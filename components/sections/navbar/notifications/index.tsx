@@ -20,9 +20,12 @@ import {
 import { Icon } from '@iconify/react';
 
 import NotificationItem from './notification-item';
-import { Notification } from '@/services/common/notifications/types';
-import { useAllNotifications, useMarkAsRead } from '@/services/common/notifications/query';
-import { GetAllNotificationsResponse } from '@/services/common/notifications/api.types';
+import { Notification } from '@/services/common/notifications/notifications.types';
+import {
+  useAllNotifications,
+  useMarkAsRead,
+} from '@/services/common/notifications/notifications.query';
+import { GetAllNotificationsResponse } from '@/services/common/notifications/notifications.types';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 
 enum NotificationTabs {
@@ -145,11 +148,11 @@ export function Notifications({
 export default function NotificationsWrapper({ size = 'md' }: { size?: ButtonProps['size'] }) {
   const [activeTab, setActiveTab] = React.useState<NotificationTabs>(NotificationTabs.unread);
 
-  const { data, isLoading } = useAllNotifications(
+  const { isLoading } = useAllNotifications(
     activeTab === NotificationTabs.unread ? 'unread' : undefined
   );
-  const notifications = data?.notifications || [];
-  const stats = data?.stats || { total: 0, unread: 0, read: 0 };
+  const notifications: Notification[] = [];
+  const stats = { total: 0, unread: 0, read: 0 };
 
   return (
     <Popover placement="bottom-end" shouldCloseOnScroll={false}>

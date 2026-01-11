@@ -25,7 +25,7 @@ export function UserQuickLook() {
         position: 'left',
         isIconOnly: true,
         onPress: () => {
-          const url = `/dashboard/users/${selected?.uid}`;
+          const url = `/dashboard/users/${selected?.id}`;
           window.open(url, '_blank');
         },
       },
@@ -99,7 +99,7 @@ export function UserQuickLook() {
   const content = (user: UnifiedUser) => [
     {
       label: 'User ID',
-      value: () => user.uid,
+      value: () => user.id,
       icon: 'solar:hashtag-circle-bold-duotone',
       classNames: { icon: 'text-purple-500 bg-purple-50' },
     },

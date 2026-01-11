@@ -2,7 +2,7 @@
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import NoResults from '@/components/ui/no-results';
 import { useDepartmentByDid } from '@/services/client/department';
-import { DoctorType } from '@/services/client/doctor/types';
+import { DoctorType } from '@/services/client/doctor/doctor.types';
 import { Avatar, AvatarGroup, Button, Card, Image } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
@@ -51,7 +51,7 @@ export default function Department({ did }: { did: string }) {
               )}
               total={(department?.team?.length || 0) - 3}
             >
-              {department.team?.map((doctor) => <Avatar key={doctor.uid} src={doctor.image} />)}
+              {department.team?.map((doctor) => <Avatar key={doctor.id} src={doctor.image} />)}
             </AvatarGroup>
           </div>
         </div>
@@ -73,7 +73,7 @@ export default function Department({ did }: { did: string }) {
         <div className="space-y-4 pb-4">
           <h3 className="text-2xl font-semibold text-default-300">Our Team</h3>
           <div className="flex flex-wrap gap-4">
-            {department.team?.map((doctor) => <TeamCard key={doctor.uid} doctor={doctor} />)}
+            {department.team?.map((doctor) => <TeamCard key={doctor.id} doctor={doctor} />)}
           </div>
         </div>
       </div>
@@ -84,7 +84,7 @@ export default function Department({ did }: { did: string }) {
 function TeamCard({
   doctor,
 }: {
-  doctor: Pick<DoctorType, 'uid' | 'name' | 'email' | 'phone' | 'image' | 'designation'>;
+  doctor: Pick<DoctorType, 'id' | 'name' | 'email' | 'phone' | 'image' | 'designation'>;
 }) {
   return (
     <Card className="min-w-[200px] items-center p-4">

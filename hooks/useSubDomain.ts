@@ -18,7 +18,7 @@ export function useSubdomain() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const hostname = window.location.hostname; // e.g., "fortis.localhost"
+      const hostname = window.location.hostname; // e.g., "fortis.thepolyclinic.app"
       const parts = hostname.split('.');
 
       let extracted: string | null = null;

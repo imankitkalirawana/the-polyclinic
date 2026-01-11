@@ -1,12 +1,14 @@
 'use client';
-import { DayView } from '@/components/client/appointments/all/views/day';
+import { DayView } from '@/components/dashboard/appointments/all/views/day';
 import { AppointmentType } from '@/services/client/appointment';
 import { Calendar } from '@heroui/react';
 import { getLocalTimeZone, today } from '@internationalized/date';
 import { faker } from '@faker-js/faker';
+import { uuidv4 } from 'zod';
 
+// @ts-ignore
 const appointments: AppointmentType[] = Array.from({ length: 10 }, (_) => ({
-  _id: faker.string.uuid(),
+  id: uuidv4(),
   aid: faker.string.uuid(),
   //   date: faker.date.recent(),
   date: new Date(),

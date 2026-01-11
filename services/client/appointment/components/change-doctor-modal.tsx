@@ -1,8 +1,8 @@
 import Modal from '@/components/ui/modal';
-import { useAppointmentStore } from '@/store/appointment';
-import { useChangeDoctorAppointment } from '../query';
+import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
+import { useChangeDoctorAppointment } from '../appointment.query';
 import { useAllDoctors, DoctorType } from '@/services/client/doctor';
-import { SelectionList } from '@/components/client/appointments/create/ui';
+import { SelectionList } from '@/components/dashboard/appointments/(common)';
 import { useState } from 'react';
 
 export default function ChangeDoctorModal({ type }: { type: 'change-doctor' | 'assign-doctor' }) {
@@ -14,7 +14,7 @@ export default function ChangeDoctorModal({ type }: { type: 'change-doctor' | 'a
 
   const handleSubmit = async () => {
     if (!aid || !selectedDoctor) return;
-    await changeDoctor({ aid, doctorId: selectedDoctor.uid }).then(() => {
+    await changeDoctor({ aid, doctorId: selectedDoctor.id }).then(() => {
       setAction(null);
     });
   };
@@ -27,13 +27,13 @@ export default function ChangeDoctorModal({ type }: { type: 'change-doctor' | 'a
           items={
             doctors?.map((doctor) => ({
               title: doctor.name,
-              id: doctor.uid,
+              id: doctor.id,
               subtitle: doctor.designation,
               image: doctor.image,
             })) || []
           }
-          selectedId={selectedDoctor?.uid}
-          onSelect={(doctorUID) => setSelectedDoctor(doctors?.find((d) => d.uid === doctorUID))}
+          selectedId={selectedDoctor?.id}
+          onSelect={(doctorId) => setSelectedDoctor(doctors?.find((d) => d.id === doctorId))}
         />
       </div>
     );

@@ -9,6 +9,7 @@ export interface SessionUser {
   image: string;
   organization: string | null;
   phone: string;
+  doctorId: string | null;
 }
 
 export interface Session {

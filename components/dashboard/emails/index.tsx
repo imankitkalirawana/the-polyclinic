@@ -10,8 +10,8 @@ import { useEmailStore } from './store';
 import { Table } from '@/components/ui/static-data-table';
 import { renderActions, renderDate } from '@/components/ui/static-data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
-import { useAllEmails } from '@/services/client/email/query';
-import { EmailType } from '@/services/client/email/types';
+import { useAllEmails } from '@/services/client/email/email.query';
+import { EmailType } from '@/services/client/email/email.types';
 
 const INITIAL_VISIBLE_COLUMNS = ['id', 'from', 'to', 'subject', 'message', 'createdAt'];
 

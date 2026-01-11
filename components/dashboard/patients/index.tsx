@@ -11,79 +11,64 @@ import { usePatientStore } from './store';
 import { Table } from '@/components/ui/static-data-table';
 import {
   renderActions,
-  renderCopyableText,
   renderDate,
   RenderUser,
 } from '@/components/ui/static-data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
 import { castData } from '@/lib/utils';
 import { PatientType } from '@/services/client/patient';
-import { useDeleteUser } from '@/services/common/user/query';
-import { useSubdomain } from '@/hooks/useSubDomain';
+import { useDeleteUser } from '@/services/common/user/user.query';
 import { useAllPatients } from '@/services/client/patient';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
+import Link from 'next/link';
+import { CopyText } from '@/components/ui/copy';
 
-const INITIAL_VISIBLE_COLUMNS = ['image', 'uid', 'name', 'email', 'age', 'gender', 'createdAt'];
+const INITIAL_VISIBLE_COLUMNS = ['image', 'name', 'email', 'age', 'gender', 'createdAt'];
 
 export default function Patients() {
   const router = useRouter();
   const deleteModal = useDisclosure();
   const { setSelected } = usePatientStore();
   const deletePatient = useDeleteUser();
-  const organization = useSubdomain();
 
   const { data, isLoading, isError, error } = useAllPatients();
 
-  const handleDelete = async (uid: string) => {
-    await deletePatient.mutateAsync({ uid, organization });
+  const handleDelete = async (userId: string) => {
+    await deletePatient.mutateAsync(userId);
   };
 
   // Define columns with render functions
   const columns: ColumnDef<PatientType>[] = useMemo(
     () => [
       {
-        name: 'User ID',
-        uid: 'uid',
-        sortable: true,
-        renderCell: (patient) => renderCopyableText(patient.uid.toString()),
-      },
-      {
         name: 'Name',
         uid: 'name',
         sortable: true,
-        renderCell: (patient) => <RenderUser name={patient.name} description={patient.email} />,
+        renderCell: (patient) => <RenderUser name={patient.name} description={patient.phone} />,
       },
       {
         name: 'Email',
         uid: 'email',
         sortable: true,
-        renderCell: (patient) => (
-          <div className="truncate lowercase text-default-foreground">{patient.email}</div>
-        ),
+        renderCell: (patient) => <CopyText>{patient.email}</CopyText>,
       },
       {
         name: 'Phone',
         uid: 'phone',
         sortable: true,
-        renderCell: (patient) => (
-          <div className="truncate text-default-foreground">{patient.phone || 'N/A'}</div>
-        ),
+        renderCell: (patient) => <CopyText>{patient.phone}</CopyText>,
       },
       {
         name: 'Age',
         uid: 'age',
         sortable: true,
-        renderCell: (patient) => (
-          <div className="truncate text-default-foreground">{patient.age || 'N/A'}</div>
-        ),
+        renderCell: (patient) => <CopyText>{patient.age?.toString()}</CopyText>,
       },
       {
         name: 'Gender',
         uid: 'gender',
         sortable: true,
-        renderCell: (patient) => (
-          <div className="truncate text-default-foreground">{patient.gender || 'N/A'}</div>
-        ),
+        renderCell: (patient) => <CopyText>{patient.gender}</CopyText>,
       },
       {
         name: 'Created At',
@@ -98,10 +83,10 @@ export default function Patients() {
         sortable: false,
         renderCell: (patient) =>
           renderActions({
-            onView: () => router.push(`/dashboard/patients/${patient.uid}`),
-            onEdit: () => router.push(`/dashboard/patients/${patient.uid}/edit`),
-            key: patient.uid,
-            onDelete: () => handleDelete(patient.uid),
+            onView: () => router.push(`/dashboard/patients/${patient.id}`),
+            onEdit: () => router.push(`/dashboard/patients/${patient.id}/edit`),
+            key: patient.id,
+            onDelete: () => handleDelete(patient.userId),
           }),
       },
     ],
@@ -154,9 +139,8 @@ export default function Patients() {
     <Button
       color="primary"
       size="sm"
-      onPress={() =>
-        router.push('/dashboard/users/new?redirectUrl=/dashboard/patients&role=patient')
-      }
+      as={Link}
+      href="/dashboard/users/new?redirectUrl=/dashboard/patients&role=PATIENT"
     >
       New Patient
     </Button>
@@ -228,12 +212,12 @@ export default function Patients() {
         data={patients}
         columns={columns}
         initialVisibleColumns={INITIAL_VISIBLE_COLUMNS}
-        keyField="uid"
+        keyField="id"
         filters={filters}
         searchField={(patient, searchValue) =>
           patient.name.toLowerCase().includes(searchValue.toLowerCase()) ||
           patient.email.toLowerCase().includes(searchValue.toLowerCase()) ||
-          patient.uid.toString().includes(searchValue) ||
+          patient.id.toString().includes(searchValue) ||
           (patient.phone ? patient.phone.toLowerCase().includes(searchValue.toLowerCase()) : false)
         }
         endContent={endContent}
@@ -243,7 +227,7 @@ export default function Patients() {
           direction: 'descending',
         }}
         onRowAction={(row) => {
-          const patient = patients.find((patient) => patient.uid == row);
+          const patient = patients.find((patient) => patient.id == row);
           if (patient) {
             setSelected(patient);
           }

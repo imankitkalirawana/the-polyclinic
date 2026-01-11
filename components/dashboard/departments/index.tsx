@@ -16,7 +16,10 @@ import {
   DropdownItem,
   Link,
 } from '@heroui/react';
-import { useAllDepartments, useDeleteDepartment } from '@/services/client/department/query';
+import {
+  useAllDepartments,
+  useDeleteDepartment,
+} from '@/services/client/department/department.query';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import NewDepartment from './new-edit';

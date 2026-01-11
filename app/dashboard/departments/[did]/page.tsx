@@ -1,4 +1,4 @@
-import { DepartmentApi } from '@/services/client/department/api';
+import { DepartmentApi } from '@/services/client/department/department.api';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import Department from '@/components/dashboard/departments/department';
 

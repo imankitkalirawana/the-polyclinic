@@ -16,7 +16,7 @@ export function ModalCellRenderer({ user }: { user: SystemUser }) {
         classNames={{
           description: 'text-default-400 text-tiny',
         }}
-        description={`#${user.uid} - ${user.email}`}
+        description={`#${user.id} - ${user.email}`}
       />
       {renderChip({ item: user.role })}
     </div>

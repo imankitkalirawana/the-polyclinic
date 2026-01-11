@@ -17,8 +17,8 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 
 import NoResults from '@/components/ui/no-results';
 import { drugValidationSchema } from '@/lib/validation';
-import { useDrugWithDid, useUpdateDrug } from '@/services/client/drug/query';
-import { DrugType } from '@/services/client/drug/types';
+import { useDrugWithDid, useUpdateDrug } from '@/services/client/drug/drug.query';
+import { DrugType } from '@/services/client/drug/drug.types';
 
 export default function EditDrug({ did }: { did: number }) {
   const router = useRouter();

@@ -1,6 +1,6 @@
 import Modal from '@/components/ui/modal';
-import { useAppointmentStore } from '@/store/appointment';
-import { useCancelAppointment } from '../query';
+import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
+import { useCancelAppointment } from '../appointment.query';
 import { Textarea } from '@heroui/react';
 import { useState } from 'react';
 

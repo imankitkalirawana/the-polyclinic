@@ -5,7 +5,7 @@ import { create } from 'zustand';
 
 import { ActionType } from './types';
 
-import { ServiceType } from '@/services/client/service/types';
+import { ServiceType } from '@/services/client/service/service.types';
 
 interface ServiceStoreState {
   selected: ServiceType | null;

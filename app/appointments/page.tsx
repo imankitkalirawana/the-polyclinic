@@ -1,6 +1,6 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
-import Appointments from '@/components/client/appointments/all';
+import Appointments from '@/components/dashboard/appointments/all';
 import { AppointmentApi } from '@/services/client/appointment';
 
 export default async function AppointmentsPage() {

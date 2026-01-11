@@ -3,7 +3,7 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 
 import { getServerSession } from '@/lib/serverAuth';
 import NewUser from '@/components/dashboard/users/new';
-import { getAllCountries } from '@/services/external/api';
+import { getAllCountries } from '@/services/external/external.api';
 import { getSubdomain } from '@/auth/sub-domain';
 
 export default async function Page() {
