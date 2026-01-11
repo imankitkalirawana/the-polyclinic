@@ -6,7 +6,7 @@ import { useLocale } from '@react-aria/i18n';
 
 import { isDateUnavailable } from '../helpers';
 
-import CalendarTimeSelect from '@/components/client/appointments/all/booking/calendar-time-select';
+import CalendarTimeSelect from '@/components/dashboard/appointments/all/booking/calendar-time-select';
 import { TIMINGS } from '@/lib/config';
 
 export default function CreateAppointmentTimeSelection({

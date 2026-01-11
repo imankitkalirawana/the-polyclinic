@@ -1,6 +1,6 @@
 import { apiRequest } from '@/lib/axios';
 import { AppointmentQueueResponse, PaymentDetails, VerifyPaymentRequest } from './queue.types';
-import { PrescriptionFormSchema } from '@/components/client/appointments/queue/views/doctor/prescription-panel';
+import { PrescriptionFormSchema } from '@/components/dashboard/appointments/queue/views/doctor/prescription-panel';
 import { AppointmentQueueRequest } from './queue.types';
 import { ActivityLogResponse } from '@/services/common/activity/activity.types';
 

@@ -13,7 +13,7 @@ import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import {
   CreateAppointmentContentContainer,
   CreateAppointmentContentHeader,
-} from '@/components/client/appointments/(common)';
+} from '@/components/dashboard/appointments/(common)';
 
 function AvailabilityChip({ date }: { date: Date | undefined }) {
   if (!date || !isValid(date)) {

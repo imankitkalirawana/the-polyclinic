@@ -13,7 +13,7 @@ import { YearView } from './views/year';
 import { CalendarHeader } from './header';
 import { views } from './types';
 
-import CreateAppointment from '@/components/client/appointments/create';
+import CreateAppointment from '@/components/dashboard/appointments/create';
 import { AppointmentType } from '@/services/client/appointment';
 import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
 

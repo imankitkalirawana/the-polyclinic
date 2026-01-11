@@ -1,7 +1,7 @@
 import { AppointmentQueueApi } from './queue.api';
 import { useGenericMutation } from '@/services/useGenericMutation';
 import { useGenericQuery } from '@/services/useGenericQuery';
-import { PrescriptionFormSchema } from '@/components/client/appointments/queue/views/doctor/prescription-panel';
+import { PrescriptionFormSchema } from '@/components/dashboard/appointments/queue/views/doctor/prescription-panel';
 import { AppointmentQueueRequest } from './queue.types';
 import { saveAs } from 'file-saver';
 

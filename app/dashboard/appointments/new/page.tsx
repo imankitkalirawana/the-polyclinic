@@ -1,7 +1,7 @@
 import { unauthorized } from 'next/navigation';
 
 import { getServerSession } from '@/lib/serverAuth';
-import NewAppointment from '@/components/client/appointments/create';
+import NewAppointment from '@/components/dashboard/appointments/create';
 import { ORGANIZATION_USER_ROLES, OrganizationUser } from '@/services/common/user';
 
 export default async function NewAppointmentPage() {

@@ -1,6 +1,6 @@
 'use client';
 
-import { Calendar } from '@/components/client/appointments/all/calendar';
+import { Calendar } from '@/components/dashboard/appointments/all/calendar';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { useAllAppointments } from '@/services/client/appointment';
 

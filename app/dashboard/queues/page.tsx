@@ -1,11 +1,11 @@
-import QueuesDoctorView from '@/components/client/appointments/queue/views/doctor';
+import QueuesDoctorView from '@/components/dashboard/appointments/queue/views/doctor';
 import { AppointmentQueueApi } from '@/services/client/appointment/queue/queue.api';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { loadSearchParams } from './search-params';
 import { SearchParams } from 'nuqs/server';
 import { getServerSession } from '@/lib/serverAuth';
 import { Role } from '@/services/common/user';
-import DefaultQueueView from '@/components/client/appointments/queue/views/default';
+import DefaultQueueView from '@/components/dashboard/appointments/queue/views/default';
 
 type PageProps = {
   searchParams: Promise<SearchParams>;

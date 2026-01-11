@@ -12,7 +12,7 @@ import {
   CreateAppointmentContentContainer,
   CreateAppointmentContentHeader,
   SearchInput,
-} from '@/components/client/appointments/(common)';
+} from '@/components/dashboard/appointments/(common)';
 import { PatientType, useAllPatients } from '@/services/client/patient';
 import { useFormContext } from 'react-hook-form';
 import { useState } from 'react';

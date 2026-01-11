@@ -7,7 +7,7 @@ import {
   generateTimeSlots,
   getDateTime,
   getTimeSlot,
-} from '@/components/client/appointments/all/booking/helper';
+} from '@/components/dashboard/appointments/all/booking/helper';
 
 const timeSlots = generateTimeSlots();
 

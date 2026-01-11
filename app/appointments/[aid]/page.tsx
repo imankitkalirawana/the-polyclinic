@@ -1,6 +1,6 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
-import Appointment from '@/components/client/appointments/id';
+import Appointment from '@/components/dashboard/appointments/id';
 import { AppointmentApi } from '@/services/client/appointment';
 
 interface Props {

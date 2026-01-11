@@ -8,7 +8,7 @@ import CustomRadio from '@/components/ui/custom-radio';
 import { AppointmentType } from '@/services/client/appointment';
 import { useDebounce } from '@/hooks/useDebounce';
 import Fuse from 'fuse.js';
-import { SearchInput } from '@/components/client/appointments/(common)';
+import { SearchInput } from '@/components/dashboard/appointments/(common)';
 import { usePreviousAppointments } from '@/services/client/patient';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { format } from 'date-fns';

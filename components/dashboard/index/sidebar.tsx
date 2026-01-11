@@ -1,5 +1,5 @@
 'use client';
-import { DayView } from '@/components/client/appointments/all/views/day';
+import { DayView } from '@/components/dashboard/appointments/all/views/day';
 import { AppointmentType } from '@/services/client/appointment';
 import { Calendar } from '@heroui/react';
 import { getLocalTimeZone, today } from '@internationalized/date';

@@ -193,7 +193,7 @@ const VerticalCollapsibleSteps = React.forwardRef<HTMLButtonElement, VerticalCol
                         <m.div animate={status} className="relative">
                           <m.div
                             className={cn(
-                              'relative flex h-[34px] w-[34px] items-center justify-center rounded-full border-medium text-large font-semibold text-default-foreground',
+                              'relative flex h-[34px] w-[34px] items-center justify-center rounded-full border-medium font-semibold text-default-foreground text-large',
                               {
                                 'shadow-lg': status === 'complete',
                               }
@@ -232,7 +232,7 @@ const VerticalCollapsibleSteps = React.forwardRef<HTMLButtonElement, VerticalCol
                       <div>
                         <div
                           className={cn(
-                            'text-medium font-medium text-default-foreground transition-[color,opacity] duration-300 group-active:opacity-80',
+                            'font-medium text-default-foreground transition-[color,opacity] duration-300 text-medium group-active:opacity-80',
                             {
                               'text-default-500': status === 'inactive',
                             }
@@ -242,7 +242,7 @@ const VerticalCollapsibleSteps = React.forwardRef<HTMLButtonElement, VerticalCol
                         </div>
                         <div
                           className={cn(
-                            'text-tiny text-default-600 transition-[color,opacity] duration-300 group-active:opacity-80 lg:text-small',
+                            'text-default-600 transition-[color,opacity] duration-300 text-tiny group-active:opacity-80 lg:text-small',
                             {
                               'text-default-500': status === 'inactive',
                             }
