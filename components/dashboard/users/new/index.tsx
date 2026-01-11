@@ -13,7 +13,7 @@ import { GENDERS } from '@/lib/constants';
 import { generateEmail, generatePhoneNumber } from '@/lib/utils';
 
 import { useCreateUser } from '@/services/common/user/user.query';
-import { CreateUser } from '@/services/common/user/user.types';
+import { CreateUserRequest } from '@/services/common/user/user.types';
 import { createUserSchema } from '@/services/common/user/user.validation';
 import { Role } from '@/services/common/user/user.constants';
 import { useQueryState } from 'nuqs';
@@ -29,7 +29,7 @@ export default function NewUser({ role = Role.PATIENT }: { role?: Role }) {
     defaultValue: '/dashboard/users',
   });
 
-  const form = useForm<CreateUser>({
+  const form = useForm<CreateUserRequest>({
     resolver: zodResolver(createUserSchema),
     defaultValues: {
       name: '',
@@ -48,7 +48,7 @@ export default function NewUser({ role = Role.PATIENT }: { role?: Role }) {
 
   const canAutofill = user?.role === Role.ADMIN;
 
-  const onSubmit = async (values: CreateUser) => {
+  const onSubmit = async (values: CreateUserRequest) => {
     await createUser(values, {
       onSuccess: () => {
         router.push(redirectUrl);

@@ -1,12 +1,10 @@
 import Modal from '@/components/ui/modal';
 import { useForm } from 'react-hook-form';
-import { NewPatientRequest } from '@/services/client/patient/patient.types';
-import { Input, NumberInput, Select, SelectItem } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { newPatientSchema } from '@/services/client/patient/patient.validation';
-import { GENDERS } from '@/lib/constants';
-import { useCreatePatient } from '@/services/client/patient/patient.query';
 import NewUser from '@/components/dashboard/users/new';
+import { CreateUserRequest } from '@/services/common/user/user.types';
+import { createUserSchema } from '@/services/common/user/user.validation';
+import { useCreateUser } from '@/services/common/user/user.query';
 
 export default function NewPatient({
   onClose,
@@ -15,26 +13,14 @@ export default function NewPatient({
   onClose: () => void;
   onSuccess?: (id: string) => void;
 }) {
-  const form = useForm<NewPatientRequest>({
-    resolver: zodResolver(newPatientSchema),
+  const form = useForm<CreateUserRequest>({
+    resolver: zodResolver(createUserSchema),
   });
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = form;
+  const { mutate: createUser } = useCreateUser();
 
-  const { mutate: createPatient } = useCreatePatient();
-
-  const onSubmit = (data: NewPatientRequest) => {
-    createPatient(data, {
-      onSuccess: (result) => {
-        if (result.success && result.data?.id) {
-          onSuccess?.(result.data.id);
-        }
-      },
-    });
+  const onSubmit = (data: CreateUserRequest) => {
+    createUser(data);
   };
 
   const renderBody = () => {
@@ -53,7 +39,7 @@ export default function NewPatient({
         children: 'Create',
         whileSubmitting: 'Creating patient...',
       }}
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={form.handleSubmit(onSubmit)}
     />
   );
 }

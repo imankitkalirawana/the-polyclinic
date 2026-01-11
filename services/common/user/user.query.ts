@@ -1,4 +1,4 @@
-import { CreateUser, UpdateUser } from './user.types';
+import { CreateUserRequest, UpdateUserRequest } from './user.types';
 import { UserApi } from './user.api';
 import { useGenericMutation } from '@/services/useGenericMutation';
 import { useGenericQuery } from '@/services/useGenericQuery';
@@ -30,14 +30,14 @@ export const useUserWithID = (id?: string) =>
 
 export const useCreateUser = () => {
   return useGenericMutation({
-    mutationFn: (user: CreateUser) => UserApi.create(user),
+    mutationFn: (user: CreateUserRequest) => UserApi.create(user),
     invalidateAllQueries: true,
   });
 };
 
 export const useUpdateUser = () => {
   return useGenericMutation({
-    mutationFn: ({ id, data }: { id: string; data: UpdateUser }) => UserApi.update(id, data),
+    mutationFn: ({ id, data }: { id: string; data: UpdateUserRequest }) => UserApi.update(id, data),
     invalidateAllQueries: true,
   });
 };

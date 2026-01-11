@@ -1,12 +1,12 @@
 import { useFormContext } from 'react-hook-form';
-import { CreateUser } from '@/services/common/user/user.types';
+import { CreateUserRequest } from '@/services/common/user/user.types';
 import { Role } from '@/services/common/user/user.constants';
 import CommonFields from './common-fields';
 import PatientFields from './patient-fields';
 import DoctorFields from './doctor-fields';
 
 export default function NewUserForm() {
-  const form = useFormContext<CreateUser>();
+  const form = useFormContext<CreateUserRequest>();
   const role = form.watch('role');
 
   return (

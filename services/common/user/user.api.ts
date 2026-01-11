@@ -1,5 +1,5 @@
 import { apiRequest } from '@/lib/axios';
-import { CreateUser, UserType, UpdateUser } from './user.types';
+import { CreateUserRequest, UserType, UpdateUserRequest } from './user.types';
 
 export class UserApi {
   private static API_BASE = '/client/users';
@@ -31,7 +31,7 @@ export class UserApi {
     });
   }
 
-  static async create(data: CreateUser) {
+  static async create(data: CreateUserRequest) {
     return await apiRequest<UserType>({
       url: this.API_BASE,
       method: 'POST',
@@ -39,7 +39,7 @@ export class UserApi {
     });
   }
 
-  static async update(id: string, data: UpdateUser) {
+  static async update(id: string, data: UpdateUserRequest) {
     return await apiRequest<UserType>({
       url: `${this.API_BASE}/${id}`,
       method: 'PUT',

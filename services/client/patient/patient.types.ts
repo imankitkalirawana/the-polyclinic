@@ -1,5 +1,3 @@
-import { z } from 'zod';
-import { newPatientSchema } from './patient.validation';
 import { Base, Gender } from '@/types';
 
 export interface PatientType extends Base {
@@ -12,5 +10,3 @@ export interface PatientType extends Base {
   age?: number;
   address?: string | null;
 }
-
-export type NewPatientRequest = z.infer<typeof newPatientSchema>;
