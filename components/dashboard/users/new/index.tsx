@@ -3,122 +3,56 @@
 import React from 'react';
 import { useRouter } from 'nextjs-toploader/app';
 import { useSession } from '@/lib/providers/session-provider';
-import {
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Form,
-  Input,
-  NumberInput,
-  ScrollShadow,
-  Select,
-  SelectItem,
-  Textarea,
-  Tooltip,
-} from '@heroui/react';
-import { useFormik } from 'formik';
+import { Button, Card, CardBody, CardHeader } from '@heroui/react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { faker } from '@faker-js/faker';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 import { GENDERS } from '@/lib/constants';
-import { generateEmail, generatePhoneNumber, toTitleCase } from '@/lib/utils';
+import { generateEmail, generatePhoneNumber } from '@/lib/utils';
 
 import { useCreateUser } from '@/services/common/user/user.query';
-import {
-  CreateUser,
-  createUserSchema,
-  ORGANIZATION_USER_ROLES,
-  SYSTEM_USER_ROLE,
-  UnifiedUser,
-} from '@/services/common/user';
-import { withZodSchema } from '@/lib/utils';
+import { CreateUser, createUserSchema, Role } from '@/services/common/user';
 import { useQueryState } from 'nuqs';
+import DashboardFooter from '@/components/ui/dashboard/footer';
+import NewUserFormInputs from './new-user-form-inputs';
 
-// TODO: Remove this after the roles are implemented
-const TEMP_DISABLED_ROLES = [ORGANIZATION_USER_ROLES.nurse, ORGANIZATION_USER_ROLES.pharmacist];
-
-const getRolesByAccess = (
-  role: UnifiedUser['role'] | null | undefined,
-  organization?: string | null
-) => {
-  if (organization) {
-    switch (role) {
-      case SYSTEM_USER_ROLE.superadmin:
-      case SYSTEM_USER_ROLE.moderator:
-      case SYSTEM_USER_ROLE.ops:
-        return Object.values(ORGANIZATION_USER_ROLES);
-      case ORGANIZATION_USER_ROLES.admin:
-        return Object.values(ORGANIZATION_USER_ROLES);
-      case ORGANIZATION_USER_ROLES.receptionist:
-        return [ORGANIZATION_USER_ROLES.patient];
-      default:
-        return [];
-    }
-  } else {
-    switch (role) {
-      case SYSTEM_USER_ROLE.superadmin:
-        return Object.values(SYSTEM_USER_ROLE);
-      case SYSTEM_USER_ROLE.moderator:
-        return Object.values(SYSTEM_USER_ROLE).filter(
-          (r) => r !== SYSTEM_USER_ROLE.superadmin && r !== SYSTEM_USER_ROLE.moderator
-        );
-      default:
-        return [];
-    }
-  }
-};
-
-export default function NewUser({ organization }: { organization?: string | null }) {
+export default function NewUser() {
   const router = useRouter();
   const { user } = useSession();
+  const createUser = useCreateUser();
+
   const [redirectUrl] = useQueryState('redirectUrl', {
     defaultValue: '/dashboard/users',
   });
-  const [queryRole] = useQueryState('role', {
-    defaultValue: organization ? ORGANIZATION_USER_ROLES.patient : SYSTEM_USER_ROLE.ops,
-  });
-  const createUser = useCreateUser();
 
-  const formik = useFormik<CreateUser>({
-    initialValues: {
+  const form = useForm<CreateUser>({
+    resolver: zodResolver(createUserSchema),
+    defaultValues: {
       name: '',
       email: '',
-      role: queryRole as CreateUser['role'],
-      organization,
-    },
-    validate: withZodSchema(createUserSchema),
-    onSubmit: async (values) => {
-      await createUser.mutateAsync(values);
-      router.push(redirectUrl);
+      role: Role.PATIENT,
     },
   });
 
   const handleAutofill = () => {
     const name = faker.person.fullName();
-    formik.setFieldValue('name', name);
-    formik.setFieldValue('email', generateEmail(name));
-    formik.setFieldValue('phone', generatePhoneNumber());
-    formik.setFieldValue('gender', faker.helpers.arrayElement(GENDERS));
-    formik.setFieldValue('dob', faker.date.birthdate().toISOString().split('T')[0]);
+    form.setValue('name', name);
+    form.setValue('email', generateEmail(name));
+    form.setValue('phone', generatePhoneNumber());
+    form.setValue('gender', faker.helpers.arrayElement(GENDERS));
   };
 
-  const roles = getRolesByAccess(SYSTEM_USER_ROLE.moderator, organization);
+  const canAutofill = user?.role === Role.ADMIN;
 
-  const isDoctor =
-    formik.values.role === ORGANIZATION_USER_ROLES.doctor &&
-    user?.role === ORGANIZATION_USER_ROLES.admin;
+  const onSubmit = async (values: CreateUser) => {
+    await createUser.mutateAsync(values);
+    router.push(redirectUrl);
+  };
 
   return (
-    <Card
-      className="bg-transparent p-2 shadow-none"
-      as={Form}
-      onSubmit={(e) => {
-        e.preventDefault();
-        formik.handleSubmit();
-      }}
-    >
+    <Card className="bg-transparent p-2 shadow-none">
       <CardHeader className="items-center justify-between px-4 pb-0 pt-4">
         <div>
           <h1 className="text-large">Add New User</h1>
@@ -126,9 +60,7 @@ export default function NewUser({ organization }: { organization?: string | null
             Fields with <span className="text-red-500">*</span> are required
           </p>
         </div>
-        {(
-          [SYSTEM_USER_ROLE.superadmin, ORGANIZATION_USER_ROLES.admin] as UnifiedUser['role'][]
-        ).includes(user?.role as UnifiedUser['role']) && (
+        {canAutofill && (
           <Button
             startContent={<Icon icon="solar:magic-stick-3-bold-duotone" width={16} />}
             variant="flat"
@@ -139,210 +71,22 @@ export default function NewUser({ organization }: { organization?: string | null
         )}
       </CardHeader>
       <CardBody>
-        <ScrollShadow className="grid grid-cols-1 gap-4 p-1 md:grid-cols-2">
-          <Input
-            isRequired
-            label="Name"
-            placeholder={isDoctor ? 'eg. Dr. John Doe' : 'eg. John Doe'}
-            name="name"
-            value={formik.values.name}
-            onChange={formik.handleChange}
-            isInvalid={!!(formik.touched.name && formik.errors.name)}
-            errorMessage={formik.errors.name}
-          />
-          <Input
-            isRequired
-            label="Email"
-            placeholder="Enter email"
-            name="email"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            isInvalid={!!(formik.touched.email && formik.errors.email)}
-            errorMessage={formik.touched.email && formik.errors.email}
-            endContent={
-              user?.role === ORGANIZATION_USER_ROLES.admin && (
-                <Tooltip content="Generate a random email">
-                  <Button
-                    isIconOnly
-                    radius="full"
-                    size="sm"
-                    isDisabled={!formik.values.name}
-                    onPress={() => {
-                      const email = generateEmail(formik.values.name);
-                      formik.setFieldValue('email', email);
-                    }}
-                  >
-                    <Icon icon="solar:refresh-bold" />
-                  </Button>
-                </Tooltip>
-              )
-            }
-          />
-
-          {roles.length > 0 && (
-            <Select
-              isRequired
-              disallowEmptySelection
-              label="Role"
-              placeholder="Select Role"
-              selectedKeys={[formik.values.role]}
-              name="role"
-              onChange={formik.handleChange}
-              isInvalid={!!(formik.touched.role && formik.errors.role)}
-              errorMessage={formik.touched.role && formik.errors.role}
-              items={roles.map((role) => ({
-                label: toTitleCase(role),
-                value: role,
-              }))}
-              disabledKeys={TEMP_DISABLED_ROLES}
-            >
-              {(item) => <SelectItem key={item.value}>{item.label}</SelectItem>}
-            </Select>
-          )}
-
-          <Input
-            label="Phone Number"
-            placeholder="Enter phone number"
-            name="phone"
-            onChange={formik.handleChange}
-            isInvalid={!!(formik.touched.phone && formik.errors.phone)}
-            endContent={
-              user?.role === ORGANIZATION_USER_ROLES.admin && (
-                <Tooltip content="Generate a random phone number">
-                  <Button
-                    isIconOnly
-                    radius="full"
-                    size="sm"
-                    onPress={() => {
-                      const phone = generatePhoneNumber();
-                      formik.setFieldValue('phone', phone);
-                    }}
-                  >
-                    <Icon icon="solar:refresh-bold" />
-                  </Button>
-                </Tooltip>
-              )
-            }
-            errorMessage={formik.touched.phone && formik.errors.phone}
-            value={formik.values.phone}
-            startContent={
-              <div className="pointer-events-none flex items-center">
-                <span className="text-default-400 text-small">+91</span>
-              </div>
-            }
-          />
-
-          {/* Patients fields */}
-
-          {formik.values.role === ORGANIZATION_USER_ROLES.patient && (
-            <>
-              <Select
-                label="Gender"
-                placeholder="Select Gender"
-                selectedKeys={[formik.values.gender || '']}
-                name="gender"
-                onChange={formik.handleChange}
-                isInvalid={!!(formik.touched.gender && formik.errors.gender)}
-                errorMessage={formik.touched.gender && formik.errors.gender}
-                items={GENDERS.map((gender) => ({
-                  label: gender.charAt(0).toUpperCase() + gender.slice(1),
-                  value: gender,
-                }))}
-              >
-                {(item) => <SelectItem key={item.value}>{item.label}</SelectItem>}
-              </Select>
-
-              <NumberInput
-                label="Age"
-                placeholder="Enter age"
-                value={formik.values.age || 0}
-                onChange={(value) =>
-                  formik.setFieldValue('age', parseInt(value.toString()) || undefined)
-                }
-                name="age"
-                isInvalid={!!(formik.touched.age && formik.errors.age)}
-                errorMessage={formik.touched.age && formik.errors.age}
-              />
-
-              <Input
-                label="Address"
-                placeholder="Enter address"
-                value={formik.values.address || ''}
-                onChange={formik.handleChange}
-                name="address"
-                isInvalid={!!(formik.touched.address && formik.errors.address)}
-                errorMessage={formik.touched.address && formik.errors.address}
-              />
-            </>
-          )}
-
-          {/* Doctor Fields */}
-
-          {isDoctor && (
-            <>
-              <Input
-                label="Specialization"
-                placeholder="eg. Cardiologist"
-                value={formik.values.specialization || ''}
-                onChange={formik.handleChange}
-                name="specialization"
-                isInvalid={!!(formik.touched.specialization && formik.errors.specialization)}
-                errorMessage={formik.touched.specialization && formik.errors.specialization}
-              />
-              <Input
-                label="Department"
-                placeholder="eg. Cardiology"
-                value={formik.values.department || ''}
-                onChange={formik.handleChange}
-                name="department"
-                isInvalid={!!(formik.touched.department && formik.errors.department)}
-                errorMessage={formik.touched.department && formik.errors.department}
-              />
-
-              <Input
-                label="Seating"
-                placeholder="eg. Room No, Floor"
-                value={formik.values.seating || ''}
-                onChange={formik.handleChange}
-                name="seating"
-                isInvalid={!!(formik.touched.seating && formik.errors.seating)}
-                errorMessage={formik.touched.seating && formik.errors.seating}
-              />
-              <Input
-                label="Education"
-                placeholder="eg. MBBS, MD"
-                value={formik.values.education || ''}
-                onChange={formik.handleChange}
-                name="education"
-                isInvalid={!!(formik.touched.education && formik.errors.education)}
-                errorMessage={formik.touched.education && formik.errors.education}
-              />
-              <Textarea
-                className="col-span-2"
-                label="Biography"
-                placeholder="eg. Experienced cardiologist"
-                value={formik.values.biography || ''}
-                onChange={formik.handleChange}
-                name="biography"
-                isInvalid={!!(formik.touched.biography && formik.errors.biography)}
-                errorMessage={formik.touched.biography && formik.errors.biography}
-              />
-            </>
-          )}
-        </ScrollShadow>
+        <FormProvider {...form}>
+          <NewUserFormInputs />
+        </FormProvider>
       </CardBody>
 
-      <CardFooter className="mt-4 justify-end gap-2">
+      <DashboardFooter>
         <Button
           color="primary"
           radius="full"
-          isLoading={formik.isSubmitting}
-          onPress={() => formik.handleSubmit()}
+          isLoading={createUser.isPending}
+          onPress={() => form.handleSubmit(onSubmit)}
           type="submit"
         >
           Create User
         </Button>
-      </CardFooter>
+      </DashboardFooter>
     </Card>
   );
 }
