@@ -34,7 +34,7 @@ export function generateEmail(name: string) {
   return faker.internet
     .email({
       firstName: name,
-      provider: 'divinely.dev',
+      provider: 'thepolyclinic.app',
     })
     .toLowerCase();
 }

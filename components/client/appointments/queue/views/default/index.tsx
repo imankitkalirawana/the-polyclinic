@@ -12,19 +12,18 @@ import { Table } from '@/components/ui/static-data-table';
 import {
   renderActions,
   renderChip,
-  renderCopyableText,
   renderDate,
   RenderUser,
 } from '@/components/ui/static-data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
 import { isSearchMatch } from '@/lib/utils';
 import { useDeleteUser } from '@/services/common/user/user.query';
-import { useSubdomain } from '@/hooks/useSubDomain';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { useAllAppointmentQueues } from '@/services/client/appointment/queue/queue.query';
 import { AppointmentQueueResponse } from '@/services/client/appointment/queue/queue.types';
 import Link from 'next/link';
 import QueueQuickLook from './quicklook';
+import { CopyText } from '@/components/ui/copy';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'sequenceNumber',
@@ -39,13 +38,12 @@ export default function DefaultQueueView() {
   const router = useRouter();
   const deleteModal = useDisclosure();
   const deleteDoctor = useDeleteUser();
-  const organization = useSubdomain();
   const [selectedQueue, setSelectedQueue] = useState<AppointmentQueueResponse | null>(null);
 
   const { data: queues, isLoading, isError, error } = useAllAppointmentQueues();
 
   const handleDelete = async (uid: string) => {
-    await deleteDoctor.mutateAsync({ uid, organization });
+    await deleteDoctor.mutateAsync(uid);
   };
 
   // Define columns with render functions
@@ -63,7 +61,7 @@ export default function DefaultQueueView() {
         name: 'Reference Number',
         uid: 'referenceNumber',
         sortable: true,
-        renderCell: (queue) => renderCopyableText(queue.referenceNumber),
+        renderCell: (queue) => <CopyText>{queue.referenceNumber}</CopyText>,
       },
       {
         name: 'Name',
@@ -77,17 +75,13 @@ export default function DefaultQueueView() {
         name: 'Email',
         uid: 'patient.email',
         sortable: true,
-        renderCell: (queue) => (
-          <div className="truncate lowercase text-default-foreground">{queue.patient.email}</div>
-        ),
+        renderCell: (queue) => <CopyText>{queue.patient.email}</CopyText>,
       },
       {
         name: 'Doctor',
         uid: 'doctor.name',
         sortable: true,
-        renderCell: (queue) => (
-          <div className="truncate text-default-foreground">{queue.doctor.name || 'N/A'}</div>
-        ),
+        renderCell: (queue) => <CopyText>{queue.doctor.name || 'N/A'}</CopyText>,
       },
       {
         name: 'Status',
@@ -99,9 +93,7 @@ export default function DefaultQueueView() {
         name: 'Seating',
         uid: 'seating',
         sortable: true,
-        renderCell: (queue) => (
-          <div className="truncate text-default-foreground">{queue.doctor.seating || 'N/A'}</div>
-        ),
+        renderCell: (queue) => <CopyText>{queue.doctor.seating || 'N/A'}</CopyText>,
       },
       {
         name: 'Created At',
@@ -113,9 +105,7 @@ export default function DefaultQueueView() {
         name: 'Booked By',
         uid: 'bookedByUser.name',
         sortable: true,
-        renderCell: (queue) => (
-          <RenderUser name={queue.bookedByUser.name} description={queue.bookedByUser.email} />
-        ),
+        renderCell: (queue) => <CopyText>{queue.bookedByUser.name}</CopyText>,
       },
       {
         name: 'Completed By',

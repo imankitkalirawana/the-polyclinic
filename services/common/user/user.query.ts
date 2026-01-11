@@ -31,20 +31,20 @@ export const useUserWithID = (id?: string) =>
 export const useCreateUser = () => {
   return useGenericMutation({
     mutationFn: (user: CreateUser) => User.create(user),
-    invalidateQueries: [['users'], ['organizations']],
+    invalidateAllQueries: true,
   });
 };
 
 export const useUpdateUser = () => {
   return useGenericMutation({
     mutationFn: ({ id, data }: { id: string; data: UpdateUser }) => User.update(id, data),
-    invalidateQueries: [],
+    invalidateAllQueries: true,
   });
 };
 
 export const useDeleteUser = () => {
   return useGenericMutation({
     mutationFn: (id: string) => User.delete(id),
-    invalidateQueries: [['users']],
+    invalidateAllQueries: true,
   });
 };

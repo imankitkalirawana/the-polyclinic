@@ -23,6 +23,13 @@ export const sectionItems: SidebarItem[] = [
         roles: ['ADMIN', 'RECEPTIONIST', 'DOCTOR', 'PATIENT'],
       },
       {
+        key: 'queues',
+        href: '/dashboard/queues',
+        icon: 'ph:coins-duotone',
+        title: 'Token Appointments',
+        roles: ['ADMIN', 'RECEPTIONIST', 'DOCTOR', 'PATIENT'],
+      },
+      {
         key: 'analytics',
         href: '/dashboard/analytics',
         icon: 'solar:graph-bold-duotone',

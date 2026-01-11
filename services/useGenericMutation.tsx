@@ -7,6 +7,7 @@ interface MutationConfig<TData extends ApiResponse, TVariables, TError = Error> 
   showToast?: boolean;
   successMessage?: string;
   errorMessage?: string;
+  invalidateAllQueries?: boolean;
   invalidateQueries?: string[][];
   invalidateQueriesWithVariables?: ({
     variables,
@@ -40,6 +41,7 @@ export const useGenericMutation = <TData extends ApiResponse, TVariables, TError
   mutationFn,
   successMessage,
   errorMessage,
+  invalidateAllQueries,
   invalidateQueries = [],
   invalidateQueriesWithVariables,
   onSuccess,
@@ -57,6 +59,10 @@ export const useGenericMutation = <TData extends ApiResponse, TVariables, TError
       return result;
     },
     onSuccess: (result, variables) => {
+      if (invalidateAllQueries) {
+        queryClient.invalidateQueries();
+      }
+
       // Invalidate static queries
       invalidateQueries.forEach((queryKey) => {
         queryClient.invalidateQueries(queryKey ? { queryKey } : undefined);

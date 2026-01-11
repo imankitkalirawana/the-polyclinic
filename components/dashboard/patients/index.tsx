@@ -33,8 +33,8 @@ export default function Patients() {
 
   const { data, isLoading, isError, error } = useAllPatients();
 
-  const handleDelete = async (id: string) => {
-    await deletePatient.mutateAsync(id);
+  const handleDelete = async (userId: string) => {
+    await deletePatient.mutateAsync(userId);
   };
 
   // Define columns with render functions
@@ -86,7 +86,7 @@ export default function Patients() {
             onView: () => router.push(`/dashboard/patients/${patient.id}`),
             onEdit: () => router.push(`/dashboard/patients/${patient.id}/edit`),
             key: patient.id,
-            onDelete: () => handleDelete(patient.userid),
+            onDelete: () => handleDelete(patient.userId),
           }),
       },
     ],

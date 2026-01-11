@@ -1,5 +1,10 @@
 import { AuthApi } from './auth.api';
-import { LoginRequest } from './auth.validation';
+import {
+  ForgotPasswordRequest,
+  LoginRequest,
+  SendOTPRequest,
+  VerifyOTPRequest,
+} from './auth.validation';
 import { useCookies } from '@/lib/providers/cookies-provider';
 import { useGenericMutation } from '@/services/useGenericMutation';
 
@@ -25,5 +30,23 @@ export const useLogout = () => {
       removeCookie('connect.sid', { path: '/' });
       window.location.href = '/auth/login';
     },
+  });
+};
+
+export const useSendOTP = () => {
+  return useGenericMutation({
+    mutationFn: (data: SendOTPRequest) => AuthApi.sendOTP(data),
+  });
+};
+
+export const useVerifyOTP = () => {
+  return useGenericMutation({
+    mutationFn: (data: VerifyOTPRequest) => AuthApi.verifyOTP(data),
+  });
+};
+
+export const useForgotPassword = () => {
+  return useGenericMutation({
+    mutationFn: (data: ForgotPasswordRequest) => AuthApi.forgotPassword(data),
   });
 };

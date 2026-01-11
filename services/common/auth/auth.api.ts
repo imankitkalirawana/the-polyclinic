@@ -1,12 +1,12 @@
 import {
   LoginRequest,
   RegistrationRequest,
-  ResetPasswordRequest,
   SendOTPRequest,
   VerifyOTPRequest,
 } from '@/services/common/auth';
 import { RegistrationResponse, VerifyOTPResponse } from './auth.types';
 import { apiRequest } from '@/lib/axios';
+import { ForgotPasswordRequest } from './auth.validation';
 
 export class AuthApi {
   private static baseUrl = '/client/auth';
@@ -17,13 +17,12 @@ export class AuthApi {
       method: 'POST',
       data,
     });
-    console.log('res', res);
     return res;
   }
 
   static async sendOTP(data: SendOTPRequest) {
     return await apiRequest({
-      url: `${this.baseUrl}/send-otp`,
+      url: `${this.baseUrl}/otp/request`,
       method: 'POST',
       data,
     });
@@ -31,7 +30,7 @@ export class AuthApi {
 
   static async verifyOTP(data: VerifyOTPRequest) {
     return await apiRequest<VerifyOTPResponse>({
-      url: `${this.baseUrl}/verify-otp`,
+      url: `${this.baseUrl}/otp/verify`,
       method: 'POST',
       data,
     });
@@ -53,9 +52,9 @@ export class AuthApi {
     });
   }
 
-  static async resetPassword(data: ResetPasswordRequest) {
+  static async forgotPassword(data: ForgotPasswordRequest) {
     return await apiRequest({
-      url: `${this.baseUrl}/reset-password`,
+      url: `${this.baseUrl}/forgot-password`,
       method: 'POST',
       data,
     });

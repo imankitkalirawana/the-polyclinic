@@ -3,7 +3,7 @@ import { newPatientSchema } from './patient.validation';
 import { Base, Gender } from '@/types';
 
 export interface PatientType extends Base {
-  userid: string;
+  userId: string;
   name: string;
   email: string;
   image?: string | null;
