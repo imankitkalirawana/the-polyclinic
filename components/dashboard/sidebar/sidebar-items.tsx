@@ -47,7 +47,7 @@ export const sectionItems: SidebarItem[] = [
             key: 'book-queue',
             href: '/dashboard/queues/new',
             title: 'Book New Appointment',
-            roles: [Role.ADMIN, Role.RECEPTIONIST, Role.DOCTOR, Role.PATIENT],
+            roles: [Role.ADMIN, Role.RECEPTIONIST, Role.PATIENT],
           },
           {
             key: 'all-queues',
@@ -176,6 +176,37 @@ export const sectionItems: SidebarItem[] = [
   // },
 ];
 
+// Helper function to filter a single item and its nested items recursively
+const filterItem = (item: SidebarItem, userRole: Role): SidebarItem | null => {
+  // Check if user has access to this item
+  const hasAccess = !item.roles || item.roles.length === 0 || item.roles.includes(userRole);
+
+  if (!hasAccess) {
+    return null;
+  }
+
+  // If item has nested items, recursively filter them
+  if (item.items && item.items.length > 0) {
+    const filteredNestedItems = item.items
+      .map((nestedItem) => filterItem(nestedItem, userRole))
+      .filter((item): item is SidebarItem => item !== null);
+
+    // If no nested items are visible, hide the parent item
+    if (filteredNestedItems.length === 0) {
+      return null;
+    }
+
+    // Return item with filtered nested items
+    return {
+      ...item,
+      items: filteredNestedItems,
+    };
+  }
+
+  // Return item as-is if no nested items
+  return item;
+};
+
 // Function to filter sidebar items based on user role
 export const getSidebarItems = (userRole?: Role | null): SidebarItem[] => {
   if (!userRole) {
@@ -185,14 +216,9 @@ export const getSidebarItems = (userRole?: Role | null): SidebarItem[] => {
   return sectionItems
     .map((section) => ({
       ...section,
-      items: section.items?.filter((item) => {
-        // If no roles specified, show to all users
-        if (!item.roles || item.roles.length === 0) {
-          return true;
-        }
-        // If roles specified, check if user has one of the required roles
-        return item.roles.includes(userRole);
-      }),
+      items: section.items
+        ?.map((item) => filterItem(item, userRole))
+        .filter((item) => item !== null),
     }))
     .filter((section) => section.items && section.items.length > 0);
 };

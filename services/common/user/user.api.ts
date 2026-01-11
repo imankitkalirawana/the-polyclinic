@@ -32,7 +32,7 @@ export class UserApi {
   }
 
   static async create(data: CreateUserRequest) {
-    return await apiRequest<UserType>({
+    return await apiRequest<UserType & { linked_id: string }>({
       url: this.API_BASE,
       method: 'POST',
       data,

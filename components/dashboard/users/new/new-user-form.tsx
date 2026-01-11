@@ -5,13 +5,13 @@ import CommonFields from './common-fields';
 import PatientFields from './patient-fields';
 import DoctorFields from './doctor-fields';
 
-export default function NewUserForm() {
+export default function NewUserForm({ lockRole }: { lockRole?: boolean }) {
   const form = useFormContext<CreateUserRequest>();
   const role = form.watch('role');
 
   return (
     <div className="grid grid-cols-1 gap-4 p-1 py-4 md:grid-cols-2 lg:grid-cols-3">
-      <CommonFields />
+      <CommonFields lockRole={lockRole} />
 
       {role === Role.PATIENT && <PatientFields />}
 

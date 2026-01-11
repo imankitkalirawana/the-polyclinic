@@ -27,7 +27,7 @@ export default function PatientSelection() {
 
   const debouncedSearch = useDebounce(search, 500);
 
-  const { data: patients } = useAllPatients(debouncedSearch);
+  const { data: patients, isLoading, isRefetching } = useAllPatients(debouncedSearch);
   const form = useFormContext<CreateAppointmentQueueFormValues>();
 
   const patientId = form.watch('appointment.patientId');
@@ -77,6 +77,7 @@ export default function PatientSelection() {
     >
       <div>
         <SearchInput
+          isLoading={isLoading || isRefetching}
           value={search}
           placeholder="Search by name, phone or email"
           onChange={(value) => {

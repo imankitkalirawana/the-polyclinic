@@ -28,10 +28,11 @@ export const useUserWithID = (id?: string) =>
     enabled: !!id,
   });
 
-export const useCreateUser = () => {
+export const useCreateUser = ({ showToast = true }: { showToast?: boolean } = {}) => {
   return useGenericMutation({
     mutationFn: (user: CreateUserRequest) => UserApi.create(user),
     invalidateAllQueries: true,
+    showToast,
   });
 };
 

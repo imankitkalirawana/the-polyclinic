@@ -6,7 +6,7 @@ import { CreateUserRequest } from '@/services/common/user/user.types';
 import { Role } from '@/services/common/user/user.constants';
 import { useSession } from '@/lib/providers/session-provider';
 
-export default function CommonFields() {
+export default function CommonFields({ lockRole }: { lockRole?: boolean }) {
   const form = useFormContext<CreateUserRequest>();
   const { user } = useSession();
 
@@ -57,7 +57,7 @@ export default function CommonFields() {
                     size="sm"
                     isDisabled={!name}
                     onPress={() => {
-                      const email = generateEmail(name || '');
+                      const email = generateEmail(name);
                       setValue('email', email, { shouldValidate: true, shouldDirty: true });
                     }}
                   >
@@ -106,34 +106,36 @@ export default function CommonFields() {
         )}
       />
 
-      <Controller
-        name="role"
-        control={control}
-        render={({ field }) => (
-          <Select
-            {...field}
-            isRequired
-            selectedKeys={field.value ? [field.value] : []}
-            onSelectionChange={(keys) => {
-              const selectedRole = Array.from(keys)[0];
-              if (typeof selectedRole === 'string') {
-                field.onChange(selectedRole as Role);
-              }
-            }}
-            disallowEmptySelection
-            label="Role"
-            placeholder="Select Role"
-            isInvalid={!!errors.role}
-            errorMessage={errors.role?.message}
-            items={Object.values(Role).map((role) => ({
-              label: toTitleCase(role),
-              value: role,
-            }))}
-          >
-            {(item) => <SelectItem key={item.value}>{item.label}</SelectItem>}
-          </Select>
-        )}
-      />
+      {!lockRole && (
+        <Controller
+          name="role"
+          control={control}
+          render={({ field }) => (
+            <Select
+              {...field}
+              isRequired
+              selectedKeys={field.value ? [field.value] : []}
+              onSelectionChange={(keys) => {
+                const selectedRole = Array.from(keys)[0];
+                if (typeof selectedRole === 'string') {
+                  field.onChange(selectedRole as Role);
+                }
+              }}
+              disallowEmptySelection
+              label="Role"
+              placeholder="Select Role"
+              isInvalid={!!errors.role}
+              errorMessage={errors.role?.message}
+              items={Object.values(Role).map((role) => ({
+                label: toTitleCase(role),
+                value: role,
+              }))}
+            >
+              {(item) => <SelectItem key={item.value}>{item.label}</SelectItem>}
+            </Select>
+          )}
+        />
+      )}
     </>
   );
 }

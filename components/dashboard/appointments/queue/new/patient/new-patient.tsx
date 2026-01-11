@@ -1,10 +1,12 @@
 import Modal from '@/components/ui/modal';
-import { useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import NewUser from '@/components/dashboard/users/new';
 import { CreateUserRequest } from '@/services/common/user/user.types';
 import { createUserSchema } from '@/services/common/user/user.validation';
 import { useCreateUser } from '@/services/common/user/user.query';
+import NewUserForm from '@/components/dashboard/users/new/new-user-form';
+import { Role } from '@/services/common/user/user.constants';
+import { addToast } from '@heroui/react';
 
 export default function NewPatient({
   onClose,
@@ -15,16 +17,33 @@ export default function NewPatient({
 }) {
   const form = useForm<CreateUserRequest>({
     resolver: zodResolver(createUserSchema),
+    defaultValues: {
+      role: Role.PATIENT,
+    },
   });
 
-  const { mutate: createUser } = useCreateUser();
+  const { mutateAsync: createUser } = useCreateUser({ showToast: false });
 
-  const onSubmit = (data: CreateUserRequest) => {
-    createUser(data);
+  const onSubmit = async (data: CreateUserRequest) => {
+    await createUser(data).then((response) => {
+      if (response.data?.linked_id) {
+        onSuccess?.(response.data.linked_id);
+      } else {
+        addToast({
+          title: 'An error occurred',
+          description: 'Failed to create patient. Please try again later.',
+          color: 'danger',
+        });
+      }
+    });
   };
 
   const renderBody = () => {
-    return <NewUser />;
+    return (
+      <FormProvider {...form}>
+        <NewUserForm lockRole />
+      </FormProvider>
+    );
   };
 
   return (

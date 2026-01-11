@@ -4,7 +4,10 @@ import { useFormContext, Controller } from 'react-hook-form';
 
 export default function DoctorFields() {
   const form = useFormContext<CreateUserRequest>();
-  const { control } = form;
+  const {
+    control,
+    formState: { errors },
+  } = form;
 
   return (
     <>
@@ -85,30 +88,18 @@ export default function DoctorFields() {
       <Controller
         name="experience"
         control={control}
-        render={({ field, fieldState }) => (
+        render={({ field }) => (
           <NumberInput
-            {...field}
-            value={field.value || undefined}
             label="Experience"
-            placeholder="eg. 10"
-            isInvalid={!!fieldState.error}
-            errorMessage={fieldState.error?.message}
-            endContent={<span className="text-default-500">years</span>}
-          />
-        )}
-      />
-
-      <Controller
-        name="education"
-        control={control}
-        render={({ field, fieldState }) => (
-          <Input
-            {...field}
-            value={field.value ?? ''}
-            label="Education"
-            placeholder="eg. MBBS, MD"
-            isInvalid={!!fieldState.error}
-            errorMessage={fieldState.error?.message}
+            placeholder="Enter experience"
+            value={field.value || undefined}
+            onChange={(value) => {
+              const numValue = value ? parseInt(value.toString(), 10) : undefined;
+              field.onChange(numValue);
+            }}
+            isInvalid={!!errors.experience}
+            errorMessage={errors.experience?.message}
+            endContent={<span className="text-default-500">year(s)</span>}
           />
         )}
       />
