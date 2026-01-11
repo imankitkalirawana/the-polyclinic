@@ -10,9 +10,10 @@ import { CircleChartCard } from './graph';
 import NoResults from '@/components/ui/no-results';
 import { convertMinutesToHoursAndMinutes } from '@/lib/utility';
 import { useServiceWithUID } from '@/services/client/service/service.query';
-import { AuthUser } from '@/services/common/user';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { format } from 'date-fns';
+import { Role } from '@/services/common/user/user.constants';
+import { Session } from '@/types/session';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   active: 'success',
@@ -29,7 +30,7 @@ const dummyData = {
   ],
 };
 
-export default function ServiceViewItem({ uid, session }: { uid: string; session: AuthUser }) {
+export default function ServiceViewItem({ uid, session }: { uid: string; session: Session }) {
   const { data: service, isError, isLoading } = useServiceWithUID(uid);
 
   if (isLoading) {
@@ -130,7 +131,9 @@ export default function ServiceViewItem({ uid, session }: { uid: string; session
               Book Appointment
             </Button>
             {session.user?.role &&
-              ['superadmin', 'moderator', 'ops'].includes(session.user.role) && (
+              [Role.ADMIN, Role.RECEPTIONIST, Role.DOCTOR, Role.PATIENT].includes(
+                session.user?.role
+              ) && (
                 <Tooltip content="Edit">
                   <Button
                     isIconOnly

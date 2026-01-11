@@ -1,8 +1,8 @@
 import { APP_INFO } from '@/lib/config';
-import { UnifiedUser } from '@/services/common/user';
+import { UserType } from '@/services/common/user/user.types';
 import { VerificationType } from '@/types';
 
-export function WelcomeUser(user: UnifiedUser) {
+export function WelcomeUser(user: UserType) {
   return `
     <html lang="en">
         <head>

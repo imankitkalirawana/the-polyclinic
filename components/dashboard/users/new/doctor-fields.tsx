@@ -1,5 +1,5 @@
 import { Input, NumberInput, Textarea } from '@heroui/react';
-import { CreateUser } from '@/services/common/user';
+import { CreateUser } from '@/services/common/user/user.types';
 import { useFormContext, Controller } from 'react-hook-form';
 
 export default function DoctorFields() {

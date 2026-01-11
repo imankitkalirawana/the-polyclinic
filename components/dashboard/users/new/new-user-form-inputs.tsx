@@ -1,5 +1,6 @@
 import { useFormContext } from 'react-hook-form';
-import { CreateUser, Role } from '@/services/common/user';
+import { CreateUser } from '@/services/common/user/user.types';
+import { Role } from '@/services/common/user/user.constants';
 import CommonFields from './common-fields';
 import PatientFields from './patient-fields';
 import DoctorFields from './doctor-fields';

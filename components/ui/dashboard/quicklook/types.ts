@@ -1,4 +1,4 @@
-import { UnifiedUser } from '@/services/common/user';
+import { Role } from '@/services/common/user/user.constants';
 import {
   ButtonProps as HeroButtonProps,
   DropdownItemProps as HeroDropdownItemProps,
@@ -28,10 +28,7 @@ export type DropdownItemProps<T extends string> = Omit<
 };
 
 export type PermissionProps<T extends string, D extends string> = Partial<
-  Record<
-    UnifiedUser['role'],
-    Array<ActionType<T> | DropdownKeyType<D>> | 'all' | 'none' | undefined
-  >
+  Record<Role, Array<ActionType<T> | DropdownKeyType<D>> | 'all' | 'none' | undefined>
 >;
 export interface QuickLookProps<T, A extends string, D extends string> {
   /**

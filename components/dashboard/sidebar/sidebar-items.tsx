@@ -1,5 +1,5 @@
-import { UnifiedUser } from '@/services/common/user';
 import { type SidebarItem, SidebarItemType } from './sidebar';
+import { Role } from '@/services/common/user/user.constants';
 
 // Extend SidebarItem to include roles
 
@@ -13,26 +13,26 @@ export const sectionItems: SidebarItem[] = [
         href: '/dashboard',
         icon: 'solar:home-2-bold-duotone',
         title: 'Home',
-        roles: ['superadmin', 'moderator', 'ops', 'ADMIN', 'RECEPTIONIST', 'DOCTOR', 'PATIENT'],
+        roles: [...Object.values(Role)],
       },
       {
         key: 'appointments',
         type: SidebarItemType.Nest,
         icon: 'solar:calendar-bold-duotone',
         title: 'Appointments',
-        roles: ['ADMIN', 'RECEPTIONIST', 'DOCTOR', 'PATIENT'],
+        roles: [Role.ADMIN, Role.RECEPTIONIST, Role.DOCTOR, Role.PATIENT],
         items: [
           {
             key: 'book-appointment',
             href: '/dashboard/appointments/create',
             title: 'New Appointment',
-            roles: ['ADMIN', 'RECEPTIONIST', 'DOCTOR', 'PATIENT'],
+            roles: [Role.ADMIN, Role.RECEPTIONIST, Role.DOCTOR, Role.PATIENT],
           },
           {
             key: 'all-appointments',
             href: '/dashboard/appointments?view=month',
             title: 'All Appointments',
-            roles: ['ADMIN', 'RECEPTIONIST', 'DOCTOR', 'PATIENT'],
+            roles: [Role.ADMIN, Role.RECEPTIONIST, Role.DOCTOR, Role.PATIENT],
           },
         ],
       },
@@ -41,19 +41,19 @@ export const sectionItems: SidebarItem[] = [
         type: SidebarItemType.Nest,
         icon: 'ph:coins-duotone',
         title: 'Token Appointments',
-        roles: ['ADMIN', 'RECEPTIONIST', 'DOCTOR', 'PATIENT'],
+        roles: [Role.ADMIN, Role.RECEPTIONIST, Role.DOCTOR, Role.PATIENT],
         items: [
           {
             key: 'book-queue',
             href: '/dashboard/queues/new',
             title: 'Book New Appointment',
-            roles: ['ADMIN', 'RECEPTIONIST', 'DOCTOR', 'PATIENT'],
+            roles: [Role.ADMIN, Role.RECEPTIONIST, Role.DOCTOR, Role.PATIENT],
           },
           {
             key: 'all-queues',
             href: '/dashboard/queues',
             title: 'All Appointments',
-            roles: ['ADMIN', 'RECEPTIONIST', 'DOCTOR', 'PATIENT'],
+            roles: [Role.ADMIN, Role.RECEPTIONIST, Role.DOCTOR, Role.PATIENT],
           },
         ],
       },
@@ -62,7 +62,7 @@ export const sectionItems: SidebarItem[] = [
         href: '/dashboard/analytics',
         icon: 'solar:graph-bold-duotone',
         title: 'Analytics',
-        roles: ['superadmin', 'ADMIN'],
+        roles: [Role.ADMIN],
       },
     ],
   },
@@ -75,21 +75,21 @@ export const sectionItems: SidebarItem[] = [
         href: '/dashboard/users',
         icon: 'solar:users-group-rounded-bold-duotone',
         title: 'Users',
-        roles: ['superadmin', 'moderator', 'ops', 'ADMIN', 'RECEPTIONIST'],
+        roles: [Role.ADMIN, Role.RECEPTIONIST, Role.DOCTOR],
       },
       {
         key: 'patients',
         href: '/dashboard/patients',
         icon: 'solar:user-heart-bold-duotone',
         title: 'Patients',
-        roles: ['ADMIN', 'RECEPTIONIST'],
+        roles: [Role.ADMIN, Role.RECEPTIONIST],
       },
       {
         key: 'doctors',
         href: '/dashboard/doctors',
         icon: 'solar:stethoscope-bold-duotone',
         title: 'Doctors',
-        roles: ['ADMIN'],
+        roles: [Role.ADMIN],
       },
     ],
   },
@@ -102,28 +102,28 @@ export const sectionItems: SidebarItem[] = [
         href: '/dashboard/organization',
         icon: 'solar:buildings-bold-duotone',
         title: 'Manage Organization',
-        roles: ['ADMIN'],
+        roles: [Role.ADMIN],
       },
       {
         key: 'services',
         href: '/dashboard/services',
         icon: 'solar:test-tube-minimalistic-bold-duotone',
         title: 'Services',
-        roles: ['ADMIN'],
+        roles: [Role.ADMIN],
       },
       {
         key: 'drugs',
         href: '/dashboard/drugs',
         icon: 'solar:pills-bold-duotone',
         title: 'Drugs',
-        roles: ['ADMIN'],
+        roles: [Role.ADMIN],
       },
       {
         key: 'departments',
         href: '/dashboard/departments',
         icon: 'solar:hospital-bold-duotone',
         title: 'Departments',
-        roles: ['ADMIN', 'RECEPTIONIST', 'PATIENT', 'DOCTOR'],
+        roles: [Role.ADMIN, Role.RECEPTIONIST, Role.DOCTOR, Role.PATIENT],
       },
     ],
   },
@@ -136,28 +136,28 @@ export const sectionItems: SidebarItem[] = [
         href: '/dashboard/organizations',
         icon: 'solar:buildings-bold-duotone',
         title: 'Organizations',
-        roles: ['superadmin', 'moderator', 'ops'],
+        roles: [Role.ADMIN],
       },
       {
         key: 'website',
         href: '/dashboard/website',
         icon: 'solar:card-bold-duotone',
         title: 'Website',
-        roles: ['superadmin'],
+        roles: [Role.ADMIN],
       },
       {
         key: 'emails',
         href: '/dashboard/emails',
         icon: 'solar:letter-bold-duotone',
         title: 'Emails',
-        roles: ['superadmin', 'moderator'],
+        roles: [Role.ADMIN],
       },
       {
         key: 'newsletters',
         href: '/dashboard/newsletters',
         icon: 'solar:inbox-bold-duotone',
         title: 'Newsletters',
-        roles: ['superadmin'],
+        roles: [Role.ADMIN],
       },
     ],
   },
@@ -177,7 +177,7 @@ export const sectionItems: SidebarItem[] = [
 ];
 
 // Function to filter sidebar items based on user role
-export const getSidebarItems = (userRole?: UnifiedUser['role'] | null): SidebarItem[] => {
+export const getSidebarItems = (userRole?: Role | null): SidebarItem[] => {
   if (!userRole) {
     return [];
   }

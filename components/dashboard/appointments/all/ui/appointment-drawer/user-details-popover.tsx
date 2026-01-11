@@ -1,9 +1,9 @@
 import { CellRenderer } from '@/components/ui/cell/rich-color/cell-renderer';
 import { renderChip, RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
-import { UnifiedUser } from '@/services/common/user';
 import { useUserWithID } from '@/services/common/user/user.query';
 import { Button, Card, CardBody, CardFooter, CardHeader, Link, Tooltip } from '@heroui/react';
+import { UserType } from '@/services/common/user/user.types';
 
 export const UserDetailsPopover = ({
   name,
@@ -30,7 +30,7 @@ export const UserDetailsPopover = ({
   );
 };
 
-const UserDetailsPopoverContent = ({ user }: { user?: UnifiedUser | null }) => {
+const UserDetailsPopoverContent = ({ user }: { user?: UserType | null }) => {
   if (!user) return <MinimalPlaceholder message="User not found..." isLoading={false} />;
 
   return (

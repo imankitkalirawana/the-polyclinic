@@ -8,14 +8,15 @@ import CellValue from '@/components/ui/cell-value';
 
 import { castData } from '@/lib/utils';
 import { useUserWithID } from '@/services/common/user/user.query';
-import { OrganizationUser, UnifiedUser } from '@/services/common/user';
+import { UserType } from '@/services/common/user/user.types';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { format } from 'date-fns';
+import { Role } from '@/services/common/user/user.constants';
 
 export default function UserCard({ id }: { id: string }) {
   const { data, isError, isLoading } = useUserWithID(id);
 
-  const user = castData<UnifiedUser>(data);
+  const user = castData<UserType>(data);
 
   if (isError) {
     return <p>Error fetching user data</p>;
@@ -29,11 +30,10 @@ export default function UserCard({ id }: { id: string }) {
     return <p>User not found</p>;
   }
 
-  const actionButton: Record<OrganizationUser['role'], React.ReactNode> = {
+  const actionButton: Record<Role, React.ReactNode> = {
     ADMIN: null,
     RECEPTIONIST: null,
     NURSE: null,
-    PHARMACIST: null,
     PATIENT: (
       <Button as={Link} href={`/appointments?id=${user.id}`} variant="flat" color="secondary">
         Book Appointment
@@ -73,9 +73,7 @@ export default function UserCard({ id }: { id: string }) {
           />
         </ScrollShadow>
       </CardBody>
-      <CardFooter className="justify-end">
-        {actionButton[user.role as OrganizationUser['role']]}
-      </CardFooter>
+      <CardFooter className="justify-end">{actionButton[user.role]}</CardFooter>
     </Card>
   );
 }

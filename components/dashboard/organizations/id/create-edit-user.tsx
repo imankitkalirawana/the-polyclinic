@@ -4,25 +4,21 @@ import Modal from '@/components/ui/modal';
 
 import { Icon } from '@iconify/react';
 import { OrganizationType } from '@/services/system/organization';
-import {
-  CreateUser,
-  createUserSchema,
-  ORGANIZATION_USER_ROLES,
-  OrganizationUser,
-  UpdateUser,
-  updateUserSchema,
-} from '@/services/common/user';
+import { CreateUser, UpdateUser, UserType } from '@/services/common/user/user.types';
+import { createUserSchema } from '@/services/common/user/user.validation';
+import { updateUserSchema } from '@/services/common/user/user.validation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toTitleCase } from '@/lib/utils';
 import { useCreateUser, useUpdateUser } from '@/services/common/user/user.query';
+import { Role } from '@/services/common/user/user.constants';
 
 interface UserModalProps {
   isOpen: boolean;
   onClose: () => void;
   organization: OrganizationType;
   mode: 'create' | 'edit';
-  user?: OrganizationUser;
+  user?: UserType;
 }
 
 export default function UserModal({ isOpen, onClose, organization, mode, user }: UserModalProps) {
@@ -111,7 +107,7 @@ export default function UserModal({ isOpen, onClose, organization, mode, user }:
             errorMessage={errors.role?.message}
             {...register('role')}
           >
-            {Object.values(ORGANIZATION_USER_ROLES).map((role) => (
+            {Object.values(Role).map((role) => (
               <SelectItem key={role} textValue={toTitleCase(role)}>
                 {toTitleCase(role)}
               </SelectItem>

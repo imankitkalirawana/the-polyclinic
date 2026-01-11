@@ -1,3 +1,5 @@
+import { Role } from '@/services/common/user/user.constants';
+
 export const MAX_APPOINTMENTS_IN_CELL = 2;
 
 export const weekdays = [
@@ -31,4 +33,4 @@ export const weekdays = [
   },
 ];
 
-export const allowedRolesToCreateAppointment = ['admin', 'receptionist', 'patient'];
+export const allowedRolesToCreateAppointment = [Role.ADMIN, Role.RECEPTIONIST, Role.PATIENT];

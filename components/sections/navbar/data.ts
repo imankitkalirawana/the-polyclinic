@@ -1,22 +1,18 @@
 // role based navbar
 
-import {
-  ORGANIZATION_USER_ROLES,
-  SYSTEM_USER_ROLE,
-  UNIFIED_USER_ROLES,
-} from '@/services/common/user';
+import { Role } from '@/services/common/user/user.constants';
 
 export const navItems = [
   {
     name: 'Home',
     href: '/',
-    roles: [...UNIFIED_USER_ROLES],
+    roles: [...Object.values(Role)],
   },
   {
     name: 'Dashboard',
     href: '/dashboard',
     thumbnail: '/assets/navbar/dashboard.webp',
-    roles: [...UNIFIED_USER_ROLES],
+    roles: [...Object.values(Role)],
     subItems: [
       {
         title: 'My Dashboard',
@@ -25,30 +21,26 @@ export const navItems = [
             name: 'Overview',
             href: '/dashboard',
             icon: 'solar:window-frame-bold-duotone',
-            roles: [...UNIFIED_USER_ROLES],
+            roles: [...Object.values(Role)],
           },
 
           {
             name: 'Users',
             href: '/dashboard/users',
             icon: 'solar:users-group-rounded-bold-duotone',
-            roles: [
-              ...Object.values(SYSTEM_USER_ROLE),
-              ORGANIZATION_USER_ROLES.admin,
-              ORGANIZATION_USER_ROLES.receptionist,
-            ] as const,
+            roles: [...Object.values(Role)] as const,
           },
           {
             name: 'Drugs',
             href: '/dashboard/drugs',
             icon: 'solar:pills-bold-duotone',
-            roles: [ORGANIZATION_USER_ROLES.admin] as const,
+            roles: [Role.ADMIN] as const,
           },
           {
             name: 'Available Slots',
             href: '/dashboard/doctors/slots',
             icon: 'solar:calendar-bold-duotone',
-            roles: [ORGANIZATION_USER_ROLES.doctor] as const,
+            roles: [Role.DOCTOR] as const,
           },
         ],
       },
@@ -59,13 +51,13 @@ export const navItems = [
             name: 'Stats',
             href: '/dashboard/admin/stats',
             icon: 'solar:graph-new-bold-duotone',
-            roles: [SYSTEM_USER_ROLE.superadmin, ORGANIZATION_USER_ROLES.admin] as const,
+            roles: [Role.ADMIN] as const,
           },
           {
             name: 'Settings',
             href: '/dashboard/admin/settings',
             icon: 'solar:settings-bold-duotone',
-            roles: [SYSTEM_USER_ROLE.superadmin, ORGANIZATION_USER_ROLES.admin] as const,
+            roles: [Role.ADMIN] as const,
           },
         ],
       },
@@ -75,12 +67,7 @@ export const navItems = [
     name: 'Appointments',
     href: '/appointments',
     thumbnail: '/assets/navbar/appointments.png',
-    roles: [
-      ORGANIZATION_USER_ROLES.admin,
-      ORGANIZATION_USER_ROLES.receptionist,
-      ORGANIZATION_USER_ROLES.doctor,
-      ORGANIZATION_USER_ROLES.patient,
-    ] as const,
+    roles: [Role.ADMIN, Role.RECEPTIONIST, Role.DOCTOR, Role.PATIENT] as const,
     subItems: [
       {
         title: 'Appointments',
@@ -89,22 +76,13 @@ export const navItems = [
             name: 'Create New',
             href: '/appointments/create',
             icon: 'solar:pen-new-round-bold-duotone',
-            roles: [
-              ORGANIZATION_USER_ROLES.admin,
-              ORGANIZATION_USER_ROLES.receptionist,
-              ORGANIZATION_USER_ROLES.patient,
-            ] as const,
+            roles: [Role.ADMIN, Role.RECEPTIONIST, Role.PATIENT] as const,
           },
           {
             name: 'Generate Token',
             href: '/appointments/queues/book',
             icon: 'solar:clipboard-list-bold-duotone',
-            roles: [
-              ORGANIZATION_USER_ROLES.patient,
-              ORGANIZATION_USER_ROLES.doctor,
-              ORGANIZATION_USER_ROLES.receptionist,
-              ORGANIZATION_USER_ROLES.admin,
-            ] as const,
+            roles: [Role.PATIENT, Role.DOCTOR, Role.RECEPTIONIST, Role.ADMIN] as const,
           },
         ],
       },
@@ -115,34 +93,19 @@ export const navItems = [
             name: 'My Schedules',
             href: '/appointments?view=schedule',
             icon: 'solar:calendar-bold-duotone',
-            roles: [
-              ORGANIZATION_USER_ROLES.admin,
-              ORGANIZATION_USER_ROLES.receptionist,
-              ORGANIZATION_USER_ROLES.patient,
-              ORGANIZATION_USER_ROLES.doctor,
-            ] as const,
+            roles: [Role.ADMIN, Role.RECEPTIONIST, Role.PATIENT, Role.DOCTOR] as const,
           },
           {
             name: 'All Appointments',
             href: '/appointments?view=month',
             icon: 'solar:clipboard-list-bold-duotone',
-            roles: [
-              ORGANIZATION_USER_ROLES.admin,
-              ORGANIZATION_USER_ROLES.receptionist,
-              ORGANIZATION_USER_ROLES.patient,
-              ORGANIZATION_USER_ROLES.doctor,
-            ] as const,
+            roles: [Role.ADMIN, Role.RECEPTIONIST, Role.PATIENT, Role.DOCTOR] as const,
           },
           {
             name: 'Token Appointments',
             href: '/appointments/queues',
             icon: 'solar:clipboard-list-bold-duotone',
-            roles: [
-              ORGANIZATION_USER_ROLES.admin,
-              ORGANIZATION_USER_ROLES.receptionist,
-              ORGANIZATION_USER_ROLES.patient,
-              ORGANIZATION_USER_ROLES.doctor,
-            ] as const,
+            roles: [Role.ADMIN, Role.RECEPTIONIST, Role.PATIENT, Role.DOCTOR] as const,
           },
         ],
       },

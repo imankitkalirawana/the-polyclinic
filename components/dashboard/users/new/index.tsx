@@ -13,7 +13,9 @@ import { GENDERS } from '@/lib/constants';
 import { generateEmail, generatePhoneNumber } from '@/lib/utils';
 
 import { useCreateUser } from '@/services/common/user/user.query';
-import { CreateUser, createUserSchema, Role } from '@/services/common/user';
+import { CreateUser } from '@/services/common/user/user.types';
+import { createUserSchema } from '@/services/common/user/user.validation';
+import { Role } from '@/services/common/user/user.constants';
 import { useQueryState } from 'nuqs';
 import DashboardFooter from '@/components/ui/dashboard/footer';
 import NewUserFormInputs from './new-user-form-inputs';

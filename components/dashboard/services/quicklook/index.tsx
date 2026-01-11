@@ -8,7 +8,7 @@ import { permissions } from './data';
 import QuickLook from '@/components/ui/dashboard/quicklook';
 import { ButtonProps, DropdownItemProps } from '@/components/ui/dashboard/quicklook/types';
 import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
-import { ServiceType } from '@/services/client/service/service.types';
+import { ServiceStatus, ServiceType } from '@/services/client/service/service.types';
 
 export function ServiceQuickLook() {
   const { selected, setSelected, setAction, action } = useServiceStore();
@@ -89,7 +89,7 @@ export function ServiceQuickLook() {
     },
     {
       label: 'Mode',
-      value: () => (service.status === 'active' ? 'Online' : 'Offline'),
+      value: () => (service.status === ServiceStatus.ACTIVE ? 'Online' : 'Offline'),
       icon: 'solar:map-point-bold-duotone',
       classNames: { icon: 'text-teal-500 bg-teal-50' },
     },

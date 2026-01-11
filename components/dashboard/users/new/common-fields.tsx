@@ -2,7 +2,8 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { Input, Select, SelectItem, Tooltip, Button } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { generateEmail, generatePhoneNumber, toTitleCase } from '@/lib/utils';
-import { CreateUser, Role } from '@/services/common/user';
+import { CreateUser } from '@/services/common/user/user.types';
+import { Role } from '@/services/common/user/user.constants';
 import { useSession } from '@/lib/providers/session-provider';
 
 export default function CommonFields() {

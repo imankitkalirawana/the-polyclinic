@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { createUserSchema } from '@/services/common/user';
+import { createUserSchema } from '@/services/common/user/user.validation';
 import { GENDERS } from '@/lib/constants';
 
 export const createPatientSchema = createUserSchema.extend({

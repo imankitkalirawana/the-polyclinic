@@ -1,13 +1,13 @@
 import { unauthorized } from 'next/navigation';
 
 import { getServerSession } from '@/lib/serverAuth';
-import { ORGANIZATION_USER_ROLES, OrganizationUser } from '@/services/common/user';
+import { Role } from '@/services/common/user/user.constants';
 
 export default async function Page() {
   const session = await getServerSession();
-  const ALLOWED_ROLES: OrganizationUser['role'][] = [ORGANIZATION_USER_ROLES.admin];
+  const ALLOWED_ROLES: Role[] = [Role.ADMIN];
 
-  if (!session || !ALLOWED_ROLES.includes(session.user?.role as OrganizationUser['role'])) {
+  if (!session?.user || !ALLOWED_ROLES.includes(session.user?.role)) {
     unauthorized();
   }
 

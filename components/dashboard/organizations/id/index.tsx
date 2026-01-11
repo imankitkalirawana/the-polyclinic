@@ -18,13 +18,13 @@ import {
   useOrganization,
   useUpdateOrganization,
 } from '@/services/system/organization/organization.query';
-import { OrganizationUser } from '@/services/common/user';
 import UserModal from './create-edit-user';
 import DeleteUserModal from './delete-user-modal';
 import UserStatusToggle from './user-status-toggle';
 import CreateEditOrganizationModal from '../create-edit';
 import { renderChip, RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
+import { UserType } from '@/services/common/user/user.types';
 
 export default function Organization({ id }: { id: string }) {
   const { data, isLoading, error } = useOrganization(id);
@@ -35,7 +35,7 @@ export default function Organization({ id }: { id: string }) {
   const deleteUserModal = useDisclosure();
 
   const [selectedTab, setSelectedTab] = useState('users');
-  const [selectedUser, setSelectedUser] = useState<OrganizationUser | null>(null);
+  const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
   const [userModalMode, setUserModalMode] = useState<'create' | 'edit'>('create');
 
   if (isLoading) {
@@ -67,13 +67,13 @@ export default function Organization({ id }: { id: string }) {
     });
   };
 
-  const handleEditUser = (user: OrganizationUser) => {
+  const handleEditUser = (user: UserType) => {
     setSelectedUser(user);
     setUserModalMode('edit');
     userModal.onOpen();
   };
 
-  const handleDeleteUser = (user: OrganizationUser) => {
+  const handleDeleteUser = (user: UserType) => {
     setSelectedUser(user);
     deleteUserModal.onOpen();
   };

@@ -1,7 +1,7 @@
 import { Controller, useFormContext } from 'react-hook-form';
 import { Input, Select, SelectItem, NumberInput } from '@heroui/react';
 import { GENDERS } from '@/lib/constants';
-import { CreateUser } from '@/services/common/user';
+import { CreateUser } from '@/services/common/user/user.types';
 
 export default function PatientFields() {
   const form = useFormContext<CreateUser>();

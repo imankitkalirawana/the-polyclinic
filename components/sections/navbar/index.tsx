@@ -26,12 +26,12 @@ import { NavItem as NavItemType } from './types';
 
 import { useSubdomain } from '@/hooks/useSubDomain';
 import { APP_INFO } from '@/lib/config';
-import { UnifiedUser } from '@/services/common/user';
+import { Role } from '@/services/common/user/user.constants';
 import NotificationsWrapper from './notifications';
 import ProfileDropdown from './profile-dropdown';
 
 // Utility function to filter nav items by user role
-const filterNavItemsByRole = (items: NavItemType[], userRole?: string): NavItemType[] => {
+const filterNavItemsByRole = (items: NavItemType[], userRole?: Role): NavItemType[] => {
   if (!userRole) return items;
 
   return items
@@ -39,7 +39,7 @@ const filterNavItemsByRole = (items: NavItemType[], userRole?: string): NavItemT
       // If item has no roles specified, show it to everyone
       if (!item.roles) return true;
       // Check if user role is in the allowed roles
-      return item.roles.includes(userRole as UnifiedUser['role']);
+      return item.roles.includes(userRole);
     })
     .map((item) => {
       // If item has subItems, filter them too
@@ -51,7 +51,7 @@ const filterNavItemsByRole = (items: NavItemType[], userRole?: string): NavItemT
               // If subMenuItem has no roles specified, show it to everyone
               if (!subMenuItem.roles) return true;
               // Check if user role is in the allowed roles
-              return subMenuItem.roles.includes(userRole as UnifiedUser['role']);
+              return subMenuItem.roles.includes(userRole);
             }),
           }))
           .filter((subItem) => subItem.items.length > 0); // Remove empty subItems

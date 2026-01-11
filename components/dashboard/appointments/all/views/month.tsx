@@ -25,6 +25,7 @@ import { TIMINGS } from '@/lib/config';
 import { cn } from '@heroui/react';
 import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
 import { AppointmentType } from '@/services/client/appointment';
+import { Role } from '@/services/common/user/user.constants';
 
 interface MonthViewProps {
   appointments: AppointmentType[];
@@ -56,7 +57,7 @@ export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
     appointments.filter((apt) => isSameDay(new Date(apt.date), date));
 
   const isAllowedToCreateAppointment = allowedRolesToCreateAppointment.includes(
-    user?.role || 'patient'
+    user?.role || Role.PATIENT
   );
 
   return (

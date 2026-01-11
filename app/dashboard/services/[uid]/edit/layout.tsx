@@ -1,7 +1,7 @@
 import { unauthorized } from 'next/navigation';
 
 import { getServerSession } from '@/lib/serverAuth';
-import { ORGANIZATION_USER_ROLES, OrganizationUser } from '@/services/common/user';
+import { Role } from '@/services/common/user/user.constants';
 
 export default async function Layout({
   children,
@@ -9,20 +9,13 @@ export default async function Layout({
   children: React.ReactNode;
 }>) {
   const session = await getServerSession();
-  const ALLOWED_ROLES: OrganizationUser['role'][] = [
-    ORGANIZATION_USER_ROLES.admin,
-    ORGANIZATION_USER_ROLES.receptionist,
-    ORGANIZATION_USER_ROLES.doctor,
-  ];
+  const ALLOWED_ROLES: Role[] = [Role.ADMIN, Role.RECEPTIONIST, Role.DOCTOR];
 
   if (!session) {
     unauthorized();
   }
 
-  if (
-    session?.user?.role &&
-    !ALLOWED_ROLES.includes(session?.user?.role as OrganizationUser['role'])
-  ) {
+  if (session?.user?.role && !ALLOWED_ROLES.includes(session?.user?.role)) {
     unauthorized();
   }
 

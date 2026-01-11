@@ -20,7 +20,7 @@ import {
   Tooltip,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
-import { UnifiedUser } from '@/services/common/user';
+import { Role } from '@/services/common/user/user.constants';
 // import Link from 'next/link';
 
 export enum SidebarItemType {
@@ -37,7 +37,7 @@ export type SidebarItem = {
   endContent?: React.ReactNode;
   items?: SidebarItem[];
   className?: string;
-  roles?: UnifiedUser['role'][];
+  roles?: Role[];
 };
 
 export type SidebarProps = Omit<ListboxProps<SidebarItem>, 'children'> & {

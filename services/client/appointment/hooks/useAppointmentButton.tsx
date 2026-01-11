@@ -6,14 +6,14 @@ import { useAppointmentButtonConfigs, isButtonVisible } from '../appointment.con
 
 import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
 import { AppointmentType, ProcessedButton } from '@/services/client/appointment';
-import { OrganizationUser } from '@/services/common/user';
+import { Role } from '@/services/common/user/user.constants';
 
 const useAppointmentButtonsInDrawer = ({
   selected,
   role,
 }: {
   selected: AppointmentType | null;
-  role: OrganizationUser['role'];
+  role: Role;
 }) => {
   const { setAction } = useAppointmentStore();
   const router = useRouter();
