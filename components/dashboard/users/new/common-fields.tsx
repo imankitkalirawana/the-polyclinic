@@ -71,35 +71,6 @@ export default function CommonFields() {
       />
 
       <Controller
-        name="role"
-        control={control}
-        render={({ field }) => (
-          <Select
-            {...field}
-            isRequired
-            selectedKeys={field.value ? [field.value] : []}
-            onSelectionChange={(keys) => {
-              const selectedRole = Array.from(keys)[0];
-              if (typeof selectedRole === 'string') {
-                field.onChange(selectedRole as Role);
-              }
-            }}
-            disallowEmptySelection
-            label="Role"
-            placeholder="Select Role"
-            isInvalid={!!errors.role}
-            errorMessage={errors.role?.message}
-            items={Object.values(Role).map((role) => ({
-              label: toTitleCase(role),
-              value: role,
-            }))}
-          >
-            {(item) => <SelectItem key={item.value}>{item.label}</SelectItem>}
-          </Select>
-        )}
-      />
-
-      <Controller
         name="phone"
         control={control}
         render={({ field }) => (
@@ -132,6 +103,35 @@ export default function CommonFields() {
               </div>
             }
           />
+        )}
+      />
+
+      <Controller
+        name="role"
+        control={control}
+        render={({ field }) => (
+          <Select
+            {...field}
+            isRequired
+            selectedKeys={field.value ? [field.value] : []}
+            onSelectionChange={(keys) => {
+              const selectedRole = Array.from(keys)[0];
+              if (typeof selectedRole === 'string') {
+                field.onChange(selectedRole as Role);
+              }
+            }}
+            disallowEmptySelection
+            label="Role"
+            placeholder="Select Role"
+            isInvalid={!!errors.role}
+            errorMessage={errors.role?.message}
+            items={Object.values(Role).map((role) => ({
+              label: toTitleCase(role),
+              value: role,
+            }))}
+          >
+            {(item) => <SelectItem key={item.value}>{item.label}</SelectItem>}
+          </Select>
         )}
       />
     </>

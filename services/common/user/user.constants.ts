@@ -1,9 +1,3 @@
-export const USER_STATUSES = {
-  active: 'ACTIVE',
-  inactive: 'INACTIVE',
-  blocked: 'BLOCKED',
-} as const;
-
 export enum Role {
   ADMIN = 'ADMIN',
   PATIENT = 'PATIENT',

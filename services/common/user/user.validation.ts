@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Role, USER_STATUSES } from './user.constants';
+import { Role, UserStatus } from './user.constants';
 import { GENDERS } from '@/lib/constants';
 
 export const createUserSchema = z
@@ -76,8 +76,8 @@ export const createUserSchema = z
 
 export const updateUserSchema = createUserSchema.partial().extend({
   status: z
-    .enum(USER_STATUSES, {
-      error: "Invalid status. Allowed values are: 'active', 'inactive', or 'blocked'.",
+    .enum(UserStatus, {
+      error: 'Invalid status. Allowed values are: ACTIVE, INACTIVE, or BLOCKED.',
     })
     .optional(),
 });

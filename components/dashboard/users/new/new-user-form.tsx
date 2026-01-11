@@ -5,7 +5,7 @@ import CommonFields from './common-fields';
 import PatientFields from './patient-fields';
 import DoctorFields from './doctor-fields';
 
-export default function NewUserFormInputs() {
+export default function NewUserForm() {
   const form = useFormContext<CreateUser>();
   const role = form.watch('role');
 

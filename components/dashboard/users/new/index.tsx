@@ -18,9 +18,9 @@ import { createUserSchema } from '@/services/common/user/user.validation';
 import { Role } from '@/services/common/user/user.constants';
 import { useQueryState } from 'nuqs';
 import DashboardFooter from '@/components/ui/dashboard/footer';
-import NewUserFormInputs from './new-user-form-inputs';
+import NewUserForm from './new-user-form';
 
-export default function NewUser() {
+export default function NewUser({ role = Role.PATIENT }: { role?: Role }) {
   const router = useRouter();
   const { user } = useSession();
   const { mutateAsync: createUser, isPending: isCreatingUser } = useCreateUser();
@@ -34,7 +34,7 @@ export default function NewUser() {
     defaultValues: {
       name: '',
       email: '',
-      role: Role.PATIENT,
+      role,
     },
   });
 
@@ -77,7 +77,7 @@ export default function NewUser() {
       </CardHeader>
       <CardBody>
         <FormProvider {...form}>
-          <NewUserFormInputs />
+          <NewUserForm />
         </FormProvider>
       </CardBody>
 
