@@ -45,7 +45,7 @@ export default function UserModal({ isOpen, onClose, organization, mode, user }:
   const onSubmit = async (values: CreateUser | UpdateUser) => {
     if (isEdit && user) {
       await updateUser.mutateAsync({
-        uid: user.uid,
+        id: user.id,
         data: values as UpdateUser,
       });
     } else {

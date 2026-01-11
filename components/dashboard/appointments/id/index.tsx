@@ -276,7 +276,7 @@ export default function Appointment({ aid }: { aid: string }) {
             <Divider className="border-dashed border-divider" />
             <CardBody className="p-6">
               <div>
-                <ActivityTimeline />
+                <ActivityTimeline activities={[]} />
               </div>
             </CardBody>
           </Card>

@@ -26,7 +26,7 @@ export default function StatusRenderer({
     <Tooltip
       content={formatLabel(status)}
       classNames={{
-        content: cn('capitalize', chipColorMap[status].bg),
+        content: cn('capitalize', chipColorMap[status]),
       }}
       isDisabled={!isDotOnly}
     >
@@ -36,7 +36,7 @@ export default function StatusRenderer({
             'block aspect-square',
             sizeClass[size],
             'rounded-full',
-            chipColorMap[status].text
+            chipColorMap[status]
           )}
         />
         {!isDotOnly && (

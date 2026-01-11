@@ -17,7 +17,7 @@ import { Icon } from '@iconify/react';
 import { useCreateAppointmentForm } from '../index';
 
 import Skeleton from '@/components/ui/skeleton';
-import { useUserWithUID } from '@/services/common/user/user.query';
+import { useUserWithID } from '@/services/common/user/user.query';
 import { useDoctorById } from '@/services/client/doctor/doctor.query';
 
 export default function AppointmentBookingConfirmation() {
@@ -25,7 +25,7 @@ export default function AppointmentBookingConfirmation() {
   const appointment = watch('appointment');
   const { isSubmitting } = formState;
 
-  const { data: patient, isLoading: isPatientLoading } = useUserWithUID(appointment.patientId);
+  const { data: patient, isLoading: isPatientLoading } = useUserWithID(appointment.patientId);
   const { data: doctor, isLoading: isDoctorLoading } = useDoctorById(appointment.doctorId);
 
   return (

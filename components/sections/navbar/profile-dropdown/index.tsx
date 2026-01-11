@@ -47,7 +47,7 @@ export default function ProfileDropdown() {
         <DropdownItem
           key="logout"
           onPress={async () => {
-            await mutateAsync();
+            await mutateAsync(undefined);
           }}
           color="danger"
         >

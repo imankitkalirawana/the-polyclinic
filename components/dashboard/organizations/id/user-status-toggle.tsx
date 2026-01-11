@@ -14,7 +14,7 @@ export default function UserStatusToggle({ organization, user }: UserStatusToggl
 
   const handleStatusToggle = async (isActive: boolean) => {
     await updateUser.mutateAsync({
-      uid: user.uid,
+      id: user.id,
       data: {
         organization: organization.organizationId,
         status: isActive ? 'active' : 'inactive',

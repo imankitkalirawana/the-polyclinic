@@ -152,7 +152,7 @@ export const sidebarContent = (drug: DrugType) => (
         </div>
       </Tab>
       <Tab title="Activity" key="activity">
-        <ActivityTimeline />
+        <ActivityTimeline activities={[]} />
       </Tab>
     </Tabs>
   </>

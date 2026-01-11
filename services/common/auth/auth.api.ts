@@ -3,7 +3,7 @@ import {
   RegistrationRequest,
   SendOTPRequest,
   VerifyOTPRequest,
-} from '@/services/common/auth';
+} from './auth.validation';
 import { RegistrationResponse, VerifyOTPResponse } from './auth.types';
 import { apiRequest } from '@/lib/axios';
 import { ForgotPasswordRequest } from './auth.validation';

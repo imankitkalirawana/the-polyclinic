@@ -2,7 +2,7 @@ import { CellRenderer } from '@/components/ui/cell/rich-color/cell-renderer';
 import { renderChip, RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { UnifiedUser } from '@/services/common/user';
-import { useUserWithUID } from '@/services/common/user/user.query';
+import { useUserWithID } from '@/services/common/user/user.query';
 import { Button, Card, CardBody, CardFooter, CardHeader, Link, Tooltip } from '@heroui/react';
 
 export const UserDetailsPopover = ({
@@ -14,7 +14,7 @@ export const UserDetailsPopover = ({
   description: string;
   uid: string;
 }) => {
-  const { data } = useUserWithUID(uid);
+  const { data } = useUserWithID(uid);
 
   return (
     <Tooltip
@@ -42,7 +42,7 @@ const UserDetailsPopoverContent = ({ user }: { user?: UnifiedUser | null }) => {
           radius="full"
           size="sm"
           as={Link}
-          href={`/dashboard/users/${user.uid}`}
+          href={`/dashboard/users/${user.id}`}
           target="_blank"
           rel="noopener noreferrer"
         >

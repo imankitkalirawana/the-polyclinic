@@ -21,7 +21,7 @@ export default function CompletedAppointmentQueue({
       <DataItem
         label="Completed By"
         value={
-          `${currentQueue.completedByUser.name} (${currentQueue.completedByUser.email}) on ${formatDate(new Date(currentQueue.updatedAt), 'PPp')}` ||
+          `${currentQueue.completedByUser?.name} (${currentQueue.completedByUser?.email}) on ${formatDate(new Date(currentQueue.updatedAt), 'PPp')}` ||
           'N/A'
         }
       />

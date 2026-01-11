@@ -1,12 +1,12 @@
 import { CellRenderer } from '@/components/ui/cell/rich-color/cell-renderer';
 import { Card, CardBody, CardHeader, Divider, Chip, ScrollShadow } from '@heroui/react';
 import { Icon } from '@iconify/react';
-import { useUserWithUID } from '@/services/common/user/user.query';
+import { useUserWithID } from '@/services/common/user/user.query';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 
 export const CreateAppointmentPatientDetails = ({ id }: { id: string }) => {
-  const { isLoading, isError, data: user } = useUserWithUID(id);
+  const { isLoading, isError, data: user } = useUserWithID(id);
 
   if (isLoading) return <MinimalPlaceholder message="Loading patient details..." />;
 

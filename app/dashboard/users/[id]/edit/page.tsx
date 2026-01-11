@@ -1,21 +1,23 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
-
-import UserCard from '@/components/dashboard/users/user';
+import EditUser from '@/components/dashboard/users/edit';
+import { getSubdomain } from '@/auth/sub-domain';
 import { User } from '@/services/common/user';
 
 interface Props {
   params: Promise<{
-    uid: string;
+    id: string;
   }>;
 }
 
 export default async function Page(props: Props) {
+  const organization = await getSubdomain();
   const params = await props.params;
+
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
-    queryKey: ['user', params.uid],
+    queryKey: ['user', params.id],
     queryFn: async () => {
-      const res = await User.getByUID(params.uid);
+      const res = await User.getByID(params.id);
       if (res.success) {
         return res.data;
       }
@@ -25,7 +27,7 @@ export default async function Page(props: Props) {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <UserCard uid={params.uid} />
+      <EditUser id={params.id} organization={organization} />
     </HydrationBoundary>
   );
 }

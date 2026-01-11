@@ -148,11 +148,11 @@ export function Notifications({
 export default function NotificationsWrapper({ size = 'md' }: { size?: ButtonProps['size'] }) {
   const [activeTab, setActiveTab] = React.useState<NotificationTabs>(NotificationTabs.unread);
 
-  const { data, isLoading } = useAllNotifications(
+  const { isLoading } = useAllNotifications(
     activeTab === NotificationTabs.unread ? 'unread' : undefined
   );
-  const notifications = data?.notifications || [];
-  const stats = data?.stats || { total: 0, unread: 0, read: 0 };
+  const notifications: Notification[] = [];
+  const stats = { total: 0, unread: 0, read: 0 };
 
   return (
     <Popover placement="bottom-end" shouldCloseOnScroll={false}>

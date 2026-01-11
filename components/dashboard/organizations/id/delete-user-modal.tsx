@@ -1,5 +1,4 @@
 'use client';
-import { OrganizationType } from '@/services/system/organization/organization.types';
 import { OrganizationUser } from '@/services/common/user';
 import { useDeleteUser } from '@/services/common/user/user.query';
 import Modal from '@/components/ui/modal';
@@ -8,20 +7,14 @@ import { Alert } from '@heroui/react';
 interface DeleteUserModalProps {
   isOpen: boolean;
   onClose: () => void;
-  organization: OrganizationType;
   user: OrganizationUser;
 }
 
-export default function DeleteUserModal({
-  isOpen,
-  onClose,
-  organization,
-  user,
-}: DeleteUserModalProps) {
+export default function DeleteUserModal({ isOpen, onClose, user }: DeleteUserModalProps) {
   const deleteUser = useDeleteUser();
 
   const handleDelete = async () => {
-    await deleteUser.mutateAsync({ uid: user.uid, organization: organization.organizationId });
+    await deleteUser.mutateAsync(user.id);
     onClose();
   };
 

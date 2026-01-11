@@ -153,7 +153,7 @@ export default function Organization({ id }: { id: string }) {
                 className="max-h-[70vh] flex-1 space-y-2 overflow-y-auto p-2 pb-4"
               >
                 {users?.map((user) => (
-                  <Card key={user.uid}>
+                  <Card key={user.id}>
                     <CardBody className="p-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
@@ -237,7 +237,6 @@ export default function Organization({ id }: { id: string }) {
         <DeleteUserModal
           isOpen={deleteUserModal.isOpen}
           onClose={deleteUserModal.onClose}
-          organization={organization}
           user={selectedUser}
         />
       )}
