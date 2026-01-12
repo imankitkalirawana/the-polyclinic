@@ -7,6 +7,7 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
+  useDisclosure,
 } from '@heroui/react';
 import {
   CreateAppointmentContentContainer,
@@ -24,6 +25,7 @@ import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
 import NewPatient from './new-patient';
+// import { useDeleteUser } from '@/services/common/user/user.query';
 
 export default function PatientSelection() {
   const [search, setSearch] = useState('');
@@ -122,7 +124,8 @@ const PatientCard = ({
   isSelected: boolean;
   onSelect: (id: string) => void;
 }) => {
-  const [isViewOpen, setIsViewOpen] = useState(false);
+  const viewModal = useDisclosure();
+  const deleteModal = useDisclosure();
 
   return (
     <>
@@ -145,14 +148,19 @@ const PatientCard = ({
               </Button>
             </DropdownTrigger>
             <DropdownMenu>
-              <DropdownItem key="view" onPress={() => setIsViewOpen(true)}>
+              <DropdownItem key="view" onPress={viewModal.onOpen}>
                 View
               </DropdownItem>
 
               <DropdownItem color="warning" key="edit">
                 Edit
               </DropdownItem>
-              <DropdownItem color="danger" key="delete">
+              <DropdownItem
+                key="delete"
+                className="text-danger"
+                color="danger"
+                onClick={deleteModal.onOpen}
+              >
                 Delete
               </DropdownItem>
             </DropdownMenu>
@@ -160,11 +168,12 @@ const PatientCard = ({
         </div>
       </Card>
       <Modal
-        isOpen={isViewOpen}
-        onOpenChange={setIsViewOpen}
+        isOpen={viewModal.isOpen}
+        onOpenChange={viewModal.onOpenChange}
         size="4xl"
         title="Patient Details"
         body={<ViewPatientBody patient={patient} />}
+        hideCancelButton
       />
     </>
   );
