@@ -15,6 +15,9 @@ import {
 } from '@/components/dashboard/appointments/(common)';
 import { PatientType, useAllPatients } from '@/services/client/patient';
 import { useFormContext } from 'react-hook-form';
+import Modal from '@/components/ui/modal';
+import ViewPatientBody from '@/components/ui/modal/view-modal';
+
 import { useState } from 'react';
 import { useDebounce } from '@/hooks/useDebounce';
 import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
@@ -119,36 +122,50 @@ const PatientCard = ({
   isSelected: boolean;
   onSelect: (id: string) => void;
 }) => {
+  const [isViewOpen, setIsViewOpen] = useState(false);
+
   return (
-    <Card
-      isPressable
-      className={cn(
-        'flex w-full flex-row items-center justify-between gap-4 border-2 border-divider px-4 py-4 shadow-none',
-        {
-          'border-primary': isSelected,
-        }
-      )}
-      onPress={() => onSelect(patient.id)}
-    >
-      <RenderUser name={patient.name} description={patient.phone || patient.email} />
-      <div>
-        <Dropdown aria-label="Patient actions" placement="bottom-end">
-          <DropdownTrigger>
-            <Button size="sm" isIconOnly variant="light" radius="full">
-              <Icon icon="solar:menu-dots-bold-duotone" className="rotate-90" width={18} />
-            </Button>
-          </DropdownTrigger>
-          <DropdownMenu>
-            <DropdownItem key="view">View</DropdownItem>
-            <DropdownItem color="warning" key="edit">
-              Edit
-            </DropdownItem>
-            <DropdownItem color="danger" key="delete">
-              Delete
-            </DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-      </div>
-    </Card>
+    <>
+      <Card
+        isPressable
+        className={cn(
+          'flex w-full flex-row items-center justify-between gap-4 border-2 border-divider px-4 py-4 shadow-none',
+          {
+            'border-primary': isSelected,
+          }
+        )}
+        onPress={() => onSelect(patient.id)}
+      >
+        <RenderUser name={patient.name} description={patient.phone || patient.email} />
+        <div>
+          <Dropdown aria-label="Patient actions" placement="bottom-end">
+            <DropdownTrigger>
+              <Button size="sm" isIconOnly variant="light" radius="full">
+                <Icon icon="solar:menu-dots-bold-duotone" className="rotate-90" width={18} />
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu>
+              <DropdownItem key="view" onPress={() => setIsViewOpen(true)}>
+                View
+              </DropdownItem>
+
+              <DropdownItem color="warning" key="edit">
+                Edit
+              </DropdownItem>
+              <DropdownItem color="danger" key="delete">
+                Delete
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        </div>
+      </Card>
+      <Modal
+        isOpen={isViewOpen}
+        onOpenChange={setIsViewOpen}
+        size="4xl"
+        title="Patient Details"
+        body={<ViewPatientBody patient={patient} />}
+      />
+    </>
   );
 };
