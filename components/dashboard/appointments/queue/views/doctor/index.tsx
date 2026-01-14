@@ -34,7 +34,7 @@ export default function QueuesDoctorView() {
     cancelled: false,
   });
 
-  const { data, isLoading } = useQueueForDoctor(session?.user?.doctorId, queueId);
+  const { data, isLoading } = useQueueForDoctor(session?.user?.doctorId, queueId, selectedDate);
 
   // Initialize prescription form with FormProvider
   const prescriptionForm = useForm<PrescriptionFormSchema>({
@@ -83,10 +83,13 @@ export default function QueuesDoctorView() {
   return (
     <FormProvider {...prescriptionForm}>
       <div
-        className="relative flex h-[calc(100vh-58px)] divide-x-1 divide-divider"
+        className="relative flex h-[calc(100vh-58px)] divide-x-1 divide-divider overflow-hidden"
         data-test-id="appointment-queues"
       >
-        <div className="relative flex w-full flex-col justify-start" data-test-id="current-queue">
+        <div
+          className="relative flex min-w-0 flex-1 flex-col justify-start"
+          data-test-id="current-queue"
+        >
           <DateScroll selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
           {currentQueue ? (
             <>
@@ -128,7 +131,10 @@ export default function QueuesDoctorView() {
 
         {/* next queues */}
         {showNextQueues && (
-          <div className="h-full w-full max-w-[400px] overflow-hidden" data-test-id="next-queues">
+          <div
+            className="h-full w-[400px] flex-shrink-0 overflow-hidden"
+            data-test-id="next-queues"
+          >
             <Tabs
               aria-label="Queues"
               classNames={{

@@ -3,6 +3,7 @@ import { AppointmentQueueResponse, PaymentDetails, VerifyPaymentRequest } from '
 import { PrescriptionFormSchema } from '@/components/dashboard/appointments/queue/views/doctor/prescription-panel';
 import { AppointmentQueueRequest } from './queue.types';
 import { ActivityLogResponse } from '@/services/common/activity/activity.types';
+import { format } from 'date-fns/format';
 
 export class AppointmentQueueApi {
   private static API_BASE = '/client/appointments/queue';
@@ -49,17 +50,27 @@ export class AppointmentQueueApi {
     });
   }
 
-  static async getQueueForDoctor(doctorId?: string | null, queueId?: string | null) {
+  static async getQueueForDoctor(
+    doctorId?: string | null,
+    queueId?: string | null,
+    appointmentDate?: Date | null
+  ) {
     if (!doctorId) {
       throw new Error('Doctor ID is required');
     }
+
+    // sanitize appointment date
+    const sanitizedAppointmentDate = appointmentDate
+      ? format(appointmentDate, 'yyyy-MM-dd')
+      : undefined;
+
     return await apiRequest<{
       previous: AppointmentQueueResponse[];
       current: AppointmentQueueResponse | null;
       next: AppointmentQueueResponse[];
     }>({
       url: `${this.API_BASE}/doctor/${doctorId}/queue`,
-      params: { id: queueId },
+      params: { id: queueId, date: sanitizedAppointmentDate },
     });
   }
 

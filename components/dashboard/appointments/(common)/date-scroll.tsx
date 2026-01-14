@@ -21,11 +21,45 @@ export default function DateScroll({ selectedDate, setSelectedDate }: DateScroll
     const key = normalizedSelectedDate.toISOString();
     const el = itemRefs.current.get(key);
 
-    el?.scrollIntoView({
-      behavior: 'smooth',
-      inline: 'center',
-      block: 'nearest',
-    });
+    if (el) {
+      // Find the scrollable container by traversing up the DOM tree
+      let scrollContainer: HTMLElement | null = el.parentElement;
+      while (scrollContainer) {
+        const style = window.getComputedStyle(scrollContainer);
+        if (
+          scrollContainer.scrollWidth > scrollContainer.clientWidth &&
+          (style.overflowX === 'auto' ||
+            style.overflowX === 'scroll' ||
+            style.overflow === 'auto' ||
+            style.overflow === 'scroll')
+        ) {
+          break;
+        }
+        scrollContainer = scrollContainer.parentElement;
+      }
+
+      if (scrollContainer) {
+        const containerRect = scrollContainer.getBoundingClientRect();
+        const elementRect = el.getBoundingClientRect();
+        const scrollLeft =
+          scrollContainer.scrollLeft +
+          (elementRect.left - containerRect.left) -
+          containerRect.width / 2 +
+          elementRect.width / 2;
+
+        scrollContainer.scrollTo({
+          left: scrollLeft,
+          behavior: 'smooth',
+        });
+      } else {
+        // Fallback to scrollIntoView with options that prevent page scroll
+        el.scrollIntoView({
+          behavior: 'smooth',
+          inline: 'center',
+          block: 'nearest',
+        });
+      }
+    }
   }, [normalizedSelectedDate]);
 
   return (
