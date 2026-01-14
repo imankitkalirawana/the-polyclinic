@@ -68,7 +68,7 @@ export type PaymentDetails = { payment: { orderId: string; amount: number; curre
 
 export type AppointmentQueueResponse = {
   id: string;
-  referenceNumber: string;
+  aid: string;
   paymentMode: PaymentMode;
   sequenceNumber: number;
   title: string;
