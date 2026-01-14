@@ -7,7 +7,6 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
-  useDisclosure,
 } from '@heroui/react';
 import {
   CreateAppointmentContentContainer,
@@ -21,6 +20,7 @@ import ViewPatientBody from '@/components/ui/modal/view-modal';
 
 import { useState } from 'react';
 import { useDebounce } from '@/hooks/useDebounce';
+
 import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
@@ -29,6 +29,7 @@ import NewPatient from './new-patient';
 
 export default function PatientSelection() {
   const [search, setSearch] = useState('');
+  const [selectedPatient, setSelectedPatient] = useState<PatientType | null>(null);
 
   const debouncedSearch = useDebounce(search, 500);
 
@@ -98,6 +99,7 @@ export default function PatientSelection() {
             patient={patient}
             isSelected={patientId === patient.id}
             onSelect={(id) => form.setValue('appointment.patientId', id)}
+            onView={setSelectedPatient}
           />
         ))}
       </div>
@@ -111,6 +113,14 @@ export default function PatientSelection() {
           }}
         />
       )}
+      <Modal
+        isOpen={!!selectedPatient}
+        onClose={() => setSelectedPatient(null)}
+        size="4xl"
+        title="Patient Details"
+        body={<ViewPatientBody patient={selectedPatient as PatientType} />}
+        hideCancelButton
+      />
     </CreateAppointmentContentContainer>
   );
 }
@@ -119,14 +129,15 @@ const PatientCard = ({
   patient,
   isSelected,
   onSelect,
+  onView,
+  onDelete,
 }: {
   patient: PatientType;
   isSelected: boolean;
   onSelect: (id: string) => void;
+  onView?: (patient: PatientType) => void;
+  onDelete?: (patient: PatientType) => void;
 }) => {
-  const viewModal = useDisclosure();
-  const deleteModal = useDisclosure();
-
   return (
     <>
       <Card
@@ -148,7 +159,7 @@ const PatientCard = ({
               </Button>
             </DropdownTrigger>
             <DropdownMenu>
-              <DropdownItem key="view" onPress={viewModal.onOpen}>
+              <DropdownItem key="view" onPress={() => onView?.(patient)}>
                 View
               </DropdownItem>
 
@@ -157,9 +168,9 @@ const PatientCard = ({
               </DropdownItem>
               <DropdownItem
                 key="delete"
+                onClick={() => onDelete?.(patient)}
                 className="text-danger"
                 color="danger"
-                onClick={deleteModal.onOpen}
               >
                 Delete
               </DropdownItem>
@@ -167,14 +178,6 @@ const PatientCard = ({
           </Dropdown>
         </div>
       </Card>
-      <Modal
-        isOpen={viewModal.isOpen}
-        onOpenChange={viewModal.onOpenChange}
-        size="4xl"
-        title="Patient Details"
-        body={<ViewPatientBody patient={patient} />}
-        hideCancelButton
-      />
     </>
   );
 };
