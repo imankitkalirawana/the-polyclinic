@@ -1,8 +1,12 @@
 # Build stage
 FROM node:18-alpine AS builder
 WORKDIR /app
-# Install pnpm globally
-RUN npm install -g pnpm
+
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
 # Copy .npmrc, package.json, and pnpm-lock.yaml for caching
 COPY .npmrc package.json pnpm-lock.yaml ./
 # Install dependencies

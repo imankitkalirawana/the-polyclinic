@@ -20,11 +20,13 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { useState, useMemo } from 'react';
 import CompletedAppointmentQueue from './completed';
 import { useSession } from '@/lib/providers/session-provider';
+import DateScroll from '../../../(common)/date-scroll';
 
 export default function QueuesDoctorView() {
   const session = useSession();
   const [queueId, setQueueId] = useQueryState('id');
   const [showNextQueues, setShowNextQueues] = useLocalStorage('show-next-queues', true);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const [selectedFilters, setSelectedFilters] = useState({
     booked: false,
     skipped: false,
@@ -85,6 +87,7 @@ export default function QueuesDoctorView() {
         data-test-id="appointment-queues"
       >
         <div className="relative flex w-full flex-col justify-start" data-test-id="current-queue">
+          <DateScroll selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
           {currentQueue ? (
             <>
               <DetailsHeader currentQueue={currentQueue} />
