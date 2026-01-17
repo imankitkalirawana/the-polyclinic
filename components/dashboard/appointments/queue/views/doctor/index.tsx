@@ -10,7 +10,7 @@ import PrescriptionPanel, {
 } from './prescription-panel';
 import Medicines from './medicines';
 import QueuesList from './queues-list';
-import { useQueryState, parseAsIsoDate } from 'nuqs';
+import { useQueryState, parseAsIsoDateTime } from 'nuqs';
 import DetailsHeader from './details-header';
 import QueueFooter from './footer';
 import { useForm, FormProvider } from 'react-hook-form';
@@ -26,7 +26,7 @@ export default function QueuesDoctorView() {
   const session = useSession();
   const [queueId, setQueueId] = useQueryState('id');
   const [showNextQueues, setShowNextQueues] = useLocalStorage('show-next-queues', true);
-  const [selectedDate, setSelectedDate] = useQueryState('date', parseAsIsoDate);
+  const [selectedDate, setSelectedDate] = useQueryState('date', parseAsIsoDateTime);
   const [selectedFilters, setSelectedFilters] = useState({
     booked: false,
     skipped: false,

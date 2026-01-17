@@ -73,6 +73,7 @@ export type AppointmentQueueResponse = {
   sequenceNumber: number;
   title: string;
   notes: string;
+  appointmentDate: string;
   prescription: string;
   status: QueueStatus;
   patient: PatientInfo;

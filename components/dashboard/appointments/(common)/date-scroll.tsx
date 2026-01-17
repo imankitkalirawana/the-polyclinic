@@ -63,7 +63,7 @@ export default function DateScroll({ selectedDate, setSelectedDate }: DateScroll
   }, [normalizedSelectedDate]);
 
   return (
-    <ScrollShadow orientation="horizontal" hideScrollBar>
+    <ScrollShadow orientation="horizontal" hideScrollBar className="pb-4">
       <div className="flex flex-row gap-2 px-2 py-2">
         {dates.map((date) => {
           const isSelected = isSameDay(date, normalizedSelectedDate);
