@@ -25,6 +25,7 @@ export default function DoctorSelection() {
 
   const handleDateSelect = (date: Date) => {
     form.setValue('appointment.appointmentDate', date);
+    form.setValue('appointment.doctorId', '');
   };
 
   const handleNext = () => {
@@ -112,12 +113,30 @@ const DoctorCard = ({
     >
       <RenderUser
         name={doctor.name}
+        variant="beam"
         description={
-          doctor.designation && (
-            <Chip size="sm" color="primary" variant="flat">
-              {doctor.designation}
-            </Chip>
-          )
+          <div className="flex gap-1">
+            {doctor.designation && (
+              <Chip title={doctor.designation} size="sm" color="primary" variant="flat">
+                <span className="block max-w-24 truncate">{doctor.designation}</span>
+              </Chip>
+            )}
+            {doctor.specialization && (
+              <Chip title={doctor.specialization} size="sm" color="warning" variant="flat">
+                <span className="block max-w-24 truncate">{doctor.specialization}</span>
+              </Chip>
+            )}
+            {doctor.education && (
+              <Chip
+                title={doctor.education}
+                size="sm"
+                variant="flat"
+                className="bg-indigo-50 text-indigo-700"
+              >
+                <span className="block max-w-24 truncate">{doctor.education}</span>
+              </Chip>
+            )}
+          </div>
         }
       />
     </Card>

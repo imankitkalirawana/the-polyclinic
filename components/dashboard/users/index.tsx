@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { useRouter } from 'nextjs-toploader/app';
 import { Button, DropdownItem, DropdownMenu, Selection, useDisclosure } from '@heroui/react';
+import Link from 'next/link';
 // eslint-disable-next-line no-restricted-imports
 import { toast } from 'sonner';
 
@@ -11,19 +11,20 @@ import { useUserStore } from './store';
 
 import { Table } from '@/components/ui/static-data-table';
 import {
-  renderActions,
+  renderDropdownMenu,
   renderChip,
   renderDate,
   RenderUser,
+  DropdownItemWithSection,
 } from '@/components/ui/static-data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
 import { useAllUsers, useDeleteUser } from '@/services/common/user/user.query';
 import { UserType } from '@/services/common/user/user.types';
+import { CopyText } from '@/components/ui/copy';
 
 const INITIAL_VISIBLE_COLUMNS = ['image', 'name', 'email', 'role', 'createdAt'];
 
 export default function Users() {
-  const router = useRouter();
   const deleteUser = useDeleteUser();
   const deleteModal = useDisclosure();
   const { setSelected } = useUserStore();
@@ -32,6 +33,31 @@ export default function Users() {
 
   const handleDelete = async (id: string) => {
     await deleteUser.mutateAsync(id);
+  };
+
+  const dropdownMenuItems = (user: UserType): DropdownItemWithSection[] => {
+    return [
+      {
+        key: 'view',
+        children: 'View',
+        as: Link,
+        href: `/dashboard/users/${user.id}`,
+      },
+      {
+        key: 'edit',
+        children: 'Edit',
+        as: Link,
+        href: `/dashboard/users/${user.id}/edit`,
+      },
+      {
+        key: 'delete',
+        children: 'Delete',
+        color: 'danger',
+        onPress: () => handleDelete(user.id),
+        section: 'Danger Zone',
+        className: 'text-danger',
+      },
+    ];
   };
 
   // Define columns with render functions
@@ -45,7 +71,7 @@ export default function Users() {
           <RenderUser
             size="md"
             name={user.name}
-            description={user.email}
+            description={user.phone || '-'}
             classNames={{
               description: 'lowercase',
             }}
@@ -56,17 +82,13 @@ export default function Users() {
         name: 'Email',
         uid: 'email',
         sortable: true,
-        renderCell: (user) => (
-          <div className="truncate lowercase text-default-foreground">{user.email}</div>
-        ),
+        renderCell: (user) => <CopyText>{user.email}</CopyText>,
       },
       {
         name: 'Phone',
         uid: 'phone',
         sortable: true,
-        renderCell: (user) => (
-          <div className="truncate text-default-foreground">{user.phone || 'N/A'}</div>
-        ),
+        renderCell: (user) => <CopyText>{user.phone}</CopyText>,
       },
       {
         name: 'Role',
@@ -97,13 +119,7 @@ export default function Users() {
         name: 'Actions',
         uid: 'actions',
         sortable: false,
-        renderCell: (user) =>
-          renderActions({
-            onView: () => router.push(`/dashboard/users/${user.id}`),
-            onEdit: () => router.push(`/dashboard/users/${user.id}/edit`),
-            key: user.id,
-            onDelete: () => handleDelete(user.id),
-          }),
+        renderCell: (user) => renderDropdownMenu(dropdownMenuItems(user)),
       },
     ],
     []
@@ -178,7 +194,7 @@ export default function Users() {
 
   // Render top bar
   const endContent = () => (
-    <Button color="primary" size="sm" onPress={() => router.push('/dashboard/users/new')}>
+    <Button color="primary" size="sm" as={Link} href="/dashboard/users/new">
       New User
     </Button>
   );

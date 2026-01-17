@@ -21,6 +21,8 @@ import { getSidebarItems } from '@/components/dashboard/sidebar/sidebar-items';
 import Sidebar from '@/components/dashboard/sidebar/sidebar';
 import NotificationsWrapper from '../sections/navbar/notifications';
 import ProfileDropdown from '../sections/navbar/profile-dropdown';
+import { ErrorBoundary } from '@sentry/nextjs';
+import CustomError from '../error';
 
 export const SIDEBAR_WIDTHS = {
   expanded: 288,
@@ -55,20 +57,24 @@ export default function DashboardLayout({ children }: { readonly children: React
           maxWidth: isHidden ? SIDEBAR_WIDTHS.collapsed : SIDEBAR_WIDTHS.expanded,
         }}
         className={cn(
-          'relative flex h-full flex-1 flex-col !border-r-small border-divider transition-all duration-250 ease-in-out'
+          'relative flex h-full flex-1 flex-col overflow-x-hidden !border-r-small border-divider transition-all duration-250 ease-in-out'
         )}
       >
-        <div
-          className={cn('flex flex-col gap-4 py-2 pl-2', {
-            'px-2': !isHidden,
-          })}
-        >
-          <Link href="/">
+        <div className="flex justify-center gap-4 border-b border-divider py-2">
+          <Button
+            data-testid="go-to-homepage-button"
+            title="Go to homepage"
+            isIconOnly={isHidden}
+            as={Link}
+            variant="light"
+            radius="full"
+            href="/"
+          >
             <Logo isCompact={isHidden} />
-          </Link>
+          </Button>
         </div>
 
-        <ScrollShadow hideScrollBar className="h-full max-h-full pl-2">
+        <ScrollShadow hideScrollBar className="h-full max-h-full">
           <Sidebar
             defaultSelectedKey="dashboard"
             items={filteredItems}
@@ -82,14 +88,16 @@ export default function DashboardLayout({ children }: { readonly children: React
 
   const header = useMemo(
     () => (
-      <header className="flex items-center justify-between gap-3 p-2 py-1">
+      <header className="flex items-center justify-between gap-3 border-b border-divider p-2">
         <div className="flex items-center gap-3 rounded-medium bg-default-200 px-3 py-1">
           <Button
             aria-label="Toggle Sidebar"
+            data-testid="toggle-sidebar-button"
             isIconOnly
             size="sm"
             variant="light"
             onPress={() => setIsHidden(!isHidden)}
+            title="Toggle Sidebar"
           >
             <Icon
               className="text-default-500"
@@ -132,10 +140,12 @@ export default function DashboardLayout({ children }: { readonly children: React
   return (
     <div className="flex h-dvh w-full overflow-hidden">
       {sidebar}
-      <div className="flex w-[80vw] flex-1 flex-col md:p-2">
+      <div className="flex w-[80vw] flex-1 flex-col">
         {header}
         <main className="w-full flex-1 overflow-hidden">
-          <div className="flex h-full flex-col gap-4 overflow-hidden p-2">{children}</div>
+          <div className="flex h-full flex-col gap-4 overflow-hidden">
+            <ErrorBoundary fallback={<CustomError type="error" />}>{children}</ErrorBoundary>
+          </div>
         </main>
       </div>
     </div>

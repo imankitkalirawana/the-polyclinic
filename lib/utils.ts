@@ -1,3 +1,4 @@
+import { Gender } from '@/types';
 import { faker } from '@faker-js/faker';
 import { z } from 'zod';
 
@@ -117,4 +118,32 @@ export function formatLabel(text: string): string {
     .split(' ')
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
+}
+
+export function formatAge(
+  age: number | null | undefined,
+  {
+    fullString = false,
+  }: {
+    fullString?: boolean;
+  } = {}
+): string {
+  if (!age) return '-';
+  return fullString
+    ? `${age} ${age === 1 ? 'year' : 'years'}`
+    : `${age} ${age === 1 ? 'yr' : 'yrs'}`;
+}
+
+export function formatGender(
+  gender: Gender | null | undefined,
+  {
+    fullString = false,
+  }: {
+    fullString?: boolean;
+  } = {}
+): string {
+  if (!gender) return '-';
+  return fullString
+    ? gender.charAt(0).toUpperCase() + gender.slice(1).toLowerCase()
+    : gender.charAt(0).toUpperCase();
 }

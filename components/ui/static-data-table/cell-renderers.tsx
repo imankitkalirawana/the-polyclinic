@@ -1,13 +1,13 @@
 'use client';
 
 import {
-  addToast,
   Button,
   Chip,
   ChipProps,
   cn,
   Dropdown,
   DropdownItem,
+  DropdownItemProps,
   DropdownMenu,
   DropdownSection,
   DropdownTrigger,
@@ -152,86 +152,68 @@ export const renderChips = (items: string[]) => (
   </div>
 );
 
-export const renderActions = ({
-  onView,
-  onEdit,
-  onDelete,
-  onCopy,
-  key,
-}: {
-  onView?: () => void;
-  onEdit?: () => void;
-  onDelete?: () => void;
-  onCopy?: () => void;
-  key?: string | number;
-}) => (
-  <Dropdown aria-label="Actions" placement="bottom-end">
-    <DropdownTrigger>
-      <Button variant="light" isIconOnly>
-        <Icon icon="solar:menu-dots-bold" width={18} className="rotate-90" />
-      </Button>
-    </DropdownTrigger>
-    <DropdownMenu aria-label="Dropdown menu with description" variant="flat">
-      <DropdownSection showDivider title="Actions">
-        <DropdownItem
-          key="view"
-          description="View the item"
-          shortcut="⌘V"
-          startContent={<Icon icon="solar:eye-bold-duotone" width={24} />}
-          onClick={onView}
-        >
-          View Item
-        </DropdownItem>
-        {onCopy || key ? (
-          <DropdownItem
-            key="copy"
-            description="Copy the link"
-            shortcut="⌘C"
-            startContent={<Icon icon="solar:copy-bold-duotone" width={24} />}
-            onClick={() => {
-              if (onCopy) {
-                onCopy();
-              } else {
-                const url = window.location.href;
-                navigator.clipboard.writeText(`${url}/${key}`);
-                addToast({
-                  title: 'Copied',
-                  description: 'Link copied to clipboard',
-                  color: 'success',
-                });
-              }
-            }}
-          >
-            Copy link
-          </DropdownItem>
-        ) : null}
-        {onEdit ? (
-          <DropdownItem
-            key="edit"
-            description="Allows you to edit the file"
-            shortcut="⌘⇧E"
-            startContent={<Icon icon="solar:pen-new-square-bold-duotone" width={24} />}
-            onClick={onEdit}
-          >
-            Edit file
-          </DropdownItem>
-        ) : null}
-      </DropdownSection>
-      {onDelete ? (
-        <DropdownSection title="Danger zone">
-          <DropdownItem
-            key="delete"
-            className="text-danger"
-            color="danger"
-            description="Permanently delete the item"
-            shortcut="⌘⇧D"
-            startContent={<Icon icon="solar:trash-bin-minimalistic-bold-duotone" width={24} />}
-            onClick={onDelete}
-          >
-            Delete item
-          </DropdownItem>
-        </DropdownSection>
-      ) : null}
-    </DropdownMenu>
-  </Dropdown>
-);
+export type DropdownItemWithSection = DropdownItemProps & { section?: string };
+
+function groupBy<T extends DropdownItemWithSection>(
+  array: T[],
+  key: 'section'
+): Record<string, T[]> {
+  return array.reduce(
+    (result, item) => {
+      const groupKey = item[key] ?? '';
+      if (!result[groupKey]) {
+        result[groupKey] = [];
+      }
+      result[groupKey].push(item);
+      return result;
+    },
+    {} as Record<string, T[]>
+  );
+}
+
+export const renderDropdownMenu = (items: DropdownItemWithSection[]) => {
+  const groupedItems = groupBy(items, 'section');
+  const itemsWithoutSection = groupedItems[''] ?? [];
+  const sections = Object.entries(groupedItems).filter(([key]) => key !== '');
+  const hasSections = sections.length > 0;
+  const shouldWrapInDefaultSection = hasSections && itemsWithoutSection.length > 0;
+
+  return (
+    <Dropdown aria-label="Actions" placement="bottom-end">
+      <DropdownTrigger>
+        <Button variant="light" isIconOnly>
+          <Icon icon="solar:menu-dots-bold" width={18} className="rotate-90" />
+        </Button>
+      </DropdownTrigger>
+      <DropdownMenu>
+        <>
+          {shouldWrapInDefaultSection ? (
+            <DropdownSection key="actions" showDivider>
+              {itemsWithoutSection.map((item) => {
+                const { key, section, ...rest } = item;
+                return <DropdownItem key={key} {...rest} />;
+              })}
+            </DropdownSection>
+          ) : (
+            itemsWithoutSection.map((item) => {
+              const { key, section, ...rest } = item;
+              return <DropdownItem key={key} {...rest} />;
+            })
+          )}
+          {sections.map(([sectionName, sectionItems], index) => (
+            <DropdownSection
+              key={sectionName}
+              title={sectionName}
+              showDivider={index !== sections.length - 1}
+            >
+              {sectionItems.map((item) => {
+                const { key, section, ...rest } = item;
+                return <DropdownItem key={key} {...rest} />;
+              })}
+            </DropdownSection>
+          ))}
+        </>
+      </DropdownMenu>
+    </Dropdown>
+  );
+};

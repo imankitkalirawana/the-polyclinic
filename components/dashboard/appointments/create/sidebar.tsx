@@ -17,7 +17,7 @@ export const CreateAppointmentSidebar = ({
   return (
     <section
       data-testid="create-appointment-sidebar"
-      className="flex h-full w-full max-w-sm flex-col overflow-hidden border-r border-divider pr-4"
+      className="flex h-full w-full max-w-sm flex-col overflow-hidden border-r border-divider p-4"
     >
       <div>
         <h1 className="mb-2 text-xl font-medium" id="getting-started">

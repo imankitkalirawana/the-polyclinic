@@ -2,7 +2,6 @@
 
 import { useMemo } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'nextjs-toploader/app';
 import { Button, DropdownItem, DropdownMenu, Selection } from '@heroui/react';
 // eslint-disable-next-line no-restricted-imports
 import { toast } from 'sonner';
@@ -12,10 +11,11 @@ import { useServiceStore } from './store';
 
 import { Table } from '@/components/ui/static-data-table';
 import {
-  renderActions,
+  renderDropdownMenu,
   renderChip,
   renderCopyableText,
   renderDate,
+  DropdownItemWithSection,
 } from '@/components/ui/static-data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
 import { CLINIC_INFO } from '@/lib/config';
@@ -33,7 +33,6 @@ const INITIAL_VISIBLE_COLUMNS = [
 ];
 
 export default function Services() {
-  const router = useRouter();
   const { data, isLoading } = useAllServices();
   const { selected, setSelected } = useServiceStore();
   const deleteService = useDeleteService();
@@ -46,6 +45,31 @@ export default function Services() {
       success: (data) => data.message,
       error: (error) => error.message,
     });
+  };
+
+  const dropdownMenuItems = (service: ServiceType): DropdownItemWithSection[] => {
+    return [
+      {
+        key: 'view',
+        children: 'View',
+        as: Link,
+        href: `/dashboard/services/${service.uniqueId}`,
+      },
+      {
+        key: 'edit',
+        children: 'Edit',
+        as: Link,
+        href: `/dashboard/services/${service.uniqueId}/edit`,
+      },
+      {
+        key: 'delete',
+        children: 'Delete',
+        color: 'danger',
+        onPress: () => handleDelete(service.uniqueId),
+        section: 'Danger Zone',
+        className: 'text-danger',
+      },
+    ];
   };
 
   // Define columns with render functions
@@ -122,13 +146,7 @@ export default function Services() {
         name: 'Actions',
         uid: 'actions',
         sortable: false,
-        renderCell: (service) =>
-          renderActions({
-            onView: () => router.push(`/dashboard/services/${service.uniqueId}`),
-            onEdit: () => router.push(`/dashboard/services/${service.uniqueId}/edit`),
-            onDelete: () => handleDelete(service.uniqueId),
-            key: service.uniqueId,
-          }),
+        renderCell: (service) => renderDropdownMenu(dropdownMenuItems(service)),
       },
     ],
     []

@@ -1,11 +1,12 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useRouter } from 'nextjs-toploader/app';
 import { addToast, Button, DropdownItem, DropdownMenu, Selection } from '@heroui/react';
+import Link from 'next/link';
 
 import { Table } from '@/components/ui/static-data-table';
-import { renderActions, renderDate } from '@/components/ui/static-data-table/cell-renderers';
+import { renderDropdownMenu, renderDate } from '@/components/ui/static-data-table/cell-renderers';
+import { DropdownItemWithSection } from '@/components/ui/static-data-table/cell-renderers';
 import type { ColumnDef } from '@/components/ui/static-data-table/types';
 import { useAllNewsletters } from '@/services/client/newsletters/newsletter.query';
 import { NewsletterType } from '@/services/client/newsletters/newsletter.types';
@@ -13,10 +14,20 @@ import { NewsletterType } from '@/services/client/newsletters/newsletter.types';
 const INITIAL_VISIBLE_COLUMNS = ['email', 'updatedAt', 'createdAt'];
 
 export default function Newsletters() {
-  const router = useRouter();
   const { data, isLoading } = useAllNewsletters();
 
   const newsletters: NewsletterType[] = data || [];
+
+  const dropdownMenuItems = (newsletter: NewsletterType): DropdownItemWithSection[] => {
+    return [
+      {
+        key: 'view',
+        children: 'View',
+        as: Link,
+        href: `/dashboard/newsletters/${newsletter._id}`,
+      },
+    ];
+  };
 
   // Define columns with render functions
   const columns: ColumnDef<NewsletterType>[] = useMemo(
@@ -46,13 +57,7 @@ export default function Newsletters() {
         name: 'Actions',
         uid: 'actions',
         sortable: false,
-        renderCell: (newsletter) =>
-          renderActions({
-            onView: () => router.push(`/dashboard/users/${newsletter._id}`),
-            onEdit: () => router.push(`/dashboard/users/${newsletter._id}/edit`),
-            onDelete: () => console.log('Delete', newsletter._id),
-            key: newsletter._id,
-          }),
+        renderCell: (newsletter) => renderDropdownMenu(dropdownMenuItems(newsletter)),
       },
     ],
     []

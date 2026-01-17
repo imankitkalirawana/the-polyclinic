@@ -8,20 +8,9 @@ import {
   type ListboxSectionProps,
   type Selection,
 } from '@heroui/react';
-import {
-  cn,
-  Link,
-  Listbox,
-  ListboxItem,
-  ListboxSection,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  Tooltip,
-} from '@heroui/react';
+import { cn, Link, Listbox, ListboxItem, ListboxSection, Tooltip } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { Role } from '@/services/common/user/user.constants';
-// import Link from 'next/link';
 
 export enum SidebarItemType {
   Nest = 'nest',
@@ -135,43 +124,50 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
             aria-label={item.title}
           >
             {isCompact && isNestType && item.items && item.items.length > 0 ? (
-              <Popover placement="right" showArrow>
-                <PopoverTrigger>
-                  <div
-                    data-testid="sidebar-item-icon"
-                    className="flex aspect-square w-full items-center justify-center"
-                  >
-                    {item.icon ? (
-                      <Icon
-                        className={cn(
-                          'text-default-500 group-data-[selected=true]:text-primary-500',
-                          iconClassName
-                        )}
-                        icon={item.icon}
-                        width={24}
-                      />
-                    ) : (
-                      (item.startContent ?? null)
-                    )}
+              <Tooltip
+                placement="right"
+                showArrow
+                content={
+                  <div>
+                    <div className="w-full px-2 py-1 text-foreground-500 text-tiny">
+                      {item.title}
+                    </div>
+                    <Listbox aria-label="nested-list" items={item.items} variant="flat">
+                      {item.items.map((subItem) => (
+                        <ListboxItem
+                          key={subItem.key}
+                          as={Link}
+                          href={subItem.href}
+                          startContent={
+                            subItem.icon ? <Icon icon={subItem.icon} width={24} /> : null
+                          }
+                          className="text-default-500"
+                        >
+                          {subItem.title}
+                        </ListboxItem>
+                      ))}
+                    </Listbox>
                   </div>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <div className="w-full px-2 py-1 text-foreground-500 text-tiny">{item.title}</div>
-                  <Listbox aria-label="nested-list" items={item.items} variant="flat">
-                    {item.items.map((subItem) => (
-                      <ListboxItem
-                        key={subItem.key}
-                        as={Link}
-                        href={subItem.href}
-                        startContent={subItem.icon ? <Icon icon={subItem.icon} width={24} /> : null}
-                        className="text-default-500"
-                      >
-                        {subItem.title}
-                      </ListboxItem>
-                    ))}
-                  </Listbox>
-                </PopoverContent>
-              </Popover>
+                }
+              >
+                <div
+                  data-testid="sidebar-item-icon"
+                  className="flex aspect-square w-full items-center justify-center"
+                >
+                  {item.icon ? (
+                    <Icon
+                      className={cn(
+                        'text-default-500 group-data-[selected=true]:text-primary-500',
+                        iconClassName
+                      )}
+                      icon={item.icon}
+                      width={24}
+                    />
+                  ) : (
+                    (item.startContent ?? null)
+                  )}
+                </div>
+              </Tooltip>
             ) : isCompact ? (
               <Tooltip content={item.title} placement="right">
                 <div className="flex w-full items-center justify-center">

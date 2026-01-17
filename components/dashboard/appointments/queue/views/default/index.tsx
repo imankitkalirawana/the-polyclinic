@@ -1,7 +1,6 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { useRouter } from 'nextjs-toploader/app';
 import { Button, DropdownItem, DropdownMenu, Selection, useDisclosure } from '@heroui/react';
 import { toast } from 'sonner';
 
@@ -10,10 +9,11 @@ import { toast } from 'sonner';
 
 import { Table } from '@/components/ui/static-data-table';
 import {
-  renderActions,
+  renderDropdownMenu,
   renderChip,
   renderDate,
   RenderUser,
+  DropdownItemWithSection,
 } from '@/components/ui/static-data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
 import { isSearchMatch } from '@/lib/utils';
@@ -36,7 +36,6 @@ const INITIAL_VISIBLE_COLUMNS = [
 ];
 
 export default function DefaultQueueView() {
-  const router = useRouter();
   const deleteModal = useDisclosure();
   const deleteDoctor = useDeleteUser();
   const [selectedQueue, setSelectedQueue] = useState<AppointmentQueueResponse | null>(null);
@@ -45,6 +44,31 @@ export default function DefaultQueueView() {
 
   const handleDelete = async (uid: string) => {
     await deleteDoctor.mutateAsync(uid);
+  };
+
+  const dropdownMenuItems = (queue: AppointmentQueueResponse): DropdownItemWithSection[] => {
+    return [
+      {
+        key: 'view',
+        children: 'View',
+        as: Link,
+        href: `/dashboard/queues/${queue.id}`,
+      },
+      {
+        key: 'edit',
+        children: 'Edit',
+        as: Link,
+        href: `/dashboard/queues/${queue.id}/edit`,
+      },
+      {
+        key: 'delete',
+        children: 'Delete',
+        color: 'danger',
+        onPress: () => handleDelete(queue.id),
+        section: 'Danger Zone',
+        className: 'text-danger',
+      },
+    ];
   };
 
   // Define columns with render functions
@@ -96,12 +120,12 @@ export default function DefaultQueueView() {
         sortable: true,
         renderCell: (queue) => <CopyText>{queue.doctor.seating || 'N/A'}</CopyText>,
       },
-      {
-        name: 'Scheduled Date',
-        uid: 'appointmentDate',
-        sortable: true,
-        renderCell: (queue) => renderDate({ date: queue.appointmentDate }),
-      },
+      // {
+      //   name: 'Scheduled Date',
+      //   uid: 'appointmentDate',
+      //   sortable: true,
+      //   renderCell: (queue) => renderDate({ date: queue.appointmentDate }),
+      // },
       {
         name: 'Created At',
         uid: 'createdAt',
@@ -130,13 +154,7 @@ export default function DefaultQueueView() {
         name: 'Actions',
         uid: 'actions',
         sortable: false,
-        renderCell: (doctor) =>
-          renderActions({
-            onView: () => router.push(`/dashboard/doctors/${doctor.id}`),
-            onEdit: () => router.push(`/dashboard/doctors/${doctor.id}/edit`),
-            key: doctor.id,
-            onDelete: () => handleDelete(doctor.id),
-          }),
+        renderCell: (queue) => renderDropdownMenu(dropdownMenuItems(queue)),
       },
     ],
     []

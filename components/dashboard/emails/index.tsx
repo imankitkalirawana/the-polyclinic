@@ -1,14 +1,15 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useRouter } from 'nextjs-toploader/app';
 import { Button, DropdownItem, DropdownMenu, Selection } from '@heroui/react';
+import Link from 'next/link';
 
 import { EmailQuickLook } from './quicklook';
 import { useEmailStore } from './store';
 
 import { Table } from '@/components/ui/static-data-table';
-import { renderActions, renderDate } from '@/components/ui/static-data-table/cell-renderers';
+import { renderDropdownMenu, renderDate } from '@/components/ui/static-data-table/cell-renderers';
+import { DropdownItemWithSection } from '@/components/ui/static-data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
 import { useAllEmails } from '@/services/client/email/email.query';
 import { EmailType } from '@/services/client/email/email.types';
@@ -16,12 +17,21 @@ import { EmailType } from '@/services/client/email/email.types';
 const INITIAL_VISIBLE_COLUMNS = ['id', 'from', 'to', 'subject', 'message', 'createdAt'];
 
 export default function Emails() {
-  const router = useRouter();
-
   const { data, isLoading } = useAllEmails();
   const { selected, setSelected } = useEmailStore();
 
   const emails: EmailType[] = data || [];
+
+  const dropdownMenuItems = (email: EmailType): DropdownItemWithSection[] => {
+    return [
+      {
+        key: 'view',
+        children: 'View',
+        as: Link,
+        href: `/dashboard/emails/${email._id}`,
+      },
+    ];
+  };
   // Define columns with render functions
   const columns: ColumnDef<EmailType>[] = useMemo(
     () => [
@@ -57,12 +67,7 @@ export default function Emails() {
         name: 'Actions',
         uid: 'actions',
         sortable: false,
-        renderCell: (email) =>
-          renderActions({
-            onView: () => router.push(`/dashboard/emails/${email._id}`),
-            onDelete: () => console.log('Delete', email._id),
-            key: email._id,
-          }),
+        renderCell: (email) => renderDropdownMenu(dropdownMenuItems(email)),
       },
     ],
     []

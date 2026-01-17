@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import DataItem from '@/components/ui/data-item';
 import { formatDate } from 'date-fns';
+import { formatGender } from '@/lib/utils';
 
 export default function DetailsHeader({
   currentQueue,
@@ -73,7 +74,7 @@ export default function DetailsHeader({
             <CellRenderer
               icon="solar:men-bold-duotone"
               label="Gender"
-              value={currentQueue.patient.gender}
+              value={formatGender(currentQueue.patient.gender, { fullString: true })}
               className="p-0"
               classNames={{
                 icon: 'text-green-500 bg-green-100',

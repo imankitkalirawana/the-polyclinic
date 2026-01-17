@@ -65,7 +65,7 @@ export const navItems = [
   },
   {
     name: 'Appointments',
-    href: '/appointments',
+    href: '/dashboard/appointments',
     thumbnail: '/assets/navbar/appointments.png',
     roles: [Role.ADMIN, Role.RECEPTIONIST, Role.DOCTOR, Role.PATIENT] as const,
     subItems: [
@@ -74,13 +74,13 @@ export const navItems = [
         items: [
           {
             name: 'Create New',
-            href: '/appointments/create',
+            href: '/dashboard/appointments/create',
             icon: 'solar:pen-new-round-bold-duotone',
             roles: [Role.ADMIN, Role.RECEPTIONIST, Role.PATIENT] as const,
           },
           {
             name: 'Generate Token',
-            href: '/appointments/queues/book',
+            href: '/dashboard/queues/new',
             icon: 'solar:clipboard-list-bold-duotone',
             roles: [Role.PATIENT, Role.DOCTOR, Role.RECEPTIONIST, Role.ADMIN] as const,
           },
@@ -91,19 +91,19 @@ export const navItems = [
         items: [
           {
             name: 'My Schedules',
-            href: '/appointments?view=schedule',
+            href: '/dashboard/appointments?view=schedule',
             icon: 'solar:calendar-bold-duotone',
             roles: [Role.ADMIN, Role.RECEPTIONIST, Role.PATIENT, Role.DOCTOR] as const,
           },
           {
             name: 'All Appointments',
-            href: '/appointments?view=month',
+            href: '/dashboard/appointments?view=month',
             icon: 'solar:clipboard-list-bold-duotone',
             roles: [Role.ADMIN, Role.RECEPTIONIST, Role.PATIENT, Role.DOCTOR] as const,
           },
           {
             name: 'Token Appointments',
-            href: '/appointments/queues',
+            href: '/dashboard/queues',
             icon: 'solar:clipboard-list-bold-duotone',
             roles: [Role.ADMIN, Role.RECEPTIONIST, Role.PATIENT, Role.DOCTOR] as const,
           },
