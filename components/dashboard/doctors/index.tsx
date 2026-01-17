@@ -1,7 +1,6 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useRouter } from 'nextjs-toploader/app';
 import { Button, DropdownItem, DropdownMenu, Selection, useDisclosure } from '@heroui/react';
 import { toast } from 'sonner';
 
@@ -10,9 +9,10 @@ import { useDoctorStore } from './store';
 
 import { Table } from '@/components/ui/static-data-table';
 import {
-  renderActions,
+  renderDropdownMenu,
   renderDate,
   RenderUser,
+  DropdownItemWithSection,
 } from '@/components/ui/static-data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
 import { castData } from '@/lib/utils';
@@ -33,7 +33,6 @@ const INITIAL_VISIBLE_COLUMNS = [
 ];
 
 export default function Doctors() {
-  const router = useRouter();
   const deleteModal = useDisclosure();
   const { setSelected } = useDoctorStore();
   const deleteDoctor = useDeleteUser();
@@ -42,6 +41,31 @@ export default function Doctors() {
 
   const handleDelete = async (id: string) => {
     await deleteDoctor.mutateAsync(id);
+  };
+
+  const dropdownMenuItems = (doctor: DoctorType): DropdownItemWithSection[] => {
+    return [
+      {
+        key: 'view',
+        children: 'View',
+        as: Link,
+        href: `/dashboard/doctors/${doctor.id}`,
+      },
+      {
+        key: 'edit',
+        children: 'Edit',
+        as: Link,
+        href: `/dashboard/doctors/${doctor.id}/edit`,
+      },
+      {
+        key: 'delete',
+        children: 'Delete',
+        color: 'danger',
+        onPress: () => handleDelete(doctor.id),
+        section: 'Danger Zone',
+        className: 'text-danger',
+      },
+    ];
   };
 
   // Define columns with render functions
@@ -88,13 +112,7 @@ export default function Doctors() {
         name: 'Actions',
         uid: 'actions',
         sortable: false,
-        renderCell: (doctor) =>
-          renderActions({
-            onView: () => router.push(`/dashboard/doctors/${doctor.id}`),
-            onEdit: () => router.push(`/dashboard/doctors/${doctor.id}/edit`),
-            key: doctor.id,
-            onDelete: () => handleDelete(doctor.userid),
-          }),
+        renderCell: (doctor) => renderDropdownMenu(dropdownMenuItems(doctor)),
       },
     ],
     []

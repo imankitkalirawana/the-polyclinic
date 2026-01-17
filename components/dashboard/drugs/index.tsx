@@ -1,18 +1,18 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useRouter } from 'nextjs-toploader/app';
 import { Button, DropdownItem, DropdownMenu, Selection } from '@heroui/react';
-
+import Link from 'next/link';
 import { DrugQuickLook } from './quicklook';
 import { useDrugStore } from './store';
 
 import { Table } from '@/components/ui/static-data-table';
 import {
-  renderActions,
+  renderDropdownMenu,
   renderChip,
   renderCopyableText,
   renderDate,
+  DropdownItemWithSection,
 } from '@/components/ui/static-data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
 import { useAllDrugs } from '@/services/client/drug/drug.query';
@@ -28,12 +28,35 @@ const INITIAL_VISIBLE_COLUMNS = [
 ];
 
 export default function Drugs() {
-  const router = useRouter();
-
   const { data, isLoading } = useAllDrugs();
 
   const drugs: DrugType[] = data || [];
   const { selected, setSelected } = useDrugStore();
+
+  const dropdownMenuItems = (drug: DrugType): DropdownItemWithSection[] => {
+    return [
+      {
+        key: 'view',
+        children: 'View',
+        as: Link,
+        href: `/dashboard/drugs/${drug.did}`,
+      },
+      {
+        key: 'edit',
+        children: 'Edit',
+        as: Link,
+        href: `/dashboard/drugs/${drug.did}/edit`,
+      },
+      {
+        key: 'delete',
+        children: 'Delete',
+        color: 'danger',
+        onPress: () => console.log('Delete', drug.did),
+        section: 'Danger Zone',
+        className: 'text-danger',
+      },
+    ];
+  };
 
   // Define columns with render functions
   const columns: ColumnDef<DrugType>[] = useMemo(
@@ -87,13 +110,7 @@ export default function Drugs() {
         name: 'Actions',
         uid: 'actions',
         sortable: false,
-        renderCell: (drug) =>
-          renderActions({
-            onView: () => router.push(`/dashboard/drugs/${drug.did}`),
-            onEdit: () => router.push(`/dashboard/drugs/${drug.did}/edit`),
-            onDelete: () => console.log('Delete', drug.did),
-            key: drug.did,
-          }),
+        renderCell: (drug) => renderDropdownMenu(dropdownMenuItems(drug)),
       },
     ],
     []

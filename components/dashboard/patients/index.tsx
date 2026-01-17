@@ -1,7 +1,6 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useRouter } from 'nextjs-toploader/app';
 import { Button, DropdownItem, DropdownMenu, Selection, useDisclosure } from '@heroui/react';
 import { toast } from 'sonner';
 
@@ -10,12 +9,12 @@ import { usePatientStore } from './store';
 
 import { Table } from '@/components/ui/static-data-table';
 import {
-  renderActions,
+  DropdownItemWithSection,
   renderDate,
+  renderDropdownMenu,
   RenderUser,
 } from '@/components/ui/static-data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
-import { castData } from '@/lib/utils';
 import { PatientType } from '@/services/client/patient';
 import { useDeleteUser } from '@/services/common/user/user.query';
 import { useAllPatients } from '@/services/client/patient';
@@ -26,15 +25,51 @@ import { CopyText } from '@/components/ui/copy';
 const INITIAL_VISIBLE_COLUMNS = ['image', 'name', 'email', 'age', 'gender', 'createdAt'];
 
 export default function Patients() {
-  const router = useRouter();
   const deleteModal = useDisclosure();
   const { setSelected } = usePatientStore();
   const deletePatient = useDeleteUser();
 
-  const { data, isLoading, isError, error } = useAllPatients();
+  const { data: patients, isLoading, isError, error } = useAllPatients();
 
   const handleDelete = async (userId: string) => {
     await deletePatient.mutateAsync(userId);
+  };
+
+  const handleChangePassword = async (userId: string) => {
+    console.log(userId);
+  };
+
+  const dropdownMenuItems = (patient: PatientType): DropdownItemWithSection[] => {
+    return [
+      {
+        key: 'view',
+        children: 'View',
+        as: Link,
+        href: `/dashboard/patients/${patient.id}`,
+      },
+      {
+        key: 'edit',
+        children: 'Edit',
+        as: Link,
+        href: `/dashboard/patients/${patient.id}/edit`,
+      },
+      {
+        key: 'change-password',
+        color: 'warning',
+        children: 'Reset Password',
+        onPress: () => handleChangePassword(patient.userId),
+        section: 'Danger Zone',
+        className: 'text-warning',
+      },
+      {
+        key: 'delete',
+        children: 'Delete',
+        color: 'danger',
+        onPress: () => handleDelete(patient.userId),
+        section: 'Danger Zone',
+        className: 'text-danger',
+      },
+    ];
   };
 
   // Define columns with render functions
@@ -81,13 +116,7 @@ export default function Patients() {
         name: 'Actions',
         uid: 'actions',
         sortable: false,
-        renderCell: (patient) =>
-          renderActions({
-            onView: () => router.push(`/dashboard/patients/${patient.id}`),
-            onEdit: () => router.push(`/dashboard/patients/${patient.id}/edit`),
-            key: patient.id,
-            onDelete: () => handleDelete(patient.userId),
-          }),
+        renderCell: (patient) => renderDropdownMenu(dropdownMenuItems(patient)),
       },
     ],
     []
@@ -195,8 +224,6 @@ export default function Patients() {
       </DropdownItem>
     </DropdownMenu>
   );
-
-  const patients = castData<PatientType[]>(data);
 
   if (isLoading) return <MinimalPlaceholder message="Loading patients..." />;
 
