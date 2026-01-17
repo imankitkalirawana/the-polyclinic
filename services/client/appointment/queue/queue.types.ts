@@ -44,6 +44,7 @@ export type AppointmentQueueRequest = {
   queueId?: string | null;
   patientId: string;
   doctorId: string;
+  appointmentDate: Date | null;
   paymentMode: PaymentMode;
   notes?: string | null;
 };

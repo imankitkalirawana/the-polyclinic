@@ -23,6 +23,7 @@ export default function NewQueueAppointment() {
         queueId: null,
         patientId: '',
         doctorId: '',
+        appointmentDate: new Date(),
         notes: null,
       },
       meta: {
