@@ -99,6 +99,13 @@ export default function PatientSelection() {
             isSelected={patientId === patient.id}
             onSelect={(id) => form.setValue('appointment.patientId', id)}
             onView={setSelectedPatient}
+            onDelete={(_patient) => {
+              addToast({
+                title: 'Delete not available',
+                description: 'Deleting patients is not available from the appointment queue.',
+                color: 'warning',
+              });
+            }}
           />
         ))}
       </div>
