@@ -21,6 +21,8 @@ import { getSidebarItems } from '@/components/dashboard/sidebar/sidebar-items';
 import Sidebar from '@/components/dashboard/sidebar/sidebar';
 import NotificationsWrapper from '../sections/navbar/notifications';
 import ProfileDropdown from '../sections/navbar/profile-dropdown';
+import { ErrorBoundary } from '@sentry/nextjs';
+import CustomError from '../error';
 
 export const SIDEBAR_WIDTHS = {
   expanded: 288,
@@ -135,7 +137,9 @@ export default function DashboardLayout({ children }: { readonly children: React
       <div className="flex w-[80vw] flex-1 flex-col md:p-2">
         {header}
         <main className="w-full flex-1 overflow-hidden">
-          <div className="flex h-full flex-col gap-4 overflow-hidden p-2">{children}</div>
+          <div className="flex h-full flex-col gap-4 overflow-hidden p-2">
+            <ErrorBoundary fallback={<CustomError type="error" />}>{children}</ErrorBoundary>
+          </div>
         </main>
       </div>
     </div>

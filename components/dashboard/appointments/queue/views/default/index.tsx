@@ -96,12 +96,12 @@ export default function DefaultQueueView() {
         sortable: true,
         renderCell: (queue) => <CopyText>{queue.doctor.seating || 'N/A'}</CopyText>,
       },
-      {
-        name: 'Scheduled Date',
-        uid: 'appointmentDate',
-        sortable: true,
-        renderCell: (queue) => renderDate({ date: queue.appointmentDate }),
-      },
+      // {
+      //   name: 'Scheduled Date',
+      //   uid: 'appointmentDate',
+      //   sortable: true,
+      //   renderCell: (queue) => renderDate({ date: queue.appointmentDate }),
+      // },
       {
         name: 'Created At',
         uid: 'createdAt',
