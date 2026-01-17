@@ -76,10 +76,6 @@ export default function QueuesDoctorView() {
     );
   }, [previousQueues, selectedFilters]);
 
-  if (!data && !isLoading) {
-    return <MinimalPlaceholder message="No queues found" isLoading={false} />;
-  }
-
   return (
     <FormProvider {...prescriptionForm}>
       <div
@@ -91,7 +87,9 @@ export default function QueuesDoctorView() {
           data-test-id="current-queue"
         >
           <DateScroll selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-          {currentQueue ? (
+          {isLoading ? (
+            <MinimalPlaceholder message="Loading appointment..." isLoading={true} />
+          ) : currentQueue ? (
             <>
               <DetailsHeader currentQueue={currentQueue} />
               {currentQueue.status === QueueStatus.IN_CONSULTATION && (
@@ -167,6 +165,7 @@ export default function QueuesDoctorView() {
                   </Chip>
                 </div>
                 <QueuesList
+                  isLoading={isLoading}
                   queues={filteredNextQueues}
                   onSelect={(queueId) => setQueueId(queueId)}
                   className="w-full"
@@ -198,6 +197,7 @@ export default function QueuesDoctorView() {
                   </Chip>
                 </div>
                 <QueuesList
+                  isLoading={isLoading}
                   queues={filteredPreviousQueues}
                   onSelect={(queueId) => setQueueId(queueId)}
                   className="w-full"
