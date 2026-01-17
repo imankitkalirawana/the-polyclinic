@@ -56,6 +56,7 @@ export const useDownloadReceipt = () => {
 export const useCreateAppointmentQueue = () => {
   return useGenericMutation({
     mutationFn: (data: AppointmentQueueRequest) => AppointmentQueueApi.create(data),
+    invalidateAllQueries: true,
   });
 };
 
