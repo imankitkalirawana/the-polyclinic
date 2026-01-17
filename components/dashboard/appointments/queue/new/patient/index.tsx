@@ -2,6 +2,7 @@ import {
   addToast,
   Button,
   Card,
+  Chip,
   cn,
   Dropdown,
   DropdownItem,
@@ -21,6 +22,7 @@ import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
 import NewPatient from './new-patient';
+import { formatAge, formatGender } from '@/lib/utils';
 
 export default function PatientSelection() {
   const [search, setSearch] = useState('');
@@ -130,7 +132,38 @@ const PatientCard = ({
       )}
       onPress={() => onSelect(patient.id)}
     >
-      <RenderUser name={patient.name} description={patient.phone || patient.email} />
+      <RenderUser
+        name={patient.name}
+        description={
+          <div className="flex gap-1">
+            <Chip title={patient.phone || patient.email} size="sm" color="primary" variant="flat">
+              <span className="block max-w-24 truncate">{patient.phone || patient.email}</span>
+            </Chip>
+            {patient.age && (
+              <Chip
+                title={formatAge(patient.age, { fullString: true })}
+                size="sm"
+                color="warning"
+                variant="flat"
+              >
+                <span className="block max-w-24 truncate">{formatAge(patient.age)}</span>
+              </Chip>
+            )}
+            {patient.gender && (
+              <Chip
+                title={formatGender(patient.gender, { fullString: true })}
+                size="sm"
+                variant="flat"
+                className="bg-blue-50 text-blue-700"
+              >
+                <span className="block max-w-24 truncate">
+                  {formatGender(patient.gender, { fullString: true })}
+                </span>
+              </Chip>
+            )}
+          </div>
+        }
+      />
       <div>
         <Dropdown aria-label="Patient actions" placement="bottom-end">
           <DropdownTrigger>

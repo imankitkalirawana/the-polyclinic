@@ -19,6 +19,7 @@ import Avatar from 'boring-avatars';
 import { formatDate } from 'date-fns';
 import { useState } from 'react';
 import { getQueueStatusColor } from './helper';
+import { formatGender } from '@/lib/utils';
 
 export default function QueuesList({
   isLoading,
@@ -99,7 +100,7 @@ export default function QueuesList({
                     <div className="flex flex-col">
                       <span className="text-default-500 text-tiny">Gender</span>
                       <p className="capitalize text-small">
-                        {queue.patient.gender ? `${queue.patient.gender.toLowerCase()}` : '-'}
+                        {formatGender(queue.patient.gender, { fullString: true })}
                       </p>
                     </div>
                   </CardBody>

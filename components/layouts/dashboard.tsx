@@ -142,8 +142,8 @@ export default function DashboardLayout({ children }: { readonly children: React
       {sidebar}
       <div className="flex w-[80vw] flex-1 flex-col">
         {header}
-        <main className="w-full flex-1 overflow-hidden p-2">
-          <div className="flex h-full flex-col gap-4 overflow-hidden p-2">
+        <main className="w-full flex-1 overflow-hidden">
+          <div className="flex h-full flex-col gap-4 overflow-hidden">
             <ErrorBoundary fallback={<CustomError type="error" />}>{children}</ErrorBoundary>
           </div>
         </main>

@@ -108,7 +108,7 @@ export default function QueuesDoctorView() {
           )}
 
           <QueueFooter currentQueue={currentQueue} />
-          <div className="absolute right-0 top-14">
+          <div className="absolute right-0 top-1/2 -translate-y-1/2">
             <Tooltip content="Show next appointments" placement="left">
               <Button
                 isIconOnly
@@ -137,7 +137,17 @@ export default function QueuesDoctorView() {
                 base: 'px-2 pt-2',
               }}
             >
-              <Tab key="upcoming" title="Upcoming">
+              <Tab
+                key="upcoming"
+                title={
+                  <div className="flex items-center gap-2">
+                    <span>Upcoming</span>
+                    <Chip size="sm" variant="flat">
+                      {filteredNextQueues.length}
+                    </Chip>
+                  </div>
+                }
+              >
                 <div className="flex items-center gap-2 px-2 pb-2">
                   <Chip
                     as={Button}
@@ -168,7 +178,17 @@ export default function QueuesDoctorView() {
                   className="w-full"
                 />
               </Tab>
-              <Tab key="completed" title="Completed">
+              <Tab
+                key="completed"
+                title={
+                  <div className="flex items-center gap-2">
+                    <span>Completed</span>
+                    <Chip size="sm" variant="flat">
+                      {filteredPreviousQueues.length}
+                    </Chip>
+                  </div>
+                }
+              >
                 <div className="flex items-center gap-2 px-2 pb-2">
                   <Chip
                     as={Button}
