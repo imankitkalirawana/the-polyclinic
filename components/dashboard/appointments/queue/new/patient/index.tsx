@@ -25,7 +25,6 @@ import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
 import NewPatient from './new-patient';
-// import { useDeleteUser } from '@/services/common/user/user.query';
 
 export default function PatientSelection() {
   const [search, setSearch] = useState('');
