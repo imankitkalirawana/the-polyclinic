@@ -154,7 +154,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                 className={cn(
                   'justify-between border-t border-divider',
                   {
-                    'border-t-0': hideCloseButton,
+                    'border-t-0': hideCancelButton,
                     'justify-end': isLargeModal,
                   },
                   classNames?.footer
