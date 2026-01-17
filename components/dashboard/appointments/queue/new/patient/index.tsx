@@ -145,45 +145,43 @@ const PatientCard = ({
   onDelete?: (patient: PatientType) => void;
 }) => {
   return (
-    <>
-      <Card
-        isPressable
-        className={cn(
-          'flex w-full flex-row items-center justify-between gap-4 border-2 border-divider px-4 py-4 shadow-none',
-          {
-            'border-primary': isSelected,
-          }
-        )}
-        onPress={() => onSelect(patient.id)}
-      >
-        <RenderUser name={patient.name} description={patient.phone || patient.email} />
-        <div>
-          <Dropdown aria-label="Patient actions" placement="bottom-end">
-            <DropdownTrigger>
-              <Button size="sm" isIconOnly variant="light" radius="full">
-                <Icon icon="solar:menu-dots-bold-duotone" className="rotate-90" width={18} />
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu>
-              <DropdownItem key="view" onPress={() => onView?.(patient)}>
-                View
-              </DropdownItem>
+    <Card
+      isPressable
+      className={cn(
+        'flex w-full flex-row items-center justify-between gap-4 border-2 border-divider px-4 py-4 shadow-none',
+        {
+          'border-primary': isSelected,
+        }
+      )}
+      onPress={() => onSelect(patient.id)}
+    >
+      <RenderUser name={patient.name} description={patient.phone || patient.email} />
+      <div>
+        <Dropdown aria-label="Patient actions" placement="bottom-end">
+          <DropdownTrigger>
+            <Button size="sm" isIconOnly variant="light" radius="full">
+              <Icon icon="solar:menu-dots-bold-duotone" className="rotate-90" width={18} />
+            </Button>
+          </DropdownTrigger>
+          <DropdownMenu>
+            <DropdownItem key="view" onPress={() => onView?.(patient)}>
+              View
+            </DropdownItem>
 
-              <DropdownItem color="warning" key="edit">
-                Edit
-              </DropdownItem>
-              <DropdownItem
-                key="delete"
-                onClick={() => onDelete?.(patient)}
-                className="text-danger"
-                color="danger"
-              >
-                Delete
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-        </div>
-      </Card>
-    </>
+            <DropdownItem color="warning" key="edit">
+              Edit
+            </DropdownItem>
+            <DropdownItem
+              key="delete"
+              onClick={() => onDelete?.(patient)}
+              className="text-danger"
+              color="danger"
+            >
+              Delete
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </div>
+    </Card>
   );
 };
