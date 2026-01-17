@@ -16,8 +16,12 @@ import {
 } from '@/components/dashboard/appointments/(common)';
 import { PatientType, useAllPatients } from '@/services/client/patient';
 import { useFormContext } from 'react-hook-form';
+import Modal from '@/components/ui/modal';
+import ViewPatientBody from '@/components/ui/modal/view-modal';
+
 import { useState } from 'react';
 import { useDebounce } from '@/hooks/useDebounce';
+
 import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
@@ -26,6 +30,7 @@ import { formatAge, formatGender } from '@/lib/utils';
 
 export default function PatientSelection() {
   const [search, setSearch] = useState('');
+  const [selectedPatient, setSelectedPatient] = useState<PatientType | null>(null);
 
   const debouncedSearch = useDebounce(search, 500);
 
@@ -95,6 +100,14 @@ export default function PatientSelection() {
             patient={patient}
             isSelected={patientId === patient.id}
             onSelect={(id) => form.setValue('appointment.patientId', id)}
+            onView={setSelectedPatient}
+            onDelete={(_patient) => {
+              addToast({
+                title: 'Delete not available',
+                description: 'Deleting patients is not available from the appointment queue.',
+                color: 'warning',
+              });
+            }}
           />
         ))}
       </div>
@@ -108,6 +121,14 @@ export default function PatientSelection() {
           }}
         />
       )}
+      <Modal
+        isOpen={!!selectedPatient}
+        onClose={() => setSelectedPatient(null)}
+        size="4xl"
+        title="Patient Details"
+        body={<ViewPatientBody patient={selectedPatient as PatientType} />}
+        hideCancelButton
+      />
     </CreateAppointmentContentContainer>
   );
 }
@@ -116,10 +137,14 @@ const PatientCard = ({
   patient,
   isSelected,
   onSelect,
+  onView,
+  onDelete,
 }: {
   patient: PatientType;
   isSelected: boolean;
   onSelect: (id: string) => void;
+  onView?: (patient: PatientType) => void;
+  onDelete?: (patient: PatientType) => void;
 }) => {
   return (
     <Card
@@ -172,11 +197,19 @@ const PatientCard = ({
             </Button>
           </DropdownTrigger>
           <DropdownMenu>
-            <DropdownItem key="view">View</DropdownItem>
+            <DropdownItem key="view" onPress={() => onView?.(patient)}>
+              View
+            </DropdownItem>
+
             <DropdownItem color="warning" key="edit">
               Edit
             </DropdownItem>
-            <DropdownItem color="danger" key="delete">
+            <DropdownItem
+              key="delete"
+              onClick={() => onDelete?.(patient)}
+              className="text-danger"
+              color="danger"
+            >
               Delete
             </DropdownItem>
           </DropdownMenu>
