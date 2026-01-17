@@ -18,7 +18,7 @@ export default function QueueFooter({
 
   return (
     <div
-      data-test-id="queue-footer"
+      data-testid="queue-footer"
       className={cn(
         'absolute bottom-0 left-0 z-10 flex w-full justify-between gap-2 border-t border-divider bg-background p-2 px-4',
         {

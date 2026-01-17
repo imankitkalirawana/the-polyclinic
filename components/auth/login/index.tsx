@@ -26,6 +26,7 @@ const LoginComponent: React.FC<{ subdomain: string | null }> = ({ subdomain }) =
             startContent={<Icon icon="solar:letter-bold-duotone" width={20} />}
             size="lg"
             color="primary"
+            data-testid="continue-with-email-btn"
             onPress={() => {
               paginate(1);
             }}
@@ -37,6 +38,7 @@ const LoginComponent: React.FC<{ subdomain: string | null }> = ({ subdomain }) =
             variant="bordered"
             startContent={<Icon icon="devicon:google" width={20} />}
             size="lg"
+            data-testid="continue-with-google-btn"
             onPress={async () => {
               addToast({
                 title: 'Coming soon',
@@ -51,6 +53,7 @@ const LoginComponent: React.FC<{ subdomain: string | null }> = ({ subdomain }) =
             fullWidth
             variant="light"
             size="lg"
+            data-testid="continue-another-way-btn"
             onPress={() => {
               addToast({
                 title: 'Coming soon',
@@ -76,6 +79,7 @@ const LoginComponent: React.FC<{ subdomain: string | null }> = ({ subdomain }) =
           placeholder="john.doe@example.com"
           autoComplete="email"
           autoFocus
+          data-testid="email-input"
           isInvalid={!!(formik.touched.email && formik.errors.email)}
           errorMessage={formik.errors.email?.toString()}
           value={formik.values.email}
@@ -101,6 +105,7 @@ const LoginComponent: React.FC<{ subdomain: string | null }> = ({ subdomain }) =
           <PasswordInput
             autoFocus
             label="Password"
+            data-testid="password-input"
             onValueChange={(value) => formik.setFieldValue('password', value)}
             isInvalid={!!(formik.touched.password && formik.errors.password)}
             errorMessage={formik.errors.password?.toString()}

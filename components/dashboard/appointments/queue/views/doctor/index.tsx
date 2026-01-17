@@ -80,11 +80,11 @@ export default function QueuesDoctorView() {
     <FormProvider {...prescriptionForm}>
       <div
         className="relative flex h-[calc(100vh-58px)] divide-x-1 divide-divider overflow-hidden"
-        data-test-id="appointment-queues"
+        data-testid="appointment-queues"
       >
         <div
           className="relative flex min-w-0 flex-1 flex-col justify-start"
-          data-test-id="current-queue"
+          data-testid="current-queue"
         >
           <DateScroll selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
           {isLoading ? (
@@ -129,10 +129,7 @@ export default function QueuesDoctorView() {
 
         {/* next queues */}
         {showNextQueues && (
-          <div
-            className="h-full w-[400px] flex-shrink-0 overflow-hidden"
-            data-test-id="next-queues"
-          >
+          <div className="h-full w-[400px] flex-shrink-0 overflow-hidden" data-testid="next-queues">
             <Tabs
               aria-label="Queues"
               classNames={{
