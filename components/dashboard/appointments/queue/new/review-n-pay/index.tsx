@@ -1,4 +1,5 @@
 import { Divider } from '@heroui/react';
+import { format } from 'date-fns';
 import {
   CreateAppointmentContentContainer,
   CreateAppointmentContentHeader,
@@ -87,6 +88,18 @@ export default function ReviewAndPay() {
           value={doctor?.specialization ?? '-'}
           classNames={{
             icon: 'text-cyan-500 bg-cyan-100',
+          }}
+        />
+        <CellRenderer
+          icon="solar:calendar-bold-duotone"
+          label="Appointment Date"
+          value={
+            appointment.appointmentDate
+              ? format(appointment.appointmentDate, 'EE, MMMM d, yyyy')
+              : '-'
+          }
+          classNames={{
+            icon: 'text-purple-500 bg-purple-100',
           }}
         />
 

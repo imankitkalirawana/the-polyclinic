@@ -51,7 +51,7 @@ export default function ActivityTimeline({ activities }: { activities: ActivityL
   return (
     <div className="h-full overflow-hidden py-4 pl-2">
       <h2 className="pb-4 font-medium text-default-800 text-small">Activity Logs</h2>
-      <ScrollShadow className="flex h-full flex-col gap-2" hideScrollBar>
+      <ScrollShadow className="flex h-full flex-col gap-2 pb-16" hideScrollBar>
         <ul className="relative flex flex-col gap-4">
           <div className="absolute bottom-0 left-4 top-5 w-px bg-gradient-to-b from-divider via-divider to-transparent" />
 
@@ -127,17 +127,15 @@ function ActivityTimelineItem({ activity }: { activity: ActivityLogResponse }) {
           </ul>
         )}
 
-        {activity.actor.type === ActorType.USER &&
-          activity.changedFields &&
-          visibleFields >= Object.keys(activity.changedFields).length && (
-            <div className="mt-1 flex items-center overflow-hidden text-default-500 text-tiny">
-              <Avatar
-                name={activity.actor.name}
-                className="mr-2 h-5 w-5 flex-shrink-0 rounded-full bg-default-300"
-              />
-              <span>{activity.actor.name}</span>
-            </div>
-          )}
+        {activity.actor.type === ActorType.USER && (
+          <div className="mt-1 flex items-center overflow-hidden text-default-500 text-tiny">
+            <Avatar
+              name={activity.actor.name}
+              className="mr-2 h-5 w-5 flex-shrink-0 rounded-full bg-default-300"
+            />
+            <span>{activity.actor.name}</span>
+          </div>
+        )}
       </div>
     </li>
   );

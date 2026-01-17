@@ -10,6 +10,7 @@ import {
   SearchInput,
 } from '../../../(common)';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
+import DateScroll from '../../../(common)/date-scroll';
 
 export default function DoctorSelection() {
   const [search, setSearch] = useState('');
@@ -20,6 +21,11 @@ export default function DoctorSelection() {
   const form = useFormContext<CreateAppointmentQueueFormValues>();
 
   const doctorId = form.watch('appointment.doctorId');
+  const appointmentDate = form.watch('appointment.appointmentDate');
+
+  const handleDateSelect = (date: Date) => {
+    form.setValue('appointment.appointmentDate', date);
+  };
 
   const handleNext = () => {
     if (!doctorId) {
@@ -37,8 +43,8 @@ export default function DoctorSelection() {
     <CreateAppointmentContentContainer
       header={
         <CreateAppointmentContentHeader
-          title="Doctor Selection"
-          description="Select the doctor with whom you want to book the appointment"
+          title="Doctor & Date Selection"
+          description="Select the doctor and date you want to book an appointment with."
         />
       }
       footer={
@@ -56,6 +62,9 @@ export default function DoctorSelection() {
         </>
       }
     >
+      <div>
+        <DateScroll selectedDate={appointmentDate} setSelectedDate={handleDateSelect} />
+      </div>
       <div>
         <SearchInput
           isLoading={isLoading || isRefetching}

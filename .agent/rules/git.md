@@ -1,0 +1,39 @@
+---
+trigger: always_on
+---
+
+# Git Workflow & Commits
+
+## Branch Naming
+
+- `feature/appointments-scheduling-improvement`
+- `fix/patient-data-validation-bug`
+- `security/hipaa-compliance-enhancement`
+
+## Commit Format
+
+Follow [commitlint.config.ts](mdc:commitlint.config.ts):
+
+```bash
+# Good examples
+feat(appointments): add real-time conflict detection
+fix(patient-data): resolve PHI masking in errors
+security(auth): implement MFA for providers
+refactor(validation): migrate Yup to Zod
+```
+
+## Code Review Checklist
+
+- [ ] No PHI in logs/errors
+- [ ] Authentication/authorization checks
+- [ ] Zod validation for healthcare data
+- [ ] HIPAA-compliant error messages
+- [ ] Audit logging for sensitive ops
+- [ ] Input sanitization (prevent injection)
+- [ ] RBAC properly implemented
+
+## Git Security
+
+- **Never commit PHI** to version control
+- Use environment variables for secrets
+- Maintain comprehensive audit trail

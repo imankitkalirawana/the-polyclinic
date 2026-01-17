@@ -27,10 +27,11 @@ import { CopyText } from '@/components/ui/copy';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'sequenceNumber',
-  'referenceNumber',
+  'aid',
   'patient.name',
   'doctor.name',
   'status',
+  'appointmentDate',
   'createdAt',
 ];
 
@@ -58,10 +59,10 @@ export default function DefaultQueueView() {
         ),
       },
       {
-        name: 'Reference Number',
-        uid: 'referenceNumber',
+        name: 'Appointment ID',
+        uid: 'aid',
         sortable: true,
-        renderCell: (queue) => <CopyText>{queue.referenceNumber}</CopyText>,
+        renderCell: (queue) => <CopyText>{queue.aid}</CopyText>,
       },
       {
         name: 'Name',
@@ -94,6 +95,12 @@ export default function DefaultQueueView() {
         uid: 'seating',
         sortable: true,
         renderCell: (queue) => <CopyText>{queue.doctor.seating || 'N/A'}</CopyText>,
+      },
+      {
+        name: 'Scheduled Date',
+        uid: 'appointmentDate',
+        sortable: true,
+        renderCell: (queue) => renderDate({ date: queue.appointmentDate }),
       },
       {
         name: 'Created At',
@@ -252,7 +259,7 @@ export default function DefaultQueueView() {
         searchField={(queue, searchValue) =>
           isSearchMatch(queue.patient.name, searchValue) ||
           isSearchMatch(queue.patient.email, searchValue) ||
-          isSearchMatch(queue.referenceNumber, searchValue) ||
+          isSearchMatch(queue.aid, searchValue) ||
           isSearchMatch(queue.patient.phone || '', searchValue)
         }
         endContent={endContent}

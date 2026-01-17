@@ -21,10 +21,12 @@ import { useState } from 'react';
 import { getQueueStatusColor } from './helper';
 
 export default function QueuesList({
+  isLoading,
   queues,
   className,
   onSelect,
 }: {
+  isLoading?: boolean;
   queues: AppointmentQueueResponse[];
   className?: string;
   onSelect?: (queueId: string) => void;
@@ -33,7 +35,9 @@ export default function QueuesList({
 
   return (
     <ScrollShadow className={cn('h-full w-full pb-20', className)}>
-      {queues.length > 0 ? (
+      {isLoading ? (
+        <MinimalPlaceholder message="Loading appointments..." isLoading={true} />
+      ) : queues.length > 0 ? (
         <Accordion
           hideIndicator
           isCompact
@@ -165,7 +169,7 @@ export default function QueuesList({
           ))}
         </Accordion>
       ) : (
-        <MinimalPlaceholder message="Nothing next, sit back and relax" isLoading={false} />
+        <MinimalPlaceholder message="Nothing to show here" isLoading={false} />
       )}
     </ScrollShadow>
   );

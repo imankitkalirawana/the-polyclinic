@@ -76,7 +76,7 @@ export default function AppointmentQueueReceipt() {
             <div className="flex w-full items-center justify-between text-small">
               <p className="text-default-500 text-tiny">Reference Number</p>
               {/* only last 6 digits of the appointment id */}
-              <p className="font-medium uppercase">{appointment?.referenceNumber}</p>
+              <p className="font-medium uppercase">{appointment?.aid}</p>
             </div>
             <div className="flex w-full items-center justify-between text-small">
               <p className="text-default-500 text-tiny">Payment Mode</p>

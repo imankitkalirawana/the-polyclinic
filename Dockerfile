@@ -1,8 +1,12 @@
 # Build stage
 FROM node:18-alpine AS builder
 WORKDIR /app
-# Install pnpm globally
-RUN npm install -g pnpm
+
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
 # Copy .npmrc, package.json, and pnpm-lock.yaml for caching
 COPY .npmrc package.json pnpm-lock.yaml ./
 # Install dependencies
@@ -22,8 +26,6 @@ COPY --from=builder /app/.npmrc /app/package.json /app/pnpm-lock.yaml ./
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/next.config.mjs ./next.config.mjs
-# Install only production dependencies
-RUN pnpm install --prod --frozen-lockfile
 # Expose the port Next.js runs on
 EXPOSE 3000
 # Start the app

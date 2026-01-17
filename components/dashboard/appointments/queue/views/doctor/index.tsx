@@ -10,7 +10,7 @@ import PrescriptionPanel, {
 } from './prescription-panel';
 import Medicines from './medicines';
 import QueuesList from './queues-list';
-import { useQueryState } from 'nuqs';
+import { useQueryState, parseAsIsoDateTime } from 'nuqs';
 import DetailsHeader from './details-header';
 import QueueFooter from './footer';
 import { useForm, FormProvider } from 'react-hook-form';
@@ -20,11 +20,13 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { useState, useMemo } from 'react';
 import CompletedAppointmentQueue from './completed';
 import { useSession } from '@/lib/providers/session-provider';
+import DateScroll from '../../../(common)/date-scroll';
 
 export default function QueuesDoctorView() {
   const session = useSession();
   const [queueId, setQueueId] = useQueryState('id');
   const [showNextQueues, setShowNextQueues] = useLocalStorage('show-next-queues', true);
+  const [selectedDate, setSelectedDate] = useQueryState('date', parseAsIsoDateTime);
   const [selectedFilters, setSelectedFilters] = useState({
     booked: false,
     skipped: false,
@@ -32,7 +34,7 @@ export default function QueuesDoctorView() {
     cancelled: false,
   });
 
-  const { data, isLoading } = useQueueForDoctor(session?.user?.doctorId, queueId);
+  const { data, isLoading } = useQueueForDoctor(session?.user?.doctorId, queueId, selectedDate);
 
   // Initialize prescription form with FormProvider
   const prescriptionForm = useForm<PrescriptionFormSchema>({
@@ -74,18 +76,20 @@ export default function QueuesDoctorView() {
     );
   }, [previousQueues, selectedFilters]);
 
-  if (!data && !isLoading) {
-    return <MinimalPlaceholder message="No queues found" isLoading={false} />;
-  }
-
   return (
     <FormProvider {...prescriptionForm}>
       <div
-        className="relative flex h-[calc(100vh-58px)] divide-x-1 divide-divider"
-        data-test-id="appointment-queues"
+        className="relative flex h-[calc(100vh-58px)] divide-x-1 divide-divider overflow-hidden"
+        data-testid="appointment-queues"
       >
-        <div className="relative flex w-full flex-col justify-start" data-test-id="current-queue">
-          {currentQueue ? (
+        <div
+          className="relative flex min-w-0 flex-1 flex-col justify-start"
+          data-testid="current-queue"
+        >
+          <DateScroll selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+          {isLoading ? (
+            <MinimalPlaceholder message="Loading appointment..." isLoading={true} />
+          ) : currentQueue ? (
             <>
               <DetailsHeader currentQueue={currentQueue} />
               {currentQueue.status === QueueStatus.IN_CONSULTATION && (
@@ -125,7 +129,7 @@ export default function QueuesDoctorView() {
 
         {/* next queues */}
         {showNextQueues && (
-          <div className="h-full w-full max-w-[400px] overflow-hidden" data-test-id="next-queues">
+          <div className="h-full w-[400px] flex-shrink-0 overflow-hidden" data-testid="next-queues">
             <Tabs
               aria-label="Queues"
               classNames={{
@@ -158,6 +162,7 @@ export default function QueuesDoctorView() {
                   </Chip>
                 </div>
                 <QueuesList
+                  isLoading={isLoading}
                   queues={filteredNextQueues}
                   onSelect={(queueId) => setQueueId(queueId)}
                   className="w-full"
@@ -189,6 +194,7 @@ export default function QueuesDoctorView() {
                   </Chip>
                 </div>
                 <QueuesList
+                  isLoading={isLoading}
                   queues={filteredPreviousQueues}
                   onSelect={(queueId) => setQueueId(queueId)}
                   className="w-full"

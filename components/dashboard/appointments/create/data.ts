@@ -33,9 +33,12 @@ export const BOOK_QUEUE_APPOINTMENT_STEPS = [
     details: ['Select patient from the list or create a new patient.'],
   },
   {
-    title: 'Doctor Selection',
-    description: 'Please select the doctor you want to book an appointment with.',
-    details: ['Select the doctor that you would like to book an appointment with.'],
+    title: 'Doctor & Date Selection',
+    description: 'Please select the doctor and date you want to book an appointment with.',
+    details: [
+      'Select the doctor with whom you want to book an appointment',
+      'Select the date and time for the appointment',
+    ],
   },
   {
     title: 'Additional Details',

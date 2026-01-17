@@ -20,10 +20,14 @@ export const useAppointmentQueueById = (appointmentId?: string | null) => {
   });
 };
 
-export const useQueueForDoctor = (doctorId?: string | null, queueId?: string | null) => {
+export const useQueueForDoctor = (
+  doctorId?: string | null,
+  queueId?: string | null,
+  appointmentDate?: Date | null
+) => {
   return useGenericQuery({
-    queryKey: ['queue-for-doctor', doctorId, queueId],
-    queryFn: () => AppointmentQueueApi.getQueueForDoctor(doctorId, queueId),
+    queryKey: ['queue-for-doctor', doctorId, queueId, appointmentDate],
+    queryFn: () => AppointmentQueueApi.getQueueForDoctor(doctorId, queueId, appointmentDate),
     enabled: !!doctorId,
   });
 };

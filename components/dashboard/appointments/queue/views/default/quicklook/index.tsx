@@ -11,7 +11,7 @@ interface QueueQuickLookProps {
 export default function QueueQuickLook({ queue, onClose }: QueueQuickLookProps) {
   const content = (
     <>
-      <RichColorCell type="key" label="Reference Number" value={queue.referenceNumber} />
+      <RichColorCell type="key" label="Appointment ID" value={queue.aid} />
       <RichColorCell type="name" value={queue.patient.name} />
       <RichColorCell type="phone" value={queue.patient.phone} />
       <RichColorCell type="email" value={queue.patient.email} />

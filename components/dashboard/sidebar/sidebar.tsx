@@ -138,7 +138,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
               <Popover placement="right" showArrow>
                 <PopoverTrigger>
                   <div
-                    data-test-id="sidebar-item-icon"
+                    data-testid="sidebar-item-icon"
                     className="flex aspect-square w-full items-center justify-center"
                   >
                     {item.icon ? (

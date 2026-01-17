@@ -42,8 +42,8 @@ export default function DetailsHeader({
         <div className="grid w-full grid-cols-3 gap-2">
           <CellRenderer
             icon="solar:key-minimalistic-bold-duotone"
-            label="Reference Number"
-            value={currentQueue.referenceNumber}
+            label="Appointment ID"
+            value={currentQueue.aid}
             className="p-0"
             classNames={{
               icon: 'text-pink-500 bg-pink-100',

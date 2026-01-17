@@ -31,7 +31,7 @@ export default function CreateAppointmentContentContainer({
       )}
     >
       <div
-        data-test-id="create-appointment-content-container"
+        data-testid="create-appointment-content-container"
         className="relative flex h-full flex-col justify-between overflow-hidden"
       >
         {/* Main content area with proper flex handling */}

@@ -67,6 +67,7 @@ const Auth: React.FC<AuthProps> = ({ steps, formik, paginate, footer, showFullPa
               radius="lg"
               fullWidth
               className="mt-4 py-6"
+              data-testid="auth-submit-btn"
             >
               {currentStep.button}
             </Button>
