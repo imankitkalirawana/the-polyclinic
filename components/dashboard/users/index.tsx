@@ -20,6 +20,7 @@ import {
 import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
 import { useAllUsers, useDeleteUser } from '@/services/common/user/user.query';
 import { UserType } from '@/services/common/user/user.types';
+import { CopyText } from '@/components/ui/copy';
 
 const INITIAL_VISIBLE_COLUMNS = ['image', 'name', 'email', 'role', 'createdAt'];
 
@@ -70,7 +71,7 @@ export default function Users() {
           <RenderUser
             size="md"
             name={user.name}
-            description={user.email}
+            description={user.phone || '-'}
             classNames={{
               description: 'lowercase',
             }}
@@ -81,17 +82,13 @@ export default function Users() {
         name: 'Email',
         uid: 'email',
         sortable: true,
-        renderCell: (user) => (
-          <div className="truncate lowercase text-default-foreground">{user.email}</div>
-        ),
+        renderCell: (user) => <CopyText>{user.email}</CopyText>,
       },
       {
         name: 'Phone',
         uid: 'phone',
         sortable: true,
-        renderCell: (user) => (
-          <div className="truncate text-default-foreground">{user.phone || 'N/A'}</div>
-        ),
+        renderCell: (user) => <CopyText>{user.phone}</CopyText>,
       },
       {
         name: 'Role',

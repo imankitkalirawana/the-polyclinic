@@ -21,6 +21,7 @@ import { useAllPatients } from '@/services/client/patient';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import Link from 'next/link';
 import { CopyText } from '@/components/ui/copy';
+import { formatAge, formatGender } from '@/lib/utils';
 
 const INITIAL_VISIBLE_COLUMNS = ['image', 'name', 'email', 'age', 'gender', 'createdAt'];
 
@@ -97,13 +98,17 @@ export default function Patients() {
         name: 'Age',
         uid: 'age',
         sortable: true,
-        renderCell: (patient) => <CopyText>{patient.age?.toString()}</CopyText>,
+        renderCell: (patient) => (
+          <CopyText>{formatAge(patient.age, { fullString: true })}</CopyText>
+        ),
       },
       {
         name: 'Gender',
         uid: 'gender',
         sortable: true,
-        renderCell: (patient) => <CopyText>{patient.gender}</CopyText>,
+        renderCell: (patient) => (
+          <CopyText>{formatGender(patient.gender, { fullString: true })}</CopyText>
+        ),
       },
       {
         name: 'Created At',
