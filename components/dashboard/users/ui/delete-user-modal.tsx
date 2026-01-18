@@ -1,7 +1,7 @@
 import Modal from '@/components/ui/modal';
 import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import { useDeleteUser, useUserWithID } from '@/services/common/user/user.query';
-import { Alert } from '@heroui/react';
+import { Card, CardBody } from '@heroui/react';
 
 export default function DeleteUserModal({
   isOpen,
@@ -24,9 +24,12 @@ export default function DeleteUserModal({
 
   const renderBody = () => {
     return (
-      <div className="flex flex-col gap-4 py-4">
-        <RenderUser name={user?.name} description={user?.email} />
-        <Alert color="danger">This action cannot be undone.</Alert>
+      <div className="flex flex-col gap-4">
+        <Card radius="md">
+          <CardBody>
+            <RenderUser name={user?.name} description={user?.email} />
+          </CardBody>
+        </Card>
       </div>
     );
   };

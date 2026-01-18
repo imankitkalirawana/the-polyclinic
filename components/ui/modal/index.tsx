@@ -136,7 +136,10 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
             <>
               {!!title && (
                 <ModalHeader
-                  className={cn('flex flex-col border-b border-divider', classNames?.header)}
+                  className={cn(
+                    'flex flex-col border-b border-divider font-semibold',
+                    classNames?.header
+                  )}
                 >
                   <h2>{title}</h2>
                   {!!subtitle && (
@@ -145,7 +148,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                 </ModalHeader>
               )}
               {!!body && (
-                <ModalBody as={ScrollShadow} className={cn('bg-default-50', classNames?.body)}>
+                <ModalBody as={ScrollShadow} className={cn('bg-default-50 p-4', classNames?.body)}>
                   {body}
                 </ModalBody>
               )}
