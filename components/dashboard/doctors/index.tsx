@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Button, DropdownItem, DropdownMenu, Selection, useDisclosure } from '@heroui/react';
 import { toast } from 'sonner';
 
@@ -18,10 +18,13 @@ import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/typ
 import { castData } from '@/lib/utils';
 import { DoctorType } from '@/services/client/doctor';
 import { useAllDoctors } from '@/services/client/doctor/doctor.query';
-import { useDeleteUser } from '@/services/common/user/user.query';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import Link from 'next/link';
 import { CopyText } from '@/components/ui/copy';
+import ResetPasswordModal from '../users/ui/reset-password-modal';
+import DeleteUserModal from '../users/ui/delete-user-modal';
+import { Role } from '@/services/common/user/user.constants';
+import { useSession } from '@/lib/providers/session-provider';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'image',
@@ -33,14 +36,23 @@ const INITIAL_VISIBLE_COLUMNS = [
 ];
 
 export default function Doctors() {
-  const deleteModal = useDisclosure();
+  const { user: currentUser } = useSession();
   const { setSelected } = useDoctorStore();
-  const deleteDoctor = useDeleteUser();
+  const deleteModal = useDisclosure();
+  const resetPasswordModal = useDisclosure();
+
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
   const { data, isLoading, isError, error } = useAllDoctors();
 
-  const handleDelete = async (id: string) => {
-    await deleteDoctor.mutateAsync(id);
+  const handleDelete = async (userId: string) => {
+    setSelectedUserId(userId);
+    deleteModal.onOpen();
+  };
+
+  const handleChangePassword = async (userId: string) => {
+    setSelectedUserId(userId);
+    resetPasswordModal.onOpen();
   };
 
   const dropdownMenuItems = (doctor: DoctorType): DropdownItemWithSection[] => {
@@ -56,14 +68,25 @@ export default function Doctors() {
         children: 'Edit',
         as: Link,
         href: `/dashboard/doctors/${doctor.id}/edit`,
+        roles: [Role.ADMIN],
+      },
+      {
+        key: 'change-password',
+        color: 'warning',
+        children: 'Reset Password',
+        onPress: () => handleChangePassword(doctor.userId),
+        section: 'Danger Zone',
+        className: 'text-warning',
+        roles: [Role.ADMIN],
       },
       {
         key: 'delete',
         children: 'Delete',
         color: 'danger',
-        onPress: () => handleDelete(doctor.id),
+        onPress: () => handleDelete(doctor.userId),
         section: 'Danger Zone',
         className: 'text-danger',
+        roles: [Role.ADMIN],
       },
     ];
   };
@@ -75,7 +98,9 @@ export default function Doctors() {
         name: 'Name',
         uid: 'name',
         sortable: true,
-        renderCell: (doctor) => <RenderUser name={doctor.name} description={doctor.email} />,
+        renderCell: (doctor) => (
+          <RenderUser variant="beam" name={doctor.name} description={doctor.email} />
+        ),
       },
       {
         name: 'Email',
@@ -112,7 +137,7 @@ export default function Doctors() {
         name: 'Actions',
         uid: 'actions',
         sortable: false,
-        renderCell: (doctor) => renderDropdownMenu(dropdownMenuItems(doctor)),
+        renderCell: (doctor) => renderDropdownMenu(dropdownMenuItems(doctor), currentUser?.role),
       },
     ],
     []
@@ -259,13 +284,17 @@ export default function Doctors() {
         }}
       />
 
-      {/* {quickLook.isOpen && quickLookItem && (
-        <QuickLook
-          onClose={quickLook.onClose}
-          item={quickLookItem as DoctorType}
-        />
-      )} */}
       <UserQuickLook />
+      <ResetPasswordModal
+        userId={selectedUserId}
+        isOpen={resetPasswordModal.isOpen}
+        onClose={resetPasswordModal.onClose}
+      />
+      <DeleteUserModal
+        userId={selectedUserId}
+        isOpen={deleteModal.isOpen}
+        onClose={deleteModal.onClose}
+      />
     </>
   );
 }

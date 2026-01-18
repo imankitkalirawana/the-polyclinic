@@ -124,6 +124,7 @@ export default function Users() {
           <RenderUser
             size="md"
             name={user.name}
+            variant={user.role === Role.DOCTOR ? 'beam' : 'marble'}
             description={user.phone || '-'}
             classNames={{
               description: 'lowercase',

@@ -473,7 +473,7 @@ export function Table<T extends TableItem>({
   );
 
   return (
-    <div className="h-full w-full">
+    <div className="h-full w-full p-2">
       <HeroTable
         isHeaderSticky
         aria-label="Generic data table with sorting, filtering, and pagination"

@@ -121,7 +121,9 @@ export default function DefaultQueueView() {
         name: 'Doctor',
         uid: 'doctor.name',
         sortable: true,
-        renderCell: (queue) => <CopyText>{queue.doctor.name || 'N/A'}</CopyText>,
+        renderCell: (queue) => (
+          <RenderUser variant="beam" name={queue.doctor.name} description={queue.doctor.seating} />
+        ),
       },
       {
         name: 'Status',
@@ -285,7 +287,7 @@ export default function DefaultQueueView() {
   );
 
   return (
-    <div className="p-4">
+    <>
       <Table
         isError={isError}
         errorMessage={error?.message}
@@ -319,6 +321,6 @@ export default function DefaultQueueView() {
       {!!selectedQueue && (
         <QueueQuickLook queue={selectedQueue} onClose={() => setSelectedQueue(null)} />
       )}
-    </div>
+    </>
   );
 }
