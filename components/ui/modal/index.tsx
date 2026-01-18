@@ -149,10 +149,12 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                   {body}
                 </ModalBody>
               )}
+
               <ModalFooter
                 className={cn(
                   'justify-between border-t border-divider',
                   {
+                    'border-t-0': hideCancelButton,
                     'justify-end': isLargeModal,
                   },
                   classNames?.footer
