@@ -89,7 +89,7 @@ export const sectionItems: SidebarItem[] = [
         href: '/dashboard/doctors',
         icon: 'solar:stethoscope-bold-duotone',
         title: 'Doctors',
-        roles: [Role.ADMIN],
+        roles: [Role.ADMIN, Role.RECEPTIONIST, Role.PATIENT],
       },
     ],
   },

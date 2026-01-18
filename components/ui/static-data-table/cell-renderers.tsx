@@ -19,6 +19,7 @@ import { Icon } from '@iconify/react';
 import { CopyText } from '@/components/ui/copy';
 import { chipColorMap, ChipColorType } from '@/lib/chip';
 import Avatar from 'boring-avatars';
+import { Role } from '@/services/common/user/user.constants';
 
 /**
  * @deprecated Avoid using this .
@@ -152,7 +153,7 @@ export const renderChips = (items: string[]) => (
   </div>
 );
 
-export type DropdownItemWithSection = DropdownItemProps & { section?: string };
+export type DropdownItemWithSection = DropdownItemProps & { section?: string; roles?: Role[] };
 
 function groupBy<T extends DropdownItemWithSection>(
   array: T[],
@@ -171,8 +172,22 @@ function groupBy<T extends DropdownItemWithSection>(
   );
 }
 
-export const renderDropdownMenu = (items: DropdownItemWithSection[]) => {
-  const groupedItems = groupBy(items, 'section');
+// filter the dropdown items by the user's roles
+const filterDropdownItems = (items: DropdownItemWithSection[], userRole: Role | undefined) => {
+  return items.filter((item) => {
+    if (item.roles && userRole) {
+      return item.roles.includes(userRole);
+    }
+    return true;
+  });
+};
+
+export const renderDropdownMenu = (
+  items: DropdownItemWithSection[],
+  useRole?: Role | undefined
+) => {
+  const filteredItems = filterDropdownItems(items, useRole);
+  const groupedItems = groupBy(filteredItems, 'section');
   const itemsWithoutSection = groupedItems[''] ?? [];
   const sections = Object.entries(groupedItems).filter(([key]) => key !== '');
   const hasSections = sections.length > 0;

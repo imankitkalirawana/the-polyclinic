@@ -23,10 +23,36 @@ import { CopyText } from '@/components/ui/copy';
 import { formatAge, formatGender } from '@/lib/utils';
 import ResetPasswordModal from '../users/ui/reset-password-modal';
 import DeleteUserModal from '../users/ui/delete-user-modal';
+import { Role } from '@/services/common/user/user.constants';
+import { useSession } from '@/lib/providers/session-provider';
+import { SessionUser } from '@/types/session';
 
 const INITIAL_VISIBLE_COLUMNS = ['image', 'name', 'email', 'age', 'gender', 'createdAt'];
 
+type Action = 'edit' | 'delete' | 'change-password';
+
+const PERMISSIONS: Record<Action, Partial<Record<Role, Role[]>>> = {
+  edit: {
+    PATIENT: [Role.ADMIN, Role.RECEPTIONIST],
+  },
+
+  delete: {
+    PATIENT: [Role.ADMIN],
+  },
+
+  'change-password': {
+    PATIENT: [Role.ADMIN],
+  },
+};
+
+const getRoles = (currentUser: SessionUser | null | undefined, action: Action): Role[] => {
+  if (!currentUser) return [];
+
+  return PERMISSIONS[action]?.[currentUser.role] ?? [];
+};
+
 export default function Patients() {
+  const { user } = useSession();
   const deleteModal = useDisclosure();
   const resetPasswordModal = useDisclosure();
   const { setSelected } = usePatientStore();
@@ -57,6 +83,7 @@ export default function Patients() {
         children: 'Edit',
         as: Link,
         href: `/dashboard/patients/${patient.id}/edit`,
+        roles: getRoles(user, 'edit'),
       },
       {
         key: 'change-password',
@@ -65,6 +92,7 @@ export default function Patients() {
         onPress: () => handleChangePassword(patient.userId),
         section: 'Danger Zone',
         className: 'text-warning',
+        roles: getRoles(user, 'change-password'),
       },
       {
         key: 'delete',
@@ -73,6 +101,7 @@ export default function Patients() {
         onPress: () => handleDelete(patient.userId),
         section: 'Danger Zone',
         className: 'text-danger',
+        roles: getRoles(user, 'delete'),
       },
     ];
   };
@@ -124,7 +153,7 @@ export default function Patients() {
         name: 'Actions',
         uid: 'actions',
         sortable: false,
-        renderCell: (patient) => renderDropdownMenu(dropdownMenuItems(patient)),
+        renderCell: (patient) => renderDropdownMenu(dropdownMenuItems(patient), user?.role),
       },
     ],
     []

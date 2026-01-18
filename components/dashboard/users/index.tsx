@@ -23,10 +23,42 @@ import { UserType } from '@/services/common/user/user.types';
 import { CopyText } from '@/components/ui/copy';
 import ResetPasswordModal from './ui/reset-password-modal';
 import DeleteUserModal from './ui/delete-user-modal';
+import { useSession } from '@/lib/providers/session-provider';
+import { Role } from '@/services/common/user/user.constants';
 
 const INITIAL_VISIBLE_COLUMNS = ['image', 'name', 'email', 'role', 'createdAt'];
 
+type Action = 'edit' | 'delete' | 'change-password';
+
+const PERMISSIONS: Record<Action, Partial<Record<Role, Role[]>>> = {
+  edit: {
+    PATIENT: [Role.ADMIN, Role.RECEPTIONIST],
+    DOCTOR: [Role.ADMIN],
+    RECEPTIONIST: [Role.ADMIN],
+    ADMIN: [Role.ADMIN],
+  },
+
+  delete: {
+    PATIENT: [Role.ADMIN],
+    DOCTOR: [Role.ADMIN],
+    RECEPTIONIST: [Role.ADMIN],
+    ADMIN: [Role.ADMIN],
+  },
+
+  'change-password': {
+    PATIENT: [Role.ADMIN],
+    DOCTOR: [Role.ADMIN],
+    RECEPTIONIST: [Role.ADMIN],
+    ADMIN: [Role.ADMIN],
+  },
+};
+
+const getRoles = (targetUser: UserType, action: Action): Role[] => {
+  return PERMISSIONS[action]?.[targetUser.role] ?? [];
+};
+
 export default function Users() {
+  const { user: currentUser } = useSession();
   const deleteModal = useDisclosure();
   const resetPasswordModal = useDisclosure();
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
@@ -58,6 +90,7 @@ export default function Users() {
         children: 'Edit',
         as: Link,
         href: `/dashboard/users/${user.id}/edit`,
+        roles: getRoles(user, 'edit'),
       },
       {
         key: 'change-password',
@@ -66,6 +99,7 @@ export default function Users() {
         onPress: () => handleChangePassword(user.id),
         section: 'Danger Zone',
         className: 'text-warning',
+        roles: getRoles(user, 'change-password'),
       },
       {
         key: 'delete',
@@ -74,6 +108,7 @@ export default function Users() {
         onPress: () => handleDelete(user.id),
         section: 'Danger Zone',
         className: 'text-danger',
+        roles: getRoles(user, 'delete'),
       },
     ];
   };
@@ -137,7 +172,7 @@ export default function Users() {
         name: 'Actions',
         uid: 'actions',
         sortable: false,
-        renderCell: (user) => renderDropdownMenu(dropdownMenuItems(user)),
+        renderCell: (user) => renderDropdownMenu(dropdownMenuItems(user), currentUser?.role),
       },
     ],
     []
