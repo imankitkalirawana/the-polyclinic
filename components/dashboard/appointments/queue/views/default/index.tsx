@@ -1,7 +1,15 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Button, DropdownItem, DropdownMenu, Selection, useDisclosure } from '@heroui/react';
+import {
+  Button,
+  cn,
+  DropdownItem,
+  DropdownMenu,
+  Selection,
+  Tooltip,
+  useDisclosure,
+} from '@heroui/react';
 import { toast } from 'sonner';
 
 // import { UserQuickLook } from './quicklook';
@@ -23,6 +31,7 @@ import { AppointmentQueueResponse } from '@/services/client/appointment/queue/qu
 import Link from 'next/link';
 import QueueQuickLook from './quicklook';
 import { CopyText } from '@/components/ui/copy';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'sequenceNumber',
@@ -39,7 +48,14 @@ export default function DefaultQueueView() {
   const deleteDoctor = useDeleteUser();
   const [selectedQueue, setSelectedQueue] = useState<AppointmentQueueResponse | null>(null);
 
-  const { data: queues, isLoading, isError, error } = useAllAppointmentQueues();
+  const {
+    data: queues,
+    isLoading,
+    isError,
+    error,
+    refetch,
+    isRefetching,
+  } = useAllAppointmentQueues();
 
   const handleDelete = async (uid: string) => {
     await deleteDoctor.mutateAsync(uid);
@@ -203,6 +219,15 @@ export default function DefaultQueueView() {
   // Render top bar
   const endContent = () => (
     <div className="flex gap-2">
+      <Tooltip content="Refresh Data">
+        <Button size="sm" variant="flat" radius="full" isIconOnly onPress={() => refetch()}>
+          <Icon
+            icon="solar:refresh-bold-duotone"
+            className={cn({ 'animate-spin': isRefetching })}
+            width={18}
+          />
+        </Button>
+      </Tooltip>
       <Button color="primary" size="sm" as={Link} href="/dashboard/queues/new">
         New Appointment
       </Button>
