@@ -81,3 +81,10 @@ export const updateUserSchema = createUserSchema.partial().extend({
     })
     .optional(),
 });
+
+export const resetPasswordSchema = z.object({
+  password: z
+    .string({ error: 'Password is required.' })
+    .trim()
+    .min(8, { error: 'Password must be at least 8 characters long.' }),
+});

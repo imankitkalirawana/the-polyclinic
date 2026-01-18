@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Button, DropdownItem, DropdownMenu, Selection, useDisclosure } from '@heroui/react';
 import { toast } from 'sonner';
 
@@ -16,28 +16,32 @@ import {
 } from '@/components/ui/static-data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
 import { PatientType } from '@/services/client/patient';
-import { useDeleteUser } from '@/services/common/user/user.query';
 import { useAllPatients } from '@/services/client/patient';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import Link from 'next/link';
 import { CopyText } from '@/components/ui/copy';
 import { formatAge, formatGender } from '@/lib/utils';
+import ResetPasswordModal from '../users/ui/reset-password-modal';
+import DeleteUserModal from '../users/ui/delete-user-modal';
 
 const INITIAL_VISIBLE_COLUMNS = ['image', 'name', 'email', 'age', 'gender', 'createdAt'];
 
 export default function Patients() {
   const deleteModal = useDisclosure();
   const { setSelected } = usePatientStore();
-  const deletePatient = useDeleteUser();
+  const resetPasswordModal = useDisclosure();
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
   const { data: patients, isLoading, isError, error } = useAllPatients();
 
   const handleDelete = async (userId: string) => {
-    await deletePatient.mutateAsync(userId);
+    setSelectedUserId(userId);
+    deleteModal.onOpen();
   };
 
   const handleChangePassword = async (userId: string) => {
-    console.log(userId);
+    setSelectedUserId(userId);
+    resetPasswordModal.onOpen();
   };
 
   const dropdownMenuItems = (patient: PatientType): DropdownItemWithSection[] => {
@@ -116,7 +120,6 @@ export default function Patients() {
         sortable: true,
         renderCell: (patient) => renderDate({ date: patient.createdAt, isTime: true }),
       },
-
       {
         name: 'Actions',
         uid: 'actions',
@@ -267,6 +270,16 @@ export default function Patients() {
       />
 
       <UserQuickLook />
+      <ResetPasswordModal
+        userId={selectedUserId}
+        isOpen={resetPasswordModal.isOpen}
+        onClose={resetPasswordModal.onClose}
+      />
+      <DeleteUserModal
+        userId={selectedUserId}
+        isOpen={deleteModal.isOpen}
+        onClose={deleteModal.onClose}
+      />
     </>
   );
 }
