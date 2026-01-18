@@ -202,9 +202,11 @@ export default function DefaultQueueView() {
 
   // Render top bar
   const endContent = () => (
-    <Button color="primary" size="sm" as={Link} href="/dashboard/queues/new">
-      New Appointment
-    </Button>
+    <div className="flex gap-2">
+      <Button color="primary" size="sm" as={Link} href="/dashboard/queues/new">
+        New Appointment
+      </Button>
+    </div>
   );
 
   const renderSelectedActions = (selectedKeys: Selection) => (
@@ -258,7 +260,7 @@ export default function DefaultQueueView() {
   );
 
   return (
-    <>
+    <div className="p-4">
       <Table
         isError={isError}
         errorMessage={error?.message}
@@ -292,6 +294,6 @@ export default function DefaultQueueView() {
       {!!selectedQueue && (
         <QueueQuickLook queue={selectedQueue} onClose={() => setSelectedQueue(null)} />
       )}
-    </>
+    </div>
   );
 }
