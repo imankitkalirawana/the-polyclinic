@@ -18,7 +18,6 @@ import {
 import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
 import { isSearchMatch } from '@/lib/utils';
 import { useDeleteUser } from '@/services/common/user/user.query';
-import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { useAllAppointmentQueues } from '@/services/client/appointment/queue/queue.query';
 import { AppointmentQueueResponse } from '@/services/client/appointment/queue/queue.types';
 import Link from 'next/link';
@@ -258,18 +257,14 @@ export default function DefaultQueueView() {
     </DropdownMenu>
   );
 
-  if (isLoading) return <MinimalPlaceholder message="Loading doctors..." />;
-
-  if (!queues) return null;
-
   return (
     <>
       <Table
         isError={isError}
         errorMessage={error?.message}
-        uniqueKey="doctors"
+        uniqueKey="appointments"
         isLoading={isLoading}
-        data={queues}
+        data={queues || []}
         columns={columns}
         initialVisibleColumns={INITIAL_VISIBLE_COLUMNS}
         keyField="id"
@@ -287,7 +282,7 @@ export default function DefaultQueueView() {
           direction: 'descending',
         }}
         onRowAction={(row) => {
-          const queue = queues.find((queue) => queue.id == row);
+          const queue = queues?.find((queue) => queue.id == row);
           if (queue) {
             setSelectedQueue(queue);
           }

@@ -28,8 +28,8 @@ const INITIAL_VISIBLE_COLUMNS = ['image', 'name', 'email', 'age', 'gender', 'cre
 
 export default function Patients() {
   const deleteModal = useDisclosure();
-  const { setSelected } = usePatientStore();
   const resetPasswordModal = useDisclosure();
+  const { setSelected } = usePatientStore();
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
   const { data: patients, isLoading, isError, error } = useAllPatients();

@@ -20,6 +20,7 @@ export default function ResetPasswordModal({
   const {
     handleSubmit,
     control,
+    reset,
     formState: { errors },
   } = useForm<ResetPasswordRequest>({
     resolver: zodResolver(resetPasswordSchema),
@@ -36,6 +37,7 @@ export default function ResetPasswordModal({
           control={control}
           render={({ field }) => (
             <Input
+              autoFocus
               label="Password"
               placeholder="Enter password"
               type="password"
@@ -52,19 +54,25 @@ export default function ResetPasswordModal({
   const onSubmit = async (data: ResetPasswordRequest) => {
     if (userId) {
       await resetPassword({ id: userId, data });
-      onClose();
+      handleClose();
     }
+  };
+
+  const handleClose = () => {
+    onClose();
+    reset();
   };
 
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       title="Reset Password"
       body={renderBody()}
       submitButton={{
         children: 'Reset Password',
         whileSubmitting: 'Resetting password...',
+        color: 'warning',
       }}
       onSubmit={handleSubmit(onSubmit)}
     />

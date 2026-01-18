@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Button, DropdownItem, DropdownMenu, Selection, useDisclosure } from '@heroui/react';
 import Link from 'next/link';
 // eslint-disable-next-line no-restricted-imports
@@ -18,21 +18,31 @@ import {
   DropdownItemWithSection,
 } from '@/components/ui/static-data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
-import { useAllUsers, useDeleteUser } from '@/services/common/user/user.query';
+import { useAllUsers } from '@/services/common/user/user.query';
 import { UserType } from '@/services/common/user/user.types';
 import { CopyText } from '@/components/ui/copy';
+import ResetPasswordModal from './ui/reset-password-modal';
+import DeleteUserModal from './ui/delete-user-modal';
 
 const INITIAL_VISIBLE_COLUMNS = ['image', 'name', 'email', 'role', 'createdAt'];
 
 export default function Users() {
-  const deleteUser = useDeleteUser();
   const deleteModal = useDisclosure();
+  const resetPasswordModal = useDisclosure();
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+
   const { setSelected } = useUserStore();
 
   const { data, isLoading, isError, error } = useAllUsers();
 
   const handleDelete = async (id: string) => {
-    await deleteUser.mutateAsync(id);
+    setSelectedUserId(id);
+    deleteModal.onOpen();
+  };
+
+  const handleChangePassword = async (id: string) => {
+    setSelectedUserId(id);
+    resetPasswordModal.onOpen();
   };
 
   const dropdownMenuItems = (user: UserType): DropdownItemWithSection[] => {
@@ -48,6 +58,14 @@ export default function Users() {
         children: 'Edit',
         as: Link,
         href: `/dashboard/users/${user.id}/edit`,
+      },
+      {
+        key: 'change-password',
+        color: 'warning',
+        children: 'Reset Password',
+        onPress: () => handleChangePassword(user.id),
+        section: 'Danger Zone',
+        className: 'text-warning',
       },
       {
         key: 'delete',
@@ -293,6 +311,16 @@ export default function Users() {
         />
       )} */}
       <UserQuickLook />
+      <ResetPasswordModal
+        userId={selectedUserId}
+        isOpen={resetPasswordModal.isOpen}
+        onClose={resetPasswordModal.onClose}
+      />
+      <DeleteUserModal
+        userId={selectedUserId}
+        isOpen={deleteModal.isOpen}
+        onClose={deleteModal.onClose}
+      />
     </>
   );
 }

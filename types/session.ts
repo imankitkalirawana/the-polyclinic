@@ -10,6 +10,7 @@ interface SessionUser {
   organization: string | null;
   phone: string;
   doctorId: string | null;
+  patientId: string | null;
 }
 
 export interface Session {

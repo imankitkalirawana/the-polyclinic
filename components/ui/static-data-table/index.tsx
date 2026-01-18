@@ -550,7 +550,7 @@ export function Table<T extends TableItem>({
             isError ? <div className="bg-red-200">Error: {errorMessage}</div> : 'No data found'
           }
           items={items}
-          loadingContent={<Spinner label="Fetching data..." />}
+          loadingContent={<Spinner label={`Fetching ${uniqueKey}...`} />}
         >
           {(item) => (
             <TableRow key={String(item[keyField])}>
