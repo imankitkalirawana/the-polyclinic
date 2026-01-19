@@ -153,7 +153,11 @@ export const renderChips = (items: string[]) => (
   </div>
 );
 
-export type DropdownItemWithSection = DropdownItemProps & { section?: string; roles?: Role[] };
+export type DropdownItemWithSection = DropdownItemProps & {
+  section?: string;
+  roles?: Role[];
+  isHidden?: boolean;
+};
 
 function groupBy<T extends DropdownItemWithSection>(
   array: T[],
@@ -175,9 +179,13 @@ function groupBy<T extends DropdownItemWithSection>(
 // filter the dropdown items by the user's roles
 const filterDropdownItems = (items: DropdownItemWithSection[], userRole: Role | undefined) => {
   return items.filter((item) => {
+    if (item.isHidden && userRole) {
+      return !item.isHidden;
+    }
     if (item.roles && userRole) {
       return item.roles.includes(userRole);
     }
+
     return true;
   });
 };
