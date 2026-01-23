@@ -64,7 +64,11 @@ export default function DoctorSelection() {
       }
     >
       <div>
-        <DateScroll selectedDate={appointmentDate} setSelectedDate={handleDateSelect} />
+        <DateScroll
+          selectedDate={appointmentDate}
+          setSelectedDate={handleDateSelect}
+          hidePastDates={true}
+        />
       </div>
       <div>
         <SearchInput
