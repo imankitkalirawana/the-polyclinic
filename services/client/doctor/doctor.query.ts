@@ -19,8 +19,8 @@ import { SlotConfig } from './doctor.types';
  * const { data: doctors, isLoading } = useAllDoctors(search);
  *
  * // In another component that just needs cached doctors (no fetch)
- * import { useDoctors } from '@/store';
- * const cachedDoctors = useDoctors();
+ * import { useCacheValue } from '@/store';
+ * const cachedDoctors = useCacheValue('doctors');
  * ```
  */
 export const useAllDoctors = (search?: string) =>

@@ -10,14 +10,12 @@
  * import {
  *   useCollectionQuery,
  *   useSelectedPatient,
- *   useSetSelectedPatient,
  *   usePatientById,
  * } from '@/store';
  *
  * // Use in components
  * function MyComponent() {
  *   const patient = useSelectedPatient();
- *   const setPatient = useSetSelectedPatient();
  *   const cachedPatient = usePatientById(patientId);
  *
  *   return <div>{patient?.name}</div>;

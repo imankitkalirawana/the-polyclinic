@@ -16,8 +16,8 @@ import { useCollectionQuery, useIndexedQuery } from '@/store/cache';
  * const { data: patients, isLoading } = useAllPatients(search);
  *
  * // In another component that just needs cached patients (no fetch)
- * import { usePatients } from '@/store';
- * const cachedPatients = usePatients();
+ * import { useCacheValue } from '@/store';
+ * const cachedPatients = useCacheValue('patients');
  * ```
  */
 export const useAllPatients = (search?: string) =>

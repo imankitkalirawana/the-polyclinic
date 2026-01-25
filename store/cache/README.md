@@ -183,14 +183,14 @@ const result = useQueryWithCache({
 
 ### Selector Hooks
 
-#### Collection Selectors
+#### Reading collections from cache
 
 ```tsx
-import { usePatients, useDoctors, useServices } from '@/store';
+import { useCacheValue } from '@/store';
 
-const patients = usePatients();  // PatientType[]
-const doctors = useDoctors();    // DoctorType[]
-const services = useServices();  // ServiceType[]
+const patients = useCacheValue('patients');  // PatientType[]
+const doctors = useCacheValue('doctors');    // DoctorType[]
+const services = useCacheValue('services');  // ServiceType[]
 ```
 
 #### Indexed Selectors (by ID)
@@ -205,11 +205,11 @@ const doctor = useDoctorById(doctorId);     // DoctorType | undefined
 #### Selected Entity Selectors
 
 ```tsx
-import { useSelectedPatient, useSetSelectedPatient } from '@/store';
+import { useSelectedPatient, useCacheSetter } from '@/store';
 
 const selectedPatient = useSelectedPatient();  // PatientType | null
-const setSelected = useSetSelectedPatient();
-setSelected(patient);  // Updates selectedPatient
+const setCache = useCacheSetter();
+setCache('selectedPatient', patient);  // Updates selectedPatient
 ```
 
 ### Store Actions
@@ -415,11 +415,11 @@ The cache store integrates with Redux DevTools. Open DevTools and look for `Cach
 ### Checking Cache Freshness
 
 ```tsx
-import { useCacheFreshness, useCacheMetadata } from '@/store';
+import { useIsCacheFresh, useCacheStore } from '@/store';
 
 function DebugPanel() {
-  const isFresh = useCacheFreshness('patients', 5 * 60 * 1000); // 5 min
-  const metadata = useCacheMetadata('patients');
+  const isFresh = useIsCacheFresh('patients', 5 * 60 * 1000); // 5 min
+  const metadata = useCacheStore((s) => s.metadata['patients']);
   
   return (
     <div>

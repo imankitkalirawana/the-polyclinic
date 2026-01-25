@@ -20,7 +20,8 @@
  *
  * // Or use the selected entity pattern
  * const selectedPatient = useSelectedPatient();
- * const setSelectedPatient = useSetSelectedPatient();
+ * const setCache = useCacheSetter();
+ * setCache('selectedPatient', patient);
  * ```
  */
 
@@ -55,59 +56,5 @@ export {
   useCacheInvalidation,
 } from './useQueryWithCache';
 
-// Selectors - Collections
-export {
-  usePatients,
-  useDoctors,
-  useDepartments,
-  useServices,
-  useDrugs,
-  useAppointments,
-  useAppointmentQueues,
-  useUsers,
-} from './selectors';
-
-// Selectors - Selected entities
-export {
-  useSelectedPatient,
-  useSelectedDoctor,
-  useSelectedDepartment,
-  useSelectedService,
-  useSelectedDrug,
-  useSelectedAppointment,
-  useSelectedAppointmentQueue,
-  useSelectedUser,
-} from './selectors';
-
-// Selectors - Indexed (by ID)
-export {
-  usePatientById,
-  useDoctorById,
-  useDepartmentById,
-  useServiceById,
-  useDrugById,
-  useAppointmentById,
-  useAppointmentQueueById,
-  useUserById,
-} from './selectors';
-
-// Selectors - Setters
-export {
-  useSetSelectedPatient,
-  useSetSelectedDoctor,
-  useSetSelectedDepartment,
-  useSetSelectedService,
-  useSetSelectedDrug,
-  useSetSelectedAppointment,
-  useSetSelectedAppointmentQueue,
-  useSetSelectedUser,
-} from './selectors';
-
-// Selectors - Generic & Utilities
-export {
-  useCacheSelector,
-  useCacheSetter as useGenericCacheSetter,
-  useCacheFreshness,
-  useCacheMetadata,
-  useCacheActions,
-} from './selectors';
+// Selectors
+export { useSelectedPatient, usePatientById, useDoctorById } from './selectors';
