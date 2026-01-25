@@ -12,8 +12,7 @@ import {
 import { formatDistanceToNow } from 'date-fns';
 import { useMarkAsRead } from '@/services/common/notifications/notifications.query';
 import { useNotificationHandler } from '@/services/common/notifications/hooks/useNotificationHandler';
-import ReactMarkdown from 'react-markdown';
-
+import { Streamdown } from 'streamdown';
 interface NotificationItemProps extends React.HTMLAttributes<HTMLDivElement> {
   notification: Notification;
 }
@@ -107,7 +106,7 @@ const NotificationItem = React.forwardRef<HTMLDivElement, NotificationItemProps>
         <div className="flex flex-1 flex-col gap-1">
           {title && <h6 className="font-semibold text-foreground text-small">{title}</h6>}
           {/* <p className="text-foreground text-small"> */}
-          <ReactMarkdown>{message}</ReactMarkdown>
+          <Streamdown>{message}</Streamdown>
           {/* </p> */}
           {actions && (
             <div className="flex gap-2 pt-2">

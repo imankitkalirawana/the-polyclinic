@@ -1,4 +1,4 @@
-import { CreateUserRequest, UpdateUserRequest } from './user.types';
+import { CreateUserRequest, ResetPasswordRequest, UpdateUserRequest } from './user.types';
 import { UserApi } from './user.api';
 import { useGenericMutation } from '@/services/useGenericMutation';
 import { useGenericQuery } from '@/services/useGenericQuery';
@@ -21,7 +21,13 @@ export const useLinkedUsers = () =>
     queryFn: () => UserApi.getLinked(),
   });
 
-export const useUserWithID = (id?: string) =>
+export const useResetPassword = () =>
+  useGenericMutation({
+    mutationFn: ({ id, data }: { id: string; data: ResetPasswordRequest }) =>
+      UserApi.resetPassword(id, data),
+  });
+
+export const useUserWithID = (id?: string | null) =>
   useGenericQuery({
     queryKey: ['user', id],
     queryFn: () => UserApi.getByID(id),

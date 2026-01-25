@@ -1,19 +1,28 @@
 import { useEffect, useRef } from 'react';
 import { Button, cn, ScrollShadow } from '@heroui/react';
-import { addDays, format, startOfDay, isSameDay, isToday } from 'date-fns';
+import { addDays, format, startOfDay, isSameDay, isToday, isAfter } from 'date-fns';
 
 const RANGE = 15;
 
 type DateScrollProps = {
   selectedDate?: Date | null;
   setSelectedDate?: (date: Date) => void;
+  hidePastDates?: boolean;
 };
 
-export default function DateScroll({ selectedDate, setSelectedDate }: DateScrollProps) {
+export default function DateScroll({
+  selectedDate,
+  setSelectedDate,
+  hidePastDates = false,
+}: DateScrollProps) {
   const today = startOfDay(new Date());
   const normalizedSelectedDate = selectedDate ? startOfDay(selectedDate) : today;
 
-  const dates = Array.from({ length: RANGE * 2 + 1 }, (_, i) => addDays(today, i - RANGE));
+  let dates = Array.from({ length: RANGE * 2 + 1 }, (_, i) => addDays(today, i - RANGE));
+
+  if (hidePastDates) {
+    dates = dates.filter((date) => isAfter(date, today) || isToday(date));
+  }
 
   const itemRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
 

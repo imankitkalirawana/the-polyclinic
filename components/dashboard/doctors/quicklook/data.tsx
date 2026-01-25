@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Button,
   Dropdown,
   DropdownItem,
@@ -13,8 +12,8 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { ActionType, DropdownKeyType } from '../types';
 
 import { PermissionProps } from '@/components/ui/dashboard/quicklook/types';
-import { avatars } from '@/lib/avatar';
 import { DoctorType } from '@/services/client/doctor';
+import Avatar from 'boring-avatars';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
   DOCTOR: ['cancel', 'reschedule', 'reminder', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
@@ -26,10 +25,7 @@ export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
 export const sidebarContent = (doctor: DoctorType) => (
   <>
     <div className="flex flex-col items-center gap-2 p-4">
-      <Avatar
-        src={doctor.image || avatars.memoji[Math.floor(Math.random() * avatars.memoji.length)]}
-        size="lg"
-      />
+      <Avatar name={doctor.name} variant="beam" size={40} />
       <div className="flex gap-1">
         <Button
           color="primary"

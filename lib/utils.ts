@@ -49,7 +49,7 @@ export function toTitleCase(str: string) {
 }
 
 export function isSearchMatch(haystack: string, needle: string) {
-  return haystack?.toLowerCase().trim().includes(needle?.toLowerCase().trim());
+  return haystack?.toLowerCase()?.trim()?.includes(needle?.toLowerCase()?.trim());
 }
 
 export function withZodSchema<T>(schema: z.ZodSchema<T>) {

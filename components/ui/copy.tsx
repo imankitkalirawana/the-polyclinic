@@ -63,15 +63,20 @@ export const CopyText = memo(
 
     const content = useMemo(() => (copied ? 'Copied' : copyText), [copied, copyText]);
 
+    const isEmpty = !children || children === '-';
+
     return (
       <div
         ref={forwardedRef}
         className={cn('group flex items-center gap-1 text-default-500', className)}
       >
-        <Tooltip delay={1000} className="text-foreground" content={content}>
+        <Tooltip delay={1000} className="text-foreground" content={content} isDisabled={isEmpty}>
           <Button
             isIconOnly
-            className="h-7 w-7 min-w-7 text-default-400 opacity-0 group-hover:opacity-100"
+            isDisabled={isEmpty}
+            className={cn('h-7 w-7 min-w-7 text-default-400 opacity-0 group-hover:opacity-100', {
+              'group-hover:opacity-0': isEmpty,
+            })}
             size="sm"
             variant="light"
             color={copied ? 'success' : 'default'}

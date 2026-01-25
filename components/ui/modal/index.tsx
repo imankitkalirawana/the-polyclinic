@@ -136,7 +136,10 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
             <>
               {!!title && (
                 <ModalHeader
-                  className={cn('flex flex-col border-b border-divider', classNames?.header)}
+                  className={cn(
+                    'flex flex-col border-b border-divider font-semibold',
+                    classNames?.header
+                  )}
                 >
                   <h2>{title}</h2>
                   {!!subtitle && (
@@ -145,14 +148,14 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                 </ModalHeader>
               )}
               {!!body && (
-                <ModalBody as={ScrollShadow} className={cn('bg-default-50', classNames?.body)}>
+                <ModalBody as={ScrollShadow} className={cn('bg-default-50 p-4', classNames?.body)}>
                   {body}
                 </ModalBody>
               )}
 
               <ModalFooter
                 className={cn(
-                  'justify-between border-t border-divider',
+                  'justify-between gap-0 overflow-hidden rounded-b-large border-t border-divider p-0',
                   {
                     'border-t-0': hideCancelButton,
                     'justify-end': isLargeModal,
@@ -163,6 +166,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                 {!hideCancelButton && (
                   <Button
                     variant="flat"
+                    radius="none"
                     onPress={onClose}
                     className={cn(
                       'max-w-sm',
@@ -178,6 +182,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                 )}
                 {!!onSubmit && (
                   <AsyncButton
+                    radius="none"
                     onPress={async () => {
                       try {
                         await onSubmit();
@@ -189,6 +194,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                         throw error;
                       }
                     }}
+                    variant="flat"
                     color="primary"
                     whileSubmitting={submitButton?.whileSubmitting}
                     className={cn(
