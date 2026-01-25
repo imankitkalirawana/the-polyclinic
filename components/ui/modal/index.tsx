@@ -131,7 +131,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
         size={size}
         {...rest}
       >
-        <ModalContent>
+        <ModalContent className="overflow-hidden">
           {(onClose) => (
             <>
               {!!title && (

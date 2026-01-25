@@ -136,7 +136,7 @@ export default function PatientSelection() {
       <Modal
         isOpen={!!selectedPatient}
         onClose={() => setSelectedPatient(null)}
-        size="4xl"
+        size="3xl"
         title="Patient Details"
         body={<ViewPatientBody patient={selectedPatient as PatientType} />}
         hideCancelButton
