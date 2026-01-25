@@ -1,4 +1,5 @@
-import { Base, Gender } from '@/types';
+import { GENDERS } from '@/lib/constants';
+import { Base } from '@/types';
 
 export interface PatientType extends Base {
   userId: string;
@@ -6,7 +7,7 @@ export interface PatientType extends Base {
   email: string;
   image?: string | null;
   phone: string;
-  gender?: Gender;
+  gender?: GENDERS;
   age?: number;
   address?: string | null;
 }

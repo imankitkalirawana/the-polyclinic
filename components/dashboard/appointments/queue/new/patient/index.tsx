@@ -27,11 +27,13 @@ import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
 import NewPatient from './new-patient';
+import EditPatientModal from './edit-patient';
 import { formatAge, formatGender } from '@/lib/utils';
 
 export default function PatientSelection() {
   const [search, setSearch] = useState('');
   const [selectedPatient, setSelectedPatient] = useState<PatientType | null>(null);
+  const [patientToEdit, setPatientToEdit] = useState<PatientType | null>(null);
 
   const debouncedSearch = useDebounce(search, 500);
 
@@ -113,12 +115,8 @@ export default function PatientSelection() {
             isSelected={patientId === patient.id}
             onSelect={handlePatientSelect}
             onView={setSelectedPatient}
-            onDelete={(_patient) => {
-              addToast({
-                title: 'Delete not available',
-                description: 'Deleting patients is not available from the appointment queue.',
-                color: 'warning',
-              });
+            onEdit={(patientRecord) => {
+              setPatientToEdit(patientRecord);
             }}
           />
         ))}
@@ -141,6 +139,23 @@ export default function PatientSelection() {
         body={<ViewPatientBody patient={selectedPatient as PatientType} />}
         hideCancelButton
       />
+      {patientToEdit && (
+        <EditPatientModal
+          patient={patientToEdit}
+          isOpen={!!patientToEdit}
+          onClose={() => setPatientToEdit(null)}
+          onUpdated={(updatedPatient) => {
+            setPatientToEdit(null);
+            setIndexedCache('patientById', updatedPatient.id, updatedPatient);
+            if (selectedPatient?.id === updatedPatient.id) {
+              setSelectedPatient(updatedPatient);
+            }
+            if (patientId === updatedPatient.id) {
+              form.setValue('appointment.patientId', updatedPatient.id);
+            }
+          }}
+        />
+      )}
     </CreateAppointmentContentContainer>
   );
 }
@@ -150,13 +165,13 @@ const PatientCard = ({
   isSelected,
   onSelect,
   onView,
-  onDelete,
+  onEdit,
 }: {
   patient: PatientType;
   isSelected: boolean;
   onSelect: (id: string) => void;
   onView?: (patient: PatientType) => void;
-  onDelete?: (patient: PatientType) => void;
+  onEdit?: (patient: PatientType) => void;
 }) => {
   return (
     <Card
@@ -212,17 +227,8 @@ const PatientCard = ({
             <DropdownItem key="view" onPress={() => onView?.(patient)}>
               View
             </DropdownItem>
-
-            <DropdownItem color="warning" key="edit">
+            <DropdownItem color="warning" key="edit" onPress={() => onEdit?.(patient)}>
               Edit
-            </DropdownItem>
-            <DropdownItem
-              key="delete"
-              onClick={() => onDelete?.(patient)}
-              className="text-danger"
-              color="danger"
-            >
-              Delete
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>
