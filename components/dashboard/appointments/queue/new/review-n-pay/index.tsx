@@ -8,7 +8,7 @@ import { useFormContext } from 'react-hook-form';
 import { CellRenderer } from '@/components/ui/cell/rich-color/cell-renderer';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
 import PaymentFooter from './payment-footer';
-import { usePatientById, useDoctorById } from '@/store';
+import { useIndexedCacheValue } from '@/store';
 
 /**
  * ReviewAndPay Component
@@ -27,8 +27,8 @@ export default function ReviewAndPay() {
   const appointment = form.watch('appointment');
 
   // Use cached data from Zustand store - no API calls!
-  const patient = usePatientById(appointment.patientId);
-  const doctor = useDoctorById(appointment.doctorId);
+  const patient = useIndexedCacheValue('patientById', appointment.patientId);
+  const doctor = useIndexedCacheValue('doctorById', appointment.doctorId);
 
   return (
     <CreateAppointmentContentContainer

@@ -55,6 +55,3 @@ export {
   useCacheSync,
   useCacheInvalidation,
 } from './useQueryWithCache';
-
-// Selectors
-export { useSelectedPatient, usePatientById, useDoctorById } from './selectors';
