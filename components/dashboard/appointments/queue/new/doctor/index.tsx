@@ -1,6 +1,7 @@
 import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import { useDebounce } from '@/hooks/useDebounce';
 import { DoctorType, useAllDoctors } from '@/services/client/doctor';
+import { useCacheStore } from '@/store';
 import { addToast, Button, Card, Chip, cn } from '@heroui/react';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -19,9 +20,20 @@ export default function DoctorSelection() {
 
   const { data: doctors, isLoading, isRefetching } = useAllDoctors(debouncedSearch);
   const form = useFormContext<CreateAppointmentQueueFormValues>();
+  const setIndexedCache = useCacheStore((state) => state.setIndexedCache);
 
   const doctorId = form.watch('appointment.doctorId');
   const appointmentDate = form.watch('appointment.appointmentDate');
+
+  // Cache the selected doctor when doctorId changes
+  const handleDoctorSelect = (id: string) => {
+    form.setValue('appointment.doctorId', id);
+    // Find and cache the selected doctor for later use in ReviewAndPay
+    const doctor = doctors?.find((d) => d.id === id);
+    if (doctor) {
+      setIndexedCache('doctorById', id, doctor);
+    }
+  };
 
   const handleDateSelect = (date: Date) => {
     form.setValue('appointment.appointmentDate', date);
@@ -87,7 +99,7 @@ export default function DoctorSelection() {
             key={index}
             doctor={doctor}
             isSelected={doctorId === doctor.id}
-            onSelect={(id) => form.setValue('appointment.doctorId', id)}
+            onSelect={handleDoctorSelect}
           />
         ))}
       </div>
