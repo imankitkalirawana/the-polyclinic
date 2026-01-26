@@ -9,7 +9,7 @@ import { apiRequest } from '@/lib/axios';
 import { ForgotPasswordRequest } from './auth.validation';
 
 export class AuthApi {
-  private static baseUrl = '/client/auth';
+  private static baseUrl = '/auth';
 
   static async login(data: LoginRequest) {
     const res = await apiRequest<{ token: string }>({

@@ -2,7 +2,7 @@ import { apiRequest } from '@/lib/axios';
 import { CreateUserRequest, UserType, UpdateUserRequest, ResetPasswordRequest } from './user.types';
 
 export class UserApi {
-  private static API_BASE = '/client/users';
+  private static API_BASE = '/users';
 
   static async getSelf() {
     return await apiRequest<UserType>({

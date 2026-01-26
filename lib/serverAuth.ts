@@ -10,7 +10,7 @@ export const getServerSession = cache(async (): Promise<Session | null> => {
 
   try {
     const res = await apiRequest<Session>({
-      url: '/client/auth/session',
+      url: '/auth/session',
       method: 'GET',
     });
 
