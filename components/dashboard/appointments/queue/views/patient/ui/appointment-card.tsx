@@ -5,14 +5,22 @@ import { Card, CardBody, Chip, Button, cn } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { formatDate } from 'date-fns';
 import Avatar from 'boring-avatars';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 export default function AppointmentCard({
   appointment,
 }: {
   appointment: AppointmentQueueResponse;
 }) {
+  const [isHidden] = useLocalStorage('isDashboardSidebarHidden', true);
   return (
-    <Card className={cn('w-full max-w-[60%] rounded-large transition-all')} shadow="md">
+    <Card
+      className={cn(
+        'w-full rounded-large transition-all',
+        isHidden ? 'min-w-[65%]' : 'min-w-[60%]'
+      )}
+      shadow="md"
+    >
       <CardBody className="gap-0 p-4">
         <div className="flex items-start justify-between gap-6 pb-6">
           <div className="flex items-start gap-5">
@@ -65,7 +73,7 @@ export default function AppointmentCard({
             <Chip variant="flat">Room {appointment.doctor.seating}</Chip>
           </div>
         </div>
-        <div className="flex pt-4">
+        <div className="flex justify-end pt-4">
           <Button color="primary">View Details</Button>
         </div>
       </CardBody>
