@@ -1,14 +1,25 @@
 'use client';
 import { useAllAppointmentQueues } from '@/services/client/appointment/queue/queue.query';
-import { Card, Chip, Tab, Tabs } from '@heroui/react';
+import { Chip, Tab, Tabs } from '@heroui/react';
+import AllAppointments from './all-appointments';
 
 export default function PatientQueueView() {
   const { data: appointments } = useAllAppointmentQueues();
 
   return (
     <div className="p-4">
-      <h1>My appointments</h1>
-      <Tabs aria-label="My appointments">
+      <Tabs aria-label="My appointments" className="p-4">
+        <Tab
+          key="all"
+          title={
+            <div className="flex items-center gap-2">
+              <span>All</span>
+              <Chip size="sm" variant="flat">
+                {appointments?.length}
+              </Chip>
+            </div>
+          }
+        ></Tab>
         <Tab
           key="upcoming"
           title={
@@ -19,15 +30,7 @@ export default function PatientQueueView() {
               </Chip>
             </div>
           }
-        >
-          <div className="grid grid-cols-3 gap-2">
-            {appointments?.map((appointment) => (
-              <Card key={appointment.id} isPressable>
-                <p>{appointment.sequenceNumber}</p>
-              </Card>
-            ))}
-          </div>
-        </Tab>
+        ></Tab>
         <Tab
           key="previous"
           title={
@@ -38,16 +41,9 @@ export default function PatientQueueView() {
               </Chip>
             </div>
           }
-        >
-          <div className="grid grid-cols-3 gap-2">
-            {appointments?.map((appointment) => (
-              <Card key={appointment.id} isPressable>
-                <p>{appointment.sequenceNumber}</p>
-              </Card>
-            ))}
-          </div>
-        </Tab>
+        ></Tab>
       </Tabs>
+      <AllAppointments />
     </div>
   );
 }

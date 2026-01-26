@@ -30,6 +30,7 @@ export type DoctorInfo = {
   phone?: string;
   image?: string;
   seating?: string;
+  specialization?: string;
 };
 
 export type UserInfo = {
