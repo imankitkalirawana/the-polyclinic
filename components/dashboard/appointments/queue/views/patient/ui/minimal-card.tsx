@@ -1,9 +1,10 @@
 'use client';
 
-import { Card, CardBody, Chip, cn } from '@heroui/react';
+import { Card, CardBody, cn } from '@heroui/react';
 import { formatDate } from 'date-fns';
 import { AppointmentQueueResponse } from '@/services/client/appointment/queue/queue.types';
 import Avatar from 'boring-avatars';
+import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
 
 export default function MinimalCard({ appointment }: { appointment: AppointmentQueueResponse }) {
   return (
@@ -14,9 +15,7 @@ export default function MinimalCard({ appointment }: { appointment: AppointmentQ
             <p className="line-clamp-1 text-default-700 text-large">
               {formatDate(new Date(appointment.appointmentDate), 'EEEE, PP')}
             </p>
-            <Chip color="primary" variant="flat" size="sm">
-              {appointment.status}
-            </Chip>
+            <div>{renderChip({ item: appointment.status })}</div>
           </div>
           <div className="flex items-center justify-between gap-6 pt-2">
             <div className="flex items-center gap-4">

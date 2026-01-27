@@ -6,6 +6,7 @@ import { Icon } from '@iconify/react';
 import { formatDate } from 'date-fns';
 import Avatar from 'boring-avatars';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
 
 export default function AppointmentCard({
   appointment,
@@ -40,9 +41,7 @@ export default function AppointmentCard({
               <p className="text-default-500">{appointment.patient.phone}</p>
             </div>
           </div>
-          <Chip color="primary" variant="flat">
-            {appointment.status}
-          </Chip>
+          <div>{renderChip({ item: appointment.status })}</div>
         </div>
         <div className="border-t border-gray-200" />
         <div className="flex items-center justify-between gap-6 pt-6">

@@ -2,9 +2,13 @@
 import { useAllAppointmentQueues } from '@/services/client/appointment/queue/queue.query';
 import { Chip, Tab, Tabs } from '@heroui/react';
 import AllAppointments from './all-appointments';
+import Upcoming from './upcoming';
+import Completed from './completed';
+import { useGroupedAppointmentQueuesForPatient } from '@/services/client/appointment/queue/queue.query';
 
 export default function PatientQueueView() {
   const { data: appointments } = useAllAppointmentQueues();
+  const { data: groupedAppointments } = useGroupedAppointmentQueuesForPatient();
 
   return (
     <div className="p-4">
@@ -19,31 +23,37 @@ export default function PatientQueueView() {
               </Chip>
             </div>
           }
-        ></Tab>
+        >
+          <AllAppointments />
+        </Tab>
         <Tab
           key="upcoming"
           title={
             <div className="flex items-center gap-2">
               <span>Upcoming</span>
+
               <Chip size="sm" variant="flat">
-                {appointments?.length}
+                {(groupedAppointments?.next.length ?? 0) + (groupedAppointments?.current ? 1 : 0)}
               </Chip>
             </div>
           }
-        ></Tab>
+        >
+          <Upcoming />
+        </Tab>
         <Tab
           key="previous"
           title={
             <div className="flex items-center gap-2">
               <span>Previous</span>
               <Chip size="sm" variant="flat">
-                {appointments?.length}
+                {groupedAppointments?.previous.length}
               </Chip>
             </div>
           }
-        ></Tab>
+        >
+          <Completed />
+        </Tab>
       </Tabs>
-      <AllAppointments />
     </div>
   );
 }

@@ -1,5 +1,10 @@
 import { apiRequest } from '@/lib/axios';
-import { AppointmentQueueResponse, PaymentDetails, VerifyPaymentRequest } from './queue.types';
+import {
+  AppointmentQueueResponse,
+  GroupedAppointmentQueuesResponse,
+  PaymentDetails,
+  VerifyPaymentRequest,
+} from './queue.types';
 import { PrescriptionFormSchema } from '@/components/dashboard/appointments/queue/views/doctor/prescription-panel';
 import { AppointmentQueueRequest } from './queue.types';
 import { ActivityLogResponse } from '@/services/common/activity/activity.types';
@@ -64,13 +69,15 @@ export class AppointmentQueueApi {
       ? format(appointmentDate, 'yyyy-MM-dd')
       : undefined;
 
-    return await apiRequest<{
-      previous: AppointmentQueueResponse[];
-      current: AppointmentQueueResponse | null;
-      next: AppointmentQueueResponse[];
-    }>({
+    return await apiRequest<GroupedAppointmentQueuesResponse>({
       url: `${this.API_BASE}/doctor/${doctorId}/queue`,
       params: { id: queueId, date: sanitizedAppointmentDate },
+    });
+  }
+
+  static async getQueuesForPatient() {
+    return await apiRequest<GroupedAppointmentQueuesResponse>({
+      url: `${this.API_BASE}/patient/me`,
     });
   }
 

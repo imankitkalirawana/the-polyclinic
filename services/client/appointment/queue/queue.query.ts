@@ -32,6 +32,13 @@ export const useQueueForDoctor = (
   });
 };
 
+export const useGroupedAppointmentQueuesForPatient = () => {
+  return useGenericQuery({
+    queryKey: ['grouped-appointment-queues-for-patient'],
+    queryFn: () => AppointmentQueueApi.getQueuesForPatient(),
+  });
+};
+
 export const useQueueActivityLogs = (queueId?: string | null) => {
   return useGenericQuery({
     queryKey: ['queue-activity-logs', queueId],

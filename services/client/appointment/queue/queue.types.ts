@@ -87,3 +87,13 @@ export type AppointmentQueueResponse = {
   previousQueueId?: string;
   nextQueueId?: string;
 };
+
+export type GroupedAppointmentQueuesResponse = {
+  previous: AppointmentQueueResponse[];
+  current: AppointmentQueueResponse | null;
+  next: AppointmentQueueResponse[];
+  meta: {
+    previousCount: number;
+    nextCount: number;
+  };
+};
