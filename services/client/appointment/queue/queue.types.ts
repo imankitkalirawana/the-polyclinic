@@ -1,4 +1,4 @@
-import { Gender } from '@/types';
+import { GENDERS } from '@/lib/constants';
 
 export enum QueueStatus {
   PAYMENT_PENDING = 'PAYMENT_PENDING',
@@ -13,18 +13,18 @@ export enum QueueStatus {
 
 export type PatientInfo = {
   id: string;
-  userId: string;
+  user_id: string;
   name: string;
   phone?: string;
   email: string;
-  gender?: Gender;
+  gender?: GENDERS;
   age?: number;
   image?: string;
 };
 
 export type DoctorInfo = {
   id: string;
-  userId: string;
+  user_id: string;
   name: string;
   email: string;
   phone?: string;
