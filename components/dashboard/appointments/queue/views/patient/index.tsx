@@ -5,16 +5,33 @@ import AllAppointments from './all-appointments';
 import Upcoming from './upcoming';
 import Completed from './completed';
 import { useGroupedAppointmentQueuesForPatient } from '@/services/client/appointment/queue/queue.query';
+import { parseAsStringEnum, useQueryState } from 'nuqs';
+
+enum AppointmentStatus {
+  ALL = 'all',
+  UPCOMING = 'upcoming',
+  PREVIOUS = 'previous',
+}
 
 export default function PatientQueueView() {
   const { data: appointments } = useAllAppointmentQueues();
   const { data: groupedAppointments } = useGroupedAppointmentQueuesForPatient();
+  const [appointmentStatus, setAppointmentStatus] = useQueryState(
+    'status',
+    parseAsStringEnum(Object.values(AppointmentStatus)).withDefault(AppointmentStatus.ALL)
+  );
 
   return (
     <div className="p-4">
-      <Tabs aria-label="My appointments" className="p-4">
+      <Tabs
+        aria-label="My appointments"
+        className="p-4"
+        selectedKey={appointmentStatus}
+        // TODO: fix type error
+        onSelectionChange={(key) => setAppointmentStatus(key as AppointmentStatus)}
+      >
         <Tab
-          key="all"
+          key={AppointmentStatus.ALL}
           title={
             <div className="flex items-center gap-2">
               <span>All</span>
@@ -27,7 +44,7 @@ export default function PatientQueueView() {
           <AllAppointments />
         </Tab>
         <Tab
-          key="upcoming"
+          key={AppointmentStatus.UPCOMING}
           title={
             <div className="flex items-center gap-2">
               <span>Upcoming</span>
@@ -41,7 +58,7 @@ export default function PatientQueueView() {
           <Upcoming />
         </Tab>
         <Tab
-          key="previous"
+          key={AppointmentStatus.PREVIOUS}
           title={
             <div className="flex items-center gap-2">
               <span>Previous</span>

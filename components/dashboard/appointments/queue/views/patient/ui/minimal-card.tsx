@@ -1,22 +1,28 @@
 'use client';
 
-import { Card, CardBody, cn } from '@heroui/react';
+import { Card, CardBody, CardHeader, cn } from '@heroui/react';
 import { formatDate } from 'date-fns';
 import { AppointmentQueueResponse } from '@/services/client/appointment/queue/queue.types';
 import Avatar from 'boring-avatars';
 import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
+import Link from 'next/link';
 
 export default function MinimalCard({ appointment }: { appointment: AppointmentQueueResponse }) {
   return (
-    <Card className={cn('transition-a w-full rounded-large')} shadow="md">
+    <Card
+      as={Link}
+      href={`/dashboard/queues/${appointment.aid}`}
+      className={cn('transition-a w-full rounded-large')}
+      shadow="md"
+    >
       <CardBody className="gap-0 p-4">
         <div>
-          <div className="flex items-center justify-between pt-1">
+          <CardHeader className="flex items-center justify-between pt-1">
             <p className="line-clamp-1 text-default-700 text-large">
               {formatDate(new Date(appointment.appointmentDate), 'EEEE, PP')}
             </p>
             <div>{renderChip({ item: appointment.status })}</div>
-          </div>
+          </CardHeader>
           <div className="flex items-center justify-between gap-6 pt-2">
             <div className="flex items-center gap-4">
               <Avatar className="h-12 w-12 flex-shrink-0" name={appointment.doctor.name} />

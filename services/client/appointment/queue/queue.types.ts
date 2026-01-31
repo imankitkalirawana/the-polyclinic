@@ -20,6 +20,11 @@ export type PatientInfo = {
   gender?: Gender;
   age?: number;
   image?: string;
+  bloodType?: string;
+  allergies?: string;
+  diseases?: string;
+  height?: number;
+  weight?: number;
 };
 
 export type DoctorInfo = {
