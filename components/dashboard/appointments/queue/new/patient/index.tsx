@@ -144,16 +144,6 @@ export default function PatientSelection() {
           patient={patientToEdit}
           isOpen={!!patientToEdit}
           onClose={() => setPatientToEdit(null)}
-          onUpdated={(updatedPatient) => {
-            setPatientToEdit(null);
-            setIndexedCache('patientById', updatedPatient.id, updatedPatient);
-            if (selectedPatient?.id === updatedPatient.id) {
-              setSelectedPatient(updatedPatient);
-            }
-            if (patientId === updatedPatient.id) {
-              form.setValue('appointment.patientId', updatedPatient.id);
-            }
-          }}
         />
       )}
     </CreateAppointmentContentContainer>

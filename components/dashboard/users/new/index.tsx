@@ -43,7 +43,7 @@ export default function NewUser({ role = Role.PATIENT }: { role?: Role }) {
     form.setValue('name', name);
     form.setValue('email', generateEmail(name));
     form.setValue('phone', generatePhoneNumber());
-    form.setValue('gender', faker.helpers.arrayElement(GENDERS));
+    form.setValue('gender', faker.helpers.arrayElement(Object.values(GENDERS)));
   };
 
   const canAutofill = user?.role === Role.ADMIN;

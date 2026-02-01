@@ -127,7 +127,7 @@ export default function NewUser({
                 onChange={formik.handleChange}
                 isInvalid={!!(formik.touched.gender && formik.errors.gender)}
                 errorMessage={formik.touched.gender && formik.errors.gender}
-                items={GENDERS.map((gender) => ({
+                items={Object.values(GENDERS).map((gender) => ({
                   label: gender.charAt(0).toUpperCase() + gender.slice(1),
                   value: gender,
                 }))}

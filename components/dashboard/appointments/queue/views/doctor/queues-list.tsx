@@ -152,7 +152,7 @@ export default function QueuesList({
                   <div className="flex flex-col">
                     <span className="text-default-500 text-tiny">Booked By</span>
                     <p className="capitalize text-small">
-                      {queue.bookedByUser.id === queue.patient.userId
+                      {queue.bookedByUser.id === queue.patient.user_id
                         ? 'Self'
                         : queue.bookedByUser.name}
                     </p>

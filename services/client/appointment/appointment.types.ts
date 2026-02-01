@@ -1,4 +1,4 @@
-import { $FixMe, Base, Gender } from '@/types';
+import { $FixMe, Base } from '@/types';
 import { ValuesOf } from '@/lib/utils';
 import {
   APPOINTMENT_MODES,
@@ -7,13 +7,14 @@ import {
 } from './appointment.constants';
 import { Role } from '@/services/common/user/user.constants';
 import { ButtonProps } from '@heroui/react';
+import { GENDERS } from '@/lib/constants';
 
 type PatientInfo = {
   uid: string;
   name: string;
   phone?: string;
   email: string;
-  gender?: Gender;
+  gender?: GENDERS;
   age?: number;
   image?: string;
 };

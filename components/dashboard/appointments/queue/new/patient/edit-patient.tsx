@@ -49,8 +49,6 @@ interface EditPatientModalProps {
 export default function EditPatientModal({ patient, onClose, isOpen }: EditPatientModalProps) {
   const updateUser = useUpdateUser();
 
-  console.log('patient', patient);
-
   const form = useForm<EditPatientFormValues>({
     resolver: zodResolver(editPatientSchema),
     defaultValues: {
@@ -63,7 +61,7 @@ export default function EditPatientModal({ patient, onClose, isOpen }: EditPatie
     },
   });
 
-  const handleSubmit = async (values: EditPatientFormValues) => {
+  const handleSubmit = async () => {
     onClose();
   };
 

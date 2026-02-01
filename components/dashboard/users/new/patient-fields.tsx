@@ -29,7 +29,7 @@ export default function PatientFields() {
             }}
             isInvalid={!!errors.gender}
             errorMessage={errors.gender?.message}
-            items={GENDERS.map((gender) => ({
+            items={Object.values(GENDERS).map((gender) => ({
               label: gender.charAt(0).toUpperCase() + gender.slice(1),
               value: gender,
             }))}

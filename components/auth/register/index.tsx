@@ -13,7 +13,7 @@ import { AuthStep } from '../types';
 import Auth from '..';
 
 import { APP_INFO } from '@/lib/config';
-import { $FixMe, Gender } from '@/types';
+import { $FixMe } from '@/types';
 import { GENDERS } from '@/lib/constants';
 
 const RegisterComponent: React.FC = () => {
@@ -102,14 +102,14 @@ const RegisterComponent: React.FC = () => {
             value={formik.values.gender}
             selectedKeys={[formik.values.gender]}
             onSelectionChange={(value) => {
-              const gender = Array.from(value)[0] as Gender;
+              const gender = Array.from(value)[0];
               formik.setFieldValue('gender', gender);
             }}
             disallowEmptySelection
             isInvalid={!!(formik.touched.gender && formik.errors.gender)}
             errorMessage={formik.errors.gender?.toString()}
           >
-            {GENDERS.map((gender) => (
+            {Object.values(GENDERS).map((gender) => (
               <SelectItem key={gender}>
                 {gender.charAt(0).toUpperCase() + gender.slice(1)}
               </SelectItem>

@@ -1,6 +1,6 @@
-import { Gender } from '@/types';
 import { faker } from '@faker-js/faker';
 import { z } from 'zod';
+import { GENDERS } from './constants';
 
 export const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
 export const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'thepolyclinic.app';
@@ -135,7 +135,7 @@ export function formatAge(
 }
 
 export function formatGender(
-  gender: Gender | null | undefined,
+  gender: GENDERS | null | undefined,
   {
     fullString = false,
   }: {
