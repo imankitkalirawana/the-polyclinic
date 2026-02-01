@@ -63,7 +63,7 @@ export class AuthApi {
   static async logout() {
     return await apiRequest({
       url: `${this.baseUrl}/logout`,
-      method: 'POST',
+      method: 'DELETE',
     });
   }
 }

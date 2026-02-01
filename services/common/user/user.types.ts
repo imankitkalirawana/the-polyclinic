@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { createUserSchema, updateUserSchema } from './user.validation';
+import { createUserSchema, resetPasswordSchema, updateUserSchema } from './user.validation';
 import { Base } from '@/types';
 import { Role, UserStatus } from './user.constants';
 
@@ -14,3 +14,4 @@ export type UserType = Base & {
 
 export type CreateUserRequest = z.infer<typeof createUserSchema>;
 export type UpdateUserRequest = z.infer<typeof updateUserSchema>;
+export type ResetPasswordRequest = z.infer<typeof resetPasswordSchema>;

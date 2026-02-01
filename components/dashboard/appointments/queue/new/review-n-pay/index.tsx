@@ -6,19 +6,29 @@ import {
 } from '../../../(common)';
 import { useFormContext } from 'react-hook-form';
 import { CellRenderer } from '@/components/ui/cell/rich-color/cell-renderer';
-import { useDoctorById } from '@/services/client/doctor/doctor.query';
-import { usePatientById } from '@/services/client/patient/patient.query';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
 import PaymentFooter from './payment-footer';
+import { usePatientById, useDoctorById } from '@/store';
 
+/**
+ * ReviewAndPay Component
+ *
+ * Displays a summary of the appointment details before payment.
+ * Uses cached patient and doctor data from Zustand store instead of
+ * making redundant API calls.
+ *
+ * The data is already cached when:
+ * - Patient was selected in PatientSelection (useAllPatients caches to 'patients')
+ * - Doctor was selected in DoctorSelection (useAllDoctors caches to 'doctors')
+ * - Individual lookups cache to 'patientById' and 'doctorById'
+ */
 export default function ReviewAndPay() {
   const form = useFormContext<CreateAppointmentQueueFormValues>();
   const appointment = form.watch('appointment');
 
-  const { data: doctor } = useDoctorById(appointment.doctorId);
-  const { data: patient } = usePatientById(appointment.patientId);
-
-  console.log('doctor', doctor);
+  // Use cached data from Zustand store - no API calls!
+  const patient = usePatientById(appointment.patientId);
+  const doctor = useDoctorById(appointment.doctorId);
 
   return (
     <CreateAppointmentContentContainer
