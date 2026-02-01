@@ -1,7 +1,7 @@
 import { Role } from '@/services/common/user/user.constants';
 import { OrganizationType } from '@/services/system/organization';
 
-interface SessionUser {
+export interface SessionUser {
   id: string;
   email: string;
   name: string;
@@ -9,8 +9,7 @@ interface SessionUser {
   image: string;
   organization: string | null;
   phone: string;
-  doctorId: string | null;
-  patientId: string | null;
+  integrated_user_id: string | null;
 }
 
 export interface Session {

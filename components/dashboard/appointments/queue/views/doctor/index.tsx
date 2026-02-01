@@ -34,7 +34,11 @@ export default function QueuesDoctorView() {
     cancelled: false,
   });
 
-  const { data, isLoading } = useQueueForDoctor(session?.user?.doctorId, queueId, selectedDate);
+  const { data, isLoading } = useQueueForDoctor(
+    session?.user?.integrated_user_id,
+    queueId,
+    selectedDate
+  );
 
   // Initialize prescription form with FormProvider
   const prescriptionForm = useForm<PrescriptionFormSchema>({

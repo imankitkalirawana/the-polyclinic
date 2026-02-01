@@ -35,6 +35,8 @@ import { useMemoizedCallback } from './use-memoized-callback';
 
 import type { $FixMe } from '@/types';
 import { useDebounce } from '@/hooks/useDebounce';
+import { useSession } from '@/lib/providers/session-provider';
+import { Role } from '@/services/common/user/user.constants';
 
 export function Table<T extends TableItem>({
   uniqueKey,
@@ -57,6 +59,7 @@ export function Table<T extends TableItem>({
 }: TableProps<T>) {
   const [searchValue, setSearchValue] = useState<string>('');
   const debouncedSearch = useDebounce(searchValue, 500);
+  const { user: currentUser } = useSession();
 
   const [state, setState] = useState<TableState>({
     key: uniqueKey,
@@ -91,7 +94,10 @@ export function Table<T extends TableItem>({
       })
       .filter(
         (column) =>
-          state.visibleColumns === 'all' || Array.from(state.visibleColumns).includes(column.uid)
+          state.visibleColumns === 'all' ||
+          (Array.from(state.visibleColumns).includes(column.uid) &&
+            !column.isHidden &&
+            (column.roles?.includes(currentUser?.role as Role) || !column.roles))
       );
   }, [state.visibleColumns, state.sortDescriptor, columns]);
 
@@ -394,6 +400,10 @@ export function Table<T extends TableItem>({
                   aria-label="Columns"
                   items={columns
                     .filter((c) => c.uid !== 'actions')
+                    .filter(
+                      (c) =>
+                        !c.isHidden && (c.roles?.includes(currentUser?.role as Role) || !c.roles)
+                    )
                     .sort((a, b) => a.name.localeCompare(b.name))}
                   selectedKeys={state.visibleColumns}
                   selectionMode="multiple"
@@ -473,7 +483,7 @@ export function Table<T extends TableItem>({
   );
 
   return (
-    <div className="h-full w-full">
+    <div className="h-full w-full p-2">
       <HeroTable
         isHeaderSticky
         aria-label="Generic data table with sorting, filtering, and pagination"

@@ -11,6 +11,8 @@ import {
   cn,
   ScrollShadow,
   Input,
+  Tooltip,
+  Kbd,
 } from '@heroui/react';
 import { Icon } from '@iconify/react';
 
@@ -23,6 +25,7 @@ import NotificationsWrapper from '../sections/navbar/notifications';
 import ProfileDropdown from '../sections/navbar/profile-dropdown';
 import { ErrorBoundary } from '@sentry/nextjs';
 import CustomError from '../error';
+import { useKeyPress } from '@/hooks/useKeyPress';
 
 export const SIDEBAR_WIDTHS = {
   expanded: 288,
@@ -33,6 +36,11 @@ export default function DashboardLayout({ children }: { readonly children: React
   const { user } = useSession();
 
   const [isHidden, setIsHidden] = useLocalStorage('isDashboardSidebarHidden', true);
+
+  // command + / to toggle sidebar
+  useKeyPress(['meta', '/'], () => {
+    setIsHidden(!isHidden);
+  });
 
   const pathname = usePathname();
   const currentPath = pathname.split('/')?.[2];
@@ -88,24 +96,28 @@ export default function DashboardLayout({ children }: { readonly children: React
 
   const header = useMemo(
     () => (
-      <header className="flex items-center justify-between gap-3 border-b border-divider p-2">
+      <header
+        data-testid="dashboard-header"
+        className="flex items-center justify-between gap-3 border-b border-divider p-2"
+      >
         <div className="flex items-center gap-3 rounded-medium bg-default-200 px-3 py-1">
-          <Button
-            aria-label="Toggle Sidebar"
-            data-testid="toggle-sidebar-button"
-            isIconOnly
-            size="sm"
-            variant="light"
-            onPress={() => setIsHidden(!isHidden)}
-            title="Toggle Sidebar"
-          >
-            <Icon
-              className="text-default-500"
-              height={24}
-              icon="solar:sidebar-minimalistic-outline"
-              width={24}
-            />
-          </Button>
+          <Tooltip delay={1000} size="sm" content={<Kbd>Cmd + /</Kbd>} placement="bottom">
+            <Button
+              aria-label="Toggle Sidebar"
+              data-testid="toggle-sidebar-button"
+              isIconOnly
+              size="sm"
+              variant="light"
+              onPress={() => setIsHidden(!isHidden)}
+            >
+              <Icon
+                className="text-default-500"
+                height={24}
+                icon="solar:sidebar-minimalistic-outline"
+                width={24}
+              />
+            </Button>
+          </Tooltip>
           <NextUIBreadcrumbs>
             {breadcrumbItems?.map((item, index) => (
               <BreadcrumbItem key={index}>

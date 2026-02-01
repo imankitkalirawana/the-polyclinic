@@ -27,11 +27,16 @@ import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/typ
 import { isSearchMatch } from '@/lib/utils';
 import { useDeleteUser } from '@/services/common/user/user.query';
 import { useAllAppointmentQueues } from '@/services/client/appointment/queue/queue.query';
-import { AppointmentQueueResponse } from '@/services/client/appointment/queue/queue.types';
+import {
+  AppointmentQueueResponse,
+  QueueStatus,
+} from '@/services/client/appointment/queue/queue.types';
 import Link from 'next/link';
 import QueueQuickLook from './quicklook';
 import { CopyText } from '@/components/ui/copy';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import { Role } from '@/services/common/user/user.constants';
+import { useSession } from '@/lib/providers/session-provider';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'sequenceNumber',
@@ -44,6 +49,7 @@ const INITIAL_VISIBLE_COLUMNS = [
 ];
 
 export default function DefaultQueueView() {
+  const { user: currentUser } = useSession();
   const deleteModal = useDisclosure();
   const deleteDoctor = useDeleteUser();
   const [selectedQueue, setSelectedQueue] = useState<AppointmentQueueResponse | null>(null);
@@ -70,10 +76,12 @@ export default function DefaultQueueView() {
         href: `/dashboard/queues/${queue.id}`,
       },
       {
-        key: 'edit',
-        children: 'Edit',
-        as: Link,
-        href: `/dashboard/queues/${queue.id}/edit`,
+        key: 'cancel',
+        children: 'Cancel Appointment',
+        section: 'Danger Zone',
+        color: 'danger',
+        isHidden: [QueueStatus.CANCELLED, QueueStatus.COMPLETED].includes(queue.status),
+        roles: [Role.ADMIN, Role.RECEPTIONIST],
       },
       {
         key: 'delete',
@@ -82,6 +90,7 @@ export default function DefaultQueueView() {
         onPress: () => handleDelete(queue.id),
         section: 'Danger Zone',
         className: 'text-danger',
+        roles: [Role.ADMIN],
       },
     ];
   };
@@ -121,7 +130,10 @@ export default function DefaultQueueView() {
         name: 'Doctor',
         uid: 'doctor.name',
         sortable: true,
-        renderCell: (queue) => <CopyText>{queue.doctor.name || 'N/A'}</CopyText>,
+        renderCell: (queue) => (
+          <RenderUser variant="beam" name={queue.doctor.name} description={queue.doctor.seating} />
+        ),
+        isHidden: currentUser?.role === Role.DOCTOR,
       },
       {
         name: 'Status',
@@ -135,12 +147,12 @@ export default function DefaultQueueView() {
         sortable: true,
         renderCell: (queue) => <CopyText>{queue.doctor.seating || 'N/A'}</CopyText>,
       },
-      // {
-      //   name: 'Scheduled Date',
-      //   uid: 'appointmentDate',
-      //   sortable: true,
-      //   renderCell: (queue) => renderDate({ date: queue.appointmentDate }),
-      // },
+      {
+        name: 'Scheduled Date',
+        uid: 'appointmentDate',
+        sortable: true,
+        renderCell: (queue) => renderDate({ date: queue.appointmentDate }),
+      },
       {
         name: 'Created At',
         uid: 'createdAt',
@@ -169,7 +181,7 @@ export default function DefaultQueueView() {
         name: 'Actions',
         uid: 'actions',
         sortable: false,
-        renderCell: (queue) => renderDropdownMenu(dropdownMenuItems(queue)),
+        renderCell: (queue) => renderDropdownMenu(dropdownMenuItems(queue), currentUser?.role),
       },
     ],
     []
@@ -285,7 +297,7 @@ export default function DefaultQueueView() {
   );
 
   return (
-    <div className="p-4">
+    <>
       <Table
         isError={isError}
         errorMessage={error?.message}
@@ -319,6 +331,6 @@ export default function DefaultQueueView() {
       {!!selectedQueue && (
         <QueueQuickLook queue={selectedQueue} onClose={() => setSelectedQueue(null)} />
       )}
-    </div>
+    </>
   );
 }

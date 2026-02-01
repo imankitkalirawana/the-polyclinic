@@ -23,10 +23,13 @@ import { CopyText } from '@/components/ui/copy';
 import { formatAge, formatGender } from '@/lib/utils';
 import ResetPasswordModal from '../users/ui/reset-password-modal';
 import DeleteUserModal from '../users/ui/delete-user-modal';
+import { Role } from '@/services/common/user/user.constants';
+import { useSession } from '@/lib/providers/session-provider';
 
 const INITIAL_VISIBLE_COLUMNS = ['image', 'name', 'email', 'age', 'gender', 'createdAt'];
 
 export default function Patients() {
+  const { user: currentUser } = useSession();
   const deleteModal = useDisclosure();
   const resetPasswordModal = useDisclosure();
   const { setSelected } = usePatientStore();
@@ -57,6 +60,7 @@ export default function Patients() {
         children: 'Edit',
         as: Link,
         href: `/dashboard/patients/${patient.id}/edit`,
+        roles: [Role.ADMIN, Role.RECEPTIONIST],
       },
       {
         key: 'change-password',
@@ -65,6 +69,7 @@ export default function Patients() {
         onPress: () => handleChangePassword(patient.userId),
         section: 'Danger Zone',
         className: 'text-warning',
+        roles: [Role.ADMIN],
       },
       {
         key: 'delete',
@@ -73,6 +78,7 @@ export default function Patients() {
         onPress: () => handleDelete(patient.userId),
         section: 'Danger Zone',
         className: 'text-danger',
+        roles: [Role.ADMIN],
       },
     ];
   };
@@ -124,7 +130,7 @@ export default function Patients() {
         name: 'Actions',
         uid: 'actions',
         sortable: false,
-        renderCell: (patient) => renderDropdownMenu(dropdownMenuItems(patient)),
+        renderCell: (patient) => renderDropdownMenu(dropdownMenuItems(patient), currentUser?.role),
       },
     ],
     []

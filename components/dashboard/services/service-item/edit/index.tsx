@@ -17,11 +17,10 @@ import {
   Tooltip,
 } from '@heroui/react';
 import { useFormik } from 'formik';
-import ReactQuill from 'react-quill';
+import Editor from '@/components/ui/text-editor/editor';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 import NoResults from '@/components/ui/no-results';
-import QuillInput from '@/components/ui/quill-input';
 import { ServiceStatuses, ServiceTypes } from '@/lib/interface';
 import { serviceValidationSchema } from '@/lib/validation';
 import { useServiceWithUID, useUpdateService } from '@/services/client/service/service.query';
@@ -232,11 +231,9 @@ export default function EditService({ uid }: { uid: string }) {
           </div>
 
           <div className="col-span-full">
-            <QuillInput
-              label="Description"
-              value={formik.values.description}
-              onChange={(value) => formik.setFieldValue('description', value)}
-              description="This information will be displayed on the report before the table."
+            <Editor
+              content={formik.values.description}
+              onChange={(html) => formik.setFieldValue('description', html)}
             />
           </div>
           <div className="col-span-full">
@@ -258,11 +255,9 @@ export default function EditService({ uid }: { uid: string }) {
                 formik.errors?.summary
               }
             /> */}
-            <QuillInput
-              label="Test Information"
-              value={formik.values.summary}
-              onChange={(value) => formik.setFieldValue('summary', value)}
-              description="This information will be displayed on the report after the table."
+            <Editor
+              content={formik.values.summary}
+              onChange={(html) => formik.setFieldValue('summary', html)}
             />
           </div>
 
@@ -387,20 +382,11 @@ export default function EditService({ uid }: { uid: string }) {
                             onMouseLeave={() => setHoveredColIndex(null)}
                             className="max-w-48 whitespace-nowrap py-0"
                           >
-                            <ReactQuill
-                              theme="snow"
-                              value={formik.values.fields[`cell-${rowIndex}-${colIndex}`] || ''}
-                              onChange={(value) =>
-                                handleInputChange(`cell-${rowIndex}-${colIndex}`, value)
+                            <Editor
+                              content={formik.values.fields[`cell-${rowIndex}-${colIndex}`] || ''}
+                              onChange={(html) =>
+                                handleInputChange(`cell-${rowIndex}-${colIndex}`, html)
                               }
-                              formats={['bold', 'italic', 'underline', 'strike']}
-                              className={cn('w-full overflow-hidden', {
-                                'rounded-tl-xl': rowIndex === 0 && colIndex === 0,
-                                'rounded-tr-xl': rowIndex === 0 && colIndex === numCols - 1,
-                                'rounded-bl-xl': rowIndex === numRows - 1 && colIndex === 0,
-                                'rounded-br-xl':
-                                  rowIndex === numRows - 1 && colIndex === numCols - 1,
-                              })}
                             />
                           </td>
                         ))}
