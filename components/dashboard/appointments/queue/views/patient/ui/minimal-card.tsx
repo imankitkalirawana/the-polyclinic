@@ -1,11 +1,22 @@
 'use client';
 
-import { Card, CardBody, CardHeader, cn } from '@heroui/react';
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  cn,
+  Button,
+  DropdownItem,
+} from '@heroui/react';
 import { formatDate } from 'date-fns';
 import { AppointmentQueueResponse } from '@/services/client/appointment/queue/queue.types';
 import Avatar from 'boring-avatars';
 import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
 import Link from 'next/link';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 export default function MinimalCard({ appointment }: { appointment: AppointmentQueueResponse }) {
   return (
@@ -36,6 +47,25 @@ export default function MinimalCard({ appointment }: { appointment: AppointmentQ
           </div>
         </div>
       </CardBody>
+      <div>
+        <Dropdown aria-label="Patient actions" placement="bottom-end">
+          <DropdownTrigger>
+            <Button size="sm" isIconOnly variant="light" radius="full">
+              <Icon icon="solar:menu-dots-bold-duotone" className="rotate-90" width={18} />
+            </Button>
+          </DropdownTrigger>
+          <DropdownMenu>
+            <DropdownItem key="view">View</DropdownItem>
+
+            <DropdownItem color="warning" key="edit">
+              Edit
+            </DropdownItem>
+            <DropdownItem key="delete" className="text-danger" color="danger">
+              Delete
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </div>
     </Card>
   );
 }
