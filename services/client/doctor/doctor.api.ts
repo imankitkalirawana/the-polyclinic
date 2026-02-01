@@ -2,7 +2,7 @@ import { DoctorType, SlotConfig } from './doctor.types';
 import { apiRequest } from '@/lib/axios';
 
 export class Doctor {
-  private static API_BASE = '/client/doctors';
+  private static API_BASE = '/doctors';
   static async getAll(search?: string) {
     return await apiRequest<DoctorType[]>({
       url: this.API_BASE,
