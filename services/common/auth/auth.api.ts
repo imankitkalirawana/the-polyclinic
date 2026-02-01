@@ -7,6 +7,7 @@ import {
 import { RegistrationResponse, VerifyOTPResponse } from './auth.types';
 import { apiRequest } from '@/lib/axios';
 import { ForgotPasswordRequest } from './auth.validation';
+import { Session } from '@/types/session';
 
 export class AuthApi {
   private static baseUrl = '/auth';
@@ -64,6 +65,13 @@ export class AuthApi {
     return await apiRequest({
       url: `${this.baseUrl}/logout`,
       method: 'DELETE',
+    });
+  }
+
+  static async getSession() {
+    return await apiRequest<Session>({
+      url: `${this.baseUrl}/session`,
+      method: 'GET',
     });
   }
 }

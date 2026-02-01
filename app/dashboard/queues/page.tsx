@@ -13,13 +13,15 @@ type PageProps = {
 };
 
 export default async function QueuePage({ searchParams }: PageProps) {
-  const { id, view } = await loadSearchParams(searchParams);
+  const { id, view, date } = await loadSearchParams(searchParams);
 
   const session = await getServerSession();
   const isDoctor = session?.user?.role === Role.DOCTOR;
   const isPatient = session?.user?.role === Role.PATIENT;
 
-  const queryKey = isDoctor ? [] : ['appointment-queues', id];
+  const queryKey = isDoctor
+    ? ['queue-for-doctor', session?.user?.integrated_user_id, id, date]
+    : ['appointment-queues', id];
 
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
@@ -27,7 +29,11 @@ export default async function QueuePage({ searchParams }: PageProps) {
     queryFn: async () => {
       let result;
       if (isDoctor) {
-        result = await AppointmentQueueApi.getQueueForDoctor(session?.user?.id, id);
+        result = await AppointmentQueueApi.getQueueForDoctor(
+          session?.user?.integrated_user_id,
+          id,
+          date
+        );
       } else {
         result = await AppointmentQueueApi.getAll();
       }
