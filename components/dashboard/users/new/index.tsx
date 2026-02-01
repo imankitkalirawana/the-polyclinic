@@ -8,10 +8,8 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { faker } from '@faker-js/faker';
 import { Icon } from '@iconify/react/dist/iconify.js';
-
 import { GENDERS } from '@/lib/constants';
 import { generateEmail, generatePhoneNumber } from '@/lib/utils';
-
 import { useCreateUser } from '@/services/common/user/user.query';
 import { CreateUserRequest } from '@/services/common/user/user.types';
 import { createUserSchema } from '@/services/common/user/user.validation';

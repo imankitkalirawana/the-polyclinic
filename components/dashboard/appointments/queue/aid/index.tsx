@@ -5,6 +5,10 @@ import { Icon } from '@iconify/react';
 import { useAppointmentQueueWithAID } from '@/services/client/appointment/queue/queue.query';
 import Avatar from 'boring-avatars';
 import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
+import DashboardFooter from '@/components/ui/dashboard/footer';
+import EditModal from './ui/edit-modal';
+
+import InfoCard from './ui/info-card';
 
 export default function AppointmentQueue({ aid }: { aid: string }) {
   const { data: appointment } = useAppointmentQueueWithAID(aid);
@@ -16,44 +20,17 @@ export default function AppointmentQueue({ aid }: { aid: string }) {
           <div className="flex flex-col gap-4">
             <Card className="p-4 shadow-md">
               <div className="flex flex-shrink-0 items-center justify-end gap-5">
-                <Chip variant="flat">Edit</Chip>
+                <Button variant="flat" size="sm" radius="full" onPress={() => <EditModal />}>
+                  Edit
+                </Button>
               </div>
               <div className="flex flex-col items-center text-center">
                 <Avatar size="lg" className="mb-4 h-28 w-28 rounded-3xl" />
                 <h2 className="text-xl font-medium text-gray-900">{appointment?.patient.name}</h2>
-                <p className="mb-4 text-gray-500">Age: {appointment?.patient.age}</p>
+                <p className="mb-4 text-gray-500"> {appointment?.patient.phone}</p>
               </div>
             </Card>
-            <Card className="p-4 shadow-md">
-              <p className="text-sm text-foreground-500">Information</p>
-              <Divider />
-              <CardBody className="space-y-3 text-base">
-                <div className="flex justify-between">
-                  <span className="font-medium">Gender:</span>
-                  <span className="text-foreground-500">{appointment?.patient.gender || '-'}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="font-medium">Blood Type:</span>
-                  <span className="text-foreground-500">
-                    {appointment?.patient.bloodType || '-'}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="font-medium">Diseases:</span>
-                  <span className="text-foreground-500">
-                    {appointment?.patient.diseases || '-'}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="font-medium">Height:</span>
-                  <span className="text-foreground-500">{appointment?.patient.height || '-'}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="font-medium">Weight:</span>
-                  <span className="text-foreground-500">{appointment?.patient.weight || '-'}</span>
-                </div>
-              </CardBody>
-            </Card>
+            <InfoCard aid={aid} />
           </div>
         </div>
         <div className="col-span-4">
@@ -216,59 +193,14 @@ export default function AppointmentQueue({ aid }: { aid: string }) {
           </div>
         </div>
       </div>
-      <div className="mt-6 grid grid-cols-4 gap-6">
-        <div className="col-span-1">
-          <Card className="p-4 text-center shadow-md">
-            <Icon icon="mdi:heart" width="48" height="48" className="mx-auto mb-4 text-red-500" />
-            <h4 className="mb-2 font-semibold text-foreground-600">Heart Rate</h4>
-            <p className="text-4xl font-semibold">
-              80<span className="ml-1 text-lg text-foreground-600">bpm</span>
-            </p>
-          </Card>
-        </div>
-        <div className="col-span-1">
-          <Card className="p-4 text-center shadow-md">
-            <Icon
-              icon="mdi:thermometer"
-              width="48"
-              height="48"
-              className="mx-auto mb-4 text-yellow-500"
-            />
-            <h4 className="mb-2 font-semibold text-foreground-600">Body Temperature</h4>
-            <p className="text-4xl font-semibold">
-              36.5<span className="ml-1 text-lg text-foreground-600">°c</span>
-            </p>
-          </Card>
-        </div>
-        <div className="col-span-1">
-          <Card className="p-4 text-center shadow-md">
-            <Icon
-              icon="mdi:water-percent"
-              width="48"
-              height="48"
-              className="mx-auto mb-4 text-red-400"
-            />
-            <h4 className="mb-2 font-semibold text-foreground-600">Glucose</h4>
-            <p className="text-4xl font-semibold">
-              100<span className="ml-1 text-lg text-foreground-600">mg/dl</span>
-            </p>
-          </Card>
-        </div>
-        <div className="col-span-1">
-          <Card className="p-4 text-center shadow-md">
-            <Icon
-              icon="mdi:water-percent"
-              width="48"
-              height="48"
-              className="mx-auto mb-4 text-red-400"
-            />
-            <h4 className="mb-2 font-semibold text-foreground-600">Glucose</h4>
-            <p className="text-4xl font-semibold">
-              100<span className="ml-1 text-lg text-foreground-600">mg/dl</span>
-            </p>
-          </Card>
-        </div>
-      </div>
+      <DashboardFooter>
+        <Button color="danger" radius="full" variant="flat">
+          Cancel Appointment
+        </Button>
+        <Button color="warning" radius="full" variant="flat">
+          Reschedule Appointment
+        </Button>
+      </DashboardFooter>
     </main>
   );
 }
