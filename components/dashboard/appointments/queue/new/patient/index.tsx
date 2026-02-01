@@ -15,6 +15,7 @@ import {
   SearchInput,
 } from '@/components/dashboard/appointments/(common)';
 import { PatientType, useAllPatients } from '@/services/client/patient';
+import { useCacheStore } from '@/store';
 import { useFormContext } from 'react-hook-form';
 import Modal from '@/components/ui/modal';
 import ViewPatientBody from '@/components/ui/modal/view-modal';
@@ -36,8 +37,19 @@ export default function PatientSelection() {
 
   const { data: patients, isLoading, isRefetching } = useAllPatients(debouncedSearch);
   const form = useFormContext<CreateAppointmentQueueFormValues>();
+  const setIndexedCache = useCacheStore((state) => state.setIndexedCache);
 
   const patientId = form.watch('appointment.patientId');
+
+  // Cache the selected patient when patientId changes
+  const handlePatientSelect = (id: string) => {
+    form.setValue('appointment.patientId', id);
+    // Find and cache the selected patient for later use in ReviewAndPay
+    const patient = patients?.find((p) => p.id === id);
+    if (patient) {
+      setIndexedCache('patientById', id, patient);
+    }
+  };
 
   const handleNext = () => {
     if (!patientId) {
@@ -99,7 +111,7 @@ export default function PatientSelection() {
             key={index}
             patient={patient}
             isSelected={patientId === patient.id}
-            onSelect={(id) => form.setValue('appointment.patientId', id)}
+            onSelect={handlePatientSelect}
             onView={setSelectedPatient}
             onDelete={(_patient) => {
               addToast({

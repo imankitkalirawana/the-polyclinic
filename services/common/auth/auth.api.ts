@@ -7,9 +7,10 @@ import {
 import { RegistrationResponse, VerifyOTPResponse } from './auth.types';
 import { apiRequest } from '@/lib/axios';
 import { ForgotPasswordRequest } from './auth.validation';
+import { Session } from '@/types/session';
 
 export class AuthApi {
-  private static baseUrl = '/client/auth';
+  private static baseUrl = '/auth';
 
   static async login(data: LoginRequest) {
     const res = await apiRequest<{ token: string }>({
@@ -63,7 +64,14 @@ export class AuthApi {
   static async logout() {
     return await apiRequest({
       url: `${this.baseUrl}/logout`,
-      method: 'POST',
+      method: 'DELETE',
+    });
+  }
+
+  static async getSession() {
+    return await apiRequest<Session>({
+      url: `${this.baseUrl}/session`,
+      method: 'GET',
     });
   }
 }

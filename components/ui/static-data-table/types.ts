@@ -2,6 +2,7 @@ import type { Selection, SortDescriptor } from '@heroui/react';
 import type React from 'react';
 
 import type { $FixMe } from '@/types';
+import { Role } from '@/services/common/user/user.constants';
 
 export type TableItem = Record<string, $FixMe>;
 
@@ -13,6 +14,8 @@ export interface ColumnDef<T extends TableItem> {
   info?: string;
   sortDirection?: 'ascending' | 'descending';
   renderCell?: (item: T, columnKey: string) => React.ReactNode;
+  isHidden?: boolean;
+  roles?: Role[];
 }
 
 export interface FilterOpt {

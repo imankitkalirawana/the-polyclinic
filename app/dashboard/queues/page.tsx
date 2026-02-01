@@ -6,18 +6,22 @@ import { SearchParams } from 'nuqs/server';
 import { getServerSession } from '@/lib/serverAuth';
 import { Role } from '@/services/common/user/user.constants';
 import DefaultQueueView from '@/components/dashboard/appointments/queue/views/default';
+import PatientQueueView from '@/components/dashboard/appointments/queue/views/patient';
 
 type PageProps = {
   searchParams: Promise<SearchParams>;
 };
 
 export default async function QueuePage({ searchParams }: PageProps) {
-  const { id } = await loadSearchParams(searchParams);
+  const { id, view, date } = await loadSearchParams(searchParams);
 
   const session = await getServerSession();
   const isDoctor = session?.user?.role === Role.DOCTOR;
+  const isPatient = session?.user?.role === Role.PATIENT;
 
-  const queryKey = isDoctor ? [] : ['appointment-queues', id];
+  const queryKey = isDoctor
+    ? ['queue-for-doctor', session?.user?.integrated_user_id, id, date]
+    : ['appointment-queues', id];
 
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
@@ -25,7 +29,11 @@ export default async function QueuePage({ searchParams }: PageProps) {
     queryFn: async () => {
       let result;
       if (isDoctor) {
-        result = await AppointmentQueueApi.getQueueForDoctor(session?.user?.id, id);
+        result = await AppointmentQueueApi.getQueueForDoctor(
+          session?.user?.integrated_user_id,
+          id,
+          date
+        );
       } else {
         result = await AppointmentQueueApi.getAll();
       }
@@ -37,9 +45,19 @@ export default async function QueuePage({ searchParams }: PageProps) {
     },
   });
 
+  let ViewComponent;
+
+  if (isDoctor) {
+    ViewComponent = view === 'all' ? DefaultQueueView : QueuesDoctorView;
+  } else if (isPatient) {
+    ViewComponent = PatientQueueView;
+  } else {
+    ViewComponent = DefaultQueueView;
+  }
+
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      {isDoctor ? <QueuesDoctorView /> : <DefaultQueueView />}
+      <ViewComponent />
     </HydrationBoundary>
   );
 }

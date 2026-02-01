@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Button, DropdownItem, DropdownMenu, Selection, useDisclosure } from '@heroui/react';
 import Link from 'next/link';
 // eslint-disable-next-line no-restricted-imports
@@ -18,21 +18,63 @@ import {
   DropdownItemWithSection,
 } from '@/components/ui/static-data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
-import { useAllUsers, useDeleteUser } from '@/services/common/user/user.query';
+import { useAllUsers } from '@/services/common/user/user.query';
 import { UserType } from '@/services/common/user/user.types';
 import { CopyText } from '@/components/ui/copy';
+import ResetPasswordModal from './ui/reset-password-modal';
+import DeleteUserModal from './ui/delete-user-modal';
+import { useSession } from '@/lib/providers/session-provider';
+import { Role } from '@/services/common/user/user.constants';
 
 const INITIAL_VISIBLE_COLUMNS = ['image', 'name', 'email', 'role', 'createdAt'];
 
+type Action = 'edit' | 'delete' | 'change-password';
+
+const PERMISSIONS: Record<Action, Partial<Record<Role, Role[]>>> = {
+  edit: {
+    PATIENT: [Role.ADMIN, Role.RECEPTIONIST],
+    DOCTOR: [Role.ADMIN],
+    RECEPTIONIST: [Role.ADMIN],
+    ADMIN: [Role.ADMIN],
+  },
+
+  delete: {
+    PATIENT: [Role.ADMIN],
+    DOCTOR: [Role.ADMIN],
+    RECEPTIONIST: [Role.ADMIN],
+    ADMIN: [Role.ADMIN],
+  },
+
+  'change-password': {
+    PATIENT: [Role.ADMIN],
+    DOCTOR: [Role.ADMIN],
+    RECEPTIONIST: [Role.ADMIN],
+    ADMIN: [Role.ADMIN],
+  },
+};
+
+const getRoles = (targetUser: UserType, action: Action): Role[] => {
+  return PERMISSIONS[action]?.[targetUser.role] ?? [];
+};
+
 export default function Users() {
-  const deleteUser = useDeleteUser();
+  const { user: currentUser } = useSession();
   const deleteModal = useDisclosure();
+  const resetPasswordModal = useDisclosure();
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+
   const { setSelected } = useUserStore();
 
   const { data, isLoading, isError, error } = useAllUsers();
 
   const handleDelete = async (id: string) => {
-    await deleteUser.mutateAsync(id);
+    setSelectedUserId(id);
+    deleteModal.onOpen();
+  };
+
+  const handleChangePassword = async (id: string) => {
+    setSelectedUserId(id);
+    resetPasswordModal.onOpen();
   };
 
   const dropdownMenuItems = (user: UserType): DropdownItemWithSection[] => {
@@ -48,6 +90,16 @@ export default function Users() {
         children: 'Edit',
         as: Link,
         href: `/dashboard/users/${user.id}/edit`,
+        roles: getRoles(user, 'edit'),
+      },
+      {
+        key: 'change-password',
+        color: 'warning',
+        children: 'Reset Password',
+        onPress: () => handleChangePassword(user.id),
+        section: 'Danger Zone',
+        className: 'text-warning',
+        roles: getRoles(user, 'change-password'),
       },
       {
         key: 'delete',
@@ -56,6 +108,7 @@ export default function Users() {
         onPress: () => handleDelete(user.id),
         section: 'Danger Zone',
         className: 'text-danger',
+        roles: getRoles(user, 'delete'),
       },
     ];
   };
@@ -71,6 +124,7 @@ export default function Users() {
           <RenderUser
             size="md"
             name={user.name}
+            variant={user.role === Role.DOCTOR ? 'beam' : 'marble'}
             description={user.phone || '-'}
             classNames={{
               description: 'lowercase',
@@ -119,7 +173,7 @@ export default function Users() {
         name: 'Actions',
         uid: 'actions',
         sortable: false,
-        renderCell: (user) => renderDropdownMenu(dropdownMenuItems(user)),
+        renderCell: (user) => renderDropdownMenu(dropdownMenuItems(user), currentUser?.role),
       },
     ],
     []
@@ -293,6 +347,16 @@ export default function Users() {
         />
       )} */}
       <UserQuickLook />
+      <ResetPasswordModal
+        userId={selectedUserId}
+        isOpen={resetPasswordModal.isOpen}
+        onClose={resetPasswordModal.onClose}
+      />
+      <DeleteUserModal
+        userId={selectedUserId}
+        isOpen={deleteModal.isOpen}
+        onClose={deleteModal.onClose}
+      />
     </>
   );
 }

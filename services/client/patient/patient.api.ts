@@ -3,7 +3,7 @@ import { AppointmentType } from '../appointment';
 import { apiRequest } from '@/lib/axios';
 
 export class PatientApi {
-  private static API_BASE = '/client/patients';
+  private static API_BASE = '/patients';
 
   static async getAll(search?: string) {
     return await apiRequest<PatientType[]>({

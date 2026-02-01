@@ -3,10 +3,8 @@
 import { useState } from 'react';
 import { Button, Tooltip } from '@heroui/react';
 import { useFormik } from 'formik';
-import ReactQuill from 'react-quill';
+import Editor from '@/components/ui/text-editor/editor';
 import { Icon } from '@iconify/react/dist/iconify.js';
-
-import 'react-quill/dist/quill.snow.css';
 
 import { cn } from '@heroui/react';
 
@@ -172,13 +170,11 @@ export default function EditableDataTable({ data, onChange }: EditableDataTableP
                     onMouseLeave={() => setHoveredColIndex(null)}
                     className="h-full"
                   >
-                    <ReactQuill
-                      theme="snow"
-                      value={formik.values.data[key] || ''}
-                      onChange={(value) => {
-                        handleInputChange(key, value);
+                    <Editor
+                      content={formik.values.data[key] || ''}
+                      onChange={(html) => {
+                        handleInputChange(key, html);
                       }}
-                      formats={['bold', 'italic', 'underline', 'strike']}
                     />
                   </td>
                 );

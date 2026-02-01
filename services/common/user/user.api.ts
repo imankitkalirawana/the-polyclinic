@@ -1,8 +1,8 @@
 import { apiRequest } from '@/lib/axios';
-import { CreateUserRequest, UserType, UpdateUserRequest } from './user.types';
+import { CreateUserRequest, UserType, UpdateUserRequest, ResetPasswordRequest } from './user.types';
 
 export class UserApi {
-  private static API_BASE = '/client/users';
+  private static API_BASE = '/users';
 
   static async getSelf() {
     return await apiRequest<UserType>({
@@ -28,6 +28,14 @@ export class UserApi {
     }
     return await apiRequest<UserType>({
       url: `${this.API_BASE}/${id}`,
+    });
+  }
+
+  static async resetPassword(id: string, data: ResetPasswordRequest) {
+    return await apiRequest({
+      url: `${this.API_BASE}/${id}/reset-password`,
+      method: 'POST',
+      data,
     });
   }
 
