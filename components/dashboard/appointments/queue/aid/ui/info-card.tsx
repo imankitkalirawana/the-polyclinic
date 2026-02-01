@@ -43,7 +43,7 @@ export default function AppointmentQueue({ aid }: { aid: string }) {
                   </div>
                 </CardBody>
               </Tab>
-              <Tab key="vitals" title="Vitals">
+              {/* <Tab key="vitals" title="Vitals">
                 <Divider />
                 <CardBody className="space-y-3 text-base">
                   <div className="flex justify-between">
@@ -77,7 +77,7 @@ export default function AppointmentQueue({ aid }: { aid: string }) {
                     </span>
                   </div>
                 </CardBody>
-              </Tab>
+              </Tab> */}
             </Tabs>
           </div>
         </Card>
