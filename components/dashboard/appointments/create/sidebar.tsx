@@ -3,7 +3,7 @@ import { Progress } from '@heroui/react';
 import { CREATE_APPOINTMENT_STEPS } from './data';
 import VerticalSteps, { VerticalCollapsibleStepProps } from './vertical-steps';
 
-import { APP_INFO } from '@/lib/config';
+import { APP_INFO } from '@/libs/config';
 
 export const CreateAppointmentSidebar = ({
   currentStep,

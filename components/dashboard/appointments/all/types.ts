@@ -1,4 +1,4 @@
-import { ValuesOf } from '@/lib/utils';
+import { ValuesOf } from '@/libs/utils';
 
 export const views = ['month', 'week', 'day', 'schedule', 'year'];
 

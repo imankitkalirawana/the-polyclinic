@@ -7,7 +7,7 @@ import AppointmentSlots from './appointment-slots';
 import Appointments from './appointments';
 
 import { CellRenderer } from '@/components/ui/cell/rich-color/cell-renderer';
-import { castData } from '@/lib/utils';
+import { castData } from '@/libs/utils';
 import { DoctorType } from '@/services/client/doctor';
 import { useDoctorById } from '@/services/client/doctor/doctor.query';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';

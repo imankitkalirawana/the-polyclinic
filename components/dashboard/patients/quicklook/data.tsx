@@ -13,7 +13,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { ActionType, DropdownKeyType } from '../types';
 
 import { PermissionProps } from '@/components/ui/dashboard/quicklook/types';
-import { avatars } from '@/lib/avatar';
+import { avatars } from '@/libs/avatar';
 import { PatientType } from '@/services/client/patient';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {

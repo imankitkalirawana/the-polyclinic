@@ -6,7 +6,7 @@ import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import Modal from '@/components/ui/modal';
-import { GENDERS } from '@/lib/constants';
+import { GENDERS } from '@/libs/constants';
 import { PatientType } from '@/services/client/patient';
 import { useUpdateUser } from '@/services/common/user/user.query';
 

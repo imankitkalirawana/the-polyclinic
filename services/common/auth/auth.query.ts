@@ -5,7 +5,7 @@ import {
   SendOTPRequest,
   VerifyOTPRequest,
 } from './auth.validation';
-import { useCookies } from '@/lib/providers/cookies-provider';
+import { useCookies } from '@/libs/providers/cookies-provider';
 import { useGenericMutation } from '@/services/useGenericMutation';
 
 export const useLogin = () => {

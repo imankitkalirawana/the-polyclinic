@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { apiRequest } from '@/lib/axios';
+import { apiRequest } from '@/libs/axios';
 import { Notification, NotificationAction } from '../notifications.types';
 import { useMarkAsRead } from '../notifications.query';
 

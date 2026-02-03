@@ -9,7 +9,7 @@ import { LoginProvider, useLogin } from '../store';
 import { AuthStep } from '../types';
 import Auth from '..';
 
-import { APP_INFO } from '@/lib/config';
+import { APP_INFO } from '@/libs/config';
 
 const LoginComponent: React.FC<{ subdomain: string | null }> = ({ subdomain }) => {
   const { formik, paginate } = useLogin();

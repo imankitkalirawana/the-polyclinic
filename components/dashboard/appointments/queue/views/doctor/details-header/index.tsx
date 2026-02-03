@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import DataItem from '@/components/ui/data-item';
 import { formatDate } from 'date-fns';
-import { formatGender } from '@/lib/utils';
+import { formatGender } from '@/libs/utils';
 
 export default function DetailsHeader({
   currentQueue,

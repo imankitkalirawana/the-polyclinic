@@ -4,7 +4,7 @@ import { Chip } from '@heroui/react';
 import { format } from 'date-fns';
 
 import NoResults from '@/components/ui/no-results';
-import { castData } from '@/lib/utils';
+import { castData } from '@/libs/utils';
 import { useEmailWithID } from '@/services/client/email/email.query';
 import { EmailType } from '@/services/client/email/email.types';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';

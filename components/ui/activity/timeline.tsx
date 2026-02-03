@@ -11,7 +11,7 @@ import {
   ActivityLogResponse,
   ActorType,
 } from '@/services/common/activity/activity.types';
-import { formatLabel } from '@/lib/utils';
+import { formatLabel } from '@/libs/utils';
 
 const getActivityIcon = (action: ActivityAction) => {
   switch (action) {

@@ -20,7 +20,7 @@ import {
 } from '@/services/client/appointment/queue/queue.query';
 import { useFormContext } from 'react-hook-form';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
-import { useSession } from '@/lib/providers/session-provider';
+import { useSession } from '@/libs/providers/session-provider';
 import { formatDate } from 'date-fns';
 
 export default function AppointmentQueueReceipt() {

@@ -1,4 +1,4 @@
-import { GENDERS } from '@/lib/constants';
+import { GENDERS } from '@/libs/constants';
 
 export enum QueueStatus {
   PAYMENT_PENDING = 'PAYMENT_PENDING',

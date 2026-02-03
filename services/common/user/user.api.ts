@@ -1,5 +1,5 @@
 import { $FixMe } from '@/types';
-import { apiRequest } from '@/lib/axios';
+import { apiRequest } from '@/libs/axios';
 import { UserType, ResetPasswordRequest, UserProfileType } from './user.types';
 
 export class UserApi {

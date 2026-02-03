@@ -1,4 +1,4 @@
-import { GENDERS } from '@/lib/constants';
+import { GENDERS } from '@/libs/constants';
 import { Base } from '@/types';
 
 export interface PatientType extends Base {

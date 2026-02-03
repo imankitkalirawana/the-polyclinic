@@ -1,5 +1,5 @@
 import { CreateDepartmentType, DepartmentType, UpdateDepartmentType } from './department.types';
-import { apiRequest } from '@/lib/axios';
+import { apiRequest } from '@/libs/axios';
 
 export class DepartmentApi {
   private static API_BASE = '/client/departments';

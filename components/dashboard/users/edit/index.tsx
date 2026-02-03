@@ -22,7 +22,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useUpdateUser, useUserProfileByID } from '@/services/common/user/user.query';
 import { updateUserSchema } from '@/services/common/user/user.validation';
 import { Role } from '@/services/common/user/user.constants';
-import { GENDERS } from '@/lib/constants';
+import { GENDERS } from '@/libs/constants';
 import { useQueryState } from 'nuqs';
 import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
 import { UpdateUserRequest } from '@/services/common/user/user.types';

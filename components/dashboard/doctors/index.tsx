@@ -15,7 +15,7 @@ import {
   DropdownItemWithSection,
 } from '@/components/ui/static-data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
-import { castData } from '@/lib/utils';
+import { castData } from '@/libs/utils';
 import { DoctorType } from '@/services/client/doctor';
 import { useAllDoctors } from '@/services/client/doctor/doctor.query';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
@@ -24,7 +24,7 @@ import { CopyText } from '@/components/ui/copy';
 import ResetPasswordModal from '../users/ui/reset-password-modal';
 import DeleteUserModal from '../users/ui/delete-user-modal';
 import { Role } from '@/services/common/user/user.constants';
-import { useSession } from '@/lib/providers/session-provider';
+import { useSession } from '@/libs/providers/session-provider';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'image',

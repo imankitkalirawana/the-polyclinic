@@ -21,8 +21,8 @@ import Editor from '@/components/ui/text-editor/editor';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 import NoResults from '@/components/ui/no-results';
-import { ServiceStatuses, ServiceTypes } from '@/lib/interface';
-import { serviceValidationSchema } from '@/lib/validation';
+import { ServiceStatuses, ServiceTypes } from '@/libs/interface';
+import { serviceValidationSchema } from '@/libs/validation';
 import { useServiceWithUID, useUpdateService } from '@/services/client/service/service.query';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { ServiceType } from '@/services/client/service/service.types';

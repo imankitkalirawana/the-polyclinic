@@ -2,7 +2,7 @@ import { format } from 'date-fns';
 
 import { useCreateAppointmentForm } from '../index';
 
-import { castData } from '@/lib/utils';
+import { castData } from '@/libs/utils';
 import { useAppointmentWithAID } from '@/services/client/appointment/appointment.query';
 import { AppointmentType } from '@/services/client/appointment';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';

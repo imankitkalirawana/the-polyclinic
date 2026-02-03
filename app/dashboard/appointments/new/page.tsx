@@ -1,6 +1,6 @@
 import { unauthorized } from 'next/navigation';
 
-import { getServerSession } from '@/lib/serverAuth';
+import { getServerSession } from '@/libs/serverAuth';
 import NewAppointment from '@/components/dashboard/appointments/create';
 import { Role } from '@/services/common/user/user.constants';
 

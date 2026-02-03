@@ -11,7 +11,7 @@ import {
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 import { cn } from '@heroui/react';
-import { tryCatch } from '@/lib/utils';
+import { tryCatch } from '@/libs/utils';
 import { $FixMe } from '@/types';
 import { AuthApi } from '@/services/common/auth/auth.api';
 

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { addToast } from '@heroui/react';
-import { ApiResponse } from '@/lib/axios';
+import { ApiResponse } from '@/libs/axios';
 
 interface MutationConfig<TData extends ApiResponse, TVariables, TError = Error> {
   mutationFn: (variables: TVariables) => Promise<TData>;

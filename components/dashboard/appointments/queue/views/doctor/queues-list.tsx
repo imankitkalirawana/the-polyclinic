@@ -19,7 +19,7 @@ import Avatar from 'boring-avatars';
 import { formatDate } from 'date-fns';
 import { useState } from 'react';
 import { getQueueStatusColor } from './helper';
-import { formatGender } from '@/lib/utils';
+import { formatGender } from '@/libs/utils';
 
 export default function QueuesList({
   isLoading,

@@ -12,9 +12,9 @@ import { RegisterProvider, useRegister } from '../store';
 import { AuthStep } from '../types';
 import Auth from '..';
 
-import { APP_INFO } from '@/lib/config';
+import { APP_INFO } from '@/libs/config';
 import { $FixMe } from '@/types';
-import { GENDERS } from '@/lib/constants';
+import { GENDERS } from '@/libs/constants';
 
 const RegisterComponent: React.FC = () => {
   const { formik, paginate } = useRegister();

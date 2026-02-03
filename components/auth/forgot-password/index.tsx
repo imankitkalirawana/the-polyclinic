@@ -8,7 +8,7 @@ import { ForgotPasswordProvider, useForgetPassword } from '../store';
 import { AuthStep } from '../types';
 import Auth from '..';
 
-import { APP_INFO } from '@/lib/config';
+import { APP_INFO } from '@/libs/config';
 
 const ForgotPasswordComponent: React.FC = () => {
   const { formik, paginate } = useForgetPassword();

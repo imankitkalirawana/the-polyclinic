@@ -1,6 +1,6 @@
 'use server';
 
-import { apiRequest } from '@/lib/axios';
+import { apiRequest } from '@/libs/axios';
 
 import { NewsletterType } from '@/services/client/newsletters/newsletter.types';
 

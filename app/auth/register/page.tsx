@@ -1,5 +1,5 @@
 import Register from '@/components/auth/register';
-import { WEBSITE_SETTING } from '@/lib/config';
+import { WEBSITE_SETTING } from '@/libs/config';
 
 export default function RegisterPage() {
   if (!WEBSITE_SETTING.status.registration) {

@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
-import { getServerSession } from '@/lib/serverAuth';
+import { getServerSession } from '@/libs/serverAuth';
 import { getAllCountries } from '@/services/external/external.api';
 
 export default async function Page() {

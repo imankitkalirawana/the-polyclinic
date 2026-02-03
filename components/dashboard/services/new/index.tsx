@@ -7,8 +7,8 @@ import { useFormik } from 'formik';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 import Editor from '@/components/ui/text-editor/editor';
-import { ServiceStatuses, ServiceTypes } from '@/lib/interface';
-import { serviceValidationSchema } from '@/lib/validation';
+import { ServiceStatuses, ServiceTypes } from '@/libs/interface';
+import { serviceValidationSchema } from '@/libs/validation';
 import { useCreateService } from '@/services/client/service/service.query';
 import { ServiceType } from '@/services/client/service/service.types';
 

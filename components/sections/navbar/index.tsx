@@ -3,7 +3,7 @@
 import React from 'react';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'nextjs-toploader/app';
-import { useSession } from '@/lib/providers/session-provider';
+import { useSession } from '@/libs/providers/session-provider';
 import {
   Button,
   Link,
@@ -25,7 +25,7 @@ import NavItem from './NavItem';
 import { NavItem as NavItemType } from './types';
 
 import { useSubdomain } from '@/hooks/useSubDomain';
-import { APP_INFO } from '@/lib/config';
+import { APP_INFO } from '@/libs/config';
 import { Role } from '@/services/common/user/user.constants';
 import NotificationsWrapper from './notifications';
 import ProfileDropdown from './profile-dropdown';

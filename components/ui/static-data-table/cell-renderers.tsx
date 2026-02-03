@@ -17,7 +17,7 @@ import type React from 'react';
 import { Icon } from '@iconify/react';
 
 import { CopyText } from '@/components/ui/copy';
-import { chipColorMap, ChipColorType } from '@/lib/chip';
+import { chipColorMap, ChipColorType } from '@/libs/chip';
 import Avatar from 'boring-avatars';
 import { Role } from '@/services/common/user/user.constants';
 

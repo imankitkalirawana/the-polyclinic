@@ -27,7 +27,7 @@ import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
 import EditPatientModal from './edit-patient';
-import { formatAge, formatGender } from '@/lib/utils';
+import { formatAge, formatGender } from '@/libs/utils';
 
 export default function PatientSelection() {
   const [search, setSearch] = useState('');

@@ -1,4 +1,4 @@
-import { apiRequest } from '@/lib/axios';
+import { apiRequest } from '@/libs/axios';
 import { AppointmentQueueResponse, PaymentDetails, VerifyPaymentRequest } from './queue.types';
 import { PrescriptionFormSchema } from '@/components/dashboard/appointments/queue/views/doctor/prescription-panel';
 import { AppointmentQueueRequest } from './queue.types';

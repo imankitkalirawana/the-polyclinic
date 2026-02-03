@@ -1,6 +1,6 @@
 'use client';
 
-import { useSession } from '@/lib/providers/session-provider';
+import { useSession } from '@/libs/providers/session-provider';
 
 export default function Profile() {
   const session = useSession();

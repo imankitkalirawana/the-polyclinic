@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useSession } from '@/lib/providers/session-provider';
+import { useSession } from '@/libs/providers/session-provider';
 import { Button, ButtonGroup, Kbd, Select, SelectItem, Tooltip } from '@heroui/react';
 import {
   addDays,

@@ -1,5 +1,5 @@
 import { redirect, unauthorized } from 'next/navigation';
-import { getServerSession } from '@/lib/serverAuth';
+import { getServerSession } from '@/libs/serverAuth';
 import { Role } from '@/services/common/user/user.constants';
 
 export default async function Layout({

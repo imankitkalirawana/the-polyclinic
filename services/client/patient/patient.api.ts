@@ -1,6 +1,6 @@
 import { PatientType } from './patient.types';
 import { AppointmentType } from '../appointment';
-import { apiRequest } from '@/lib/axios';
+import { apiRequest } from '@/libs/axios';
 
 export class PatientApi {
   private static API_BASE = '/patients';

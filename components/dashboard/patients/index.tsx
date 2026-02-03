@@ -20,11 +20,11 @@ import { useAllPatients } from '@/services/client/patient';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import Link from 'next/link';
 import { CopyText } from '@/components/ui/copy';
-import { formatAge, formatGender } from '@/lib/utils';
+import { formatAge, formatGender } from '@/libs/utils';
 import ResetPasswordModal from '../users/ui/reset-password-modal';
 import DeleteUserModal from '../users/ui/delete-user-modal';
 import { Role } from '@/services/common/user/user.constants';
-import { useSession } from '@/lib/providers/session-provider';
+import { useSession } from '@/libs/providers/session-provider';
 
 const INITIAL_VISIBLE_COLUMNS = ['image', 'name', 'email', 'age', 'gender', 'createdAt'];
 

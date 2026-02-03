@@ -24,7 +24,7 @@ import {
   DropdownItemWithSection,
 } from '@/components/ui/static-data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
-import { isSearchMatch } from '@/lib/utils';
+import { isSearchMatch } from '@/libs/utils';
 import { useDeleteUser } from '@/services/common/user/user.query';
 import { useAllAppointmentQueues } from '@/services/client/appointment/queue/queue.query';
 import {
@@ -36,7 +36,7 @@ import QueueQuickLook from './quicklook';
 import { CopyText } from '@/components/ui/copy';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { Role } from '@/services/common/user/user.constants';
-import { useSession } from '@/lib/providers/session-provider';
+import { useSession } from '@/libs/providers/session-provider';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'sequenceNumber',

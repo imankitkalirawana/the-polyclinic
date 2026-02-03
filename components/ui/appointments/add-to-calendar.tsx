@@ -20,8 +20,8 @@ import {
   addToGoogleCalendar,
   addToOutlookCalendar,
   handleAddToCalendar,
-} from '@/lib/client-functions';
-import { EventType } from '@/lib/interface';
+} from '@/libs/client-functions';
+import { EventType } from '@/libs/interface';
 import { AppointmentType } from '@/services/client/appointment';
 
 type ActionType = 'google' | 'outlook' | 'download';

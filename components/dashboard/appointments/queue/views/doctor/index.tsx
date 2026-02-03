@@ -19,7 +19,7 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useState, useMemo } from 'react';
 import CompletedAppointmentQueue from './completed';
-import { useSession } from '@/lib/providers/session-provider';
+import { useSession } from '@/libs/providers/session-provider';
 import DateScroll from '../../../(common)/date-scroll';
 
 export default function QueuesDoctorView() {

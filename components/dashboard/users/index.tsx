@@ -23,7 +23,7 @@ import { UserType } from '@/services/common/user/user.types';
 import { CopyText } from '@/components/ui/copy';
 import ResetPasswordModal from './ui/reset-password-modal';
 import DeleteUserModal from './ui/delete-user-modal';
-import { useSession } from '@/lib/providers/session-provider';
+import { useSession } from '@/libs/providers/session-provider';
 import { Role } from '@/services/common/user/user.constants';
 
 const INITIAL_VISIBLE_COLUMNS = ['image', 'name', 'email', 'role', 'createdAt'];

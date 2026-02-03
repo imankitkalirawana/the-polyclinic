@@ -35,7 +35,7 @@ import { useMemoizedCallback } from './use-memoized-callback';
 
 import type { $FixMe } from '@/types';
 import { useDebounce } from '@/hooks/useDebounce';
-import { useSession } from '@/lib/providers/session-provider';
+import { useSession } from '@/libs/providers/session-provider';
 import { Role } from '@/services/common/user/user.constants';
 
 export function Table<T extends TableItem>({
