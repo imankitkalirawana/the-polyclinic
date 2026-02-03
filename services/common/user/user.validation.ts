@@ -2,9 +2,33 @@ import { GENDERS } from '@/lib/constants';
 import { z } from 'zod';
 
 const userProfileUpdateSchema = z.object({
-  name: z.string().trim().min(1, { error: 'Name cannot be empty.' }),
+  name: z
+    .string()
+    .trim()
+    .min(3, { error: 'Name cannot be empty.' })
+    .max(50, { error: 'Name cannot be more than 50 characters.' }),
   email: z.email({ error: 'Invalid email address.' }).trim(),
-  phone: z.string().trim().nullable().optional(),
+  phone: z
+    .string()
+    .trim()
+    .transform((val) => (val === '' ? undefined : val))
+    .optional()
+    .superRefine((val, ctx) => {
+      if (val === undefined) return;
+      if (val.length !== 10) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Phone number must be 10 digits.',
+        });
+        return;
+      }
+      if (!/^[6-9]\d{9}$/.test(val)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Invalid phone number.',
+        });
+      }
+    }),
   image: z.string().trim().nullable().optional(),
 });
 

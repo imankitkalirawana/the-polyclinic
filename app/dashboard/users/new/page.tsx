@@ -2,7 +2,6 @@ import { redirect } from 'next/navigation';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
 import { getServerSession } from '@/lib/serverAuth';
-import NewUser from '@/components/dashboard/users/new';
 import { getAllCountries } from '@/services/external/external.api';
 
 export default async function Page() {
@@ -24,9 +23,5 @@ export default async function Page() {
     return redirect('/dashboard');
   }
 
-  return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <NewUser />
-    </HydrationBoundary>
-  );
+  return <HydrationBoundary state={dehydrate(queryClient)}>{/* <NewUser /> */}</HydrationBoundary>;
 }

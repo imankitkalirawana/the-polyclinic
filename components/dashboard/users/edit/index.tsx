@@ -68,7 +68,7 @@ export default function EditUser({ id }: { id: string }) {
         <div>
           <h1 className="text-large">Update a User</h1>
           <p className="text-default-500 text-tiny">
-            Fields with <span className="text-red-500">*</span> are required
+            Fields with <span className="text-danger-500">*</span> are required
           </p>
         </div>
         {renderChip({
@@ -116,7 +116,7 @@ export default function EditUser({ id }: { id: string }) {
             render={({ field, fieldState }) => (
               <Input
                 {...field}
-                isRequired
+                maxLength={10}
                 label="Phone Number"
                 placeholder="Enter phone number"
                 value={field.value || ''}

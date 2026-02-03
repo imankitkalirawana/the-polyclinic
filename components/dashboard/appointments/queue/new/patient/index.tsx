@@ -26,7 +26,6 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
-import NewPatient from './new-patient';
 import EditPatientModal from './edit-patient';
 import { formatAge, formatGender } from '@/lib/utils';
 
@@ -121,7 +120,7 @@ export default function PatientSelection() {
           />
         ))}
       </div>
-      {form.watch('meta.createNewPatient') && (
+      {/* {form.watch('meta.createNewPatient') && (
         <NewPatient
           onClose={() => form.setValue('meta.createNewPatient', false)}
           onSuccess={(id) => {
@@ -130,7 +129,7 @@ export default function PatientSelection() {
             form.setValue('meta.currentStep', 1);
           }}
         />
-      )}
+      )} */}
       <Modal
         isOpen={!!selectedPatient}
         onClose={() => setSelectedPatient(null)}
