@@ -1,85 +1,37 @@
-import { z } from 'zod';
-import { Role, UserStatus } from './user.constants';
 import { GENDERS } from '@/lib/constants';
+import { z } from 'zod';
 
-export const createUserSchema = z
-  .object({
-    name: z
-      .string({ error: 'Name is required.' })
-      .trim()
-      .min(1, { error: 'Name cannot be empty.' }),
+const userProfileUpdateSchema = z.object({
+  name: z.string().trim().min(1, { error: 'Name cannot be empty.' }),
+  email: z.email({ error: 'Invalid email address.' }).trim(),
+  phone: z.string().trim().nullable().optional(),
+  image: z.string().trim().nullable().optional(),
+});
 
-    email: z.email({ error: 'Invalid email address.' }).trim(),
-
-    phone: z
-      .string({ error: 'Invalid phone number.' })
-      .trim()
-      .optional()
-      .refine((phone) => {
-        if (phone) {
-          return z
-            .string()
-            .regex(/^[6-9]\d{9}$/, { error: 'Phone number must be a valid 10-digit number.' })
-            .safeParse(phone).success;
-        }
-        return true;
-      }),
-
-    password: z
-      .string({ error: 'Password is required.' })
-      .trim()
-      .min(8, { error: 'Password must be at least 8 characters long.' })
-      .optional()
-      .or(z.literal('')),
-
-    organization: z.string().trim().optional().or(z.literal('')).nullable(),
-
-    role: z.enum(Role, {
-      error: 'Invalid role selected.',
-    }),
-
-    // Patient fields
-    age: z
-      .number()
-      .int()
-      .positive()
-      .max(120, { error: 'Age cannot exceed 120.' })
-      .optional()
-      .nullable(),
-    address: z.string().max(200).optional().nullable().or(z.literal('')),
-
-    // Doctor fields
-    specialization: z.string().max(200).optional().nullable().or(z.literal('')),
-    experience: z.number().int().positive().optional().nullable(),
-    department: z.string().max(200).optional().nullable().or(z.literal('')),
-    designation: z.string().max(200).optional().nullable().or(z.literal('')),
-    seating: z.string().max(200).optional().nullable().or(z.literal('')),
-    education: z.string().max(200).optional().nullable().or(z.literal('')),
-    biography: z.string().max(200).optional().nullable().or(z.literal('')),
-    shortbio: z.string().max(200).optional().nullable().or(z.literal('')),
-
-    // Common fields
-    gender: z.enum(GENDERS).optional().nullable().or(z.literal('')), // doctor, patient
-  })
-  .refine(
-    (data) => {
-      if (data.organization) {
-        return data.role ? Object.values(Role).includes(data.role as Role) : true;
-      }
-      return data.role ? Object.values(Role).includes(data.role as Role) : true;
-    },
-    {
-      message: 'Role does not match the selected organization type.',
-      path: ['role'],
-    }
-  );
-
-export const updateUserSchema = createUserSchema.partial().extend({
-  status: z
-    .enum(UserStatus, {
-      error: 'Invalid status. Allowed values are: ACTIVE, INACTIVE, or BLOCKED.',
-    })
+const doctorProfileUpdateSchema = z.object({
+  designation: z.string().trim().min(1, { error: 'Designation cannot be empty.' }),
+  department: z.string().trim().min(1, { error: 'Department cannot be empty.' }),
+  experience: z
+    .number({ error: 'Experience must be a number.' })
+    .int({ error: 'Experience must be a number.' })
+    .positive({ error: 'Experience must be a positive number.' })
+    .nullable()
     .optional(),
+  education: z.string().trim().nullable().optional(),
+  biography: z.string().trim().nullable().optional(),
+  shortbio: z.string().trim().nullable().optional(),
+});
+
+const patientProfileUpdateSchema = z.object({
+  gender: z.enum(GENDERS).nullable().optional(),
+  age: z.number().int().positive().nullable().optional(),
+  address: z.string().trim().nullable().optional(),
+});
+
+export const updateUserSchema = z.object({
+  user: userProfileUpdateSchema,
+  doctor: doctorProfileUpdateSchema.optional(),
+  patient: patientProfileUpdateSchema.optional(),
 });
 
 export const resetPasswordSchema = z.object({

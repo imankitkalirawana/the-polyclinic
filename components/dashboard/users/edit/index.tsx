@@ -16,46 +16,44 @@ import {
   SelectItem,
   Textarea,
 } from '@heroui/react';
-import { useFormik } from 'formik';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useUpdateUser, useUserWithID } from '@/services/common/user/user.query';
-import { UpdateUserRequest } from '@/services/common/user/user.types';
+import { useUpdateUser, useUserProfileByID } from '@/services/common/user/user.query';
 import { updateUserSchema } from '@/services/common/user/user.validation';
 import { Role } from '@/services/common/user/user.constants';
-import { withZodSchema } from '@/lib/utils';
 import { GENDERS } from '@/lib/constants';
 import { useQueryState } from 'nuqs';
 import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
+import { UpdateUserRequest } from '@/services/common/user/user.types';
 
-export default function NewUser({
-  id,
-  organization,
-}: {
-  id: string;
-  organization?: string | null;
-}) {
+export default function EditUser({ id }: { id: string }) {
   const router = useRouter();
   const [redirectUrl] = useQueryState('redirectUrl', {
     defaultValue: '/dashboard/users',
   });
 
-  const { data: user } = useUserWithID(id);
+  const { data: profile } = useUserProfileByID(id);
   const updateUser = useUpdateUser();
 
-  const formik = useFormik<UpdateUserRequest>({
-    initialValues: {
-      ...user,
-      organization,
-    },
-    validate: withZodSchema(updateUserSchema),
-    onSubmit: async (values) => {
-      await updateUser.mutateAsync({
-        id,
-        data: values,
-      });
-      router.push(redirectUrl);
+  const { user, doctor, patient } = profile || {};
+
+  const { control, handleSubmit } = useForm<UpdateUserRequest>({
+    resolver: zodResolver(updateUserSchema),
+    defaultValues: {
+      user,
+      doctor,
+      patient,
     },
   });
+
+  const onSubmit = async (values: UpdateUserRequest) => {
+    await updateUser.mutateAsync({
+      id,
+      data: values,
+    });
+    router.push(redirectUrl);
+  };
 
   return (
     <Card
@@ -63,7 +61,7 @@ export default function NewUser({
       as={Form}
       onSubmit={(e) => {
         e.preventDefault();
-        formik.handleSubmit();
+        handleSubmit(onSubmit);
       }}
     >
       <CardHeader className="items-center justify-between px-4 pb-0 pt-4">
@@ -79,136 +77,187 @@ export default function NewUser({
       </CardHeader>
       <CardBody>
         <ScrollShadow className="grid grid-cols-1 gap-4 p-1 md:grid-cols-2">
-          <Input
-            isRequired
-            label="Name"
-            placeholder={formik.values.role === 'DOCTOR' ? 'eg. Dr. John Doe' : 'eg. John Doe'}
-            name="name"
-            value={formik.values.name}
-            onChange={formik.handleChange}
-            isInvalid={!!(formik.touched.name && formik.errors.name)}
-            errorMessage={formik.errors.name}
+          <Controller
+            name="user.name"
+            control={control}
+            render={({ field, fieldState }) => (
+              <Input
+                {...field}
+                isRequired
+                label="Name"
+                placeholder={user?.role === Role.DOCTOR ? 'eg. Dr. John Doe' : 'eg. John Doe'}
+                value={field.value}
+                onChange={field.onChange}
+                isInvalid={!!fieldState.error}
+                errorMessage={fieldState.error?.message}
+              />
+            )}
           />
-          <Input
-            isRequired
-            label="Email"
-            placeholder="Enter email"
-            name="email"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            isInvalid={!!(formik.touched.email && formik.errors.email)}
-            errorMessage={formik.touched.email && formik.errors.email}
+          <Controller
+            name="user.email"
+            control={control}
+            render={({ field, fieldState }) => (
+              <Input
+                {...field}
+                isRequired
+                label="Email"
+                placeholder="Enter email"
+                value={field.value}
+                onChange={field.onChange}
+                isInvalid={!!fieldState.error}
+                errorMessage={fieldState.error?.message}
+              />
+            )}
           />
 
-          <Input
-            label="Phone Number"
-            placeholder="Enter phone number"
-            name="phone"
-            onChange={formik.handleChange}
-            isInvalid={!!(formik.touched.phone && formik.errors.phone)}
-            errorMessage={formik.touched.phone && formik.errors.phone}
-            value={formik.values.phone}
-            startContent={
-              <div className="pointer-events-none flex items-center">
-                <span className="text-default-400 text-small">+91</span>
-              </div>
-            }
+          <Controller
+            name="user.phone"
+            control={control}
+            render={({ field, fieldState }) => (
+              <Input
+                {...field}
+                isRequired
+                label="Phone Number"
+                placeholder="Enter phone number"
+                value={field.value || ''}
+                onChange={field.onChange}
+                isInvalid={!!fieldState.error}
+                errorMessage={fieldState.error?.message}
+                startContent={
+                  <div className="pointer-events-none flex items-center">
+                    <span className="text-default-400 text-small">+91</span>
+                  </div>
+                }
+              />
+            )}
           />
 
           {/* Patients fields */}
 
-          {formik.values.role === 'PATIENT' && (
+          {user?.role === Role.PATIENT && (
             <>
-              <Select
-                label="Gender"
-                placeholder="Select Gender"
-                selectedKeys={[formik.values.gender || '']}
-                name="gender"
-                onChange={formik.handleChange}
-                isInvalid={!!(formik.touched.gender && formik.errors.gender)}
-                errorMessage={formik.touched.gender && formik.errors.gender}
-                items={Object.values(GENDERS).map((gender) => ({
-                  label: gender.charAt(0).toUpperCase() + gender.slice(1),
-                  value: gender,
-                }))}
-              >
-                {(item) => <SelectItem key={item.value}>{item.label}</SelectItem>}
-              </Select>
-
-              <NumberInput
-                label="Age"
-                placeholder="Enter age"
-                value={formik.values.age || 0}
-                onChange={(value) =>
-                  formik.setFieldValue('age', parseInt(value.toString()) || undefined)
-                }
-                name="age"
-                isInvalid={!!(formik.touched.age && formik.errors.age)}
-                errorMessage={formik.touched.age && formik.errors.age}
+              <Controller
+                name="patient.gender"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Select
+                    ref={field.ref}
+                    label="Gender"
+                    placeholder="Select Gender"
+                    selectedKeys={[field.value || '']}
+                    onChange={field.onChange}
+                    isInvalid={!!fieldState.error}
+                    errorMessage={fieldState.error?.message}
+                  >
+                    {Object.values(GENDERS).map((gender) => (
+                      <SelectItem key={gender}>
+                        {gender.charAt(0).toUpperCase() + gender.slice(1)}
+                      </SelectItem>
+                    ))}
+                  </Select>
+                )}
               />
 
-              <Input
-                label="Address"
-                placeholder="Enter address"
-                value={formik.values.address || ''}
-                onChange={formik.handleChange}
-                name="address"
-                isInvalid={!!(formik.touched.address && formik.errors.address)}
-                errorMessage={formik.touched.address && formik.errors.address}
+              <Controller
+                name="patient.age"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <NumberInput
+                    {...field}
+                    label="Age"
+                    placeholder="Enter age"
+                    value={field.value || 0}
+                    onChange={(value) => field.onChange(parseInt(value.toString()) || undefined)}
+                    isInvalid={!!fieldState.error}
+                    errorMessage={fieldState.error?.message}
+                  />
+                )}
+              />
+
+              <Controller
+                name="patient.address"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Input
+                    {...field}
+                    label="Address"
+                    placeholder="Enter address"
+                    value={field.value || ''}
+                    onChange={field.onChange}
+                    isInvalid={!!fieldState.error}
+                    errorMessage={fieldState.error?.message}
+                  />
+                )}
               />
             </>
           )}
 
           {/* Doctor Fields */}
 
-          {formik.values.role === 'DOCTOR' && (
+          {user?.role === Role.DOCTOR && (
             <>
-              <Input
-                label="Specialization"
-                placeholder="eg. Cardiologist"
-                value={formik.values.specialization || ''}
-                onChange={formik.handleChange}
-                name="specialization"
-                isInvalid={!!(formik.touched.specialization && formik.errors.specialization)}
-                errorMessage={formik.touched.specialization && formik.errors.specialization}
+              <Controller
+                name="doctor.designation"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Input
+                    {...field}
+                    label="Designation"
+                    placeholder="eg. Cardiologist"
+                    value={field.value || ''}
+                    onChange={field.onChange}
+                    isInvalid={!!fieldState.error}
+                    errorMessage={fieldState.error?.message}
+                  />
+                )}
               />
-              <Input
-                label="Department"
-                placeholder="eg. Cardiology"
-                value={formik.values.department || ''}
-                onChange={formik.handleChange}
-                name="department"
-                isInvalid={!!(formik.touched.department && formik.errors.department)}
-                errorMessage={formik.touched.department && formik.errors.department}
+              <Controller
+                name="doctor.department"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Input
+                    {...field}
+                    label="Department"
+                    placeholder="eg. MBBS, MD"
+                    value={field.value || ''}
+                    onChange={field.onChange}
+                    isInvalid={!!fieldState.error}
+                    errorMessage={fieldState.error?.message}
+                  />
+                )}
               />
 
-              <Input
-                label="Seating"
-                placeholder="eg. Room No, Floor"
-                value={formik.values.seating || ''}
-                onChange={formik.handleChange}
-                name="seating"
-                isInvalid={!!(formik.touched.seating && formik.errors.seating)}
-                errorMessage={formik.touched.seating && formik.errors.seating}
+              <Controller
+                name="doctor.experience"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <NumberInput
+                    {...field}
+                    label="Experience"
+                    placeholder="Enter experience"
+                    value={field.value || 0}
+                    onChange={(value) => field.onChange(parseInt(value.toString()) || undefined)}
+                    isInvalid={!!fieldState.error}
+                    errorMessage={fieldState.error?.message}
+                  />
+                )}
               />
-              <Input
-                label="Education"
-                placeholder="eg. MBBS, MD"
-                value={formik.values.education || ''}
-                onChange={formik.handleChange}
-                name="education"
-                isInvalid={!!(formik.touched.education && formik.errors.education)}
-                errorMessage={formik.touched.education && formik.errors.education}
-              />
-              <Textarea
-                className="col-span-2"
-                label="Biography"
-                placeholder="eg. Experienced cardiologist"
-                value={formik.values.biography || ''}
-                onChange={formik.handleChange}
-                name="biography"
-                isInvalid={!!(formik.touched.biography && formik.errors.biography)}
-                errorMessage={formik.touched.biography && formik.errors.biography}
+
+              <Controller
+                name="doctor.biography"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Textarea
+                    {...field}
+                    className="col-span-2"
+                    label="Biography"
+                    placeholder="eg. Experienced cardiologist"
+                    value={field.value || ''}
+                    onChange={field.onChange}
+                    isInvalid={!!fieldState.error}
+                    errorMessage={fieldState.error?.message}
+                  />
+                )}
               />
             </>
           )}
@@ -219,8 +268,8 @@ export default function NewUser({
         <Button
           color="primary"
           radius="full"
-          isLoading={formik.isSubmitting}
-          onPress={() => formik.handleSubmit()}
+          isLoading={updateUser.isPending}
+          onPress={() => handleSubmit(onSubmit)()}
           type="submit"
         >
           Update User

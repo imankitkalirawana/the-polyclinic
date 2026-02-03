@@ -1,5 +1,5 @@
 import { CellRenderer } from '@/components/ui/cell/rich-color/cell-renderer';
-import { renderChips, RenderUser } from '@/components/ui/static-data-table/cell-renderers';
+import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import { DoctorType } from '@/services/client/doctor';
 import { Card, CardBody, CardHeader, Divider, Chip, ScrollShadow } from '@heroui/react';
 import { Icon } from '@iconify/react';
@@ -47,11 +47,7 @@ export const CreateAppointmentDoctorDetails = ({ doctor }: { doctor?: DoctorType
 
       <CardBody as={ScrollShadow} className="min-h-0 flex-1 space-y-2 overflow-y-auto">
         {/* Profile Section */}
-        <RenderUser
-          name={doctor.name}
-          description={renderChips(doctor.departments ?? [])}
-          size="lg"
-        />
+        <RenderUser name={doctor.name} description={doctor.designation} size="lg" />
 
         {/* Contact Information */}
         <div>

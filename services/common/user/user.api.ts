@@ -1,5 +1,6 @@
+import { $FixMe } from '@/types';
 import { apiRequest } from '@/lib/axios';
-import { CreateUserRequest, UserType, UpdateUserRequest, ResetPasswordRequest } from './user.types';
+import { UserType, ResetPasswordRequest, UserProfileType } from './user.types';
 
 export class UserApi {
   private static API_BASE = '/users';
@@ -31,6 +32,15 @@ export class UserApi {
     });
   }
 
+  static async getUserProfile(id?: string | null) {
+    if (!id) {
+      return { success: false, message: 'User ID is required', data: null };
+    }
+    return await apiRequest<UserProfileType>({
+      url: `${this.API_BASE}/${id}/profile`,
+    });
+  }
+
   static async resetPassword(id: string, data: ResetPasswordRequest) {
     return await apiRequest({
       url: `${this.API_BASE}/${id}/reset-password`,
@@ -39,7 +49,7 @@ export class UserApi {
     });
   }
 
-  static async create(data: CreateUserRequest) {
+  static async create(data: $FixMe) {
     return await apiRequest<UserType & { linked_id: string }>({
       url: this.API_BASE,
       method: 'POST',
@@ -47,10 +57,10 @@ export class UserApi {
     });
   }
 
-  static async update(id: string, data: UpdateUserRequest) {
+  static async update(id: string, data: UserProfileType) {
     return await apiRequest<UserType>({
-      url: `${this.API_BASE}/${id}`,
-      method: 'PUT',
+      url: `${this.API_BASE}/${id}/profile`,
+      method: 'PATCH',
       data,
     });
   }
