@@ -1,12 +1,12 @@
 import { GENDERS } from '@/libs/constants';
 import { handleDateChange } from '@/libs/utils';
-import { UpdateUserRequest } from '@/services/common/user/user.types';
+import { UserFormValues } from '@/services/common/user/user.types';
 import { DatePicker, Input, Select, SelectItem } from '@heroui/react';
 import { getLocalTimeZone, parseDate, today } from '@internationalized/date';
 import { I18nProvider } from '@react-aria/i18n';
 import { Control, Controller } from 'react-hook-form';
 
-export default function PatientFields({ control }: { control: Control<UpdateUserRequest> }) {
+export default function PatientFields({ control }: { control: Control<UserFormValues> }) {
   return (
     <>
       <Controller

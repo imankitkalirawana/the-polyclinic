@@ -31,7 +31,7 @@ const patientProfileUpdateSchema = z.object({
   address: nullableStringValidation,
 });
 
-export const updateUserSchema = z.object({
+export const userFormValuesSchema = z.object({
   user: userProfileUpdateSchema,
   doctor: doctorProfileUpdateSchema.optional(),
   patient: patientProfileUpdateSchema.optional(),

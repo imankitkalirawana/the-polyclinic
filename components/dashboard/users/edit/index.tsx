@@ -2,28 +2,20 @@
 
 import React from 'react';
 import { useRouter } from 'nextjs-toploader/app';
-import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Divider,
-  Form,
-  Input,
-  ScrollShadow,
-} from '@heroui/react';
-import { useForm, Controller } from 'react-hook-form';
+import { Button, Card, CardBody, CardHeader, Divider, Form, ScrollShadow } from '@heroui/react';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useUpdateUser, useUserProfileByID } from '@/services/common/user/user.query';
-import { updateUserSchema } from '@/services/common/user/user.validation';
+import { userFormValuesSchema } from '@/services/common/user/user.validation';
 import { Role } from '@/services/common/user/user.constants';
 import { useQueryState } from 'nuqs';
 import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
-import { UpdateUserRequest } from '@/services/common/user/user.types';
+import { UserFormValues } from '@/services/common/user/user.types';
 import DoctorFields from './doctor-fields';
 import PatientFields from './patient-fields';
 import DashboardFooter from '@/components/ui/dashboard/footer';
+import CommonFields from './common-fields';
 
 export default function EditUser({ id }: { id: string }) {
   const router = useRouter();
@@ -36,19 +28,16 @@ export default function EditUser({ id }: { id: string }) {
 
   const { user, doctor, patient } = profile || {};
 
-  const { control, handleSubmit } = useForm<UpdateUserRequest>({
-    resolver: zodResolver(updateUserSchema),
+  const { control, handleSubmit } = useForm<UserFormValues>({
+    resolver: zodResolver(userFormValuesSchema),
     defaultValues: {
       user,
       doctor,
-      patient: {
-        ...patient,
-        dob: patient?.dob ?? undefined,
-      },
+      patient,
     },
   });
 
-  const onSubmit = async (values: UpdateUserRequest) => {
+  const onSubmit = async (values: UserFormValues) => {
     await updateUser.mutateAsync({
       id,
       data: values,
@@ -78,60 +67,7 @@ export default function EditUser({ id }: { id: string }) {
       </CardHeader>
       <CardBody>
         <ScrollShadow className="grid grid-cols-1 gap-4 p-1 sm:grid-cols-2 md:grid-cols-3">
-          <Controller
-            name="user.name"
-            control={control}
-            render={({ field, fieldState }) => (
-              <Input
-                {...field}
-                isRequired
-                label="Name"
-                placeholder={user?.role === Role.DOCTOR ? 'eg. Dr. John Doe' : 'eg. John Doe'}
-                value={field.value}
-                onChange={field.onChange}
-                isInvalid={!!fieldState.error}
-                errorMessage={fieldState.error?.message}
-              />
-            )}
-          />
-          <Controller
-            name="user.email"
-            control={control}
-            render={({ field, fieldState }) => (
-              <Input
-                {...field}
-                isRequired
-                label="Email"
-                placeholder="Enter email"
-                value={field.value}
-                onChange={field.onChange}
-                isInvalid={!!fieldState.error}
-                errorMessage={fieldState.error?.message}
-              />
-            )}
-          />
-
-          <Controller
-            name="user.phone"
-            control={control}
-            render={({ field, fieldState }) => (
-              <Input
-                {...field}
-                maxLength={10}
-                label="Phone Number"
-                placeholder="Enter phone number"
-                value={field.value || ''}
-                onChange={field.onChange}
-                isInvalid={!!fieldState.error}
-                errorMessage={fieldState.error?.message}
-                startContent={
-                  <div className="pointer-events-none flex items-center">
-                    <span className="text-default-400 text-small">+91</span>
-                  </div>
-                }
-              />
-            )}
-          />
+          <CommonFields control={control} />
 
           {[Role.PATIENT, Role.DOCTOR].includes(user?.role || Role.PATIENT) && (
             <Divider className="col-span-full" />

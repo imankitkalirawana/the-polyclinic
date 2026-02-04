@@ -1,8 +1,8 @@
-import { UpdateUserRequest } from '@/services/common/user/user.types';
+import { UserFormValues } from '@/services/common/user/user.types';
 import { Input, NumberInput, Textarea } from '@heroui/react';
 import { Control, Controller } from 'react-hook-form';
 
-export default function DoctorFields({ control }: { control: Control<UpdateUserRequest> }) {
+export default function DoctorFields({ control }: { control: Control<UserFormValues> }) {
   return (
     <>
       <Controller

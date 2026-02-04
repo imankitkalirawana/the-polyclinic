@@ -1,0 +1,64 @@
+import { UserFormValues } from '@/services/common/user/user.types';
+import { Input } from '@heroui/react';
+import { Control, Controller } from 'react-hook-form';
+
+export default function CommonFields({ control }: { control: Control<UserFormValues> }) {
+  return (
+    <>
+      <Controller
+        name="user.name"
+        control={control}
+        render={({ field, fieldState }) => (
+          <Input
+            {...field}
+            isRequired
+            label="Name"
+            placeholder="eg. John Doe"
+            value={field.value}
+            onChange={field.onChange}
+            isInvalid={!!fieldState.error}
+            errorMessage={fieldState.error?.message}
+          />
+        )}
+      />
+      <Controller
+        name="user.email"
+        control={control}
+        render={({ field, fieldState }) => (
+          <Input
+            {...field}
+            isRequired
+            label="Email"
+            placeholder="Enter email"
+            value={field.value}
+            onChange={field.onChange}
+            isInvalid={!!fieldState.error}
+            errorMessage={fieldState.error?.message}
+          />
+        )}
+      />
+
+      <Controller
+        name="user.phone"
+        control={control}
+        render={({ field, fieldState }) => (
+          <Input
+            {...field}
+            maxLength={10}
+            label="Phone Number"
+            placeholder="Enter phone number"
+            value={field.value || ''}
+            onChange={field.onChange}
+            isInvalid={!!fieldState.error}
+            errorMessage={fieldState.error?.message}
+            startContent={
+              <div className="pointer-events-none flex items-center">
+                <span className="text-default-400 text-small">+91</span>
+              </div>
+            }
+          />
+        )}
+      />
+    </>
+  );
+}
