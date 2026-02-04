@@ -10,11 +10,7 @@ import {
   CardHeader,
   Form,
   Input,
-  NumberInput,
   ScrollShadow,
-  Select,
-  SelectItem,
-  Textarea,
 } from '@heroui/react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -22,10 +18,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useUpdateUser, useUserProfileByID } from '@/services/common/user/user.query';
 import { updateUserSchema } from '@/services/common/user/user.validation';
 import { Role } from '@/services/common/user/user.constants';
-import { GENDERS } from '@/libs/constants';
 import { useQueryState } from 'nuqs';
 import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
 import { UpdateUserRequest } from '@/services/common/user/user.types';
+import DoctorFields from './doctor-fields';
+import PatientFields from './patient-fields';
 
 export default function EditUser({ id }: { id: string }) {
   const router = useRouter();
@@ -43,7 +40,10 @@ export default function EditUser({ id }: { id: string }) {
     defaultValues: {
       user,
       doctor,
-      patient,
+      patient: {
+        ...patient,
+        dob: patient?.dob ?? undefined,
+      },
     },
   });
 
@@ -132,135 +132,8 @@ export default function EditUser({ id }: { id: string }) {
             )}
           />
 
-          {/* Patients fields */}
-
-          {user?.role === Role.PATIENT && (
-            <>
-              <Controller
-                name="patient.gender"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <Select
-                    ref={field.ref}
-                    label="Gender"
-                    placeholder="Select Gender"
-                    selectedKeys={[field.value || '']}
-                    onChange={field.onChange}
-                    isInvalid={!!fieldState.error}
-                    errorMessage={fieldState.error?.message}
-                  >
-                    {Object.values(GENDERS).map((gender) => (
-                      <SelectItem key={gender}>
-                        {gender.charAt(0).toUpperCase() + gender.slice(1)}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                )}
-              />
-
-              <Controller
-                name="patient.age"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <NumberInput
-                    {...field}
-                    label="Age"
-                    placeholder="Enter age"
-                    value={field.value || 0}
-                    onChange={(value) => field.onChange(parseInt(value.toString()) || undefined)}
-                    isInvalid={!!fieldState.error}
-                    errorMessage={fieldState.error?.message}
-                  />
-                )}
-              />
-
-              <Controller
-                name="patient.address"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <Input
-                    {...field}
-                    label="Address"
-                    placeholder="Enter address"
-                    value={field.value || ''}
-                    onChange={field.onChange}
-                    isInvalid={!!fieldState.error}
-                    errorMessage={fieldState.error?.message}
-                  />
-                )}
-              />
-            </>
-          )}
-
-          {/* Doctor Fields */}
-
-          {user?.role === Role.DOCTOR && (
-            <>
-              <Controller
-                name="doctor.designation"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <Input
-                    {...field}
-                    label="Designation"
-                    placeholder="eg. Cardiologist"
-                    value={field.value || ''}
-                    onChange={field.onChange}
-                    isInvalid={!!fieldState.error}
-                    errorMessage={fieldState.error?.message}
-                  />
-                )}
-              />
-              <Controller
-                name="doctor.department"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <Input
-                    {...field}
-                    label="Department"
-                    placeholder="eg. MBBS, MD"
-                    value={field.value || ''}
-                    onChange={field.onChange}
-                    isInvalid={!!fieldState.error}
-                    errorMessage={fieldState.error?.message}
-                  />
-                )}
-              />
-
-              <Controller
-                name="doctor.experience"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <NumberInput
-                    {...field}
-                    label="Experience"
-                    placeholder="Enter experience"
-                    value={field.value || 0}
-                    onChange={(value) => field.onChange(parseInt(value.toString()) || undefined)}
-                    isInvalid={!!fieldState.error}
-                    errorMessage={fieldState.error?.message}
-                  />
-                )}
-              />
-
-              <Controller
-                name="doctor.biography"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <Textarea
-                    {...field}
-                    className="col-span-2"
-                    label="Biography"
-                    placeholder="eg. Experienced cardiologist"
-                    value={field.value || ''}
-                    onChange={field.onChange}
-                    isInvalid={!!fieldState.error}
-                    errorMessage={fieldState.error?.message}
-                  />
-                )}
-              />
-            </>
-          )}
+          {user?.role === Role.PATIENT && <PatientFields control={control} />}
+          {user?.role === Role.DOCTOR && <DoctorFields control={control} />}
         </ScrollShadow>
       </CardBody>
 

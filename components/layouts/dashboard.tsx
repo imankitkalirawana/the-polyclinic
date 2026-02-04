@@ -32,6 +32,18 @@ export const SIDEBAR_WIDTHS = {
   collapsed: 64,
 };
 
+const MAX_LENGTH = 10;
+
+function formatLongSegment(text: string) {
+  return text.length > MAX_LENGTH ? (
+    <Tooltip delay={1000} size="sm" content={text}>
+      {text.slice(0, MAX_LENGTH / 2) + '...' + text.slice(-MAX_LENGTH / 2)}
+    </Tooltip>
+  ) : (
+    text
+  );
+}
+
 export default function DashboardLayout({ children }: { readonly children: React.ReactNode }) {
   const { user } = useSession();
 
@@ -49,7 +61,7 @@ export default function DashboardLayout({ children }: { readonly children: React
 
   const breadcrumbItems = pathSegments?.map((segment, index) => {
     const path = `/${pathSegments.slice(0, index + 1).join('/')}`;
-    return { label: segment, link: path };
+    return { label: formatLongSegment(segment), link: path };
   });
 
   const sidebar = useMemo(() => {

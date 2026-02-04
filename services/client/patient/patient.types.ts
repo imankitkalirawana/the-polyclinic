@@ -8,6 +8,7 @@ export interface PatientType extends Base {
   image?: string | null;
   phone: string;
   gender?: GENDERS;
+  dob?: string;
   age?: number;
   address?: string | null;
 }

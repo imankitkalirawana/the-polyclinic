@@ -16,18 +16,18 @@ const userProfileUpdateSchema = z.object({
   image: nullableStringValidation,
 });
 
-const doctorProfileUpdateSchema = z.object({
+export const doctorProfileUpdateSchema = z.object({
+  specialization: nullableStringValidation,
   designation: nullableStringValidation,
-  department: nullableStringValidation,
   experience: nullablePositiveNumberValidation,
   education: nullableStringValidation,
   biography: nullableStringValidation,
-  shortbio: nullableStringValidation,
+  seating: nullableStringValidation,
 });
 
 const patientProfileUpdateSchema = z.object({
   gender: z.enum(GENDERS).nullable().optional(),
-  age: nullablePositiveNumberValidation,
+  dob: z.iso.datetime().nullable().optional(),
   address: nullableStringValidation,
 });
 
