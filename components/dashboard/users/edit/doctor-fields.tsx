@@ -12,7 +12,7 @@ export default function DoctorFields({ control }: { control: Control<UpdateUserR
           <Input
             {...field}
             label="Designation"
-            placeholder="eg. Cardiologist"
+            placeholder="eg. Senior Consultant"
             value={field.value || ''}
             onChange={field.onChange}
             isInvalid={!!fieldState.error}
@@ -27,7 +27,7 @@ export default function DoctorFields({ control }: { control: Control<UpdateUserR
           <Input
             {...field}
             label="Specialization"
-            placeholder="eg. MBBS, MD"
+            placeholder="eg. Cardiology, Neurology"
             value={field.value || ''}
             onChange={field.onChange}
             isInvalid={!!fieldState.error}
@@ -43,11 +43,12 @@ export default function DoctorFields({ control }: { control: Control<UpdateUserR
           <NumberInput
             {...field}
             label="Experience"
-            placeholder="Enter experience"
+            placeholder="eg. 10"
             value={field.value || 0}
             onChange={(value) => field.onChange(parseInt(value.toString()) || undefined)}
             isInvalid={!!fieldState.error}
             errorMessage={fieldState.error?.message}
+            endContent={<span className="text-default-400 text-small">years</span>}
           />
         )}
       />
@@ -58,7 +59,7 @@ export default function DoctorFields({ control }: { control: Control<UpdateUserR
           <Input
             {...field}
             label="Education"
-            placeholder="Enter education"
+            placeholder="eg. MBBS, MD"
             value={field.value || ''}
             onChange={field.onChange}
             isInvalid={!!fieldState.error}
@@ -74,7 +75,7 @@ export default function DoctorFields({ control }: { control: Control<UpdateUserR
           <Input
             {...field}
             label="Seating"
-            placeholder="Enter seating"
+            placeholder="eg. Room 101"
             value={field.value || ''}
             onChange={field.onChange}
             isInvalid={!!fieldState.error}
@@ -89,9 +90,9 @@ export default function DoctorFields({ control }: { control: Control<UpdateUserR
         render={({ field, fieldState }) => (
           <Textarea
             {...field}
-            className="col-span-2"
+            className="col-span-full"
             label="Biography"
-            placeholder="eg. Experienced cardiologist"
+            placeholder="eg. Experienced in Cardiology and Neurology"
             value={field.value || ''}
             onChange={field.onChange}
             isInvalid={!!fieldState.error}

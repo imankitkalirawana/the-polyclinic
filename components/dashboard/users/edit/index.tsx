@@ -6,8 +6,8 @@ import {
   Button,
   Card,
   CardBody,
-  CardFooter,
   CardHeader,
+  Divider,
   Form,
   Input,
   ScrollShadow,
@@ -23,6 +23,7 @@ import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
 import { UpdateUserRequest } from '@/services/common/user/user.types';
 import DoctorFields from './doctor-fields';
 import PatientFields from './patient-fields';
+import DashboardFooter from '@/components/ui/dashboard/footer';
 
 export default function EditUser({ id }: { id: string }) {
   const router = useRouter();
@@ -76,7 +77,7 @@ export default function EditUser({ id }: { id: string }) {
         })}
       </CardHeader>
       <CardBody>
-        <ScrollShadow className="grid grid-cols-1 gap-4 p-1 md:grid-cols-2">
+        <ScrollShadow className="grid grid-cols-1 gap-4 p-1 sm:grid-cols-2 md:grid-cols-3">
           <Controller
             name="user.name"
             control={control}
@@ -132,12 +133,16 @@ export default function EditUser({ id }: { id: string }) {
             )}
           />
 
+          {[Role.PATIENT, Role.DOCTOR].includes(user?.role || Role.PATIENT) && (
+            <Divider className="col-span-full" />
+          )}
+
           {user?.role === Role.PATIENT && <PatientFields control={control} />}
           {user?.role === Role.DOCTOR && <DoctorFields control={control} />}
         </ScrollShadow>
       </CardBody>
 
-      <CardFooter className="mt-4 justify-end gap-2">
+      <DashboardFooter>
         <Button
           color="primary"
           radius="full"
@@ -147,7 +152,7 @@ export default function EditUser({ id }: { id: string }) {
         >
           Update User
         </Button>
-      </CardFooter>
+      </DashboardFooter>
     </Card>
   );
 }
