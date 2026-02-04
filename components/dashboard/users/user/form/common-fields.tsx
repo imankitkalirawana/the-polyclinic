@@ -1,8 +1,15 @@
+import { Role } from '@/services/common/user/user.constants';
 import { UserFormValues } from '@/services/common/user/user.types';
-import { Input } from '@heroui/react';
+import { Input, Select, SelectItem } from '@heroui/react';
 import { Control, Controller } from 'react-hook-form';
 
-export default function CommonFields({ control }: { control: Control<UserFormValues> }) {
+export default function CommonFields({
+  control,
+  showRole = true,
+}: {
+  control: Control<UserFormValues>;
+  showRole?: boolean;
+}) {
   return (
     <>
       <Controller
@@ -59,6 +66,28 @@ export default function CommonFields({ control }: { control: Control<UserFormVal
           />
         )}
       />
+
+      {showRole && (
+        <Controller
+          name="user.role"
+          control={control}
+          render={({ field, fieldState }) => (
+            <Select
+              ref={field.ref}
+              label="Role"
+              placeholder="Select Role"
+              selectedKeys={[field.value || '']}
+              onChange={field.onChange}
+              isInvalid={!!fieldState.error}
+              errorMessage={fieldState.error?.message}
+            >
+              {Object.values(Role).map((role) => (
+                <SelectItem key={role}>{role.charAt(0).toUpperCase() + role.slice(1)}</SelectItem>
+              ))}
+            </Select>
+          )}
+        />
+      )}
     </>
   );
 }

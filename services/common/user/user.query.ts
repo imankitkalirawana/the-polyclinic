@@ -1,5 +1,5 @@
 import { $FixMe } from '@/types';
-import { ResetPasswordRequest } from './user.types';
+import { ResetPasswordRequest, UserFormValues } from './user.types';
 import { UserApi } from './user.api';
 import { useGenericMutation } from '@/services/useGenericMutation';
 import { useGenericQuery } from '@/services/useGenericQuery';
@@ -44,7 +44,7 @@ export const useUserProfileByID = (id?: string | null) =>
 
 export const useCreateUser = ({ showToast = true }: { showToast?: boolean } = {}) => {
   return useGenericMutation({
-    mutationFn: (user: $FixMe) => UserApi.create(user),
+    mutationFn: (data: UserFormValues) => UserApi.create(data),
     invalidateAllQueries: true,
     showToast,
   });

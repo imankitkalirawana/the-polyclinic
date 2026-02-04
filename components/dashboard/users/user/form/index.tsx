@@ -6,7 +6,11 @@ import { Button, Card, CardBody, CardHeader, Divider, Form, ScrollShadow } from 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useUpdateUser, useUserProfileByID } from '@/services/common/user/user.query';
+import {
+  useCreateUser,
+  useUpdateUser,
+  useUserProfileByID,
+} from '@/services/common/user/user.query';
 import { userFormValuesSchema } from '@/services/common/user/user.validation';
 import { Role } from '@/services/common/user/user.constants';
 import { useQueryState } from 'nuqs';
@@ -17,18 +21,19 @@ import PatientFields from './patient-fields';
 import DashboardFooter from '@/components/ui/dashboard/footer';
 import CommonFields from './common-fields';
 
-export default function EditUser({ id }: { id: string }) {
+export default function UserForm({ id }: { id?: string }) {
   const router = useRouter();
   const [redirectUrl] = useQueryState('redirectUrl', {
     defaultValue: '/dashboard/users',
   });
 
   const { data: profile } = useUserProfileByID(id);
+  const createUser = useCreateUser();
   const updateUser = useUpdateUser();
 
   const { user, doctor, patient } = profile || {};
 
-  const { control, handleSubmit } = useForm<UserFormValues>({
+  const { control, handleSubmit, watch } = useForm<UserFormValues>({
     resolver: zodResolver(userFormValuesSchema),
     defaultValues: {
       user,
@@ -38,12 +43,20 @@ export default function EditUser({ id }: { id: string }) {
   });
 
   const onSubmit = async (values: UserFormValues) => {
-    await updateUser.mutateAsync({
-      id,
-      data: values,
-    });
+    if (id) {
+      await updateUser.mutateAsync({
+        id,
+        data: values,
+      });
+    } else {
+      await createUser.mutateAsync(values);
+    }
     router.push(redirectUrl);
   };
+
+  const title = id ? 'Update User' : 'Create a User';
+
+  const role = watch('user.role');
 
   return (
     <Card
@@ -56,25 +69,24 @@ export default function EditUser({ id }: { id: string }) {
     >
       <CardHeader className="items-center justify-between px-4 pb-0 pt-4">
         <div>
-          <h1 className="text-large">Update a User</h1>
+          <h1 className="text-large">{title}</h1>
           <p className="text-default-500 text-tiny">
             Fields with <span className="text-danger-500">*</span> are required
           </p>
         </div>
-        {renderChip({
-          item: user?.role || Role.PATIENT,
-        })}
+        {role &&
+          renderChip({
+            item: role,
+          })}
       </CardHeader>
       <CardBody>
         <ScrollShadow className="grid grid-cols-1 gap-4 p-1 sm:grid-cols-2 md:grid-cols-3">
-          <CommonFields control={control} />
+          <CommonFields control={control} showRole={!id} />
 
-          {[Role.PATIENT, Role.DOCTOR].includes(user?.role || Role.PATIENT) && (
-            <Divider className="col-span-full" />
-          )}
+          {[Role.PATIENT, Role.DOCTOR].includes(role) && <Divider className="col-span-full" />}
 
-          {user?.role === Role.PATIENT && <PatientFields control={control} />}
-          {user?.role === Role.DOCTOR && <DoctorFields control={control} />}
+          {role === Role.PATIENT && <PatientFields control={control} />}
+          {role === Role.DOCTOR && <DoctorFields control={control} />}
         </ScrollShadow>
       </CardBody>
 
@@ -82,11 +94,11 @@ export default function EditUser({ id }: { id: string }) {
         <Button
           color="primary"
           radius="full"
-          isLoading={updateUser.isPending}
+          isLoading={updateUser.isPending || createUser.isPending}
           onPress={() => handleSubmit(onSubmit)()}
           type="submit"
         >
-          Update User
+          {id ? 'Update User' : 'Create User'}
         </Button>
       </DashboardFooter>
     </Card>

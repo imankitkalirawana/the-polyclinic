@@ -1,5 +1,5 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
-import EditUser from '@/components/dashboard/users/edit';
+import UserForm from '@/components/dashboard/users/user/form';
 import { UserApi } from '@/services/common/user/user.api';
 
 interface Props {
@@ -25,7 +25,7 @@ export default async function Page(props: Props) {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <EditUser id={params.id} />
+      <UserForm id={params.id} />
     </HydrationBoundary>
   );
 }

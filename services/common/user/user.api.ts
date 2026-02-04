@@ -1,6 +1,5 @@
-import { $FixMe } from '@/types';
 import { apiRequest } from '@/libs/axios';
-import { UserType, ResetPasswordRequest, UserProfileType } from './user.types';
+import { UserType, ResetPasswordRequest, UserProfileType, UserFormValues } from './user.types';
 
 export class UserApi {
   private static API_BASE = '/users';
@@ -49,8 +48,8 @@ export class UserApi {
     });
   }
 
-  static async create(data: $FixMe) {
-    return await apiRequest<UserType & { linked_id: string }>({
+  static async create(data: UserFormValues) {
+    return await apiRequest<UserType>({
       url: this.API_BASE,
       method: 'POST',
       data,

@@ -8,8 +8,10 @@ import {
 } from '@/utils/factories/validation.factory';
 
 import { z } from 'zod';
+import { Role } from './user.constants';
 
 const userProfileUpdateSchema = z.object({
+  role: z.enum(Role).readonly(),
   name: nameValidation,
   email: emailValidation,
   phone: phoneNumberValidation.optional(),
