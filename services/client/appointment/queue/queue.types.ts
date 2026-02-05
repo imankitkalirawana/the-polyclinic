@@ -1,4 +1,5 @@
 import { GENDERS } from '@/libs/constants';
+import { CalendarDate, parseDate } from '@internationalized/date';
 
 export enum QueueStatus {
   PAYMENT_PENDING = 'PAYMENT_PENDING',
@@ -67,7 +68,7 @@ export type VerifyPaymentRequest = {
 
 export type PaymentDetails = { payment: { orderId: string; amount: number; currency: string } };
 
-export type AppointmentQueueResponse = {
+export type AppointmentQueueType = {
   id: string;
   aid: string;
   paymentMode: PaymentMode;
@@ -85,4 +86,64 @@ export type AppointmentQueueResponse = {
   updatedAt: string;
   previousQueueId?: string;
   nextQueueId?: string;
+};
+
+/** Form/UI filter state – uses CalendarDate for date inputs */
+export type AppointmentQueueFilters = {
+  date: {
+    start: CalendarDate | null;
+    end: CalendarDate | null;
+  };
+  /** Filter by one or more queue statuses */
+  status?: QueueStatus[];
+  /** Filter by doctor (user) id */
+  doctorId?: string | null;
+};
+
+/** API request payload – date range as ISO date strings */
+export type AppointmentQueueFiltersPayload = {
+  date: {
+    start: string | null;
+    end: string | null;
+  };
+  status?: QueueStatus[];
+  doctorId?: string | null;
+};
+
+/** Default empty filter values for forms and reset */
+export const DEFAULT_APPOINTMENT_QUEUE_FILTERS: AppointmentQueueFilters = {
+  date: { start: null, end: null },
+  status: undefined,
+  doctorId: null,
+};
+
+/** Filters as returned from API (date range may be ISO strings) */
+export type AppointmentQueueFiltersFromApi = Omit<AppointmentQueueFilters, 'date'> & {
+  date: {
+    start: CalendarDate | string | null;
+    end: CalendarDate | string | null;
+  };
+};
+
+/**
+ * Normalize API filter response to form/UI shape (CalendarDate).
+ * Use when initializing filter form from API response.
+ */
+export function normalizeFiltersFromApi(
+  fromApi: AppointmentQueueFiltersFromApi | undefined
+): AppointmentQueueFilters {
+  if (!fromApi) return DEFAULT_APPOINTMENT_QUEUE_FILTERS;
+  const start = fromApi.date?.start;
+  const end = fromApi.date?.end;
+  return {
+    ...fromApi,
+    date: {
+      start: start == null ? null : typeof start === 'string' ? parseDate(start) : start,
+      end: end == null ? null : typeof end === 'string' ? parseDate(end) : end,
+    },
+  };
+}
+
+export type AppointmentQueueMetaData = {
+  total: number;
 };

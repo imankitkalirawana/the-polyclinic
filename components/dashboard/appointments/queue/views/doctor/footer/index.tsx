@@ -1,4 +1,4 @@
-import { AppointmentQueueResponse } from '@/services/client/appointment/queue/queue.types';
+import { AppointmentQueueType } from '@/services/client/appointment/queue/queue.types';
 import { Button, cn } from '@heroui/react';
 import { useQueryState } from 'nuqs';
 import QueueFooterActions from './actions';
@@ -7,7 +7,7 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 export default function QueueFooter({
   currentQueue,
 }: {
-  currentQueue?: AppointmentQueueResponse | null;
+  currentQueue?: AppointmentQueueType | null;
 }) {
   const [queueId, setQueueId] = useQueryState('id');
   const [showNextQueues] = useLocalStorage('show-next-queues', true);

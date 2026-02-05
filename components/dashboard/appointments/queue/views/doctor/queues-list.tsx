@@ -1,9 +1,6 @@
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { cn } from '@heroui/react';
-import {
-  AppointmentQueueResponse,
-  QueueStatus,
-} from '@/services/client/appointment/queue/queue.types';
+import { AppointmentQueueType, QueueStatus } from '@/services/client/appointment/queue/queue.types';
 import {
   Accordion,
   AccordionItem,
@@ -28,7 +25,7 @@ export default function QueuesList({
   onSelect,
 }: {
   isLoading?: boolean;
-  queues: AppointmentQueueResponse[];
+  queues: AppointmentQueueType[];
   className?: string;
   onSelect?: (queueId: string) => void;
 }) {

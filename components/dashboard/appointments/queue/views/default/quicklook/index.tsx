@@ -1,10 +1,10 @@
 import RichColorCell from '@/components/ui/cell/rich-color';
 import QuickLook from '@/components/ui/quicklook';
-import { AppointmentQueueResponse } from '@/services/client/appointment/queue/queue.types';
+import { AppointmentQueueType } from '@/services/client/appointment/queue/queue.types';
 import QueueActivityLogs from './activity-logs';
 
 interface QueueQuickLookProps {
-  queue: AppointmentQueueResponse;
+  queue: AppointmentQueueType;
   onClose: () => void;
 }
 

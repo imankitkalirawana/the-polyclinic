@@ -56,6 +56,7 @@ export function Table<T extends TableItem>({
   onSelectionChange,
   isError,
   errorMessage,
+  renderFilter,
 }: TableProps<T>) {
   const [searchValue, setSearchValue] = useState<string>('');
   const debouncedSearch = useDebounce(searchValue, 500);
@@ -287,6 +288,7 @@ export function Table<T extends TableItem>({
               />
             )}
 
+            {!!renderFilter && renderFilter()}
             {filters.length > 0 && (
               <div>
                 <Popover placement="bottom">

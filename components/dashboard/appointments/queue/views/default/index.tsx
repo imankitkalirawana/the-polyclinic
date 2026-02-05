@@ -3,9 +3,14 @@
 import { useMemo, useState } from 'react';
 import {
   Button,
+  Chip,
   cn,
   DropdownItem,
   DropdownMenu,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  ScrollShadow,
   Selection,
   Tooltip,
   useDisclosure,
@@ -23,13 +28,16 @@ import {
   RenderUser,
   DropdownItemWithSection,
 } from '@/components/ui/static-data-table/cell-renderers';
-import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
+import type { ColumnDef } from '@/components/ui/static-data-table/types';
 import { isSearchMatch } from '@/libs/utils';
 import { useDeleteUser } from '@/services/common/user/user.query';
 import { useAllAppointmentQueues } from '@/services/client/appointment/queue/queue.query';
 import {
-  AppointmentQueueResponse,
+  AppointmentQueueType,
+  DEFAULT_APPOINTMENT_QUEUE_FILTERS,
+  type AppointmentQueueFilters,
   QueueStatus,
+  normalizeFiltersFromApi,
 } from '@/services/client/appointment/queue/queue.types';
 import Link from 'next/link';
 import QueueQuickLook from './quicklook';
@@ -37,6 +45,8 @@ import { CopyText } from '@/components/ui/copy';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { Role } from '@/services/common/user/user.constants';
 import { useSession } from '@/libs/providers/session-provider';
+import { QueueFilters } from './filters';
+import { getActiveFilterCount } from './helper';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'sequenceNumber',
@@ -51,23 +61,25 @@ const INITIAL_VISIBLE_COLUMNS = [
 export default function DefaultQueueView() {
   const { user: currentUser } = useSession();
   const deleteModal = useDisclosure();
+  const filterPopover = useDisclosure();
   const deleteDoctor = useDeleteUser();
-  const [selectedQueue, setSelectedQueue] = useState<AppointmentQueueResponse | null>(null);
+  const [selectedQueue, setSelectedQueue] = useState<AppointmentQueueType | null>(null);
+  const [appliedFilters, setAppliedFilters] = useState<AppointmentQueueFilters | undefined>(
+    undefined
+  );
 
-  const {
-    data: queues,
-    isLoading,
-    isError,
-    error,
-    refetch,
-    isRefetching,
-  } = useAllAppointmentQueues();
+  const { data, isLoading, isError, error, refetch, isRefetching } =
+    useAllAppointmentQueues(appliedFilters);
+
+  const { queues, filters: filtersFromApi } = data || {};
+  const filterInitialValues: AppointmentQueueFilters =
+    appliedFilters ?? normalizeFiltersFromApi(filtersFromApi) ?? DEFAULT_APPOINTMENT_QUEUE_FILTERS;
 
   const handleDelete = async (uid: string) => {
     await deleteDoctor.mutateAsync(uid);
   };
 
-  const dropdownMenuItems = (queue: AppointmentQueueResponse): DropdownItemWithSection[] => {
+  const dropdownMenuItems = (queue: AppointmentQueueType): DropdownItemWithSection[] => {
     return [
       {
         key: 'view',
@@ -96,7 +108,7 @@ export default function DefaultQueueView() {
   };
 
   // Define columns with render functions
-  const columns: ColumnDef<AppointmentQueueResponse>[] = useMemo(
+  const columns: ColumnDef<AppointmentQueueType>[] = useMemo(
     () => [
       {
         name: 'Sequence Number',
@@ -187,47 +199,6 @@ export default function DefaultQueueView() {
     []
   );
 
-  // Define filters
-  const filters: FilterDef<AppointmentQueueResponse>[] = useMemo(
-    () => [
-      {
-        name: 'Created At',
-        key: 'createdAt',
-        options: [
-          { label: 'All', value: 'all' },
-          { label: 'Today', value: 'today' },
-          { label: 'This week', value: 'thisWeek' },
-          { label: 'Past Users', value: 'past' },
-        ],
-        filterFn: (doctor, value) => {
-          if (value === 'all') return true;
-
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
-
-          const createdAt = new Date(doctor.createdAt);
-          createdAt.setHours(0, 0, 0, 0);
-
-          const daysDiff = Math.floor(
-            (createdAt.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
-          );
-
-          switch (value) {
-            case 'today':
-              return daysDiff === 0;
-            case 'thisWeek':
-              return daysDiff >= 0 && daysDiff < 7;
-            case 'past':
-              return daysDiff < 0;
-            default:
-              return true;
-          }
-        },
-      },
-    ],
-    []
-  );
-
   // Render top bar
   const endContent = () => (
     <div className="flex gap-2">
@@ -296,9 +267,49 @@ export default function DefaultQueueView() {
     </DropdownMenu>
   );
 
+  const renderFilter = () => (
+    <div>
+      <Popover
+        placement="bottom"
+        isOpen={filterPopover.isOpen}
+        onOpenChange={filterPopover.onOpenChange}
+      >
+        <PopoverTrigger>
+          <Button
+            className="bg-default-100 text-default-800"
+            size="sm"
+            startContent={
+              <Icon className="text-default-400" icon="solar:tuning-2-linear" width={16} />
+            }
+            endContent={
+              getActiveFilterCount(filterInitialValues) > 0 && (
+                <Chip size="sm" color="primary" variant="flat">
+                  {getActiveFilterCount(filterInitialValues)}
+                </Chip>
+              )
+            }
+          >
+            Filter
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-80">
+          <ScrollShadow className="flex max-h-96 w-full flex-col gap-6 px-2 py-4 scrollbar-hide">
+            <QueueFilters
+              initialValues={filterInitialValues}
+              onSubmit={setAppliedFilters}
+              onClear={() => setAppliedFilters(undefined)}
+              onApplyComplete={filterPopover.onClose}
+            />
+          </ScrollShadow>
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+
   return (
     <>
       <Table
+        renderFilter={renderFilter}
         isError={isError}
         errorMessage={error?.message}
         uniqueKey="appointments"
@@ -307,7 +318,6 @@ export default function DefaultQueueView() {
         columns={columns}
         initialVisibleColumns={INITIAL_VISIBLE_COLUMNS}
         keyField="id"
-        filters={filters}
         searchField={(queue, searchValue) =>
           isSearchMatch(queue.patient.name, searchValue) ||
           isSearchMatch(queue.patient.email, searchValue) ||
