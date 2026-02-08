@@ -4,8 +4,7 @@ import { PrescriptionFormSchema } from '@/components/dashboard/appointments/queu
 import { AppointmentQueueRequest } from './queue.types';
 import { ActivityLogResponse } from '@/services/common/activity/activity.types';
 import { format } from 'date-fns/format';
-import { RowData } from '@tanstack/react-table';
-import { ColumnDefinition } from '@/components/ui/new-data-table/types';
+import { ColumnDefinition, RowData } from '@/components/ui/new-data-table/types';
 
 export class AppointmentQueueApi {
   private static API_BASE = '/client/appointments/queue';
@@ -13,7 +12,7 @@ export class AppointmentQueueApi {
   static async getAll() {
     return await apiRequest<{
       columns: ColumnDefinition[];
-      rows: RowData;
+      rows: RowData[];
     }>({
       url: `${this.API_BASE}/all`,
     });

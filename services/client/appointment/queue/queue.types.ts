@@ -1,3 +1,4 @@
+import type { DateValue } from '@internationalized/date';
 import { GENDERS } from '@/libs/constants';
 
 export enum QueueStatus {
@@ -66,6 +67,18 @@ export type VerifyPaymentRequest = {
 };
 
 export type PaymentDetails = { payment: { orderId: string; amount: number; currency: string } };
+
+export type AppointmentQueueFilters = {
+  date: { start: DateValue | null; end: DateValue | null };
+  status?: QueueStatus[];
+  doctorId?: string | null;
+};
+
+export const DEFAULT_APPOINTMENT_QUEUE_FILTERS: AppointmentQueueFilters = {
+  date: { start: null, end: null },
+  status: undefined,
+  doctorId: null,
+};
 
 export type AppointmentQueueType = {
   id: string;
