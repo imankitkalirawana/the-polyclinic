@@ -12,6 +12,9 @@ export type ColumnDefinition = {
   name: string;
   data_type: ColumnDataType;
   order: number;
+  pinned: boolean;
+  visible: boolean;
+  width: number;
 };
 
 export type CellOption = {

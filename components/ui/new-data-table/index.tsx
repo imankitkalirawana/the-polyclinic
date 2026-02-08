@@ -25,7 +25,11 @@ export function Table({ columns, rows }: TableProps) {
         className="max-h-full px-px"
       >
         <TableHeader columns={columns}>
-          {(column) => <TableColumn key={column.key}>{column.name}</TableColumn>}
+          {(column) => (
+            <TableColumn key={column.key} width={column.width}>
+              {column.name}
+            </TableColumn>
+          )}
         </TableHeader>
         <TableBody>
           {rows.map((row, rowIndex) => (
