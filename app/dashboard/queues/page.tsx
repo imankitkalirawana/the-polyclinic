@@ -21,7 +21,7 @@ export default async function QueuePage({ searchParams }: PageProps) {
 
   const queryKey = isDoctor
     ? ['queue-for-doctor', session?.user?.integrated_user_id, id, date]
-    : ['appointment-queues', id];
+    : ['appointment-queues'];
 
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({

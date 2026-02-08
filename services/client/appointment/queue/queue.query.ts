@@ -2,13 +2,13 @@ import { AppointmentQueueApi } from './queue.api';
 import { useGenericMutation } from '@/services/useGenericMutation';
 import { useGenericQuery } from '@/services/useGenericQuery';
 import { PrescriptionFormSchema } from '@/components/dashboard/appointments/queue/views/doctor/prescription-panel';
-import { AppointmentQueueFilters, AppointmentQueueRequest } from './queue.types';
+import { AppointmentQueueRequest } from './queue.types';
 import { saveAs } from 'file-saver';
 
-export const useAllAppointmentQueues = (params?: AppointmentQueueFilters) => {
+export const useAllAppointmentQueues = () => {
   return useGenericQuery({
-    queryKey: ['appointment-queues', params],
-    queryFn: () => AppointmentQueueApi.getAll(params),
+    queryKey: ['appointment-queues'],
+    queryFn: () => AppointmentQueueApi.getAll(),
   });
 };
 
