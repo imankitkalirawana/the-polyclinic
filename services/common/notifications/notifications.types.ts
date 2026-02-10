@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { Base } from '@/types';
-import { ValuesOf } from '@/lib/utils';
+import { ValuesOf } from '@/libs/utils';
 import {
   NOTIFICATION_TYPES,
   NOTIFICATION_STATUSES,

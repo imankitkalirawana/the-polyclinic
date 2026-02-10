@@ -65,7 +65,7 @@ const DayCell = memo(
         <div
           key={day.toISOString()}
           className={cn(
-            'relative flex aspect-square size-7 cursor-pointer items-center justify-center rounded text-xs transition-colors',
+            'relative flex aspect-square size-7 cursor-pointer items-center justify-center rounded-sm text-xs transition-colors',
             {
               'text-default-400': !isCurrentMonth,
               'text-white': hasAppointments && isCurrentMonth,
@@ -114,7 +114,7 @@ const MonthCalendar = memo(
             {weekdays.map((day) => (
               <div
                 key={day.value}
-                className="flex h-6 items-center justify-center text-xs font-medium text-default-500"
+                className="text-default-500 flex h-6 items-center justify-center text-xs font-medium"
               >
                 {day.label}
               </div>

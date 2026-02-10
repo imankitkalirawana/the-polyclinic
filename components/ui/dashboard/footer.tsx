@@ -71,10 +71,10 @@ export function DashboardFooter({
   return (
     <div
       className={cn(
-        'fixed inset-x-0 bottom-0 z-50 ml-auto w-[calc(100%-288px)] flex-shrink-0 transition-all duration-250 ease-in-out',
+        'duration-250 fixed inset-x-0 bottom-0 z-50 ml-auto w-[calc(100%-288px)] shrink-0 transition-all ease-in-out',
         {
           'w-[calc(100%-64px)]': isHidden,
-          'border-t border-divider': showBorder,
+          'border-divider border-t': showBorder,
           'bg-background/80 backdrop-blur-lg backdrop-saturate-150': blurred,
           'bg-background': !blurred,
         },
@@ -193,8 +193,8 @@ export function InlineFooter({
   return (
     <div
       className={cn(
-        'flex flex-shrink-0 items-center gap-3 px-4 py-3',
-        showBorder && 'border-t border-divider',
+        'flex shrink-0 items-center gap-3 px-4 py-3',
+        showBorder && 'border-divider border-t',
         alignmentClasses[align],
         className
       )}

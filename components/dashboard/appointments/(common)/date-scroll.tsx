@@ -81,7 +81,7 @@ export default function DateScroll({
           return (
             <Button
               key={key}
-              ref={(el) => {
+              ref={(el: HTMLButtonElement) => {
                 if (el) itemRefs.current.set(key, el);
               }}
               variant={isSelected ? 'solid' : isToday(date) ? 'flat' : 'bordered'}

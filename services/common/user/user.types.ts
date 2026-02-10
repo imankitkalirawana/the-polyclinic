@@ -1,7 +1,9 @@
 import { z } from 'zod';
-import { createUserSchema, resetPasswordSchema, updateUserSchema } from './user.validation';
+import { resetPasswordSchema, userFormValuesSchema } from './user.validation';
 import { Base } from '@/types';
 import { Role, UserStatus } from './user.constants';
+import { DoctorType } from '@/services/client/doctor';
+import { PatientType } from '@/services/client/patient';
 
 export type UserType = Base & {
   email: string;
@@ -12,6 +14,11 @@ export type UserType = Base & {
   role: Role;
 };
 
-export type CreateUserRequest = z.infer<typeof createUserSchema>;
-export type UpdateUserRequest = z.infer<typeof updateUserSchema>;
+export type UserFormValues = z.infer<typeof userFormValuesSchema>;
 export type ResetPasswordRequest = z.infer<typeof resetPasswordSchema>;
+
+export type UserProfileType = {
+  user: UserType;
+  doctor?: DoctorType;
+  patient?: PatientType;
+};

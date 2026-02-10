@@ -68,13 +68,14 @@ export const CopyText = memo(
     return (
       <div
         ref={forwardedRef}
-        className={cn('group flex items-center gap-1 text-default-500', className)}
+        className={cn('text-default-500 group flex items-center gap-1', className)}
       >
+        <span className={textClassName}>{children || '-'}</span>
         <Tooltip delay={1000} className="text-foreground" content={content} isDisabled={isEmpty}>
           <Button
             isIconOnly
             isDisabled={isEmpty}
-            className={cn('h-7 w-7 min-w-7 text-default-400 opacity-0 group-hover:opacity-100', {
+            className={cn('text-default-400 h-7 w-7 min-w-7 opacity-0 group-hover:opacity-100', {
               'group-hover:opacity-0': isEmpty,
             })}
             size="sm"
@@ -85,7 +86,6 @@ export const CopyText = memo(
             <Icon icon={copied ? 'solar:check-read-linear' : 'solar:copy-linear'} width={15} />
           </Button>
         </Tooltip>
-        <span className={textClassName}>{children || '-'}</span>
       </div>
     );
   })

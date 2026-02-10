@@ -1,4 +1,5 @@
 'use client';
+
 import { Chip, Tab, Tabs } from '@heroui/react';
 import AllAppointments from './all-appointments';
 import Upcoming from './upcoming';

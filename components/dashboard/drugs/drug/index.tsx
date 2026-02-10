@@ -30,7 +30,7 @@ export default function DrugCard({ did }: { did: number }) {
         </Button>
       </CardHeader>
       <CardBody className="space-y-2 px-0">
-        <ScrollShadow className="divide-y-1 pr-4">
+        <ScrollShadow className="divide-y pr-4">
           <CellValue label="Brand Name" value={drug.brandName || '-'} />
           <CellValue label="Generic Name" value={drug.genericName || '-'} />
           <CellValue label="Manufacturer" value={drug.manufacturer || '-'} />

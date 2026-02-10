@@ -92,7 +92,7 @@ export const sidebarContent = (drug: DrugType) => (
     <div className="flex flex-col items-center gap-2 p-4">
       <div className="flex flex-col items-center">
         <h6 className="font-medium capitalize">{drug.brandName}</h6>
-        <p className="capitalize text-default-500 text-small">
+        <p className="text-default-500 text-small capitalize">
           {drug.manufacturer ? `${drug.manufacturer}` : ''}
         </p>
       </div>
@@ -130,24 +130,24 @@ export const sidebarContent = (drug: DrugType) => (
     <Tabs size="sm" className="flex flex-col gap-2 p-4">
       <Tab title="Patient Details" key="patient-details">
         <div className="flex flex-col gap-2">
-          <div className="flex items-center justify-between gap-4 text-small">
+          <div className="text-small flex items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <div className="rounded-medium bg-orange-200 p-[5px] text-orange-400">
                 <Icon icon="solar:hashtag-circle-bold" width="24" />
               </div>
-              <span className="capitalize text-default-400">UID</span>
+              <span className="text-default-400 capitalize">UID</span>
             </div>
-            <span className="capitalize text-default-foreground">{drug.did}</span>
+            <span className="text-default-foreground capitalize">{drug.did}</span>
           </div>
-          <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20" />
-          <div className="flex items-center justify-between gap-4 text-small">
+          <div className="from-divider/20 via-divider to-divider/20 bg-linear-to-r h-px w-full" />
+          <div className="text-small flex items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <div className="rounded-medium bg-pink-200 p-[5px] text-pink-400">
                 <Icon icon="material-symbols:abc-rounded" width="24" />
               </div>
-              <span className="capitalize text-default-400">Name</span>
+              <span className="text-default-400 capitalize">Name</span>
             </div>
-            <span className="capitalize text-default-foreground">{drug.brandName}</span>
+            <span className="text-default-foreground capitalize">{drug.brandName}</span>
           </div>
         </div>
       </Tab>

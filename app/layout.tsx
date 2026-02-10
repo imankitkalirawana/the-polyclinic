@@ -7,10 +7,10 @@ import { Providers } from './providers';
 import './globals.css';
 
 import Navbar from '@/components/sections/navbar';
-import { APP_INFO } from '@/lib/config';
+import { APP_INFO } from '@/libs/config';
 import { getSubdomain } from '@/auth/sub-domain';
-import { toTitleCase } from '@/lib/utils';
-import { getServerSession } from '@/lib/serverAuth';
+import { toTitleCase } from '@/libs/utils';
+import { getServerSession } from '@/libs/serverAuth';
 
 const outfit = Outfit({
   subsets: ['latin'],

@@ -1,3 +1,4 @@
+import { AUTH_COOKIE_NAME } from '@/libs/axios/constants';
 import { AuthApi } from './auth.api';
 import {
   ForgotPasswordRequest,
@@ -5,7 +6,7 @@ import {
   SendOTPRequest,
   VerifyOTPRequest,
 } from './auth.validation';
-import { useCookies } from '@/lib/providers/cookies-provider';
+import { useCookies } from '@/libs/providers/cookies-provider';
 import { useGenericMutation } from '@/services/useGenericMutation';
 
 export const useLogin = () => {
@@ -14,7 +15,12 @@ export const useLogin = () => {
     mutationFn: (data: LoginRequest) => AuthApi.login(data),
     invalidateQueries: [['user']],
     onSuccess: (result) => {
-      setCookie('connect.sid', result.data?.token ?? '', { path: '/' });
+      setCookie(AUTH_COOKIE_NAME, result.data?.token ?? '', {
+        path: '/',
+        maxAge: 7 * 24 * 60 * 60,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+      });
       window.location.href = '/dashboard';
     },
   });
@@ -27,7 +33,7 @@ export const useLogout = () => {
     mutationFn: () => AuthApi.logout(),
     invalidateQueries: [['user']],
     onSuccess: () => {
-      removeCookie('connect.sid', { path: '/' });
+      removeCookie(AUTH_COOKIE_NAME, { path: '/' });
       window.location.href = '/auth/login';
     },
   });

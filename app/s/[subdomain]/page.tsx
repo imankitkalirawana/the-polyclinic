@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { excludedSubdomains } from '@/lib/utils';
+import { excludedSubdomains } from '@/libs/utils';
 
 export default async function SubdomainPage({
   params,

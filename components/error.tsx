@@ -25,9 +25,9 @@ function ChatMessage({
       className={`mb-4 flex gap-3 ${isUser ? 'flex-row-reverse' : ''}`}
     >
       {!isUser && (
-        <div className="mt-1 flex-shrink-0">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-foreground">
-            <Icon icon="solar:bot-linear" className="h-4 w-4 text-background" />
+        <div className="mt-1 shrink-0">
+          <div className="bg-foreground flex h-8 w-8 items-center justify-center rounded-full">
+            <Icon icon="solar:bot-linear" className="text-background h-4 w-4" />
           </div>
         </div>
       )}
@@ -358,7 +358,7 @@ export default function CustomError({
         >
           <Card>
             <CardHeader className="justify-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-secondary-foreground">
+              <div className="bg-secondary text-secondary-foreground flex h-12 w-12 items-center justify-center rounded-full">
                 <Icon icon="solar:chat-dots-bold-duotone" className="h-6 w-6" />
               </div>
             </CardHeader>

@@ -1,25 +1,35 @@
+import { UserFormValues } from '@/services/common/user/user.types';
 import { Input, NumberInput, Textarea } from '@heroui/react';
-import { CreateUserRequest } from '@/services/common/user/user.types';
-import { useFormContext, Controller } from 'react-hook-form';
+import { Control, Controller } from 'react-hook-form';
 
-export default function DoctorFields() {
-  const form = useFormContext<CreateUserRequest>();
-  const {
-    control,
-    formState: { errors },
-  } = form;
-
+export default function DoctorFields({ control }: { control: Control<UserFormValues> }) {
   return (
     <>
       <Controller
-        name="specialization"
+        name="doctor.designation"
         control={control}
         render={({ field, fieldState }) => (
           <Input
             {...field}
-            value={field.value ?? ''}
+            label="Designation"
+            placeholder="eg. Senior Consultant"
+            value={field.value || ''}
+            onChange={field.onChange}
+            isInvalid={!!fieldState.error}
+            errorMessage={fieldState.error?.message}
+          />
+        )}
+      />
+      <Controller
+        name="doctor.specialization"
+        control={control}
+        render={({ field, fieldState }) => (
+          <Input
+            {...field}
             label="Specialization"
-            placeholder="eg. Cardiologist"
+            placeholder="eg. Cardiology, Neurology"
+            value={field.value || ''}
+            onChange={field.onChange}
             isInvalid={!!fieldState.error}
             errorMessage={fieldState.error?.message}
           />
@@ -27,58 +37,47 @@ export default function DoctorFields() {
       />
 
       <Controller
-        name="department"
+        name="doctor.experience"
         control={control}
         render={({ field, fieldState }) => (
-          <Input
+          <NumberInput
             {...field}
-            value={field.value ?? ''}
-            label="Department"
-            placeholder="eg. Cardiology"
+            label="Experience"
+            placeholder="eg. 10"
+            value={field.value || 0}
+            onChange={(value) => field.onChange(parseInt(value.toString()) || undefined)}
             isInvalid={!!fieldState.error}
             errorMessage={fieldState.error?.message}
+            endContent={<span className="text-default-400 text-small">years</span>}
           />
         )}
       />
-
       <Controller
-        name="seating"
+        name="doctor.education"
         control={control}
         render={({ field, fieldState }) => (
           <Input
             {...field}
-            value={field.value ?? ''}
-            label="Seating"
-            placeholder="eg. Room No, Floor"
-            isInvalid={!!fieldState.error}
-            errorMessage={fieldState.error?.message}
-          />
-        )}
-      />
-
-      <Controller
-        name="education"
-        control={control}
-        render={({ field, fieldState }) => (
-          <Input
-            {...field}
-            value={field.value ?? ''}
             label="Education"
             placeholder="eg. MBBS, MD"
+            value={field.value || ''}
+            onChange={field.onChange}
             isInvalid={!!fieldState.error}
             errorMessage={fieldState.error?.message}
           />
         )}
       />
+
       <Controller
-        name="designation"
+        name="doctor.seating"
         control={control}
         render={({ field, fieldState }) => (
           <Input
             {...field}
-            value={field.value ?? ''}
-            label="Designation"
-            placeholder="eg. Cardiologist"
+            label="Seating"
+            placeholder="eg. Room 101"
+            value={field.value || ''}
+            onChange={field.onChange}
             isInvalid={!!fieldState.error}
             errorMessage={fieldState.error?.message}
           />
@@ -86,33 +85,16 @@ export default function DoctorFields() {
       />
 
       <Controller
-        name="experience"
-        control={control}
-        render={({ field }) => (
-          <NumberInput
-            label="Experience"
-            placeholder="Enter experience"
-            value={field.value || undefined}
-            onChange={(value) => {
-              const numValue = value ? parseInt(value.toString(), 10) : undefined;
-              field.onChange(numValue);
-            }}
-            isInvalid={!!errors.experience}
-            errorMessage={errors.experience?.message}
-            endContent={<span className="text-default-500">year(s)</span>}
-          />
-        )}
-      />
-
-      <Controller
-        name="biography"
+        name="doctor.biography"
         control={control}
         render={({ field, fieldState }) => (
           <Textarea
             {...field}
-            value={field.value ?? ''}
+            className="col-span-full"
             label="Biography"
-            placeholder="eg. Experienced cardiologist"
+            placeholder="eg. Experienced in Cardiology and Neurology"
+            value={field.value || ''}
+            onChange={field.onChange}
             isInvalid={!!fieldState.error}
             errorMessage={fieldState.error?.message}
           />

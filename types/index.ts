@@ -1,6 +1,3 @@
-import { GENDERS } from '@/lib/constants';
-import { ValuesOf } from '@/lib/utils';
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type $FixMe = any;
 
@@ -11,8 +8,6 @@ export type Base = {
   createdBy: string;
   updatedBy: string;
 };
-
-export type Gender = ValuesOf<typeof GENDERS>;
 
 export interface CountryProps {
   id: number;

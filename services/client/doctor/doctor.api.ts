@@ -1,5 +1,5 @@
 import { DoctorType, SlotConfig } from './doctor.types';
-import { apiRequest } from '@/lib/axios';
+import { apiRequest } from '@/libs/axios';
 
 export class Doctor {
   private static API_BASE = '/doctors';

@@ -1,6 +1,7 @@
-import { Gender } from '@/types';
 import { faker } from '@faker-js/faker';
 import { z } from 'zod';
+import { GENDERS } from './constants';
+import { CalendarDate } from '@internationalized/date';
 
 export const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
 export const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'thepolyclinic.app';
@@ -135,7 +136,7 @@ export function formatAge(
 }
 
 export function formatGender(
-  gender: Gender | null | undefined,
+  gender: GENDERS | null | undefined,
   {
     fullString = false,
   }: {
@@ -146,4 +147,13 @@ export function formatGender(
   return fullString
     ? gender.charAt(0).toUpperCase() + gender.slice(1).toLowerCase()
     : gender.charAt(0).toUpperCase();
+}
+
+export function handleDateChange(value: CalendarDate | null) {
+  if (!value) {
+    return;
+  }
+
+  const dob = new Date(value as unknown as Date).toISOString();
+  return dob;
 }

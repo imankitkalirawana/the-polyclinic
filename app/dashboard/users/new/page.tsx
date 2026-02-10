@@ -1,9 +1,9 @@
 import { redirect } from 'next/navigation';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
-import { getServerSession } from '@/lib/serverAuth';
-import NewUser from '@/components/dashboard/users/new';
+import { getServerSession } from '@/libs/serverAuth';
 import { getAllCountries } from '@/services/external/external.api';
+import UserForm from '@/components/dashboard/users/user/form';
 
 export default async function Page() {
   const session = await getServerSession();
@@ -26,7 +26,7 @@ export default async function Page() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <NewUser />
+      <UserForm />
     </HydrationBoundary>
   );
 }

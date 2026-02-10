@@ -7,7 +7,7 @@ import AppointmentSlots from './appointment-slots';
 import Appointments from './appointments';
 
 import { CellRenderer } from '@/components/ui/cell/rich-color/cell-renderer';
-import { castData } from '@/lib/utils';
+import { castData } from '@/libs/utils';
 import { DoctorType } from '@/services/client/doctor';
 import { useDoctorById } from '@/services/client/doctor/doctor.query';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
@@ -138,7 +138,7 @@ export default function DashboardDoctor({ id }: { id: string }) {
               <div className="flex flex-col justify-between">
                 <div className="flex flex-col">
                   <h2 className="text-xl font-medium">{doctor.name}</h2>
-                  <p className="text-sm text-default-500">
+                  <p className="text-default-500 text-sm">
                     {doctor.specialization || doctor.departments?.join(', ') || '-'}
                   </p>
                 </div>
@@ -185,7 +185,7 @@ export default function DashboardDoctor({ id }: { id: string }) {
               <div className="rounded-small bg-blue-100 p-1 text-blue-500">
                 <Icon icon="solar:users-group-two-rounded-bold-duotone" width={32} />
               </div>
-              <p className="text-2xl font-medium text-default-500">100</p>
+              <p className="text-default-500 text-2xl font-medium">100</p>
             </div>
             <p className="text-default-500 text-tiny">
               <span className="text-success">3.5%</span> Have increased from yesterday
@@ -199,7 +199,7 @@ export default function DashboardDoctor({ id }: { id: string }) {
               <div className="rounded-small bg-purple-100 p-1 text-purple-500">
                 <Icon icon="solar:calendar-date-bold-duotone" width={32} />
               </div>
-              <p className="text-2xl font-medium text-default-500">100</p>
+              <p className="text-default-500 text-2xl font-medium">100</p>
             </div>
             <p className="text-default-500 text-tiny">
               <span className="text-success">1.5%</span> Have increased from yesterday
@@ -213,8 +213,8 @@ export default function DashboardDoctor({ id }: { id: string }) {
               <div className="rounded-small bg-amber-100 p-1 text-amber-500">
                 <Icon icon="solar:star-bold-duotone" width={32} />
               </div>
-              <p className="text-2xl font-medium text-default-500">
-                4.5<span className="text-base text-default-400">/5.0</span>
+              <p className="text-default-500 text-2xl font-medium">
+                4.5<span className="text-default-400 text-base">/5.0</span>
               </p>
             </div>
             <p className="text-default-500 text-tiny">Based on 120 reviews from patients.</p>

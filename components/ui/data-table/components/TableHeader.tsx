@@ -44,7 +44,7 @@ const TableHeader = <TData extends RowData>({
 
   return (
     <div
-      className="sticky top-0 z-[1] flex items-center bg-primary-50 font-medium text-neutral-700"
+      className="bg-primary-50 z-1 sticky top-0 flex items-center font-medium text-neutral-700"
       style={style}
     >
       {virtualPaddingLeft ? <div style={{ width: virtualPaddingLeft }} /> : null}
@@ -73,14 +73,14 @@ const TableHeader = <TData extends RowData>({
 
                 {header.column.getCanResize() ? (
                   <div
-                    className='absolute bottom-0 right-0 top-0 z-[2] w-[10px] cursor-col-resize touch-none select-none after:absolute after:right-0 after:inline-block after:h-full after:w-0.5 after:bg-neutral-200 after:content-[""] hover:after:w-1'
+                    className='z-2 absolute bottom-0 right-0 top-0 w-[10px] cursor-col-resize touch-none select-none after:absolute after:right-0 after:inline-block after:h-full after:w-0.5 after:bg-neutral-200 after:content-[""] hover:after:w-1'
                     onDoubleClick={() => header.column.resetSize()}
                     onMouseDown={header.getResizeHandler()}
                     onTouchStart={header.getResizeHandler()}
                   >
                     {header.column.getIsResizing() ? (
                       <div
-                        className="absolute right-0 z-[2] h-screen w-0.5 -translate-x-px touch-none select-none bg-primary"
+                        className="bg-primary z-2 absolute right-0 h-screen w-0.5 -translate-x-px touch-none select-none"
                         style={{
                           transform: `translateX(${limitedResizingDeltaOffset}px)`,
                         }}

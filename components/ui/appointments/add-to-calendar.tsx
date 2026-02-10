@@ -20,8 +20,8 @@ import {
   addToGoogleCalendar,
   addToOutlookCalendar,
   handleAddToCalendar,
-} from '@/lib/client-functions';
-import { EventType } from '@/lib/interface';
+} from '@/libs/client-functions';
+import { EventType } from '@/libs/interface';
 import { AppointmentType } from '@/services/client/appointment';
 
 type ActionType = 'google' | 'outlook' | 'download';
@@ -81,12 +81,12 @@ export default function AddToCalendar({
     <Modal isOpen backdrop="blur" onClose={onClose}>
       <ModalContent>
         <ModalHeader className="flex-col items-start gap-2">
-          <h2 className="max-w-xs text-center text-medium">Add to Calendar</h2>
-          <p className="font-normal text-default-500 text-small">
+          <h2 className="text-medium max-w-xs text-center">Add to Calendar</h2>
+          <p className="text-default-500 text-small font-normal">
             Add this appointment to your calendar by downloading the{' '}
-            <span className="font-medium text-foreground">event file</span> or adding it to your{' '}
-            <span className="font-medium text-foreground">Google</span> or{' '}
-            <span className="font-medium text-foreground">Outlook</span> calendar
+            <span className="text-foreground font-medium">event file</span> or adding it to your{' '}
+            <span className="text-foreground font-medium">Google</span> or{' '}
+            <span className="text-foreground font-medium">Outlook</span> calendar
           </p>
         </ModalHeader>
         <ModalBody>

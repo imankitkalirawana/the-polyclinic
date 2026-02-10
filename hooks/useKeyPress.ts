@@ -56,7 +56,7 @@ export function useKeyPress(
     return () => {
       window.removeEventListener('keydown', handleKeyDown, { capture });
       window.removeEventListener('keyup', handleKeyUp, { capture });
-      window.removeEventListener('blur', handleBlur);
+      window.removeEventListener('blur-sm', handleBlur);
     };
   }, [keysSet, callback, options.capture, options.preventDefault]);
 }

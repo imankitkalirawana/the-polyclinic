@@ -3,18 +3,14 @@ import { getQueueStatusColor } from '../helper';
 import { CellRenderer } from '@/components/ui/cell/rich-color/cell-renderer';
 import { Accordion, AccordionItem, Chip } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { AppointmentQueueResponse } from '@/services/client/appointment/queue/queue.types';
+import { AppointmentQueueType } from '@/services/client/appointment/queue/queue.types';
 import { useEffect, useState } from 'react';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import DataItem from '@/components/ui/data-item';
 import { formatDate } from 'date-fns';
-import { formatGender } from '@/lib/utils';
+import { formatGender } from '@/libs/utils';
 
-export default function DetailsHeader({
-  currentQueue,
-}: {
-  currentQueue: AppointmentQueueResponse;
-}) {
+export default function DetailsHeader({ currentQueue }: { currentQueue: AppointmentQueueType }) {
   const [selectedKeys, setSelectedKeys] = useState(new Set(['']));
   const [isDetailsOpen, setIsDetailsOpen] = useLocalStorage('is-queue-details-open', false);
 
@@ -28,7 +24,7 @@ export default function DetailsHeader({
     <div className="relative flex flex-col">
       <div
         className={cn(
-          'flex items-center justify-start gap-8 border-l-8 border-l-default p-4',
+          'border-l-default flex items-center justify-start gap-8 border-l-8 p-4',
           getQueueStatusColor(currentQueue.status)
         )}
       >
@@ -38,7 +34,7 @@ export default function DetailsHeader({
           </Chip>
         </div>
         <div className="aspect-square">
-          <h2 className="text-7xl font-bold text-primary">{currentQueue.sequenceNumber}</h2>
+          <h2 className="text-primary text-7xl font-bold">{currentQueue.sequenceNumber}</h2>
         </div>
         <div className="grid w-full grid-cols-3 gap-2">
           <CellRenderer
@@ -113,7 +109,7 @@ export default function DetailsHeader({
           const keysSet = keys as Set<string>;
           setIsDetailsOpen(keysSet.has('view-more-details'));
         }}
-        className="border-b border-divider bg-default-100"
+        className="border-divider bg-default-100 border-b"
         itemClasses={{
           trigger: 'py-0.5',
         }}
@@ -122,7 +118,7 @@ export default function DetailsHeader({
           key="view-more-details"
           aria-label="More details"
           title={
-            <div className="flex w-full items-center justify-center gap-1 py-0.5 text-center text-small">
+            <div className="text-small flex w-full items-center justify-center gap-1 py-0.5 text-center">
               <span>View more details</span>
               <Icon
                 icon="solar:alt-arrow-down-line-duotone"

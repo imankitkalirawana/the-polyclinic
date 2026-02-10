@@ -60,7 +60,7 @@ export const usePatientByIdQuery = (id?: string | null) =>
     queryKey: ['patient', id],
     queryFn: () => PatientApi.getById(id),
     indexKey: 'patientById', // ← Cache key for indexed storage
-    entityId: id,            // ← The ID to index by
+    entityId: id, // ← The ID to index by
     enabled: !!id,
   });
 ```
@@ -119,21 +119,21 @@ function PatientSelection() {
 
 The cache registry defines all available cache keys and their types:
 
-| Key | Type | Description |
-|-----|------|-------------|
-| `patients` | `PatientType[]` | All patients collection |
-| `doctors` | `DoctorType[]` | All doctors collection |
-| `departments` | `DepartmentType[]` | All departments collection |
-| `services` | `ServiceType[]` | All services collection |
-| `drugs` | `DrugType[]` | All drugs collection |
-| `appointments` | `AppointmentType[]` | All appointments collection |
-| `appointmentQueues` | `AppointmentQueueResponse[]` | All queue appointments |
-| `users` | `UserType[]` | All users collection |
-| `selectedPatient` | `PatientType \| null` | Currently selected patient |
-| `selectedDoctor` | `DoctorType \| null` | Currently selected doctor |
-| `patientById` | `Record<string, PatientType>` | Patients indexed by ID |
-| `doctorById` | `Record<string, DoctorType>` | Doctors indexed by ID |
-| ... | ... | (See `cache.types.ts` for full list) |
+| Key                 | Type                          | Description                          |
+| ------------------- | ----------------------------- | ------------------------------------ |
+| `patients`          | `PatientType[]`               | All patients collection              |
+| `doctors`           | `DoctorType[]`                | All doctors collection               |
+| `departments`       | `DepartmentType[]`            | All departments collection           |
+| `services`          | `ServiceType[]`               | All services collection              |
+| `drugs`             | `DrugType[]`                  | All drugs collection                 |
+| `appointments`      | `AppointmentType[]`           | All appointments collection          |
+| `appointmentQueues` | `AppointmentQueueType[]`      | All queue appointments               |
+| `users`             | `UserType[]`                  | All users collection                 |
+| `selectedPatient`   | `PatientType \| null`         | Currently selected patient           |
+| `selectedDoctor`    | `DoctorType \| null`          | Currently selected doctor            |
+| `patientById`       | `Record<string, PatientType>` | Patients indexed by ID               |
+| `doctorById`        | `Record<string, DoctorType>`  | Doctors indexed by ID                |
+| ...                 | ...                           | (See `cache.types.ts` for full list) |
 
 ### Query Hooks
 
@@ -188,9 +188,9 @@ const result = useQueryWithCache({
 ```tsx
 import { useCacheValue } from '@/store';
 
-const patients = useCacheValue('patients');  // PatientType[]
-const doctors = useCacheValue('doctors');    // DoctorType[]
-const services = useCacheValue('services');  // ServiceType[]
+const patients = useCacheValue('patients'); // PatientType[]
+const doctors = useCacheValue('doctors'); // DoctorType[]
+const services = useCacheValue('services'); // ServiceType[]
 ```
 
 #### Indexed Selectors (by ID)
@@ -198,8 +198,8 @@ const services = useCacheValue('services');  // ServiceType[]
 ```tsx
 import { usePatientById, useDoctorById } from '@/store';
 
-const patient = usePatientById(patientId);  // PatientType | undefined
-const doctor = useDoctorById(doctorId);     // DoctorType | undefined
+const patient = usePatientById(patientId); // PatientType | undefined
+const doctor = useDoctorById(doctorId); // DoctorType | undefined
 ```
 
 #### Selected Entity Selectors
@@ -207,9 +207,9 @@ const doctor = useDoctorById(doctorId);     // DoctorType | undefined
 ```tsx
 import { useSelectedPatient, useCacheSetter } from '@/store';
 
-const selectedPatient = useSelectedPatient();  // PatientType | null
+const selectedPatient = useSelectedPatient(); // PatientType | null
 const setCache = useCacheSetter();
-setCache('selectedPatient', patient);  // Updates selectedPatient
+setCache('selectedPatient', patient); // Updates selectedPatient
 ```
 
 ### Store Actions
@@ -220,17 +220,17 @@ Access store actions directly:
 import { useCacheStore } from '@/store';
 
 const {
-  setCache,           // Set a cache value
-  getCache,           // Get a cache value
-  setIndexedCache,    // Set an indexed cache entry
-  getIndexedCache,    // Get an indexed cache entry
-  markStale,          // Mark cache as stale
-  markManyStale,      // Mark multiple caches as stale
-  clearCache,         // Clear a cache entry
-  clearManyCache,     // Clear multiple cache entries
-  clearAllCache,      // Clear all cache
-  setBulkCache,       // Set multiple cache entries at once
-  isCacheFresh,       // Check if cache is fresh
+  setCache, // Set a cache value
+  getCache, // Get a cache value
+  setIndexedCache, // Set an indexed cache entry
+  getIndexedCache, // Get an indexed cache entry
+  markStale, // Mark cache as stale
+  markManyStale, // Mark multiple caches as stale
+  clearCache, // Clear a cache entry
+  clearManyCache, // Clear multiple cache entries
+  clearAllCache, // Clear all cache
+  setBulkCache, // Set multiple cache entries at once
+  isCacheFresh, // Check if cache is fresh
 } = useCacheStore();
 ```
 
@@ -246,12 +246,12 @@ const { data: patients } = useAllPatients();
 const setIndexedCache = useCacheStore((s) => s.setIndexedCache);
 
 const handleSelect = (id: string) => {
-  const patient = patients?.find(p => p.id === id);
+  const patient = patients?.find((p) => p.id === id);
   if (patient) setIndexedCache('patientById', id, patient);
 };
 
 // Step 3: Review (reads from cache)
-const patient = usePatientById(selectedPatientId);  // No fetch!
+const patient = usePatientById(selectedPatientId); // No fetch!
 ```
 
 ### Pattern 2: Detail Views with Fallback
@@ -262,16 +262,16 @@ Show cached data immediately, fetch fresh data in background:
 function PatientDetails({ id }: { id: string }) {
   // Try cache first
   const cachedPatient = usePatientById(id);
-  
+
   // Fetch fresh data (will update cache automatically)
   const { data: freshPatient, isLoading } = usePatientByIdQuery(id);
-  
+
   // Use cached data while loading, fresh data when available
   const patient = freshPatient ?? cachedPatient;
-  
+
   if (!patient && isLoading) return <Skeleton />;
   if (!patient) return <NotFound />;
-  
+
   return <PatientCard patient={patient} />;
 }
 ```
@@ -283,13 +283,13 @@ import { useCacheInvalidation } from '@/store';
 
 function useUpdatePatient() {
   const { markStale, clear } = useCacheInvalidation();
-  
+
   return useMutation({
     mutationFn: PatientApi.update,
     onSuccess: () => {
       // Option 1: Mark as stale (will refetch on next access)
       markStale(['patients', 'patientById']);
-      
+
       // Option 2: Clear completely
       clear(['patients']);
     },
@@ -309,13 +309,13 @@ import { NewEntityType } from '@/services/client/new-entity/new-entity.types';
 
 export interface CacheRegistry {
   // ... existing entries
-  
+
   // Add collection
   newEntities: NewEntityType[];
-  
+
   // Add selected
   selectedNewEntity: NewEntityType | null;
-  
+
   // Add indexed
   newEntityById: Record<string, NewEntityType>;
 }
@@ -333,7 +333,7 @@ export function isCacheKey(key: string): key is CacheKey {
   const validKeys: CacheKey[] = [
     // ... existing keys
     'newEntities',
-    'selectedNewEntity', 
+    'selectedNewEntity',
     'newEntityById',
   ];
   return validKeys.includes(key as CacheKey);
@@ -420,7 +420,7 @@ import { useIsCacheFresh, useCacheStore } from '@/store';
 function DebugPanel() {
   const isFresh = useIsCacheFresh('patients', 5 * 60 * 1000); // 5 min
   const metadata = useCacheStore((s) => s.metadata['patients']);
-  
+
   return (
     <div>
       <p>Fresh: {isFresh ? 'Yes' : 'No'}</p>
@@ -471,7 +471,7 @@ function DebugPanel() {
   function ReviewComponent() {
 -   const { data: doctor } = useDoctorById(doctorId);
 +   const doctor = useDoctorById(doctorId);  // No fetch, reads from cache
-    
+
     return <div>{doctor?.name}</div>;
   }
 ```

@@ -1,6 +1,81 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@plugin '../hero.ts';
+
+@source '../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
+
+@custom-variant dark (&:is([data-theme^="dark-"] *));
+
+@theme {
+  --font-manrope: Manrope, sans-serif;
+
+  --breakpoint-xs: 512px;
+
+  --container-8xl: 96rem;
+  --container-9xl: 105rem;
+
+  --animate-caret-blink: caret-blink 1.25s ease-out infinite;
+  --animate-marquee-horizontal: marquee-x var(--duration) infinite linear;
+  --animate-marquee-vertical: marquee-y var(--duration) linear infinite;
+  --animate-card-up: card-up 0.3s ease-out;
+
+  @keyframes caret-blink {
+    0%,
+    70%,
+    100% {
+      opacity: 1;
+    }
+    20%,
+    50% {
+      opacity: 0;
+    }
+  }
+  @keyframes marquee-x {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-100% - var(--gap)));
+    }
+  }
+  @keyframes marquee-y {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(calc(-100% - var(--gap)));
+    }
+  }
+  @keyframes card-up {
+    from {
+      transform: translateY(-40px);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@utility grid-cols-auto-fill {
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
 
 @layer base {
   /* cyrillic-ext */
@@ -432,16 +507,18 @@
   }
 }
 
-@layer utilities {
-  .grid-cols-auto-fill {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  }
-}
-
 /* adjust scrollbar width globally */
 
 * {
   scrollbar-width: thin;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 
 .tbl td,

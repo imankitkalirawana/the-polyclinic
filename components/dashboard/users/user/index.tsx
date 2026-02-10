@@ -6,7 +6,7 @@ import { Button, Card, CardBody, CardFooter, CardHeader, ScrollShadow } from '@h
 
 import CellValue from '@/components/ui/cell-value';
 
-import { castData } from '@/lib/utils';
+import { castData } from '@/libs/utils';
 import { useUserWithID } from '@/services/common/user/user.query';
 import { UserType } from '@/services/common/user/user.types';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
@@ -48,7 +48,7 @@ export default function UserCard({ id }: { id: string }) {
   return (
     <Card className="bg-transparent shadow-none">
       <CardHeader className="justify-between px-0">
-        <div className="flex flex-col items-start scrollbar-hide">
+        <div className="scrollbar-hide flex flex-col items-start">
           <p className="text-large">Personal Details</p>
           <p className="text-default-500 text-small">Manage your personal details</p>
         </div>

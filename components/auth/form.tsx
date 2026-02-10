@@ -11,7 +11,7 @@ import {
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 import { cn } from '@heroui/react';
-import { tryCatch } from '@/lib/utils';
+import { tryCatch } from '@/libs/utils';
 import { $FixMe } from '@/types';
 import { AuthApi } from '@/services/common/auth/auth.api';
 
@@ -94,11 +94,11 @@ export const PasswordInput = forwardRef<
         <button type="button" onClick={toggleVisibility}>
           {isVisible ? (
             <Icon
-              className="pointer-events-none text-2xl text-default-400"
+              className="text-default-400 pointer-events-none text-2xl"
               icon="solar:eye-closed-linear"
             />
           ) : (
-            <Icon className="pointer-events-none text-2xl text-default-400" icon="solar:eye-bold" />
+            <Icon className="text-default-400 pointer-events-none text-2xl" icon="solar:eye-bold" />
           )}
         </button>
       }
@@ -180,7 +180,7 @@ export const OtpInput = forwardRef<
   return (
     <div className="mb-2 flex flex-col items-center justify-center">
       <InputOtp ref={ref} radius="lg" length={6} name="otp" {...props} />
-      <div className="flex flex-col items-center justify-between px-1 py-2 text-default-500 text-small">
+      <div className="text-default-500 text-small flex flex-col items-center justify-between px-1 py-2">
         <p>Didn&apos;t receive the code?</p>
         <Button
           variant="light"

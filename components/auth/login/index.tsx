@@ -9,7 +9,7 @@ import { LoginProvider, useLogin } from '../store';
 import { AuthStep } from '../types';
 import Auth from '..';
 
-import { APP_INFO } from '@/lib/config';
+import { APP_INFO } from '@/libs/config';
 
 const LoginComponent: React.FC<{ subdomain: string | null }> = ({ subdomain }) => {
   const { formik, paginate } = useLogin();
@@ -131,11 +131,11 @@ const LoginComponent: React.FC<{ subdomain: string | null }> = ({ subdomain }) =
       {subdomain && (
         <>
           <div className="flex items-center gap-2">
-            <div className="h-px w-full bg-divider" />
+            <div className="bg-divider h-px w-full" />
             <div className="text-default-500 text-small">or</div>
-            <div className="h-px w-full bg-divider" />
+            <div className="bg-divider h-px w-full" />
           </div>
-          <div className="text-center text-small">
+          <div className="text-small text-center">
             Need to create an account?&nbsp;
             <Link href={`/auth/register?email=${formik.values.email}`} size="sm">
               Sign Up

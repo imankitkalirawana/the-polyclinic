@@ -3,7 +3,7 @@
 import React from 'react';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'nextjs-toploader/app';
-import { useSession } from '@/lib/providers/session-provider';
+import { useSession } from '@/libs/providers/session-provider';
 import {
   Button,
   Link,
@@ -25,7 +25,7 @@ import NavItem from './NavItem';
 import { NavItem as NavItemType } from './types';
 
 import { useSubdomain } from '@/hooks/useSubDomain';
-import { APP_INFO } from '@/lib/config';
+import { APP_INFO } from '@/libs/config';
 import { Role } from '@/services/common/user/user.constants';
 import NotificationsWrapper from './notifications';
 import ProfileDropdown from './profile-dropdown';
@@ -114,9 +114,9 @@ export default function Navbar() {
       <NavbarMenuToggle className="text-default-400 md:hidden" />
 
       <NavbarBrand>
-        <Link className="ml-2 font-medium text-foreground text-large" href="/">
+        <Link className="text-foreground text-large ml-2 font-medium" href="/">
           {APP_INFO.name}
-          <span className="ml-1 uppercase text-primary text-tiny">{subdomain}</span>
+          <span className="text-primary text-tiny ml-1 uppercase">{subdomain}</span>
         </Link>
       </NavbarBrand>
 
@@ -145,7 +145,7 @@ export default function Navbar() {
             <NotificationsWrapper />
           </NavbarItem>
         )}
-        <NavbarItem className="ml-2 !flex gap-2">
+        <NavbarItem className="flex! ml-2 gap-2">
           {user ? (
             <ProfileDropdown />
           ) : (
@@ -162,7 +162,7 @@ export default function Navbar() {
       </NavbarContent>
 
       <NavbarMenu
-        className="top-[calc(var(--navbar-height)_-_1px)] max-h-[80vh] bg-default-200/50 pt-6 shadow-xl backdrop-blur-md backdrop-saturate-150 md:hidden md:max-h-[30vh]"
+        className="bg-default-200/50 top-[calc(var(--navbar-height)-1px)] max-h-[80vh] pt-6 shadow-xl backdrop-blur-md backdrop-saturate-150 md:hidden md:max-h-[30vh]"
         motionProps={{
           initial: { opacity: 0, y: -20 },
           animate: { opacity: 1, y: 0 },
@@ -175,7 +175,7 @@ export default function Navbar() {
       >
         {filteredNavItems.map((item, index) => (
           <NavbarMenuItem key={`${item.name}-${index}`}>
-            <Link className="w-full text-default-500" href={item.href} size="md">
+            <Link className="text-default-500 w-full" href={item.href} size="md">
               {item.name}
             </Link>
           </NavbarMenuItem>
@@ -183,7 +183,7 @@ export default function Navbar() {
       </NavbarMenu>
 
       <NavbarMenu
-        className="top-[calc(var(--navbar-height)_+_8px)] mx-auto hidden max-h-72 max-w-4xl rounded-large bg-default-200/80 py-6 shadow-xl backdrop-blur-md backdrop-saturate-150 md:flex"
+        className="rounded-large bg-default-200/80 top-[calc(var(--navbar-height)+8px)] mx-auto hidden max-h-72 max-w-4xl py-6 shadow-xl backdrop-blur-md backdrop-saturate-150 md:flex"
         onMouseEnter={clearTimeoutRef}
         onMouseLeave={startCloseTimeout}
         motionProps={{
@@ -202,7 +202,7 @@ export default function Navbar() {
               {activeMenu.subItems.map((subItem, idx) => (
                 <div key={`${subItem.title}-${idx}`}>
                   <motion.h3
-                    className="mb-4 font-light text-default-500 text-tiny"
+                    className="text-default-500 text-tiny mb-4 font-light"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                   >
@@ -211,7 +211,7 @@ export default function Navbar() {
                   <Listbox aria-label={subItem.title}>
                     {subItem.items.map((subMenuItem, index) => (
                       <ListboxItem
-                        className="pl-2 pr-4 text-default-500"
+                        className="text-default-500 pl-2 pr-4"
                         key={`${subMenuItem.name}-${index}`}
                         startContent={
                           subMenuItem?.icon && (
@@ -253,7 +253,7 @@ export default function Navbar() {
               style={{
                 backgroundImage: `url(${activeMenu.thumbnail})`,
               }}
-              className="col-span-4 h-full w-full max-w-sm rounded-medium bg-gradient-to-r from-[#F2F0FF] to-[#F0F6FF] bg-cover p-4 text-default-500"
+              className="rounded-medium text-default-500 bg-linear-to-r col-span-4 h-full w-full max-w-sm from-[#F2F0FF] to-[#F0F6FF] bg-cover p-4"
             />
           </div>
         )}

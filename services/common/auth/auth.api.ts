@@ -5,7 +5,7 @@ import {
   VerifyOTPRequest,
 } from './auth.validation';
 import { RegistrationResponse, VerifyOTPResponse } from './auth.types';
-import { apiRequest } from '@/lib/axios';
+import { apiRequest } from '@/libs/axios';
 import { ForgotPasswordRequest } from './auth.validation';
 import { Session } from '@/types/session';
 

@@ -1,9 +1,6 @@
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { cn } from '@heroui/react';
-import {
-  AppointmentQueueResponse,
-  QueueStatus,
-} from '@/services/client/appointment/queue/queue.types';
+import { AppointmentQueueType, QueueStatus } from '@/services/client/appointment/queue/queue.types';
 import {
   Accordion,
   AccordionItem,
@@ -19,7 +16,7 @@ import Avatar from 'boring-avatars';
 import { formatDate } from 'date-fns';
 import { useState } from 'react';
 import { getQueueStatusColor } from './helper';
-import { formatGender } from '@/lib/utils';
+import { formatGender } from '@/libs/utils';
 
 export default function QueuesList({
   isLoading,
@@ -28,7 +25,7 @@ export default function QueuesList({
   onSelect,
 }: {
   isLoading?: boolean;
-  queues: AppointmentQueueResponse[];
+  queues: AppointmentQueueType[];
   className?: string;
   onSelect?: (queueId: string) => void;
 }) {
@@ -55,7 +52,7 @@ export default function QueuesList({
                 <Card
                   key={queue.id}
                   className={cn(
-                    'group rounded-small border border-l-5 border-divider border-l-default bg-default-50 shadow-none transition-all',
+                    'rounded-small border-l-5 border-divider border-l-default bg-default-50 group border shadow-none transition-all',
                     {
                       'rounded-b-none border-b-0': selectedKeys.has(queue.id),
                     },
@@ -69,7 +66,7 @@ export default function QueuesList({
                       ) : (
                         <Avatar name={queue.patient.name} size={30} />
                       )}
-                      <span className="font-medium text-default-500 text-small">
+                      <span className="text-default-500 text-small font-medium">
                         {queue.patient.name}
                       </span>
                     </div>
@@ -83,7 +80,7 @@ export default function QueuesList({
                       >
                         View
                       </Button>
-                      <span className="font-bold text-primary-500 text-large">
+                      <span className="text-primary-500 text-large font-bold">
                         {queue.sequenceNumber}
                       </span>
                     </div>
@@ -91,7 +88,7 @@ export default function QueuesList({
                   <CardBody className="grid w-full grid-cols-2 gap-2">
                     <div className="flex flex-col">
                       <span className="text-default-500 text-tiny">Age</span>
-                      <p className="capitalize text-small">
+                      <p className="text-small capitalize">
                         {queue.patient.age
                           ? `${queue.patient.age} ${queue.patient.age === 1 ? 'year' : 'years'}`
                           : '-'}
@@ -99,7 +96,7 @@ export default function QueuesList({
                     </div>
                     <div className="flex flex-col">
                       <span className="text-default-500 text-tiny">Gender</span>
-                      <p className="capitalize text-small">
+                      <p className="text-small capitalize">
                         {formatGender(queue.patient.gender, { fullString: true })}
                       </p>
                     </div>
@@ -109,7 +106,7 @@ export default function QueuesList({
             >
               <div
                 className={cn(
-                  'rounded-b-small border border-l-5 border-t-0 border-divider border-l-default p-4',
+                  'rounded-b-small border-l-5 border-divider border-l-default border border-t-0 p-4',
                   getQueueStatusColor(queue.status)
                 )}
               >
@@ -118,7 +115,7 @@ export default function QueuesList({
                     <>
                       <div className="flex flex-col">
                         <span className="text-default-500 text-tiny">Age</span>
-                        <p className="capitalize text-small">
+                        <p className="text-small capitalize">
                           {queue.patient.age
                             ? `${queue.patient.age} ${queue.patient.age === 1 ? 'year' : 'years'}`
                             : '-'}
@@ -126,7 +123,7 @@ export default function QueuesList({
                       </div>
                       <div className="flex flex-col">
                         <span className="text-default-500 text-tiny">Gender</span>
-                        <p className="capitalize text-small">
+                        <p className="text-small capitalize">
                           {queue.patient.gender ? `${queue.patient.gender.toLowerCase()}` : '-'}
                         </p>
                       </div>
@@ -135,24 +132,24 @@ export default function QueuesList({
 
                   <div className="flex flex-col">
                     <span className="text-default-500 text-tiny">Phone</span>
-                    <p className="capitalize text-small">{queue.patient.phone || '-'}</p>
+                    <p className="text-small capitalize">{queue.patient.phone || '-'}</p>
                   </div>
 
                   <div title={queue.patient.email} className="flex flex-col">
                     <span className="text-default-500 text-tiny">Email</span>
-                    <p className="truncate lowercase text-small">{queue.patient.email || '-'}</p>
+                    <p className="text-small truncate lowercase">{queue.patient.email || '-'}</p>
                   </div>
 
                   <div className="flex flex-col">
                     <span className="text-default-500 text-tiny">Booked At</span>
-                    <p className="capitalize text-small">
+                    <p className="text-small capitalize">
                       {formatDate(new Date(queue.createdAt), 'PPp')}
                     </p>
                   </div>
                   <div className="flex flex-col">
                     <span className="text-default-500 text-tiny">Booked By</span>
-                    <p className="capitalize text-small">
-                      {queue.bookedByUser.id === queue.patient.userId
+                    <p className="text-small capitalize">
+                      {queue.bookedByUser.id === queue.patient.user_id
                         ? 'Self'
                         : queue.bookedByUser.name}
                     </p>
@@ -161,7 +158,7 @@ export default function QueuesList({
                   {queue.notes && (
                     <div className="col-span-full flex flex-col">
                       <span className="text-default-500 text-tiny">Patient Note</span>
-                      <p className="capitalize text-small">{queue.notes}</p>
+                      <p className="text-small capitalize">{queue.notes}</p>
                     </div>
                   )}
                 </div>

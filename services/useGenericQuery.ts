@@ -1,5 +1,5 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
-import { ApiResponse } from '@/lib/axios';
+import { ApiResponse } from '@/libs/axios';
 import { addToast } from '@heroui/react';
 
 interface QueryConfig<TData, TError = Error>

@@ -130,19 +130,19 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
         size={size}
         {...rest}
       >
-        <ModalContent>
+        <ModalContent className="overflow-hidden">
           {(onClose) => (
             <>
               {!!title && (
                 <ModalHeader
                   className={cn(
-                    'flex flex-col border-b border-divider font-semibold',
+                    'border-divider flex flex-col border-b font-semibold',
                     classNames?.header
                   )}
                 >
                   <h2>{title}</h2>
                   {!!subtitle && (
-                    <p className="font-normal text-default-500 text-small">{subtitle}</p>
+                    <p className="text-default-500 text-small font-normal">{subtitle}</p>
                   )}
                 </ModalHeader>
               )}
@@ -154,10 +154,10 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
 
               <ModalFooter
                 className={cn(
-                  'justify-between gap-0 overflow-hidden rounded-b-large border-t border-divider p-0',
+                  'rounded-b-large border-divider justify-between gap-0 overflow-hidden border-t p-0',
                   {
                     'border-t-0': hideCancelButton,
-                    'justify-end': isLargeModal,
+                    'justify-end gap-4 p-2': isLargeModal,
                   },
                   classNames?.footer
                 )}
@@ -165,7 +165,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                 {!hideCancelButton && (
                   <Button
                     variant="flat"
-                    radius="none"
+                    radius={isLargeModal ? 'md' : 'none'}
                     onPress={onClose}
                     className={cn(
                       'max-w-sm',
@@ -181,7 +181,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                 )}
                 {!!onSubmit && (
                   <AsyncButton
-                    radius="none"
+                    radius={isLargeModal ? 'md' : 'none'}
                     onPress={async () => {
                       try {
                         await onSubmit();

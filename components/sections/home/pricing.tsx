@@ -1,7 +1,7 @@
 import { Button, Card } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import Link from 'next/link';
-import { currency } from '@/lib/currency';
+import { currency } from '@/libs/currency';
 
 export default function Pricing() {
   return (
@@ -20,7 +20,7 @@ export default function Pricing() {
                 <p className="mt-2 text-lg">For your company of any size</p>
                 <span className="mb-6 mt-12 inline-block text-6xl font-bold">
                   {currency(11999)}
-                  <sub className="font-normal text-default-500 text-small">/month</sub>
+                  <sub className="text-default-500 text-small font-normal">/month</sub>
                 </span>
 
                 <div className="flex justify-center">
@@ -29,7 +29,7 @@ export default function Pricing() {
                   </Button>
                 </div>
 
-                <p className="mt-12 text-sm text-default-500">
+                <p className="text-default-500 mt-12 text-sm">
                   Includes : Security, Unlimited Storage, Payment, Search engine, and all features
                 </p>
               </div>
@@ -47,7 +47,7 @@ export default function Pricing() {
                     </li>
                   ))}
                 </ul>
-                <p className="mt-6 text-sm text-default-500">
+                <p className="text-default-500 mt-6 text-sm">
                   Team can be any size, and you can add or switch members as needed. Companies using
                   our platform include:
                 </p>

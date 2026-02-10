@@ -19,7 +19,7 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useState, useMemo } from 'react';
 import CompletedAppointmentQueue from './completed';
-import { useSession } from '@/lib/providers/session-provider';
+import { useSession } from '@/libs/providers/session-provider';
 import DateScroll from '../../../(common)/date-scroll';
 
 export default function QueuesDoctorView() {
@@ -83,7 +83,7 @@ export default function QueuesDoctorView() {
   return (
     <FormProvider {...prescriptionForm}>
       <div
-        className="relative flex h-[calc(100vh-58px)] divide-x-1 divide-divider overflow-hidden"
+        className="divide-divider relative flex h-[calc(100vh-58px)] divide-x overflow-hidden"
         data-testid="appointment-queues"
       >
         <div
@@ -133,7 +133,7 @@ export default function QueuesDoctorView() {
 
         {/* next queues */}
         {showNextQueues && (
-          <div className="h-full w-[400px] flex-shrink-0 overflow-hidden" data-testid="next-queues">
+          <div className="h-full w-[400px] shrink-0 overflow-hidden" data-testid="next-queues">
             <Tabs
               aria-label="Queues"
               classNames={{

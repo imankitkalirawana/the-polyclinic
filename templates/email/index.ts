@@ -1,4 +1,4 @@
-import { APP_INFO } from '@/lib/config';
+import { APP_INFO } from '@/libs/config';
 import { UserType } from '@/services/common/user/user.types';
 import { VerificationType } from '@/types';
 

@@ -1,6 +1,6 @@
 import ModeToggle from '@/components/mode-toggle';
 import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
-import { useSession } from '@/lib/providers/session-provider';
+import { useSession } from '@/libs/providers/session-provider';
 import { useLogout } from '@/services/common/auth/auth.query';
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -24,7 +24,7 @@ export default function ProfileDropdown() {
       <DropdownMenu aria-label="Profile Actions" variant="flat">
         <DropdownItem key="profile" href="/profile" className="h-14 gap-2">
           <p className="font-semibold">{user?.name}</p>
-          <p className="capitalize text-default-500 text-tiny">{user?.role}</p>
+          <p className="text-default-500 text-tiny capitalize">{user?.role}</p>
         </DropdownItem>
         <DropdownItem key="my-profile" href="/profile">
           My Profile

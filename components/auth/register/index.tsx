@@ -12,9 +12,9 @@ import { RegisterProvider, useRegister } from '../store';
 import { AuthStep } from '../types';
 import Auth from '..';
 
-import { APP_INFO } from '@/lib/config';
-import { $FixMe, Gender } from '@/types';
-import { GENDERS } from '@/lib/constants';
+import { APP_INFO } from '@/libs/config';
+import { $FixMe } from '@/types';
+import { GENDERS } from '@/libs/constants';
 
 const RegisterComponent: React.FC = () => {
   const { formik, paginate } = useRegister();
@@ -102,14 +102,14 @@ const RegisterComponent: React.FC = () => {
             value={formik.values.gender}
             selectedKeys={[formik.values.gender]}
             onSelectionChange={(value) => {
-              const gender = Array.from(value)[0] as Gender;
+              const gender = Array.from(value)[0];
               formik.setFieldValue('gender', gender);
             }}
             disallowEmptySelection
             isInvalid={!!(formik.touched.gender && formik.errors.gender)}
             errorMessage={formik.errors.gender?.toString()}
           >
-            {GENDERS.map((gender) => (
+            {Object.values(GENDERS).map((gender) => (
               <SelectItem key={gender}>
                 {gender.charAt(0).toUpperCase() + gender.slice(1)}
               </SelectItem>
@@ -177,7 +177,7 @@ const RegisterComponent: React.FC = () => {
   const registerFooter =
     formik.values.page === 0 ? (
       <>
-        <div className="text-center text-small">
+        <div className="text-small text-center">
           By continuing, you agree to {APP_INFO.name}&apos;s{' '}
           <Link className="underline" href="/terms-of-use" size="sm">
             Terms of Use
@@ -189,11 +189,11 @@ const RegisterComponent: React.FC = () => {
           .
         </div>
         <div className="flex items-center gap-2">
-          <div className="h-px w-full bg-divider" />
+          <div className="bg-divider h-px w-full" />
           <div className="text-default-500 text-small">or</div>
-          <div className="h-px w-full bg-divider" />
+          <div className="bg-divider h-px w-full" />
         </div>
-        <div className="text-center text-small">
+        <div className="text-small text-center">
           Already have an account?&nbsp;
           <Link href="/auth/login" size="sm">
             Log In

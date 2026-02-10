@@ -1,4 +1,4 @@
-import { getServerSession } from '@/lib/serverAuth';
+import { getServerSession } from '@/libs/serverAuth';
 import DashboardLayout from '@/components/layouts/dashboard';
 import { unauthorized } from 'next/navigation';
 

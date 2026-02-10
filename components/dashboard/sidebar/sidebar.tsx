@@ -125,11 +125,12 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
           >
             {isCompact && isNestType && item.items && item.items.length > 0 ? (
               <Tooltip
+                key={`${item.key}-nest-tooltip`}
                 placement="right"
                 showArrow
                 content={
                   <div>
-                    <div className="w-full px-2 py-1 text-foreground-500 text-tiny">
+                    <div className="text-foreground-500 text-tiny w-full px-2 py-1">
                       {item.title}
                     </div>
                     <Listbox aria-label="nested-list" items={item.items} variant="flat">
@@ -169,7 +170,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
                 </div>
               </Tooltip>
             ) : isCompact ? (
-              <Tooltip content={item.title} placement="right">
+              <Tooltip key={`${item.key}-tooltip`} content={item.title} placement="right">
                 <div className="flex w-full items-center justify-center">
                   {item.icon ? (
                     <Icon
@@ -187,7 +188,12 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
               </Tooltip>
             ) : null}
             {!isCompact && isNestType ? (
-              <Accordion className="p-0" variant="light" selectionMode="single">
+              <Accordion
+                key={`${item.key}-accordion`}
+                className="p-0"
+                variant="light"
+                selectionMode="single"
+              >
                 <AccordionItem
                   key={item.key}
                   aria-label={item.title}
@@ -207,7 +213,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
                           icon={item.icon}
                           width={24}
                         />
-                        <span className="font-medium text-default-500 text-small group-data-[selected=true]:text-primary-500">
+                        <span className="text-default-500 text-small group-data-[selected=true]:text-primary-500 font-medium">
                           {item.title}
                         </span>
                       </div>

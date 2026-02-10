@@ -10,7 +10,7 @@ import {
   APPOINTMENT_TYPES,
   AppointmentType,
 } from '@/services/client/appointment';
-import { extractFirstName } from '@/lib/utils';
+import { extractFirstName } from '@/libs/utils';
 
 export default function AppointmentTriggerItem({
   appointment,
@@ -27,7 +27,7 @@ export default function AppointmentTriggerItem({
       key={appointment.aid}
       data-testid={`appointment-trigger-item-${appointment.aid}`}
       className={cn(
-        'flex min-h-6 cursor-pointer items-center justify-start gap-1 truncate rounded-lg p-1 text-tiny hover:bg-default-100 md:px-2',
+        'text-tiny hover:bg-default-100 flex min-h-6 cursor-pointer items-center justify-start gap-1 truncate rounded-lg p-1 md:px-2',
         {
           'bg-warning-100/70 hover:bg-warning-100':
             appointment.type === APPOINTMENT_TYPES.emergency.value,

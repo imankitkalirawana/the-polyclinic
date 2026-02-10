@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { excludedSubdomains } from '@/lib/utils';
+import { excludedSubdomains } from '@/libs/utils';
 
 /**
  * Client-side hook to get the current subdomain from window.location.hostname

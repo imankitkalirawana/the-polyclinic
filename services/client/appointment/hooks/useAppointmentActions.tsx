@@ -1,4 +1,4 @@
-import { useSession } from '@/lib/providers/session-provider';
+import { useSession } from '@/libs/providers/session-provider';
 import { useConfirmAppointment, useSendReminder } from '../appointment.query';
 import { AppointmentType } from '../appointment.types';
 

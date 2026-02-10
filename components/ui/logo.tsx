@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import { cn } from '@heroui/react';
 
-import { APP_INFO } from '@/lib/config';
+import { APP_INFO } from '@/libs/config';
 
 export default function Logo({
   isCompact,

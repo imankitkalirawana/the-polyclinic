@@ -1,6 +1,6 @@
 import { unauthorized } from 'next/navigation';
 
-import { getServerSession } from '@/lib/serverAuth';
+import { getServerSession } from '@/libs/serverAuth';
 import { Role } from '@/services/common/user/user.constants';
 
 export default async function Page() {
@@ -11,5 +11,5 @@ export default async function Page() {
     unauthorized();
   }
 
-  return <div className="h-full w-full max-w-8xl px-2">adfa</div>;
+  return <div className="max-w-8xl h-full w-full px-2">adfa</div>;
 }

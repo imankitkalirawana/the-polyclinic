@@ -8,7 +8,7 @@ import { useFormContext } from 'react-hook-form';
 import { CellRenderer } from '@/components/ui/cell/rich-color/cell-renderer';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
 import PaymentFooter from './payment-footer';
-import { usePatientById, useDoctorById } from '@/store';
+import { useIndexedCacheValue } from '@/store';
 
 /**
  * ReviewAndPay Component
@@ -27,8 +27,8 @@ export default function ReviewAndPay() {
   const appointment = form.watch('appointment');
 
   // Use cached data from Zustand store - no API calls!
-  const patient = usePatientById(appointment.patientId);
-  const doctor = useDoctorById(appointment.doctorId);
+  const patient = useIndexedCacheValue('patientById', appointment.patientId);
+  const doctor = useIndexedCacheValue('doctorById', appointment.doctorId);
 
   return (
     <CreateAppointmentContentContainer
@@ -43,7 +43,7 @@ export default function ReviewAndPay() {
       <div className="grid grid-cols-2 gap-2">
         <div className="col-span-full flex items-center gap-2">
           <Divider className="flex-1" />
-          <p className="text-center text-default-500 text-small">Patient Details</p>
+          <p className="text-default-500 text-small text-center">Patient Details</p>
           <Divider className="flex-1" />
         </div>
         <CellRenderer
@@ -81,7 +81,7 @@ export default function ReviewAndPay() {
 
         <div className="col-span-full flex items-center gap-2">
           <Divider className="flex-1" />
-          <p className="text-center text-default-500 text-small">Doctor Details</p>
+          <p className="text-default-500 text-small text-center">Doctor Details</p>
           <Divider className="flex-1" />
         </div>
         <CellRenderer
@@ -115,7 +115,7 @@ export default function ReviewAndPay() {
 
         <div className="col-span-full flex items-center gap-2">
           <Divider className="flex-1" />
-          <p className="text-center text-default-500 text-small">Additional Details</p>
+          <p className="text-default-500 text-small text-center">Additional Details</p>
           <Divider className="flex-1" />
         </div>
         <CellRenderer

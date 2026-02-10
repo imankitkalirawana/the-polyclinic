@@ -3,7 +3,7 @@
 import React, { useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useSession } from '@/lib/providers/session-provider';
+import { useSession } from '@/libs/providers/session-provider';
 import {
   BreadcrumbItem,
   Breadcrumbs as NextUIBreadcrumbs,
@@ -32,6 +32,18 @@ export const SIDEBAR_WIDTHS = {
   collapsed: 64,
 };
 
+const MAX_LENGTH = 10;
+
+function formatLongSegment(text: string) {
+  return text.length > MAX_LENGTH ? (
+    <Tooltip delay={1000} size="sm" content={text}>
+      {text.slice(0, MAX_LENGTH / 2) + '...' + text.slice(-MAX_LENGTH / 2)}
+    </Tooltip>
+  ) : (
+    text
+  );
+}
+
 export default function DashboardLayout({ children }: { readonly children: React.ReactNode }) {
   const { user } = useSession();
 
@@ -49,7 +61,7 @@ export default function DashboardLayout({ children }: { readonly children: React
 
   const breadcrumbItems = pathSegments?.map((segment, index) => {
     const path = `/${pathSegments.slice(0, index + 1).join('/')}`;
-    return { label: segment, link: path };
+    return { label: formatLongSegment(segment), link: path };
   });
 
   const sidebar = useMemo(() => {
@@ -65,10 +77,10 @@ export default function DashboardLayout({ children }: { readonly children: React
           maxWidth: isHidden ? SIDEBAR_WIDTHS.collapsed : SIDEBAR_WIDTHS.expanded,
         }}
         className={cn(
-          'relative flex h-full flex-1 flex-col overflow-x-hidden !border-r-small border-divider transition-all duration-250 ease-in-out'
+          '!border-r-small border-divider duration-250 relative flex h-full flex-1 flex-col overflow-x-hidden transition-all ease-in-out'
         )}
       >
-        <div className="flex justify-center gap-4 border-b border-divider py-2">
+        <div className="border-divider flex justify-center gap-4 border-b py-2">
           <Button
             data-testid="go-to-homepage-button"
             title="Go to homepage"
@@ -98,9 +110,9 @@ export default function DashboardLayout({ children }: { readonly children: React
     () => (
       <header
         data-testid="dashboard-header"
-        className="flex items-center justify-between gap-3 border-b border-divider p-2"
+        className="border-divider flex items-center justify-between gap-3 border-b p-2"
       >
-        <div className="flex items-center gap-3 rounded-medium bg-default-200 px-3 py-1">
+        <div className="rounded-medium bg-default-200 flex items-center gap-3 px-3 py-1">
           <Tooltip delay={1000} size="sm" content={<Kbd>Cmd + /</Kbd>} placement="bottom">
             <Button
               aria-label="Toggle Sidebar"

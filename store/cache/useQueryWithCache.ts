@@ -1,6 +1,7 @@
+'use client';
 import { useEffect, useRef } from 'react';
 import { useQuery, UseQueryOptions, UseQueryResult } from '@tanstack/react-query';
-import { ApiResponse } from '@/lib/axios';
+import { ApiResponse } from '@/libs/axios';
 import { useCacheStore } from './cache.store';
 import { CacheKey, CacheRegistry, CacheConfig } from './cache.types';
 

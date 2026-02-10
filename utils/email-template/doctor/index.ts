@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 
-import { API_BASE_URL } from '@/lib/config';
+import { API_BASE_URL } from '@/libs/config';
 import { AppointmentType } from '@/services/client/appointment';
 
 export function NewAppointment(appointment: AppointmentType) {

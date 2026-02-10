@@ -158,7 +158,7 @@ const VerticalCollapsibleSteps = React.forwardRef<HTMLButtonElement, VerticalCol
               <li
                 key={stepIdx}
                 className={cn(
-                  'group relative gap-4 rounded-large border border-default-200 data-[status=active]:bg-default-100 dark:border-default-50 dark:data-[status=active]:bg-default-50',
+                  'rounded-large border-default-200 data-[status=active]:bg-default-100 dark:border-default-50 dark:data-[status=active]:bg-default-50 group relative gap-4 border',
                   stepClassName
                 )}
                 data-status={status}
@@ -176,7 +176,7 @@ const VerticalCollapsibleSteps = React.forwardRef<HTMLButtonElement, VerticalCol
                     }
                     aria-current={status === 'active' ? 'step' : undefined}
                     className={cn(
-                      'flex w-full cursor-pointer items-center justify-center gap-x-4 rounded-large px-3 py-2.5',
+                      'rounded-large flex w-full cursor-pointer items-center justify-center gap-x-4 px-3 py-2.5',
                       {
                         'cursor-not-allowed': status !== 'complete',
                       }
@@ -193,7 +193,7 @@ const VerticalCollapsibleSteps = React.forwardRef<HTMLButtonElement, VerticalCol
                         <m.div animate={status} className="relative">
                           <m.div
                             className={cn(
-                              'relative flex h-[34px] w-[34px] items-center justify-center rounded-full border-medium font-semibold text-default-foreground text-large',
+                              'border-medium text-default-foreground text-large relative flex h-[34px] w-[34px] items-center justify-center rounded-full font-semibold',
                               {
                                 'shadow-lg': status === 'complete',
                               }
@@ -219,7 +219,7 @@ const VerticalCollapsibleSteps = React.forwardRef<HTMLButtonElement, VerticalCol
                           >
                             <div className="flex items-center justify-center">
                               {status === 'complete' ? (
-                                <CheckIcon className="h-6 w-6 text-[var(--active-fg-color)]" />
+                                <CheckIcon className="text-(--active-fg-color) h-6 w-6" />
                               ) : (
                                 <span>{stepIdx + 1}</span>
                               )}
@@ -232,7 +232,7 @@ const VerticalCollapsibleSteps = React.forwardRef<HTMLButtonElement, VerticalCol
                       <div>
                         <div
                           className={cn(
-                            'font-medium text-default-foreground transition-[color,opacity] duration-300 text-medium group-active:opacity-80',
+                            'text-default-foreground text-medium font-medium transition-[color,opacity] duration-300 group-active:opacity-80',
                             {
                               'text-default-500': status === 'inactive',
                             }
@@ -242,7 +242,7 @@ const VerticalCollapsibleSteps = React.forwardRef<HTMLButtonElement, VerticalCol
                         </div>
                         <div
                           className={cn(
-                            'text-default-600 transition-[color,opacity] duration-300 text-tiny group-active:opacity-80 lg:text-small',
+                            'text-default-600 text-tiny lg:text-small transition-[color,opacity] duration-300 group-active:opacity-80',
                             {
                               'text-default-500': status === 'inactive',
                             }
@@ -279,9 +279,9 @@ const VerticalCollapsibleSteps = React.forwardRef<HTMLButtonElement, VerticalCol
                       }}
                     >
                       <Spacer x={14} />
-                      <ul className="list-disc pb-4 pl-1 pr-12 text-default-400">
+                      <ul className="text-default-400 list-disc pb-4 pl-1 pr-12">
                         {step.details.map((detail, idx) => (
-                          <li key={idx} className="mb-1 text-tiny">
+                          <li key={idx} className="text-tiny mb-1">
                             {detail}
                           </li>
                         ))}
