@@ -37,15 +37,7 @@ export const RenderUser = ({
 }: {
   name?: string | null;
   size?: 'sm' | 'md' | 'lg' | 'xl';
-  variant?:
-    | 'bauhaus'
-    | 'beam'
-    | 'geometric'
-    | 'marble'
-    | 'pixel'
-    | 'ring-3'
-    | 'sunset'
-    | 'abstract';
+  variant?: 'bauhaus' | 'beam' | 'geometric' | 'marble' | 'pixel' | 'ring' | 'sunset' | 'abstract';
   description?: string | number | React.ReactNode;
   isCompact?: boolean;
   classNames?: {

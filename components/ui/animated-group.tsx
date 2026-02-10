@@ -7,7 +7,7 @@ export type PresetType =
   | 'fade'
   | 'slide'
   | 'scale'
-  | 'blur-sm'
+  | 'blur'
   | 'blur-slide'
   | 'zoom'
   | 'flip'
