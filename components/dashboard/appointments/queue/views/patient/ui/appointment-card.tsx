@@ -1,12 +1,23 @@
 'use client';
 
 import { AppointmentQueueResponse } from '@/services/client/appointment/queue/queue.types';
-import { Card, CardBody, Chip, Button, cn } from '@heroui/react';
+import {
+  Card,
+  CardBody,
+  Chip,
+  Button,
+  cn,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+} from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { formatDate } from 'date-fns';
 import Avatar from 'boring-avatars';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
+import { useRouter } from 'nextjs-toploader/app';
 
 export default function AppointmentCard({
   appointment,
@@ -14,6 +25,7 @@ export default function AppointmentCard({
   appointment: AppointmentQueueResponse;
 }) {
   const [isHidden] = useLocalStorage('isDashboardSidebarHidden', true);
+  const router = useRouter();
   return (
     <Card
       className={cn(
@@ -34,14 +46,34 @@ export default function AppointmentCard({
               </div>
             </div>
             <div className="flex flex-col pt-1">
-              <p className="text-xl text-default-700">
+              <p className="flex gap-5 text-xl text-default-700">
                 {formatDate(new Date(appointment.appointmentDate), 'EEEE, PP | p')}
+                <div>{renderChip({ item: appointment.status })}</div>
               </p>
+
               <h2 className="text-2xl font-medium text-gray-900">{appointment.patient.name}</h2>
               <p className="text-default-500">{appointment.patient.phone}</p>
             </div>
           </div>
-          <div>{renderChip({ item: appointment.status })}</div>
+          <div>
+            <Dropdown aria-label="Patient actions" placement="bottom-end">
+              <DropdownTrigger>
+                <Button size="sm" isIconOnly variant="flat" radius="full">
+                  <Icon icon="solar:menu-dots-bold-duotone" className="rotate-90" width={18} />
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu>
+                <DropdownItem key="view">View</DropdownItem>
+
+                <DropdownItem color="warning" key="edit">
+                  Edit
+                </DropdownItem>
+                <DropdownItem key="delete" className="text-danger" color="danger">
+                  Delete
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </div>
         </div>
         <div className="border-t border-gray-200" />
         <div className="flex items-center justify-between gap-6 pt-6">
@@ -73,7 +105,12 @@ export default function AppointmentCard({
           </div>
         </div>
         <div className="flex justify-end pt-4">
-          <Button color="primary">View Details</Button>
+          <Button
+            color="primary"
+            onPress={() => router.push(`/dashboard/queues/${appointment.aid}`)}
+          >
+            View Details
+          </Button>
         </div>
       </CardBody>
     </Card>

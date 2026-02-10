@@ -1,5 +1,4 @@
 'use client';
-import { useAllAppointmentQueues } from '@/services/client/appointment/queue/queue.query';
 import { Chip, Tab, Tabs } from '@heroui/react';
 import AllAppointments from './all-appointments';
 import Upcoming from './upcoming';
@@ -14,12 +13,20 @@ enum AppointmentStatus {
 }
 
 export default function PatientQueueView() {
-  const { data: appointments } = useAllAppointmentQueues();
-  const { data: groupedAppointments } = useGroupedAppointmentQueuesForPatient();
+  const { data: appointments } = useGroupedAppointmentQueuesForPatient();
   const [appointmentStatus, setAppointmentStatus] = useQueryState(
     'status',
     parseAsStringEnum(Object.values(AppointmentStatus)).withDefault(AppointmentStatus.ALL)
   );
+
+  const getNextAppointmentsCount = () => {
+    const nextCount = appointments?.metaData?.totalNext || 0;
+
+    if (appointments?.current) {
+      return nextCount + 1;
+    }
+    return nextCount;
+  };
 
   return (
     <div className="p-4">
@@ -27,7 +34,6 @@ export default function PatientQueueView() {
         aria-label="My appointments"
         className="p-4"
         selectedKey={appointmentStatus}
-        // TODO: fix type error
         onSelectionChange={(key) => setAppointmentStatus(key as AppointmentStatus)}
       >
         <Tab
@@ -36,7 +42,7 @@ export default function PatientQueueView() {
             <div className="flex items-center gap-2">
               <span>All</span>
               <Chip size="sm" variant="flat">
-                {appointments?.length}
+                {appointments?.metaData?.total}
               </Chip>
             </div>
           }
@@ -48,9 +54,8 @@ export default function PatientQueueView() {
           title={
             <div className="flex items-center gap-2">
               <span>Upcoming</span>
-
               <Chip size="sm" variant="flat">
-                {(groupedAppointments?.next.length ?? 0) + (groupedAppointments?.current ? 1 : 0)}
+                {getNextAppointmentsCount()}
               </Chip>
             </div>
           }
@@ -63,7 +68,7 @@ export default function PatientQueueView() {
             <div className="flex items-center gap-2">
               <span>Previous</span>
               <Chip size="sm" variant="flat">
-                {groupedAppointments?.previous.length}
+                {appointments?.metaData.totalPrevious}
               </Chip>
             </div>
           }

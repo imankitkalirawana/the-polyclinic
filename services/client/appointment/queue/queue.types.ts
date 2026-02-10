@@ -97,8 +97,9 @@ export type GroupedAppointmentQueuesResponse = {
   previous: AppointmentQueueResponse[];
   current: AppointmentQueueResponse | null;
   next: AppointmentQueueResponse[];
-  meta: {
-    previousCount: number;
-    nextCount: number;
+  metaData: {
+    totalPrevious: number;
+    totalNext: number;
+    total: number;
   };
 };
