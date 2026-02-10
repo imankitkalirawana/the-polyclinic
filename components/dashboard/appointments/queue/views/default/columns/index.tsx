@@ -21,7 +21,12 @@ export default function QueueColumns() {
             setSelectedColumns(value.map((id) => columns?.find((column) => column.id === id)!))
           }
         />
-        <SelectedColumns selectedColumns={selectedColumns} />
+        <SelectedColumns
+          selectedColumns={selectedColumns}
+          onRemoveColumn={(column) =>
+            setSelectedColumns(selectedColumns.filter((c) => c.id !== column.id))
+          }
+        />
       </div>
     );
   }, [columns, selectedColumns]);
