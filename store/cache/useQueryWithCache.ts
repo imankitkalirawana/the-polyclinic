@@ -1,3 +1,4 @@
+'use client';
 import { useEffect, useRef } from 'react';
 import { useQuery, UseQueryOptions, UseQueryResult } from '@tanstack/react-query';
 import { ApiResponse } from '@/libs/axios';
