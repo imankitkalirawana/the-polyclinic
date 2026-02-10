@@ -100,14 +100,14 @@ const TableRow = <TData extends RowData>({
                 }
               }}
               className={cn(
-                'relative flex items-center p-3 shadow-[0_-2px_0_0_theme(colors.neutral.100)_inset]',
+                'relative flex items-center p-3 shadow-[0_-2px_0_0_var(--color-neutral-100)_inset]',
                 {
-                  'relative after:pointer-events-none after:absolute after:bottom-0 after:right-0 after:top-0 after:w-[30px] after:translate-x-full after:shadow-[rgba(5,5,5,0.06)_10px_0px_8px_-6px_inset] after:content-[""]':
+                  'relative after:pointer-events-none after:absolute after:top-0 after:right-0 after:bottom-0 after:w-[30px] after:translate-x-full after:shadow-[rgba(5,5,5,0.06)_10px_0px_8px_-6px_inset] after:content-[""]':
                     getIsLastColumnPinned(column) && isHorizontalScrollPresent,
-                  'border border-primary': isOriginForAutoFill,
-                  'border-l border-r border-dashed border-primary': isCellBetweenAutoFillRange,
-                  'border-b border-l border-r border-dashed border-primary': isEndDown,
-                  'border-l border-r border-t border-dashed border-primary': isEndUp,
+                  'border-primary border': isOriginForAutoFill,
+                  'border-primary border-r border-l border-dashed': isCellBetweenAutoFillRange,
+                  'border-primary border-r border-b border-l border-dashed': isEndDown,
+                  'border-primary border-t border-r border-l border-dashed': isEndUp,
                   'cursor-pointer': isCellSelectable,
                   'border-danger': !isCellEditable && !(isCellSelectable && isOriginForAutoFill),
                   '!bg-default-100': isCellColumnFiltered,
@@ -128,7 +128,7 @@ const TableRow = <TData extends RowData>({
                 <div
                   ref={draggerRef}
                   data-testid="cell-selection-dragger"
-                  className="absolute bottom-0 right-0 h-2.5 w-2.5 cursor-cell bg-primary"
+                  className="bg-primary absolute right-0 bottom-0 h-2.5 w-2.5 cursor-cell"
                   onPointerDown={handlePointerDownOnDragger}
                 />
               ) : null}

@@ -63,8 +63,8 @@ export function Providers({
                   shouldShowTimeoutProgress: true,
                   radius: 'lg',
                   classNames: {
-                    base: '!z-[100]',
-                    wrapper: '!z-[100]',
+                    base: 'z-100!',
+                    wrapper: 'z-100!',
                   },
                 }}
               />
@@ -76,13 +76,13 @@ export function Providers({
                   // className: 'bg-background/20 backdrop-blur-md',
                   style: { borderRadius: 'var(--heroui-radius-large)' },
                   classNames: {
-                    description: '!text-[inherit]',
+                    description: 'text-inherit!',
                     toast: 'w-full max-w-sm group bg-red-500 p-2 text-tiny',
                     error: '!text-danger-500 !bg-danger-50 !border-danger-100',
                     success: '!text-success-500 !bg-success-50 !border-success-100',
                     warning: '!text-warning-500 !bg-warning-50 !border-warning-100',
                     info: '!text-info-500 !bg-info-50 !border-info-100',
-                    closeButton: '!-right-4 !-left-[inherit] group-hover:opacity-100 opacity-0',
+                    closeButton: '-right-4! -left-[inherit]! group-hover:opacity-100 opacity-0',
                   },
                 }}
                 expand

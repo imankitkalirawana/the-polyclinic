@@ -129,12 +129,12 @@ export default function Appointment({ aid }: { aid: string }) {
                 </Button>
               }
             />
-            <Divider className="border-dashed border-divider" />
+            <Divider className="border-divider border-dashed" />
 
             <CardBody>
               {/* Patient Avatar and Name */}
               <div className="flex items-start gap-4 pb-4">
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   <Avatar
                     src={appointment.patient.image}
                     name={appointment.patient.name}
@@ -143,7 +143,7 @@ export default function Appointment({ aid }: { aid: string }) {
                 </div>
                 <div className="flex flex-col">
                   <h3 className="pl-8 text-xl">{appointment.patient.name}</h3>
-                  <p className="pl-8 text-sm text-default-400">
+                  <p className="text-default-400 pl-8 text-sm">
                     <span className="text-gray-500">Patient ID: </span>
                     {appointment.patient.uid}
                   </p>
@@ -191,7 +191,7 @@ export default function Appointment({ aid }: { aid: string }) {
                   </div>
                 </div>
               </div>
-              <Divider className="border-dashed border-divider" />
+              <Divider className="border-divider border-dashed" />
 
               {/* View Full Profile Link */}
               <div className="mt-2 flex justify-end">
@@ -205,12 +205,12 @@ export default function Appointment({ aid }: { aid: string }) {
           {!!appointment.doctor && (
             <Card className="mx-auto w-full max-w-md">
               <CustomCardHeader title="Doctor Details" endContent="" />
-              <Divider className="border-dashed border-divider" />
+              <Divider className="border-divider border-dashed" />
 
               <CardBody>
                 {/* Patient Avatar and Name */}
                 <div className="flex items-start gap-4 pb-4">
-                  <div className="flex-shrink-0">
+                  <div className="shrink-0">
                     <Avatar
                       src={appointment.doctor.image}
                       name={appointment.doctor?.name}
@@ -218,8 +218,8 @@ export default function Appointment({ aid }: { aid: string }) {
                     />
                   </div>
                   <div className="flex flex-col">
-                    <h3 className="pl-6 text-large">{appointment.doctor?.name}</h3>
-                    <p className="pl-6 text-sm text-default-400">
+                    <h3 className="text-large pl-6">{appointment.doctor?.name}</h3>
+                    <p className="text-default-400 pl-6 text-sm">
                       <span className="text-default-400">Doctor ID: </span>
                       {appointment.doctor?.uid}
                     </p>
@@ -273,7 +273,7 @@ export default function Appointment({ aid }: { aid: string }) {
           )}
           <Card>
             <CustomCardHeader title="Activity" endContent="" />
-            <Divider className="border-dashed border-divider" />
+            <Divider className="border-divider border-dashed" />
             <CardBody className="p-6">
               <div>
                 <ActivityTimeline activities={[]} />
@@ -281,11 +281,11 @@ export default function Appointment({ aid }: { aid: string }) {
             </CardBody>
           </Card>
         </div>
-        <div className="flex flex-[2] flex-col gap-4">
+        <div className="flex flex-2 flex-col gap-4">
           {/* first card  second column */}
           <Card>
             <CustomCardHeader title="Appointment Details" endContent="" />
-            <Divider className="border-dashed border-divider" />
+            <Divider className="border-divider border-dashed" />
             <CardBody className="space-y-4 p-6">
               <div className="flex max-w-xl items-center justify-between">
                 <div>
@@ -335,7 +335,7 @@ export default function Appointment({ aid }: { aid: string }) {
                   <div>Completed</div>
                 </div>
               </div>
-              <Divider className="border-dashed border-divider" />
+              <Divider className="border-divider border-dashed" />
               <div>
                 <CellRenderer
                   label="Symptoms"
@@ -355,7 +355,7 @@ export default function Appointment({ aid }: { aid: string }) {
           {/* last card */}
           <Card>
             <CustomCardHeader title="Additional Information" endContent="" />
-            <Divider className="border-dashed border-divider" />
+            <Divider className="border-divider border-dashed" />
             <CardBody className="space-y-4 p-6">
               <div>
                 <CellRenderer
@@ -377,7 +377,7 @@ export default function Appointment({ aid }: { aid: string }) {
           </Card>
         </div>
       </div>
-      <footer className="fixed bottom-0 left-0 z-20 w-full border-t bg-background/30 px-8 shadow-md backdrop-blur">
+      <footer className="bg-background/30 fixed bottom-0 left-0 z-20 w-full border-t px-8 shadow-md backdrop-blur-sm">
         <div className="m-4 flex justify-between">
           <Button
             color="default"

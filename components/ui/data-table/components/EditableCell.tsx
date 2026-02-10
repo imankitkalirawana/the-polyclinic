@@ -157,15 +157,15 @@ export function EditableCell<TData extends RowData>({
     <div
       onClick={handleClick}
       className={cn(
-        'flex h-full w-full items-center overflow-hidden rounded px-3 py-2 transition-colors',
+        'flex h-full w-full items-center overflow-hidden rounded-sm px-3 py-2 transition-colors',
         {
-          'cursor-text hover:bg-default-100': canEdit,
+          'hover:bg-default-100 cursor-text': canEdit,
           'cursor-default': !canEdit,
         },
         className
       )}
     >
-      <span className="whitespace-nowrap text-sm">{displayValue}</span>
+      <span className="text-sm whitespace-nowrap">{displayValue}</span>
     </div>
   );
 }

@@ -64,7 +64,7 @@ function TableContent<TData>({
 
   if (!hasColumns) {
     return (
-      <div className="flex min-h-[200px] w-full items-center justify-center rounded-lg border border-default-200 bg-default-50 p-6">
+      <div className="border-default-200 bg-default-50 flex min-h-[200px] w-full items-center justify-center rounded-lg border p-6">
         <p className="text-default-500">No columns configured</p>
       </div>
     );
@@ -108,8 +108,8 @@ function TableContent<TData>({
                     aria-orientation="vertical"
                     aria-label="Resize column"
                     className={cn(
-                      'absolute bottom-0 right-0 top-0 z-[2] w-3 cursor-col-resize touch-none select-none',
-                      'after:absolute after:right-0 after:inline-block after:h-full after:w-0.5 after:bg-default-200 after:content-[""] hover:after:bg-primary-400'
+                      'absolute top-0 right-0 bottom-0 z-2 w-3 cursor-col-resize touch-none select-none',
+                      'after:bg-default-200 hover:after:bg-primary-400 after:absolute after:right-0 after:inline-block after:h-full after:w-0.5 after:content-[""]'
                     )}
                     onMouseDown={(e) => {
                       e.preventDefault();
@@ -128,7 +128,7 @@ function TableContent<TData>({
         <TableBody>
           {rows.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={flatHeaders.length} className="text-center text-default-500">
+              <TableCell colSpan={flatHeaders.length} className="text-default-500 text-center">
                 No data
               </TableCell>
             </TableRow>

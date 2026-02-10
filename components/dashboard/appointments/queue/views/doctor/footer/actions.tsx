@@ -63,7 +63,7 @@ export default function QueueFooterActions({
       {(isCallButton || isRecallButton) && (
         <Button
           isLoading={isCallPending}
-          variant={isRecallButton ? 'flat' : 'shadow'}
+          variant={isRecallButton ? 'flat' : 'shadow-sm'}
           color="primary"
           onPress={() =>
             mutateCall({

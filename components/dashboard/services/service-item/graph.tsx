@@ -23,9 +23,13 @@ export const CircleChartCard = React.forwardRef<
   HTMLDivElement,
   Omit<CardProps, 'children'> & CircleChartProps
 >(({ className, title, categories, color, chartData }, ref) => (
-  <div ref={ref} className={cn('border border-transparent dark:border-default-100', className)}>
+  <div ref={ref} className={cn('dark:border-default-100 border border-transparent', className)}>
     <div className="flex h-full flex-col flex-wrap items-center justify-center gap-x-2 lg:flex-nowrap">
-      <ResponsiveContainer className="[&_.recharts-surface]:outline-none" height={200} width="100%">
+      <ResponsiveContainer
+        className="[&_.recharts-surface]:outline-hidden"
+        height={200}
+        width="100%"
+      >
         <PieChart
           accessibilityLayer
           margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
@@ -33,8 +37,8 @@ export const CircleChartCard = React.forwardRef<
         >
           <Tooltip
             content={({ label, payload }) => (
-              <div className="flex h-8 min-w-[120px] items-center gap-x-2 rounded-medium bg-background px-1 text-tiny shadow-small">
-                <span className="font-medium text-foreground">{label}</span>
+              <div className="rounded-medium bg-background text-tiny shadow-small flex h-8 min-w-[120px] items-center gap-x-2 px-1">
+                <span className="text-foreground font-medium">{label}</span>
                 {payload?.map((p, index) => {
                   const { name } = p;
                   const { value } = p;
@@ -48,9 +52,9 @@ export const CircleChartCard = React.forwardRef<
                           backgroundColor: `hsl(var(--heroui-${color}-${(index + 1) * 200}))`,
                         }}
                       />
-                      <div className="flex w-full items-center justify-between gap-x-2 pr-1 text-tiny text-default-700">
+                      <div className="text-tiny text-default-700 flex w-full items-center justify-between gap-x-2 pr-1">
                         <span className="text-default-500">{category}</span>
-                        <span className="font-mono font-medium text-default-700">
+                        <span className="text-default-700 font-mono font-medium">
                           {formatTotal(value as number)}
                         </span>
                       </div>
@@ -81,7 +85,7 @@ export const CircleChartCard = React.forwardRef<
         </PieChart>
       </ResponsiveContainer>
 
-      <div className="flex w-full justify-center gap-4 p-4 text-tiny text-default-500 lg:p-0">
+      <div className="text-tiny text-default-500 flex w-full justify-center gap-4 p-4 lg:p-0">
         {categories.map((category, index) => (
           <div key={index} className="flex items-center gap-2">
             <span

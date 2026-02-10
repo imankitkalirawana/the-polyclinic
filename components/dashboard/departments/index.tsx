@@ -84,7 +84,7 @@ export default function Departments() {
                   max={3}
                   size="sm"
                   renderCount={(count) => (
-                    <p className="ms-2 font-medium text-foreground text-small">+{count} others</p>
+                    <p className="text-foreground text-small ms-2 font-medium">+{count} others</p>
                   )}
                   total={10}
                 >
@@ -130,12 +130,12 @@ export default function Departments() {
                   'https://thepolyclinic.s3.ap-south-1.amazonaws.com/clients/departments/default.jpg'
                 }
               />
-              <CardFooter className="absolute bottom-0 z-10 justify-between border-t-1 border-divider bg-background/40">
+              <CardFooter className="border-divider bg-background/40 absolute bottom-0 z-10 justify-between border-t">
                 <div className="flex flex-col">
-                  <p className="font-semibold text-default-foreground text-small">
+                  <p className="text-default-foreground text-small font-semibold">
                     {department.name}
                   </p>
-                  <p className="line-clamp-2 text-default-500 text-tiny">
+                  <p className="text-default-500 text-tiny line-clamp-2">
                     {department.description}
                   </p>
                 </div>

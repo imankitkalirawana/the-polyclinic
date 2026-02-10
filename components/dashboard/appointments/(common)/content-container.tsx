@@ -36,7 +36,7 @@ export default function CreateAppointmentContentContainer({
       >
         {/* Main content area with proper flex handling */}
         <div className="flex h-full min-h-0 flex-col gap-4 overflow-hidden p-4">
-          {header && <div className="flex-shrink-0">{header}</div>}
+          {header && <div className="shrink-0">{header}</div>}
           {/* Ensure children can grow and shrink properly */}
           <div className="min-h-0 flex-1 overflow-hidden">{children}</div>
         </div>
@@ -45,7 +45,7 @@ export default function CreateAppointmentContentContainer({
         {!!footer && (
           <div
             className={cn(
-              'flex flex-shrink-0 flex-row-reverse items-center justify-between gap-4 border-t border-divider p-4',
+              'border-divider flex shrink-0 flex-row-reverse items-center justify-between gap-4 border-t p-4',
               classNames?.footer
             )}
           >

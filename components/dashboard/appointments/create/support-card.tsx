@@ -13,7 +13,7 @@ const SupportCard = React.forwardRef<HTMLDivElement, SupportCardProps>(
       {...props}
       ref={ref}
       className={cn(
-        'align-center my-2 flex shrink-0 items-center justify-center gap-3 self-stretch rounded-large bg-content1 px-3 py-3 shadow-small',
+        'align-center rounded-large bg-content1 shadow-small my-2 flex shrink-0 items-center justify-center gap-3 self-stretch px-3 py-3',
         className
       )}
     >
@@ -37,12 +37,12 @@ const SupportCard = React.forwardRef<HTMLDivElement, SupportCardProps>(
           src="https://nextuipro.nyc3.cdn.digitaloceanspaces.com/components-images/avatars/f4d075c1fa8155478e5bb26aaae69fc1.jpg"
         />
       </AvatarGroup>
-      <div className="line-clamp-2 text-left font-medium text-default-700 text-tiny">
+      <div className="text-default-700 text-tiny line-clamp-2 text-left font-medium">
         We&apos;re here to answer your questions.
       </div>
       <Button
         isIconOnly
-        className="align-center flex h-[32px] w-[31px] justify-center rounded-[12px] bg-default-100 dark:bg-[#27272A]/[.4]"
+        className="align-center bg-default-100 flex h-[32px] w-[31px] justify-center rounded-[12px] dark:bg-[#27272A]/40"
         size="sm"
         variant="flat"
       >

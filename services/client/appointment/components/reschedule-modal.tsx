@@ -70,7 +70,7 @@ export default function RescheduleAppointment() {
             gridWrapper: 'pb-3',
             cell: 'p-1.5 w-full',
             cellButton:
-              'w-full h-9 rounded-medium data-[selected]:shadow-[0_2px_12px_0] data-[selected]:shadow-primary-300 text-small font-medium',
+              'w-full h-9 rounded-medium data-selected:shadow-[0_2px_12px_0] data-[selected]:shadow-primary-300 text-small font-medium',
           }}
         />
         <CalendarTimeSelect date={date} setDate={setDate} />

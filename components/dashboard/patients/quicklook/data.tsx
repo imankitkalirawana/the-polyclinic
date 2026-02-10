@@ -64,32 +64,32 @@ export const sidebarContent = (patient: PatientType) => (
     <Tabs size="sm" className="flex flex-col gap-2 p-4">
       <Tab title="Patient Details" key="patient-details">
         <div className="flex flex-col gap-2">
-          <div className="flex items-center justify-between gap-4 text-small">
+          <div className="text-small flex items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <div className="rounded-medium bg-orange-200 p-[5px] text-orange-400">
                 <Icon icon="solar:hashtag-circle-bold" width="24" />
               </div>
-              <span className="capitalize text-default-400">ID</span>
+              <span className="text-default-400 capitalize">ID</span>
             </div>
-            <span className="capitalize text-default-foreground">{patient.id}</span>
+            <span className="text-default-foreground capitalize">{patient.id}</span>
           </div>
-          <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20" />
-          <div className="flex items-center justify-between gap-4 text-small">
+          <div className="from-divider/20 via-divider to-divider/20 h-px w-full bg-linear-to-r" />
+          <div className="text-small flex items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <div className="rounded-medium bg-pink-200 p-[5px] text-pink-400">
                 <Icon icon="material-symbols:abc-rounded" width="24" />
               </div>
-              <span className="capitalize text-default-400">Name</span>
+              <span className="text-default-400 capitalize">Name</span>
             </div>
-            <span className="capitalize text-default-foreground">{patient.name}</span>
+            <span className="text-default-foreground capitalize">{patient.name}</span>
           </div>
-          <div className="h-[1px] w-full bg-gradient-to-r from-divider/20 via-divider to-divider/20" />
-          <div className="flex items-center justify-between gap-4 text-small">
+          <div className="from-divider/20 via-divider to-divider/20 h-px w-full bg-linear-to-r" />
+          <div className="text-small flex items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <div className="rounded-medium bg-blue-200 p-[5px] text-blue-400">
                 <Icon icon="uim:calender" width="24" height="24" />
               </div>
-              <span className="capitalize text-default-400">Age</span>
+              <span className="text-default-400 capitalize">Age</span>
             </div>
             <span className="text-default-foreground">{patient.age}</span>
           </div>

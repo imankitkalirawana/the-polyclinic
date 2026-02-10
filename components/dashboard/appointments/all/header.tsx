@@ -131,7 +131,7 @@ export function CalendarHeader({
   };
 
   return (
-    <header className="flex items-center justify-between border-b border-divider px-2 py-2 sm:px-4">
+    <header className="border-divider flex items-center justify-between border-b px-2 py-2 sm:px-4">
       <div className="flex items-center sm:gap-4">
         <Button
           variant="flat"
@@ -152,7 +152,7 @@ export function CalendarHeader({
           </Button>
         </div>
 
-        <h2 className="whitespace-nowrap font-medium">{getDateTitle()}</h2>
+        <h2 className="font-medium whitespace-nowrap">{getDateTitle()}</h2>
       </div>
 
       <div className="flex w-full items-center justify-end gap-2">
@@ -194,12 +194,12 @@ export function CalendarHeader({
             {user?.role === Role.PATIENT && (
               <Tooltip
                 content="Book an appointment with AI"
-                className="bg-gradient-to-br from-blue-300/50 via-blue-500/50 via-40% to-purple-500/50 backdrop-blur-sm"
+                className="bg-linear-to-br from-blue-300/50 via-blue-500/50 via-40% to-purple-500/50 backdrop-blur-xs"
               >
                 <Button
                   isIconOnly
                   radius="full"
-                  className="bg-gradient-to-br from-blue-300/50 via-blue-500/50 via-40% to-purple-500/50"
+                  className="bg-linear-to-br from-blue-300/50 via-blue-500/50 via-40% to-purple-500/50"
                 >
                   <Icon icon="solar:stars-minimalistic-line-duotone" className="h-4 w-4" />
                 </Button>

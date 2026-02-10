@@ -12,7 +12,7 @@ export default function SearchInput({
   placeholder?: string;
 }) {
   return (
-    <div className="mb-4 flex-shrink-0">
+    <div className="mb-4 shrink-0">
       <Input
         endContent={isLoading ? <Spinner size="sm" /> : null}
         className="max-w-sm"

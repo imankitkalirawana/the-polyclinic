@@ -115,8 +115,8 @@ export default function NewService() {
   return (
     <div className="pb-12">
       <div className="mt-4 px-4 sm:px-0">
-        <h3 className="leading-large font-semibold text-gray-900 text-medium">Add New Service</h3>
-        <p className="leading-medium max-w-2xl text-gray-500 text-small">
+        <h3 className="leading-large text-medium font-semibold text-gray-900">Add New Service</h3>
+        <p className="leading-medium text-small max-w-2xl text-gray-500">
           Fill in the form below to add a new service.
         </p>
       </div>
@@ -242,7 +242,7 @@ export default function NewService() {
             </Select>
           </div>
           <div className="col-span-full mt-4">
-            <div className="flex min-h-[6rem] min-w-[18rem] flex-wrap items-center justify-center gap-2 overflow-x-hidden bg-cover bg-top">
+            <div className="flex min-h-24 min-w-[18rem] flex-wrap items-center justify-center gap-2 overflow-x-hidden bg-cover bg-top">
               <div className="overflow-x-auto md:w-full">
                 <table className="table w-full">
                   <thead>
@@ -330,7 +330,7 @@ export default function NewService() {
                             key={colIndex}
                             onMouseEnter={() => setHoveredColIndex(colIndex)}
                             onMouseLeave={() => setHoveredColIndex(null)}
-                            className="max-w-48 whitespace-nowrap py-0"
+                            className="max-w-48 py-0 whitespace-nowrap"
                           >
                             <Editor
                               content={formik.values.fields[`cell-${rowIndex}-${colIndex}`] || ''}

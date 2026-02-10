@@ -37,7 +37,15 @@ export const RenderUser = ({
 }: {
   name?: string | null;
   size?: 'sm' | 'md' | 'lg' | 'xl';
-  variant?: 'bauhaus' | 'beam' | 'geometric' | 'marble' | 'pixel' | 'ring' | 'sunset' | 'abstract';
+  variant?:
+    | 'bauhaus'
+    | 'beam'
+    | 'geometric'
+    | 'marble'
+    | 'pixel'
+    | 'ring-3'
+    | 'sunset'
+    | 'abstract';
   description?: string | number | React.ReactNode;
   isCompact?: boolean;
   classNames?: {
@@ -80,10 +88,10 @@ export const RenderUser = ({
       />
       {!isCompact && (
         <div className={cn('flex flex-col items-start', sizeClass[size].gap)}>
-          <h4 className={cn('text-nowrap text-default-foreground text-small', classNames?.name)}>
+          <h4 className={cn('text-default-foreground text-small text-nowrap', classNames?.name)}>
             {name}
           </h4>
-          <p className={cn('text-nowrap text-default-500 text-tiny', classNames?.description)}>
+          <p className={cn('text-default-500 text-tiny text-nowrap', classNames?.description)}>
             {description}
           </p>
         </div>
@@ -97,11 +105,11 @@ export const renderDate = ({ date, isTime = false }: { date: Date | string; isTi
 
   return (
     <div className="flex flex-col">
-      <p className="text-nowrap capitalize text-default-foreground text-small">
+      <p className="text-default-foreground text-small text-nowrap capitalize">
         {format(dateObj, 'PP')}
       </p>
       {isTime && (
-        <p className="text-nowrap capitalize text-default-500 text-tiny">{format(dateObj, 'p')}</p>
+        <p className="text-default-500 text-tiny text-nowrap capitalize">{format(dateObj, 'p')}</p>
       )}
     </div>
   );
@@ -110,7 +118,7 @@ export const renderDate = ({ date, isTime = false }: { date: Date | string; isTi
 export const renderCountry = (name: string, icon: React.ReactNode) => (
   <div className="flex items-center gap-2">
     <div className="h-[16px] w-[16px]">{icon}</div>
-    <p className="text-nowrap text-default-foreground text-small">{name}</p>
+    <p className="text-default-foreground text-small text-nowrap">{name}</p>
   </div>
 );
 
@@ -132,7 +140,7 @@ export const renderChips = (items: string[]) => (
         return (
           <Chip
             key={item}
-            className="rounded-small bg-default-100 px-[6px] capitalize text-default-800"
+            className="rounded-small bg-default-100 text-default-800 px-[6px] capitalize"
             size="sm"
             variant="flat"
           >
