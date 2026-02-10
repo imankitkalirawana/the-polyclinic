@@ -21,6 +21,8 @@
     "@auth/mongodb-adapter": "^3.9.1",
     "@aws-sdk/client-s3": "^3.679.0",
     "@commitlint/types": "^19.8.0",
+    "@dnd-kit/abstract": "^0.2.4",
+    "@dnd-kit/react": "^0.2.4",
     "@faker-js/faker": "^9.7.0",
     "@google/generative-ai": "^0.24.1",
     "@heroui/react": "^2.8.3",

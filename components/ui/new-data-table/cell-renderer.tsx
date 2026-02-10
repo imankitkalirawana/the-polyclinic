@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { format, parseISO, isValid } from 'date-fns';
-import { CellOption, ColumnDataType, ColumnDefinition } from './types';
+import { CellOption, ColumnDefinition } from './types';
+import { ColumnDataType } from '@/services/common/columns/columns.types';
 
 function formatDateValue(value: string): string {
   const parsed = parseISO(value);

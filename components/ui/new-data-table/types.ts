@@ -1,13 +1,5 @@
+import { ColumnDataType } from '@/services/common/columns/columns.types';
 import type { ColumnDef, Table } from '@tanstack/react-table';
-
-export enum ColumnDataType {
-  STRING = 'STRING',
-  INTEGER = 'INTEGER',
-  HASHTAG = 'HASHTAG',
-  DATE = 'DATE',
-  TIME = 'TIME',
-  DATETIME = 'DATETIME',
-}
 
 export type ColumnDefinition = {
   key: string;

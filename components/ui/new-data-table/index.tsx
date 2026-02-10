@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { flexRender } from '@tanstack/react-table';
 import type { Table as TanStackTable, ColumnDef } from '@tanstack/react-table';
 import {
@@ -17,16 +17,55 @@ import type { ColumnDefinition, NewDataTableProps, RowData } from './types';
 import { createColumnDefsFromDefinitions, isColumnDefinitionArray } from './helper';
 import { useNewDataTable } from './use-new-data-table';
 
-function TableContent<TData>({ table }: { table: TanStackTable<TData> }) {
+function TableContent<TData>({
+  table,
+  topContent,
+}: {
+  table: TanStackTable<TData>;
+  topContent?: React.ReactNode;
+}) {
+  const [draggedColumnId, setDraggedColumnId] = useState<string | null>(null);
   const headerGroups = table.getHeaderGroups();
   const rows = table.getRowModel().rows;
   const flatHeaders = headerGroups[0]?.headers ?? [];
   const hasColumns = flatHeaders.length > 0;
 
+  const handleColumnDragStart = (columnId: string) => (e: React.DragEvent) => {
+    setDraggedColumnId(columnId);
+    e.dataTransfer.setData('text/plain', columnId);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setDragImage(e.currentTarget, 0, 0);
+  };
+
+  const handleColumnDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleColumnDrop = (dropTargetId: string) => (e: React.DragEvent) => {
+    e.preventDefault();
+    setDraggedColumnId(null);
+    const draggedId = e.dataTransfer.getData('text/plain');
+    if (!draggedId || draggedId === dropTargetId) return;
+    table.setColumnOrder((prev) => {
+      const from = prev.indexOf(draggedId);
+      const to = prev.indexOf(dropTargetId);
+      if (from === -1 || to === -1) return prev;
+      const next = [...prev];
+      next.splice(from, 1);
+      next.splice(to, 0, draggedId);
+      return next;
+    });
+  };
+
+  const handleColumnDragEnd = () => {
+    setDraggedColumnId(null);
+  };
+
   if (!hasColumns) {
     return (
       <div className="flex min-h-[200px] w-full items-center justify-center rounded-lg border border-default-200 bg-default-50 p-6">
-        <p className="text-neutral-500">No columns configured</p>
+        <p className="text-default-500">No columns configured</p>
       </div>
     );
   }
@@ -41,12 +80,26 @@ function TableContent<TData>({ table }: { table: TanStackTable<TData> }) {
         }}
         topContentPlacement="outside"
         className="max-h-full px-px"
+        topContent={topContent}
       >
         <TableHeader columns={flatHeaders}>
           {(header) => (
-            <TableColumn key={header.id} width={header.column.getSize()}>
-              <div className="relative flex w-full items-center justify-between pr-1">
-                <span className="truncate">
+            <TableColumn
+              key={header.id}
+              width={header.column.getSize()}
+              onDragOver={handleColumnDragOver}
+              onDrop={handleColumnDrop(header.column.id)}
+              onDragStart={handleColumnDragStart(header.column.id)}
+              onDragEnd={handleColumnDragEnd}
+              draggable
+              className="hover:cursor-grab"
+            >
+              <div
+                className={cn('relative flex w-full items-center gap-1 pr-1', {
+                  'opacity-50 backdrop-blur-lg': draggedColumnId === header.column.id,
+                })}
+              >
+                <span className="min-w-0 flex-1 truncate">
                   {flexRender(header.column.columnDef.header, header.getContext())}
                 </span>
                 {header.column.getCanResize() ? (
@@ -55,11 +108,17 @@ function TableContent<TData>({ table }: { table: TanStackTable<TData> }) {
                     aria-orientation="vertical"
                     aria-label="Resize column"
                     className={cn(
-                      'absolute bottom-0 right-0 top-0 z-[2] w-2 cursor-col-resize touch-none select-none',
-                      'after:absolute after:right-0 after:inline-block after:h-full after:w-0.5 after:bg-default-200 after:content-[""] hover:after:bg-default-400'
+                      'absolute bottom-0 right-0 top-0 z-[2] w-3 cursor-col-resize touch-none select-none',
+                      'after:absolute after:right-0 after:inline-block after:h-full after:w-0.5 after:bg-default-200 after:content-[""] hover:after:bg-primary-400'
                     )}
-                    onMouseDown={header.getResizeHandler()}
-                    onTouchStart={header.getResizeHandler()}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      header.getResizeHandler()(e);
+                    }}
+                    onTouchStart={(e) => {
+                      e.preventDefault();
+                      header.getResizeHandler()(e);
+                    }}
                   />
                 ) : null}
               </div>
@@ -69,7 +128,7 @@ function TableContent<TData>({ table }: { table: TanStackTable<TData> }) {
         <TableBody>
           {rows.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={flatHeaders.length} className="text-center text-neutral-500">
+              <TableCell colSpan={flatHeaders.length} className="text-center text-default-500">
                 No data
               </TableCell>
             </TableRow>
@@ -101,7 +160,8 @@ function TableWithData<TData extends Record<string, unknown>>({
   data,
   columns,
   getRowId,
-}: Extract<NewDataTableProps<TData>, { table?: undefined }>) {
+  topContent,
+}: Extract<NewDataTableProps<TData>, { table?: undefined }> & { topContent?: React.ReactNode }) {
   const columnDefs = useMemo(() => {
     if (isColumnDefinitionArray(columns as ColumnDefinition[] | ColumnDef<unknown, unknown>[])) {
       return createColumnDefsFromDefinitions(columns as ColumnDefinition[]);
@@ -109,23 +169,38 @@ function TableWithData<TData extends Record<string, unknown>>({
     return columns as ColumnDef<TData, unknown>[];
   }, [columns]);
 
+  const initialColumnOrder = useMemo(
+    () => columnDefs.map((c) => c.id).filter(Boolean) as string[],
+    [columnDefs]
+  );
+  const [columnOrder, setColumnOrder] = useState<string[]>(initialColumnOrder);
+
   const table = useNewDataTable({
     data,
     columns: columnDefs as ColumnDef<TData, unknown>[],
     getRowId,
+    state: { columnOrder },
+    onColumnOrderChange: setColumnOrder,
   });
 
-  return <TableContent table={table} />;
+  return <TableContent table={table} topContent={topContent} />;
 }
 
 export function Table<TData extends Record<string, unknown> = RowData>(
-  props: NewDataTableProps<TData>
+  props: NewDataTableProps<TData> & { topContent?: React.ReactNode }
 ) {
   if ('table' in props && props.table) {
-    return <TableContent table={props.table} />;
+    return <TableContent table={props.table} topContent={props.topContent} />;
   }
-  const { data, columns, getRowId } = props;
-  return <TableWithData<TData> data={data} columns={columns} getRowId={getRowId} />;
+  const { data, columns, getRowId, topContent } = props;
+  return (
+    <TableWithData<TData>
+      data={data}
+      columns={columns}
+      getRowId={getRowId}
+      topContent={topContent}
+    />
+  );
 }
 
 export { createColumnDefsFromDefinitions, isColumnDefinitionArray } from './helper';
@@ -140,4 +215,3 @@ export {
   type RowData,
   type TableProps,
 } from './types';
-export { ColumnDataType } from './types';
