@@ -177,7 +177,7 @@ const RegisterComponent: React.FC = () => {
   const registerFooter =
     formik.values.page === 0 ? (
       <>
-        <div className="text-center text-small">
+        <div className="text-small text-center">
           By continuing, you agree to {APP_INFO.name}&apos;s{' '}
           <Link className="underline" href="/terms-of-use" size="sm">
             Terms of Use
@@ -189,11 +189,11 @@ const RegisterComponent: React.FC = () => {
           .
         </div>
         <div className="flex items-center gap-2">
-          <div className="h-px w-full bg-divider" />
+          <div className="bg-divider h-px w-full" />
           <div className="text-default-500 text-small">or</div>
-          <div className="h-px w-full bg-divider" />
+          <div className="bg-divider h-px w-full" />
         </div>
-        <div className="text-center text-small">
+        <div className="text-small text-center">
           Already have an account?&nbsp;
           <Link href="/auth/login" size="sm">
             Log In

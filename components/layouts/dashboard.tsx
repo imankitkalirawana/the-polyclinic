@@ -77,10 +77,10 @@ export default function DashboardLayout({ children }: { readonly children: React
           maxWidth: isHidden ? SIDEBAR_WIDTHS.collapsed : SIDEBAR_WIDTHS.expanded,
         }}
         className={cn(
-          'relative flex h-full flex-1 flex-col overflow-x-hidden !border-r-small border-divider transition-all duration-250 ease-in-out'
+          '!border-r-small border-divider relative flex h-full flex-1 flex-col overflow-x-hidden transition-all duration-250 ease-in-out'
         )}
       >
-        <div className="flex justify-center gap-4 border-b border-divider py-2">
+        <div className="border-divider flex justify-center gap-4 border-b py-2">
           <Button
             data-testid="go-to-homepage-button"
             title="Go to homepage"
@@ -110,9 +110,9 @@ export default function DashboardLayout({ children }: { readonly children: React
     () => (
       <header
         data-testid="dashboard-header"
-        className="flex items-center justify-between gap-3 border-b border-divider p-2"
+        className="border-divider flex items-center justify-between gap-3 border-b p-2"
       >
-        <div className="flex items-center gap-3 rounded-medium bg-default-200 px-3 py-1">
+        <div className="rounded-medium bg-default-200 flex items-center gap-3 px-3 py-1">
           <Tooltip delay={1000} size="sm" content={<Kbd>Cmd + /</Kbd>} placement="bottom">
             <Button
               aria-label="Toggle Sidebar"
