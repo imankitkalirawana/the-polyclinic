@@ -513,6 +513,14 @@
   scrollbar-width: thin;
 }
 
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 .tbl td,
 .tbl th {
   /* padding: 0.25rem; */
