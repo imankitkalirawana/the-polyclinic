@@ -19,6 +19,10 @@ export default function PatientQueueView() {
     'status',
     parseAsStringEnum(Object.values(AppointmentStatus)).withDefault(AppointmentStatus.ALL)
   );
+  const totalAppointments =
+    (appointments?.metaData?.totalNext ?? 0) +
+    (appointments?.metaData?.totalPrevious ?? 0) +
+    (appointments?.current ? 1 : 0);
 
   const getNextAppointmentsCount = () => {
     const nextCount = appointments?.metaData?.totalNext || 0;
@@ -43,7 +47,7 @@ export default function PatientQueueView() {
             <div className="flex items-center gap-2">
               <span>All</span>
               <Chip size="sm" variant="flat">
-                {appointments?.metaData?.total}
+                {totalAppointments}
               </Chip>
             </div>
           }

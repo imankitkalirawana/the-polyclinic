@@ -23,12 +23,26 @@ export default function AppointmentQueue({ aid }: { aid: string }) {
                       {appointment?.patient.gender || '-'}
                     </span>
                   </div>
+
+                  <div className="flex justify-between">
+                    <span className="font-medium">Phone:</span>
+                    <span className="text-foreground-500">{appointment?.patient.phone || '-'}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="font-medium">DOB:</span>
+                    <span className="text-foreground-500">{appointment?.patient?.dob || '-'}</span>
+                  </div>
                   <div className="flex justify-between">
                     <span className="font-medium">Blood Type:</span>
                     <span className="text-foreground-500">
                       {appointment?.patient.bloodType || '-'}
                     </span>
                   </div>
+                </CardBody>
+              </Tab>
+              <Tab key="vitals" title="Vitals">
+                <Divider />
+                <CardBody className="space-y-3 text-base">
                   <div className="flex justify-between">
                     <span className="font-medium">Height:</span>
                     <span className="text-foreground-500">
@@ -41,17 +55,6 @@ export default function AppointmentQueue({ aid }: { aid: string }) {
                       {appointment?.patient.weight || '-'}
                     </span>
                   </div>
-                </CardBody>
-              </Tab>
-              {/* <Tab key="vitals" title="Vitals">
-                <Divider />
-                <CardBody className="space-y-3 text-base">
-                  <div className="flex justify-between">
-                    <span className="font-medium">Heart Rate:</span>
-                    <span className="text-foreground-500">
-                      {appointment?.patient.heartRate || '-'}
-                    </span>
-                  </div>
                   <div className="flex justify-between">
                     <span className="font-medium">Blood Pressure:</span>
                     <span className="text-foreground-500">
@@ -59,25 +62,19 @@ export default function AppointmentQueue({ aid }: { aid: string }) {
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="font-medium">Blood Sugar:</span>
+                    <span className="font-medium">Heart Rate:</span>
                     <span className="text-foreground-500">
-                      {appointment?.patient.bloodSugar || '-'}
+                      {appointment?.patient.heartRate || '-'}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="font-medium">Glucose:</span>
+                    <span className="font-medium">Allergy:</span>
                     <span className="text-foreground-500">
-                      {appointment?.patient.glucose || '-'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="font-medium">Hemoglobin:</span>
-                    <span className="text-foreground-500">
-                      {appointment?.patient.hemoglobin || '-'}
+                      {appointment?.patient.allergies || '-'}
                     </span>
                   </div>
                 </CardBody>
-              </Tab> */}
+              </Tab>
             </Tabs>
           </div>
         </Card>

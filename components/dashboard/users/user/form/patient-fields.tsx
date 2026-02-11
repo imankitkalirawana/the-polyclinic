@@ -66,6 +66,105 @@ export default function PatientFields({ control }: { control: Control<UserFormVa
           />
         )}
       />
+
+      <Controller
+        name="patient.bloodType"
+        control={control}
+        render={({ field, fieldState }) => (
+          <Input
+            {...field}
+            label="Blood Type"
+            placeholder="e.g. O+"
+            value={field.value || ''}
+            onChange={field.onChange}
+            isInvalid={!!fieldState.error}
+            errorMessage={fieldState.error?.message}
+          />
+        )}
+      />
+
+      <Controller
+        name="patient.height"
+        control={control}
+        render={({ field, fieldState }) => (
+          <Input
+            {...field}
+            type="number"
+            label="Height (cm)"
+            placeholder="Enter height"
+            value={field.value?.toString() ?? ''}
+            onChange={(e) => field.onChange(e.target.value === '' ? null : Number(e.target.value))}
+            isInvalid={!!fieldState.error}
+            errorMessage={fieldState.error?.message}
+          />
+        )}
+      />
+
+      <Controller
+        name="patient.weight"
+        control={control}
+        render={({ field, fieldState }) => (
+          <Input
+            {...field}
+            type="number"
+            label="Weight (kg)"
+            placeholder="Enter weight"
+            value={field.value?.toString() ?? ''}
+            onChange={(e) => field.onChange(e.target.value === '' ? null : Number(e.target.value))}
+            isInvalid={!!fieldState.error}
+            errorMessage={fieldState.error?.message}
+          />
+        )}
+      />
+
+      <Controller
+        name="patient.bloodPressure"
+        control={control}
+        render={({ field, fieldState }) => (
+          <Input
+            {...field}
+            label="Blood Pressure"
+            placeholder="e.g. 120/80"
+            value={field.value || ''}
+            onChange={field.onChange}
+            isInvalid={!!fieldState.error}
+            errorMessage={fieldState.error?.message}
+          />
+        )}
+      />
+
+      <Controller
+        name="patient.heartRate"
+        control={control}
+        render={({ field, fieldState }) => (
+          <Input
+            {...field}
+            type="number"
+            label="Heart Rate (bpm)"
+            placeholder="e.g. 72"
+            value={field.value?.toString() ?? ''}
+            onChange={(e) => field.onChange(e.target.value === '' ? null : Number(e.target.value))}
+            isInvalid={!!fieldState.error}
+            errorMessage={fieldState.error?.message}
+          />
+        )}
+      />
+
+      <Controller
+        name="patient.allergies"
+        control={control}
+        render={({ field, fieldState }) => (
+          <Input
+            {...field}
+            label="Allergy"
+            placeholder="Enter allergy details"
+            value={field.value || ''}
+            onChange={field.onChange}
+            isInvalid={!!fieldState.error}
+            errorMessage={fieldState.error?.message}
+          />
+        )}
+      />
     </>
   );
 }

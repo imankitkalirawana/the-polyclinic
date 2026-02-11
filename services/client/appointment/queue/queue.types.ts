@@ -21,7 +21,11 @@ export type PatientInfo = {
   gender?: GENDERS;
   age?: number;
   image?: string;
+  dob?: string;
+  address?: string;
   bloodType?: string;
+  bloodPressure?: string;
+  heartRate?: number;
   allergies?: string;
   diseases?: string;
   height?: number;
@@ -107,9 +111,9 @@ export type AppointmentQueueType = {
 };
 
 export type GroupedAppointmentQueuesResponse = {
-  previous: AppointmentQueueResponse[];
-  current: AppointmentQueueResponse | null;
-  next: AppointmentQueueResponse[];
+  previous: AppointmentQueueType[];
+  current: AppointmentQueueType | null;
+  next: AppointmentQueueType[];
   metaData: {
     totalPrevious: number;
     totalNext: number;

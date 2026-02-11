@@ -15,12 +15,12 @@ export default function AppointmentQueue({ aid }: { aid: string }) {
 
   return (
     <>
-      <main className="min-h-screen bg-foreground-50 p-8">
+      <main className="bg-foreground-50 min-h-screen p-8">
         <div className="grid grid-cols-12 gap-6">
           <div className="col-span-3">
             <div className="flex flex-col gap-4">
               <Card className="p-4 shadow-md">
-                <div className="flex flex-shrink-0 items-center justify-end gap-5">
+                <div className="flex shrink-0 items-center justify-end gap-5">
                   <Button onPress={editPatientModal.onOpen} variant="flat" size="sm" radius="full">
                     Edit
                   </Button>
@@ -28,7 +28,7 @@ export default function AppointmentQueue({ aid }: { aid: string }) {
                 <div className="flex flex-col items-center text-center">
                   <Avatar size="lg" className="mb-4 h-28 w-28 rounded-3xl" />
                   <h2 className="text-xl font-medium text-gray-900">{appointment?.patient.name}</h2>
-                  <p className="mb-4 text-gray-500"> {appointment?.patient.phone}</p>
+                  <p className="mb-4 text-gray-500"> {appointment?.patient.email}</p>
                 </div>
               </Card>
               <InfoCard aid={aid} />
@@ -38,7 +38,7 @@ export default function AppointmentQueue({ aid }: { aid: string }) {
             <div className="flex flex-col gap-4">
               {/* //doctor info card */}
               <Card className="p-4 shadow-md">
-                <div className="flex flex-shrink-0 items-center justify-end gap-5">
+                <div className="flex shrink-0 items-center justify-end gap-5">
                   <Chip variant="flat">Room {appointment?.doctor?.seating || '-'}</Chip>
                 </div>
                 <div className="flex items-center justify-between gap-6 pt-6">
@@ -46,7 +46,7 @@ export default function AppointmentQueue({ aid }: { aid: string }) {
                     <div>
                       <Avatar
                         variant="beam"
-                        className="h-20 w-20 flex-shrink-0"
+                        className="h-20 w-20 shrink-0"
                         name={appointment?.doctor?.name || '-'}
                       />
                     </div>
@@ -59,11 +59,11 @@ export default function AppointmentQueue({ aid }: { aid: string }) {
                       </div>
                       <div className="flex flex-col gap-1.5 pt-4">
                         <div className="flex items-center gap-3 text-sm">
-                          <Icon icon="mdi:phone" className="h-5 w-5 flex-shrink-0 text-primary" />
+                          <Icon icon="mdi:phone" className="text-primary h-5 w-5 shrink-0" />
                           <span>{appointment?.doctor?.phone || '-'}</span>
                         </div>
                         <div className="flex items-center gap-3 text-sm">
-                          <Icon icon="mdi:email" className="h-5 w-5 text-primary" />
+                          <Icon icon="mdi:email" className="text-primary h-5 w-5" />
                           <span>{appointment?.doctor?.email || '-'}</span>
                         </div>
                       </div>
@@ -112,7 +112,7 @@ export default function AppointmentQueue({ aid }: { aid: string }) {
           <div className="col-span-5">
             <div className="flex flex-col gap-4">
               <Card className="p-4 shadow-md">
-                <h3 className="text-sm text-foreground-500">Test Reports</h3>
+                <h3 className="text-foreground-500 text-sm">Test Reports</h3>
                 <CardBody className="space-y-4 text-sm">
                   <div className="flex items-center gap-3">
                     <Icon
@@ -122,8 +122,8 @@ export default function AppointmentQueue({ aid }: { aid: string }) {
                       className="text-blue-500"
                     />
                     <div>
-                      <h4 className="font-semibold text-foreground-600">CT Scan -Full Body</h4>
-                      <p className="text-sm text-foreground-500">12th February 2020</p>
+                      <h4 className="text-foreground-600 font-semibold">CT Scan -Full Body</h4>
+                      <p className="text-foreground-500 text-sm">12th February 2020</p>
                     </div>
                   </div>
                   <Divider />
@@ -135,8 +135,8 @@ export default function AppointmentQueue({ aid }: { aid: string }) {
                       className="text-yellow-500"
                     />
                     <div>
-                      <h4 className="font-semibold text-foreground-600">Creatine Kinase T</h4>
-                      <p className="text-sm text-foreground-500">12th February 2020</p>
+                      <h4 className="text-foreground-600 font-semibold">Creatine Kinase T</h4>
+                      <p className="text-foreground-500 text-sm">12th February 2020</p>
                     </div>
                   </div>
                   <Divider />
@@ -148,20 +148,20 @@ export default function AppointmentQueue({ aid }: { aid: string }) {
                       className="text-red-500"
                     />
                     <div>
-                      <h4 className="font-semibold text-foreground-600">Eye Fluorescein Test</h4>
-                      <p className="text-sm text-foreground-500">12th February 2020</p>
+                      <h4 className="text-foreground-600 font-semibold">Eye Fluorescein Test</h4>
+                      <p className="text-foreground-500 text-sm">12th February 2020</p>
                     </div>
                   </div>
                 </CardBody>
               </Card>
               <Card className="p-4 shadow-md">
-                <div className="grid grid-cols-3 gap-4 py-4 text-sm font-medium text-foreground-600">
+                <div className="text-foreground-600 grid grid-cols-3 gap-4 py-4 text-sm font-medium">
                   <div>Prescriptions</div>
                   <div>Date</div>
                   <div>Duration</div>
                 </div>
 
-                <div className="divide-y divide-foreground-200">
+                <div className="divide-foreground-200 divide-y">
                   <div className="grid grid-cols-3 items-center gap-4 py-2">
                     <div className="flex items-center gap-3">
                       <Icon
@@ -217,7 +217,7 @@ export default function AppointmentQueue({ aid }: { aid: string }) {
           </Button>
         </DashboardFooter>
       </main>
-      <EditModal isOpen={editPatientModal.isOpen} onClose={editPatientModal.onClose} />
+      <EditModal aid={aid} isOpen={editPatientModal.isOpen} onClose={editPatientModal.onClose} />
     </>
   );
 }

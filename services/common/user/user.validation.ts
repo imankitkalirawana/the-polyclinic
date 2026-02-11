@@ -31,6 +31,12 @@ const patientProfileUpdateSchema = z.object({
   gender: z.enum(GENDERS).nullable().optional(),
   dob: z.iso.datetime().nullable().optional(),
   address: nullableStringValidation,
+  bloodType: nullableStringValidation, // NEW
+  height: nullablePositiveNumberValidation, // NEW
+  weight: nullablePositiveNumberValidation, // NEW
+  bloodPressure: nullableStringValidation, // NEW (e.g. "120/80")
+  heartRate: nullablePositiveNumberValidation, // NEW
+  allergies: nullableStringValidation, // NEW
 });
 
 export const userFormValuesSchema = z.object({
