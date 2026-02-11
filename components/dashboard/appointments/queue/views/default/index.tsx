@@ -15,7 +15,7 @@ import { Input } from '@heroui/react';
 export default function DefaultQueueView() {
   const [selectedQueue, setSelectedQueue] = useState<AppointmentQueueType | null>(null);
 
-  const { data } = useAllAppointmentQueues();
+  const { data, dataUpdatedAt } = useAllAppointmentQueues();
 
   const { columns = [], rows = [] } = data || {};
 
@@ -36,7 +36,7 @@ export default function DefaultQueueView() {
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       <div className="min-h-[300px] flex-1">
-        <Table data={rows} columns={columns} topContent={topContent} />
+        <Table data={rows} columns={columns} topContent={topContent} tableKey={dataUpdatedAt} />
       </div>
       {!!selectedQueue && (
         <QueueQuickLook queue={selectedQueue} onClose={() => setSelectedQueue(null)} />

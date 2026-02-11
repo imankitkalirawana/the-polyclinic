@@ -18,8 +18,12 @@ export enum TableViewType {
 export type ColumnDefinition = {
   id: string;
   name: string;
-  label: string;
   key: string;
-  type: ColumnDataType;
-  hidden?: boolean;
+  data_type: ColumnDataType;
+};
+
+export type SelectedColumnDefinition = ColumnDefinition & {
+  order: number;
+  pinned: boolean;
+  width?: number;
 };

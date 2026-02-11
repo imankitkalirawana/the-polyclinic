@@ -34,6 +34,9 @@ importers:
       '@dnd-kit/abstract':
         specifier: ^0.2.4
         version: 0.2.4
+      '@dnd-kit/helpers':
+        specifier: ^0.2.4
+        version: 0.2.4
       '@dnd-kit/react':
         specifier: ^0.2.4
         version: 0.2.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -1310,6 +1313,9 @@ packages:
 
   '@dnd-kit/geometry@0.2.4':
     resolution: {integrity: sha512-S8wVj4rQIErimDQoRT0n1+lgxPvlO/gvzT9/1vzyyw1U4bB/S8avtrI+REVw/jH84c/dii+GwrrzVkDDoIluNw==}
+
+  '@dnd-kit/helpers@0.2.4':
+    resolution: {integrity: sha512-xKnkVPVH5YOeyerJGsqgzivTZq1lGSqnBiP5T+3G2jnM/KY5FCZBJSVcwNzFXcaIrMlj35N/sxlFHCX8kKgXEA==}
 
   '@dnd-kit/react@0.2.4':
     resolution: {integrity: sha512-XMevr4jSSEoabNRGYpIUDUWnmCTILJiiNVeUCBorpM/Om78sU0i6TKwSmfFIVQiZmKj7mYAIg95qSfyTTuW+EQ==}
@@ -10547,6 +10553,11 @@ snapshots:
   '@dnd-kit/geometry@0.2.4':
     dependencies:
       '@dnd-kit/state': 0.2.4
+      tslib: 2.8.1
+
+  '@dnd-kit/helpers@0.2.4':
+    dependencies:
+      '@dnd-kit/abstract': 0.2.4
       tslib: 2.8.1
 
   '@dnd-kit/react@0.2.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':

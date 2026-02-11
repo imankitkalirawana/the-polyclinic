@@ -28,6 +28,11 @@ export type NewDataTableDataProps<TData> = {
   data: TData[];
   columns: ColumnDef<TData, unknown>[] | ColumnDefinition[];
   getRowId?: (row: TData) => string;
+  /**
+   * When this value changes, the table remounts so it picks up new data.
+   * Use e.g. query.dataUpdatedAt so the table updates after invalidation/refetch.
+   */
+  tableKey?: string | number;
 };
 
 /** Union: either a table instance or data + columns. */
