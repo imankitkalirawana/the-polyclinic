@@ -1,7 +1,15 @@
 export enum ColumnDataType {
   STRING = 'STRING',
   INTEGER = 'INTEGER',
-  HASHTAG = 'HASHTAG',
+  DATE = 'DATE',
+}
+
+export enum ColumnType {
+  DEFAULT = 'DEFAULT',
+  CHIP = 'CHIP',
+  EMAIL = 'EMAIL',
+  PHONE = 'PHONE',
+  URL = 'URL',
   DATE = 'DATE',
   TIME = 'TIME',
   DATETIME = 'DATETIME',

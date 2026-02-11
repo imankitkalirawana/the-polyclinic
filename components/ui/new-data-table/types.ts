@@ -1,10 +1,11 @@
-import { ColumnDataType } from '@/services/common/columns/columns.types';
+import { ColumnDataType, ColumnType } from '@/services/common/columns/columns.types';
 import type { ColumnDef, Table } from '@tanstack/react-table';
 
 export type ColumnDefinition = {
   key: string;
   name: string;
   data_type: ColumnDataType;
+  column_type: ColumnType;
   order: number;
   pinned: boolean;
   /** When omitted (e.g. from API), column is shown. Use false to hide. */

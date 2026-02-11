@@ -17,7 +17,7 @@ const MIN_SELECTED_COLUMNS = 3;
 export default function QueueColumns() {
   const columnModal = useDisclosure();
   const [selectedColumns, setSelectedColumns] = useState<SelectedColumnDefinition[]>([]);
-  const { data: columns } = useAllColumns(TableViewType.QUEUE);
+  const { data: columns, isLoading: isLoadingColumns } = useAllColumns(TableViewType.QUEUE);
   const { data: selectedColumnsData } = useSelectedColumns(TableViewType.QUEUE);
   const { mutateAsync: updateColumns } = useUpdateColumns();
 
@@ -94,7 +94,10 @@ export default function QueueColumns() {
 
   return (
     <>
-      <Button onPress={columnModal.onOpen}>Columns</Button>
+      {/* TODO: Add a loading state */}
+      <Button size="sm" onPress={columnModal.onOpen} isDisabled={isLoadingColumns}>
+        Columns
+      </Button>
       <Modal
         size="4xl"
         isOpen={columnModal.isOpen}
