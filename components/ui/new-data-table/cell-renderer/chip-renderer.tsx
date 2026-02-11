@@ -1,4 +1,5 @@
 import { Chip, ChipProps } from '@heroui/react';
+import { Gender } from '@polyclinic/store';
 
 const CHIP_CONFIG: Record<string, ChipProps['classNames']> = {
   // For roles

@@ -30,6 +30,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@iconify/react": "^5.0.2",
     "@internationalized/date": "^3.9.0",
+    "@polyclinic/store": "^1.0.0",
     "@radix-ui/react-slot": "^1.2.3",
     "@react-aria/i18n": "^3.12.8",
     "@react-email/components": "0.5.3",
