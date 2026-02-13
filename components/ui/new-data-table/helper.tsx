@@ -3,7 +3,7 @@ import { Selection } from '@heroui/react';
 import React from 'react';
 
 import type { ColumnDefinition, RowData } from './types';
-import { CellRenderer } from './cell-renderer';
+import { RenderCell } from './cell-renderer';
 
 export const isAll = (selection: Selection): selection is 'all' => selection === 'all';
 
@@ -43,7 +43,7 @@ export function createColumnDefsFromDefinitions(
           column.columnDef.meta as { columnDefinition?: ColumnDefinition } | undefined
         )?.columnDefinition;
         if (!columnDefinition) return null;
-        return <CellRenderer column={columnDefinition} data={value ?? { value: '' }} />;
+        return <RenderCell column={columnDefinition} data={value ?? { value: '' }} />;
       },
     }));
 }

@@ -25,4 +25,5 @@ export const useUpdateColumns = () =>
       columns: SelectedColumnDefinition[];
     }) => ColumnsApi.updateColumns(viewType, columns),
     invalidateAllQueries: true,
+    showToast: false,
   });

@@ -83,9 +83,9 @@ export const RenderUser = ({
           <h4 className={cn('text-default-foreground text-small text-nowrap', classNames?.name)}>
             {name}
           </h4>
-          <p className={cn('text-default-500 text-tiny text-nowrap', classNames?.description)}>
+          <div className={cn('text-default-500 text-tiny text-nowrap', classNames?.description)}>
             {description}
-          </p>
+          </div>
         </div>
       )}
     </div>

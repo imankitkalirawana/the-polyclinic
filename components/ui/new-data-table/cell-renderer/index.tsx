@@ -3,14 +3,14 @@
 import React from 'react';
 import { CellOption, ColumnDefinition } from '../types';
 import { ColumnDataType, ColumnType } from '@/services/common/columns/columns.types';
-import { Chip } from '@heroui/react';
-import { FormatDate, FormatDateTime, FormatTime } from './date-renderer';
+import { FormatDate, FormatDateTime, FormatTime } from './render-date';
+import RenderChip from './render-chip';
 
 /**
  * Renders a table cell based on column data_type. Uses label for display where applicable;
  * DATE/TIME/DATETIME are formatted; STRING/INTEGER/HASHTAG show label (or value as fallback).
  */
-export function CellRenderer({
+export function RenderCell({
   column,
   data,
 }: {
@@ -33,12 +33,14 @@ export function CellRenderer({
           return <FormatTime value={value} />;
         case ColumnType.DATETIME:
           return <FormatDateTime value={value} />;
+        default:
+          return value;
       }
       break;
     case ColumnDataType.STRING:
       switch (column_type) {
         case ColumnType.CHIP:
-          return <Chip size="sm">{value}</Chip>;
+          return <RenderChip value={value} />;
         default:
           return value;
       }
