@@ -69,3 +69,5 @@ export const WEBSITE_SETTING = {
     logo: '/images/logo.png',
   },
 };
+
+export const PUBLIC_ROUTES = ['/auth'];

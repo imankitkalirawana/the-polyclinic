@@ -1,5 +1,5 @@
 import Modal from '@/components/ui/modal';
-import { Button, addToast, useDisclosure } from '@heroui/react';
+import { Button, useDisclosure } from '@heroui/react';
 import { useEffect, useMemo, useState } from 'react';
 import AllColumns from './all-columns';
 import SelectedColumns from './selected-columns';
@@ -34,13 +34,6 @@ export default function QueueColumns() {
           columns={columns || []}
           selectedColumns={selectedColumns}
           onSelectionChange={(value) => {
-            if (value.length < MIN_SELECTED_COLUMNS) {
-              addToast({
-                description: `You need to select at least ${MIN_SELECTED_COLUMNS} columns`,
-                color: 'warning',
-              });
-              return;
-            }
             setSelectedColumns((previousSelectedColumns) => {
               return value.map((id, index) => {
                 const existingColumn = previousSelectedColumns.find(

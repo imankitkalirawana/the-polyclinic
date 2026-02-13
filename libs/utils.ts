@@ -46,7 +46,10 @@ export function toSnakeCase(str: string) {
 }
 
 export function toTitleCase(str: string) {
-  return str.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
+  return str
+    .toLowerCase()
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
 export function isSearchMatch(haystack: string, needle: string) {
