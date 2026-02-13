@@ -4,9 +4,6 @@ import React from 'react';
 import { addToast, Button, Link } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import { LoginProvider } from '../store';
-import { AuthStep } from '../types';
-
 import { APP_INFO } from '@/libs/config';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,13 +16,14 @@ import {
 import { AnimatePresence, domAnimation, m, LazyMotion } from 'framer-motion';
 import { BlurIn } from '@/components/ui/text/blur-in';
 import Logo from '@/components/ui/logo';
-import { Header } from '../header';
+import { Header } from '../ui/header';
 import AuthEmailInput from '../ui/auth-email.input';
 import AuthPhoneInput from '../ui/auth-phone.input';
 import { toTitleCase } from '@/libs/utils';
 import AuthPasswordInput from '../ui/auth-password.input';
 import { AuthApi } from '@/services/common/auth/auth.api';
 import { useLogin } from '@/services/common/auth/auth.query';
+import { AuthStep } from '../types';
 
 const variants = {
   enter: (direction: number) => ({
@@ -81,7 +79,7 @@ const loginSchema = z
     }
   });
 
-const LoginComponent = () => {
+export default function Login() {
   const { mutateAsync: login, isSuccess: isLoginSuccess } = useLogin();
   const form = useForm({
     resolver: zodResolver(loginSchema),
@@ -305,14 +303,5 @@ const LoginComponent = () => {
         </div>
       </div>
     </LazyMotion>
-  );
-};
-
-// Wrapper with provider
-export default function Login() {
-  return (
-    <LoginProvider>
-      <LoginComponent />
-    </LoginProvider>
   );
 }

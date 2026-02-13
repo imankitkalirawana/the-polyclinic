@@ -26,7 +26,7 @@ export function Header({
             <span className="sr-only">Go back</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4 text-default-500"
+              className="text-default-500 h-4 w-4"
               viewBox="0 0 24 24"
             >
               <path
