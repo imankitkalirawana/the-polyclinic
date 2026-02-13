@@ -1,5 +1,5 @@
 import type { DateValue } from '@internationalized/date';
-import { GENDERS } from '@/libs/constants';
+import { PatientType } from '../../patient';
 
 export enum QueueStatus {
   PAYMENT_PENDING = 'PAYMENT_PENDING',
@@ -11,26 +11,6 @@ export enum QueueStatus {
   CANCELLED = 'CANCELLED',
   COMPLETED = 'COMPLETED',
 }
-
-export type PatientInfo = {
-  id: string;
-  user_id: string;
-  name: string;
-  phone?: string;
-  email: string;
-  gender?: GENDERS;
-  age?: number;
-  image?: string;
-  dob?: string;
-  address?: string;
-  bloodType?: string;
-  bloodPressure?: string;
-  heartRate?: number;
-  allergies?: string;
-  diseases?: string;
-  height?: number;
-  weight?: number;
-};
 
 export type DoctorInfo = {
   id: string;
@@ -100,7 +80,7 @@ export type AppointmentQueueType = {
   appointmentDate: string;
   prescription: string;
   status: QueueStatus;
-  patient: PatientInfo;
+  patient: Pick<PatientType, 'id' | 'name' | 'phone' | 'email' | 'gender' | 'age' | 'vitals'>;
   doctor: DoctorInfo;
   bookedByUser: UserInfo;
   completedByUser?: UserInfo;

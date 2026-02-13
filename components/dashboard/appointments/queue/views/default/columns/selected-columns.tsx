@@ -4,7 +4,8 @@ import { Button, ScrollShadow } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useState } from 'react';
 import { RestrictToVerticalAxis } from '@dnd-kit/abstract/modifiers';
-import { DragDropProvider } from '@dnd-kit/react';
+
+const MIN_SELECTED_COLUMNS = 3;
 
 export default function SelectedColumns({
   selectedColumns,
@@ -13,24 +14,21 @@ export default function SelectedColumns({
   selectedColumns: ColumnDefinition[];
   onRemoveColumn: (column: ColumnDefinition) => void;
 }) {
+  const canRemove = selectedColumns.length > MIN_SELECTED_COLUMNS;
+
   return (
     <ScrollShadow className="border-divider border-l px-4">
-      <DragDropProvider
-        onDragStart={({ operation }) => {
-          console.log('Started dragging', operation?.source?.id);
-        }}
-      >
-        <ul className="flex flex-col">
-          {selectedColumns?.map((column, index) => (
-            <Sortable
-              key={column.id}
-              column={column}
-              index={index}
-              onRemoveColumn={onRemoveColumn}
-            />
-          ))}
-        </ul>
-      </DragDropProvider>
+      <ul className="flex flex-col">
+        {selectedColumns?.map((column, index) => (
+          <Sortable
+            key={column.id}
+            column={column}
+            index={index}
+            onRemoveColumn={onRemoveColumn}
+            canRemove={canRemove}
+          />
+        ))}
+      </ul>
     </ScrollShadow>
   );
 }
@@ -39,10 +37,12 @@ function Sortable({
   column,
   index,
   onRemoveColumn,
+  canRemove,
 }: {
   column: ColumnDefinition;
   index: number;
   onRemoveColumn: (column: ColumnDefinition) => void;
+  canRemove: boolean;
 }) {
   const { ref, handleRef } = useSortable({
     id: column.id,
@@ -64,7 +64,7 @@ function Sortable({
         </span>
         <span>{column.name}</span>
       </div>
-      {isHovering && (
+      {isHovering && canRemove && (
         <Button
           color="danger"
           radius="full"

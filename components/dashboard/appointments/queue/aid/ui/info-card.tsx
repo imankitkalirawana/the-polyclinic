@@ -4,6 +4,7 @@ import { useAppointmentQueueWithAID } from '@/services/client/appointment/queue/
 
 export default function AppointmentQueue({ aid }: { aid: string }) {
   const { data: appointment } = useAppointmentQueueWithAID(aid);
+
   return (
     <main>
       <div>
@@ -29,13 +30,16 @@ export default function AppointmentQueue({ aid }: { aid: string }) {
                     <span className="text-foreground-500">{appointment?.patient.phone || '-'}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="font-medium">DOB:</span>
-                    <span className="text-foreground-500">{appointment?.patient?.dob || '-'}</span>
-                  </div>
-                  <div className="flex justify-between">
                     <span className="font-medium">Blood Type:</span>
                     <span className="text-foreground-500">
-                      {appointment?.patient.bloodType || '-'}
+                      {appointment?.patient.vitals?.bloodType || '-'}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between">
+                    <span className="font-medium">Diseases:</span>
+                    <span className="text-foreground-500">
+                      {appointment?.patient.vitals?.diseases || '-'}
                     </span>
                   </div>
                 </CardBody>
@@ -46,31 +50,31 @@ export default function AppointmentQueue({ aid }: { aid: string }) {
                   <div className="flex justify-between">
                     <span className="font-medium">Height:</span>
                     <span className="text-foreground-500">
-                      {appointment?.patient.height || '-'}
+                      {appointment?.patient.vitals?.height || '-'}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="font-medium">Weight:</span>
                     <span className="text-foreground-500">
-                      {appointment?.patient.weight || '-'}
+                      {appointment?.patient.vitals?.weight || '-'}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="font-medium">Blood Pressure:</span>
                     <span className="text-foreground-500">
-                      {appointment?.patient.bloodPressure || '-'}
+                      {appointment?.patient.vitals?.bloodPressure || '-'}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="font-medium">Heart Rate:</span>
                     <span className="text-foreground-500">
-                      {appointment?.patient.heartRate || '-'}
+                      {appointment?.patient.vitals?.heartRate || '-'}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="font-medium">Allergy:</span>
                     <span className="text-foreground-500">
-                      {appointment?.patient.allergies || '-'}
+                      {appointment?.patient.vitals?.allergies || '-'}
                     </span>
                   </div>
                 </CardBody>

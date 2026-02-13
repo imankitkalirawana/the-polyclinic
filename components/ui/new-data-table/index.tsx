@@ -28,7 +28,6 @@ function TableContent<TData>({
   const headerGroups = table.getHeaderGroups();
   const rows = table.getRowModel().rows;
   const flatHeaders = headerGroups[0]?.headers ?? [];
-  const hasColumns = flatHeaders.length > 0;
 
   const handleColumnDragStart = (columnId: string) => (e: React.DragEvent) => {
     setDraggedColumnId(columnId);
@@ -61,14 +60,6 @@ function TableContent<TData>({
   const handleColumnDragEnd = () => {
     setDraggedColumnId(null);
   };
-
-  if (!hasColumns) {
-    return (
-      <div className="border-default-200 bg-default-50 flex min-h-[200px] w-full items-center justify-center rounded-lg border p-6">
-        <p className="text-default-500">No columns configured</p>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-[200px] w-full flex-1 p-2">
@@ -108,7 +99,7 @@ function TableContent<TData>({
                     aria-orientation="vertical"
                     aria-label="Resize column"
                     className={cn(
-                      'z-2 absolute bottom-0 right-0 top-0 w-3 cursor-col-resize touch-none select-none',
+                      'absolute top-0 right-0 bottom-0 z-2 w-3 cursor-col-resize touch-none select-none',
                       'after:bg-default-200 hover:after:bg-primary-400 after:absolute after:right-0 after:inline-block after:h-full after:w-0.5 after:content-[""]'
                     )}
                     onMouseDown={(e) => {
@@ -125,7 +116,7 @@ function TableContent<TData>({
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody>
+        <TableBody emptyContent={<div className="text-default-500 text-center">No data</div>}>
           {rows.length === 0 ? (
             <TableRow>
               <TableCell colSpan={flatHeaders.length} className="text-default-500 text-center">
@@ -192,9 +183,10 @@ export function Table<TData extends Record<string, unknown> = RowData>(
   if ('table' in props && props.table) {
     return <TableContent table={props.table} topContent={props.topContent} />;
   }
-  const { data, columns, getRowId, topContent } = props;
+  const { data, columns, getRowId, topContent, tableKey } = props;
   return (
     <TableWithData<TData>
+      key={tableKey}
       data={data}
       columns={columns}
       getRowId={getRowId}

@@ -1,7 +1,15 @@
 export enum ColumnDataType {
   STRING = 'STRING',
   INTEGER = 'INTEGER',
-  HASHTAG = 'HASHTAG',
+  DATE = 'DATE',
+}
+
+export enum ColumnType {
+  DEFAULT = 'DEFAULT',
+  CHIP = 'CHIP',
+  EMAIL = 'EMAIL',
+  PHONE = 'PHONE',
+  URL = 'URL',
   DATE = 'DATE',
   TIME = 'TIME',
   DATETIME = 'DATETIME',
@@ -18,8 +26,12 @@ export enum TableViewType {
 export type ColumnDefinition = {
   id: string;
   name: string;
-  label: string;
   key: string;
-  type: ColumnDataType;
-  hidden?: boolean;
+  data_type: ColumnDataType;
+};
+
+export type SelectedColumnDefinition = ColumnDefinition & {
+  order: number;
+  pinned: boolean;
+  width?: number;
 };

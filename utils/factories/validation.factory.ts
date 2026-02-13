@@ -7,7 +7,12 @@ export const nullableStringValidation = z
   .optional();
 
 export const nullableNumberValidation = z.number().nullable().optional();
-export const nullablePositiveNumberValidation = z.number().int().positive().nullable().optional();
+export const nullablePositiveNumberValidation = z
+  .number({ error: 'Only numeric values are allowed.' })
+  .int({ error: 'Only integer values are allowed.' })
+  .positive({ error: 'Only positive numbers are allowed.' })
+  .nullable()
+  .optional();
 export const nullableIntegerValidation = z.number().int().nullable().optional();
 
 export const nameValidation = z

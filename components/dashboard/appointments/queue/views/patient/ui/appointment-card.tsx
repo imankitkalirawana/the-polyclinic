@@ -44,7 +44,7 @@ export default function AppointmentCard({ appointment }: { appointment: Appointm
             <div className="flex flex-col pt-1">
               <p className="text-default-700 flex gap-5 text-xl">
                 {formatDate(new Date(appointment.appointmentDate), 'EEEE, PP | p')}
-                <div>{renderChip({ item: appointment.status })}</div>
+                <span className="ml-2">{renderChip({ item: appointment.status })}</span>
               </p>
 
               <h2 className="text-2xl font-medium text-gray-900">{appointment.patient.name}</h2>
