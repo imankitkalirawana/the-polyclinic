@@ -19,7 +19,7 @@ const userProfileUpdateSchema = z.object({
 });
 
 export const doctorProfileUpdateSchema = z.object({
-  specialization: nullableStringValidation,
+  specializations: nullableStringValidation.array(),
   designation: nullableStringValidation,
   experience: nullablePositiveNumberValidation,
   education: nullableStringValidation,

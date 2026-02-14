@@ -1,8 +1,11 @@
+import { useSpecializations } from '@/services/client/doctor';
 import { UserFormValues } from '@/services/common/user/user.types';
-import { Input, NumberInput, Textarea } from '@heroui/react';
+import { Input, NumberInput, Select, SelectItem, Textarea } from '@heroui/react';
 import { Control, Controller } from 'react-hook-form';
 
 export default function DoctorFields({ control }: { control: Control<UserFormValues> }) {
+  const { data: specializations = [] } = useSpecializations();
+
   return (
     <>
       <Controller
@@ -21,18 +24,28 @@ export default function DoctorFields({ control }: { control: Control<UserFormVal
         )}
       />
       <Controller
-        name="doctor.specialization"
+        name="doctor.specializations"
         control={control}
         render={({ field, fieldState }) => (
-          <Input
-            {...field}
+          <Select
+            selectionMode="multiple"
+            ref={field.ref}
             label="Specialization"
             placeholder="eg. Cardiology, Neurology"
-            value={field.value || ''}
-            onChange={field.onChange}
+            selectedKeys={
+              field.value?.filter((k): k is string => typeof k === 'string' && k !== '') ?? []
+            }
+            onSelectionChange={(keys) => {
+              const set = keys as Set<string>;
+              field.onChange(set.size ? Array.from(set) : undefined);
+            }}
             isInvalid={!!fieldState.error}
             errorMessage={fieldState.error?.message}
-          />
+          >
+            {specializations.map((specialization) => (
+              <SelectItem key={specialization.id}>{specialization.name}</SelectItem>
+            ))}
+          </Select>
         )}
       />
 

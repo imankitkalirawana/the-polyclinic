@@ -2,7 +2,17 @@ import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import { useDebounce } from '@/hooks/useDebounce';
 import { DoctorType, useAllDoctors } from '@/services/client/doctor';
 import { useCacheStore } from '@/store';
-import { addToast, Button, Card, Chip, cn } from '@heroui/react';
+import {
+  addToast,
+  Button,
+  Card,
+  Chip,
+  cn,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Tooltip,
+} from '@heroui/react';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import {
@@ -13,9 +23,12 @@ import {
 import { BookQueueSteps } from '@/components/dashboard/appointments/create/data';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
 import DateScroll from '../../../(common)/date-scroll';
+import DoctorCategories from './doctor-categories';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 export default function DoctorSelection() {
   const [search, setSearch] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
 
   const debouncedSearch = useDebounce(search, 500);
 
@@ -94,6 +107,13 @@ export default function DoctorSelection() {
           }}
         />
       </div>
+      {doctorsData?.categories && (
+        <DoctorCategories
+          categories={doctorsData.categories}
+          selectedCategory={selectedCategory}
+          onSelectCategory={setSelectedCategory}
+        />
+      )}
       <div className="grid grid-cols-2 gap-2">
         {doctorsData?.doctors?.map((doctor, index) => (
           <DoctorCard
@@ -138,11 +158,50 @@ const DoctorCard = ({
                 <span className="block max-w-24 truncate">{doctor.designation}</span>
               </Chip>
             )}
-            {doctor.specialization && (
-              <Chip title={doctor.specialization} size="sm" color="warning" variant="flat">
-                <span className="block max-w-24 truncate">{doctor.specialization}</span>
-              </Chip>
+            {doctor.specializations && doctor.specializations.length > 0 && (
+              <>
+                {doctor.specializations.slice(0, 3).map((specialization) => (
+                  <Chip
+                    key={specialization.id}
+                    title={specialization.name}
+                    size="sm"
+                    color="warning"
+                    variant="flat"
+                    endContent={
+                      <Popover showArrow className="max-w-64">
+                        <PopoverTrigger>
+                          <button type="button" className="m-0 cursor-pointer p-0">
+                            <Icon icon="solar:info-circle-bold-duotone" width={15} />
+                          </button>
+                        </PopoverTrigger>
+                        <PopoverContent>{specialization.description}</PopoverContent>
+                      </Popover>
+                    }
+                  >
+                    <span className="block max-w-24 truncate">{specialization.name}</span>
+                  </Chip>
+                ))}
+                {doctor.specializations.length > 3 && (
+                  <Tooltip
+                    delay={1000}
+                    content={doctor.specializations
+                      .slice(3)
+                      .map((specialization) => specialization.name)
+                      .join(', ')}
+                  >
+                    <Chip
+                      title={`${doctor.specializations.length - 3} more`}
+                      size="sm"
+                      color="warning"
+                      variant="flat"
+                    >
+                      <span className="block max-w-24 truncate">{`${doctor.specializations.length - 3} more`}</span>
+                    </Chip>
+                  </Tooltip>
+                )}
+              </>
             )}
+
             {doctor.education && (
               <Chip
                 title={doctor.education}

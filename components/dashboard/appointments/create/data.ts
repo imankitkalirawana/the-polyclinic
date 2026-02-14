@@ -73,12 +73,16 @@ const stepExclusionByRole: Partial<Record<Role, string[]>> = {
   [Role.PATIENT]: [BookQueueSteps.PATIENT_INFORMATION],
 };
 
-export function getBookQueueStepsByRole(role: Role) {
+export function getBookQueueStepsByRole(role: Role): VerticalCollapsibleStepProps[] {
   const excludedSteps = stepExclusionByRole[role] ?? [];
 
-  return Object.fromEntries(
-    Object.entries(BookQueueAppointmentSteps).filter(([stepKey]) =>
-      excludedSteps.includes(stepKey as BookQueueSteps)
-    )
-  );
+  return Object.entries(BookQueueAppointmentSteps)
+    .filter(([stepKey]) => !excludedSteps.includes(stepKey as BookQueueSteps))
+    .map(([, step]) => step);
+}
+
+export function getFirstBookQueueStep(role: Role): BookQueueSteps {
+  const steps = getBookQueueStepsByRole(role);
+  const firstKey = steps[0]?.key;
+  return firstKey ?? BookQueueSteps.PATIENT_INFORMATION;
 }

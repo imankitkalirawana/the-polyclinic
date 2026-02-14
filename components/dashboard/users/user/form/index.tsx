@@ -37,7 +37,10 @@ export default function UserForm({ id }: { id?: string }) {
     resolver: zodResolver(userFormValuesSchema),
     defaultValues: {
       user,
-      doctor,
+      doctor: {
+        ...doctor,
+        specializations: doctor?.specializations?.map((specialization) => specialization.id),
+      },
       patient,
     },
   });
@@ -67,7 +70,7 @@ export default function UserForm({ id }: { id?: string }) {
         handleSubmit(onSubmit);
       }}
     >
-      <CardHeader className="items-center justify-between px-4 pb-0 pt-4">
+      <CardHeader className="items-center justify-between px-4 pt-4 pb-0">
         <div>
           <h1 className="text-large">{title}</h1>
           <p className="text-default-500 text-tiny">

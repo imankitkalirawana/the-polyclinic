@@ -1,5 +1,5 @@
 import { PatientType } from '@/services/client/patient';
-import { DoctorType } from '@/services/client/doctor';
+import { DoctorSpecialization, DoctorType } from '@/services/client/doctor';
 import { DepartmentType } from '@/services/client/department/department.types';
 import { ServiceType } from '@/services/client/service/service.types';
 import { DrugType } from '@/services/client/drug/drug.types';
@@ -26,7 +26,7 @@ export interface CacheRegistry {
   appointments: AppointmentType[];
   appointmentQueues: AppointmentQueueType[];
   users: UserType[];
-
+  specializations: DoctorSpecialization[];
   // Single entities (for selections, current items, etc.)
   selectedPatient: PatientType | null;
   selectedDoctor: DoctorType | null;
@@ -146,6 +146,7 @@ export const cacheDefaults: CacheRegistry = {
   appointments: [],
   appointmentQueues: [],
   users: [],
+  specializations: [],
   selectedPatient: null,
   selectedDoctor: null,
   selectedDepartment: null,

@@ -1,12 +1,13 @@
-import { DoctorType, SlotConfig } from './doctor.types';
+import { DoctorSpecialization, DoctorType, SlotConfig } from './doctor.types';
 import { apiRequest } from '@/libs/axios';
+import { CreateSpecializationDto } from './doctor.dto';
 
 export class Doctor {
   private static API_BASE = '/doctors';
   static async getAll(search?: string) {
     return await apiRequest<{
       doctors: DoctorType[];
-      categories: string[];
+      categories: DoctorSpecialization[];
     }>({
       url: this.API_BASE,
       params: {
@@ -21,6 +22,20 @@ export class Doctor {
     }
     return await apiRequest<DoctorType>({
       url: `${this.API_BASE}/${id}`,
+    });
+  }
+
+  static async getSpecializations() {
+    return await apiRequest<DoctorSpecialization[]>({
+      url: `${this.API_BASE}/specializations`,
+    });
+  }
+
+  static async createSpecialization(specialization: CreateSpecializationDto) {
+    return await apiRequest<DoctorSpecialization>({
+      url: `${this.API_BASE}/specializations`,
+      method: 'POST',
+      data: specialization,
     });
   }
 }

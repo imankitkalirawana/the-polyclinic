@@ -15,7 +15,6 @@ import {
   DropdownItemWithSection,
 } from '@/components/ui/static-data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
-import { castData } from '@/libs/utils';
 import { DoctorType } from '@/services/client/doctor';
 import { useAllDoctors } from '@/services/client/doctor/doctor.query';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
@@ -44,6 +43,8 @@ export default function Doctors() {
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
   const { data, isLoading, isError, error } = useAllDoctors();
+
+  const doctors = data?.doctors ?? [];
 
   const handleDelete = async (userId: string) => {
     setSelectedUserId(userId);
@@ -118,7 +119,7 @@ export default function Doctors() {
         name: 'Specialization',
         uid: 'specialization',
         sortable: true,
-        renderCell: (doctor) => <CopyText>{doctor.specialization}</CopyText>,
+        renderCell: (doctor) => <CopyText>{doctor.specializations?.join(', ')}</CopyText>,
       },
       {
         name: 'Seating',
@@ -246,11 +247,7 @@ export default function Doctors() {
     </DropdownMenu>
   );
 
-  const doctors = castData<DoctorType[]>(data);
-
   if (isLoading) return <MinimalPlaceholder message="Loading doctors..." />;
-
-  if (!doctors) return null;
 
   return (
     <>

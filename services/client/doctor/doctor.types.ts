@@ -7,13 +7,22 @@ export interface DoctorType extends Base {
   phone: string;
   image?: string;
   departments?: string[];
-  specialization?: string;
+  specializations?: DoctorSpecialization[];
   designation?: string;
   experience?: number;
   education?: string;
   biography?: string;
   seating?: string;
 }
+
+export type DoctorSpecialization = {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
 
 export interface TimeSlot {
   id: string;
