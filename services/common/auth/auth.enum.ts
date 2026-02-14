@@ -7,6 +7,6 @@ export enum AuthMethod {
 
 export enum VerificationType {
   REGISTRATION = 'REGISTRATION',
-  FORGOT_PASSWORD = 'FORGOT_PASSWORD',
+  PASSWORD_RESET = 'PASSWORD_RESET',
   VERIFICATION = 'VERIFICATION',
 }

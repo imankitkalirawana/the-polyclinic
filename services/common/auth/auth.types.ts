@@ -40,6 +40,8 @@ export type VerifyOTPResponse = {
 
 export type ForgotPasswordRequest = {
   email: string;
+  password: string;
+  otp: string;
 };
 
 export type ForgotPasswordResponse = {

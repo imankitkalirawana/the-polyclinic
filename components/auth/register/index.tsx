@@ -8,6 +8,7 @@ import { z } from 'zod';
 import {
   emailValidation,
   nameValidation,
+  otpValidation,
   passwordValidation,
   phoneNumberValidation,
 } from '@/utils/factories/validation.factory';
@@ -24,11 +25,6 @@ import AuthPhoneInput from '../ui/auth-phone.input';
 import AuthOtpInput from '../ui/auth-otp.input';
 import { AuthTextInput } from '../ui/auth-text.input';
 import AuthPasswordInput from '../ui/auth-password.input';
-
-const otpValidation = z
-  .string()
-  .length(6, { message: 'OTP must be 6 digits' })
-  .regex(/^\d{6}$/, { message: 'OTP must contain only digits' });
 
 const registerSchema = z
   .object({
@@ -130,8 +126,6 @@ export default function Register() {
     name: 'meta',
     defaultValue: { page: 0, method: AuthMethod.EMAIL },
   });
-
-  console.log(form.formState.errors);
 
   const REGISTER_STEPS: Record<number, AuthStep> = {
     0: {

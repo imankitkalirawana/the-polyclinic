@@ -42,3 +42,8 @@ export const phoneNumberValidation = z
 export const passwordValidation = z
   .string()
   .min(8, { message: 'Password must be at least 8 characters' });
+
+export const otpValidation = z
+  .string()
+  .length(6, { message: 'OTP must be 6 digits' })
+  .regex(/^\d{6}$/, { message: 'OTP must contain only digits' });

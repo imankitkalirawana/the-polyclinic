@@ -57,7 +57,7 @@ export class AuthApi {
 
   static async forgotPassword(data: ForgotPasswordRequest) {
     return await apiRequest({
-      url: `${this.baseUrl}/forgot-password`,
+      url: `${this.baseUrl}/reset-password`,
       method: 'POST',
       data,
     });
