@@ -1,19 +1,21 @@
 import {
+  ForgotPasswordRequest,
   LoginRequest,
+  LoginResponse,
   RegistrationRequest,
+  RegistrationResponse,
   SendOTPRequest,
   VerifyOTPRequest,
-} from './auth.validation';
-import { RegistrationResponse, VerifyOTPResponse } from './auth.types';
+  VerifyOTPResponse,
+} from './auth.types';
 import { apiRequest } from '@/libs/axios';
-import { ForgotPasswordRequest } from './auth.validation';
 import { Session } from '@/types/session';
 
 export class AuthApi {
   private static baseUrl = '/auth';
 
   static async login(data: LoginRequest) {
-    const res = await apiRequest<{ token: string }>({
+    const res = await apiRequest<LoginResponse>({
       url: `${this.baseUrl}/login`,
       method: 'POST',
       data,
@@ -23,7 +25,7 @@ export class AuthApi {
 
   static async sendOTP(data: SendOTPRequest) {
     return await apiRequest({
-      url: `${this.baseUrl}/otp/request`,
+      url: `${this.baseUrl}/send-otp`,
       method: 'POST',
       data,
     });
@@ -31,7 +33,7 @@ export class AuthApi {
 
   static async verifyOTP(data: VerifyOTPRequest) {
     return await apiRequest<VerifyOTPResponse>({
-      url: `${this.baseUrl}/otp/verify`,
+      url: `${this.baseUrl}/verify-otp`,
       method: 'POST',
       data,
     });

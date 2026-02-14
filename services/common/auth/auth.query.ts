@@ -1,13 +1,15 @@
 import { AUTH_COOKIE_NAME } from '@/libs/axios/constants';
 import { AuthApi } from './auth.api';
+
+import { useCookies } from '@/libs/providers/cookies-provider';
+import { useGenericMutation } from '@/services/useGenericMutation';
 import {
   ForgotPasswordRequest,
   LoginRequest,
+  RegistrationRequest,
   SendOTPRequest,
   VerifyOTPRequest,
-} from './auth.validation';
-import { useCookies } from '@/libs/providers/cookies-provider';
-import { useGenericMutation } from '@/services/useGenericMutation';
+} from './auth.types';
 
 export const useLogin = () => {
   const { setCookie } = useCookies();
@@ -51,8 +53,28 @@ export const useVerifyOTP = () => {
   });
 };
 
+export const useRegister = () => {
+  const { setCookie } = useCookies();
+  return useGenericMutation({
+    mutationFn: (data: RegistrationRequest) => AuthApi.registerUser(data),
+    invalidateQueries: [['user']],
+    onSuccess: (result) => {
+      setCookie(AUTH_COOKIE_NAME, result.data?.token ?? '', {
+        path: '/',
+        maxAge: 7 * 24 * 60 * 60,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+      });
+      window.location.href = '/dashboard';
+    },
+  });
+};
+
 export const useForgotPassword = () => {
   return useGenericMutation({
     mutationFn: (data: ForgotPasswordRequest) => AuthApi.forgotPassword(data),
+    onSuccess: () => {
+      window.location.href = '/auth/login';
+    },
   });
 };

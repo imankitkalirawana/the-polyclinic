@@ -1,0 +1,12 @@
+export enum AuthMethod {
+  PHONE = 'PHONE',
+  EMAIL = 'EMAIL',
+  GOOGLE = 'GOOGLE',
+  ANOTHER = 'ANOTHER',
+}
+
+export enum VerificationType {
+  REGISTRATION = 'REGISTRATION',
+  FORGOT_PASSWORD = 'FORGOT_PASSWORD',
+  VERIFICATION = 'VERIFICATION',
+}

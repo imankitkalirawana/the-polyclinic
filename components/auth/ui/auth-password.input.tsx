@@ -1,4 +1,4 @@
-import { Input } from '@heroui/react';
+import { Button, Input } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useState } from 'react';
 import { Control, Controller, FieldValues, Path } from 'react-hook-form';
@@ -36,9 +36,19 @@ export default function AuthPasswordInput<T extends FormWithUserPassword>({
           isInvalid={!!fieldState.error}
           errorMessage={fieldState.error?.message}
           endContent={
-            <button type="button" onClick={toggleVisibility}>
-              {isVisible ? <Icon icon="solar:eye-closed-linear" /> : <Icon icon="solar:eye-bold" />}
-            </button>
+            <Button
+              isIconOnly
+              type="button"
+              variant="light"
+              radius="full"
+              onPress={toggleVisibility}
+              tabIndex={-1}
+            >
+              <Icon
+                icon={isVisible ? 'solar:eye-closed-bold-duotone' : 'solar:eye-bold-duotone'}
+                width={20}
+              />
+            </Button>
           }
         />
       )}
