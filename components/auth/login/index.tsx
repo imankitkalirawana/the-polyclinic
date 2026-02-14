@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Link } from '@heroui/react';
+import { Link, addToast } from '@heroui/react';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -17,10 +17,11 @@ import AuthEmailInput from '../ui/auth-email.input';
 import AuthPhoneInput from '../ui/auth-phone.input';
 import AuthPasswordInput from '../ui/auth-password.input';
 import { AuthApi } from '@/services/common/auth/auth.api';
-import { useLogin } from '@/services/common/auth/auth.query';
+import { useGoogleLogin, useLogin } from '@/services/common/auth/auth.query';
 import { AuthStep } from '../types';
 import { AuthMethod } from '../../../services/common/auth/auth.enum';
 import AuthMethodSelector from '../ui/auth-method.input';
+// import { CredentialResponse, useGoogleOneTapLogin } from '@react-oauth/google';
 
 const loginSchema = z
   .object({
@@ -30,7 +31,7 @@ const loginSchema = z
       password: passwordValidation.optional(),
     }),
     meta: z.object({
-      method: z.enum(AuthMethod),
+      method: z.nativeEnum(AuthMethod),
       page: z.number().min(0).max(2),
       submitCount: z.number().default(0),
     }),
@@ -56,6 +57,21 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function Login() {
   const { mutateAsync: login, isSuccess: isLoginSuccess } = useLogin();
+  const { mutate: loginWithGoogle, isPending: isGoogleLoginPending } = useGoogleLogin();
+
+  // useGoogleOneTapLogin({
+  //   auto_select: true,
+  //   onSuccess: (credential: CredentialResponse) => {
+  //     loginWithGoogle({ credential: credential.credential ?? '' });
+  //   },
+  //   onError: () => {
+  //     addToast({
+  //       title: 'Google sign-in was cancelled or failed.',
+  //       color: 'danger',
+  //     });
+  //   },
+  // });
+
   const form = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -77,8 +93,18 @@ export default function Login() {
       content: (
         <AuthMethodSelector
           onChange={(method) => {
+            if (method === AuthMethod.GOOGLE) return;
             form.setValue('meta.method', method);
             form.setValue('meta.page', 1);
+          }}
+          onGoogleSuccess={(credential) => {
+            loginWithGoogle({ credential });
+          }}
+          onGoogleError={() => {
+            addToast({
+              title: 'Google sign-in was cancelled or failed.',
+              color: 'danger',
+            });
           }}
         />
       ),
@@ -171,7 +197,7 @@ export default function Login() {
       submitLabel={LOGIN_STEPS[meta.page]?.button}
       onSubmit={form.handleSubmit(onSubmit)}
       isSubmitting={form.formState.isSubmitting}
-      isSubmitDisabled={isLoginSuccess}
+      isSubmitDisabled={isLoginSuccess || isGoogleLoginPending}
       footer={footer}
     />
   );

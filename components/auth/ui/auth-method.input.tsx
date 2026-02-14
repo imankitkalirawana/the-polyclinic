@@ -1,12 +1,38 @@
+'use client';
+
 import { Button } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { AuthMethod } from '../../../services/common/auth/auth.enum';
+import { TokenResponse, useGoogleLogin } from '@react-oauth/google';
+
+import { GOOGLE_CLIENT_ID } from '@/libs/config';
+
+import { AuthMethod } from '@/services/common/auth/auth.enum';
+
+export interface AuthMethodSelectorProps {
+  onChange: (method: AuthMethod) => void;
+  /** When provided and Google is configured, Google sign-in is shown and credential is sent here. */
+  onGoogleSuccess?: (credential: string) => void;
+  onGoogleError?: () => void;
+}
 
 export default function AuthMethodSelector({
   onChange,
-}: {
-  onChange: (method: AuthMethod) => void;
-}) {
+  onGoogleSuccess,
+  onGoogleError,
+}: AuthMethodSelectorProps) {
+  const showGoogleLogin = Boolean(GOOGLE_CLIENT_ID) && typeof onGoogleSuccess === 'function';
+  const googleLogin = useGoogleLogin({
+    flow: 'implicit',
+    onSuccess: (response: TokenResponse) => {
+      if (response.access_token) {
+        onGoogleSuccess?.(response.access_token);
+      }
+    },
+    onError: () => {
+      onGoogleError?.();
+    },
+  });
+
   return (
     <>
       <Button
@@ -34,10 +60,11 @@ export default function AuthMethodSelector({
       <Button
         fullWidth
         variant="bordered"
-        startContent={<Icon icon="devicon:google" width={20} />}
+        startContent={<Icon icon="material-icon-theme:google" width={20} />}
         size="lg"
         data-testid="continue-with-google-btn"
-        onPress={() => onChange(AuthMethod.GOOGLE)}
+        onPress={() => googleLogin()}
+        isDisabled={!showGoogleLogin}
       >
         Continue with Google
       </Button>

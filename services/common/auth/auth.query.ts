@@ -5,6 +5,7 @@ import { useCookies } from '@/libs/providers/cookies-provider';
 import { useGenericMutation } from '@/services/useGenericMutation';
 import {
   ForgotPasswordRequest,
+  GoogleLoginRequest,
   LoginRequest,
   RegistrationRequest,
   SendOTPRequest,
@@ -15,6 +16,23 @@ export const useLogin = () => {
   const { setCookie } = useCookies();
   return useGenericMutation({
     mutationFn: (data: LoginRequest) => AuthApi.login(data),
+    invalidateQueries: [['user']],
+    onSuccess: (result) => {
+      setCookie(AUTH_COOKIE_NAME, result.data?.token ?? '', {
+        path: '/',
+        maxAge: 7 * 24 * 60 * 60,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+      });
+      window.location.href = '/dashboard';
+    },
+  });
+};
+
+export const useGoogleLogin = () => {
+  const { setCookie } = useCookies();
+  return useGenericMutation({
+    mutationFn: (data: GoogleLoginRequest) => AuthApi.loginWithGoogle(data),
     invalidateQueries: [['user']],
     onSuccess: (result) => {
       setCookie(AUTH_COOKIE_NAME, result.data?.token ?? '', {

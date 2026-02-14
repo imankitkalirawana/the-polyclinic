@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Link } from '@heroui/react';
+import { Link, addToast } from '@heroui/react';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -16,7 +16,7 @@ import { APP_INFO } from '@/libs/config';
 import { AuthFormLayout } from '../shared';
 import AuthEmailInput from '../ui/auth-email.input';
 import { AuthApi } from '@/services/common/auth/auth.api';
-import { useRegister, useSendOTP } from '@/services/common/auth/auth.query';
+import { useGoogleLogin, useRegister, useSendOTP } from '@/services/common/auth/auth.query';
 import { AuthStep } from '../types';
 import AuthMethodSelector from '../ui/auth-method.input';
 import { AuthMethod, VerificationType } from '@/services/common/auth/auth.enum';
@@ -112,6 +112,7 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 export default function Register() {
   const { mutate: sendOTP } = useSendOTP();
   const { mutateAsync: registerUser, isSuccess: isRegisterSuccess } = useRegister();
+  const { mutate: loginWithGoogle, isPending: isGoogleLoginPending } = useGoogleLogin();
 
   const form = useForm({
     resolver: zodResolver(registerSchema),
@@ -136,6 +137,15 @@ export default function Register() {
           onChange={(method) => {
             form.setValue('meta.method', method);
             form.setValue('meta.page', 1);
+          }}
+          onGoogleSuccess={(credential) => {
+            loginWithGoogle({ credential });
+          }}
+          onGoogleError={() => {
+            addToast({
+              title: 'Google sign-in was cancelled or failed.',
+              color: 'danger',
+            });
           }}
         />
       ),
@@ -266,7 +276,7 @@ export default function Register() {
       submitLabel={REGISTER_STEPS[meta.page]?.button}
       onSubmit={form.handleSubmit(onSubmit)}
       isSubmitting={form.formState.isSubmitting}
-      isSubmitDisabled={isRegisterSuccess}
+      isSubmitDisabled={isRegisterSuccess || isGoogleLoginPending}
       footer={footer}
     />
   );

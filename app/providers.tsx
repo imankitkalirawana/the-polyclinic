@@ -3,6 +3,7 @@
 import React from 'react';
 import NextTopLoader from 'nextjs-toploader';
 import { useRouter } from 'nextjs-toploader/app';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { HeroUIProvider, Spinner, ToastProvider } from '@heroui/react';
 import { I18nProvider } from '@react-aria/i18n';
 import { Toaster } from 'sonner';
@@ -12,6 +13,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { getQueryClient } from './get-query-client';
 
 import { ThemeProvider } from 'next-themes';
+import { GOOGLE_CLIENT_ID } from '@/libs/config';
 import { CookiesProvider, CookieItem } from '@/libs/providers/cookies-provider';
 import { SessionProvider } from '@/libs/providers/session-provider';
 import { Session } from '@/types/session';
@@ -45,7 +47,7 @@ export function Providers({
 }) {
   const router = useRouter();
 
-  return (
+  const content = (
     <QueryClientProvider client={queryClient}>
       <ErrorBoundary fallback={<div>Error</div>}>
         <HeroUIProvider navigate={router.push}>
@@ -109,4 +111,10 @@ export function Providers({
       </ErrorBoundary>
     </QueryClientProvider>
   );
+
+  if (GOOGLE_CLIENT_ID) {
+    return <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>{content}</GoogleOAuthProvider>;
+  }
+
+  return content;
 }

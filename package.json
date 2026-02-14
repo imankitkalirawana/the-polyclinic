@@ -33,6 +33,7 @@
     "@polyclinic/store": "^1.0.0",
     "@radix-ui/react-slot": "^1.2.3",
     "@react-aria/i18n": "^3.12.8",
+    "@react-oauth/google": "^0.13.4",
     "@react-email/components": "0.5.3",
     "@react-types/shared": "^3.29.0",
     "@sentry/nextjs": "^10",

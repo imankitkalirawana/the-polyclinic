@@ -1,6 +1,9 @@
 // export const isCaching = process.env.NODE_ENV === 'production' ? true : false;
 export const isCaching = false;
 export const API_BASE_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/v1`;
+
+/** Google OAuth 2.0 client ID for Sign in with Google (public, safe for client). */
+export const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? '';
 export const DEFAULT_AVATAR = 'https://cdn.jsdelivr.net/gh/alohe/avatars/png/memo_2.png';
 
 export const APP_INFO = {

@@ -47,3 +47,11 @@ export type ForgotPasswordRequest = {
 export type ForgotPasswordResponse = {
   success: boolean;
 };
+
+/** Payload sent to backend for Google OAuth; credential is the Google ID token (JWT). */
+export type GoogleLoginRequest = {
+  credential: string;
+};
+
+/** Backend returns same token shape as email login for Google auth. */
+export type GoogleLoginResponse = LoginResponse;

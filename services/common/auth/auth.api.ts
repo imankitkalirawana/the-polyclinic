@@ -1,5 +1,7 @@
 import {
   ForgotPasswordRequest,
+  GoogleLoginRequest,
+  GoogleLoginResponse,
   LoginRequest,
   LoginResponse,
   RegistrationRequest,
@@ -21,6 +23,18 @@ export class AuthApi {
       data,
     });
     return res;
+  }
+
+  /**
+   * Exchange Google ID token (credential) for app session token.
+   * Backend verifies the credential with Google and returns same token shape as email login.
+   */
+  static async loginWithGoogle(data: GoogleLoginRequest) {
+    return await apiRequest<GoogleLoginResponse>({
+      url: `${this.baseUrl}/google`,
+      method: 'POST',
+      data,
+    });
   }
 
   static async sendOTP(data: SendOTPRequest) {
