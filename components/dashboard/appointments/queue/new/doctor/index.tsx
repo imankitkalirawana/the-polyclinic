@@ -13,12 +13,11 @@ import {
   PopoverTrigger,
   Tooltip,
 } from '@heroui/react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import {
   CreateAppointmentContentContainer,
   CreateAppointmentContentHeader,
-  SearchInput,
 } from '../../../(common)';
 import { BookQueueSteps } from '@/components/dashboard/appointments/create/data';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
@@ -27,12 +26,12 @@ import DoctorCategories from './doctor-categories';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 export default function DoctorSelection() {
-  const [search, setSearch] = useState('');
+  const [search, _setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
 
   const debouncedSearch = useDebounce(search, 500);
 
-  const { data: doctorsData, isLoading, isRefetching } = useAllDoctors(debouncedSearch);
+  const { data: doctorsData } = useAllDoctors(debouncedSearch);
   const form = useFormContext<CreateAppointmentQueueFormValues>();
   const setIndexedCache = useCacheStore((state) => state.setIndexedCache);
 
@@ -66,6 +65,16 @@ export default function DoctorSelection() {
     form.setValue('meta.currentStep', BookQueueSteps.ADDITIONAL_DETAILS);
   };
 
+  const filteredDoctors = useMemo(() => {
+    if (!doctorsData) return [];
+    if (selectedCategory) {
+      return doctorsData.doctors.filter((d) =>
+        d.specializations?.some((s) => s.id === selectedCategory)
+      );
+    }
+    return doctorsData.doctors;
+  }, [doctorsData, selectedCategory]);
+
   return (
     <CreateAppointmentContentContainer
       header={
@@ -96,7 +105,7 @@ export default function DoctorSelection() {
           hidePastDates={true}
         />
       </div>
-      <div>
+      {/* <div>
         <SearchInput
           isLoading={isLoading || isRefetching}
           value={search}
@@ -106,16 +115,19 @@ export default function DoctorSelection() {
             form.setValue('appointment.doctorId', '');
           }}
         />
-      </div>
+      </div> */}
       {doctorsData?.categories && (
         <DoctorCategories
           categories={doctorsData.categories}
           selectedCategory={selectedCategory}
-          onSelectCategory={setSelectedCategory}
+          onSelectCategory={(category) => {
+            setSelectedCategory(category);
+            form.setValue('appointment.doctorId', '');
+          }}
         />
       )}
       <div className="grid grid-cols-2 gap-2">
-        {doctorsData?.doctors?.map((doctor, index) => (
+        {filteredDoctors?.map((doctor, index) => (
           <DoctorCard
             key={index}
             doctor={doctor}
