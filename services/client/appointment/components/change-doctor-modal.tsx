@@ -8,7 +8,7 @@ import { useState } from 'react';
 export default function ChangeDoctorModal({ type }: { type: 'change-doctor' | 'assign-doctor' }) {
   const { setAction, aid } = useAppointmentStore();
   const { mutateAsync: changeDoctor } = useChangeDoctorAppointment();
-  const { data: doctors, isLoading: isDoctorsLoading } = useAllDoctors();
+  const { data: doctorsData, isLoading: isDoctorsLoading } = useAllDoctors();
 
   const [selectedDoctor, setSelectedDoctor] = useState<DoctorType | undefined>(undefined);
 
@@ -25,7 +25,7 @@ export default function ChangeDoctorModal({ type }: { type: 'change-doctor' | 'a
         <SelectionList
           isLoading={isDoctorsLoading}
           items={
-            doctors?.map((doctor) => ({
+            doctorsData?.doctors?.map((doctor) => ({
               title: doctor.name,
               id: doctor.id,
               subtitle: doctor.designation,
@@ -33,7 +33,9 @@ export default function ChangeDoctorModal({ type }: { type: 'change-doctor' | 'a
             })) || []
           }
           selectedId={selectedDoctor?.id}
-          onSelect={(doctorId) => setSelectedDoctor(doctors?.find((d) => d.id === doctorId))}
+          onSelect={(doctorId) =>
+            setSelectedDoctor(doctorsData?.doctors?.find((d) => d.id === doctorId))
+          }
         />
       </div>
     );

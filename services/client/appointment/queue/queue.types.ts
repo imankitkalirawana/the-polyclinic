@@ -1,5 +1,6 @@
 import type { DateValue } from '@internationalized/date';
 import { GENDERS } from '@/libs/constants';
+import { BookQueueSteps } from '@/components/dashboard/appointments/create/data';
 
 export enum QueueStatus {
   PAYMENT_PENDING = 'PAYMENT_PENDING',
@@ -53,7 +54,7 @@ export type AppointmentQueueRequest = {
 export type CreateAppointmentQueueFormValues = {
   appointment: AppointmentQueueRequest & { queueId?: string | null };
   meta: {
-    currentStep: number;
+    currentStep: BookQueueSteps;
     showConfirmation: boolean;
     showReceipt: boolean;
     createNewPatient: boolean;

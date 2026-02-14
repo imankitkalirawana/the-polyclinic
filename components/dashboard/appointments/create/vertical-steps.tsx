@@ -7,8 +7,10 @@ import { cn } from '@heroui/react';
 import { domAnimation, LazyMotion, m } from 'framer-motion';
 import type { ComponentProps } from 'react';
 import { useControlledState } from '@react-stately/utils';
+import { BookQueueSteps } from './data';
 
 export type VerticalCollapsibleStepProps = {
+  key: BookQueueSteps;
   className?: string;
   description?: React.ReactNode;
   title?: React.ReactNode;

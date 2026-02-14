@@ -44,7 +44,7 @@ export function QueueFilters({
     values: initialValues,
   });
 
-  const { data: doctors = [] } = useAllDoctors();
+  const { data: doctorsData } = useAllDoctors();
 
   useEffect(() => {
     reset(initialValues);
@@ -125,9 +125,7 @@ export function QueueFilters({
             }}
             onBlur={field.onBlur}
           >
-            {doctors.map((d) => (
-              <SelectItem key={d.id}>{d.name}</SelectItem>
-            ))}
+            {doctorsData?.doctors?.map((d) => <SelectItem key={d.id}>{d.name}</SelectItem>) || []}
           </Select>
         )}
       />

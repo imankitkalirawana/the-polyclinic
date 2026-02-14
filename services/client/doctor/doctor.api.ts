@@ -4,7 +4,10 @@ import { apiRequest } from '@/libs/axios';
 export class Doctor {
   private static API_BASE = '/doctors';
   static async getAll(search?: string) {
-    return await apiRequest<DoctorType[]>({
+    return await apiRequest<{
+      doctors: DoctorType[];
+      categories: string[];
+    }>({
       url: this.API_BASE,
       params: {
         search,

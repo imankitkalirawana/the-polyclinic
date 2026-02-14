@@ -4,6 +4,7 @@ import {
   CreateAppointmentContentHeader,
 } from '../../../(common)';
 import { Button, Textarea } from '@heroui/react';
+import { BookQueueSteps } from '@/components/dashboard/appointments/create/data';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
 
 export default function AdditionalInfo() {
@@ -24,7 +25,7 @@ export default function AdditionalInfo() {
             variant="shadow"
             color="primary"
             radius="full"
-            onPress={() => form.setValue('meta.currentStep', 3)}
+            onPress={() => form.setValue('meta.currentStep', BookQueueSteps.REVIEW_AND_PAY)}
             // endContent={<Kbd keys={['enter']} className="bg-transparent text-primary-foreground" />}
           >
             Next

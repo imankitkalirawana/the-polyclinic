@@ -48,10 +48,12 @@ export {
 } from './cache.store';
 
 // Query hooks with cache integration
+export type { IndexedCacheFetchConfig } from './useQueryWithCache';
 export {
   useQueryWithCache,
   useCollectionQuery,
   useIndexedQuery,
+  useIndexedCacheValueOrFetch,
   useCacheSync,
   useCacheInvalidation,
 } from './useQueryWithCache';

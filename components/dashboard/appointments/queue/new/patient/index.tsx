@@ -25,6 +25,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 
 import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import { BookQueueSteps } from '@/components/dashboard/appointments/create/data';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
 import EditPatientModal from './edit-patient';
 import { formatAge, formatGender } from '@/libs/utils';
@@ -61,7 +62,7 @@ export default function PatientSelection() {
       });
       return;
     }
-    form.setValue('meta.currentStep', 1);
+    form.setValue('meta.currentStep', BookQueueSteps.DOCTOR_DATE_SELECTION);
   };
 
   return (
@@ -126,7 +127,7 @@ export default function PatientSelection() {
           onSuccess={(id) => {
             form.setValue('appointment.patientId', id);
             form.setValue('meta.createNewPatient', false);
-            form.setValue('meta.currentStep', 1);
+            form.setValue('meta.currentStep', BookQueueSteps.DOCTOR_DATE_SELECTION);
           }}
         />
       )} */}
@@ -166,7 +167,7 @@ const PatientCard = ({
     <Card
       isPressable
       className={cn(
-        'flex w-full flex-row items-center justify-between gap-4 border-2 border-divider px-4 py-4 shadow-none',
+        'border-divider flex w-full flex-row items-center justify-between gap-4 border-2 px-4 py-4 shadow-none',
         {
           'border-primary': isSelected,
         }

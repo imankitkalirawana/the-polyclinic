@@ -10,6 +10,7 @@ import {
   CreateAppointmentContentHeader,
   SearchInput,
 } from '../../../(common)';
+import { BookQueueSteps } from '@/components/dashboard/appointments/create/data';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
 import DateScroll from '../../../(common)/date-scroll';
 
@@ -18,7 +19,7 @@ export default function DoctorSelection() {
 
   const debouncedSearch = useDebounce(search, 500);
 
-  const { data: doctors, isLoading, isRefetching } = useAllDoctors(debouncedSearch);
+  const { data: doctorsData, isLoading, isRefetching } = useAllDoctors(debouncedSearch);
   const form = useFormContext<CreateAppointmentQueueFormValues>();
   const setIndexedCache = useCacheStore((state) => state.setIndexedCache);
 
@@ -29,7 +30,7 @@ export default function DoctorSelection() {
   const handleDoctorSelect = (id: string) => {
     form.setValue('appointment.doctorId', id);
     // Find and cache the selected doctor for later use in ReviewAndPay
-    const doctor = doctors?.find((d) => d.id === id);
+    const doctor = doctorsData?.doctors?.find((d) => d.id === id);
     if (doctor) {
       setIndexedCache('doctorById', id, doctor);
     }
@@ -49,7 +50,7 @@ export default function DoctorSelection() {
       });
       return;
     }
-    form.setValue('meta.currentStep', 2);
+    form.setValue('meta.currentStep', BookQueueSteps.ADDITIONAL_DETAILS);
   };
 
   return (
@@ -94,7 +95,7 @@ export default function DoctorSelection() {
         />
       </div>
       <div className="grid grid-cols-2 gap-2">
-        {doctors?.map((doctor, index) => (
+        {doctorsData?.doctors?.map((doctor, index) => (
           <DoctorCard
             key={index}
             doctor={doctor}
@@ -120,7 +121,7 @@ const DoctorCard = ({
     <Card
       isPressable
       className={cn(
-        'flex w-full flex-row items-center justify-between gap-4 border-2 border-divider px-4 py-4 shadow-none',
+        'border-divider flex w-full flex-row items-center justify-between gap-4 border-2 px-4 py-4 shadow-none',
         {
           'border-primary': isSelected,
         }

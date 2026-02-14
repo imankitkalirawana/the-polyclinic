@@ -28,6 +28,8 @@ export default function AppointmentBookingConfirmation() {
   const { data: patient, isLoading: isPatientLoading } = useUserWithID(appointment.patientId);
   const { data: doctor, isLoading: isDoctorLoading } = useDoctorById(appointment.doctorId);
 
+  console.log('patient', patient);
+
   return (
     <Modal
       isOpen
@@ -36,20 +38,20 @@ export default function AppointmentBookingConfirmation() {
       onOpenChange={() => setValue('meta.showConfirmation', false)}
     >
       <ModalContent>
-        <ModalHeader className="flex-col items-center border-b border-divider">
+        <ModalHeader className="border-divider flex-col items-center border-b">
           <Icon
-            className="mb-3 text-warning-500"
+            className="text-warning-500 mb-3"
             icon="solar:info-circle-bold-duotone"
             width={56}
           />
           <p className="mb-2 text-base font-medium">Schedule this Appointment?</p>
-          <p className="text-center font-normal text-default-500 text-small">
+          <p className="text-default-500 text-small text-center font-normal">
             Please review the details below before confirming your appointment.
           </p>
         </ModalHeader>
         <ModalBody>
           <div className="flex w-full flex-col items-start gap-2">
-            <div className="flex w-full flex-col text-small">
+            <div className="text-small flex w-full flex-col">
               <p className="text-default-500 text-tiny">Patient Name</p>
               {isPatientLoading ? (
                 <Skeleton className="h-4 w-24" />
@@ -57,7 +59,7 @@ export default function AppointmentBookingConfirmation() {
                 <p className="font-medium">{patient?.name}</p>
               )}
             </div>
-            <div className="flex w-full flex-col text-small">
+            <div className="text-small flex w-full flex-col">
               <p className="text-default-500 text-tiny">When</p>
               <p className="font-medium">
                 {format(appointment.date, 'EEEE, MMMM d, yyyy')} -{' '}
@@ -65,7 +67,7 @@ export default function AppointmentBookingConfirmation() {
               </p>
             </div>
             {!!appointment.doctorId && (
-              <div className="flex w-full flex-col text-small">
+              <div className="text-small flex w-full flex-col">
                 <p className="text-default-500 text-tiny">Doctor</p>
                 {isDoctorLoading ? (
                   <Skeleton className="h-4 w-24" />
@@ -84,34 +86,34 @@ export default function AppointmentBookingConfirmation() {
                 )}
               </div>
             )}
-            <div className="flex w-full flex-col text-small">
+            <div className="text-small flex w-full flex-col">
               <p className="text-default-500 text-tiny">Where</p>
-              <Link className="flex w-fit items-center gap-1 text-foreground" size="sm">
+              <Link className="text-foreground flex w-fit items-center gap-1" size="sm">
                 <p className="font-medium">Google Meet</p>
                 <Icon className="text-default-500" icon="mdi:open-in-new" width={14} />
               </Link>
             </div>
             {!!appointment.additionalInfo?.symptoms && (
-              <div className="flex w-full flex-col text-small">
+              <div className="text-small flex w-full flex-col">
                 <p className="text-default-500 text-tiny">Symptoms</p>
                 <p className="font-medium">{appointment.additionalInfo?.symptoms}</p>
               </div>
             )}
             {!!appointment.additionalInfo?.notes && (
-              <div className="flex w-full flex-col text-small">
+              <div className="text-small flex w-full flex-col">
                 <p className="text-default-500 text-tiny">Additional notes</p>
                 <p className="font-medium">{appointment.additionalInfo?.notes}</p>
               </div>
             )}
             {!!appointment.type && (
-              <div className="flex w-full flex-col text-small">
+              <div className="text-small flex w-full flex-col">
                 <p className="text-default-500 text-tiny">Appointment Type</p>
                 <p className="font-medium capitalize">{appointment.type}</p>
               </div>
             )}
           </div>
         </ModalBody>
-        <ModalFooter className="border-t border-divider">
+        <ModalFooter className="border-divider border-t">
           <Button
             fullWidth
             variant="bordered"
