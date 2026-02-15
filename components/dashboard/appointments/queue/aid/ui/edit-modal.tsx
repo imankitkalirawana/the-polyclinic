@@ -17,11 +17,10 @@ interface EditModalProps {
 
 export default function EditModal({ aid, isOpen, onClose }: EditModalProps) {
   const { data: appointment } = useAppointmentQueueWithAID(aid);
-  const patientUserId = appointment?.patient.user_id;
+  const patientUserId = appointment?.patient;
 
-  const { data: profile } = useUserProfileByID(patientUserId);
+  const { data: profile } = useUserProfileByID(patientUserId?.user_id);
   const updateUser = useUpdateUser();
-
   const form = useForm<UserFormValues>({
     resolver: zodResolver(userFormValuesSchema),
     defaultValues: {

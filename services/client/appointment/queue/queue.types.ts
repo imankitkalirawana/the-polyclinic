@@ -80,7 +80,10 @@ export type AppointmentQueueType = {
   appointmentDate: string;
   prescription: string;
   status: QueueStatus;
-  patient: Pick<PatientType, 'id' | 'name' | 'phone' | 'email' | 'gender' | 'age' | 'vitals'>;
+  patient: Pick<
+    PatientType,
+    'id' | 'name' | 'phone' | 'email' | 'gender' | 'age' | 'vitals' | 'user_id' | 'image'
+  >;
   doctor: DoctorInfo;
   bookedByUser: UserInfo;
   completedByUser?: UserInfo;
