@@ -12,11 +12,11 @@ export const useAllAppointmentQueues = () => {
   });
 };
 
-export const useAppointmentQueueById = (appointmentId?: string | null) => {
+export const useAppointmentQueueByAid = (aid?: string | null) => {
   return useGenericQuery({
-    queryKey: ['appointment-queue', appointmentId],
-    queryFn: () => AppointmentQueueApi.getById(appointmentId),
-    enabled: !!appointmentId,
+    queryKey: ['appointment-queue-by-aid', aid],
+    queryFn: () => AppointmentQueueApi.getByAid(aid),
+    enabled: !!aid,
   });
 };
 

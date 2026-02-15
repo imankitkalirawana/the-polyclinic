@@ -28,7 +28,7 @@ export default function Department({ did }: { did: string }) {
           }
           className="max-h-[300px] w-full object-cover"
           classNames={{
-            wrapper: 'w-full max-h-[300px] !max-w-full',
+            wrapper: 'w-full max-h-[300px] max-w-full!',
           }}
         />
       </div>
@@ -47,7 +47,7 @@ export default function Department({ did }: { did: string }) {
               max={3}
               size="sm"
               renderCount={(count) => (
-                <p className="ms-2 font-medium text-foreground text-small">+{count} others</p>
+                <p className="text-foreground text-small ms-2 font-medium">+{count} others</p>
               )}
               total={(department?.team?.length || 0) - 3}
             >
@@ -56,22 +56,22 @@ export default function Department({ did }: { did: string }) {
           </div>
         </div>
         <div>
-          <h3 className="text-2xl font-semibold text-default-300">About</h3>
-          <p className="leading-tight text-default-500">{department.description}</p>
+          <h3 className="text-default-300 text-2xl font-semibold">About</h3>
+          <p className="text-default-500 leading-tight">{department.description}</p>
         </div>
         <div>
-          <h3 className="text-2xl font-semibold text-default-300">Our Treatments</h3>
+          <h3 className="text-default-300 text-2xl font-semibold">Our Treatments</h3>
           <ul className="list-disc space-y-4 pl-6">
             {department?.features?.map((feature) => (
               <li key={feature.name}>
-                <h4 className="font-medium text-default-500 text-large">{feature.name}</h4>
-                <p className="leading-tight text-default-400 text-small">{feature.description}</p>
+                <h4 className="text-default-500 text-large font-medium">{feature.name}</h4>
+                <p className="text-default-400 text-small leading-tight">{feature.description}</p>
               </li>
             ))}
           </ul>
         </div>
         <div className="space-y-4 pb-4">
-          <h3 className="text-2xl font-semibold text-default-300">Our Team</h3>
+          <h3 className="text-default-300 text-2xl font-semibold">Our Team</h3>
           <div className="flex flex-wrap gap-4">
             {department.team?.map((doctor) => <TeamCard key={doctor.id} doctor={doctor} />)}
           </div>
@@ -89,7 +89,7 @@ function TeamCard({
   return (
     <Card className="min-w-[200px] items-center p-4">
       <Avatar size="lg" src={doctor.image} />
-      <h3 className="font-medium text-large">{doctor.name}</h3>
+      <h3 className="text-large font-medium">{doctor.name}</h3>
       <p className="text-default-400 text-small">{doctor.designation}</p>
     </Card>
   );

@@ -1,9 +1,6 @@
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { cn } from '@heroui/react';
-import {
-  AppointmentQueueResponse,
-  QueueStatus,
-} from '@/services/client/appointment/queue/queue.types';
+import { AppointmentQueueType, QueueStatus } from '@/services/client/appointment/queue/queue.types';
 import {
   Accordion,
   AccordionItem,
@@ -19,7 +16,7 @@ import Avatar from 'boring-avatars';
 import { formatDate } from 'date-fns';
 import { useState } from 'react';
 import { getQueueStatusColor } from './helper';
-import { formatGender } from '@/lib/utils';
+import { formatGender } from '@/libs/utils';
 
 export default function QueuesList({
   isLoading,
@@ -28,7 +25,7 @@ export default function QueuesList({
   onSelect,
 }: {
   isLoading?: boolean;
-  queues: AppointmentQueueResponse[];
+  queues: AppointmentQueueType[];
   className?: string;
   onSelect?: (queueId: string) => void;
 }) {
@@ -152,7 +149,7 @@ export default function QueuesList({
                   <div className="flex flex-col">
                     <span className="text-default-500 text-tiny">Booked By</span>
                     <p className="capitalize text-small">
-                      {queue.bookedByUser.id === queue.patient.userId
+                      {queue.bookedByUser.id === queue.patient.user_id
                         ? 'Self'
                         : queue.bookedByUser.name}
                     </p>

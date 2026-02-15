@@ -23,8 +23,9 @@ import { UserType } from '@/services/common/user/user.types';
 import { CopyText } from '@/components/ui/copy';
 import ResetPasswordModal from './ui/reset-password-modal';
 import DeleteUserModal from './ui/delete-user-modal';
-import { useSession } from '@/lib/providers/session-provider';
+import { useSession } from '@/libs/providers/session-provider';
 import { Role } from '@/services/common/user/user.constants';
+import { useRouter } from 'nextjs-toploader/app';
 
 const INITIAL_VISIBLE_COLUMNS = ['image', 'name', 'email', 'role', 'createdAt'];
 
@@ -58,6 +59,7 @@ const getRoles = (targetUser: UserType, action: Action): Role[] => {
 };
 
 export default function Users() {
+  const router = useRouter();
   const { user: currentUser } = useSession();
   const deleteModal = useDisclosure();
   const resetPasswordModal = useDisclosure();
@@ -82,14 +84,12 @@ export default function Users() {
       {
         key: 'view',
         children: 'View',
-        as: Link,
-        href: `/dashboard/users/${user.id}`,
+        onPress: () => router.push(`/dashboard/users/${user.id}`),
       },
       {
         key: 'edit',
         children: 'Edit',
-        as: Link,
-        href: `/dashboard/users/${user.id}/edit`,
+        onPress: () => router.push(`/dashboard/users/${user.id}/edit`),
         roles: getRoles(user, 'edit'),
       },
       {

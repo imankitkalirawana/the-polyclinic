@@ -37,7 +37,7 @@ export function CellRenderer({
         className
       )}
     >
-      <div className={cn('flex items-center gap-2 text-small')}>
+      <div className={cn('text-small flex items-center gap-2')}>
         {!!icon && (
           <div className={cn('rounded-small p-[5px]', classNames?.icon)}>
             <Icon icon={icon} width={iconSize} />
@@ -49,11 +49,11 @@ export function CellRenderer({
           })}
         >
           {!!label && (
-            <span className={cn('capitalize text-default-400', classNames?.label)}>{label}</span>
+            <span className={cn('text-default-400 capitalize', classNames?.label)}>{label}</span>
           )}
           <span
             className={cn(
-              'capitalize text-default-foreground',
+              'text-default-foreground capitalize',
               {
                 lowercase: typeof value === 'string' && value.includes('@'),
               },

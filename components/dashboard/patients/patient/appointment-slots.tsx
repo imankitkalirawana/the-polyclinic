@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { faker } from '@faker-js/faker';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import { TIMINGS } from '@/lib/config';
+import { TIMINGS } from '@/libs/config';
 
 type Slot = {
   id: string;

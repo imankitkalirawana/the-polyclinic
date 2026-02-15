@@ -1,19 +1,28 @@
 import { Base } from '@/types';
 
 export interface DoctorType extends Base {
-  userId: string;
+  user_id: string;
   name: string;
   email: string;
   phone: string;
   image?: string;
-  specialization?: string;
-  designation?: string;
   departments?: string[];
-  experience?: string;
+  specializations?: DoctorSpecialization[];
+  designation?: string;
+  experience?: number;
   education?: string;
   biography?: string;
   seating?: string;
 }
+
+export type DoctorSpecialization = {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
 
 export interface TimeSlot {
   id: string;

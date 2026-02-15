@@ -15,7 +15,6 @@ import {
   DropdownItemWithSection,
 } from '@/components/ui/static-data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
-import { castData } from '@/lib/utils';
 import { DoctorType } from '@/services/client/doctor';
 import { useAllDoctors } from '@/services/client/doctor/doctor.query';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
@@ -24,7 +23,7 @@ import { CopyText } from '@/components/ui/copy';
 import ResetPasswordModal from '../users/ui/reset-password-modal';
 import DeleteUserModal from '../users/ui/delete-user-modal';
 import { Role } from '@/services/common/user/user.constants';
-import { useSession } from '@/lib/providers/session-provider';
+import { useSession } from '@/libs/providers/session-provider';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'image',
@@ -44,6 +43,8 @@ export default function Doctors() {
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
   const { data, isLoading, isError, error } = useAllDoctors();
+
+  const doctors = data?.doctors ?? [];
 
   const handleDelete = async (userId: string) => {
     setSelectedUserId(userId);
@@ -74,7 +75,7 @@ export default function Doctors() {
         key: 'change-password',
         color: 'warning',
         children: 'Reset Password',
-        onPress: () => handleChangePassword(doctor.userId),
+        onPress: () => handleChangePassword(doctor.user_id),
         section: 'Danger Zone',
         className: 'text-warning',
         roles: [Role.ADMIN],
@@ -83,7 +84,7 @@ export default function Doctors() {
         key: 'delete',
         children: 'Delete',
         color: 'danger',
-        onPress: () => handleDelete(doctor.userId),
+        onPress: () => handleDelete(doctor.user_id),
         section: 'Danger Zone',
         className: 'text-danger',
         roles: [Role.ADMIN],
@@ -118,7 +119,7 @@ export default function Doctors() {
         name: 'Specialization',
         uid: 'specialization',
         sortable: true,
-        renderCell: (doctor) => <CopyText>{doctor.specialization}</CopyText>,
+        renderCell: (doctor) => <CopyText>{doctor.specializations?.join(', ')}</CopyText>,
       },
       {
         name: 'Seating',
@@ -246,11 +247,7 @@ export default function Doctors() {
     </DropdownMenu>
   );
 
-  const doctors = castData<DoctorType[]>(data);
-
   if (isLoading) return <MinimalPlaceholder message="Loading doctors..." />;
-
-  if (!doctors) return null;
 
   return (
     <>

@@ -1,3 +1,6 @@
+import { Role } from '@/services/common/user/user.constants';
+import { VerticalCollapsibleStepProps } from './vertical-steps';
+
 export const CREATE_APPOINTMENT_STEPS = [
   {
     title: 'Patient Information',
@@ -26,26 +29,37 @@ export const CREATE_APPOINTMENT_STEPS = [
   },
 ];
 
-export const BOOK_QUEUE_APPOINTMENT_STEPS = [
-  {
+export enum BookQueueSteps {
+  PATIENT_INFORMATION = 'patient-information',
+  DOCTOR_SELECTION = 'doctor-selection',
+  ADDITIONAL_DETAILS = 'additional-details',
+  REVIEW_AND_PAY = 'review-and-pay',
+}
+
+export const BookQueueAppointmentSteps: Record<string, VerticalCollapsibleStepProps> = {
+  [BookQueueSteps.PATIENT_INFORMATION]: {
+    key: BookQueueSteps.PATIENT_INFORMATION,
     title: 'Patient Information',
     description: 'Please provide your patient information to create an appointment.',
     details: ['Select patient from the list or create a new patient.'],
   },
-  {
-    title: 'Doctor & Date Selection',
-    description: 'Please select the doctor and date you want to book an appointment with.',
+  [BookQueueSteps.DOCTOR_SELECTION]: {
+    key: BookQueueSteps.DOCTOR_SELECTION,
+    title: 'Doctor Selection',
+    description: 'Please select the doctor you want to book an appointment with.',
+    details: ['Select the doctor that you would like to book an appointment with.'],
+  },
+  [BookQueueSteps.ADDITIONAL_DETAILS]: {
+    key: BookQueueSteps.ADDITIONAL_DETAILS,
+    title: 'Date & Additional Details',
+    description: 'Please provide additional details for your appointment.',
     details: [
-      'Select the doctor with whom you want to book an appointment',
-      'Select the date and time for the appointment',
+      'Select the date for the appointment',
+      'Provide additional information to the doctor',
     ],
   },
-  {
-    title: 'Additional Details',
-    description: 'Please provide additional details for your appointment.',
-    details: ['Please provide additional details for your appointment.'],
-  },
-  {
+  [BookQueueSteps.REVIEW_AND_PAY]: {
+    key: BookQueueSteps.REVIEW_AND_PAY,
     title: 'Review and Pay',
     description: 'Check details and pay',
     details: [
@@ -53,4 +67,22 @@ export const BOOK_QUEUE_APPOINTMENT_STEPS = [
       'Pay via UPI, Bank Transfer, or Cash.',
     ],
   },
-];
+};
+
+const stepExclusionByRole: Partial<Record<Role, string[]>> = {
+  [Role.PATIENT]: [BookQueueSteps.PATIENT_INFORMATION],
+};
+
+export function getBookQueueStepsByRole(role: Role): VerticalCollapsibleStepProps[] {
+  const excludedSteps = stepExclusionByRole[role] ?? [];
+
+  return Object.entries(BookQueueAppointmentSteps)
+    .filter(([stepKey]) => !excludedSteps.includes(stepKey as BookQueueSteps))
+    .map(([, step]) => step);
+}
+
+export function getFirstBookQueueStep(role: Role): BookQueueSteps {
+  const steps = getBookQueueStepsByRole(role);
+  const firstKey = steps[0]?.key;
+  return firstKey ?? BookQueueSteps.PATIENT_INFORMATION;
+}

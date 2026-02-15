@@ -1,5 +1,5 @@
 import { DrugType } from '@/services/client/drug/drug.types';
-import { apiRequest } from '@/lib/axios';
+import { apiRequest } from '@/libs/axios';
 
 export class DrugApi {
   private static API_BASE = '/client/drugs';

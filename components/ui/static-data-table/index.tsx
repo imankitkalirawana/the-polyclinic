@@ -35,7 +35,7 @@ import { useMemoizedCallback } from './use-memoized-callback';
 
 import type { $FixMe } from '@/types';
 import { useDebounce } from '@/hooks/useDebounce';
-import { useSession } from '@/lib/providers/session-provider';
+import { useSession } from '@/libs/providers/session-provider';
 import { Role } from '@/services/common/user/user.constants';
 
 export function Table<T extends TableItem>({
@@ -56,6 +56,7 @@ export function Table<T extends TableItem>({
   onSelectionChange,
   isError,
   errorMessage,
+  renderFilter,
 }: TableProps<T>) {
   const [searchValue, setSearchValue] = useState<string>('');
   const debouncedSearch = useDebounce(searchValue, 500);
@@ -97,9 +98,10 @@ export function Table<T extends TableItem>({
           state.visibleColumns === 'all' ||
           (Array.from(state.visibleColumns).includes(column.uid) &&
             !column.isHidden &&
-            (column.roles?.includes(currentUser?.role as Role) || !column.roles))
+            // When currentUser is missing (e.g. SSR), show column so server/client column set matches and hydration succeeds
+            (!currentUser || !column.roles || column.roles.includes(currentUser.role)))
       );
-  }, [state.visibleColumns, state.sortDescriptor, columns]);
+  }, [state.visibleColumns, state.sortDescriptor, columns, currentUser?.role]);
 
   const itemFilter = useCallback(
     (item: T) =>
@@ -287,6 +289,7 @@ export function Table<T extends TableItem>({
               />
             )}
 
+            {!!renderFilter && renderFilter()}
             {filters.length > 0 && (
               <div>
                 <Popover placement="bottom">
@@ -306,7 +309,7 @@ export function Table<T extends TableItem>({
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-80">
-                    <ScrollShadow className="flex max-h-96 w-full flex-col gap-6 px-2 py-4 scrollbar-hide">
+                    <ScrollShadow className="scrollbar-hide flex max-h-96 w-full flex-col gap-6 px-2 py-4">
                       {filters.map((filter) => (
                         <RadioGroup
                           key={filter.key}
@@ -417,7 +420,7 @@ export function Table<T extends TableItem>({
 
           <Divider className="h-5" orientation="vertical" />
 
-          <div className="whitespace-nowrap text-default-800 text-small">
+          <div className="text-default-800 text-small whitespace-nowrap">
             {isAll(selectedKeys)
               ? 'All items selected'
               : `${selectedKeys.size > 0 ? `${selectedKeys.size} Selected` : ''}`}

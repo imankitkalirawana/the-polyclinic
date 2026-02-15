@@ -25,13 +25,15 @@ import { useDebounce } from '@/hooks/useDebounce';
 
 import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import { BookQueueSteps } from '@/components/dashboard/appointments/create/data';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
-import NewPatient from './new-patient';
-import { formatAge, formatGender } from '@/lib/utils';
+import EditPatientModal from './edit-patient';
+import { formatAge, formatGender } from '@/libs/utils';
 
 export default function PatientSelection() {
   const [search, setSearch] = useState('');
   const [selectedPatient, setSelectedPatient] = useState<PatientType | null>(null);
+  const [patientToEdit, setPatientToEdit] = useState<PatientType | null>(null);
 
   const debouncedSearch = useDebounce(search, 500);
 
@@ -60,7 +62,7 @@ export default function PatientSelection() {
       });
       return;
     }
-    form.setValue('meta.currentStep', 1);
+    form.setValue('meta.currentStep', BookQueueSteps.DOCTOR_SELECTION);
   };
 
   return (
@@ -113,34 +115,37 @@ export default function PatientSelection() {
             isSelected={patientId === patient.id}
             onSelect={handlePatientSelect}
             onView={setSelectedPatient}
-            onDelete={(_patient) => {
-              addToast({
-                title: 'Delete not available',
-                description: 'Deleting patients is not available from the appointment queue.',
-                color: 'warning',
-              });
+            onEdit={(patientRecord) => {
+              setPatientToEdit(patientRecord);
             }}
           />
         ))}
       </div>
-      {form.watch('meta.createNewPatient') && (
+      {/* {form.watch('meta.createNewPatient') && (
         <NewPatient
           onClose={() => form.setValue('meta.createNewPatient', false)}
           onSuccess={(id) => {
             form.setValue('appointment.patientId', id);
             form.setValue('meta.createNewPatient', false);
-            form.setValue('meta.currentStep', 1);
+            form.setValue('meta.currentStep', BookQueueSteps.DOCTOR_DATE_SELECTION);
           }}
         />
-      )}
+      )} */}
       <Modal
         isOpen={!!selectedPatient}
         onClose={() => setSelectedPatient(null)}
-        size="4xl"
+        size="3xl"
         title="Patient Details"
         body={<ViewPatientBody patient={selectedPatient as PatientType} />}
         hideCancelButton
       />
+      {patientToEdit && (
+        <EditPatientModal
+          patient={patientToEdit}
+          isOpen={!!patientToEdit}
+          onClose={() => setPatientToEdit(null)}
+        />
+      )}
     </CreateAppointmentContentContainer>
   );
 }
@@ -150,19 +155,19 @@ const PatientCard = ({
   isSelected,
   onSelect,
   onView,
-  onDelete,
+  onEdit,
 }: {
   patient: PatientType;
   isSelected: boolean;
   onSelect: (id: string) => void;
   onView?: (patient: PatientType) => void;
-  onDelete?: (patient: PatientType) => void;
+  onEdit?: (patient: PatientType) => void;
 }) => {
   return (
     <Card
       isPressable
       className={cn(
-        'flex w-full flex-row items-center justify-between gap-4 border-2 border-divider px-4 py-4 shadow-none',
+        'border-divider flex w-full flex-row items-center justify-between gap-4 border-2 px-4 py-4 shadow-none',
         {
           'border-primary': isSelected,
         }
@@ -212,17 +217,8 @@ const PatientCard = ({
             <DropdownItem key="view" onPress={() => onView?.(patient)}>
               View
             </DropdownItem>
-
-            <DropdownItem color="warning" key="edit">
+            <DropdownItem color="warning" key="edit" onPress={() => onEdit?.(patient)}>
               Edit
-            </DropdownItem>
-            <DropdownItem
-              key="delete"
-              onClick={() => onDelete?.(patient)}
-              className="text-danger"
-              color="danger"
-            >
-              Delete
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>

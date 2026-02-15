@@ -1,19 +1,23 @@
 import {
+  ForgotPasswordRequest,
+  GoogleLoginRequest,
+  GoogleLoginResponse,
   LoginRequest,
+  LoginResponse,
   RegistrationRequest,
+  RegistrationResponse,
   SendOTPRequest,
   VerifyOTPRequest,
-} from './auth.validation';
-import { RegistrationResponse, VerifyOTPResponse } from './auth.types';
-import { apiRequest } from '@/lib/axios';
-import { ForgotPasswordRequest } from './auth.validation';
+  VerifyOTPResponse,
+} from './auth.types';
+import { apiRequest } from '@/libs/axios';
 import { Session } from '@/types/session';
 
 export class AuthApi {
   private static baseUrl = '/auth';
 
   static async login(data: LoginRequest) {
-    const res = await apiRequest<{ token: string }>({
+    const res = await apiRequest<LoginResponse>({
       url: `${this.baseUrl}/login`,
       method: 'POST',
       data,
@@ -21,9 +25,21 @@ export class AuthApi {
     return res;
   }
 
+  /**
+   * Exchange Google ID token (credential) for app session token.
+   * Backend verifies the credential with Google and returns same token shape as email login.
+   */
+  static async loginWithGoogle(data: GoogleLoginRequest) {
+    return await apiRequest<GoogleLoginResponse>({
+      url: `${this.baseUrl}/google`,
+      method: 'POST',
+      data,
+    });
+  }
+
   static async sendOTP(data: SendOTPRequest) {
     return await apiRequest({
-      url: `${this.baseUrl}/otp/request`,
+      url: `${this.baseUrl}/send-otp`,
       method: 'POST',
       data,
     });
@@ -31,7 +47,7 @@ export class AuthApi {
 
   static async verifyOTP(data: VerifyOTPRequest) {
     return await apiRequest<VerifyOTPResponse>({
-      url: `${this.baseUrl}/otp/verify`,
+      url: `${this.baseUrl}/verify-otp`,
       method: 'POST',
       data,
     });
@@ -55,7 +71,7 @@ export class AuthApi {
 
   static async forgotPassword(data: ForgotPasswordRequest) {
     return await apiRequest({
-      url: `${this.baseUrl}/forgot-password`,
+      url: `${this.baseUrl}/reset-password`,
       method: 'POST',
       data,
     });

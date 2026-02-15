@@ -19,7 +19,7 @@ import { APPOINTMENT_TYPES } from '@/services/client/appointment';
 import { useAllDepartments } from '@/services/client/department';
 
 export default function DoctorSelection({ className }: { className?: string }) {
-  const { data: doctors, isLoading: isDoctorsLoading } = useAllDoctors();
+  const { data: doctorsData, isLoading: isDoctorsLoading } = useAllDoctors();
   const { data: departments } = useAllDepartments();
   const { watch, setValue } = useCreateAppointmentForm();
   const [search, setSearch] = useState('');
@@ -29,26 +29,28 @@ export default function DoctorSelection({ className }: { className?: string }) {
   const appointment = watch('appointment');
 
   const fuse = useMemo(() => {
-    if (!doctors) return null;
-    return new Fuse(doctors, {
+    if (!doctorsData) return null;
+    return new Fuse(doctorsData.doctors, {
       keys: ['name', 'email', 'phone', 'department', 'designation', 'id'],
       threshold: 0.3,
     });
-  }, [doctors]);
+  }, [doctorsData]);
 
   const filteredDoctors = useMemo(() => {
-    if (!doctors) return [];
+    if (!doctorsData) return [];
     if (selectedDepartment) {
-      return doctors.filter((d) => d.departments?.some((d) => d === selectedDepartment));
+      return doctorsData.doctors.filter((d) =>
+        d.departments?.some((d) => d === selectedDepartment)
+      );
     }
-    if (!debouncedSearch.trim() || !fuse) return doctors;
+    if (!debouncedSearch.trim() || !fuse) return doctorsData.doctors;
 
     return fuse.search(debouncedSearch).map((result) => result.item);
-  }, [doctors, debouncedSearch, fuse, selectedDepartment]);
+  }, [doctorsData, debouncedSearch, fuse, selectedDepartment]);
 
   const doctor = useMemo(() => {
-    return doctors?.find((d) => d.id === appointment.doctorId);
-  }, [doctors, appointment.doctorId]);
+    return doctorsData?.doctors?.find((d) => d.id === appointment.doctorId);
+  }, [doctorsData?.doctors, appointment.doctorId]);
 
   const isDisabled = useMemo(() => {
     return appointment.type === APPOINTMENT_TYPES.follow_up.value;
@@ -72,7 +74,7 @@ export default function DoctorSelection({ className }: { className?: string }) {
             color="primary"
             radius="full"
             onPress={() => setValue('meta.currentStep', 3)}
-            endContent={<Kbd keys={['enter']} className="bg-transparent text-primary-foreground" />}
+            endContent={<Kbd keys={['enter']} className="text-primary-foreground bg-transparent" />}
           >
             Next
           </Button>

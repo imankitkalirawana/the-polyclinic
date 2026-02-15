@@ -3,7 +3,7 @@ import { AppointmentQueueApi } from '@/services/client/appointment/queue/queue.a
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { loadSearchParams } from './search-params';
 import { SearchParams } from 'nuqs/server';
-import { getServerSession } from '@/lib/serverAuth';
+import { getServerSession } from '@/libs/serverAuth';
 import { Role } from '@/services/common/user/user.constants';
 import DefaultQueueView from '@/components/dashboard/appointments/queue/views/default';
 import PatientQueueView from '@/components/dashboard/appointments/queue/views/patient';
@@ -21,7 +21,7 @@ export default async function QueuePage({ searchParams }: PageProps) {
 
   const queryKey = isDoctor
     ? ['queue-for-doctor', session?.user?.integrated_user_id, id, date]
-    : ['appointment-queues', id];
+    : ['appointment-queues'];
 
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({

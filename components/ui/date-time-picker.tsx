@@ -11,8 +11,8 @@ import {
 } from '@heroui/react';
 import { CalendarDate, getLocalTimeZone, Time, today } from '@internationalized/date';
 
-import { disabledDates } from '@/lib/appointments/new';
-import { TIMINGS } from '@/lib/config';
+import { disabledDates } from '@/libs/appointments/new';
+import { TIMINGS } from '@/libs/config';
 import { $FixMe } from '@/types';
 
 export default function DateTimePicker({

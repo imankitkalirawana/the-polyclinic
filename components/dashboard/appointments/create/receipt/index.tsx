@@ -38,20 +38,20 @@ export default function AppointmentBookingReceipt() {
       }}
     >
       <ModalContent>
-        <ModalHeader className="flex-col items-center border-b border-divider">
+        <ModalHeader className="border-divider flex-col items-center border-b">
           <Icon
-            className="mb-3 text-success-500"
+            className="text-success-500 mb-3"
             icon="solar:check-circle-bold-duotone"
             width={56}
           />
           <p className="mb-2 text-base font-medium">This appointment is scheduled</p>
-          <p className="text-center font-normal text-default-500 text-small">
+          <p className="text-default-500 text-small text-center font-normal">
             We sent a confirmation email to the patient and the doctor.
           </p>
         </ModalHeader>
         <ModalBody>
           <div className="flex w-full flex-col items-start gap-2">
-            <div className="flex w-full flex-col text-small">
+            <div className="text-small flex w-full flex-col">
               <p className="text-default-500 text-tiny">Patient Name</p>
               {isPatientLoading ? (
                 <Skeleton className="h-4 w-24" />
@@ -59,15 +59,15 @@ export default function AppointmentBookingReceipt() {
                 <p className="font-medium">{patient?.name}</p>
               )}
             </div>
-            <div className="flex w-full flex-col text-small">
+            <div className="text-small flex w-full flex-col">
               <p className="text-default-500 text-tiny">When</p>
               <p className="font-medium">
-                {format(appointment.date, 'EEEE, MMMM d, yyyy')} -{' '}
-                {format(appointment.date, 'h:mm a')}
+                {format(new Date(appointment.date), 'EEEE, MMMM d, yyyy')} -{' '}
+                {format(new Date(appointment.date), 'h:mm a')}
               </p>
             </div>
             {!!appointment.doctorId && (
-              <div className="flex w-full flex-col text-small">
+              <div className="text-small flex w-full flex-col">
                 <p className="text-default-500 text-tiny">Doctor</p>
                 {isDoctorLoading ? (
                   <Skeleton className="h-4 w-24" />
@@ -88,34 +88,34 @@ export default function AppointmentBookingReceipt() {
                 )}
               </div>
             )}
-            <div className="flex w-full flex-col text-small">
+            <div className="text-small flex w-full flex-col">
               <p className="text-default-500 text-tiny">Where</p>
-              <Link className="flex w-fit items-center gap-1 text-foreground" size="sm">
+              <Link className="text-foreground flex w-fit items-center gap-1" size="sm">
                 <p className="font-medium">Google Meet</p>
                 <Icon className="text-default-500" icon="mdi:open-in-new" width={14} />
               </Link>
             </div>
             {!!appointment.additionalInfo?.symptoms && (
-              <div className="flex w-full flex-col text-small">
+              <div className="text-small flex w-full flex-col">
                 <p className="text-default-500 text-tiny">Symptoms</p>
                 <p className="font-medium">{appointment.additionalInfo?.symptoms}</p>
               </div>
             )}
             {!!appointment.additionalInfo?.notes && (
-              <div className="flex w-full flex-col text-small">
+              <div className="text-small flex w-full flex-col">
                 <p className="text-default-500 text-tiny">Additional notes</p>
                 <p className="font-medium">{appointment.additionalInfo?.notes}</p>
               </div>
             )}
             {!!appointment.type && (
-              <div className="flex w-full flex-col text-small">
+              <div className="text-small flex w-full flex-col">
                 <p className="text-default-500 text-tiny">Appointment Type</p>
                 <p className="font-medium capitalize">{appointment.type}</p>
               </div>
             )}
           </div>
-          <Divider className="w-full bg-default-100" />
-          <p className="text-center text-default-500 text-small">
+          <Divider className="bg-default-100 w-full" />
+          <p className="text-default-500 text-small text-center">
             Need to make a change?{' '}
             <Link
               className="text-default-800 text-small"
@@ -135,7 +135,7 @@ export default function AppointmentBookingReceipt() {
               Cancel
             </Link>
           </p>
-          <Divider className="w-full bg-default-100" />
+          <Divider className="bg-default-100 w-full" />
           <div className="flex flex-col items-center gap-2">
             <p className="text-default-500 text-small">Add to calendar</p>
             <div className="flex items-center gap-2">
@@ -154,7 +154,7 @@ export default function AppointmentBookingReceipt() {
             </div>
           </div>
         </ModalBody>
-        <ModalFooter className="border-t border-divider">
+        <ModalFooter className="border-divider border-t">
           <Button
             fullWidth
             variant="bordered"

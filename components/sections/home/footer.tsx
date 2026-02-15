@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Logo from '@/components/ui/logo';
 import { Button, Input } from '@heroui/react';
-import { APP_INFO } from '@/lib/config';
+import { APP_INFO } from '@/libs/config';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 const enterpriseLinks = [

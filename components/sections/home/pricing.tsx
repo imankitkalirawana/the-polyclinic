@@ -1,7 +1,7 @@
 import { Button, Card } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import Link from 'next/link';
-import { currency } from '@/lib/currency';
+import { currency } from '@/libs/currency';
 
 export default function Pricing() {
   return (

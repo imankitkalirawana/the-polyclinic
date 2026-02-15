@@ -87,14 +87,14 @@ export function Calendar({ appointments }: CalendarProps) {
 
   return (
     <>
-      <div className="flex h-[calc(100vh_-_60px)] max-h-[calc(100vh_-_60px)] flex-col overflow-hidden">
+      <div className="flex h-[calc(100vh-60px)] max-h-[calc(100vh-60px)] flex-col overflow-hidden">
         <CalendarHeader
           currentDate={currentDate}
           onDateChange={setCurrentDate}
           onToday={() => setCurrentDate(new Date())}
           onCreateAppointment={handleCreateAppointment}
         />
-        <div className="h-[calc(100vh_-_120px)] flex-1">{renderView()}</div>
+        <div className="h-[calc(100vh-120px)] flex-1">{renderView()}</div>
       </div>
       {aid && <AppointmentDrawer />}
       <Modal

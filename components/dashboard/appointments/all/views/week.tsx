@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import { useSession } from '@/lib/providers/session-provider';
+import { useSession } from '@/libs/providers/session-provider';
 import { ScrollShadow, Tooltip } from '@heroui/react';
 import {
   eachDayOfInterval,
@@ -21,7 +21,7 @@ import AppointmentTriggerItem from '../ui/appointment-trigger-item';
 import { CurrentHourIndicator } from '../ui/current-hour-indicator';
 import DateChip from '../ui/date-chip';
 
-import { TIMINGS } from '@/lib/config';
+import { TIMINGS } from '@/libs/config';
 import { cn } from '@heroui/react';
 import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
 import { AppointmentType } from '@/services/client/appointment';

@@ -1,4 +1,6 @@
-import { Gender } from '@/types';
+import type { DateValue } from '@internationalized/date';
+import { GENDERS } from '@/libs/constants';
+import { BookQueueSteps } from '@/components/dashboard/appointments/create/data';
 
 export enum QueueStatus {
   PAYMENT_PENDING = 'PAYMENT_PENDING',
@@ -13,18 +15,18 @@ export enum QueueStatus {
 
 export type PatientInfo = {
   id: string;
-  userId: string;
+  user_id: string;
   name: string;
   phone?: string;
   email: string;
-  gender?: Gender;
+  gender?: GENDERS;
   age?: number;
   image?: string;
 };
 
 export type DoctorInfo = {
   id: string;
-  userId: string;
+  user_id: string;
   name: string;
   email: string;
   phone?: string;
@@ -41,7 +43,7 @@ export type UserInfo = {
 export type PaymentMode = 'RAZORPAY' | 'CASH';
 
 export type AppointmentQueueRequest = {
-  queueId?: string | null;
+  aid?: string | null;
   patientId: string;
   doctorId: string;
   appointmentDate: Date | null;
@@ -50,9 +52,9 @@ export type AppointmentQueueRequest = {
 };
 
 export type CreateAppointmentQueueFormValues = {
-  appointment: AppointmentQueueRequest & { queueId?: string | null };
+  appointment: AppointmentQueueRequest;
   meta: {
-    currentStep: number;
+    currentStep: BookQueueSteps;
     showConfirmation: boolean;
     showReceipt: boolean;
     createNewPatient: boolean;
@@ -67,7 +69,19 @@ export type VerifyPaymentRequest = {
 
 export type PaymentDetails = { payment: { orderId: string; amount: number; currency: string } };
 
-export type AppointmentQueueResponse = {
+export type AppointmentQueueFilters = {
+  date: { start: DateValue | null; end: DateValue | null };
+  status?: QueueStatus[];
+  doctorId?: string | null;
+};
+
+export const DEFAULT_APPOINTMENT_QUEUE_FILTERS: AppointmentQueueFilters = {
+  date: { start: null, end: null },
+  status: undefined,
+  doctorId: null,
+};
+
+export type AppointmentQueueType = {
   id: string;
   aid: string;
   paymentMode: PaymentMode;

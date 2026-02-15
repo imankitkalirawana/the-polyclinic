@@ -21,8 +21,8 @@ import Editor from '@/components/ui/text-editor/editor';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 import NoResults from '@/components/ui/no-results';
-import { ServiceStatuses, ServiceTypes } from '@/lib/interface';
-import { serviceValidationSchema } from '@/lib/validation';
+import { ServiceStatuses, ServiceTypes } from '@/libs/interface';
+import { serviceValidationSchema } from '@/libs/validation';
 import { useServiceWithUID, useUpdateService } from '@/services/client/service/service.query';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { ServiceType } from '@/services/client/service/service.types';
@@ -150,8 +150,8 @@ export default function EditService({ uid }: { uid: string }) {
       className="bg-transparent shadow-none"
     >
       <CardHeader className="flex-col items-start p-0">
-        <h3 className="leading-large font-semibold text-default-900 text-medium">Edit Service</h3>
-        <p className="leading-medium max-w-2xl text-default-500 text-small">
+        <h3 className="leading-large text-default-900 text-medium font-semibold">Edit Service</h3>
+        <p className="leading-medium text-default-500 text-small max-w-2xl">
           Edit the service details below.
         </p>
       </CardHeader>
@@ -292,7 +292,7 @@ export default function EditService({ uid }: { uid: string }) {
             </Select>
           </div>
           <div className="col-span-full mt-4">
-            <div className="flex min-h-[6rem] min-w-[18rem] flex-wrap items-center justify-center gap-2 overflow-x-hidden bg-cover bg-top">
+            <div className="flex min-h-24 min-w-[18rem] flex-wrap items-center justify-center gap-2 overflow-x-hidden bg-cover bg-top">
               <div className="overflow-x-auto md:w-full">
                 <table className="table w-full">
                   <thead>
@@ -380,7 +380,7 @@ export default function EditService({ uid }: { uid: string }) {
                             key={colIndex}
                             onMouseEnter={() => setHoveredColIndex(colIndex)}
                             onMouseLeave={() => setHoveredColIndex(null)}
-                            className="max-w-48 whitespace-nowrap py-0"
+                            className="max-w-48 py-0 whitespace-nowrap"
                           >
                             <Editor
                               content={formik.values.fields[`cell-${rowIndex}-${colIndex}`] || ''}

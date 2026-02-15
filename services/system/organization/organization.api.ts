@@ -5,7 +5,7 @@ import {
   UpdateOrganizationType,
 } from './organization.types';
 
-import { apiRequest } from '@/lib/axios';
+import { apiRequest } from '@/libs/axios';
 
 export class OrganizationApi {
   private static readonly API_BASE = '/system/organizations';

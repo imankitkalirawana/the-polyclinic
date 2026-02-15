@@ -11,7 +11,7 @@ import {
   ActivityLogResponse,
   ActorType,
 } from '@/services/common/activity/activity.types';
-import { formatLabel } from '@/lib/utils';
+import { formatLabel } from '@/libs/utils';
 
 const getActivityIcon = (action: ActivityAction) => {
   switch (action) {
@@ -50,10 +50,10 @@ const getActivityColor = (action: ActivityAction) => {
 export default function ActivityTimeline({ activities }: { activities: ActivityLogResponse[] }) {
   return (
     <div className="h-full overflow-hidden py-4 pl-2">
-      <h2 className="pb-4 font-medium text-default-800 text-small">Activity Logs</h2>
+      <h2 className="text-default-800 text-small pb-4 font-medium">Activity Logs</h2>
       <ScrollShadow className="flex h-full flex-col gap-2 pb-16" hideScrollBar>
         <ul className="relative flex flex-col gap-4">
-          <div className="absolute bottom-0 left-4 top-5 w-px bg-gradient-to-b from-divider via-divider to-transparent" />
+          <div className="from-divider via-divider absolute top-5 bottom-0 left-4 w-px bg-linear-to-b to-transparent" />
 
           {activities?.map((activity) => (
             <ActivityTimelineItem key={activity.id} activity={activity} />
@@ -72,7 +72,7 @@ function ActivityTimelineItem({ activity }: { activity: ActivityLogResponse }) {
       <Tooltip content={formatLabel(activity.action)}>
         <div
           className={cn(
-            'absolute left-0 top-0 z-10 flex size-9 items-center justify-center rounded-full',
+            'absolute top-0 left-0 z-10 flex size-9 items-center justify-center rounded-full',
             getActivityColor(activity.action)
           )}
         >
@@ -88,22 +88,22 @@ function ActivityTimelineItem({ activity }: { activity: ActivityLogResponse }) {
               ? `Yesterday ${format(new Date(activity?.createdAt), 'HH:mm a')}`
               : format(new Date(activity?.createdAt), 'dd/MM/yyyy')}
         </div>
-        <h3 className="mb-1 font-medium text-default-800 text-small">{activity.description}</h3>
+        <h3 className="text-default-800 text-small mb-1 font-medium">{activity.description}</h3>
 
         {activity.changedFields && (
-          <ul className="mt-1 text-default-500">
+          <ul className="text-default-500 mt-1">
             {Object.keys(activity.changedFields)
               .slice(0, visibleFields)
               .map((field) => (
                 <li key={field} className="text-tiny">
-                  <div className="absolute left-4 h-5 w-8 -translate-y-1/2 rounded-bl-2xl border-b border-l border-divider" />
+                  <div className="border-divider absolute left-4 h-5 w-8 -translate-y-1/2 rounded-bl-2xl border-b border-l" />
                   <div className="line-clamp-1 hover:line-clamp-none">
                     <span className="capitalize">{field}</span> : {/* show previus value here */}
-                    <span className="capitalize text-danger-300 line-through">
+                    <span className="text-danger-300 capitalize line-through">
                       {activity?.changedFields?.[field]?.before}
                     </span>{' '}
                     &rarr;{' '}
-                    <span className="capitalize text-success-300">
+                    <span className="text-success-300 capitalize">
                       {activity?.changedFields?.[field]?.after}
                     </span>
                   </div>
@@ -113,7 +113,7 @@ function ActivityTimelineItem({ activity }: { activity: ActivityLogResponse }) {
               visibleFields < Object.keys(activity.changedFields).length && (
                 <button
                   onClick={() => setVisibleFields(Object.keys(activity.changedFields ?? {}).length)}
-                  className="flex items-center text-primary-500 text-tiny hover:underline"
+                  className="text-primary-500 text-tiny flex items-center hover:underline"
                 >
                   <div className="flex h-6 w-6 items-center justify-center rounded-full">
                     <Icon icon="solar:menu-dots-circle-bold-duotone" width={18} />
@@ -128,10 +128,10 @@ function ActivityTimelineItem({ activity }: { activity: ActivityLogResponse }) {
         )}
 
         {activity.actor.type === ActorType.USER && (
-          <div className="mt-1 flex items-center overflow-hidden text-default-500 text-tiny">
+          <div className="text-default-500 text-tiny mt-1 flex items-center overflow-hidden">
             <Avatar
               name={activity.actor.name}
-              className="mr-2 h-5 w-5 flex-shrink-0 rounded-full bg-default-300"
+              className="bg-default-300 mr-2 h-5 w-5 shrink-0 rounded-full"
             />
             <span>{activity.actor.name}</span>
           </div>

@@ -48,6 +48,7 @@ export interface TableProps<T extends TableItem> {
   onSelectionChange?: (keys: Selection) => void;
   isError?: boolean;
   errorMessage?: string;
+  renderFilter?: () => React.ReactNode;
 }
 
 export interface TableState {

@@ -7,28 +7,23 @@ import {
 import { useFormContext } from 'react-hook-form';
 import { CellRenderer } from '@/components/ui/cell/rich-color/cell-renderer';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
+import { Doctor } from '@/services/client/doctor/doctor.api';
+import { PatientApi } from '@/services/client/patient/patient.api';
 import PaymentFooter from './payment-footer';
-import { usePatientById, useDoctorById } from '@/store';
+import { useIndexedCacheValueOrFetch } from '@/store';
 
-/**
- * ReviewAndPay Component
- *
- * Displays a summary of the appointment details before payment.
- * Uses cached patient and doctor data from Zustand store instead of
- * making redundant API calls.
- *
- * The data is already cached when:
- * - Patient was selected in PatientSelection (useAllPatients caches to 'patients')
- * - Doctor was selected in DoctorSelection (useAllDoctors caches to 'doctors')
- * - Individual lookups cache to 'patientById' and 'doctorById'
- */
 export default function ReviewAndPay() {
   const form = useFormContext<CreateAppointmentQueueFormValues>();
   const appointment = form.watch('appointment');
 
-  // Use cached data from Zustand store - no API calls!
-  const patient = usePatientById(appointment.patientId);
-  const doctor = useDoctorById(appointment.doctorId);
+  const patient = useIndexedCacheValueOrFetch('patientById', appointment.patientId, {
+    queryKey: ['patient', appointment.patientId],
+    queryFn: () => PatientApi.getById(appointment.patientId),
+  });
+  const doctor = useIndexedCacheValueOrFetch('doctorById', appointment.doctorId, {
+    queryKey: ['doctor', appointment.doctorId],
+    queryFn: () => Doctor.getById(appointment.doctorId),
+  });
 
   return (
     <CreateAppointmentContentContainer
@@ -43,7 +38,7 @@ export default function ReviewAndPay() {
       <div className="grid grid-cols-2 gap-2">
         <div className="col-span-full flex items-center gap-2">
           <Divider className="flex-1" />
-          <p className="text-center text-default-500 text-small">Patient Details</p>
+          <p className="text-default-500 text-small text-center">Patient Details</p>
           <Divider className="flex-1" />
         </div>
         <CellRenderer
@@ -81,7 +76,7 @@ export default function ReviewAndPay() {
 
         <div className="col-span-full flex items-center gap-2">
           <Divider className="flex-1" />
-          <p className="text-center text-default-500 text-small">Doctor Details</p>
+          <p className="text-default-500 text-small text-center">Doctor Details</p>
           <Divider className="flex-1" />
         </div>
         <CellRenderer
@@ -92,14 +87,7 @@ export default function ReviewAndPay() {
             icon: 'text-primary-500 bg-primary-100',
           }}
         />
-        <CellRenderer
-          icon="solar:stethoscope-bold-duotone"
-          label="Specialization"
-          value={doctor?.specialization ?? '-'}
-          classNames={{
-            icon: 'text-cyan-500 bg-cyan-100',
-          }}
-        />
+
         <CellRenderer
           icon="solar:calendar-bold-duotone"
           label="Appointment Date"
@@ -115,7 +103,7 @@ export default function ReviewAndPay() {
 
         <div className="col-span-full flex items-center gap-2">
           <Divider className="flex-1" />
-          <p className="text-center text-default-500 text-small">Additional Details</p>
+          <p className="text-default-500 text-small text-center">Additional Details</p>
           <Divider className="flex-1" />
         </div>
         <CellRenderer

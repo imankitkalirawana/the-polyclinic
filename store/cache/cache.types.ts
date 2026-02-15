@@ -1,10 +1,10 @@
 import { PatientType } from '@/services/client/patient';
-import { DoctorType } from '@/services/client/doctor';
+import { DoctorSpecialization, DoctorType } from '@/services/client/doctor';
 import { DepartmentType } from '@/services/client/department/department.types';
 import { ServiceType } from '@/services/client/service/service.types';
 import { DrugType } from '@/services/client/drug/drug.types';
 import { AppointmentType } from '@/services/client/appointment/appointment.types';
-import { AppointmentQueueResponse } from '@/services/client/appointment/queue/queue.types';
+import { AppointmentQueueType } from '@/services/client/appointment/queue/queue.types';
 import { UserType } from '@/services/common/user/user.types';
 
 /**
@@ -24,9 +24,9 @@ export interface CacheRegistry {
   services: ServiceType[];
   drugs: DrugType[];
   appointments: AppointmentType[];
-  appointmentQueues: AppointmentQueueResponse[];
+  appointmentQueues: AppointmentQueueType[];
   users: UserType[];
-
+  specializations: DoctorSpecialization[];
   // Single entities (for selections, current items, etc.)
   selectedPatient: PatientType | null;
   selectedDoctor: DoctorType | null;
@@ -34,7 +34,7 @@ export interface CacheRegistry {
   selectedService: ServiceType | null;
   selectedDrug: DrugType | null;
   selectedAppointment: AppointmentType | null;
-  selectedAppointmentQueue: AppointmentQueueResponse | null;
+  selectedAppointmentQueue: AppointmentQueueType | null;
   selectedUser: UserType | null;
 
   // Indexed entities (by ID)
@@ -44,7 +44,7 @@ export interface CacheRegistry {
   serviceById: Record<string, ServiceType>;
   drugById: Record<string, DrugType>;
   appointmentById: Record<string, AppointmentType>;
-  appointmentQueueById: Record<string, AppointmentQueueResponse>;
+  appointmentQueueById: Record<string, AppointmentQueueType>;
   userById: Record<string, UserType>;
 }
 
@@ -146,6 +146,7 @@ export const cacheDefaults: CacheRegistry = {
   appointments: [],
   appointmentQueues: [],
   users: [],
+  specializations: [],
   selectedPatient: null,
   selectedDoctor: null,
   selectedDepartment: null,

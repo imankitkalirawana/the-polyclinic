@@ -16,7 +16,7 @@ import { useFormik } from 'formik';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 import NoResults from '@/components/ui/no-results';
-import { drugValidationSchema } from '@/lib/validation';
+import { drugValidationSchema } from '@/libs/validation';
 import { useDrugWithDid, useUpdateDrug } from '@/services/client/drug/drug.query';
 import { DrugType } from '@/services/client/drug/drug.types';
 

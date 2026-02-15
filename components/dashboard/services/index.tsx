@@ -18,7 +18,7 @@ import {
   DropdownItemWithSection,
 } from '@/components/ui/static-data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
-import { CLINIC_INFO } from '@/lib/config';
+import { CLINIC_INFO } from '@/libs/config';
 import { useAllServices, useDeleteService } from '@/services/client/service/service.query';
 import { ServiceType } from '@/services/client/service/service.types';
 

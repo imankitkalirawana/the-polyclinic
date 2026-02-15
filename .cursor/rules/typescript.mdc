@@ -1,6 +1,5 @@
 ---
-description: Apply when writing TypeScript code, defining types/interfaces, working with type safety, or implementing healthcare data validation with proper typing.
-alwaysApply: false
+alwaysApply: true
 ---
 
 # TypeScript Standards
@@ -25,6 +24,7 @@ alwaysApply: false
 
 ## Type Safety for Healthcare
 
+- Never type assert any any case, never use `as` type assertion
 - **Branded types** for sensitive identifiers (SSN, patient IDs)
 - Union types for medical enums (`'scheduled' | 'confirmed' | 'completed'`)
 - Optional properties (`?`) for non-required fields

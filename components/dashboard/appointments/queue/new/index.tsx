@@ -1,33 +1,39 @@
 'use client';
 import { FormProvider, useForm } from 'react-hook-form';
 import { CreateAppointmentSidebar } from '../../create/sidebar';
-import { BOOK_QUEUE_APPOINTMENT_STEPS } from '../../create/data';
+import { BookQueueSteps, getBookQueueStepsByRole, getFirstBookQueueStep } from '../../create/data';
 import PatientSelection from './patient';
 import DoctorSelection from './doctor';
 import AdditionalInfo from './additional-info';
 import ReviewAndPay from './review-n-pay';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
 import AppointmentQueueReceipt from './receipt';
+import { useSession } from '@/libs/providers/session-provider';
+import { Role } from '@/services/common/user/user.constants';
 
-const contentMap: Record<number, React.ReactNode> = {
-  0: <PatientSelection />,
-  1: <DoctorSelection />,
-  2: <AdditionalInfo />,
-  3: <ReviewAndPay />,
+const contentMap: Record<BookQueueSteps, React.ReactNode> = {
+  [BookQueueSteps.PATIENT_INFORMATION]: <PatientSelection />,
+  [BookQueueSteps.DOCTOR_SELECTION]: <DoctorSelection />,
+  [BookQueueSteps.ADDITIONAL_DETAILS]: <AdditionalInfo />,
+  [BookQueueSteps.REVIEW_AND_PAY]: <ReviewAndPay />,
 };
 
 export default function NewQueueAppointment() {
+  const { user } = useSession();
+  const integratedUserId = user?.integrated_user_id ?? '';
+
+  const role = user?.role ?? Role.PATIENT;
   const form = useForm<CreateAppointmentQueueFormValues>({
     defaultValues: {
       appointment: {
-        queueId: null,
-        patientId: '',
+        aid: null,
+        patientId: role === Role.PATIENT ? integratedUserId : '',
         doctorId: '',
         appointmentDate: new Date(),
         notes: null,
       },
       meta: {
-        currentStep: 0,
+        currentStep: getFirstBookQueueStep(role),
         showConfirmation: false,
         showReceipt: false,
         createNewPatient: false,
@@ -42,7 +48,7 @@ export default function NewQueueAppointment() {
       <FormProvider {...form}>
         <div className="flex h-[calc(100vh-3.75rem)]">
           <CreateAppointmentSidebar
-            steps={BOOK_QUEUE_APPOINTMENT_STEPS}
+            steps={getBookQueueStepsByRole(role)}
             currentStep={currentStep}
             setCurrentStep={(step) => form.setValue('meta.currentStep', step)}
           />

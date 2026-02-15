@@ -10,7 +10,7 @@ import {
   APPOINTMENT_TYPES,
   AppointmentType,
 } from '@/services/client/appointment';
-import { extractFirstName } from '@/lib/utils';
+import { extractFirstName } from '@/libs/utils';
 
 export default function AppointmentTriggerItem({
   appointment,

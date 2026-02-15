@@ -1,5 +1,5 @@
 import { AppointmentType, CreateAppointmentType } from './appointment.types';
-import { apiRequest } from '@/lib/axios';
+import { apiRequest } from '@/libs/axios';
 
 export class AppointmentApi {
   private static API_BASE = '/client/appointments';

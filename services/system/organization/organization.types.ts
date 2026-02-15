@@ -1,4 +1,4 @@
-import { ValuesOf } from '@/lib/utils';
+import { ValuesOf } from '@/libs/utils';
 import { createOrganizationSchema, updateOrganizationSchema } from './organization.validation';
 
 import { Base } from '@/types';

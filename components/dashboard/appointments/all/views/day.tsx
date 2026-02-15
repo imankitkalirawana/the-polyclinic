@@ -1,7 +1,7 @@
 'use client';
 
 import React, { type MouseEvent, useEffect, useRef } from 'react';
-import { useSession } from '@/lib/providers/session-provider';
+import { useSession } from '@/libs/providers/session-provider';
 import { ScrollShadow, Tooltip } from '@heroui/react';
 import { format, isPast, isSameDay, isToday } from 'date-fns';
 
@@ -11,7 +11,7 @@ import AppointmentTriggerItem from '../ui/appointment-trigger-item';
 import { CurrentHourIndicator } from '../ui/current-hour-indicator';
 import DateChip from '../ui/date-chip';
 
-import { TIMINGS } from '@/lib/config'; // Assuming this provides start/end hours
+import { TIMINGS } from '@/libs/config'; // Assuming this provides start/end hours
 import { cn } from '@heroui/react';
 import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
 import { AppointmentType } from '@/services/client/appointment';

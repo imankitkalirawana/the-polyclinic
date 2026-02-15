@@ -1,4 +1,4 @@
-import { Base } from '@/lib/interface';
+import { Base } from '@/libs/interface';
 
 export enum DrugStatus {
   available = 'available',

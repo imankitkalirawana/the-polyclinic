@@ -8,7 +8,7 @@ import DataTable from './data-table';
 import { CircleChartCard } from './graph';
 
 import NoResults from '@/components/ui/no-results';
-import { convertMinutesToHoursAndMinutes } from '@/lib/utility';
+import { convertMinutesToHoursAndMinutes } from '@/libs/utility';
 import { useServiceWithUID } from '@/services/client/service/service.query';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { format } from 'date-fns';

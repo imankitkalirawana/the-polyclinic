@@ -1,7 +1,7 @@
 import { DateValue, isWeekend } from '@internationalized/date';
 
-import { disabledDates } from '@/lib/appointments/new';
-import { TIMINGS } from '@/lib/config';
+import { disabledDates } from '@/libs/appointments/new';
+import { TIMINGS } from '@/libs/config';
 
 export const generateTimeSlots = () => {
   const slots: string[] = [];

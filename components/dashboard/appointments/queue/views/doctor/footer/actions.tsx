@@ -4,10 +4,7 @@ import {
   useSkipPatient,
   useCompletePatient,
 } from '@/services/client/appointment/queue/queue.query';
-import {
-  AppointmentQueueResponse,
-  QueueStatus,
-} from '@/services/client/appointment/queue/queue.types';
+import { AppointmentQueueType, QueueStatus } from '@/services/client/appointment/queue/queue.types';
 import { Button } from '@heroui/react';
 import { useQueryState } from 'nuqs';
 import { useFormContext } from 'react-hook-form';
@@ -16,7 +13,7 @@ import { type PrescriptionFormSchema } from '../prescription-panel';
 export default function QueueFooterActions({
   currentQueue,
 }: {
-  currentQueue: AppointmentQueueResponse;
+  currentQueue: AppointmentQueueType;
 }) {
   const [_queueId, setQueueId] = useQueryState('id');
   const { mutateAsync: mutateCall, isPending: isCallPending } = useCallPatient();

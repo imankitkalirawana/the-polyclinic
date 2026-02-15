@@ -1,4 +1,4 @@
-import { apiRequest } from '@/lib/axios';
+import { apiRequest } from '@/libs/axios';
 import { ServiceType } from '@/services/client/service/service.types';
 
 export class ServiceApi {

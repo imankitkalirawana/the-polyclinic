@@ -131,7 +131,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
         size={size}
         {...rest}
       >
-        <ModalContent>
+        <ModalContent className="overflow-hidden">
           {(onClose) => (
             <>
               {!!title && (
@@ -158,7 +158,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                   'justify-between gap-0 overflow-hidden rounded-b-large border-t border-divider p-0',
                   {
                     'border-t-0': hideCancelButton,
-                    'justify-end': isLargeModal,
+                    'justify-end gap-4 p-2': isLargeModal,
                   },
                   classNames?.footer
                 )}
@@ -166,7 +166,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                 {!hideCancelButton && (
                   <Button
                     variant="flat"
-                    radius="none"
+                    radius={isLargeModal ? 'md' : 'none'}
                     onPress={onClose}
                     className={cn(
                       'max-w-sm',
@@ -182,7 +182,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                 )}
                 {!!onSubmit && (
                   <AsyncButton
-                    radius="none"
+                    radius={isLargeModal ? 'md' : 'none'}
                     onPress={async () => {
                       try {
                         await onSubmit();

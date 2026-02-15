@@ -3,18 +3,14 @@ import { getQueueStatusColor } from '../helper';
 import { CellRenderer } from '@/components/ui/cell/rich-color/cell-renderer';
 import { Accordion, AccordionItem, Chip } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { AppointmentQueueResponse } from '@/services/client/appointment/queue/queue.types';
+import { AppointmentQueueType } from '@/services/client/appointment/queue/queue.types';
 import { useEffect, useState } from 'react';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import DataItem from '@/components/ui/data-item';
 import { formatDate } from 'date-fns';
-import { formatGender } from '@/lib/utils';
+import { formatGender } from '@/libs/utils';
 
-export default function DetailsHeader({
-  currentQueue,
-}: {
-  currentQueue: AppointmentQueueResponse;
-}) {
+export default function DetailsHeader({ currentQueue }: { currentQueue: AppointmentQueueType }) {
   const [selectedKeys, setSelectedKeys] = useState(new Set(['']));
   const [isDetailsOpen, setIsDetailsOpen] = useLocalStorage('is-queue-details-open', false);
 

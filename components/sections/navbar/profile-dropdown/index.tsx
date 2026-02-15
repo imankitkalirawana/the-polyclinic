@@ -1,6 +1,6 @@
 import ModeToggle from '@/components/mode-toggle';
 import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
-import { useSession } from '@/lib/providers/session-provider';
+import { useSession } from '@/libs/providers/session-provider';
 import { useLogout } from '@/services/common/auth/auth.query';
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';

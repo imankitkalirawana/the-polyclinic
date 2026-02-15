@@ -4,12 +4,12 @@ import { CalendarDate, getLocalTimeZone, today } from '@internationalized/date';
 import Modal from '@/components/ui/modal';
 import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
 import { useAppointmentWithAID, useRescheduleAppointment } from '@/services/client/appointment';
-import { useSession } from '@/lib/providers/session-provider';
+import { useSession } from '@/libs/providers/session-provider';
 import { useSlotsByUID } from '@/services/client/doctor';
 import { SlotsPreview } from '@/components/dashboard/doctors/doctor/slots/slots-preview';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { Calendar } from '@heroui/react';
-import { TIMINGS } from '@/lib/config';
+import { TIMINGS } from '@/libs/config';
 import { isDateUnavailable } from '@/components/dashboard/appointments/create/helpers';
 import { useLocale } from '@react-aria/i18n';
 import CalendarTimeSelect from '@/components/dashboard/appointments/all/booking/calendar-time-select';
@@ -70,7 +70,7 @@ export default function RescheduleAppointment() {
             gridWrapper: 'pb-3',
             cell: 'p-1.5 w-full',
             cellButton:
-              'w-full h-9 rounded-medium data-[selected]:shadow-[0_2px_12px_0] data-[selected]:shadow-primary-300 text-small font-medium',
+              'w-full h-9 rounded-medium data-selected:shadow-[0_2px_12px_0] data-[selected]:shadow-primary-300 text-small font-medium',
           }}
         />
         <CalendarTimeSelect date={date} setDate={setDate} />

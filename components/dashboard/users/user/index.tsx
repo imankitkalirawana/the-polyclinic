@@ -6,7 +6,7 @@ import { Button, Card, CardBody, CardFooter, CardHeader, ScrollShadow } from '@h
 
 import CellValue from '@/components/ui/cell-value';
 
-import { castData } from '@/lib/utils';
+import { castData } from '@/libs/utils';
 import { useUserWithID } from '@/services/common/user/user.query';
 import { UserType } from '@/services/common/user/user.types';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';

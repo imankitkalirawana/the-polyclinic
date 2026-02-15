@@ -1,223 +1,283 @@
 'use client';
 
 import React from 'react';
-import { addToast, Button, DatePicker, Link, Select, SelectItem } from '@heroui/react';
-import { useQueryState } from 'nuqs';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import { getLocalTimeZone, parseDate, today } from '@internationalized/date';
-import { I18nProvider } from '@react-aria/i18n';
-
-import { Input, OtpInput, PasswordInput } from '../form';
-import { RegisterProvider, useRegister } from '../store';
+import { Link, addToast } from '@heroui/react';
+import { useForm, useWatch } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import {
+  emailValidation,
+  nameValidation,
+  otpValidation,
+  passwordValidation,
+  phoneNumberValidation,
+} from '@/utils/factories/validation.factory';
+import { APP_INFO } from '@/libs/config';
+import { AuthFormLayout } from '../shared';
+import AuthEmailInput from '../ui/auth-email.input';
+import { AuthApi } from '@/services/common/auth/auth.api';
+import { useGoogleLogin, useRegister, useSendOTP } from '@/services/common/auth/auth.query';
 import { AuthStep } from '../types';
-import Auth from '..';
+import AuthMethodSelector from '../ui/auth-method.input';
+import { AuthMethod, VerificationType } from '@/services/common/auth/auth.enum';
+import { toTitleCase } from '@/libs/utils';
+import AuthPhoneInput from '../ui/auth-phone.input';
+import AuthOtpInput from '../ui/auth-otp.input';
+import { AuthTextInput } from '../ui/auth-text.input';
+import AuthPasswordInput from '../ui/auth-password.input';
 
-import { APP_INFO } from '@/lib/config';
-import { $FixMe, Gender } from '@/types';
-import { GENDERS } from '@/lib/constants';
+const registerSchema = z
+  .object({
+    user: z
+      .object({
+        email: emailValidation.optional(),
+        phone: phoneNumberValidation.optional(),
+        otp: otpValidation.optional(),
+        name: nameValidation.optional(),
+        password: passwordValidation.optional(),
+        confirmPassword: z
+          .string()
+          .min(8, { message: 'Password must be at least 8 characters' })
+          .optional(),
+      })
+      .refine((data) => data.password === data.confirmPassword, {
+        message: 'Passwords do not match',
+        path: ['confirmPassword'],
+      }),
+    meta: z.object({
+      page: z.number().min(0),
+      method: z.enum(AuthMethod),
+    }),
+  })
+  .superRefine((data, ctx) => {
+    switch (data.meta.page) {
+      case 1:
+        switch (data.meta.method) {
+          case AuthMethod.EMAIL:
+            if (!data.user.email) {
+              ctx.addIssue({
+                code: 'custom',
+                message: 'Email is required',
+                path: ['user', 'email'],
+              });
+            }
+            break;
+          case AuthMethod.PHONE:
+            if (!data.user.phone) {
+              ctx.addIssue({
+                code: 'custom',
+                message: 'Phone is required',
+                path: ['user', 'phone'],
+              });
+            }
+            break;
+        }
+        break;
+      case 2:
+        if (!data.user.otp) {
+          ctx.addIssue({ code: 'custom', message: 'OTP is required', path: ['user', 'otp'] });
+        }
+        break;
+      case 3:
+        if (!data.user.name) {
+          ctx.addIssue({ code: 'custom', message: 'Name is required', path: ['user', 'name'] });
+        }
+        if (!data.user.password) {
+          ctx.addIssue({
+            code: 'custom',
+            message: 'Password is required',
+            path: ['user', 'password'],
+          });
+        }
+        if (!data.user.confirmPassword) {
+          ctx.addIssue({
+            code: 'custom',
+            message: 'Confirm password is required',
+            path: ['user', 'confirmPassword'],
+          });
+        }
+        if (data.user.password !== data.user.confirmPassword) {
+          ctx.addIssue({
+            code: 'custom',
+            message: 'Passwords do not match',
+            path: ['user', 'confirmPassword'],
+          });
+        }
+        break;
+    }
+  });
 
-const RegisterComponent: React.FC = () => {
-  const { formik, paginate } = useRegister();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_email, setEmail] = useQueryState('email');
+type RegisterFormValues = z.infer<typeof registerSchema>;
+
+export default function Register() {
+  const { mutate: sendOTP } = useSendOTP();
+  const { mutateAsync: registerUser, isSuccess: isRegisterSuccess } = useRegister();
+  const { mutate: loginWithGoogle, isPending: isGoogleLoginPending } = useGoogleLogin();
+
+  const form = useForm({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      user: {},
+      meta: { page: 0, method: AuthMethod.EMAIL },
+    },
+  });
+
+  const meta = useWatch({
+    control: form.control,
+    name: 'meta',
+    defaultValue: { page: 0, method: AuthMethod.EMAIL },
+  });
 
   const REGISTER_STEPS: Record<number, AuthStep> = {
     0: {
-      title: 'Sign up in seconds',
-      description: `Use your email or another service to continue with ${APP_INFO.name}!`,
+      title: 'Create an account',
+      description: `Join ${APP_INFO.name}! Please choose a way to continue.`,
       content: (
-        <>
-          <Button
-            fullWidth
-            variant="flat"
-            startContent={<Icon icon="solar:letter-bold-duotone" width={20} />}
-            size="lg"
-            color="primary"
-            onPress={() => {
-              paginate(1);
-            }}
-          >
-            Continue with Email
-          </Button>
-          <Button
-            fullWidth
-            variant="bordered"
-            startContent={<Icon icon="devicon:google" width={20} />}
-            size="lg"
-            onPress={() => {
-              addToast({
-                title: 'Coming soon',
-                description: 'This feature is coming soon',
-                color: 'warning',
-              });
-            }}
-          >
-            Continue with Google
-          </Button>
-          <Button fullWidth variant="light" size="lg">
-            Continue another way
-          </Button>
-        </>
-      ),
-    },
-    1: {
-      title: 'Continue with email',
-      description: "We'll check if you have an account, and help create one if you don't.",
-      button: 'Continue',
-      content: (
-        <Input
-          name="email"
-          type="email"
-          label="Email"
-          placeholder="john.doe@example.com"
-          autoComplete="email"
-          autoFocus
-          isInvalid={!!(formik.touched.email && formik.errors.email)}
-          errorMessage={formik.errors.email?.toString()}
-          value={formik.values.email}
-          onChange={(e) => {
-            setEmail(e.target.value);
-            formik.setFieldValue('email', e.target.value);
+        <AuthMethodSelector
+          onChange={(method) => {
+            form.setValue('meta.method', method);
+            form.setValue('meta.page', 1);
+          }}
+          onGoogleSuccess={(credential) => {
+            loginWithGoogle({ credential });
+          }}
+          onGoogleError={() => {
+            addToast({
+              title: 'Google sign-in was cancelled or failed.',
+              color: 'danger',
+            });
           }}
         />
       ),
     },
-    2: {
-      title: 'Create your account',
-      description: `You're creating a ${APP_INFO.name} account with ${formik.values.email}.`,
+    1: {
+      title: 'Create an account',
+      description: `Please enter your ${toTitleCase(meta.method)} to continue.`,
       button: 'Continue',
-      content: (
-        <>
-          <Input
-            label="Name"
-            placeholder="John Doe"
-            value={formik.values.name}
-            onValueChange={(value) => formik.setFieldValue('name', value)}
-            isInvalid={!!(formik.touched.name && formik.errors.name)}
-            errorMessage={formik.errors.name?.toString()}
-            autoFocus
-          />
-          <Select
-            label="Gender"
-            value={formik.values.gender}
-            selectedKeys={[formik.values.gender]}
-            onSelectionChange={(value) => {
-              const gender = Array.from(value)[0] as Gender;
-              formik.setFieldValue('gender', gender);
-            }}
-            disallowEmptySelection
-            isInvalid={!!(formik.touched.gender && formik.errors.gender)}
-            errorMessage={formik.errors.gender?.toString()}
-          >
-            {GENDERS.map((gender) => (
-              <SelectItem key={gender}>
-                {gender.charAt(0).toUpperCase() + gender.slice(1)}
-              </SelectItem>
-            ))}
-          </Select>
-          <I18nProvider locale="en-IN">
-            <DatePicker
-              label="Date of Birth (Optional)"
-              value={formik.values.dob ? parseDate(formik.values.dob) : null}
-              onChange={(value) => {
-                const dob = new Date(value as $FixMe).toISOString().split('T')[0];
-                formik.setFieldValue('dob', dob);
-              }}
-              maxValue={today(getLocalTimeZone())}
-              showMonthAndYearPickers
-            />
-          </I18nProvider>
-        </>
-      ),
+      content:
+        meta.method === AuthMethod.EMAIL ? (
+          <AuthEmailInput control={form.control} name="user.email" />
+        ) : (
+          <AuthPhoneInput control={form.control} name="user.phone" />
+        ),
     },
-    3: {
-      title: "You're almost signed up",
-      description: `Enter the code we sent to ${formik.values.email} to finish signing up.`,
-      button: 'Continue',
+    2: {
+      title: 'Verify and continue',
+      description: `Enter the OTP sent to your ${toTitleCase(meta.method)} to continue.`,
+      button: 'Verify',
       content: (
-        <OtpInput
-          email={formik.values.email}
-          label="OTP"
-          placeholder="Enter OTP"
-          value={formik.values.otp}
-          onValueChange={(value) => formik.setFieldValue('otp', value)}
-          isInvalid={!!(formik.touched.otp && formik.errors.otp)}
-          errorMessage={formik.errors.otp?.toString()}
-          autoFocus
-          onComplete={() => formik.handleSubmit()}
+        <AuthOtpInput
+          control={form.control}
+          name="user.otp"
+          onComplete={() => {
+            form.handleSubmit(onSubmit)();
+          }}
         />
       ),
     },
-    4: {
-      title: 'One more step',
-      description: `Create a password to secure your account.`,
-      button: 'Sign up',
+    3: {
+      title: 'Create an account',
+      description: 'Enter your details to create your account.',
+      button: 'Create account',
       content: (
         <>
-          <Input
-            name="email"
-            type="email"
-            label="Email"
-            placeholder="john.doe@example.com"
-            autoComplete="email"
-            value={formik.values.email}
-            className="sr-only"
+          <AuthTextInput<RegisterFormValues>
+            control={form.control}
+            name="user.name"
+            label="Full name"
+            placeholder="John Doe"
+            autoComplete="name"
           />
-          <PasswordInput
-            autoFocus
-            isValidation
-            onValueChange={(value) => formik.setFieldValue('password', value)}
-            isInvalid={!!(formik.touched.password && formik.errors.password)}
+          <AuthPasswordInput<RegisterFormValues>
+            control={form.control}
+            name="user.password"
+            autoFocus={false}
+          />
+          <AuthPasswordInput<RegisterFormValues>
+            control={form.control}
+            name="user.confirmPassword"
+            autoFocus={false}
           />
         </>
       ),
     },
   };
 
-  const registerFooter =
-    formik.values.page === 0 ? (
-      <>
-        <div className="text-center text-small">
-          By continuing, you agree to {APP_INFO.name}&apos;s{' '}
-          <Link className="underline" href="/terms-of-use" size="sm">
-            Terms of Use
-          </Link>
-          . Read our{' '}
-          <Link className="underline" href="/privacy-policy" size="sm">
-            Privacy Policy
-          </Link>
-          .
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="h-px w-full bg-divider" />
-          <div className="text-default-500 text-small">or</div>
-          <div className="h-px w-full bg-divider" />
-        </div>
-        <div className="text-center text-small">
-          Already have an account?&nbsp;
-          <Link href="/auth/login" size="sm">
-            Log In
-          </Link>
-        </div>
-      </>
-    ) : undefined;
+  const onSubmit = async (data: RegisterFormValues): Promise<void> => {
+    switch (data.meta.page) {
+      case 1:
+        switch (data.meta.method) {
+          case AuthMethod.PHONE:
+            form.setValue('meta.page', 2);
+            break;
+          case AuthMethod.EMAIL: {
+            const res = await AuthApi.checkEmail({ email: data.user.email ?? '' });
+            if (res.data?.exists) {
+              form.setError('user.email', { message: 'Email already exists' });
+            } else {
+              sendOTP({
+                email: data.user.email ?? '',
+                type: VerificationType.REGISTRATION,
+              });
+              form.setValue('meta.page', 2);
+            }
+            break;
+          }
+        }
+        break;
+      case 2:
+        const { success } = await AuthApi.verifyOTP({
+          email: data.user.email ?? '',
+          otp: data.user.otp ?? '',
+          type: VerificationType.REGISTRATION,
+        });
+        if (success) {
+          form.setValue('meta.page', 3);
+        } else {
+          form.setError('user.otp', { message: 'Invalid OTP' });
+        }
+        break;
+      case 3:
+        await registerUser({
+          email: data.user.email ?? '',
+          password: data.user.password ?? '',
+          name: data.user.name ?? '',
+          otp: data.user.otp ?? '',
+          phone: data.user.phone ?? '',
+        });
+        break;
+    }
+  };
 
-  return (
-    <Auth
-      flowType="register"
-      steps={REGISTER_STEPS}
-      formik={formik}
-      paginate={paginate}
-      footer={registerFooter}
-    />
+  const footer = (
+    <>
+      <div className="flex items-center gap-2">
+        <div className="bg-divider h-px w-full" />
+        <div className="text-default-500 text-small">or</div>
+        <div className="bg-divider h-px w-full" />
+      </div>
+      <div className="text-small text-center">
+        Already have an account?&nbsp;
+        <Link href="/auth/login" size="sm">
+          Log in
+        </Link>
+      </div>
+    </>
   );
-};
 
-// Wrapper with provider
-export default function Register() {
   return (
-    <RegisterProvider>
-      <RegisterComponent />
-    </RegisterProvider>
+    <AuthFormLayout
+      stepKey={meta.page}
+      title={REGISTER_STEPS[meta.page]?.title ?? ''}
+      description={REGISTER_STEPS[meta.page]?.description}
+      isBack={meta.page > 0}
+      onBack={() => form.setValue('meta.page', meta.page - 1)}
+      formContent={REGISTER_STEPS[meta.page]?.content}
+      submitLabel={REGISTER_STEPS[meta.page]?.button}
+      onSubmit={form.handleSubmit(onSubmit)}
+      isSubmitting={form.formState.isSubmitting}
+      isSubmitDisabled={isRegisterSuccess || isGoogleLoginPending}
+      footer={footer}
+    />
   );
 }

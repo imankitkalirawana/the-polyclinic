@@ -125,6 +125,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
           >
             {isCompact && isNestType && item.items && item.items.length > 0 ? (
               <Tooltip
+                key={`${item.key}-nest-tooltip`}
                 placement="right"
                 showArrow
                 content={
@@ -169,7 +170,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
                 </div>
               </Tooltip>
             ) : isCompact ? (
-              <Tooltip content={item.title} placement="right">
+              <Tooltip key={`${item.key}-tooltip`} content={item.title} placement="right">
                 <div className="flex w-full items-center justify-center">
                   {item.icon ? (
                     <Icon
@@ -187,7 +188,12 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
               </Tooltip>
             ) : null}
             {!isCompact && isNestType ? (
-              <Accordion className="p-0" variant="light" selectionMode="single">
+              <Accordion
+                key={`${item.key}-accordion`}
+                className="p-0"
+                variant="light"
+                selectionMode="single"
+              >
                 <AccordionItem
                   key={item.key}
                   aria-label={item.title}

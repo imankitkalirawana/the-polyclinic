@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react';
-import { useSession } from '@/lib/providers/session-provider';
+import { useSession } from '@/libs/providers/session-provider';
 import {
   addToast,
   Alert,

@@ -1,8 +1,23 @@
+'use client';
 import { useEffect, useRef } from 'react';
 import { useQuery, UseQueryOptions, UseQueryResult } from '@tanstack/react-query';
-import { ApiResponse } from '@/lib/axios';
-import { useCacheStore } from './cache.store';
+import { ApiResponse } from '@/libs/axios';
+import { useCacheStore, useIndexedCacheValue } from './cache.store';
 import { CacheKey, CacheRegistry, CacheConfig } from './cache.types';
+
+/**
+ * Entity type for an indexed cache key (e.g. PatientType for 'patientById')
+ */
+type IndexedValue<K extends CacheKey> =
+  CacheRegistry[K] extends Record<string, infer V> ? V : never;
+
+/**
+ * Config to fetch a single entity and cache it under an indexed key
+ */
+export interface IndexedCacheFetchConfig<K extends CacheKey> {
+  queryKey: unknown[];
+  queryFn: () => Promise<ApiResponse<IndexedValue<K>>>;
+}
 
 /**
  * Configuration for caching to a collection key (e.g., 'patients', 'doctors')
@@ -227,6 +242,43 @@ export function useIndexedQuery<TData, TError = Error, K extends CacheKey = Cach
     enabled: options.enabled !== false && !!entityId,
     ...options,
   });
+}
+
+/**
+ * Hook to read an entity from indexed cache, or fetch from API when not in cache.
+ * Use when you prefer cache-first behavior but need to load the entity if it was never fetched.
+ *
+ * @param indexKey - The index cache key (e.g. 'patientById', 'doctorById')
+ * @param entityId - The entity ID (when null/undefined, no fetch runs)
+ * @param fetchConfig - queryKey and queryFn used to fetch when cache miss
+ * @returns The entity from cache, or undefined until fetch completes (then re-renders with value)
+ *
+ * @example
+ * ```tsx
+ * const patient = useIndexedCacheValueOrFetch('patientById', appointment.patientId, {
+ *   queryKey: ['patient', appointment.patientId],
+ *   queryFn: () => PatientApi.getById(appointment.patientId!),
+ * });
+ * const doctor = useIndexedCacheValueOrFetch('doctorById', appointment.doctorId, {
+ *   queryKey: ['doctor', appointment.doctorId],
+ *   queryFn: () => Doctor.getById(appointment.doctorId!),
+ * });
+ * ```
+ */
+export function useIndexedCacheValueOrFetch<K extends CacheKey>(
+  indexKey: K,
+  entityId: string | null | undefined,
+  fetchConfig: IndexedCacheFetchConfig<K>
+): CacheRegistry[K] extends Record<string, infer V> ? V | undefined : never {
+  const cached = useIndexedCacheValue(indexKey, entityId);
+  useIndexedQuery({
+    queryKey: fetchConfig.queryKey,
+    queryFn: fetchConfig.queryFn,
+    indexKey,
+    entityId: entityId ?? undefined,
+    enabled: !!entityId && cached === undefined,
+  });
+  return cached;
 }
 
 /**

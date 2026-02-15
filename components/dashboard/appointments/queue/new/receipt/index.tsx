@@ -15,20 +15,21 @@ import {
 import { Icon } from '@iconify/react';
 
 import {
-  useAppointmentQueueById,
+  useAppointmentQueueByAid,
   useDownloadReceipt,
 } from '@/services/client/appointment/queue/queue.query';
 import { useFormContext } from 'react-hook-form';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
-import { useSession } from '@/lib/providers/session-provider';
+import { useSession } from '@/libs/providers/session-provider';
 import { formatDate } from 'date-fns';
 
 export default function AppointmentQueueReceipt() {
   const form = useFormContext<CreateAppointmentQueueFormValues>();
   const { user } = useSession();
-  const appointmentId = form.watch('appointment.queueId');
+  const appointmentId = form.watch('appointment.aid');
+
   const { data: appointment, isLoading: isAppointmentLoading } =
-    useAppointmentQueueById(appointmentId);
+    useAppointmentQueueByAid(appointmentId);
 
   const { mutate: downloadReceipt, isPending: isDownloadReceiptPending } = useDownloadReceipt();
 
@@ -48,48 +49,48 @@ export default function AppointmentQueueReceipt() {
       }}
     >
       <ModalContent>
-        <ModalHeader className="flex-col items-center border-b border-divider">
+        <ModalHeader className="border-divider flex-col items-center border-b">
           <Icon
-            className="mb-3 text-success-500"
+            className="text-success-500 mb-3"
             icon="solar:check-circle-bold-duotone"
             width={56}
           />
           <p className="mb-2 text-base font-medium">Appointment Booked</p>
-          <p className="text-center font-normal text-default-500 text-small">
+          <p className="text-default-500 text-small text-center font-normal">
             We sent a confirmation email to the patient and the doctor.
           </p>
         </ModalHeader>
         <ModalBody>
           <div className="flex w-full flex-col items-start gap-2">
-            <div className="flex w-full items-center justify-between text-small">
+            <div className="text-small flex w-full items-center justify-between">
               <p className="text-default-500 text-tiny">Token Number</p>
               <p className="font-medium">{appointment?.sequenceNumber}</p>
             </div>
-            <div className="flex w-full items-center justify-between text-small">
+            <div className="text-small flex w-full items-center justify-between">
               <p className="text-default-500 text-tiny">Patient Name</p>
               <p className="font-medium">{appointment?.patient?.name}</p>
             </div>
-            <div className="flex w-full items-center justify-between text-small">
+            <div className="text-small flex w-full items-center justify-between">
               <p className="text-default-500 text-tiny">Doctor</p>
               <p className="font-medium">{appointment?.doctor?.name}</p>
             </div>
-            <div className="flex w-full items-center justify-between text-small">
+            <div className="text-small flex w-full items-center justify-between">
               <p className="text-default-500 text-tiny">Reference Number</p>
               {/* only last 6 digits of the appointment id */}
               <p className="font-medium uppercase">{appointment?.aid}</p>
             </div>
-            <div className="flex w-full items-center justify-between text-small">
+            <div className="text-small flex w-full items-center justify-between">
               <p className="text-default-500 text-tiny">Payment Mode</p>
               <p className="font-medium">{appointment?.paymentMode}</p>
             </div>
-            <div className="flex w-full items-center justify-between text-small">
+            <div className="text-small flex w-full items-center justify-between">
               <p className="text-default-500 text-tiny">Booked On</p>
               <p className="font-medium">
                 {formatDate(new Date(appointment?.createdAt || ''), 'EEEE, MMMM d, yyyy')}
               </p>
             </div>
           </div>
-          <Divider className="w-full bg-default-100" />
+          <Divider className="bg-default-100 w-full" />
           <div className="flex flex-col items-center gap-2">
             <p className="text-default-500 text-small">Add to calendar</p>
             <div className="flex items-center gap-2">
@@ -108,14 +109,14 @@ export default function AppointmentQueueReceipt() {
             </div>
           </div>
         </ModalBody>
-        <ModalFooter className="border-t border-divider">
+        <ModalFooter className="border-divider border-t">
           <Button
             fullWidth
             variant="bordered"
             startContent={<Icon icon="solar:cloud-download-bold-duotone" width={18} />}
             isLoading={isDownloadReceiptPending}
             onPress={() => {
-              downloadReceipt(appointmentId || '');
+              downloadReceipt(appointmentId ?? '');
             }}
           >
             Download Receipt
