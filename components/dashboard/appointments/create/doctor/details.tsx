@@ -75,7 +75,7 @@ export const CreateAppointmentDoctorDetails = ({ doctor }: { doctor?: DoctorType
         </div>
 
         {/* Professional Information */}
-        {(doctor.specialization || doctor.experience || doctor.education) && (
+        {(doctor.experience || doctor.education) && (
           <>
             <Divider />
             <div className="space-y-2">
@@ -83,17 +83,6 @@ export const CreateAppointmentDoctorDetails = ({ doctor }: { doctor?: DoctorType
                 Professional Information
               </h5>
               <div className="grid gap-3">
-                {doctor.specialization && (
-                  <CellRenderer
-                    icon="solar:medical-cross-bold-duotone"
-                    label="Specialization"
-                    value={doctor.specialization}
-                    classNames={{
-                      icon: 'text-purple-500 bg-purple-100',
-                    }}
-                  />
-                )}
-
                 {doctor.experience && (
                   <CellRenderer
                     icon="solar:clock-circle-bold-duotone"

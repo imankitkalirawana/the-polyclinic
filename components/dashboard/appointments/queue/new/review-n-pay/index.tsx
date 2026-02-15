@@ -87,14 +87,7 @@ export default function ReviewAndPay() {
             icon: 'text-primary-500 bg-primary-100',
           }}
         />
-        <CellRenderer
-          icon="solar:stethoscope-bold-duotone"
-          label="Specialization"
-          value={doctor?.specialization ?? '-'}
-          classNames={{
-            icon: 'text-cyan-500 bg-cyan-100',
-          }}
-        />
+
         <CellRenderer
           icon="solar:calendar-bold-duotone"
           label="Appointment Date"

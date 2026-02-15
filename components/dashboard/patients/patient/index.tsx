@@ -18,7 +18,7 @@ type ListItem = {
     DoctorType,
     | 'email'
     | 'phone'
-    | 'specialization'
+    | 'specializations'
     | 'departments'
     | 'designation'
     | 'experience'
@@ -49,14 +49,6 @@ const listItems: ListItem[] = [
     },
   },
 
-  {
-    label: 'Specialization',
-    value: 'specialization',
-    icon: 'solar:stethoscope-bold-duotone',
-    classNames: {
-      icon: 'bg-rose-100 text-rose-500',
-    },
-  },
   {
     label: 'Departments',
     value: 'departments',
@@ -135,14 +127,6 @@ export default function DashboardDoctor({ id }: { id: string }) {
                   <Icon icon="solar:pen-2-linear" width={18} />
                 </Button>
               </div>
-              <div className="flex flex-col justify-between">
-                <div className="flex flex-col">
-                  <h2 className="text-xl font-medium">{doctor.name}</h2>
-                  <p className="text-sm text-default-500">
-                    {doctor.specialization || doctor.departments?.join(', ') || '-'}
-                  </p>
-                </div>
-              </div>
             </div>
             <div className="flex gap-2">
               <Button variant="flat" color="primary">
@@ -169,7 +153,11 @@ export default function DashboardDoctor({ id }: { id: string }) {
             <CellRenderer
               key={item.label}
               label={item.label}
-              value={doctor[item.value] || '-'}
+              value={
+                item.value === 'specializations'
+                  ? doctor.specializations?.map((specialization) => specialization.name).join(', ')
+                  : doctor[item.value] || '-'
+              }
               icon={item.icon}
               direction="horizontal"
               classNames={item.classNames}
@@ -185,7 +173,7 @@ export default function DashboardDoctor({ id }: { id: string }) {
               <div className="rounded-small bg-blue-100 p-1 text-blue-500">
                 <Icon icon="solar:users-group-two-rounded-bold-duotone" width={32} />
               </div>
-              <p className="text-2xl font-medium text-default-500">100</p>
+              <p className="text-default-500 text-2xl font-medium">100</p>
             </div>
             <p className="text-default-500 text-tiny">
               <span className="text-success">3.5%</span> Have increased from yesterday
@@ -199,7 +187,7 @@ export default function DashboardDoctor({ id }: { id: string }) {
               <div className="rounded-small bg-purple-100 p-1 text-purple-500">
                 <Icon icon="solar:calendar-date-bold-duotone" width={32} />
               </div>
-              <p className="text-2xl font-medium text-default-500">100</p>
+              <p className="text-default-500 text-2xl font-medium">100</p>
             </div>
             <p className="text-default-500 text-tiny">
               <span className="text-success">1.5%</span> Have increased from yesterday
@@ -213,8 +201,8 @@ export default function DashboardDoctor({ id }: { id: string }) {
               <div className="rounded-small bg-amber-100 p-1 text-amber-500">
                 <Icon icon="solar:star-bold-duotone" width={32} />
               </div>
-              <p className="text-2xl font-medium text-default-500">
-                4.5<span className="text-base text-default-400">/5.0</span>
+              <p className="text-default-500 text-2xl font-medium">
+                4.5<span className="text-default-400 text-base">/5.0</span>
               </p>
             </div>
             <p className="text-default-500 text-tiny">Based on 120 reviews from patients.</p>

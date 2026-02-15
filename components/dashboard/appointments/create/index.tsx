@@ -17,6 +17,7 @@ import { CreateAppointmentFormValues } from './types';
 import { useCreateAppointment } from '@/services/client/appointment/appointment.query';
 import { cn } from '@heroui/react';
 import { useKeyPress } from '@/hooks/useKeyPress';
+import { BookQueueSteps } from './data';
 
 const contentMap: Record<number, React.ReactNode> = {
   0: <PatientSelection />,
@@ -96,8 +97,10 @@ export default function NewAppointment({ date, isModal }: { date?: Date; isModal
       <CreateAppointmentContext.Provider value={contextValue}>
         <div className={cn('flex h-[calc(100vh-3.75rem)]', isModal && 'h-screen')}>
           <CreateAppointmentSidebar
-            currentStep={currentStep}
-            setCurrentStep={(step) => form.setValue('meta.currentStep', step)}
+            currentStep={Object.values(BookQueueSteps)[currentStep]}
+            setCurrentStep={(step) =>
+              form.setValue('meta.currentStep', Object.keys(BookQueueSteps).indexOf(step))
+            }
           />
           <MainContent />
         </div>
