@@ -13,7 +13,7 @@ import { Role } from '@/services/common/user/user.constants';
 
 const contentMap: Record<BookQueueSteps, React.ReactNode> = {
   [BookQueueSteps.PATIENT_INFORMATION]: <PatientSelection />,
-  [BookQueueSteps.DOCTOR_DATE_SELECTION]: <DoctorSelection />,
+  [BookQueueSteps.DOCTOR_SELECTION]: <DoctorSelection />,
   [BookQueueSteps.ADDITIONAL_DETAILS]: <AdditionalInfo />,
   [BookQueueSteps.REVIEW_AND_PAY]: <ReviewAndPay />,
 };
@@ -26,7 +26,7 @@ export default function NewQueueAppointment() {
   const form = useForm<CreateAppointmentQueueFormValues>({
     defaultValues: {
       appointment: {
-        queueId: null,
+        aid: null,
         patientId: role === Role.PATIENT ? integratedUserId : '',
         doctorId: '',
         appointmentDate: new Date(),

@@ -43,7 +43,7 @@ export type UserInfo = {
 export type PaymentMode = 'RAZORPAY' | 'CASH';
 
 export type AppointmentQueueRequest = {
-  queueId?: string | null;
+  aid?: string | null;
   patientId: string;
   doctorId: string;
   appointmentDate: Date | null;
@@ -52,7 +52,7 @@ export type AppointmentQueueRequest = {
 };
 
 export type CreateAppointmentQueueFormValues = {
-  appointment: AppointmentQueueRequest & { queueId?: string | null };
+  appointment: AppointmentQueueRequest;
   meta: {
     currentStep: BookQueueSteps;
     showConfirmation: boolean;

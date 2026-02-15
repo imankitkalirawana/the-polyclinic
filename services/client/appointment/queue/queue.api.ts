@@ -18,12 +18,12 @@ export class AppointmentQueueApi {
     });
   }
 
-  static async getById(queueId?: string | null) {
-    if (!queueId) {
-      throw new Error('Queue ID is required');
+  static async getByAid(aid?: string | null) {
+    if (!aid) {
+      throw new Error('Appointment ID is required');
     }
     return await apiRequest<AppointmentQueueType>({
-      url: `${this.API_BASE}/${queueId}`,
+      url: `${this.API_BASE}/${aid}`,
     });
   }
 

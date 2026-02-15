@@ -50,7 +50,7 @@ export default function PaymentFooter() {
         color: 'success',
       });
 
-      form.setValue('appointment.queueId', createAppointmentResponse.data.id);
+      form.setValue('appointment.aid', createAppointmentResponse.data.aid);
       form.setValue('meta.showReceipt', true);
     } catch (err) {
       setStatus('failed');
@@ -89,7 +89,7 @@ export default function PaymentFooter() {
         return;
       }
 
-      form.setValue('appointment.queueId', createAppointmentResponse.data.id);
+      form.setValue('appointment.aid', createAppointmentResponse.data.aid);
 
       const razorpayKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY || 'rzp_test_RwXKuh4eV9Pxy6';
 
@@ -164,7 +164,7 @@ export default function PaymentFooter() {
   return (
     <div className="flex w-full items-center justify-between">
       <div className="flex flex-col">
-        <div className="text-xs text-default-500">You are going to pay</div>
+        <div className="text-default-500 text-xs">You are going to pay</div>
         <div className="flex gap-2 text-3xl">
           <span>₹</span>
           <span>100</span>
@@ -172,7 +172,7 @@ export default function PaymentFooter() {
       </div>
       {error && (
         <div>
-          <Alert hideIcon color="danger" className="py-0 text-small">
+          <Alert hideIcon color="danger" className="text-small py-0">
             <p dangerouslySetInnerHTML={{ __html: error }} />
           </Alert>
         </div>

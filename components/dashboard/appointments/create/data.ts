@@ -31,7 +31,7 @@ export const CREATE_APPOINTMENT_STEPS = [
 
 export enum BookQueueSteps {
   PATIENT_INFORMATION = 'patient-information',
-  DOCTOR_DATE_SELECTION = 'doctor-date-selection',
+  DOCTOR_SELECTION = 'doctor-selection',
   ADDITIONAL_DETAILS = 'additional-details',
   REVIEW_AND_PAY = 'review-and-pay',
 }
@@ -43,20 +43,20 @@ export const BookQueueAppointmentSteps: Record<string, VerticalCollapsibleStepPr
     description: 'Please provide your patient information to create an appointment.',
     details: ['Select patient from the list or create a new patient.'],
   },
-  [BookQueueSteps.DOCTOR_DATE_SELECTION]: {
-    key: BookQueueSteps.DOCTOR_DATE_SELECTION,
-    title: 'Doctor & Date Selection',
-    description: 'Please select the doctor and date you want to book an appointment with.',
-    details: [
-      'Select the doctor with whom you want to book an appointment',
-      'Select the date and time for the appointment',
-    ],
+  [BookQueueSteps.DOCTOR_SELECTION]: {
+    key: BookQueueSteps.DOCTOR_SELECTION,
+    title: 'Doctor Selection',
+    description: 'Please select the doctor you want to book an appointment with.',
+    details: ['Select the doctor that you would like to book an appointment with.'],
   },
   [BookQueueSteps.ADDITIONAL_DETAILS]: {
     key: BookQueueSteps.ADDITIONAL_DETAILS,
-    title: 'Additional Details',
+    title: 'Date & Additional Details',
     description: 'Please provide additional details for your appointment.',
-    details: ['Please provide additional details for your appointment.'],
+    details: [
+      'Select the date for the appointment',
+      'Provide additional information to the doctor',
+    ],
   },
   [BookQueueSteps.REVIEW_AND_PAY]: {
     key: BookQueueSteps.REVIEW_AND_PAY,

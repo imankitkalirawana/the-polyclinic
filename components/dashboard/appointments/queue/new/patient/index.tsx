@@ -62,7 +62,7 @@ export default function PatientSelection() {
       });
       return;
     }
-    form.setValue('meta.currentStep', BookQueueSteps.DOCTOR_DATE_SELECTION);
+    form.setValue('meta.currentStep', BookQueueSteps.DOCTOR_SELECTION);
   };
 
   return (

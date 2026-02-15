@@ -2,17 +2,7 @@ import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import { useDebounce } from '@/hooks/useDebounce';
 import { DoctorType, useAllDoctors } from '@/services/client/doctor';
 import { useCacheStore } from '@/store';
-import {
-  addToast,
-  Button,
-  Card,
-  Chip,
-  cn,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  Tooltip,
-} from '@heroui/react';
+import { addToast, Button, Card, Chip, cn, Tooltip } from '@heroui/react';
 import { useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import {
@@ -21,9 +11,7 @@ import {
 } from '../../../(common)';
 import { BookQueueSteps } from '@/components/dashboard/appointments/create/data';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
-import DateScroll from '../../../(common)/date-scroll';
 import DoctorCategories from './doctor-categories';
-import { Icon } from '@iconify/react/dist/iconify.js';
 
 export default function DoctorSelection() {
   const [search, _setSearch] = useState('');
@@ -36,7 +24,6 @@ export default function DoctorSelection() {
   const setIndexedCache = useCacheStore((state) => state.setIndexedCache);
 
   const doctorId = form.watch('appointment.doctorId');
-  const appointmentDate = form.watch('appointment.appointmentDate');
 
   // Cache the selected doctor when doctorId changes
   const handleDoctorSelect = (id: string) => {
@@ -46,11 +33,6 @@ export default function DoctorSelection() {
     if (doctor) {
       setIndexedCache('doctorById', id, doctor);
     }
-  };
-
-  const handleDateSelect = (date: Date) => {
-    form.setValue('appointment.appointmentDate', date);
-    form.setValue('appointment.doctorId', '');
   };
 
   const handleNext = () => {
@@ -98,13 +80,6 @@ export default function DoctorSelection() {
         </>
       }
     >
-      <div>
-        <DateScroll
-          selectedDate={appointmentDate}
-          setSelectedDate={handleDateSelect}
-          hidePastDates={true}
-        />
-      </div>
       {/* <div>
         <SearchInput
           isLoading={isLoading || isRefetching}
@@ -179,16 +154,6 @@ const DoctorCard = ({
                     size="sm"
                     color="warning"
                     variant="flat"
-                    endContent={
-                      <Popover showArrow className="max-w-64">
-                        <PopoverTrigger>
-                          <button type="button" className="m-0 cursor-pointer p-0">
-                            <Icon icon="solar:info-circle-bold-duotone" width={15} />
-                          </button>
-                        </PopoverTrigger>
-                        <PopoverContent>{specialization.description}</PopoverContent>
-                      </Popover>
-                    }
                   >
                     <span className="block max-w-24 truncate">{specialization.name}</span>
                   </Chip>
