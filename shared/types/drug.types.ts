@@ -1,18 +1,14 @@
 import { Base } from './common.types';
-import { DrugStatus } from '../enums';
+import { DrugForm, DrugScheduleType } from '../enums';
 
 export type Drug = Base & {
-  unique_id: number;
-  brandName: string;
-  genericName: string;
+  unique_id: string;
+  name: string;
+  generic_name: string;
+  strength?: string;
+  form?: DrugForm;
   description?: string;
   manufacturer?: string;
-  dosage?: string;
-  form?: string;
-  frequency?: string;
-  strength?: number;
-  quantity?: number;
-  price?: number;
-  status: DrugStatus;
-  stock?: number;
+  schedule_type?: DrugScheduleType;
+  companies?: string[];
 };

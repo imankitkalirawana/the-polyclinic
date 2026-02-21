@@ -9,23 +9,15 @@ import { useDrugStore } from './store';
 import { Table } from '@/components/ui/static-data-table';
 import {
   renderDropdownMenu,
-  renderChip,
-  renderCopyableText,
   renderDate,
   DropdownItemWithSection,
 } from '@/components/ui/static-data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
 import { useAllDrugs } from '@/services/client/drug/drug.query';
 import { Drug } from '@/shared';
+import { CopyText } from '@/components/ui/copy';
 
-const INITIAL_VISIBLE_COLUMNS = [
-  'did',
-  'brandName',
-  'genericName',
-  'manufacturer',
-  'status',
-  'createdAt',
-];
+const INITIAL_VISIBLE_COLUMNS = ['did', 'name', 'generic_name', 'manufacturer', 'createdAt'];
 
 export default function Drugs() {
   const { data, isLoading } = useAllDrugs();
@@ -63,24 +55,24 @@ export default function Drugs() {
     () => [
       {
         name: 'Drug ID',
-        uid: 'did',
+        uid: 'unique_id',
         sortable: true,
-        renderCell: (drug) => renderCopyableText(drug.unique_id.toString()),
+        renderCell: (drug) => <CopyText>{drug.unique_id}</CopyText>,
       },
       {
         name: 'Brand Name',
-        uid: 'brandName',
+        uid: 'name',
         sortable: true,
         renderCell: (drug) => (
-          <div className="text-default-foreground font-medium">{drug.brandName}</div>
+          <div className="text-default-foreground font-medium">{drug.name}</div>
         ),
       },
       {
         name: 'Generic Name',
-        uid: 'genericName',
+        uid: 'generic_name',
         sortable: true,
         renderCell: (drug) => (
-          <div className="text-default-foreground truncate capitalize">{drug.genericName}</div>
+          <div className="text-default-foreground truncate capitalize">{drug.generic_name}</div>
         ),
       },
       {
@@ -91,15 +83,7 @@ export default function Drugs() {
           <div className="text-default-foreground truncate capitalize">{drug.manufacturer}</div>
         ),
       },
-      {
-        name: 'Status',
-        uid: 'status',
-        sortable: true,
-        renderCell: (drug) =>
-          renderChip({
-            item: drug.status,
-          }),
-      },
+
       {
         name: 'Created At',
         uid: 'createdAt',
@@ -119,16 +103,6 @@ export default function Drugs() {
   // Define filters
   const filters: FilterDef<Drug>[] = useMemo(
     () => [
-      {
-        name: 'Status',
-        key: 'status',
-        options: [
-          { label: 'All', value: 'all' },
-          { label: 'Available', value: 'available' },
-          { label: 'Unavailable', value: 'unavailable' },
-        ],
-        filterFn: (drug, value) => drug.status.toLowerCase() === value,
-      },
       {
         name: 'Created At',
         key: 'createdAt',
@@ -215,8 +189,8 @@ export default function Drugs() {
         keyField="unique_id"
         filters={filters}
         searchField={(drug, searchValue) =>
-          drug.brandName.toLowerCase().includes(searchValue.toLowerCase()) ||
-          drug.genericName.toLowerCase().includes(searchValue.toLowerCase()) ||
+          drug.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+          drug.generic_name.toLowerCase().includes(searchValue.toLowerCase()) ||
           (drug.manufacturer
             ? drug.manufacturer.toLowerCase().includes(searchValue.toLowerCase())
             : false)
