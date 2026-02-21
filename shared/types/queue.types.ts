@@ -1,25 +1,6 @@
-import { Gender, PaymentMode, QueueStatus } from '../enums';
-
-export type QueuePatientInfo = {
-  id: string;
-  user_id: string;
-  name: string;
-  phone?: string;
-  email: string;
-  gender?: Gender;
-  age?: number;
-  image?: string;
-};
-
-export type QueueDoctorInfo = {
-  id: string;
-  user_id: string;
-  name: string;
-  email: string;
-  phone?: string;
-  image?: string;
-  seating?: string;
-};
+import { Patient } from '.';
+import { PaymentMode, QueueStatus } from '../enums';
+import { Doctor } from './doctor.types';
 
 export type QueueUserInfo = {
   id: string;
@@ -56,8 +37,14 @@ export type AppointmentQueue = {
   appointmentDate: string;
   prescription: string;
   status: QueueStatus;
-  patient: QueuePatientInfo;
-  doctor: QueueDoctorInfo;
+  patient: Pick<
+    Patient,
+    'id' | 'name' | 'email' | 'phone' | 'image' | 'user_id' | 'age' | 'gender'
+  >;
+  doctor: Pick<
+    Doctor,
+    'id' | 'name' | 'email' | 'phone' | 'image' | 'specializations' | 'seating' | 'user_id'
+  >;
   bookedByUser: QueueUserInfo;
   completedByUser?: QueueUserInfo;
   createdAt: string;
@@ -70,4 +57,15 @@ export type Counter = {
   skip: number;
   clockIn: number;
   call: number;
+};
+
+export type GroupedAppointmentQueuesResponse = {
+  previous: AppointmentQueue[];
+  current: AppointmentQueue | null;
+  next: AppointmentQueue[];
+  metaData: {
+    totalPrevious: number;
+    totalNext: number;
+    total: number;
+  };
 };

@@ -9,7 +9,7 @@ import ReviewAndPay from './review-n-pay';
 import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
 import AppointmentQueueReceipt from './receipt';
 import { useSession } from '@/libs/providers/session-provider';
-import { UserRole } from '@repo/store';
+import { UserRole } from '@/shared';
 
 const contentMap: Record<BookQueueSteps, React.ReactNode> = {
   [BookQueueSteps.PATIENT_INFORMATION]: <PatientSelection />,

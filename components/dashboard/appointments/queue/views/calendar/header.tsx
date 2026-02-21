@@ -21,7 +21,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { allowedRolesToCreateAppointment } from './data';
 import { ViewType, viewTypes as ViewTypes } from './types';
 import { useKeyPress } from '@/hooks/useKeyPress';
-import { UserRole } from '@repo/store';
+import { UserRole } from '@/shared';
 
 interface CalendarHeaderProps {
   currentDate: Date;

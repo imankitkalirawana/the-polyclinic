@@ -1,6 +1,6 @@
 import RichColorCell from '@/components/ui/cell/rich-color';
 import QuickLook from '@/components/ui/quicklook';
-import { AppointmentQueue } from '@repo/store';
+import { AppointmentQueue } from '@/shared';
 import QueueActivityLogs from './activity-logs';
 
 interface QueueQuickLookProps {

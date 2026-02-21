@@ -1,4 +1,4 @@
-import { AppointmentQueueFilters } from '@/services/client/appointment/queue/queue.types';
+import { $FixMe } from '@/types';
 
 /**
  * Decides if a single filter value is "active" based on its shape.
@@ -18,7 +18,6 @@ function isFilterValueActive(value: unknown): boolean {
   return false;
 }
 
-export const getActiveFilterCount = (filters: AppointmentQueueFilters): number =>
-  (Object.keys(filters) as Array<keyof AppointmentQueueFilters>).filter((key) =>
-    isFilterValueActive(filters[key])
-  ).length;
+export const getActiveFilterCount = (filters: $FixMe): number =>
+  (Object.keys(filters) as Array<keyof $FixMe>).filter((key) => isFilterValueActive(filters[key]))
+    .length;

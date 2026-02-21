@@ -6,8 +6,7 @@ import CommonFields from '@/components/dashboard/users/user/form/common-fields';
 import PatientFields from '@/components/dashboard/users/user/form/patient-fields';
 import { useAppointmentQueueWithAID } from '@/services/client/appointment/queue/queue.query';
 import { useUserProfileByID, useUpdateUser } from '@/services/common/user/user.query';
-import { userFormValuesSchema } from '@/services/common/user/user.validation';
-import { UserFormValues } from '@/services/common/user/user.types';
+import { CreateProfileDto, createProfileSchema } from '@/shared';
 
 interface EditModalProps {
   aid: string;
@@ -21,8 +20,8 @@ export default function EditModal({ aid, isOpen, onClose }: EditModalProps) {
 
   const { data: profile } = useUserProfileByID(patientUserId?.user_id);
   const updateUser = useUpdateUser();
-  const form = useForm<UserFormValues>({
-    resolver: zodResolver(userFormValuesSchema),
+  const form = useForm({
+    resolver: zodResolver(createProfileSchema),
     defaultValues: {
       user: profile?.user,
       patient: profile?.patient,
@@ -38,7 +37,7 @@ export default function EditModal({ aid, isOpen, onClose }: EditModalProps) {
     }
   }, [profile, form]);
 
-  const handleSubmit = async (values: UserFormValues) => {
+  const handleSubmit = async (values: CreateProfileDto) => {
     if (!profile?.user.id) {
       return;
     }

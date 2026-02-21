@@ -3,7 +3,7 @@ import { renderChip, RenderUser } from '@/components/ui/static-data-table/cell-r
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { useUserProfileByID } from '@/services/common/user/user.query';
 import { Button, Card, CardBody, CardFooter, CardHeader, Link, Tooltip } from '@heroui/react';
-import { User } from '@repo/store';
+import { User } from '@/shared';
 
 export const UserDetailsPopover = ({
   name,

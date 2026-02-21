@@ -1,5 +1,5 @@
+import { $FixMe } from '@/types';
 import { DepartmentApi } from './department.api';
-import { CreateDepartmentType, UpdateDepartmentType } from './department.types';
 import { useGenericQuery } from '@/services/useGenericQuery';
 import { useGenericMutation } from '@/services/useGenericMutation';
 
@@ -18,14 +18,14 @@ export const useDepartmentByDid = (did?: string | null) =>
 
 export const useCreateDepartment = () => {
   return useGenericMutation({
-    mutationFn: (data: CreateDepartmentType) => DepartmentApi.create(data),
+    mutationFn: (data: $FixMe) => DepartmentApi.create(data),
     invalidateQueries: [['departments'], ['department']],
   });
 };
 
 export const useUpdateDepartment = (did: string) => {
   return useGenericMutation({
-    mutationFn: (data: UpdateDepartmentType) => DepartmentApi.update(did, data),
+    mutationFn: (data: $FixMe) => DepartmentApi.update(did, data),
     invalidateQueries: [['departments'], ['department', did]],
   });
 };

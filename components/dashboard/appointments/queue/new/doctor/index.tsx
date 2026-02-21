@@ -1,6 +1,6 @@
 import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import { useDebounce } from '@/hooks/useDebounce';
-import { Doctor } from '@repo/store';
+import { Doctor } from '@/shared';
 import { useAllDoctors } from '@/services/client/doctor';
 import { useCacheStore } from '@/store';
 import { addToast, Button, Card, Chip, cn, Tooltip } from '@heroui/react';

@@ -1,7 +1,6 @@
-import { DoctorSpecialization, DoctorType } from '@/services/client/doctor';
-import { DepartmentType } from '@/services/client/department/department.types';
+import { Department } from '@/shared';
 import { ServiceType } from '@/services/client/service/service.types';
-import { Appointment, Drug } from '@/shared';
+import { Appointment, Doctor, DoctorSpecialization, Drug } from '@/shared';
 import { AppointmentType } from '@/services/client/appointment/appointment.types';
 import { AppointmentQueue, Patient, User } from '@/shared';
 
@@ -17,8 +16,8 @@ import { AppointmentQueue, Patient, User } from '@/shared';
 export interface CacheRegistry {
   // Collections (arrays)
   patients: Patient[];
-  doctors: DoctorType[];
-  departments: DepartmentType[];
+  doctors: Doctor[];
+  departments: Department[];
   services: ServiceType[];
   drugs: Drug[];
   appointments: Appointment[];
@@ -27,8 +26,8 @@ export interface CacheRegistry {
   specializations: DoctorSpecialization[];
   // Single entities (for selections, current items, etc.)
   selectedPatient: Patient | null;
-  selectedDoctor: DoctorType | null;
-  selectedDepartment: DepartmentType | null;
+  selectedDoctor: Doctor | null;
+  selectedDepartment: Department | null;
   selectedService: ServiceType | null;
   selectedDrug: Drug | null;
   selectedAppointment: AppointmentType | null;
@@ -37,8 +36,8 @@ export interface CacheRegistry {
 
   // Indexed entities (by ID)
   patientById: Record<string, Patient>;
-  doctorById: Record<string, DoctorType>;
-  departmentById: Record<string, DepartmentType>;
+  doctorById: Record<string, Doctor>;
+  departmentById: Record<string, Department>;
   serviceById: Record<string, ServiceType>;
   drugById: Record<string, Drug>;
   appointmentById: Record<string, AppointmentType>;

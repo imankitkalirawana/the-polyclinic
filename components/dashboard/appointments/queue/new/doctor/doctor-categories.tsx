@@ -1,4 +1,4 @@
-import { DoctorSpecialization } from '@repo/store';
+import { DoctorSpecialization } from '@/shared';
 import { Button, Popover, PopoverContent, PopoverTrigger, ScrollShadow } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 

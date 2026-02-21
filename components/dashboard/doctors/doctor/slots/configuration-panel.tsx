@@ -18,7 +18,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 
 import { SpecificDateManager } from './specific-date-manager';
 import { getValidEndTimes, getValidStartTimes, timeToMinutes } from './util';
-import { SlotConfig, TimeSlot } from '@/services/client/doctor';
+import { SlotConfig, TimeSlot } from '@/shared';
 
 const DEFAULT_BUFFER_TIME = 30;
 const DEFAULT_MAX_BOOKINGS_PER_DAY = 10;

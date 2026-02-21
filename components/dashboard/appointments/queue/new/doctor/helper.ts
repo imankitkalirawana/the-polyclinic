@@ -1,4 +1,4 @@
-import { Doctor } from '@repo/store';
+import { Doctor } from '@/shared';
 
 export const getFilterChips = (doctors: Doctor[]) => {
   return doctors.map((doctor) => {

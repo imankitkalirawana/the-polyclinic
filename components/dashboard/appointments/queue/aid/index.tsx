@@ -54,7 +54,7 @@ export default function AppointmentQueue({ aid }: { aid: string }) {
                       <div className="flex flex-col pr-2">
                         <h3 className="text-xl font-medium">{appointment?.doctor?.name || '-'}</h3>
                         <p className="text-default-500">
-                          {appointment?.doctor?.specialization || '-'}
+                          {appointment?.doctor?.specializations?.join(', ') || '-'}
                         </p>
                       </div>
                       <div className="flex flex-col gap-1.5 pt-4">

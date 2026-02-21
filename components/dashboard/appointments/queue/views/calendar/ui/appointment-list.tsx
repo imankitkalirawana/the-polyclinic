@@ -6,7 +6,7 @@ import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs';
 import { viewTypes } from '../types';
 import DateChip from './date-chip';
 
-import { AppointmentQueue } from '@repo/store';
+import { AppointmentQueue } from '@/shared';
 import AppointmentTriggerItem from './appointment-trigger-item';
 
 export default function AppointmentList({

@@ -39,7 +39,7 @@ export const useGroupedAppointmentQueuesForPatient = () => {
   });
 };
 
-export const useAppointmentQueueWithAID = (aid: string) => {
+export const useAppointmentQueueWithAID = (aid: string | null) => {
   return useGenericQuery({
     queryKey: ['appointment-queue-with-aid', aid],
     queryFn: () => AppointmentQueueApi.getQueueByAid(aid),

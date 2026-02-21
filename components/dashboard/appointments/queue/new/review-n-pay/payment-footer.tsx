@@ -6,7 +6,7 @@ import { addToast, Alert, Button } from '@heroui/react';
 import { useState, useRef, useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { PaymentMode } from '@repo/store';
+import { PaymentMode } from '@/shared';
 
 type PaymentStatus = 'idle' | 'loading' | 'success' | 'failed' | 'cancelled';
 

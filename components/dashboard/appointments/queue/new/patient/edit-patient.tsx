@@ -6,9 +6,9 @@ import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import Modal from '@/components/ui/modal';
-import { Patient } from '@repo/store';
+import { Patient } from '@/shared';
 import { useUpdateUser } from '@/services/common/user/user.query';
-import { Gender } from '@repo/store';
+import { Gender } from '@/shared';
 
 const PHONE_REGEX = /^[6-9]\d{9}$/;
 

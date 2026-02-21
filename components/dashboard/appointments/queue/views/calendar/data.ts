@@ -1,4 +1,4 @@
-import { UserRole } from '@repo/store';
+import { UserRole } from '@/shared';
 
 export const MAX_APPOINTMENTS_IN_CELL = 2;
 

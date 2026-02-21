@@ -12,7 +12,7 @@ import { YearView } from './views/year';
 import { CalendarHeader } from './header';
 import { viewTypes } from './types';
 
-import { AppointmentQueue } from '@repo/store';
+import { AppointmentQueue } from '@/shared';
 import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
 
 interface CalendarProps {
