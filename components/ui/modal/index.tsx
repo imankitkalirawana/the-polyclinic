@@ -120,7 +120,6 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
     ref
   ) => {
     const isLargeModal = isLargerThan3xl(size);
-
     return (
       <HeroModal
         ref={ref}

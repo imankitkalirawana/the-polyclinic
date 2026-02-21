@@ -1,6 +1,5 @@
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { cn } from '@heroui/react';
-import { AppointmentQueue, QueueStatus } from '@repo/store';
 import {
   Accordion,
   AccordionItem,
@@ -16,7 +15,7 @@ import Avatar from 'boring-avatars';
 import { formatDate } from 'date-fns';
 import { useState } from 'react';
 import { getQueueStatusColor } from './helper';
-import { formatGender } from '@repo/store';
+import { AppointmentQueue, QueueStatus, formatGender } from '@/shared';
 
 export default function QueuesList({
   isLoading,
@@ -80,9 +79,7 @@ export default function QueuesList({
                       >
                         View
                       </Button>
-                      <span className="text-primary-500 text-large font-bold">
-                        {queue.sequenceNumber}
-                      </span>
+                      <span className="text-primary-500 text-large font-bold">{queue.id}</span>
                     </div>
                   </CardHeader>
                   <CardBody className="grid w-full grid-cols-2 gap-2">

@@ -31,11 +31,10 @@ import AsyncButton from '@/components/ui/buttons/async-button';
 import useAppointmentButtonsInDrawer from '@/services/client/appointment/hooks/useAppointmentButton';
 import { useIsMobile } from '@/hooks/useMobile';
 import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
-import { AppointmentQueue, PaymentMode, QueueStatus } from '@repo/store';
+import { AppointmentQueue, PaymentMode, QueueStatus, UserRole } from '@/shared';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { useClipboard } from '@/hooks/useClipboard';
 import { UserDetailsPopover } from './user-details-popover';
-import { UserRole } from '@repo/store';
 import { useAppointmentQueueWithAID } from '@/services/client/appointment/queue/queue.query';
 import RenderChip from '@/components/ui/new-data-table/cell-renderer/render-chip';
 

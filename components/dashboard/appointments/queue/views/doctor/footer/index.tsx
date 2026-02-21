@@ -1,8 +1,8 @@
-import { AppointmentQueue } from '@repo/store';
 import { Button, cn } from '@heroui/react';
 import { useQueryState } from 'nuqs';
 import QueueFooterActions from './actions';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { AppointmentQueue } from '@/shared';
 
 export default function QueueFooter({ currentQueue }: { currentQueue?: AppointmentQueue | null }) {
   const [queueId, setQueueId] = useQueryState('id');

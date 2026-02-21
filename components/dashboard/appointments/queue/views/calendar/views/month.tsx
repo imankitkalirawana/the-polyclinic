@@ -24,11 +24,10 @@ import DateChip from '../ui/date-chip';
 import { TIMINGS } from '@/libs/config';
 import { cn } from '@heroui/react';
 import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
-import { AppointmentQueue } from '@repo/store';
-import { UserRole } from '@repo/store';
+import { Appointment, UserRole } from '@/shared';
 
 interface MonthViewProps {
-  appointments: AppointmentQueue[];
+  appointments: Appointment[];
   onTimeSlotClick: (date: Date) => void;
 }
 
@@ -52,7 +51,7 @@ export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
   const numberOfWeeks = Math.ceil(days.length / 7);
 
   const getAppointmentsForDay = (date: Date) =>
-    appointments.filter((apt) => isSameDay(new Date(apt.appointmentDate ?? ''), date));
+    appointments.filter((apt) => isSameDay(new Date(apt.date ?? ''), date));
 
   const isAllowedToCreateAppointment = allowedRolesToCreateAppointment.includes(
     user?.role || UserRole.PATIENT

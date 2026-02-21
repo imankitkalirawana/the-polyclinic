@@ -12,11 +12,11 @@ import {
   DropdownItem,
 } from '@heroui/react';
 import { formatDate } from 'date-fns';
-import { AppointmentQueue } from '@repo/store';
 import Avatar from 'boring-avatars';
 import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useRouter } from 'nextjs-toploader/app';
+import { AppointmentQueue } from '@/shared';
 
 export default function MinimalCard({ appointment }: { appointment: AppointmentQueue }) {
   const router = useRouter();

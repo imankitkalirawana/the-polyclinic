@@ -1,6 +1,5 @@
 'use client';
 
-import { AppointmentQueue } from '@repo/store';
 import {
   Card,
   CardBody,
@@ -18,6 +17,7 @@ import Avatar from 'boring-avatars';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
 import { useRouter } from 'nextjs-toploader/app';
+import { AppointmentQueue } from '@/shared';
 
 export default function AppointmentCard({ appointment }: { appointment: AppointmentQueue }) {
   const [isHidden] = useLocalStorage('isDashboardSidebarHidden', true);

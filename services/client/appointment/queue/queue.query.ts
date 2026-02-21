@@ -32,6 +32,21 @@ export const useQueueForDoctor = (
   });
 };
 
+export const useGroupedAppointmentQueuesForPatient = () => {
+  return useGenericQuery({
+    queryKey: ['grouped-appointment-queues-for-patient'],
+    queryFn: () => AppointmentQueueApi.getQueuesForPatient(),
+  });
+};
+
+export const useAppointmentQueueWithAID = (aid: string) => {
+  return useGenericQuery({
+    queryKey: ['appointment-queue-with-aid', aid],
+    queryFn: () => AppointmentQueueApi.getQueueByAid(aid),
+    enabled: !!aid,
+  });
+};
+
 export const useQueueActivityLogs = (queueId?: string | null) => {
   return useGenericQuery({
     queryKey: ['queue-activity-logs', queueId],

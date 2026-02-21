@@ -24,10 +24,10 @@ import DateChip from '../ui/date-chip';
 import { TIMINGS } from '@/libs/config';
 import { cn } from '@heroui/react';
 import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
-import { AppointmentQueue, UserRole } from '@repo/store';
+import { Appointment, UserRole } from '@/shared';
 
 interface WeekViewProps {
-  appointments: AppointmentQueue[];
+  appointments: Appointment[];
   currentDate: Date;
   onTimeSlotClick: (date: Date) => void;
 }
@@ -58,7 +58,7 @@ export function WeekView({ appointments, currentDate, onTimeSlotClick }: WeekVie
 
   const getAppointmentsForDayAndHour = (targetDate: Date, targetHour: number) =>
     appointments.filter((apt) => {
-      const aptDate = new Date(apt.appointmentDate ?? '');
+      const aptDate = new Date(apt.date ?? '');
       return isSameDay(aptDate, targetDate) && aptDate.getHours() === targetHour;
     });
 

@@ -14,12 +14,12 @@ import DateChip from '../ui/date-chip';
 import { TIMINGS } from '@/libs/config'; // Assuming this provides start/end hours
 import { cn } from '@heroui/react';
 import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
-import { AppointmentQueue, UserRole } from '@repo/store';
+import { Appointment, UserRole } from '@/shared';
 
 interface DayViewProps {
   isCompact?: boolean;
   openInNewTab?: boolean;
-  appointments: AppointmentQueue[];
+  appointments: Appointment[];
   currentDate: Date;
   onTimeSlotClick: (date: Date) => void;
 }
@@ -45,12 +45,12 @@ export function DayView({
   );
 
   const dayAppointments = appointments.filter((apt) =>
-    isSameDay(new Date(apt.appointmentDate ?? ''), currentDate)
+    isSameDay(new Date(apt.date ?? ''), currentDate)
   );
 
   const getAppointmentsForHour = (hour: number) =>
     dayAppointments.filter((apt) => {
-      const aptDate = new Date(apt.appointmentDate ?? '');
+      const aptDate = new Date(apt.date ?? '');
       return aptDate.getHours() === hour;
     });
 
