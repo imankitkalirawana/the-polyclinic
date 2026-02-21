@@ -1,4 +1,4 @@
-import { Base } from './common';
+import { Base } from './common.types';
 import { DrugStatus } from '../enums';
 
 export type Drug = Base & {

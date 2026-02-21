@@ -1,8 +1,8 @@
-import { Base } from './common';
-import { Gender } from '../enums';
+import { Base } from './common.types';
+import { Gender, PatientVitals } from '../enums';
 
 export type Patient = Base & {
-  user_id: string;
+  userId: string;
   name: string;
   email: string;
   image?: string | null;
@@ -11,4 +11,5 @@ export type Patient = Base & {
   dob?: string;
   age?: number;
   address?: string | null;
+  vitals?: PatientVitals;
 };

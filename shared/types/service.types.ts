@@ -1,4 +1,4 @@
-import { Base } from './common';
+import { Base } from './common.types';
 import { ServiceStatus, ServiceType } from '../enums';
 
 export type ServiceFields = {

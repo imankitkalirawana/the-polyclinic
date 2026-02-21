@@ -1,5 +1,5 @@
 import { UserRole, UserStatus } from '../../enums';
-import { Base } from '../common';
+import { Base } from '../common.types';
 
 export type User = Base & {
   email: string;

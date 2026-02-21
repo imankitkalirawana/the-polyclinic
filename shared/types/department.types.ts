@@ -1,4 +1,4 @@
-import { Base } from './common';
+import { Base } from './common.types';
 
 export type DepartmentFeature = {
   name: string;

@@ -1,4 +1,4 @@
-import { Base } from './common';
+import { Base } from './common.types';
 import { type AppointmentStatus, type AppointmentMode, type AppointmentType } from '../enums';
 import { Gender } from '../enums';
 

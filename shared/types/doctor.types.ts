@@ -1,4 +1,4 @@
-import { Base } from './common';
+import { Base } from './common.types';
 
 export type Doctor = Base & {
   user_id: string;
