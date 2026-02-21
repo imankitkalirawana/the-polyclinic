@@ -6,7 +6,7 @@ import {
 } from '../../../(common)';
 import { useFormContext } from 'react-hook-form';
 import { CellRenderer } from '@/components/ui/cell/rich-color/cell-renderer';
-import { Doctor } from '@/services/client/doctor/doctor.api';
+import { DoctorApi } from '@/services/client/doctor/doctor.api';
 import { PatientApi } from '@/services/client/patient/patient.api';
 import PaymentFooter from './payment-footer';
 import { useIndexedCacheValueOrFetch } from '@/store';
@@ -21,7 +21,7 @@ export default function ReviewAndPay() {
   });
   const doctor = useIndexedCacheValueOrFetch('doctorById', appointment.doctorId, {
     queryKey: ['doctor', appointment.doctorId],
-    queryFn: () => Doctor.getById(appointment.doctorId),
+    queryFn: () => DoctorApi.getById(appointment.doctorId),
   });
 
   return (

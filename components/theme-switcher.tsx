@@ -36,7 +36,7 @@ function ThemeOption({
         <motion.div
           layoutId="theme-option"
           transition={{ type: 'spring', bounce: 0.3, duration: 0.6 }}
-          className="absolute inset-0 rounded-full border border-divider"
+          className="border-divider absolute inset-0 rounded-full border"
         />
       )}
     </button>
@@ -77,7 +77,7 @@ function ThemeSwitcher() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
-      className="inline-flex items-center overflow-hidden rounded-full bg-background ring-1 ring-inset ring-divider"
+      className="bg-background ring-divider inline-flex items-center overflow-hidden rounded-full ring-1 ring-inset"
       role="radiogroup"
     >
       {THEME_OPTIONS.map((option) => (

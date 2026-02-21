@@ -1,12 +1,13 @@
-import { DoctorSpecialization, DoctorType, SlotConfig } from './doctor.types';
 import { apiRequest } from '@/libs/axios';
-import { CreateSpecializationDto } from './doctor.dto';
+import { CreateSpecializationDto, DoctorSpecialization } from '@/shared';
+import { $FixMe } from '@/types';
+import { Doctor } from '@/shared';
 
-export class Doctor {
+export class DoctorApi {
   private static API_BASE = '/doctors';
   static async getAll(search?: string) {
     return await apiRequest<{
-      doctors: DoctorType[];
+      doctors: Doctor[];
       categories: DoctorSpecialization[];
     }>({
       url: this.API_BASE,
@@ -20,7 +21,7 @@ export class Doctor {
     if (!id) {
       return { success: false, message: 'ID is required', data: null };
     }
-    return await apiRequest<DoctorType>({
+    return await apiRequest<Doctor>({
       url: `${this.API_BASE}/${id}`,
     });
   }
@@ -47,13 +48,13 @@ export class DoctorSlots {
     if (!uid) {
       return { success: false, message: 'UID is required', data: null };
     }
-    return await apiRequest<SlotConfig>({
+    return await apiRequest<$FixMe>({
       url: `${this.API_BASE}/${uid}/slots`,
     });
   }
 
-  static async updateSlotsByUID(uid: string, slot: SlotConfig) {
-    return await apiRequest<SlotConfig>({
+  static async updateSlotsByUID(uid: string, slot: $FixMe) {
+    return await apiRequest<$FixMe>({
       url: `${this.API_BASE}/${uid}/slots`,
       method: 'POST',
       data: slot,

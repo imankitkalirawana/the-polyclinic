@@ -7,12 +7,12 @@ import { format } from 'date-fns';
 
 import CellValue from '@/components/ui/cell-value';
 import { useDrugWithDid } from '@/services/client/drug/drug.query';
-import { DrugType } from '@/services/client/drug/drug.types';
+import { Drug } from '@/shared';
 
-export default function DrugCard({ did }: { did: number }) {
-  const { data } = useDrugWithDid(did);
+export default function DrugCard({ unique_id }: { unique_id: string }) {
+  const { data } = useDrugWithDid(unique_id);
 
-  const drug: DrugType = data as DrugType;
+  const drug: Drug = data as Drug;
 
   if (!drug) {
     return <div>Drug not found</div>;
@@ -25,25 +25,17 @@ export default function DrugCard({ did }: { did: number }) {
           <p className="text-large">Drug Details</p>
           <p className="text-default-500 text-small">View and manage drug details</p>
         </div>
-        <Button color="primary" as={Link} href={`/dashboard/drugs/${drug.did}/edit`}>
+        <Button color="primary" as={Link} href={`/dashboard/drugs/${drug.unique_id}/edit`}>
           Edit
         </Button>
       </CardHeader>
       <CardBody className="space-y-2 px-0">
         <ScrollShadow className="divide-y pr-4">
-          <CellValue label="Brand Name" value={drug.brandName || '-'} />
-          <CellValue label="Generic Name" value={drug.genericName || '-'} />
+          <CellValue label="Brand Name" value={drug.name || '-'} />
+          <CellValue label="Generic Name" value={drug.generic_name || '-'} />
           <CellValue label="Manufacturer" value={drug.manufacturer || '-'} />
           <CellValue label="Description" value={drug.description || '-'} />
-          <CellValue label="Dosage" value={drug.dosage || '-'} />
-          <CellValue label="Form" value={drug.form || '-'} />
-          <CellValue label="Strength" value={drug.strength || '-'} />
-          <CellValue label="Quantity" value={drug.quantity || '-'} />
-          <CellValue label="Price" value={drug.price || '-'} />
-          <CellValue
-            label="Frequency"
-            value={<span className="capitalize">{drug.frequency}</span>}
-          />
+          <CellValue label="Manufacturer" value={drug.manufacturer || '-'} />
           <CellValue
             label="Created By"
             value={`${drug.createdBy || 'Admin'} on ${format(new Date(drug.createdAt), 'PPPp')}`}

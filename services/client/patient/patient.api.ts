@@ -1,5 +1,4 @@
-import { Patient } from '@/shared';
-import { AppointmentType } from '../appointment';
+import { AppointmentQueue, Patient } from '@/shared';
 import { apiRequest } from '@/libs/axios';
 
 export class PatientApi {
@@ -28,7 +27,7 @@ export class PatientApi {
       return { success: false, message: 'UID is required', data: null };
     }
 
-    return await apiRequest<AppointmentType[]>({
+    return await apiRequest<AppointmentQueue[]>({
       url: `${this.API_BASE}/${uid}/appointments`,
     });
   }

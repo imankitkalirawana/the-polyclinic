@@ -1,6 +1,5 @@
-import { AppointmentType } from '@/services/client/appointment';
 import { UserRole, UserStatus } from '@/shared';
-import { DrugStatus } from '@/services/client/drug/drug.types';
+import { DrugStatus } from '@/shared';
 import { ServiceStatus, ServiceTypes } from '@/services/client/service/service.types';
 import { QueueStatus } from '@/shared';
 
@@ -10,7 +9,6 @@ export type ChipColorType =
   | ServiceStatus
   | ServiceTypes
   | DrugStatus
-  | AppointmentType['status']
   | QueueStatus;
 
 export const chipColorMap: Record<ChipColorType, string> = {
@@ -26,15 +24,6 @@ export const chipColorMap: Record<ChipColorType, string> = {
   DOCTOR: 'bg-blue-100 text-blue-700',
   NURSE: 'bg-amber-100 text-amber-700',
   RECEPTIONIST: 'bg-yellow-100 text-yellow-700',
-
-  /* for appointment status */
-  overdue: 'bg-red-100 text-red-700',
-  completed: 'bg-green-100 text-green-700',
-  cancelled: 'bg-default-100 text-default-700',
-  on_hold: 'bg-yellow-100 text-yellow-700',
-  booked: 'bg-cyan-100 text-cyan-700',
-  confirmed: 'bg-blue-100 text-blue-700',
-  in_progress: 'bg-violet-100 text-violet-700',
 
   /* for service types */
   medical: 'bg-red-100 text-red-700',

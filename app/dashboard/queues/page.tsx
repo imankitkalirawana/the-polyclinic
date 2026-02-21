@@ -7,6 +7,8 @@ import { getServerSession } from '@/libs/serverAuth';
 import { UserRole } from '@/shared';
 import DefaultQueueView from '@/components/dashboard/appointments/queue/views/default';
 import PatientQueueView from '@/components/dashboard/appointments/queue/views/patient';
+import { QueueViewType } from './types';
+import QueueCalendarView from '@/components/dashboard/appointments/queue/views/calendar';
 
 type PageProps = {
   searchParams: Promise<SearchParams>;
@@ -17,7 +19,6 @@ export default async function QueuePage({ searchParams }: PageProps) {
 
   const session = await getServerSession();
   const isDoctor = session?.user?.role === UserRole.DOCTOR;
-  const isPatient = session?.user?.role === UserRole.PATIENT;
 
   const queryKey = isDoctor
     ? ['queue-for-doctor', session?.user?.integrated_user_id, id, date]
@@ -45,14 +46,28 @@ export default async function QueuePage({ searchParams }: PageProps) {
     },
   });
 
-  let ViewComponent;
+  let ViewComponent: React.FC = DefaultQueueView;
 
-  if (isDoctor) {
-    ViewComponent = view === 'all' ? DefaultQueueView : QueuesDoctorView;
-  } else if (isPatient) {
-    ViewComponent = PatientQueueView;
-  } else {
-    ViewComponent = DefaultQueueView;
+  switch (view) {
+    case QueueViewType.DEFAULT:
+      switch (session?.user?.role) {
+        case UserRole.DOCTOR:
+          ViewComponent = QueuesDoctorView;
+          break;
+        case UserRole.PATIENT:
+          ViewComponent = PatientQueueView;
+          break;
+      }
+      break;
+    case QueueViewType.CALENDAR:
+      ViewComponent = QueueCalendarView;
+      break;
+    case QueueViewType.SCHEDULED:
+      ViewComponent = QueuesDoctorView;
+      break;
+    case QueueViewType.ALL:
+      ViewComponent = DefaultQueueView;
+      break;
   }
 
   return (

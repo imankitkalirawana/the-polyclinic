@@ -15,7 +15,7 @@ export default function MinimalPlaceholder({
     <div className="flex h-full w-full flex-col items-center justify-center gap-2">
       <div className="flex">
         {isLoading && <Spinner variant="spinner" size="sm" />}
-        <p className="text-sm text-default-500">{message}</p>
+        <p className="text-default-500 text-sm">{message}</p>
       </div>
       {withButton && <Button variant="flat" size="sm" color="primary" {...buttonProps} />}
     </div>

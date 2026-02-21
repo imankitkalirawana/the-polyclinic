@@ -153,14 +153,14 @@ const VerticalCollapsibleSteps = React.forwardRef<HTMLButtonElement, VerticalCol
           className={cn('flex h-full max-h-[70vh] flex-col gap-y-3 pb-8', colors, className)}
         >
           {steps?.map((step, stepIdx) => {
-            let status =
+            const status =
               currentStep === stepIdx ? 'active' : currentStep < stepIdx ? 'inactive' : 'complete';
 
             return (
               <li
                 key={stepIdx}
                 className={cn(
-                  'group rounded-large border-default-200 data-[status=active]:bg-default-100 dark:border-default-50 dark:data-[status=active]:bg-default-50 relative gap-4 border',
+                  'rounded-large border-default-200 data-[status=active]:bg-default-100 dark:border-default-50 dark:data-[status=active]:bg-default-50 group relative gap-4 border',
                   stepClassName
                 )}
                 data-status={status}

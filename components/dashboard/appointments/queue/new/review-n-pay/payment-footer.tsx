@@ -5,6 +5,7 @@ import { addToast, Alert, Button } from '@heroui/react';
 import { useState, useRef, useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import { PaymentMode } from '@/shared';
 
 type PaymentStatus = 'idle' | 'loading' | 'success' | 'failed' | 'cancelled';
 
@@ -33,7 +34,7 @@ export default function PaymentFooter() {
     try {
       const createAppointmentResponse = await AppointmentQueueApi.create({
         ...appointment,
-        paymentMode: 'CASH',
+        paymentMode: PaymentMode.CASH,
       });
 
       if (!createAppointmentResponse.success || !createAppointmentResponse.data) {
@@ -68,7 +69,7 @@ export default function PaymentFooter() {
 
     try {
       await loadRazorpay();
-    } catch (err) {
+    } catch {
       setStatus('failed');
       setError('Failed to load payment gateway. Please try again.');
       isProcessingRef.current = false;
@@ -78,7 +79,7 @@ export default function PaymentFooter() {
     try {
       const createAppointmentResponse = await AppointmentQueueApi.create({
         ...appointment,
-        paymentMode: 'RAZORPAY',
+        paymentMode: PaymentMode.RAZORPAY,
       });
 
       if (!createAppointmentResponse.success || !createAppointmentResponse.data) {

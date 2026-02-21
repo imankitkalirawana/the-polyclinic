@@ -12,7 +12,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { ActionType, DropdownKeyType } from '../types';
 
 import { PermissionProps } from '@/components/ui/dashboard/quicklook/types';
-import { DoctorType } from '@/services/client/doctor';
+import { Doctor } from '@/shared';
 import Avatar from 'boring-avatars';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
@@ -22,7 +22,7 @@ export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
   NURSE: ['cancel', 'reschedule'],
   RECEPTIONIST: ['cancel', 'reschedule', 'reminder'],
 };
-export const sidebarContent = (doctor: DoctorType) => (
+export const sidebarContent = (doctor: Doctor) => (
   <>
     <div className="flex flex-col items-center gap-2 p-4">
       <Avatar name={doctor.name} variant="beam" size={40} />

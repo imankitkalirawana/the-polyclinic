@@ -1,4 +1,4 @@
-import { RowData } from '@tanstack/react-table';
+import { Cell, RowData, Table } from '@tanstack/react-table';
 
 import { CellAutoFillState } from './custom-features/cellAutoFill';
 

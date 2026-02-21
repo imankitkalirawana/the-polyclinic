@@ -40,21 +40,21 @@ export default function Emails() {
         uid: 'from',
         sortable: true,
         renderCell: (email) => (
-          <div className="font-medium text-default-foreground">{email.from}</div>
+          <div className="text-default-foreground font-medium">{email.from}</div>
         ),
       },
       {
         name: 'To',
         uid: 'to',
         sortable: true,
-        renderCell: (email) => <div className="truncate text-default-foreground">{email.to}</div>,
+        renderCell: (email) => <div className="text-default-foreground truncate">{email.to}</div>,
       },
       {
         name: 'Subject',
         uid: 'subject',
         sortable: true,
         renderCell: (email) => (
-          <div className="truncate capitalize text-default-foreground">{email.subject}</div>
+          <div className="text-default-foreground truncate capitalize">{email.subject}</div>
         ),
       },
       {

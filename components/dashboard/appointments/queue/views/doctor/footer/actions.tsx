@@ -4,7 +4,8 @@ import {
   useSkipPatient,
   useCompletePatient,
 } from '@/services/client/appointment/queue/queue.query';
-import { AppointmentQueue, QueueStatus } from '@/shared';
+import { AppointmentQueue } from '@/shared';
+import { QueueStatus } from '@/shared';
 import { Button } from '@heroui/react';
 import { useQueryState } from 'nuqs';
 import { useFormContext } from 'react-hook-form';

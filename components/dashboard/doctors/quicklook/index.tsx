@@ -8,7 +8,7 @@ import { permissions, sidebarContent } from './data';
 
 import QuickLook from '@/components/ui/dashboard/quicklook';
 import { ButtonProps, DropdownItemProps } from '@/components/ui/dashboard/quicklook/types';
-import { DoctorType } from '@/services/client/doctor';
+import { Doctor } from '@/shared';
 
 export function UserQuickLook() {
   const { selected, setSelected, setAction, action } = useDoctorStore();
@@ -73,7 +73,7 @@ export function UserQuickLook() {
     [selected]
   );
 
-  const content = (doctor: DoctorType) => [
+  const content = (doctor: Doctor) => [
     {
       label: 'User ID',
       value: () => doctor.id,

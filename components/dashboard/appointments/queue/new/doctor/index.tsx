@@ -1,6 +1,7 @@
 import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import { useDebounce } from '@/hooks/useDebounce';
-import { DoctorType, useAllDoctors } from '@/services/client/doctor';
+import { Doctor } from '@/shared';
+import { useAllDoctors } from '@/services/client/doctor';
 import { useCacheStore } from '@/store';
 import { addToast, Button, Card, Chip, cn, Tooltip } from '@heroui/react';
 import { useMemo, useState } from 'react';
@@ -119,7 +120,7 @@ const DoctorCard = ({
   isSelected,
   onSelect,
 }: {
-  doctor: DoctorType;
+  doctor: Doctor;
   isSelected: boolean;
   onSelect: (id: string) => void;
 }) => {

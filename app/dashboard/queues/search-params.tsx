@@ -1,8 +1,9 @@
-import { createLoader, parseAsIsoDateTime, parseAsString } from 'nuqs/server';
+import { createLoader, parseAsIsoDateTime, parseAsString, parseAsStringEnum } from 'nuqs/server';
+import { QueueViewType } from './types';
 
 export const queuesSearchParams = {
   id: parseAsString,
-  view: parseAsString,
+  view: parseAsStringEnum(Object.values(QueueViewType)).withDefault(QueueViewType.DEFAULT),
   date: parseAsIsoDateTime,
 };
 

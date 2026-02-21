@@ -31,7 +31,7 @@ export default function DateTimePicker({
   timeProps?: TimeInputProps;
 }) {
   return (
-    <div className="flex flex-col items-center gap-4 xs:items-start">
+    <div className="xs:items-start flex flex-col items-center gap-4">
       <Calendar
         {...dateProps}
         aria-label="Date (Min Date Value)"
@@ -42,7 +42,7 @@ export default function DateTimePicker({
         })}
         value={date}
         onChange={(selectedDate) => onDateChange?.(selectedDate as CalendarDate)}
-        isInvalid={disabledDates[0].map((d) => d.compare(date!)).includes(0)}
+        isInvalid={disabledDates[0].map((d) => d.compare(date)).includes(0)}
         showMonthAndYearPickers
         showHelper
         isDateUnavailable={(date) => disabledDates[0].map((d) => d.compare(date)).includes(0)}

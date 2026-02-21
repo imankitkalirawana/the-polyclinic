@@ -37,7 +37,8 @@ export async function apiRequest<TData = unknown, TRequest = unknown>(
 
     return {
       success: true,
-      // @ts-ignore TODO: fix this
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error TODO: fix this
       data: response.data.data || response.data || null,
       message: response.data.message,
       errors: undefined,

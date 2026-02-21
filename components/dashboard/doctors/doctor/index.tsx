@@ -3,19 +3,16 @@
 import { Button, Card, Chip, Image, Link, ScrollShadow } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import AppointmentSlots from './appointment-slots';
-import Appointments from './appointments';
-
 import { CellRenderer } from '@/components/ui/cell/rich-color/cell-renderer';
 import { castData } from '@/libs/utils';
-import { DoctorType } from '@/services/client/doctor';
 import { useDoctorById } from '@/services/client/doctor/doctor.query';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
+import { Doctor } from '@/shared';
 
 type ListItem = {
   label: string;
   value: keyof Pick<
-    DoctorType,
+    Doctor,
     | 'email'
     | 'phone'
     | 'specializations'
@@ -87,7 +84,7 @@ const listItems: ListItem[] = [
 export default function DashboardDoctor({ id }: { id: string }) {
   const { data, isError, isLoading } = useDoctorById(id);
 
-  const doctor = castData<DoctorType>(data);
+  const doctor = castData<Doctor>(data);
 
   if (isError) {
     return <p>Error fetching doctor data</p>;
@@ -208,8 +205,6 @@ export default function DashboardDoctor({ id }: { id: string }) {
             <p className="text-default-500 text-tiny">Based on 120 reviews from patients.</p>
           </div>
         </Card>
-        <Appointments />
-        <AppointmentSlots id={id} />
       </div>
     </div>
   );

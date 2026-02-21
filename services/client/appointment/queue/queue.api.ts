@@ -2,6 +2,7 @@ import { apiRequest } from '@/libs/axios';
 import {
   AppointmentQueue,
   AppointmentQueueRequest,
+  GroupedAppointmentQueuesResponse,
   PaymentDetails,
   VerifyPaymentRequest,
 } from '@/shared';
@@ -75,6 +76,21 @@ export class AppointmentQueueApi {
     }>({
       url: `${this.API_BASE}/doctor/${doctorId}/queue`,
       params: { id: queueId, date: sanitizedAppointmentDate },
+    });
+  }
+
+  static async getQueuesForPatient() {
+    return await apiRequest<GroupedAppointmentQueuesResponse>({
+      url: `${this.API_BASE}/patient/me`,
+    });
+  }
+
+  static async getQueueByAid(aid: string | null) {
+    if (!aid) {
+      throw new Error('Appointment ID is required');
+    }
+    return await apiRequest<AppointmentQueue>({
+      url: `${this.API_BASE}/${aid}`,
     });
   }
 

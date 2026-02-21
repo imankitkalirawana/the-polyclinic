@@ -14,7 +14,7 @@ export default function ProfileDropdown() {
       <DropdownTrigger>
         <Button
           aria-label="Profile"
-          className="bg-default-200 pl-1 pr-2"
+          className="bg-default-200 pr-2 pl-1"
           startContent={<RenderUser isCompact name={user?.name} size="sm" />}
           endContent={<Icon icon="solar:alt-arrow-down-linear" width={18} />}
         >
@@ -24,7 +24,7 @@ export default function ProfileDropdown() {
       <DropdownMenu aria-label="Profile Actions" variant="flat">
         <DropdownItem key="profile" href="/profile" className="h-14 gap-2">
           <p className="font-semibold">{user?.name}</p>
-          <p className="capitalize text-default-500 text-tiny">{user?.role}</p>
+          <p className="text-default-500 text-tiny capitalize">{user?.role}</p>
         </DropdownItem>
         <DropdownItem key="my-profile" href="/profile">
           My Profile

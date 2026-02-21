@@ -39,13 +39,13 @@ const AppointmentByTypes = React.forwardRef<
   return (
     <Card
       ref={ref}
-      className={cn('h-[300px] border border-transparent dark:border-default-100', className)}
+      className={cn('dark:border-default-100 h-[300px] border border-transparent', className)}
       {...props}
     >
       <div className="flex flex-col gap-y-2 p-4">
         <div className="flex items-center justify-between gap-x-2">
           <dt>
-            <h3 className="font-medium text-default-500 text-small">{title}</h3>
+            <h3 className="text-default-500 text-small font-medium">{title}</h3>
           </dt>
           <div className="flex items-center justify-end gap-x-2">
             <Select
@@ -94,8 +94,8 @@ const AppointmentByTypes = React.forwardRef<
           </div>
         </div>
         <dd className="flex items-baseline gap-x-1">
-          <span className="text-3xl font-semibold text-default-900">{value}</span>
-          <span className="font-medium text-default-500 text-medium">{unit}</span>
+          <span className="text-default-900 text-3xl font-semibold">{value}</span>
+          <span className="text-default-500 text-medium font-medium">{unit}</span>
         </dd>
       </div>
 
@@ -126,9 +126,9 @@ const AppointmentByTypes = React.forwardRef<
           />
           <Tooltip
             content={({ label, payload }) => (
-              <div className="flex h-auto min-w-[120px] items-center gap-x-2 rounded-medium bg-background p-2 shadow-small text-tiny">
+              <div className="rounded-medium bg-background shadow-small text-tiny flex h-auto min-w-[120px] items-center gap-x-2 p-2">
                 <div className="flex w-full flex-col gap-y-1">
-                  <span className="font-medium text-foreground">{formatWeekday(label)}</span>
+                  <span className="text-foreground font-medium">{formatWeekday(label)}</span>
                   {payload?.map((p, index) => {
                     const name = p.name;
                     const value = p.value;
@@ -142,9 +142,9 @@ const AppointmentByTypes = React.forwardRef<
                             backgroundColor: `hsl(var(--heroui-${color}-${(index + 1) * 200}))`,
                           }}
                         />
-                        <div className="flex w-full items-center justify-between gap-x-2 pr-1 text-xs text-default-700">
+                        <div className="text-default-700 flex w-full items-center justify-between gap-x-2 pr-1 text-xs">
                           <span className="text-default-500">{category}</span>
-                          <span className="font-mono font-medium text-default-700">{value}</span>
+                          <span className="text-default-700 font-mono font-medium">{value}</span>
                         </div>
                       </div>
                     );
@@ -169,7 +169,7 @@ const AppointmentByTypes = React.forwardRef<
         </BarChart>
       </ResponsiveContainer>
 
-      <div className="flex w-full justify-center gap-4 pb-4 text-default-500 text-tiny">
+      <div className="text-default-500 text-tiny flex w-full justify-center gap-4 pb-4">
         {categories.map((category, index) => (
           <div key={index} className="flex items-center gap-2">
             <span

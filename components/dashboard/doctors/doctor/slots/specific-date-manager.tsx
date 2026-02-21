@@ -6,7 +6,7 @@ import type { FormikProps } from 'formik';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 import { getValidEndTimes, getValidStartTimes, timeToMinutes } from './util';
-import { SlotConfig, SpecificDateAvailability, TimeSlot } from '@/services/client/doctor';
+import { SlotConfig, SpecificDateAvailability, TimeSlot } from '@/shared';
 
 interface SpecificDateManagerProps {
   formik: FormikProps<SlotConfig>;
@@ -211,7 +211,7 @@ export function SpecificDateManager({ formik }: SpecificDateManagerProps) {
                             </SelectItem>
                           ))}
                         </Select>
-                        <span className="flex items-center justify-center text-center text-default-500">
+                        <span className="text-default-500 flex items-center justify-center text-center">
                           -
                         </span>
                         <Select
@@ -295,7 +295,7 @@ export function SpecificDateManager({ formik }: SpecificDateManagerProps) {
                   })
                 ) : (
                   <>
-                    <div className="col-span-8 text-sm text-default-400">Unavailable</div>
+                    <div className="text-default-400 col-span-8 text-sm">Unavailable</div>
                     <Tooltip delay={1000} content="Add another period for this date">
                       <Button
                         isIconOnly

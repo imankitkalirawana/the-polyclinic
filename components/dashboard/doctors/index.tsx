@@ -15,14 +15,13 @@ import {
   DropdownItemWithSection,
 } from '@/components/ui/static-data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
-import { DoctorType } from '@/services/client/doctor';
 import { useAllDoctors } from '@/services/client/doctor/doctor.query';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import Link from 'next/link';
 import { CopyText } from '@/components/ui/copy';
 import ResetPasswordModal from '../users/ui/reset-password-modal';
 import DeleteUserModal from '../users/ui/delete-user-modal';
-import { UserRole } from '@/shared';
+import { Doctor, UserRole } from '@/shared';
 import { useSession } from '@/libs/providers/session-provider';
 
 const INITIAL_VISIBLE_COLUMNS = [
@@ -56,7 +55,7 @@ export default function Doctors() {
     resetPasswordModal.onOpen();
   };
 
-  const dropdownMenuItems = (doctor: DoctorType): DropdownItemWithSection[] => {
+  const dropdownMenuItems = (doctor: Doctor): DropdownItemWithSection[] => {
     return [
       {
         key: 'view',
@@ -93,7 +92,7 @@ export default function Doctors() {
   };
 
   // Define columns with render functions
-  const columns: ColumnDef<DoctorType>[] = useMemo(
+  const columns: ColumnDef<Doctor>[] = useMemo(
     () => [
       {
         name: 'Name',
@@ -145,7 +144,7 @@ export default function Doctors() {
   );
 
   // Define filters
-  const filters: FilterDef<DoctorType>[] = useMemo(
+  const filters: FilterDef<Doctor>[] = useMemo(
     () => [
       {
         name: 'Created At',
@@ -274,7 +273,7 @@ export default function Doctors() {
           direction: 'descending',
         }}
         onRowAction={(row) => {
-          const doctor = doctors.find((doctor) => doctor.id == row);
+          const doctor = doctors.find((doctor) => doctor.user_id == row);
           if (doctor) {
             setSelected(doctor);
           }

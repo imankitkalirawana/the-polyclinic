@@ -120,7 +120,6 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
     ref
   ) => {
     const isLargeModal = isLargerThan3xl(size);
-
     return (
       <HeroModal
         ref={ref}
@@ -137,13 +136,13 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
               {!!title && (
                 <ModalHeader
                   className={cn(
-                    'flex flex-col border-b border-divider font-semibold',
+                    'border-divider flex flex-col border-b font-semibold',
                     classNames?.header
                   )}
                 >
                   <h2>{title}</h2>
                   {!!subtitle && (
-                    <p className="font-normal text-default-500 text-small">{subtitle}</p>
+                    <p className="text-default-500 text-small font-normal">{subtitle}</p>
                   )}
                 </ModalHeader>
               )}
@@ -155,7 +154,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
 
               <ModalFooter
                 className={cn(
-                  'justify-between gap-0 overflow-hidden rounded-b-large border-t border-divider p-0',
+                  'rounded-b-large border-divider justify-between gap-0 overflow-hidden border-t p-0',
                   {
                     'border-t-0': hideCancelButton,
                     'justify-end gap-4 p-2': isLargeModal,

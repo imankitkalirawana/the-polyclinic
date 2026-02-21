@@ -3,55 +3,44 @@
 import { useMemo } from 'react';
 import { Button, DropdownItem, DropdownMenu, Selection } from '@heroui/react';
 import Link from 'next/link';
-import { DrugQuickLook } from './quicklook';
-import { useDrugStore } from './store';
 
 import { Table } from '@/components/ui/static-data-table';
 import {
   renderDropdownMenu,
-  renderChip,
-  renderCopyableText,
   renderDate,
   DropdownItemWithSection,
 } from '@/components/ui/static-data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
 import { useAllDrugs } from '@/services/client/drug/drug.query';
-import { DrugType } from '@/services/client/drug/drug.types';
+import { Drug } from '@/shared';
+import { CopyText } from '@/components/ui/copy';
 
-const INITIAL_VISIBLE_COLUMNS = [
-  'did',
-  'brandName',
-  'genericName',
-  'manufacturer',
-  'status',
-  'createdAt',
-];
+const INITIAL_VISIBLE_COLUMNS = ['did', 'name', 'generic_name', 'manufacturer', 'createdAt'];
 
 export default function Drugs() {
   const { data, isLoading } = useAllDrugs();
 
-  const drugs: DrugType[] = data || [];
-  const { selected, setSelected } = useDrugStore();
+  const drugs: Drug[] = data || [];
 
-  const dropdownMenuItems = (drug: DrugType): DropdownItemWithSection[] => {
+  const dropdownMenuItems = (drug: Drug): DropdownItemWithSection[] => {
     return [
       {
         key: 'view',
         children: 'View',
         as: Link,
-        href: `/dashboard/drugs/${drug.did}`,
+        href: `/dashboard/drugs/${drug.unique_id}`,
       },
       {
         key: 'edit',
         children: 'Edit',
         as: Link,
-        href: `/dashboard/drugs/${drug.did}/edit`,
+        href: `/dashboard/drugs/${drug.unique_id}/edit`,
       },
       {
         key: 'delete',
         children: 'Delete',
         color: 'danger',
-        onPress: () => console.log('Delete', drug.did),
+        onPress: () => console.log('Delete', drug.unique_id),
         section: 'Danger Zone',
         className: 'text-danger',
       },
@@ -59,28 +48,28 @@ export default function Drugs() {
   };
 
   // Define columns with render functions
-  const columns: ColumnDef<DrugType>[] = useMemo(
+  const columns: ColumnDef<Drug>[] = useMemo(
     () => [
       {
         name: 'Drug ID',
-        uid: 'did',
+        uid: 'unique_id',
         sortable: true,
-        renderCell: (drug) => renderCopyableText(drug.did.toString()),
+        renderCell: (drug) => <CopyText>{drug.unique_id}</CopyText>,
       },
       {
         name: 'Brand Name',
-        uid: 'brandName',
+        uid: 'name',
         sortable: true,
         renderCell: (drug) => (
-          <div className="font-medium text-default-foreground">{drug.brandName}</div>
+          <div className="text-default-foreground font-medium">{drug.name}</div>
         ),
       },
       {
         name: 'Generic Name',
-        uid: 'genericName',
+        uid: 'generic_name',
         sortable: true,
         renderCell: (drug) => (
-          <div className="truncate capitalize text-default-foreground">{drug.genericName}</div>
+          <div className="text-default-foreground truncate capitalize">{drug.generic_name}</div>
         ),
       },
       {
@@ -88,18 +77,10 @@ export default function Drugs() {
         uid: 'manufacturer',
         sortable: true,
         renderCell: (drug) => (
-          <div className="truncate capitalize text-default-foreground">{drug.manufacturer}</div>
+          <div className="text-default-foreground truncate capitalize">{drug.manufacturer}</div>
         ),
       },
-      {
-        name: 'Status',
-        uid: 'status',
-        sortable: true,
-        renderCell: (drug) =>
-          renderChip({
-            item: drug.status,
-          }),
-      },
+
       {
         name: 'Created At',
         uid: 'createdAt',
@@ -117,18 +98,8 @@ export default function Drugs() {
   );
 
   // Define filters
-  const filters: FilterDef<DrugType>[] = useMemo(
+  const filters: FilterDef<Drug>[] = useMemo(
     () => [
-      {
-        name: 'Status',
-        key: 'status',
-        options: [
-          { label: 'All', value: 'all' },
-          { label: 'Available', value: 'available' },
-          { label: 'Unavailable', value: 'unavailable' },
-        ],
-        filterFn: (drug, value) => drug.status.toLowerCase() === value,
-      },
       {
         name: 'Created At',
         key: 'createdAt',
@@ -212,11 +183,11 @@ export default function Drugs() {
         data={drugs}
         columns={columns}
         initialVisibleColumns={INITIAL_VISIBLE_COLUMNS}
-        keyField="did"
+        keyField="unique_id"
         filters={filters}
         searchField={(drug, searchValue) =>
-          drug.brandName.toLowerCase().includes(searchValue.toLowerCase()) ||
-          drug.genericName.toLowerCase().includes(searchValue.toLowerCase()) ||
+          drug.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+          drug.generic_name.toLowerCase().includes(searchValue.toLowerCase()) ||
           (drug.manufacturer
             ? drug.manufacturer.toLowerCase().includes(searchValue.toLowerCase())
             : false)
@@ -227,15 +198,8 @@ export default function Drugs() {
           column: 'createdAt',
           direction: 'descending',
         }}
-        onRowAction={(row) => {
-          const drug = drugs.find((drug) => drug.did == row);
-          if (drug) {
-            setSelected(drug);
-          }
-        }}
+        // onRowAction={() => {}}
       />
-      {/* Quick Look or Sidebar can be added here */}
-      {selected && <DrugQuickLook />}
     </>
   );
 }

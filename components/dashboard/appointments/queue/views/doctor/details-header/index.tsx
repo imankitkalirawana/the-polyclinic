@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import DataItem from '@/components/ui/data-item';
 import { formatDate } from 'date-fns';
-import { formatGender } from '@/libs/utils';
+import { formatGender } from '@/shared';
 
 export default function DetailsHeader({ currentQueue }: { currentQueue: AppointmentQueue }) {
   const [selectedKeys, setSelectedKeys] = useState(new Set(['']));

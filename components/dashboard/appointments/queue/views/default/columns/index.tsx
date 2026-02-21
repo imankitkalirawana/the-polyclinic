@@ -35,26 +35,32 @@ export default function QueueColumns() {
           selectedColumns={selectedColumns}
           onSelectionChange={(value) => {
             setSelectedColumns((previousSelectedColumns) => {
-              return value.map((id, index) => {
-                const existingColumn = previousSelectedColumns.find(
-                  (selectedColumn) => selectedColumn.id === id
-                );
+              return value
+                .map((id, index) => {
+                  const existingColumn = previousSelectedColumns.find(
+                    (selectedColumn) => selectedColumn.id === id
+                  );
 
-                if (existingColumn) {
+                  if (existingColumn) {
+                    return {
+                      ...existingColumn,
+                      order: index,
+                    };
+                  }
+
+                  const baseColumn = columns?.find((column) => column.id === id);
+
+                  if (!baseColumn) {
+                    return null;
+                  }
+
                   return {
-                    ...existingColumn,
+                    ...baseColumn,
                     order: index,
+                    pinned: false,
                   };
-                }
-
-                const baseColumn = columns?.find((column) => column.id === id)!;
-
-                return {
-                  ...baseColumn,
-                  order: index,
-                  pinned: false,
-                };
-              });
+                })
+                .filter((item): item is SelectedColumnDefinition => item !== null);
             });
           }}
         />
