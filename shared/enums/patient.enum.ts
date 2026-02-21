@@ -1,5 +1,5 @@
 export type PatientVitals = {
-  bloodType: string;
+  bloodType: BloodType;
   bloodPressure: string;
   heartRate: string;
   weight: number;

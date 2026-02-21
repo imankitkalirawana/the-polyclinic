@@ -2,7 +2,7 @@ import { Base } from './common.types';
 import { Gender, PatientVitals } from '../enums';
 
 export type Patient = Base & {
-  userId: string;
+  user_id: string;
   name: string;
   email: string;
   image?: string | null;
