@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { z } from 'zod';
-import { GENDERS } from './constants';
 import { CalendarDate } from '@internationalized/date';
+import { Gender } from '@/shared';
 
 export const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
 export const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'thepolyclinic.app';
@@ -139,7 +139,7 @@ export function formatAge(
 }
 
 export function formatGender(
-  gender: GENDERS | null | undefined,
+  gender: Gender | null | undefined,
   {
     fullString = false,
   }: {

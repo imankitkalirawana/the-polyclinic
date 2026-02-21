@@ -1,31 +1,5 @@
-import { Gender, PaymentMode, QueueStatus } from '../enums';
-
-export type QueuePatientInfo = {
-  id: string;
-  user_id: string;
-  name: string;
-  phone?: string;
-  email: string;
-  gender?: Gender;
-  age?: number;
-  image?: string;
-};
-
-export type QueueDoctorInfo = {
-  id: string;
-  user_id: string;
-  name: string;
-  email: string;
-  phone?: string;
-  image?: string;
-  seating?: string;
-};
-
-export type QueueUserInfo = {
-  id: string;
-  email: string;
-  name: string;
-};
+import { Doctor, Patient, User } from '.';
+import { PaymentMode, QueueStatus } from '../enums';
 
 export type AppointmentQueueRequest = {
   aid?: string | null;
@@ -56,10 +30,13 @@ export type AppointmentQueue = {
   appointmentDate: string;
   prescription: string;
   status: QueueStatus;
-  patient: QueuePatientInfo;
-  doctor: QueueDoctorInfo;
-  bookedByUser: QueueUserInfo;
-  completedByUser?: QueueUserInfo;
+  patient: Pick<
+    Patient,
+    'id' | 'user_id' | 'name' | 'phone' | 'email' | 'gender' | 'age' | 'image'
+  >;
+  doctor: Pick<Doctor, 'id' | 'user_id' | 'name' | 'email' | 'phone' | 'image' | 'seating'>;
+  bookedByUser: Pick<User, 'id' | 'name' | 'email' | 'image'>;
+  completedByUser?: Pick<User, 'id' | 'name' | 'email' | 'image'>;
   createdAt: string;
   updatedAt: string;
   previousQueueId?: string;

@@ -46,7 +46,7 @@ import {
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { useClipboard } from '@/hooks/useClipboard';
 import { UserDetailsPopover } from './user-details-popover';
-import { Role } from '@/services/common/user/user.constants';
+import { UserRole } from '@/shared';
 
 const DRAWER_DELAY = 200;
 
@@ -63,7 +63,7 @@ const AppointmentHeading = memo(
   }) => (
     <div
       className={cn(
-        'flex w-full items-center justify-between gap-2 font-medium uppercase tracking-wide text-default-500 text-tiny',
+        'text-default-500 text-tiny flex w-full items-center justify-between gap-2 font-medium tracking-wide uppercase',
         className
       )}
     >
@@ -122,7 +122,7 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
   const location = organization?.organizationDetails?.location || '';
 
   const patientDescription = useMemo(() => {
-    const parts = [`Patient • #${appointment.patient.uid}`];
+    const parts = [`Patient • #${appointment.patient.id}`];
 
     if (appointment.patient.gender || appointment.patient.age) {
       const details = [appointment.patient.gender, appointment.patient.age]
@@ -132,15 +132,15 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
     }
 
     return parts.join(' • ');
-  }, [appointment.patient.uid, appointment.patient.gender, appointment.patient.age]);
+  }, [appointment.patient.id, appointment.patient.gender, appointment.patient.age]);
 
   const doctorDescription = useMemo(() => {
-    if (!appointment.doctor?.uid) return '';
+    if (!appointment.doctor?.id) return '';
 
-    return [`Doctor • #${appointment.doctor.uid}`, appointment.doctor.seating]
+    return [`Doctor • #${appointment.doctor.id}`, appointment.doctor.seating]
       .filter(Boolean)
       .join(' • ');
-  }, [appointment.doctor?.uid, appointment.doctor?.seating]);
+  }, [appointment.doctor?.id, appointment.doctor?.seating]);
 
   const appointmentModeContent = useMemo(() => {
     const isOnline = appointment.additionalInfo.type === 'online';
@@ -183,13 +183,13 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
       <div className="flex flex-col items-start gap-1">
         <AppointmentHeading title="PEOPLE" />
         <UserDetailsPopover
-          uid={appointment.patient.uid}
+          uid={appointment.patient.id}
           name={appointment.patient.name}
           description={patientDescription}
         />
-        {!!appointment.doctor?.uid && (
+        {!!appointment.doctor?.id && (
           <UserDetailsPopover
-            uid={appointment.doctor.uid}
+            uid={appointment.doctor.id}
             name={appointment.doctor.name}
             description={doctorDescription}
           />
@@ -200,13 +200,13 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
             as={Link}
             href={`/appointments/${appointment.previousAppointment}`}
             target="_blank"
-            className="mt-2 w-full items-start rounded-small px-2 py-1"
+            className="rounded-small mt-2 w-full items-start px-2 py-1"
           >
             <AppointmentHeading
               title="LINKED APPOINTMENT"
               description={
                 <Link
-                  className="flex items-center gap-0.5 underline text-small hover:text-primary"
+                  className="text-small hover:text-primary flex items-center gap-0.5 underline"
                   href={`/appointments/${appointment.previousAppointment}`}
                   target="_blank"
                 >
@@ -355,14 +355,14 @@ const AppointmentHeader = memo(
         <div>
           <div className="flex items-center gap-1">
             <h2
-              className={cn('font-medium capitalize text-primary-foreground text-large', {
+              className={cn('text-primary-foreground text-large font-medium capitalize', {
                 'line-through': appointment.status === APPOINTMENT_STATUSES.cancelled,
               })}
             >
               #{appointment.aid} - {APPOINTMENT_TYPES[appointment.type].label}
             </h2>
             {appointment.type === APPOINTMENT_TYPES.emergency.value && (
-              <Icon icon="solar:danger-triangle-bold" className="animate-pulse text-warning-500" />
+              <Icon icon="solar:danger-triangle-bold" className="text-warning-500 animate-pulse" />
             )}
           </div>
           <div className="flex items-center gap-1">
@@ -429,10 +429,11 @@ const AppointmentFooter = memo(({ appointment }: { appointment: AppointmentType 
   const { user } = useSession();
   const buttons = useAppointmentButtonsInDrawer({
     selected: appointment,
-    role: user?.role as Role,
+    role: user?.role as UserRole,
   });
 
-  return appointment.status === APPOINTMENT_STATUSES.cancelled && user?.role === Role.PATIENT ? (
+  return appointment.status === APPOINTMENT_STATUSES.cancelled &&
+    user?.role === UserRole.PATIENT ? (
     <Alert
       color="warning"
       title="Cancelled"
@@ -520,7 +521,7 @@ const AppointmentDrawerDesktop = memo(({ aid, setAid, isTooltipOpen }: Appointme
             ) : (
               appointment && (
                 <>
-                  <DrawerHeader className="flex flex-row items-start justify-between gap-8 rounded-none border-b border-divider bg-primary-500 pr-2 text-primary-foreground">
+                  <DrawerHeader className="border-divider bg-primary-500 text-primary-foreground flex flex-row items-start justify-between gap-8 rounded-none border-b pr-2">
                     <AppointmentHeader appointment={appointment} onClose={onClose} />
                   </DrawerHeader>
                   <DrawerBody>
@@ -560,7 +561,7 @@ const AppointmentDrawerMobile = memo(({ aid, setAid, isTooltipOpen }: Appointmen
       hideCloseButton
       scrollBehavior="inside"
     >
-      <ModalContent className="rounded-b-none p-0 sm:rounded-b-large">
+      <ModalContent className="sm:rounded-b-large rounded-b-none p-0">
         {(onClose) => (
           <>
             {isLoading ? (
@@ -568,7 +569,7 @@ const AppointmentDrawerMobile = memo(({ aid, setAid, isTooltipOpen }: Appointmen
             ) : (
               appointment && (
                 <>
-                  <ModalHeader className="flex flex-row items-start justify-between gap-8 rounded-t-large border-b border-divider bg-primary-500 pr-2 text-primary-foreground">
+                  <ModalHeader className="rounded-t-large border-divider bg-primary-500 text-primary-foreground flex flex-row items-start justify-between gap-8 border-b pr-2">
                     <AppointmentHeader appointment={appointment} onClose={onClose} />
                   </ModalHeader>
                   <ModalBody>

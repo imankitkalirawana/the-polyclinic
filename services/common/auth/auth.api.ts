@@ -1,3 +1,4 @@
+import { apiRequest } from '@/libs/axios';
 import {
   ForgotPasswordRequest,
   GoogleLoginRequest,
@@ -9,8 +10,7 @@ import {
   SendOTPRequest,
   VerifyOTPRequest,
   VerifyOTPResponse,
-} from './auth.types';
-import { apiRequest } from '@/libs/axios';
+} from '@/shared';
 import { Session } from '@/types/session';
 
 export class AuthApi {

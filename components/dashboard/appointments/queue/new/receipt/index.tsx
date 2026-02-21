@@ -19,12 +19,11 @@ import {
   useDownloadReceipt,
 } from '@/services/client/appointment/queue/queue.query';
 import { useFormContext } from 'react-hook-form';
-import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
 import { useSession } from '@/libs/providers/session-provider';
 import { formatDate } from 'date-fns';
 
 export default function AppointmentQueueReceipt() {
-  const form = useFormContext<CreateAppointmentQueueFormValues>();
+  const form = useFormContext();
   const { user } = useSession();
   const appointmentId = form.watch('appointment.aid');
 

@@ -1,11 +1,11 @@
 import { AppointmentType } from '@/services/client/appointment';
-import { Role, UserStatus } from '@/services/common/user/user.constants';
+import { UserRole, UserStatus } from '@/shared';
 import { DrugStatus } from '@/services/client/drug/drug.types';
 import { ServiceStatus, ServiceTypes } from '@/services/client/service/service.types';
-import { QueueStatus } from '@/services/client/appointment/queue/queue.types';
+import { QueueStatus } from '@/shared';
 
 export type ChipColorType =
-  | Role
+  | UserRole
   | UserStatus
   | ServiceStatus
   | ServiceTypes
@@ -52,4 +52,8 @@ export const chipColorMap: Record<ChipColorType, string> = {
   SKIPPED: 'bg-cyan-100 text-cyan-700',
   CANCELLED: 'bg-red-100 text-red-700',
   COMPLETED: 'bg-success-100 text-success-700',
+  [UserRole.SUPER_ADMIN]: '',
+  [UserRole.MODERATOR]: '',
+  [UserRole.OPS]: '',
+  [UserRole.GUEST]: '',
 };

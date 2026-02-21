@@ -1,18 +1,18 @@
 // role based navbar
 
-import { Role } from '@/services/common/user/user.constants';
+import { UserRole } from '@/shared';
 
 export const navItems = [
   {
     name: 'Home',
     href: '/',
-    roles: [...Object.values(Role)],
+    roles: [...Object.values(UserRole)],
   },
   {
     name: 'Dashboard',
     href: '/dashboard',
     thumbnail: '/assets/navbar/dashboard.webp',
-    roles: [...Object.values(Role)],
+    roles: [...Object.values(UserRole)],
     subItems: [
       {
         title: 'My Dashboard',
@@ -21,26 +21,26 @@ export const navItems = [
             name: 'Overview',
             href: '/dashboard',
             icon: 'solar:window-frame-bold-duotone',
-            roles: [...Object.values(Role)],
+            roles: [...Object.values(UserRole)],
           },
 
           {
             name: 'Users',
             href: '/dashboard/users',
             icon: 'solar:users-group-rounded-bold-duotone',
-            roles: [...Object.values(Role)] as const,
+            roles: [...Object.values(UserRole)] as const,
           },
           {
             name: 'Drugs',
             href: '/dashboard/drugs',
             icon: 'solar:pills-bold-duotone',
-            roles: [Role.ADMIN] as const,
+            roles: [UserRole.ADMIN] as const,
           },
           {
             name: 'Available Slots',
             href: '/dashboard/doctors/slots',
             icon: 'solar:calendar-bold-duotone',
-            roles: [Role.DOCTOR] as const,
+            roles: [UserRole.DOCTOR] as const,
           },
         ],
       },
@@ -51,13 +51,13 @@ export const navItems = [
             name: 'Stats',
             href: '/dashboard/admin/stats',
             icon: 'solar:graph-new-bold-duotone',
-            roles: [Role.ADMIN] as const,
+            roles: [UserRole.ADMIN] as const,
           },
           {
             name: 'Settings',
             href: '/dashboard/admin/settings',
             icon: 'solar:settings-bold-duotone',
-            roles: [Role.ADMIN] as const,
+            roles: [UserRole.ADMIN] as const,
           },
         ],
       },
@@ -67,7 +67,7 @@ export const navItems = [
     name: 'Appointments',
     href: '/dashboard/appointments',
     thumbnail: '/assets/navbar/appointments.png',
-    roles: [Role.ADMIN, Role.RECEPTIONIST, Role.DOCTOR, Role.PATIENT] as const,
+    roles: [UserRole.ADMIN, UserRole.RECEPTIONIST, UserRole.DOCTOR, UserRole.PATIENT] as const,
     subItems: [
       {
         title: 'Appointments',
@@ -76,13 +76,18 @@ export const navItems = [
             name: 'Create New',
             href: '/dashboard/appointments/create',
             icon: 'solar:pen-new-round-bold-duotone',
-            roles: [Role.ADMIN, Role.RECEPTIONIST, Role.PATIENT] as const,
+            roles: [UserRole.ADMIN, UserRole.RECEPTIONIST, UserRole.PATIENT] as const,
           },
           {
             name: 'Generate Token',
             href: '/dashboard/queues/new',
             icon: 'solar:clipboard-list-bold-duotone',
-            roles: [Role.PATIENT, Role.DOCTOR, Role.RECEPTIONIST, Role.ADMIN] as const,
+            roles: [
+              UserRole.PATIENT,
+              UserRole.DOCTOR,
+              UserRole.RECEPTIONIST,
+              UserRole.ADMIN,
+            ] as const,
           },
         ],
       },
@@ -93,19 +98,34 @@ export const navItems = [
             name: 'My Schedules',
             href: '/dashboard/appointments?view=schedule',
             icon: 'solar:calendar-bold-duotone',
-            roles: [Role.ADMIN, Role.RECEPTIONIST, Role.PATIENT, Role.DOCTOR] as const,
+            roles: [
+              UserRole.ADMIN,
+              UserRole.RECEPTIONIST,
+              UserRole.PATIENT,
+              UserRole.DOCTOR,
+            ] as const,
           },
           {
             name: 'All Appointments',
             href: '/dashboard/appointments?view=month',
             icon: 'solar:clipboard-list-bold-duotone',
-            roles: [Role.ADMIN, Role.RECEPTIONIST, Role.PATIENT, Role.DOCTOR] as const,
+            roles: [
+              UserRole.ADMIN,
+              UserRole.RECEPTIONIST,
+              UserRole.PATIENT,
+              UserRole.DOCTOR,
+            ] as const,
           },
           {
             name: 'Token Appointments',
             href: '/dashboard/queues',
             icon: 'solar:clipboard-list-bold-duotone',
-            roles: [Role.ADMIN, Role.RECEPTIONIST, Role.PATIENT, Role.DOCTOR] as const,
+            roles: [
+              UserRole.ADMIN,
+              UserRole.RECEPTIONIST,
+              UserRole.PATIENT,
+              UserRole.DOCTOR,
+            ] as const,
           },
         ],
       },

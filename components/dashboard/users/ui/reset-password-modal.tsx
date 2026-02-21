@@ -1,10 +1,9 @@
 import Modal from '@/components/ui/modal';
 import { useResetPassword } from '@/services/common/user/user.query';
-import { ResetPasswordRequest } from '@/services/common/user/user.types';
 import { useForm, Controller } from 'react-hook-form';
-import { resetPasswordSchema } from '@/services/common/user/user.validation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@heroui/react';
+import { ResetPasswordDto, resetPasswordSchema } from '@/shared';
 
 export default function ResetPasswordModal({
   isOpen,
@@ -22,10 +21,10 @@ export default function ResetPasswordModal({
     control,
     reset,
     formState: { errors },
-  } = useForm<ResetPasswordRequest>({
+  } = useForm({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
-      password: '',
+      email: '',
     },
   });
 
@@ -33,7 +32,7 @@ export default function ResetPasswordModal({
     return (
       <>
         <Controller
-          name="password"
+          name="email"
           control={control}
           render={({ field }) => (
             <Input
@@ -41,8 +40,8 @@ export default function ResetPasswordModal({
               label="Password"
               placeholder="Enter password"
               type="password"
-              isInvalid={!!errors.password}
-              errorMessage={errors.password?.message}
+              isInvalid={!!errors.email}
+              errorMessage={errors.email?.message}
               {...field}
             />
           )}
@@ -51,7 +50,7 @@ export default function ResetPasswordModal({
     );
   };
 
-  const onSubmit = async (data: ResetPasswordRequest) => {
+  const onSubmit = async (data: ResetPasswordDto) => {
     if (userId) {
       await resetPassword({ id: userId, data });
       handleClose();

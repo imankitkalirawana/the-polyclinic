@@ -19,12 +19,13 @@ import { AuthApi } from '@/services/common/auth/auth.api';
 import { useGoogleLogin, useRegister, useSendOTP } from '@/services/common/auth/auth.query';
 import { AuthStep } from '../types';
 import AuthMethodSelector from '../ui/auth-method.input';
-import { AuthMethod, VerificationType } from '@/services/common/auth/auth.enum';
 import { toTitleCase } from '@/libs/utils';
 import AuthPhoneInput from '../ui/auth-phone.input';
 import AuthOtpInput from '../ui/auth-otp.input';
 import { AuthTextInput } from '../ui/auth-text.input';
 import AuthPasswordInput from '../ui/auth-password.input';
+import { AuthMethod } from '@/services/common/auth/auth.enum';
+import { VerificationType } from '@/shared';
 
 const registerSchema = z
   .object({

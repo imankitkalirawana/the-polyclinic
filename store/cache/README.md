@@ -128,7 +128,7 @@ The cache registry defines all available cache keys and their types:
 | `drugs`             | `DrugType[]`                  | All drugs collection                 |
 | `appointments`      | `AppointmentType[]`           | All appointments collection          |
 | `appointmentQueues` | `AppointmentQueueType[]`      | All queue appointments               |
-| `users`             | `UserType[]`                  | All users collection                 |
+| `users`             | `User[]`                      | All users collection                 |
 | `selectedPatient`   | `PatientType \| null`         | Currently selected patient           |
 | `selectedDoctor`    | `DoctorType \| null`          | Currently selected doctor            |
 | `patientById`       | `Record<string, PatientType>` | Patients indexed by ID               |

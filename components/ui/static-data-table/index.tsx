@@ -36,7 +36,7 @@ import { useMemoizedCallback } from './use-memoized-callback';
 import type { $FixMe } from '@/types';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useSession } from '@/libs/providers/session-provider';
-import { Role } from '@/services/common/user/user.constants';
+import { UserRole } from '@/shared';
 
 export function Table<T extends TableItem>({
   uniqueKey,
@@ -405,7 +405,8 @@ export function Table<T extends TableItem>({
                     .filter((c) => c.uid !== 'actions')
                     .filter(
                       (c) =>
-                        !c.isHidden && (c.roles?.includes(currentUser?.role as Role) || !c.roles)
+                        !c.isHidden &&
+                        (c.roles?.includes(currentUser?.role as UserRole) || !c.roles)
                     )
                     .sort((a, b) => a.name.localeCompare(b.name))}
                   selectedKeys={state.visibleColumns}

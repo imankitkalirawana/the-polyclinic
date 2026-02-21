@@ -1,11 +1,9 @@
 'use client';
 import { useAllAppointmentQueues } from '@/services/client/appointment/queue/queue.query';
-import type { RowData } from '@/components/ui/new-data-table/types';
 import { Card, Chip, Tab, Tabs } from '@heroui/react';
 
 export default function PatientQueueView() {
-  const { data } = useAllAppointmentQueues();
-  const rows: RowData[] = data?.rows ?? [];
+  const { data: appointmentQueues } = useAllAppointmentQueues();
 
   return (
     <div className="p-4">
@@ -17,15 +15,15 @@ export default function PatientQueueView() {
             <div className="flex items-center gap-2">
               <span>Upcoming</span>
               <Chip size="sm" variant="flat">
-                {rows.length}
+                {appointmentQueues?.length}
               </Chip>
             </div>
           }
         >
           <div className="grid grid-cols-3 gap-2">
-            {rows.map((row, index) => (
-              <Card key={row.id?.value ?? index} isPressable>
-                <p>{row.sequenceNumber?.value ?? ''}</p>
+            {appointmentQueues?.map((queue, index) => (
+              <Card key={queue.id ?? index} isPressable>
+                <p>{queue.sequenceNumber ?? ''}</p>
               </Card>
             ))}
           </div>
@@ -36,15 +34,15 @@ export default function PatientQueueView() {
             <div className="flex items-center gap-2">
               <span>Previous</span>
               <Chip size="sm" variant="flat">
-                {rows.length}
+                {appointmentQueues?.length}
               </Chip>
             </div>
           }
         >
           <div className="grid grid-cols-3 gap-2">
-            {rows.map((row, index) => (
-              <Card key={row.id?.value ?? index} isPressable>
-                <p>{row.sequenceNumber?.value ?? ''}</p>
+            {appointmentQueues?.map((queue, index) => (
+              <Card key={queue.id ?? index} isPressable>
+                <p>{queue.sequenceNumber ?? ''}</p>
               </Card>
             ))}
           </div>

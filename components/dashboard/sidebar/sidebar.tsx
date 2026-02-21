@@ -10,7 +10,7 @@ import {
 } from '@heroui/react';
 import { cn, Link, Listbox, ListboxItem, ListboxSection, Tooltip } from '@heroui/react';
 import { Icon } from '@iconify/react';
-import { Role } from '@/services/common/user/user.constants';
+import { UserRole } from '@/shared';
 
 export enum SidebarItemType {
   Nest = 'nest',
@@ -26,7 +26,7 @@ export type SidebarItem = {
   endContent?: React.ReactNode;
   items?: SidebarItem[];
   className?: string;
-  roles?: Role[];
+  roles?: UserRole[];
 };
 
 export type SidebarProps = Omit<ListboxProps<SidebarItem>, 'children'> & {
@@ -130,7 +130,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
                 showArrow
                 content={
                   <div>
-                    <div className="w-full px-2 py-1 text-foreground-500 text-tiny">
+                    <div className="text-foreground-500 text-tiny w-full px-2 py-1">
                       {item.title}
                     </div>
                     <Listbox aria-label="nested-list" items={item.items} variant="flat">
@@ -213,7 +213,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
                           icon={item.icon}
                           width={24}
                         />
-                        <span className="font-medium text-default-500 text-small group-data-[selected=true]:text-primary-500">
+                        <span className="text-default-500 text-small group-data-[selected=true]:text-primary-500 font-medium">
                           {item.title}
                         </span>
                       </div>

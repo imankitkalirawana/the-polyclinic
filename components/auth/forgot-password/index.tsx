@@ -18,7 +18,7 @@ import AuthOtpInput from '../ui/auth-otp.input';
 import { AuthStep } from '../types';
 import { APP_INFO } from '@/libs/config';
 import { AuthApi } from '@/services/common/auth/auth.api';
-import { VerificationType } from '@/services/common/auth/auth.enum';
+import { VerificationType } from '@/shared';
 
 const forgotPasswordSchema = z
   .object({

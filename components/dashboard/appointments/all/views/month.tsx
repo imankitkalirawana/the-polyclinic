@@ -25,7 +25,7 @@ import { TIMINGS } from '@/libs/config';
 import { cn } from '@heroui/react';
 import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
 import { AppointmentType } from '@/services/client/appointment';
-import { Role } from '@/services/common/user/user.constants';
+import { UserRole } from '@/shared';
 
 interface MonthViewProps {
   appointments: AppointmentType[];
@@ -57,7 +57,7 @@ export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
     appointments.filter((apt) => isSameDay(new Date(apt.date), date));
 
   const isAllowedToCreateAppointment = allowedRolesToCreateAppointment.includes(
-    user?.role || Role.PATIENT
+    user?.role || UserRole.PATIENT
   );
 
   return (
@@ -68,7 +68,7 @@ export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
           <div
             key={day}
             className={cn(
-              'border-r border-divider text-center font-medium uppercase text-default-500 text-tiny last:border-r-0'
+              'border-divider text-default-500 text-tiny border-r text-center font-medium uppercase last:border-r-0'
             )}
           >
             {day}
@@ -98,10 +98,10 @@ export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
               key={day.toISOString()}
               title={isDateDisabled ? 'Booking is not allowed in the past' : ''}
               className={cn(
-                'flex select-none flex-col justify-start overflow-hidden border-b border-r border-divider p-1 last:border-r-0',
+                'border-divider flex flex-col justify-start overflow-hidden border-r border-b p-1 select-none last:border-r-0',
                 {
                   'bg-default-100 text-default-500': !isCurrentMonth,
-                  'cursor-not-allowed bg-default-50': isDateDisabled,
+                  'bg-default-50 cursor-not-allowed': isDateDisabled,
                   'cursor-auto': !isAllowedToCreateAppointment,
                 }
               )}
@@ -149,7 +149,7 @@ export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
                     content={<AppointmentList appointments={dayAppointments} date={day} />}
                     onOpenChange={setIsTooltipOpen}
                   >
-                    <button className="truncate rounded-lg p-1 px-2 text-start text-tiny hover:bg-default-100">
+                    <button className="text-tiny hover:bg-default-100 truncate rounded-lg p-1 px-2 text-start">
                       {dayAppointments.length - maxAppointmentsToShow} more
                     </button>
                   </Tooltip>

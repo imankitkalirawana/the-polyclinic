@@ -26,12 +26,12 @@ import { NavItem as NavItemType } from './types';
 
 import { useSubdomain } from '@/hooks/useSubDomain';
 import { APP_INFO } from '@/libs/config';
-import { Role } from '@/services/common/user/user.constants';
+import { UserRole } from '@/shared';
 import NotificationsWrapper from './notifications';
 import ProfileDropdown from './profile-dropdown';
 
 // Utility function to filter nav items by user role
-const filterNavItemsByRole = (items: NavItemType[], userRole?: Role): NavItemType[] => {
+const filterNavItemsByRole = (items: NavItemType[], userRole?: UserRole): NavItemType[] => {
   if (!userRole) return items;
 
   return items

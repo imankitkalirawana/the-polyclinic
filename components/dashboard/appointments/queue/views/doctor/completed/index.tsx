@@ -1,11 +1,11 @@
 import DataItem from '@/components/ui/data-item';
-import { AppointmentQueueType } from '@/services/client/appointment/queue/queue.types';
+import { AppointmentQueue } from '@/shared';
 import { formatDate } from 'date-fns';
 
 export default function CompletedAppointmentQueue({
   currentQueue,
 }: {
-  currentQueue: AppointmentQueueType;
+  currentQueue: AppointmentQueue;
 }) {
   return (
     <div className="flex flex-col gap-4 p-4">
