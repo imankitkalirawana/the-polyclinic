@@ -1,4 +1,4 @@
-import { BloodType, Gender } from '@enums/index';
+import { BloodType, Gender } from 'shared/enums';
 
 /**
  * Converts strings like "on_hold" or "on-hold" to "On Hold"

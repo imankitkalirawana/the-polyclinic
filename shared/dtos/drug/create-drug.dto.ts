@@ -1,5 +1,5 @@
+import { DrugForm, DrugScheduleType } from 'shared/enums';
 import { nameValidation, nullableStringValidation } from '../factory.dto';
-import { DrugForm, DrugScheduleType } from '@enums/drug.enum';
 import { z } from 'zod';
 
 export const createDrugSchema = z.object({
