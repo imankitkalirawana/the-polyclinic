@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/static-data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
 import { useAllDrugs } from '@/services/client/drug/drug.query';
-import { DrugType } from '@/services/client/drug/drug.types';
+import { Drug } from '@/shared';
 
 const INITIAL_VISIBLE_COLUMNS = [
   'did',
@@ -30,28 +30,28 @@ const INITIAL_VISIBLE_COLUMNS = [
 export default function Drugs() {
   const { data, isLoading } = useAllDrugs();
 
-  const drugs: DrugType[] = data || [];
+  const drugs: Drug[] = data || [];
   const { selected, setSelected } = useDrugStore();
 
-  const dropdownMenuItems = (drug: DrugType): DropdownItemWithSection[] => {
+  const dropdownMenuItems = (drug: Drug): DropdownItemWithSection[] => {
     return [
       {
         key: 'view',
         children: 'View',
         as: Link,
-        href: `/dashboard/drugs/${drug.did}`,
+        href: `/dashboard/drugs/${drug.unique_id}`,
       },
       {
         key: 'edit',
         children: 'Edit',
         as: Link,
-        href: `/dashboard/drugs/${drug.did}/edit`,
+        href: `/dashboard/drugs/${drug.unique_id}/edit`,
       },
       {
         key: 'delete',
         children: 'Delete',
         color: 'danger',
-        onPress: () => console.log('Delete', drug.did),
+        onPress: () => console.log('Delete', drug.unique_id),
         section: 'Danger Zone',
         className: 'text-danger',
       },
@@ -59,20 +59,20 @@ export default function Drugs() {
   };
 
   // Define columns with render functions
-  const columns: ColumnDef<DrugType>[] = useMemo(
+  const columns: ColumnDef<Drug>[] = useMemo(
     () => [
       {
         name: 'Drug ID',
         uid: 'did',
         sortable: true,
-        renderCell: (drug) => renderCopyableText(drug.did.toString()),
+        renderCell: (drug) => renderCopyableText(drug.unique_id.toString()),
       },
       {
         name: 'Brand Name',
         uid: 'brandName',
         sortable: true,
         renderCell: (drug) => (
-          <div className="font-medium text-default-foreground">{drug.brandName}</div>
+          <div className="text-default-foreground font-medium">{drug.brandName}</div>
         ),
       },
       {
@@ -80,7 +80,7 @@ export default function Drugs() {
         uid: 'genericName',
         sortable: true,
         renderCell: (drug) => (
-          <div className="truncate capitalize text-default-foreground">{drug.genericName}</div>
+          <div className="text-default-foreground truncate capitalize">{drug.genericName}</div>
         ),
       },
       {
@@ -88,7 +88,7 @@ export default function Drugs() {
         uid: 'manufacturer',
         sortable: true,
         renderCell: (drug) => (
-          <div className="truncate capitalize text-default-foreground">{drug.manufacturer}</div>
+          <div className="text-default-foreground truncate capitalize">{drug.manufacturer}</div>
         ),
       },
       {
@@ -117,7 +117,7 @@ export default function Drugs() {
   );
 
   // Define filters
-  const filters: FilterDef<DrugType>[] = useMemo(
+  const filters: FilterDef<Drug>[] = useMemo(
     () => [
       {
         name: 'Status',
@@ -212,7 +212,7 @@ export default function Drugs() {
         data={drugs}
         columns={columns}
         initialVisibleColumns={INITIAL_VISIBLE_COLUMNS}
-        keyField="did"
+        keyField="unique_id"
         filters={filters}
         searchField={(drug, searchValue) =>
           drug.brandName.toLowerCase().includes(searchValue.toLowerCase()) ||
@@ -228,7 +228,7 @@ export default function Drugs() {
           direction: 'descending',
         }}
         onRowAction={(row) => {
-          const drug = drugs.find((drug) => drug.did == row);
+          const drug = drugs.find((drug) => drug.unique_id == row);
           if (drug) {
             setSelected(drug);
           }

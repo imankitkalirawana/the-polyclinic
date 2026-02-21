@@ -29,7 +29,7 @@ export default function SelectionCard({
       isDisabled={isDisabled}
       title={isDisabled ? disabledTitle : undefined}
       className={cn(
-        'flex w-full flex-row items-center justify-start gap-4 border-2 border-divider px-4 py-4 shadow-none',
+        'border-divider flex w-full flex-row items-center justify-start gap-4 border-2 px-4 py-4 shadow-none',
         {
           'border-primary': isSelected,
         },

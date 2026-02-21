@@ -14,13 +14,12 @@ import DateChip from '../ui/date-chip';
 import { TIMINGS } from '@/libs/config'; // Assuming this provides start/end hours
 import { cn } from '@heroui/react';
 import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
-import { AppointmentType } from '@/services/client/appointment';
-import { UserRole } from '@/shared';
+import { Appointment, UserRole } from '@/shared';
 
 interface DayViewProps {
   isCompact?: boolean;
   openInNewTab?: boolean;
-  appointments: AppointmentType[];
+  appointments: Appointment[];
   currentDate: Date;
   onTimeSlotClick: (date: Date) => void;
 }

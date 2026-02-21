@@ -55,9 +55,9 @@ const footerLinks = [
 
 export default function Footer() {
   return (
-    <footer className="m-1 rounded-3xl border border-divider">
+    <footer className="border-divider m-1 rounded-3xl border">
       <div className="mx-auto max-w-5xl space-y-16 px-5 py-16">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-divider pb-8">
+        <div className="border-divider flex flex-wrap items-center justify-between gap-4 border-b pb-8">
           <Link href="/" aria-label="go home">
             <Logo />
           </Link>
@@ -67,7 +67,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Threads"
-              className="block text-default-500 hover:text-primary"
+              className="text-default-500 hover:text-primary block"
             >
               <svg
                 className="size-6"
@@ -92,7 +92,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram"
-              className="block text-default-500 hover:text-primary"
+              className="text-default-500 hover:text-primary block"
             >
               <svg
                 className="size-6"
@@ -118,7 +118,7 @@ export default function Footer() {
                   <li key={index}>
                     <Link
                       href={link.href}
-                      className="text-sm text-default-500 duration-150 hover:text-primary"
+                      className="text-default-500 hover:text-primary text-sm duration-150"
                     >
                       {link.label}
                     </Link>
@@ -134,7 +134,7 @@ export default function Footer() {
                 <li key={index}>
                   <Link
                     href={link.href}
-                    className="text-sm text-default-500 duration-150 hover:text-primary"
+                    className="text-default-500 hover:text-primary text-sm duration-150"
                   >
                     {link.label}
                   </Link>
@@ -163,11 +163,11 @@ export default function Footer() {
             </form>
           </div>
         </div>
-        <div className="mt-16 flex items-center justify-between rounded-medium bg-default-100 p-4 px-6 py-3">
+        <div className="rounded-medium bg-default-100 mt-16 flex items-center justify-between p-4 px-6 py-3">
           <span>
             &copy; {APP_INFO.name} {new Date().getFullYear()}
           </span>
-          <Link href="#" className="text-sm text-default-500 hover:text-primary">
+          <Link href="#" className="text-default-500 hover:text-primary text-sm">
             Licence
           </Link>
         </div>

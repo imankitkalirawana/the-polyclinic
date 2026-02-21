@@ -72,8 +72,8 @@ const PatientSelection = ({ className }: { className?: string }) => {
     if (isError) {
       return (
         <div className="flex h-full flex-col items-center justify-center p-4 text-center">
-          <p className="mb-2 text-danger">Failed to load patients</p>
-          <p className="text-sm text-default-500">{error?.message}</p>
+          <p className="text-danger mb-2">Failed to load patients</p>
+          <p className="text-default-500 text-sm">{error?.message}</p>
         </div>
       );
     }
@@ -113,7 +113,7 @@ const PatientSelection = ({ className }: { className?: string }) => {
             radius="full"
             onPress={handleNext}
             isDisabled={!canProceed}
-            endContent={<Kbd keys={['enter']} className="bg-transparent text-primary-foreground" />}
+            endContent={<Kbd keys={['enter']} className="text-primary-foreground bg-transparent" />}
           >
             Next
           </Button>

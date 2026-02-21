@@ -21,9 +21,9 @@ export default function CalendarTimeSelect({
   const time = useMemo(() => getTimeSlot(date), [date]);
 
   return (
-    <div className="flex w-full flex-col items-center gap-2 rounded-r-large bg-default-50 px-4 pt-3 lg:w-[300px]">
+    <div className="rounded-r-large bg-default-50 flex w-full flex-col items-center gap-2 px-4 pt-3 lg:w-[300px]">
       <div className="flex w-full justify-between">
-        <p className="flex items-center text-small">
+        <p className="text-small flex items-center">
           <span className="text-default-700">{format(date, 'EEE')}</span>
           &nbsp;
           <span className="text-default-500">{format(date, 'd')}</span>

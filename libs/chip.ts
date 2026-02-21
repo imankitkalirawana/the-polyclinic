@@ -1,6 +1,6 @@
 import { AppointmentType } from '@/services/client/appointment';
 import { UserRole, UserStatus } from '@/shared';
-import { DrugStatus } from '@/services/client/drug/drug.types';
+import { DrugStatus } from '@/shared';
 import { ServiceStatus, ServiceTypes } from '@/services/client/service/service.types';
 import { QueueStatus } from '@/shared';
 

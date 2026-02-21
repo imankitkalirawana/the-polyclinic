@@ -33,11 +33,11 @@ export default function QuickLook({
         <ModalBody
           as={ScrollShadow}
           className={cn(
-            'grid w-full grid-cols-3 gap-0 divide-x divide-divider p-0 scrollbar-hide',
+            'divide-divider scrollbar-hide grid w-full grid-cols-3 gap-0 divide-x p-0',
             classNames?.body
           )}
         >
-          <div className="col-span-2 grid h-fit grid-cols-2 divide-x divide-y divide-divider border-b border-divider">
+          <div className="divide-divider border-divider col-span-2 grid h-fit grid-cols-2 divide-x divide-y border-b">
             <div className="col-span-full h-fit p-4">
               <Title level={2} title={title} />
             </div>
@@ -45,14 +45,14 @@ export default function QuickLook({
           </div>
           <div
             className={cn(
-              'h-full divide-y divide-divider overflow-y-auto overflow-x-hidden',
+              'divide-divider h-full divide-y overflow-x-hidden overflow-y-auto',
               classNames?.sidebar
             )}
           >
             {sidebarContent}
           </div>
         </ModalBody>
-        <ModalFooter className={cn('justify-between border-t border-divider', classNames?.footer)}>
+        <ModalFooter className={cn('border-divider justify-between border-t', classNames?.footer)}>
           <div className={cn('flex items-center gap-2', classNames?.footerLeft)}>{footerLeft}</div>
           <div className={cn('flex items-center gap-2', classNames?.footerRight)}>
             {footerRight}

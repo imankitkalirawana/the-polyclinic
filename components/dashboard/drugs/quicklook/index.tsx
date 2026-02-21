@@ -10,7 +10,7 @@ import { permissions, sidebarContent } from './data';
 import QuickLook from '@/components/ui/dashboard/quicklook';
 import { ButtonProps, DropdownItemProps } from '@/components/ui/dashboard/quicklook/types';
 import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
-import { DrugType } from '@/services/client/drug/drug.types';
+import { Drug } from '@/shared';
 
 export function DrugQuickLook() {
   const { selected, setSelected, setAction, action } = useDrugStore();
@@ -26,7 +26,7 @@ export function DrugQuickLook() {
         position: 'left',
         isIconOnly: true,
         onPress: () => {
-          const url = `/dashboard/drugs/${selected?.did}`;
+          const url = `/dashboard/drugs/${selected?.unique_id}`;
           window.open(url, '_blank');
         },
       },
@@ -97,10 +97,10 @@ export function DrugQuickLook() {
     [selected]
   );
 
-  const content = (drug: DrugType) => [
+  const content = (drug: Drug) => [
     {
       label: 'Drug ID',
-      value: () => drug.did,
+      value: () => drug.unique_id,
       icon: 'solar:hashtag-circle-bold-duotone',
       classNames: { icon: 'text-purple-500 bg-purple-50' },
     },

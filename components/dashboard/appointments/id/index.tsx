@@ -145,7 +145,7 @@ export default function Appointment({ aid }: { aid: string }) {
                   <h3 className="pl-8 text-xl">{appointment.patient.name}</h3>
                   <p className="text-default-400 pl-8 text-sm">
                     <span className="text-gray-500">Patient ID: </span>
-                    {appointment.patient.id}
+                    {appointment.patient.uid}
                   </p>
 
                   {/* Patient Details using CellRenderer */}
@@ -221,7 +221,7 @@ export default function Appointment({ aid }: { aid: string }) {
                     <h3 className="text-large pl-6">{appointment.doctor?.name}</h3>
                     <p className="text-default-400 pl-6 text-sm">
                       <span className="text-default-400">Doctor ID: </span>
-                      {appointment.doctor?.id}
+                      {appointment.doctor?.uid}
                     </p>
 
                     {/* Patient Details using CellRenderer */}

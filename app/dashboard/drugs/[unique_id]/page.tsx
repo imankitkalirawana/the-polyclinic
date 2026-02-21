@@ -1,22 +1,22 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
-import EditDrug from '@/components/dashboard/drugs/drug/edit';
+import DrugCard from '@/components/dashboard/drugs/drug';
 import { DrugApi } from '@/services/client/drug/drug.api';
 
 interface Props {
   params: Promise<{
-    did: number;
+    unique_id: string;
   }>;
 }
 
 export default async function Page(props: Props) {
   const params = await props.params;
-  const did = Number(params.did);
+  const unique_id = params.unique_id;
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
-    queryKey: ['drug', did],
+    queryKey: ['drug', unique_id],
     queryFn: async () => {
-      const res = await DrugApi.getByDid(did);
+      const res = await DrugApi.getByUID(unique_id);
       if (res.success) {
         return res.data;
       }
@@ -26,7 +26,7 @@ export default async function Page(props: Props) {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <EditDrug did={did} />
+      <DrugCard unique_id={unique_id} />
     </HydrationBoundary>
   );
 }

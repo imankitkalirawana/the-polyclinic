@@ -1,6 +1,6 @@
 import { useSession } from '@/libs/providers/session-provider';
 import { useConfirmAppointment, useSendReminder } from '../appointment.query';
-import { AppointmentType } from '../appointment.types';
+import { Appointment } from '@/shared';
 
 export const useAppointmentActions = () => {
   const confirmMutation = useConfirmAppointment();
@@ -8,11 +8,11 @@ export const useAppointmentActions = () => {
   const { user } = useSession();
   const role = user?.role;
 
-  const handleConfirm = async (appointment: AppointmentType) => {
+  const handleConfirm = async (appointment: Appointment) => {
     await confirmMutation.mutateAsync(appointment.aid);
   };
 
-  const handleReminder = async (appointment: AppointmentType) => {
+  const handleReminder = async (appointment: Appointment) => {
     let emails: string[] = [];
 
     if (role === 'DOCTOR') {

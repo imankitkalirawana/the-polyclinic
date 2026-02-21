@@ -24,16 +24,16 @@ export default function Appointments() {
       <CardHeader className="justify-between">
         <h3 className="text-lg font-medium">Today&apos;s Schedules</h3>
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1 text-default-500 text-tiny">
-            <span className="h-2 w-2 rounded-full bg-default" />
+          <div className="text-default-500 text-tiny flex items-center gap-1">
+            <span className="bg-default h-2 w-2 rounded-full" />
             <span>Consultation</span>
           </div>
-          <div className="flex items-center gap-1 text-default-500 text-tiny">
+          <div className="text-default-500 text-tiny flex items-center gap-1">
             <span className="h-2 w-2 rounded-full bg-blue-300" />
             <span>Follow-up</span>
           </div>
-          <div className="flex items-center gap-1 text-default-500 text-tiny">
-            <span className="h-2 w-2 rounded-full bg-danger-300" />
+          <div className="text-default-500 text-tiny flex items-center gap-1">
+            <span className="bg-danger-300 h-2 w-2 rounded-full" />
             <span>Emergency</span>
           </div>
         </div>
@@ -68,14 +68,14 @@ export default function Appointments() {
                 isPressable
                 key={appointment.aid}
                 className={cn('flex flex-col gap-2 p-4', {
-                  'border border-danger-100 bg-danger-50':
+                  'border-danger-100 bg-danger-50 border':
                     appointment.type === APPOINTMENT_TYPES.emergency.value,
                   'border border-blue-100 bg-blue-50':
                     appointment.type === APPOINTMENT_TYPES.follow_up.value,
                 })}
               >
                 <CardHeader className="justify-between p-0">
-                  <p className="whitespace-nowrap font-medium">
+                  <p className="font-medium whitespace-nowrap">
                     {format(appointment.date, 'hh:mm a')}
                   </p>
                   {renderChip({

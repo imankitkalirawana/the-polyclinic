@@ -15,7 +15,7 @@ import { ActionType, DropdownKeyType } from '../types';
 
 import { PermissionProps } from '@/components/ui/dashboard/quicklook/types';
 import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
-import { DrugType } from '@/services/client/drug/drug.types';
+import { Drug } from '@/shared';
 
 export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
   DOCTOR: ['cancel', 'reschedule', 'reminder', 'new-tab', 'add-to-calendar', 'invoice', 'reports'],
@@ -24,10 +24,10 @@ export const permissions: PermissionProps<ActionType, DropdownKeyType> = {
   RECEPTIONIST: ['cancel', 'reschedule', 'reminder'],
 };
 
-export const content = (drug: DrugType) => [
+export const content = (drug: Drug) => [
   {
     label: 'drug ID',
-    value: () => drug.did,
+    value: () => drug.unique_id,
     icon: 'solar:hashtag-circle-bold-duotone',
     classNames: { icon: 'text-purple-500 bg-purple-50' },
   },
@@ -87,7 +87,7 @@ export const content = (drug: DrugType) => [
   },
 ];
 
-export const sidebarContent = (drug: DrugType) => (
+export const sidebarContent = (drug: Drug) => (
   <>
     <div className="flex flex-col items-center gap-2 p-4">
       <div className="flex flex-col items-center">
@@ -137,7 +137,7 @@ export const sidebarContent = (drug: DrugType) => (
               </div>
               <span className="text-default-400 capitalize">UID</span>
             </div>
-            <span className="text-default-foreground capitalize">{drug.did}</span>
+            <span className="text-default-foreground capitalize">{drug.unique_id}</span>
           </div>
           <div className="from-divider/20 via-divider to-divider/20 h-px w-full bg-linear-to-r" />
           <div className="text-small flex items-center justify-between gap-4">

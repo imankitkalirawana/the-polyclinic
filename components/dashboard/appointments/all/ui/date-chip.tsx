@@ -22,7 +22,7 @@ export default function DateChip({
   return (
     <button
       className={cn(
-        'mb-1 flex items-center justify-center self-center rounded-full font-medium transition-colors hover:bg-default-100',
+        'hover:bg-default-100 mb-1 flex items-center justify-center self-center rounded-full font-medium transition-colors',
         sizeClass[size],
         {
           'bg-primary-500 text-primary-foreground hover:bg-primary-400': isToday(date),

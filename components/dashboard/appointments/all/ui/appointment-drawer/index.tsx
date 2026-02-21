@@ -47,6 +47,7 @@ import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { useClipboard } from '@/hooks/useClipboard';
 import { UserDetailsPopover } from './user-details-popover';
 import { UserRole } from '@/shared';
+import { Appointment } from '@/shared';
 
 const DRAWER_DELAY = 200;
 
@@ -113,7 +114,7 @@ const MeetDirections = memo(
 MeetDirections.displayName = 'MeetDirections';
 
 // Extracted shared content component
-const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType }) => {
+const AppointmentContent = memo(({ appointment }: { appointment: Appointment }) => {
   const { data: previousAppointment, isLoading } = useAppointmentWithAID(
     appointment?.previousAppointment || ''
   );
@@ -122,7 +123,7 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
   const location = organization?.organizationDetails?.location || '';
 
   const patientDescription = useMemo(() => {
-    const parts = [`Patient • #${appointment.patient.id}`];
+    const parts = [`Patient • #${appointment.patient.uid}`];
 
     if (appointment.patient.gender || appointment.patient.age) {
       const details = [appointment.patient.gender, appointment.patient.age]
@@ -132,15 +133,15 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
     }
 
     return parts.join(' • ');
-  }, [appointment.patient.id, appointment.patient.gender, appointment.patient.age]);
+  }, [appointment.patient.uid, appointment.patient.gender, appointment.patient.age]);
 
   const doctorDescription = useMemo(() => {
-    if (!appointment.doctor?.id) return '';
+    if (!appointment.doctor?.uid) return '';
 
-    return [`Doctor • #${appointment.doctor.id}`, appointment.doctor.seating]
+    return [`Doctor • #${appointment.doctor.uid}`, appointment.doctor.seating]
       .filter(Boolean)
       .join(' • ');
-  }, [appointment.doctor?.id, appointment.doctor?.seating]);
+  }, [appointment.doctor?.uid, appointment.doctor?.seating]);
 
   const appointmentModeContent = useMemo(() => {
     const isOnline = appointment.additionalInfo.type === 'online';
@@ -183,13 +184,13 @@ const AppointmentContent = memo(({ appointment }: { appointment: AppointmentType
       <div className="flex flex-col items-start gap-1">
         <AppointmentHeading title="PEOPLE" />
         <UserDetailsPopover
-          uid={appointment.patient.id}
+          uid={appointment.patient.uid}
           name={appointment.patient.name}
           description={patientDescription}
         />
-        {!!appointment.doctor?.id && (
+        {!!appointment.doctor?.uid && (
           <UserDetailsPopover
-            uid={appointment.doctor.id}
+            uid={appointment.doctor.uid}
             name={appointment.doctor.name}
             description={doctorDescription}
           />
@@ -344,7 +345,7 @@ AppointmentContent.displayName = 'AppointmentContent';
 
 // Shared header component
 const AppointmentHeader = memo(
-  ({ appointment, onClose }: { appointment: AppointmentType; onClose: () => void }) => {
+  ({ appointment, onClose }: { appointment: Appointment; onClose: () => void }) => {
     const formattedDate = useMemo(
       () => format(new Date(appointment.date), 'EEEE, MMMM d · hh:mm a'),
       [appointment.date]
@@ -424,7 +425,7 @@ const AppointmentHeader = memo(
 AppointmentHeader.displayName = 'AppointmentHeader';
 
 // Shared footer component
-const AppointmentFooter = memo(({ appointment }: { appointment: AppointmentType }) => {
+const AppointmentFooter = memo(({ appointment }: { appointment: Appointment }) => {
   const { action } = useAppointmentStore();
   const { user } = useSession();
   const buttons = useAppointmentButtonsInDrawer({

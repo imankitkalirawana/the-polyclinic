@@ -73,7 +73,7 @@ export default function QuickLook<T, A extends string = string, D extends string
 
   const detailsSection = useMemo(
     () => (
-      <div className="col-span-2 grid h-fit grid-cols-2 divide-x divide-y divide-divider border-b border-divider">
+      <div className="divide-divider border-divider col-span-2 grid h-fit grid-cols-2 divide-x divide-y border-b">
         <div className="col-span-full h-fit p-4">
           <Title level={2} title="Details" />
         </div>
@@ -94,7 +94,7 @@ export default function QuickLook<T, A extends string = string, D extends string
   );
 
   const infoSection = useMemo(
-    () => <div className="divide-y divide-divider">{sidebarContent}</div>,
+    () => <div className="divide-divider divide-y">{sidebarContent}</div>,
     [item, sidebarContent]
   );
 
@@ -168,14 +168,14 @@ export default function QuickLook<T, A extends string = string, D extends string
           <ModalBody
             as={ScrollShadow}
             className={cn(
-              'grid w-full grid-cols-3 gap-0 divide-x divide-divider p-0 scrollbar-hide',
+              'divide-divider scrollbar-hide grid w-full grid-cols-3 gap-0 divide-x p-0',
               !sidebarContent && 'grid-cols-2'
             )}
           >
             {detailsSection}
             {sidebarContent && infoSection}
           </ModalBody>
-          <ModalFooter className="justify-between border-t border-divider">
+          <ModalFooter className="border-divider justify-between border-t">
             <div className="flex items-center gap-2">{leftButtons}</div>
             <div className="flex items-center gap-2">
               {rightButtons}

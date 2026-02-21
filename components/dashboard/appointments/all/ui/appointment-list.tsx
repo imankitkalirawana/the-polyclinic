@@ -6,7 +6,7 @@ import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs';
 import { views } from '../types';
 import DateChip from './date-chip';
 
-import { AppointmentType } from '@/services/client/appointment';
+import { Appointment } from '@/shared';
 import AppointmentTriggerItem from './appointment-trigger-item';
 
 export default function AppointmentList({
@@ -14,7 +14,7 @@ export default function AppointmentList({
   date,
   openInNewTab = false,
 }: {
-  appointments: AppointmentType[] | null;
+  appointments: Appointment[] | null;
   date: Date;
   openInNewTab?: boolean;
 }) {
@@ -29,7 +29,7 @@ export default function AppointmentList({
   return (
     <Card className="flex max-w-xs flex-col shadow-none">
       <CardHeader className="flex-col items-center gap-2 pb-0">
-        <span className="font-medium uppercase text-small">{format(date, 'E')}</span>
+        <span className="text-small font-medium uppercase">{format(date, 'E')}</span>
         <DateChip
           date={date}
           size="lg"
@@ -49,14 +49,14 @@ export default function AppointmentList({
             />
           ))
         ) : (
-          <p className="pb-4 text-center text-default-500 text-small">
+          <p className="text-default-500 text-small pb-4 text-center">
             There are no appointments for this day
           </p>
         )}
       </CardBody>
       <CardFooter className="pt-0">
         {appointments && appointments.length > 0 && (
-          <p className="text-center text-default-500 text-tiny">
+          <p className="text-default-500 text-tiny text-center">
             Total appointments: {appointments.length}
           </p>
         )}

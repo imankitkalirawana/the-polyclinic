@@ -1,6 +1,5 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
-import DrugCard from '@/components/dashboard/drugs/drug';
 import { DrugApi } from '@/services/client/drug/drug.api';
 
 interface Props {
@@ -26,7 +25,7 @@ export default async function Page(props: Props) {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <DrugCard did={did} />
+      {/* <EditDrug did={did} /> */}
     </HydrationBoundary>
   );
 }

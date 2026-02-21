@@ -37,7 +37,7 @@ export default function Newsletters() {
         uid: 'email',
         sortable: true,
         renderCell: (newsletter) => (
-          <div className="truncate lowercase text-default-foreground">{newsletter.email}</div>
+          <div className="text-default-foreground truncate lowercase">{newsletter.email}</div>
         ),
       },
 

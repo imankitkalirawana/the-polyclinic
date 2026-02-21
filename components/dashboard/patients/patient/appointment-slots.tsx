@@ -84,7 +84,7 @@ export default function AppointmentSlots({ id }: { id: string }) {
               isDisabled={!slot.isAvailable}
               onPress={() => setSelectedSlot(slot)}
               className={cn(
-                'flex h-fit items-center justify-center overflow-visible rounded-medium border border-divider px-4 py-2',
+                'rounded-medium border-divider flex h-fit items-center justify-center overflow-visible border px-4 py-2',
                 {
                   'bg-default-200': !slot.isAvailable || slot.slots === 0,
                 }

@@ -1,15 +1,16 @@
 import React from 'react';
 
-import { APPOINTMENT_STATUSES, AppointmentType, ButtonConfig } from '@/services/client/appointment';
+import { APPOINTMENT_STATUSES, ButtonConfig } from '@/services/client/appointment';
 import { useAppointmentActions } from './hooks/useAppointmentActions';
 import RescheduleAppointment from '@/services/client/appointment/components/reschedule-modal';
 import CancelModal from './components/cancel-modal';
 import ChangeDoctorModal from './components/change-doctor-modal';
 import { UserRole } from '@/shared';
+import { Appointment } from '@/shared';
 
 export const createAppointmentButtonConfigs = (actions: {
-  handleConfirm: (appointment: AppointmentType) => Promise<void>;
-  handleReminder: (appointment: AppointmentType) => Promise<void>;
+  handleConfirm: (appointment: Appointment) => Promise<void>;
+  handleReminder: (appointment: Appointment) => Promise<void>;
 }): ButtonConfig[] => [
   {
     key: 'cancel',
@@ -45,7 +46,7 @@ export const createAppointmentButtonConfigs = (actions: {
     visibilityRules: {
       statuses: [APPOINTMENT_STATUSES.booked],
       roles: [UserRole.ADMIN, UserRole.DOCTOR],
-      custom: (appointment) => appointment.doctor?.id !== undefined,
+      custom: (appointment) => appointment.doctor?.uid !== undefined,
     },
     action: {
       type: 'store-action',
@@ -87,7 +88,7 @@ export const createAppointmentButtonConfigs = (actions: {
     visibilityRules: {
       statuses: [APPOINTMENT_STATUSES.booked, APPOINTMENT_STATUSES.confirmed],
       roles: [UserRole.RECEPTIONIST, UserRole.ADMIN],
-      custom: (appointment) => appointment.doctor?.id !== undefined,
+      custom: (appointment) => appointment.doctor?.uid !== undefined,
     },
     action: {
       type: 'store-action',
@@ -105,7 +106,7 @@ export const createAppointmentButtonConfigs = (actions: {
     visibilityRules: {
       statuses: [APPOINTMENT_STATUSES.booked],
       roles: [UserRole.RECEPTIONIST, UserRole.ADMIN],
-      custom: (appointment) => !appointment.doctor?.id,
+      custom: (appointment) => !appointment.doctor?.uid,
     },
     action: {
       type: 'store-action',
@@ -153,7 +154,7 @@ export const createAppointmentButtonConfigs = (actions: {
     visibilityRules: {
       statuses: [APPOINTMENT_STATUSES.booked],
       roles: [UserRole.DOCTOR, UserRole.ADMIN],
-      custom: (appointment) => appointment.doctor?.id !== undefined,
+      custom: (appointment) => appointment.doctor?.uid !== undefined,
     },
     action: {
       type: 'async-function',
@@ -194,7 +195,7 @@ export const useAppointmentButtonConfigs = () => {
 
 export const isButtonVisible = (
   config: ButtonConfig,
-  appointment: AppointmentType | null,
+  appointment: Appointment | null,
   role: UserRole | null
 ): boolean => {
   if (!appointment) return false;

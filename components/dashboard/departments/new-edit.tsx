@@ -110,13 +110,13 @@ export default function DepartmentModal({
         {/* Features Section */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h4 className="font-medium text-large">Features</h4>
+            <h4 className="text-large font-medium">Features</h4>
           </div>
 
           {fields.map((field, index) => (
-            <div key={field.id} className="space-y-3 rounded-large border border-divider p-4">
+            <div key={field.id} className="rounded-large border-divider space-y-3 border p-4">
               <div className="flex items-center justify-between">
-                <h5 className="font-medium text-default-700">Feature {index + 1}</h5>
+                <h5 className="text-default-700 font-medium">Feature {index + 1}</h5>
                 <Button
                   isIconOnly
                   type="button"
@@ -152,7 +152,7 @@ export default function DepartmentModal({
           ))}
 
           {fields.length === 0 ? (
-            <div className="flex flex-col gap-2 py-8 text-center text-default-500">
+            <div className="text-default-500 flex flex-col gap-2 py-8 text-center">
               <Icon icon="material-symbols:feature-search" className="mx-auto mb-2 text-4xl" />
               <p>No features added yet</p>
               <div>{renderAddFeatureButton()}</div>

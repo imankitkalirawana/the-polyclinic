@@ -5,13 +5,13 @@ import { create } from 'zustand';
 
 import { ActionType } from './types';
 
-import { DrugType } from '@/services/client/drug/drug.types';
+import { Drug } from '@/shared';
 
 interface DrugStoreState {
-  selected: DrugType | null;
+  selected: Drug | null;
   action: ActionType | null;
   keys: Selection | undefined;
-  setSelected: (selected: DrugType | null) => void;
+  setSelected: (selected: Drug | null) => void;
   setAction: (action: ActionType | null) => void;
   setKeys: (keys: Selection) => void;
   resetState: () => void;

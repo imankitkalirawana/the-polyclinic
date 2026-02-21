@@ -71,18 +71,14 @@ export interface CellAutoFillCell {
 }
 
 /**
- * Uses declaration merging to add our new feature APIs and state types to TanStack Table's existing types.
- * Note: This affect global namespace for @tanstack/react-table types
+ * Uses declaration merging to extend TanStack Table's existing types with CellAutoFill APIs.
+ * Augmenting @tanstack/table-core so Table remains the full instance type plus our methods.
  */
-declare module '@tanstack/react-table' {
+declare module '@tanstack/table-core' {
   interface TableState extends CellAutoFillTableState {}
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface TableOptionsResolved<TData extends RowData> extends CellAutoFillOptions {}
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface Table<TData extends RowData> extends CellAutoFillInstance {}
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface Row<TData extends RowData> extends CellAutoFillRow {}
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface Cell<TData extends RowData, TValue> extends CellAutoFillCell {}
 }
 

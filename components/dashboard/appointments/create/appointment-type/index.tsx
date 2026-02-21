@@ -68,7 +68,7 @@ export default function AppointmentType() {
           radius="lg"
           className="btn btn-primary"
           isDisabled={isSubmitting || isNextButtonDisabled}
-          endContent={<Kbd keys={['enter']} className="bg-transparent text-primary-foreground" />}
+          endContent={<Kbd keys={['enter']} className="text-primary-foreground bg-transparent" />}
           onPress={() => {
             if (appointment.type === APPOINTMENT_TYPES.follow_up.value) {
               setValue('meta.currentStep', 3);

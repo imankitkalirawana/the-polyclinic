@@ -1,7 +1,7 @@
 import { DoctorSpecialization, DoctorType } from '@/services/client/doctor';
 import { DepartmentType } from '@/services/client/department/department.types';
 import { ServiceType } from '@/services/client/service/service.types';
-import { DrugType } from '@/services/client/drug/drug.types';
+import { Appointment, Drug } from '@/shared';
 import { AppointmentType } from '@/services/client/appointment/appointment.types';
 import { AppointmentQueue, Patient, User } from '@/shared';
 
@@ -20,8 +20,8 @@ export interface CacheRegistry {
   doctors: DoctorType[];
   departments: DepartmentType[];
   services: ServiceType[];
-  drugs: DrugType[];
-  appointments: AppointmentType[];
+  drugs: Drug[];
+  appointments: Appointment[];
   appointmentQueues: AppointmentQueue[];
   users: User[];
   specializations: DoctorSpecialization[];
@@ -30,7 +30,7 @@ export interface CacheRegistry {
   selectedDoctor: DoctorType | null;
   selectedDepartment: DepartmentType | null;
   selectedService: ServiceType | null;
-  selectedDrug: DrugType | null;
+  selectedDrug: Drug | null;
   selectedAppointment: AppointmentType | null;
   selectedAppointmentQueue: AppointmentQueue | null;
   selectedUser: User | null;
@@ -40,7 +40,7 @@ export interface CacheRegistry {
   doctorById: Record<string, DoctorType>;
   departmentById: Record<string, DepartmentType>;
   serviceById: Record<string, ServiceType>;
-  drugById: Record<string, DrugType>;
+  drugById: Record<string, Drug>;
   appointmentById: Record<string, AppointmentType>;
   appointmentQueueById: Record<string, AppointmentQueue>;
   userById: Record<string, User>;

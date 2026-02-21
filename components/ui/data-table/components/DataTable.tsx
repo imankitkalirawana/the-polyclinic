@@ -51,8 +51,7 @@ const DataTable = <TData extends RowData>({
     const headers = table.getFlatHeaders();
     const colSizes: { [key: string]: number } = {};
 
-    for (let i = 0; i < headers.length; i++) {
-      const header = headers[i]!;
+    for (const header of headers) {
       colSizes[`--header-${header.id}-size`] = header.getSize();
       colSizes[`--col-${header.column.id}-size`] = header.column.getSize();
     }
@@ -114,7 +113,7 @@ const DataTable = <TData extends RowData>({
       onPointerEnter={(e) => {
         internalTableContainerRef.current?.releasePointerCapture(e.pointerId);
       }}
-      className="relative flex-1 overflow-auto rounded-t-md border-l border-t"
+      className="relative flex-1 overflow-auto rounded-t-md border-t border-l"
     >
       <div
         role="table"
@@ -143,6 +142,7 @@ const DataTable = <TData extends RowData>({
           {isTableEmpty && <MinimalPlaceholder message="No Data Found" />}
           {rowVirtualizer.getVirtualItems().map((virtualRow, index) => {
             const row = rows[virtualRow.index];
+            if (!row) return null;
 
             return (
               <TableRow

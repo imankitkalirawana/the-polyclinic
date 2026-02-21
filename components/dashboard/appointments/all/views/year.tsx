@@ -21,10 +21,10 @@ import AppointmentList from '../ui/appointment-list';
 
 import { cn } from '@heroui/react';
 import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
-import { AppointmentType } from '@/services/client/appointment';
+import { Appointment } from '@/shared';
 
 interface YearViewProps {
-  appointments: AppointmentType[];
+  appointments: Appointment[];
   currentDate: Date;
 }
 
@@ -51,7 +51,7 @@ const DayCell = memo(
     isCurrentMonth: boolean;
     appointmentCount: number;
     hasAppointments: boolean;
-    dayAppointments: AppointmentType[];
+    dayAppointments: Appointment[];
   }) => {
     const { setIsTooltipOpen } = useAppointmentStore();
     const isDayToday = isToday(day);
@@ -92,7 +92,7 @@ const MonthCalendar = memo(
     appointmentsByDate,
   }: {
     month: Date;
-    appointmentsByDate: Map<string, AppointmentType[]>;
+    appointmentsByDate: Map<string, Appointment[]>;
   }) => {
     const monthStart = startOfMonth(month);
     const monthEnd = endOfMonth(month);
@@ -153,7 +153,7 @@ MonthCalendar.displayName = 'MonthCalendar';
 export function YearView({ appointments, currentDate }: YearViewProps) {
   // Create a map of appointments by date for faster lookups
   const appointmentsByDate = useMemo(() => {
-    const map = new Map<string, AppointmentType[]>();
+    const map = new Map<string, Appointment[]>();
 
     appointments.forEach((apt) => {
       const date = new Date(apt.date);

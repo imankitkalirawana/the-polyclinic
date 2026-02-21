@@ -18,7 +18,7 @@ export default function NavItem({ item, index, onMouseEnter, onMouseLeave }: Nav
       <NavbarItem key={`${item.name}-${index}`}>
         <Link
           aria-label={item.name}
-          className="cursor-pointer text-default-500 text-small"
+          className="text-default-500 text-small cursor-pointer"
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
         >

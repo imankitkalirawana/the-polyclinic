@@ -8,19 +8,19 @@ export default function Pricing() {
     <div className="relative py-16 md:py-32">
       <div className="mx-auto max-w-5xl px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-balance text-3xl font-bold md:text-4xl lg:text-5xl">
+          <h2 className="text-3xl font-bold text-balance md:text-4xl lg:text-5xl">
             Start managing your hospital smarter today
           </h2>
         </div>
         <div className="mt-8 md:mt-20">
           <Card className="relative">
             <div className="grid items-center gap-12 divide-y p-12 md:grid-cols-2 md:divide-x md:divide-y-0">
-              <div className="pb-12 text-center md:pb-0 md:pr-12">
+              <div className="pb-12 text-center md:pr-12 md:pb-0">
                 <h3 className="text-2xl font-semibold">Suite Enterprise</h3>
                 <p className="mt-2 text-lg">For your company of any size</p>
-                <span className="mb-6 mt-12 inline-block text-6xl font-bold">
+                <span className="mt-12 mb-6 inline-block text-6xl font-bold">
                   {currency(11999)}
-                  <sub className="font-normal text-default-500 text-small">/month</sub>
+                  <sub className="text-default-500 text-small font-normal">/month</sub>
                 </span>
 
                 <div className="flex justify-center">
@@ -29,7 +29,7 @@ export default function Pricing() {
                   </Button>
                 </div>
 
-                <p className="mt-12 text-sm text-default-500">
+                <p className="text-default-500 mt-12 text-sm">
                   Includes : Security, Unlimited Storage, Payment, Search engine, and all features
                 </p>
               </div>
@@ -47,7 +47,7 @@ export default function Pricing() {
                     </li>
                   ))}
                 </ul>
-                <p className="mt-6 text-sm text-default-500">
+                <p className="text-default-500 mt-6 text-sm">
                   Team can be any size, and you can add or switch members as needed. Companies using
                   our platform include:
                 </p>

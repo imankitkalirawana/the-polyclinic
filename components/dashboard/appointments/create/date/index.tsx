@@ -41,7 +41,7 @@ function AvailabilityChip({ date }: { date: Date | undefined }) {
 
 function DateDisplay({ date }: { date: Date | undefined }) {
   if (!date || !isValid(date)) {
-    return <div className="text-sm text-default-500">No date selected</div>;
+    return <div className="text-default-500 text-sm">No date selected</div>;
   }
 
   return <div className="text-sm font-medium">{format(date, 'PPPp')}</div>;

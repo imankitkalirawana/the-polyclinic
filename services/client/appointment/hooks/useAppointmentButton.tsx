@@ -5,14 +5,15 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { useAppointmentButtonConfigs, isButtonVisible } from '../appointment.config';
 
 import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
-import { AppointmentType, ProcessedButton } from '@/services/client/appointment';
+import { ProcessedButton } from '@/services/client/appointment';
+import { Appointment } from '@/shared';
 import { UserRole } from '@/shared';
 
 const useAppointmentButtonsInDrawer = ({
   selected,
   role,
 }: {
-  selected: AppointmentType | null;
+  selected: Appointment | null;
   role: UserRole;
 }) => {
   const { setAction } = useAppointmentStore();

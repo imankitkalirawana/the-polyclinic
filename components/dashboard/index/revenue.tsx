@@ -185,12 +185,12 @@ export default function Revenue() {
   const { chartData, color, suffix, type } = activeChartData;
 
   return (
-    <Card as="dl" className="border border-transparent dark:border-default-100">
+    <Card as="dl" className="dark:border-default-100 border border-transparent">
       <section className="flex flex-col flex-nowrap">
         <div className="flex flex-col justify-between gap-y-2 p-6">
           <div className="flex flex-col gap-y-2">
             <div className="flex flex-col gap-y-0">
-              <dt className="font-medium text-foreground text-medium">Analytics</dt>
+              <dt className="text-foreground text-medium font-medium">Analytics</dt>
             </div>
             <Spacer y={2} />
             <Tabs size="sm">
@@ -206,7 +206,7 @@ export default function Revenue() {
                   <button
                     key={key}
                     className={cn(
-                      'flex w-full flex-col gap-2 rounded-medium p-3 transition-colors',
+                      'rounded-medium flex w-full flex-col gap-2 p-3 transition-colors',
                       {
                         'bg-default-100': activeChart === key,
                       }
@@ -214,14 +214,14 @@ export default function Revenue() {
                     onClick={() => setActiveChart(key)}
                   >
                     <span
-                      className={cn('font-medium text-default-500 transition-colors text-small', {
+                      className={cn('text-default-500 text-small font-medium transition-colors', {
                         'text-primary': activeChart === key,
                       })}
                     >
                       {title}
                     </span>
                     <div className="flex items-center gap-x-3">
-                      <span className="text-3xl font-bold text-foreground">
+                      <span className="text-foreground text-3xl font-bold">
                         {formatValue(value, type)}
                       </span>
                       <Chip
@@ -258,7 +258,7 @@ export default function Revenue() {
           </div>
         </div>
         <ResponsiveContainer
-          className="[&_.recharts-surface]:outline-hidden min-h-[300px]"
+          className="min-h-[300px] [&_.recharts-surface]:outline-hidden"
           height="100%"
           width="100%"
         >
@@ -300,7 +300,7 @@ export default function Revenue() {
             />
             <Tooltip
               content={({ label, payload }) => (
-                <div className="flex h-auto min-w-[120px] items-center gap-x-2 rounded-medium bg-foreground p-2 shadow-small text-tiny">
+                <div className="rounded-medium bg-foreground shadow-small text-tiny flex h-auto min-w-[120px] items-center gap-x-2 p-2">
                   <div className="flex w-full flex-col gap-y-0">
                     {payload?.map((p, index) => {
                       const name = p.name;
@@ -308,14 +308,14 @@ export default function Revenue() {
 
                       return (
                         <div key={`${index}-${name}`} className="flex w-full items-center gap-x-2">
-                          <div className="flex w-full items-center gap-x-1 text-background text-small">
+                          <div className="text-background text-small flex w-full items-center gap-x-1">
                             <span>{formatValue(value as number, type)}</span>
                             <span>{suffix}</span>
                           </div>
                         </div>
                       );
                     })}
-                    <span className="font-medium text-foreground-400 text-small">
+                    <span className="text-foreground-400 text-small font-medium">
                       {formatMonth(label)} 25, 2024
                     </span>
                   </div>
@@ -351,7 +351,7 @@ export default function Revenue() {
           <DropdownTrigger>
             <Button
               isIconOnly
-              className="absolute right-2 top-2 w-auto rounded-full"
+              className="absolute top-2 right-2 w-auto rounded-full"
               size="sm"
               variant="light"
             >

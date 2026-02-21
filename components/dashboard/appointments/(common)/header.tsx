@@ -14,8 +14,8 @@ export default function CreateAppointmentContentHeader({
   return (
     <div className={cn('flex items-center justify-between gap-1', className)}>
       <div className="flex flex-col">
-        <div className="font-semibold text-default-foreground">{title}</div>
-        <div className="text-sm text-default-500">{description}</div>
+        <div className="text-default-foreground font-semibold">{title}</div>
+        <div className="text-default-500 text-sm">{description}</div>
       </div>
       {!!endContent && <div>{endContent}</div>}
     </div>

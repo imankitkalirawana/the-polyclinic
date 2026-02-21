@@ -24,7 +24,7 @@ export default function Logo({
     >
       <Image src="/logo.png" alt="logo" width={36} height={36} />
       <span
-        className={cn('whitespace-nowrap text-xl font-semibold', {
+        className={cn('text-xl font-semibold whitespace-nowrap', {
           hidden: isCompact,
         })}
       >

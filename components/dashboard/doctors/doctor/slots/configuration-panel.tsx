@@ -138,7 +138,7 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
   ];
 
   return (
-    <div className="relative flex w-[448px] max-w-md flex-col justify-between gap-4 overflow-y-auto overflow-x-hidden border-r border-divider">
+    <div className="border-divider relative flex w-[448px] max-w-md flex-col justify-between gap-4 overflow-x-hidden overflow-y-auto border-r">
       {/* Title */}
       <div className="flex flex-col gap-4 overflow-y-auto pr-2">
         <Item>
@@ -231,7 +231,7 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
                                   <SelectItem key={time}>{time}</SelectItem>
                                 ))}
                               </Select>
-                              <span className="flex items-center justify-center text-center text-default-500">
+                              <span className="text-default-500 flex items-center justify-center text-center">
                                 -
                               </span>
                               <Select
@@ -249,7 +249,7 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
                               </Select>
                             </>
                           ) : (
-                            <div className="col-span-7 text-default-500">Unavailable</div>
+                            <div className="text-default-500 col-span-7">Unavailable</div>
                           )}
                           <div className="col-span-2 flex items-center gap-2">
                             {dayConfig.enabled ? (
@@ -349,7 +349,7 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
             <div className="ml-8 flex flex-col gap-4">
               <div className="flex flex-col gap-2">
                 <div className="flex flex-col">
-                  <h3 className="font-medium text-small">Buffer time</h3>
+                  <h3 className="text-small font-medium">Buffer time</h3>
                   <p className="text-default-500 text-tiny">Add time between appointment slots</p>
                 </div>
                 <div className="flex items-center gap-2">
@@ -378,7 +378,7 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
 
               <div className="flex flex-col gap-2">
                 <div className="flex flex-col">
-                  <h3 className="font-medium text-small">Maximum bookings per day</h3>
+                  <h3 className="text-small font-medium">Maximum bookings per day</h3>
                   <p className="text-default-500 text-tiny">
                     Limit how many booked appointments to accept in a single day
                   </p>
@@ -409,7 +409,7 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
                 </div>
               </div>
               <div className="flex flex-col gap-2">
-                <h3 className="font-medium text-small">Guest permissions</h3>
+                <h3 className="text-small font-medium">Guest permissions</h3>
                 <div className="flex items-center gap-2">
                   <Checkbox
                     aria-label="Guest permissions"
@@ -418,7 +418,7 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
                     onChange={formik.handleChange}
                   />
                   <div>
-                    <div className="font-medium text-small">Guests can invite others</div>
+                    <div className="text-small font-medium">Guests can invite others</div>
                     <div className="text-default-500 text-tiny">
                       After booking an appointment guests can modify the calendar event to invite
                       others
@@ -431,7 +431,7 @@ export function ConfigurationPanel({ formik }: ConfigurationPanelProps) {
         </Accordion>
       </div>
       {/* Save button */}
-      <div className="flex justify-end border-t border-divider px-4 pt-2">
+      <div className="border-divider flex justify-end border-t px-4 pt-2">
         <Button onPress={handleSave} isLoading={formik.isSubmitting} color="primary" radius="full">
           Save
         </Button>
@@ -450,7 +450,7 @@ function Subtitle({ subtitle }: { subtitle: string }) {
 
 function ItemIcon({ icon, className }: { icon: string; className?: string }) {
   return (
-    <div className={cn('flex items-center gap-2 rounded-small p-1 text-default-500', className)}>
+    <div className={cn('rounded-small text-default-500 flex items-center gap-2 p-1', className)}>
       <Icon icon={icon} width={20} />
     </div>
   );
@@ -484,7 +484,7 @@ function Item({
         className={cn(
           'ml-8 flex flex-col',
           {
-            'border-b border-divider pb-4': isBorder,
+            'border-divider border-b pb-4': isBorder,
           },
           className
         )}

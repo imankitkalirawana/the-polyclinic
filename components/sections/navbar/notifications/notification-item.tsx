@@ -75,7 +75,7 @@ const NotificationItem = React.forwardRef<HTMLDivElement, NotificationItemProps>
       <div
         ref={ref}
         className={cn(
-          'flex gap-3 border-b border-divider px-6 py-4 transition-colors',
+          'border-divider flex gap-3 border-b px-6 py-4 transition-colors',
           {
             'bg-default-100': !isRead,
           },
@@ -93,7 +93,7 @@ const NotificationItem = React.forwardRef<HTMLDivElement, NotificationItemProps>
           >
             <div
               className={cn(
-                'flex h-10 w-10 items-center justify-center rounded-full bg-default-100',
+                'bg-default-100 flex h-10 w-10 items-center justify-center rounded-full',
                 {
                   'bg-default-200': !isRead,
                 }
@@ -104,7 +104,7 @@ const NotificationItem = React.forwardRef<HTMLDivElement, NotificationItemProps>
           </Badge>
         </div>
         <div className="flex flex-1 flex-col gap-1">
-          {title && <h6 className="font-semibold text-foreground text-small">{title}</h6>}
+          {title && <h6 className="text-foreground text-small font-semibold">{title}</h6>}
           {/* <p className="text-foreground text-small"> */}
           <Streamdown>{message}</Streamdown>
           {/* </p> */}
@@ -128,7 +128,7 @@ const NotificationItem = React.forwardRef<HTMLDivElement, NotificationItemProps>
             <time className="text-default-400 text-tiny">{formatTime(createdAt)}</time>
             {priority && priority !== 'medium' && (
               <span
-                className={cn('capitalize text-tiny', {
+                className={cn('text-tiny capitalize', {
                   'text-danger': priority === 'high',
                   'text-default-400': priority === 'low',
                 })}

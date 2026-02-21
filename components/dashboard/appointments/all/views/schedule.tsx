@@ -7,10 +7,10 @@ import { parseAsStringEnum, useQueryState } from 'nuqs';
 import { views } from '../types';
 import AppointmentTriggerItem from '../ui/appointment-trigger-item';
 import DateChip from '../ui/date-chip';
-import { AppointmentType } from '@/services/client/appointment';
+import { Appointment } from '@/shared';
 
 interface ScheduleViewProps {
-  appointments: AppointmentType[];
+  appointments: Appointment[];
   currentDate: Date;
 }
 
@@ -36,13 +36,13 @@ export function ScheduleView({ appointments, currentDate }: ScheduleViewProps) {
       groups[dateKey].push(apt);
       return groups;
     },
-    {} as Record<string, AppointmentType[]>
+    {} as Record<string, Appointment[]>
   );
 
   return (
     <div className="flex h-full flex-col">
       <div className="flex-1 overflow-auto p-4">
-        <div className="divide-y divide-default-200">
+        <div className="divide-default-200 divide-y">
           {Object.entries(groupedAppointments).map(([dateKey, dayAppointments]) => {
             const date = new Date(dateKey);
 
@@ -50,7 +50,7 @@ export function ScheduleView({ appointments, currentDate }: ScheduleViewProps) {
               <div key={dateKey} className="flex w-full items-start py-1">
                 <div className="flex w-28 items-center gap-2">
                   <DateChip date={date} onClick={() => setView('day')} size="md" />
-                  <p className="mt-1.5 uppercase text-default-600 text-tiny">
+                  <p className="text-default-600 text-tiny mt-1.5 uppercase">
                     {format(date, 'MMM, EEE')}
                   </p>
                 </div>

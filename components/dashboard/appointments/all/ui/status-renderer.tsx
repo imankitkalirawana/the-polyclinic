@@ -40,7 +40,7 @@ export default function StatusRenderer({
           )}
         />
         {!isDotOnly && (
-          <span className={cn('capitalize text-tiny', className)}>
+          <span className={cn('text-tiny capitalize', className)}>
             {status.replace(/[_-]/g, ' ')}
           </span>
         )}

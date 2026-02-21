@@ -5,7 +5,7 @@ import {
   APPOINTMENT_STATUSES,
   APPOINTMENT_TYPES,
 } from './appointment.constants';
-import { UserRole } from '@/shared';
+import { Appointment, UserRole } from '@/shared';
 import { ButtonProps } from '@heroui/react';
 import { Doctor, Patient } from '@/shared';
 
@@ -59,18 +59,18 @@ export type ButtonConfig = {
   isIconOnly?: boolean;
   whileLoading?: string;
   visibilityRules: {
-    statuses?: AppointmentType['status'][];
+    statuses?: Appointment['status'][];
     roles?: UserRole[];
-    custom?: (appointment: AppointmentType, role: UserRole) => boolean;
+    custom?: (appointment: Appointment, role: UserRole) => boolean;
   };
   action: {
     type: 'store-action' | 'async-function' | 'navigation';
     payload?: $FixMe;
-    handler?: (appointment: AppointmentType) => Promise<void> | void;
-    url?: (appointment: AppointmentType) => string;
+    handler?: (appointment: Appointment) => Promise<void> | void;
+    url?: (appointment: Appointment) => string;
   };
   content?: React.ComponentType<{
-    appointment: AppointmentType;
+    appointment: Appointment;
     onClose: () => void;
   }>;
 };

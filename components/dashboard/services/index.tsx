@@ -86,7 +86,7 @@ export default function Services() {
         uid: 'name',
         sortable: true,
         renderCell: (service) => (
-          <div className="truncate font-medium text-default-foreground">{service.name}</div>
+          <div className="text-default-foreground truncate font-medium">{service.name}</div>
         ),
       },
       {
@@ -94,7 +94,7 @@ export default function Services() {
         uid: 'description',
         sortable: true,
         renderCell: (service) => (
-          <div className="truncate lowercase text-default-foreground">{service.description}</div>
+          <div className="text-default-foreground truncate lowercase">{service.description}</div>
         ),
       },
       {
@@ -102,7 +102,7 @@ export default function Services() {
         uid: 'duration',
         sortable: true,
         renderCell: (service) => (
-          <div className="truncate lowercase text-default-foreground">
+          <div className="text-default-foreground truncate lowercase">
             {service.duration} {service.duration === 1 ? 'hr' : 'hrs'}
           </div>
         ),
@@ -112,7 +112,7 @@ export default function Services() {
         uid: 'price',
         sortable: true,
         renderCell: (service) => (
-          <div className="truncate lowercase text-default-foreground">
+          <div className="text-default-foreground truncate lowercase">
             {CLINIC_INFO.preferences.currency.symbol} {service.price.toLocaleString('en-IN')}
           </div>
         ),

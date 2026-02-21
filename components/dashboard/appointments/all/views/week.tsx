@@ -24,11 +24,11 @@ import DateChip from '../ui/date-chip';
 import { TIMINGS } from '@/libs/config';
 import { cn } from '@heroui/react';
 import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
-import { AppointmentType } from '@/services/client/appointment';
+import { Appointment } from '@/shared';
 import { UserRole } from '@/shared';
 
 interface WeekViewProps {
-  appointments: AppointmentType[];
+  appointments: Appointment[];
   currentDate: Date;
   onTimeSlotClick: (date: Date) => void;
 }

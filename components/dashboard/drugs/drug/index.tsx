@@ -7,12 +7,12 @@ import { format } from 'date-fns';
 
 import CellValue from '@/components/ui/cell-value';
 import { useDrugWithDid } from '@/services/client/drug/drug.query';
-import { DrugType } from '@/services/client/drug/drug.types';
+import { Drug } from '@/shared';
 
-export default function DrugCard({ did }: { did: number }) {
-  const { data } = useDrugWithDid(did);
+export default function DrugCard({ unique_id }: { unique_id: string }) {
+  const { data } = useDrugWithDid(unique_id);
 
-  const drug: DrugType = data as DrugType;
+  const drug: Drug = data as Drug;
 
   if (!drug) {
     return <div>Drug not found</div>;
@@ -25,7 +25,7 @@ export default function DrugCard({ did }: { did: number }) {
           <p className="text-large">Drug Details</p>
           <p className="text-default-500 text-small">View and manage drug details</p>
         </div>
-        <Button color="primary" as={Link} href={`/dashboard/drugs/${drug.did}/edit`}>
+        <Button color="primary" as={Link} href={`/dashboard/drugs/${drug.unique_id}/edit`}>
           Edit
         </Button>
       </CardHeader>
