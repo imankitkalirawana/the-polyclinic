@@ -1,4 +1,4 @@
-import { UserRole } from '@/shared';
+import { UserRole } from '@repo/store';
 import { VerticalCollapsibleStepProps } from './vertical-steps';
 
 export const CREATE_APPOINTMENT_STEPS = [

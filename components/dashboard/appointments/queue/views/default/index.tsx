@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/static-data-table/cell-renderers';
 import type { ColumnDef, FilterDef } from '@/components/ui/static-data-table/types';
 import { useSession } from '@/libs/providers/session-provider';
-import { AppointmentQueue } from '@/shared';
+import { AppointmentQueue } from '@repo/store';
 import { useRouter } from 'nextjs-toploader/app';
 import { useAllAppointmentQueues } from '@/services/client/appointment/queue/queue.query';
 import RenderChip from '@/components/ui/new-data-table/cell-renderer/render-chip';

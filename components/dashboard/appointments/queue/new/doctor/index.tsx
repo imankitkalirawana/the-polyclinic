@@ -1,6 +1,7 @@
 import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import { useDebounce } from '@/hooks/useDebounce';
-import { DoctorType, useAllDoctors } from '@/services/client/doctor';
+import { Doctor } from '@repo/store';
+import { useAllDoctors } from '@/services/client/doctor';
 import { useCacheStore } from '@/store';
 import { addToast, Button, Card, Chip, cn, Tooltip } from '@heroui/react';
 import { useMemo, useState } from 'react';
@@ -10,6 +11,7 @@ import {
   CreateAppointmentContentHeader,
 } from '../../../(common)';
 import { BookQueueSteps } from '@/components/dashboard/appointments/create/data';
+import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
 import DoctorCategories from './doctor-categories';
 
 export default function DoctorSelection() {
@@ -19,7 +21,7 @@ export default function DoctorSelection() {
   const debouncedSearch = useDebounce(search, 500);
 
   const { data: doctorsData } = useAllDoctors(debouncedSearch);
-  const form = useFormContext();
+  const form = useFormContext<CreateAppointmentQueueFormValues>();
   const setIndexedCache = useCacheStore((state) => state.setIndexedCache);
 
   const doctorId = form.watch('appointment.doctorId');
@@ -119,7 +121,7 @@ const DoctorCard = ({
   isSelected,
   onSelect,
 }: {
-  doctor: DoctorType;
+  doctor: Doctor;
   isSelected: boolean;
   onSelect: (id: string) => void;
 }) => {

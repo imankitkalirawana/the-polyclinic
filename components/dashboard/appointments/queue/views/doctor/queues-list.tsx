@@ -1,6 +1,6 @@
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { cn } from '@heroui/react';
-import { AppointmentQueue, QueueStatus } from '@/shared';
+import { AppointmentQueue, QueueStatus } from '@repo/store';
 import {
   Accordion,
   AccordionItem,
@@ -16,7 +16,7 @@ import Avatar from 'boring-avatars';
 import { formatDate } from 'date-fns';
 import { useState } from 'react';
 import { getQueueStatusColor } from './helper';
-import { formatGender } from '@/libs/utils';
+import { formatGender } from '@repo/store';
 
 export default function QueuesList({
   isLoading,
@@ -52,7 +52,7 @@ export default function QueuesList({
                 <Card
                   key={queue.id}
                   className={cn(
-                    'group rounded-small border-divider border-l-default bg-default-50 border border-l-5 shadow-none transition-all',
+                    'rounded-small border-divider border-l-default bg-default-50 group border border-l-5 shadow-none transition-all',
                     {
                       'rounded-b-none border-b-0': selectedKeys.has(queue.id),
                     },

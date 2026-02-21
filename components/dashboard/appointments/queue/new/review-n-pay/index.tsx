@@ -6,13 +6,14 @@ import {
 } from '../../../(common)';
 import { useFormContext } from 'react-hook-form';
 import { CellRenderer } from '@/components/ui/cell/rich-color/cell-renderer';
-import { Doctor } from '@/services/client/doctor/doctor.api';
+import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
+import { DoctorApi } from '@/services/client/doctor/doctor.api';
 import { PatientApi } from '@/services/client/patient/patient.api';
 import PaymentFooter from './payment-footer';
 import { useIndexedCacheValueOrFetch } from '@/store';
 
 export default function ReviewAndPay() {
-  const form = useFormContext();
+  const form = useFormContext<CreateAppointmentQueueFormValues>();
   const appointment = form.watch('appointment');
 
   const patient = useIndexedCacheValueOrFetch('patientById', appointment.patientId, {
@@ -21,7 +22,7 @@ export default function ReviewAndPay() {
   });
   const doctor = useIndexedCacheValueOrFetch('doctorById', appointment.doctorId, {
     queryKey: ['doctor', appointment.doctorId],
-    queryFn: () => Doctor.getById(appointment.doctorId),
+    queryFn: () => DoctorApi.getById(appointment.doctorId),
   });
 
   return (

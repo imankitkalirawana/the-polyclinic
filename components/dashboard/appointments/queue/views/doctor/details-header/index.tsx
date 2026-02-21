@@ -3,12 +3,12 @@ import { getQueueStatusColor } from '../helper';
 import { CellRenderer } from '@/components/ui/cell/rich-color/cell-renderer';
 import { Accordion, AccordionItem, Chip } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { AppointmentQueue } from '@/shared';
+import { AppointmentQueue } from '@repo/store';
 import { useEffect, useState } from 'react';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import DataItem from '@/components/ui/data-item';
 import { formatDate } from 'date-fns';
-import { formatGender } from '@/libs/utils';
+import { formatGender } from '@repo/store';
 
 export default function DetailsHeader({ currentQueue }: { currentQueue: AppointmentQueue }) {
   const [selectedKeys, setSelectedKeys] = useState(new Set(['']));

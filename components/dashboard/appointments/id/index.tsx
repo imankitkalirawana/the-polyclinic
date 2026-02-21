@@ -136,7 +136,7 @@ export default function Appointment({ aid }: { aid: string }) {
               <div className="flex items-start gap-4 pb-4">
                 <div className="shrink-0">
                   <Avatar
-                    src={appointment.patient.image || ''}
+                    src={appointment.patient.image}
                     name={appointment.patient.name}
                     size="lg"
                   />

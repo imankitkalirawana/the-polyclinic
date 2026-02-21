@@ -2,7 +2,7 @@
 
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { useQueueForDoctor } from '@/services/client/appointment/queue/queue.query';
-import { QueueStatus } from '@/shared';
+import { QueueStatus } from '@repo/store';
 import { Button, Chip, ScrollShadow, Tab, Tabs, Tooltip } from '@heroui/react';
 import PrescriptionPanel, {
   prescriptionFormSchema,

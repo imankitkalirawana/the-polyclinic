@@ -1,6 +1,6 @@
-import { DoctorType } from '@/services/client/doctor';
+import { Doctor } from '@repo/store';
 
-export const getFilterChips = (doctors: DoctorType[]) => {
+export const getFilterChips = (doctors: Doctor[]) => {
   return doctors.map((doctor) => {
     return {
       label: doctor.name,

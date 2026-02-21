@@ -1,4 +1,4 @@
-import { QueueStatus } from '@/shared';
+import { QueueStatus } from '@repo/store';
 
 export const getQueueStatusColor = (status: QueueStatus) => {
   return {

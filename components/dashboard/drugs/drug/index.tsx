@@ -31,19 +31,11 @@ export default function DrugCard({ unique_id }: { unique_id: string }) {
       </CardHeader>
       <CardBody className="space-y-2 px-0">
         <ScrollShadow className="divide-y pr-4">
-          <CellValue label="Brand Name" value={drug.brandName || '-'} />
-          <CellValue label="Generic Name" value={drug.genericName || '-'} />
+          <CellValue label="Brand Name" value={drug.name || '-'} />
+          <CellValue label="Generic Name" value={drug.generic_name || '-'} />
           <CellValue label="Manufacturer" value={drug.manufacturer || '-'} />
           <CellValue label="Description" value={drug.description || '-'} />
-          <CellValue label="Dosage" value={drug.dosage || '-'} />
-          <CellValue label="Form" value={drug.form || '-'} />
-          <CellValue label="Strength" value={drug.strength || '-'} />
-          <CellValue label="Quantity" value={drug.quantity || '-'} />
-          <CellValue label="Price" value={drug.price || '-'} />
-          <CellValue
-            label="Frequency"
-            value={<span className="capitalize">{drug.frequency}</span>}
-          />
+          <CellValue label="Manufacturer" value={drug.manufacturer || '-'} />
           <CellValue
             label="Created By"
             value={`${drug.createdBy || 'Admin'} on ${format(new Date(drug.createdAt), 'PPPp')}`}

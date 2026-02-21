@@ -2,9 +2,6 @@ import React from 'react';
 
 import { APPOINTMENT_STATUSES, ButtonConfig } from '@/services/client/appointment';
 import { useAppointmentActions } from './hooks/useAppointmentActions';
-import RescheduleAppointment from '@/services/client/appointment/components/reschedule-modal';
-import CancelModal from './components/cancel-modal';
-import ChangeDoctorModal from './components/change-doctor-modal';
 import { UserRole } from '@/shared';
 import { Appointment } from '@/shared';
 
@@ -34,7 +31,6 @@ export const createAppointmentButtonConfigs = (actions: {
       type: 'store-action',
       payload: 'cancel',
     },
-    content: () => <CancelModal />,
   },
   {
     key: 'decline',
@@ -52,7 +48,6 @@ export const createAppointmentButtonConfigs = (actions: {
       type: 'store-action',
       payload: 'decline',
     },
-    content: () => <CancelModal />,
   },
   {
     key: 'reminder',
@@ -94,7 +89,7 @@ export const createAppointmentButtonConfigs = (actions: {
       type: 'store-action',
       payload: 'change-doctor',
     },
-    content: () => <ChangeDoctorModal type="change-doctor" />,
+    // content: () => <ChangeDoctorModal type="change-doctor" />,
   },
   {
     key: 'assign-doctor',
@@ -112,7 +107,7 @@ export const createAppointmentButtonConfigs = (actions: {
       type: 'store-action',
       payload: 'assign-doctor',
     },
-    content: () => <ChangeDoctorModal type="assign-doctor" />,
+    // content: () => <ChangeDoctorModal type="assign-doctor" />,
   },
   {
     key: 'reschedule',
@@ -142,7 +137,7 @@ export const createAppointmentButtonConfigs = (actions: {
       type: 'store-action',
       payload: 'reschedule',
     },
-    content: () => <RescheduleAppointment />,
+    // content: () => <RescheduleAppointment />,
   },
   {
     key: 'accept',

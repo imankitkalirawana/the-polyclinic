@@ -1,10 +1,12 @@
 import { AppointmentQueueApi } from '@/services/client/appointment/queue/queue.api';
+import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
 import { RazorpayOptions, RazorpayPaymentResponse } from '@/types';
 import { loadRazorpay } from '@/utils/loadRazorpay';
 import { addToast, Alert, Button } from '@heroui/react';
 import { useState, useRef, useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import { PaymentMode } from '@repo/store';
 
 type PaymentStatus = 'idle' | 'loading' | 'success' | 'failed' | 'cancelled';
 
@@ -12,7 +14,7 @@ export default function PaymentFooter() {
   const [status, setStatus] = useState<PaymentStatus>('idle');
   const [error, setError] = useState<string | null>(null);
   const isProcessingRef = useRef(false);
-  const form = useFormContext();
+  const form = useFormContext<CreateAppointmentQueueFormValues>();
 
   const appointment = form.watch('appointment');
 
@@ -33,7 +35,7 @@ export default function PaymentFooter() {
     try {
       const createAppointmentResponse = await AppointmentQueueApi.create({
         ...appointment,
-        paymentMode: 'CASH',
+        paymentMode: PaymentMode.CASH,
       });
 
       if (!createAppointmentResponse.success || !createAppointmentResponse.data) {
@@ -68,7 +70,7 @@ export default function PaymentFooter() {
 
     try {
       await loadRazorpay();
-    } catch (err) {
+    } catch {
       setStatus('failed');
       setError('Failed to load payment gateway. Please try again.');
       isProcessingRef.current = false;
@@ -78,7 +80,7 @@ export default function PaymentFooter() {
     try {
       const createAppointmentResponse = await AppointmentQueueApi.create({
         ...appointment,
-        paymentMode: 'RAZORPAY',
+        paymentMode: PaymentMode.RAZORPAY,
       });
 
       if (!createAppointmentResponse.success || !createAppointmentResponse.data) {

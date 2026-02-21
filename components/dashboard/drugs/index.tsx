@@ -3,8 +3,6 @@
 import { useMemo } from 'react';
 import { Button, DropdownItem, DropdownMenu, Selection } from '@heroui/react';
 import Link from 'next/link';
-import { DrugQuickLook } from './quicklook';
-import { useDrugStore } from './store';
 
 import { Table } from '@/components/ui/static-data-table';
 import {
@@ -23,7 +21,6 @@ export default function Drugs() {
   const { data, isLoading } = useAllDrugs();
 
   const drugs: Drug[] = data || [];
-  const { selected, setSelected } = useDrugStore();
 
   const dropdownMenuItems = (drug: Drug): DropdownItemWithSection[] => {
     return [
@@ -201,15 +198,8 @@ export default function Drugs() {
           column: 'createdAt',
           direction: 'descending',
         }}
-        onRowAction={(row) => {
-          const drug = drugs.find((drug) => drug.unique_id == row);
-          if (drug) {
-            setSelected(drug);
-          }
-        }}
+        // onRowAction={() => {}}
       />
-      {/* Quick Look or Sidebar can be added here */}
-      {selected && <DrugQuickLook />}
     </>
   );
 }
