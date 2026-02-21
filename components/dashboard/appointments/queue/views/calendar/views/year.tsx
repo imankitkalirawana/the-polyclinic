@@ -20,7 +20,6 @@ import { weekdays } from '../data';
 import AppointmentList from '../ui/appointment-list';
 
 import { cn } from '@heroui/react';
-import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
 import { AppointmentQueue } from '@/shared';
 
 interface YearViewProps {
@@ -53,15 +52,10 @@ const DayCell = memo(
     hasAppointments: boolean;
     dayAppointments: AppointmentQueue[];
   }) => {
-    const { setIsTooltipOpen } = useAppointmentStore();
     const isDayToday = isToday(day);
 
     return (
-      <Tooltip
-        content={<AppointmentList appointments={dayAppointments} date={day} />}
-        onOpenChange={setIsTooltipOpen}
-        delay={1000}
-      >
+      <Tooltip content={<AppointmentList appointments={dayAppointments} date={day} />} delay={1000}>
         <div
           key={day.toISOString()}
           className={cn(

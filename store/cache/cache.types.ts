@@ -1,7 +1,6 @@
 import { Department } from '@/shared';
 import { ServiceType } from '@/services/client/service/service.types';
-import { Appointment, Doctor, DoctorSpecialization, Drug } from '@/shared';
-import { AppointmentType } from '@/services/client/appointment/appointment.types';
+import { Doctor, DoctorSpecialization, Drug } from '@/shared';
 import { AppointmentQueue, Patient, User } from '@/shared';
 
 /**
@@ -20,7 +19,6 @@ export interface CacheRegistry {
   departments: Department[];
   services: ServiceType[];
   drugs: Drug[];
-  appointments: Appointment[];
   appointmentQueues: AppointmentQueue[];
   users: User[];
   specializations: DoctorSpecialization[];
@@ -30,7 +28,6 @@ export interface CacheRegistry {
   selectedDepartment: Department | null;
   selectedService: ServiceType | null;
   selectedDrug: Drug | null;
-  selectedAppointment: AppointmentType | null;
   selectedAppointmentQueue: AppointmentQueue | null;
   selectedUser: User | null;
 
@@ -40,7 +37,6 @@ export interface CacheRegistry {
   departmentById: Record<string, Department>;
   serviceById: Record<string, ServiceType>;
   drugById: Record<string, Drug>;
-  appointmentById: Record<string, AppointmentType>;
   appointmentQueueById: Record<string, AppointmentQueue>;
   userById: Record<string, User>;
 }
@@ -108,7 +104,6 @@ export function isCacheKey(key: string): key is CacheKey {
     'departments',
     'services',
     'drugs',
-    'appointments',
     'appointmentQueues',
     'users',
     'selectedPatient',
@@ -116,7 +111,6 @@ export function isCacheKey(key: string): key is CacheKey {
     'selectedDepartment',
     'selectedService',
     'selectedDrug',
-    'selectedAppointment',
     'selectedAppointmentQueue',
     'selectedUser',
     'patientById',
@@ -124,7 +118,6 @@ export function isCacheKey(key: string): key is CacheKey {
     'departmentById',
     'serviceById',
     'drugById',
-    'appointmentById',
     'appointmentQueueById',
     'userById',
   ];
@@ -140,7 +133,6 @@ export const cacheDefaults: CacheRegistry = {
   departments: [],
   services: [],
   drugs: [],
-  appointments: [],
   appointmentQueues: [],
   users: [],
   specializations: [],
@@ -149,7 +141,6 @@ export const cacheDefaults: CacheRegistry = {
   selectedDepartment: null,
   selectedService: null,
   selectedDrug: null,
-  selectedAppointment: null,
   selectedAppointmentQueue: null,
   selectedUser: null,
   patientById: {},
@@ -157,7 +148,6 @@ export const cacheDefaults: CacheRegistry = {
   departmentById: {},
   serviceById: {},
   drugById: {},
-  appointmentById: {},
   appointmentQueueById: {},
   userById: {},
 };

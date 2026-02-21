@@ -39,7 +39,7 @@ export type AppointmentQueue = {
   status: QueueStatus;
   patient: Pick<
     Patient,
-    'id' | 'name' | 'email' | 'phone' | 'image' | 'user_id' | 'age' | 'gender'
+    'id' | 'name' | 'email' | 'phone' | 'image' | 'user_id' | 'age' | 'gender' | 'vitals'
   >;
   doctor: Pick<
     Doctor,

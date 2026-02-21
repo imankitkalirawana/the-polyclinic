@@ -23,7 +23,6 @@ import DateChip from '../ui/date-chip';
 
 import { TIMINGS } from '@/libs/config';
 import { cn } from '@heroui/react';
-import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
 import { AppointmentQueue, UserRole } from '@/shared';
 
 interface WeekViewProps {
@@ -50,7 +49,6 @@ export function WeekView({ appointments, currentDate, onTimeSlotClick }: WeekVie
     user?.role || UserRole.PATIENT
   );
 
-  const { aid, setIsTooltipOpen } = useAppointmentStore();
   const displayHours = Array.from(
     { length: TIMINGS.appointment.end - TIMINGS.appointment.start },
     (_, i) => i + TIMINGS.appointment.start
@@ -70,6 +68,9 @@ export function WeekView({ appointments, currentDate, onTimeSlotClick }: WeekVie
       });
     }
   }, []);
+
+  // TODO: Add aid
+  const aid = null;
 
   return (
     <div className="flex h-full flex-col">
@@ -173,7 +174,7 @@ export function WeekView({ appointments, currentDate, onTimeSlotClick }: WeekVie
                     {dayAppointments.length > MAX_APPOINTMENTS_IN_CELL && (
                       <Tooltip
                         content={<AppointmentList appointments={dayAppointments} date={day} />}
-                        onOpenChange={setIsTooltipOpen}
+                        // onOpenChange={setIsTooltipOpen}
                       >
                         <button className="text-tiny hover:bg-default-100 truncate rounded-lg p-1 px-2 text-start">
                           {dayAppointments.length - MAX_APPOINTMENTS_IN_CELL} more

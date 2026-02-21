@@ -1,7 +1,6 @@
 import React from 'react';
 import { cn } from '@heroui/react';
 
-import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
 import { AppointmentQueue } from '@/shared';
 import RenderChip from '@/components/ui/new-data-table/cell-renderer/render-chip';
 
@@ -12,8 +11,6 @@ export default function AppointmentTriggerItem({
   appointment: AppointmentQueue;
   openInNewTab?: boolean;
 }) {
-  const { setAid } = useAppointmentStore();
-
   return (
     <button
       title={`${appointment.patient.name} - ${appointment.doctor?.name}`}
@@ -27,7 +24,7 @@ export default function AppointmentTriggerItem({
         if (openInNewTab) {
           window.open(`/appointments/${appointment.aid}`, '_blank');
         } else {
-          setAid(appointment.aid);
+          // setAid(appointment.aid);
         }
       }}
     >

@@ -13,13 +13,12 @@ import DateChip from '../ui/date-chip';
 
 import { TIMINGS } from '@/libs/config'; // Assuming this provides start/end hours
 import { cn } from '@heroui/react';
-import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
-import { Appointment, UserRole } from '@/shared';
+import { AppointmentQueue, UserRole } from '@/shared';
 
 interface DayViewProps {
   isCompact?: boolean;
   openInNewTab?: boolean;
-  appointments: Appointment[];
+  appointments: AppointmentQueue[];
   currentDate: Date;
   onTimeSlotClick: (date: Date) => void;
 }
@@ -33,7 +32,6 @@ export function DayView({
 }: DayViewProps) {
   const { user } = useSession();
   const ref = useRef<HTMLDivElement>(null);
-  const { aid, setIsTooltipOpen } = useAppointmentStore();
 
   const isAllowedToCreateAppointment = allowedRolesToCreateAppointment.includes(
     user?.role || UserRole.PATIENT
@@ -45,12 +43,12 @@ export function DayView({
   );
 
   const dayAppointments = appointments.filter((apt) =>
-    isSameDay(new Date(apt.date ?? ''), currentDate)
+    isSameDay(new Date(apt.appointmentDate ?? ''), currentDate)
   );
 
   const getAppointmentsForHour = (hour: number) =>
     dayAppointments.filter((apt) => {
-      const aptDate = new Date(apt.date ?? '');
+      const aptDate = new Date(apt.appointmentDate ?? '');
       return aptDate.getHours() === hour;
     });
 
@@ -62,6 +60,9 @@ export function DayView({
       });
     }
   }, []);
+
+  // TODO: Add aid
+  const aid = null;
 
   return (
     <div className="flex h-full flex-col">
@@ -181,7 +182,7 @@ export function DayView({
                           openInNewTab={openInNewTab}
                         />
                       }
-                      onOpenChange={setIsTooltipOpen}
+                      // onOpenChange={setIsTooltipOpen}
                     >
                       <button className="text-tiny hover:bg-default-100 truncate rounded-lg p-1 px-2 text-start">
                         {dayAppointments.length - MAX_APPOINTMENTS_IN_CELL} more

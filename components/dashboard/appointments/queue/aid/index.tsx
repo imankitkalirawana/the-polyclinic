@@ -8,6 +8,7 @@ import { renderChip } from '@/components/ui/static-data-table/cell-renderers';
 import DashboardFooter from '@/components/ui/dashboard/footer';
 import EditModal from './ui/edit-modal';
 import InfoCard from './ui/info-card';
+import { QueueStatus } from '@/shared';
 
 export default function AppointmentQueue({ aid }: { aid: string }) {
   const { data: appointment } = useAppointmentQueueWithAID(aid);
@@ -93,7 +94,7 @@ export default function AppointmentQueue({ aid }: { aid: string }) {
                   </div>
                   <div className="flex justify-between">
                     <span className="font-medium">Status:</span>
-                    <div>{renderChip({ item: appointment?.status || 'completed' })}</div>
+                    <div>{renderChip({ item: appointment?.status || QueueStatus.COMPLETED })}</div>
                   </div>
                   <div className="flex justify-between">
                     <span className="font-medium">Payment Mode:</span>

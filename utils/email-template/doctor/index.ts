@@ -1,9 +1,9 @@
 import { format } from 'date-fns';
 
 import { API_BASE_URL } from '@/libs/config';
-import { AppointmentType } from '@/services/client/appointment';
+import { AppointmentQueue } from '@/shared';
 
-export function NewAppointment(appointment: AppointmentType) {
+export function NewAppointment(appointment: AppointmentQueue) {
   return `<body style="margin: 0; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; background-color: #ffffff; color: #1a1a1a; line-height: 1.5;">
     <div style="max-width: 800px; margin: 0 auto; text-align: center;">
         <h1 style="color: #73CD7D; font-size: 32px; margin-bottom: 40px; font-weight: 700;">New Patient Appointment</h1>
@@ -33,28 +33,17 @@ export function NewAppointment(appointment: AppointmentType) {
             <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
                 <div style="flex: 1; min-width: 200px;">
                     <p style="font-size: 16px; color: #6b7280; margin: 0 0 4px;">Date</p>
-                    <p style="font-size: 18px; color: #73CD7D; font-weight: 500; margin: 0;">${format(appointment?.date, 'PP')}</p>
+                    <p style="font-size: 18px; color: #73CD7D; font-weight: 500; margin: 0;">${format(appointment?.appointmentDate, 'PP')}</p>
                 </div>
                 <div style="flex: 1; min-width: 200px;">
                     <p style="font-size: 16px; color: #6b7280; margin: 0 0 4px;">Time</p>
-                    <p style="font-size: 18px; color: #73CD7D; font-weight: 500; margin: 0;">${format(appointment?.date, 'p')}</p>
+                    <p style="font-size: 18px; color: #73CD7D; font-weight: 500; margin: 0;">${format(appointment?.appointmentDate, 'p')}</p>
                 </div>
                 <div style="flex: 1; min-width: 200px;">
                     <p style="font-size: 16px; color: #6b7280; margin: 0 0 4px;">Duration</p>
                     <p style="font-size: 18px; color: #1d1b48; font-weight: 500; margin: 0;">15 minutes</p>
                 </div>
             </div>
-            ${
-              appointment.additionalInfo.notes &&
-              `
-            <div style="background-color: #f3f4f6; border-radius: 8px; padding: 16px;">
-                <p style="font-size: 16px; color: #6b7280; margin: 0 0 8px;">Appointment Notes</p>
-                <p style="font-size: 16px; color: #1d1b48; margin: 0; line-height: 1.6;">
-                    ${appointment.additionalInfo.notes}
-                </p>
-            </div>
-            `
-            }
         </div>
         
         <div style="display: flex; justify-content: center; gap: 16px;">

@@ -23,7 +23,6 @@ import DateChip from '../ui/date-chip';
 
 import { TIMINGS } from '@/libs/config';
 import { cn } from '@heroui/react';
-import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
 import { AppointmentQueue, UserRole } from '@/shared';
 
 interface MonthViewProps {
@@ -37,8 +36,6 @@ export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
     'date',
     parseAsIsoDateTime.withDefault(new Date())
   );
-
-  const { aid, setIsTooltipOpen } = useAppointmentStore();
 
   const [_viewType, setViewType] = useQueryState('type', parseAsStringEnum(viewTypes));
   const monthStart = startOfMonth(currentDate);
@@ -56,6 +53,9 @@ export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
   const isAllowedToCreateAppointment = allowedRolesToCreateAppointment.includes(
     user?.role || UserRole.PATIENT
   );
+
+  // TODO: Add aid
+  const aid = null;
 
   return (
     <div className="flex h-full flex-col">
@@ -144,7 +144,6 @@ export function MonthView({ appointments, onTimeSlotClick }: MonthViewProps) {
                   <Tooltip
                     delay={200}
                     content={<AppointmentList appointments={dayAppointments} date={day} />}
-                    onOpenChange={setIsTooltipOpen}
                   >
                     <button className="text-tiny hover:bg-default-100 truncate rounded-lg p-1 px-2 text-start">
                       {dayAppointments.length - maxAppointmentsToShow} more

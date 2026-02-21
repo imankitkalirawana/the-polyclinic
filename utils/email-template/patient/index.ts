@@ -1,9 +1,9 @@
 import { format } from 'date-fns';
 
 import { API_BASE_URL, CLINIC_INFO } from '@/libs/config';
-import { AppointmentType } from '@/services/client/appointment';
+import { AppointmentQueue } from '@/shared';
 
-export function AppointmentStatus(appointment: AppointmentType) {
+export function AppointmentStatus(appointment: AppointmentQueue) {
   const statusDescriptionMap: Record<string, string> = {
     booked:
       "We've received your appointment request. Your appointment is currently booked and awaiting confirmation. Stay tuned for updates!",
@@ -58,7 +58,7 @@ export function AppointmentStatus(appointment: AppointmentType) {
               
               <p style="font-size: 18px; color: #333; margin-bottom: 16px; line-height: 1.6;">
                   <strong style="color: #1d1b48; display: inline-block; width: 180px;">Appointment Date:</strong> 
-                  ${format(appointment.date, 'PPp')}
+                  ${format(appointment.appointmentDate, 'PPp')}
               </p>
               
               <p style="font-size: 18px; color: #333; margin-bottom: 16px; line-height: 1.6;">
@@ -82,7 +82,7 @@ export function AppointmentStatus(appointment: AppointmentType) {
   </body>`;
 }
 
-export function RescheduledAppointment(appointment: AppointmentType, previousDate: Date | string) {
+export function RescheduledAppointment(appointment: AppointmentQueue, previousDate: Date | string) {
   return `<body style="margin: 0; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; background-color: #ffffff; color: #1a1a1a; line-height: 1.5;">
     <div style="max-width: 800px; margin: 0 auto; text-align: center;">
         <h1 style="color: #73CD7D; font-size: 32px; margin-bottom: 40px; font-weight: 700;">Your Appointment Has Been Rescheduled</h1>
@@ -111,8 +111,8 @@ export function RescheduledAppointment(appointment: AppointmentType, previousDat
                 <div style="font-size: 24px; color: #73CD7D;">→</div>
                 <div style="text-align: center;">
                     <p style="font-size: 16px; color: #6b7280; margin: 0;">New Date</p>
-                    <p style="font-size: 18px; color: #73CD7D; margin: 8px 0 0; font-weight: 500;">${format(appointment.date, 'PP')}</p>
-                    <p style="font-size: 16px; color: #73CD7D; margin: 4px 0 0;">${format(new Date(appointment.date), 'p')}</p>
+                    <p style="font-size: 18px; color: #73CD7D; margin: 8px 0 0; font-weight: 500;">${format(appointment.appointmentDate, 'PP')}</p>
+                    <p style="font-size: 16px; color: #73CD7D; margin: 4px 0 0;">${format(new Date(appointment.appointmentDate), 'p')}</p>
                 </div>
             </div>
             

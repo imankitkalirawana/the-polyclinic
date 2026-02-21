@@ -3,9 +3,6 @@
 import { Button, Card, Chip, Image, Link, ScrollShadow } from '@heroui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import AppointmentSlots from './appointment-slots';
-import Appointments from './appointments';
-
 import { CellRenderer } from '@/components/ui/cell/rich-color/cell-renderer';
 import { castData } from '@/libs/utils';
 import { useDoctorById } from '@/services/client/doctor/doctor.query';
@@ -208,8 +205,6 @@ export default function DashboardDoctor({ id }: { id: string }) {
             <p className="text-default-500 text-tiny">Based on 120 reviews from patients.</p>
           </div>
         </Card>
-        <Appointments />
-        <AppointmentSlots id={id} />
       </div>
     </div>
   );

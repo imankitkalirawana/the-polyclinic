@@ -6,7 +6,6 @@ export * from './drug.types';
 export * from './service.types';
 export * from './department.types';
 export * from './organization.types';
-export * from './appointment.types';
 export * from './queue.types';
 export * from './auth.types';
 export * from './column.types';

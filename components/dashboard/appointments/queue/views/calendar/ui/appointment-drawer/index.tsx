@@ -27,10 +27,7 @@ import {
 import { formatDate } from 'date-fns';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
-import AsyncButton from '@/components/ui/buttons/async-button';
-import useAppointmentButtonsInDrawer from '@/services/client/appointment/hooks/useAppointmentButton';
 import { useIsMobile } from '@/hooks/useMobile';
-import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
 import { AppointmentQueue, PaymentMode, QueueStatus, UserRole } from '@/shared';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { useClipboard } from '@/hooks/useClipboard';
@@ -292,12 +289,7 @@ AppointmentHeader.displayName = 'AppointmentHeader';
 
 // Shared footer component
 const AppointmentFooter = memo(({ appointment }: { appointment: AppointmentQueue }) => {
-  const { action } = useAppointmentStore();
   const { user } = useSession();
-  const buttons = useAppointmentButtonsInDrawer({
-    selected: appointment,
-    role: user?.role as UserRole,
-  });
 
   return appointment.status === QueueStatus.CANCELLED && user?.role === UserRole.PATIENT ? (
     <Alert
@@ -311,36 +303,7 @@ const AppointmentFooter = memo(({ appointment }: { appointment: AppointmentQueue
     />
   ) : (
     <div className="flex w-full flex-row items-center justify-center gap-2">
-      {buttons.map((button) => {
-        const isButtonIconOnly = button.isIconOnly || buttons.length > 3;
-
-        return (
-          <Tooltip
-            key={button.key}
-            delay={500}
-            content={button.children}
-            isDisabled={!isButtonIconOnly}
-            color={button.color}
-          >
-            <AsyncButton
-              color={button.color}
-              variant={button.variant}
-              isIconOnly={isButtonIconOnly}
-              fullWidth
-              whileSubmitting={button.whileLoading}
-              onPress={async () => {
-                if (button.onPress) {
-                  await button.onPress();
-                }
-              }}
-              startContent={button.startContent}
-            >
-              {isButtonIconOnly ? null : button.children}
-            </AsyncButton>
-          </Tooltip>
-        );
-      })}
-      {buttons.find((btn) => btn.key === action)?.content}
+      {/* TODO: Add buttons here */}
     </div>
   );
 });
@@ -449,12 +412,11 @@ const AppointmentDrawerMobile = memo(({ aid, setAid, isTooltipOpen }: Appointmen
 AppointmentDrawerMobile.displayName = 'AppointmentDrawerMobile';
 
 export default function AppointmentDrawer() {
-  const { aid, setAid, isTooltipOpen } = useAppointmentStore();
   const isMobile = useIsMobile();
 
   return isMobile ? (
-    <AppointmentDrawerMobile aid={aid} setAid={setAid} isTooltipOpen={isTooltipOpen} />
+    <AppointmentDrawerMobile aid={null} setAid={() => null} isTooltipOpen={false} />
   ) : (
-    <AppointmentDrawerDesktop aid={aid} setAid={setAid} isTooltipOpen={isTooltipOpen} />
+    <AppointmentDrawerDesktop aid={null} setAid={() => null} isTooltipOpen={false} />
   );
 }

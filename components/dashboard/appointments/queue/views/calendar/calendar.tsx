@@ -3,7 +3,6 @@
 import React from 'react';
 import { parseAsIsoDateTime, parseAsStringEnum, useQueryState } from 'nuqs';
 
-import AppointmentDrawer from './ui/appointment-drawer';
 import { DayView } from './views/day';
 import { MonthView } from './views/month';
 import { ScheduleView } from './views/schedule';
@@ -13,7 +12,6 @@ import { CalendarHeader } from './header';
 import { viewTypes } from './types';
 
 import { AppointmentQueue } from '@/shared';
-import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
 
 interface CalendarProps {
   appointments: AppointmentQueue[];
@@ -21,7 +19,6 @@ interface CalendarProps {
 
 export function Calendar({ appointments }: CalendarProps) {
   const [viewType] = useQueryState('type', parseAsStringEnum(viewTypes).withDefault('schedule'));
-  const { aid } = useAppointmentStore();
   const [currentDate, setCurrentDate] = useQueryState(
     'date',
     parseAsIsoDateTime.withDefault(new Date())
@@ -90,7 +87,6 @@ export function Calendar({ appointments }: CalendarProps) {
         />
         <div className="h-[calc(100vh-120px)] flex-1">{renderView()}</div>
       </div>
-      {aid && <AppointmentDrawer />}
     </>
   );
 }

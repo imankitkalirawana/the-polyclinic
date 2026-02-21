@@ -26,7 +26,6 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { BookQueueSteps } from '@/components/dashboard/appointments/create/data';
-import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
 import EditPatientModal from './edit-patient';
 import { formatAge, formatGender } from '@/shared';
 import { Patient } from '@/shared';
@@ -39,7 +38,7 @@ export default function PatientSelection() {
   const debouncedSearch = useDebounce(search, 500);
 
   const { data: patients, isLoading, isRefetching } = useAllPatients(debouncedSearch);
-  const form = useFormContext<CreateAppointmentQueueFormValues>();
+  const form = useFormContext();
   const setIndexedCache = useCacheStore((state) => state.setIndexedCache);
 
   const patientId = form.watch('appointment.patientId');

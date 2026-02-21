@@ -35,13 +35,6 @@ export default function AppointmentQueue({ aid }: { aid: string }) {
                       {appointment?.patient.vitals?.bloodType || '-'}
                     </span>
                   </div>
-
-                  <div className="flex justify-between">
-                    <span className="font-medium">Diseases:</span>
-                    <span className="text-foreground-500">
-                      {appointment?.patient.vitals?.diseases || '-'}
-                    </span>
-                  </div>
                 </CardBody>
               </Tab>
               <Tab key="vitals" title="Vitals">
@@ -69,12 +62,6 @@ export default function AppointmentQueue({ aid }: { aid: string }) {
                     <span className="font-medium">Heart Rate:</span>
                     <span className="text-foreground-500">
                       {appointment?.patient.vitals?.heartRate || '-'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="font-medium">Allergy:</span>
-                    <span className="text-foreground-500">
-                      {appointment?.patient.vitals?.allergies || '-'}
                     </span>
                   </div>
                 </CardBody>
