@@ -1,0 +1,43 @@
+export enum DrugStatus {
+  AVAILABLE = 'available',
+  UNAVAILABLE = 'unavailable',
+}
+
+export enum DrugForm {
+  TABLET = 'TABLET',
+  CAPSULE = 'CAPSULE',
+  SYRUP = 'SYRUP',
+  INJECTION = 'INJECTION',
+  OINTMENT = 'OINTMENT',
+  CREAM = 'CREAM',
+  GEL = 'GEL',
+  DROPS = 'DROPS',
+  INHALER = 'INHALER',
+  POWDER = 'POWDER',
+  SUSPENSION = 'SUSPENSION',
+  SOLUTION = 'SOLUTION',
+  LOTION = 'LOTION',
+  SUPPOSITORY = 'SUPPOSITORY',
+  PATCH = 'PATCH',
+}
+
+export enum DrugScheduleType {
+  OTC = 'OTC',
+  SCHEDULE_H = 'SCHEDULE_H',
+  SCHEDULE_H1 = 'SCHEDULE_H1',
+  SCHEDULE_X = 'SCHEDULE_X',
+  SCHEDULE_G = 'SCHEDULE_G',
+  NARCOTIC = 'NARCOTIC',
+}
+
+export enum DrugStockType {
+  IN = 'IN',
+  OUT = 'OUT',
+  ADJUSTMENT = 'ADJUSTMENT',
+  TRANSFER = 'TRANSFER',
+  RETURN = 'RETURN',
+  DAMAGE = 'DAMAGE',
+  EXPIRED = 'EXPIRED',
+  WASTE = 'WASTE',
+  OTHER = 'OTHER',
+}

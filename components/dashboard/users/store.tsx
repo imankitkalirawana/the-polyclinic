@@ -4,13 +4,13 @@ import * as Yup from 'yup';
 import { create } from 'zustand';
 
 import { ActionType } from './types';
-import { UserType } from '@/services/common/user/user.types';
+import { User } from '@/shared';
 
 interface UserStoreState {
-  selected: UserType | null;
+  selected: User | null;
   action: ActionType | null;
   keys: Selection | undefined;
-  setSelected: (selected: UserType | null) => void;
+  setSelected: (selected: User | null) => void;
   setAction: (action: ActionType | null) => void;
   setKeys: (keys: Selection) => void;
   resetState: () => void;

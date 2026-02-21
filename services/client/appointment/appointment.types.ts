@@ -5,34 +5,15 @@ import {
   APPOINTMENT_STATUSES,
   APPOINTMENT_TYPES,
 } from './appointment.constants';
-import { Role } from '@/services/common/user/user.constants';
+import { UserRole } from '@/shared';
 import { ButtonProps } from '@heroui/react';
-import { GENDERS } from '@/libs/constants';
-
-type PatientInfo = {
-  uid: string;
-  name: string;
-  phone?: string;
-  email: string;
-  gender?: GENDERS;
-  age?: number;
-  image?: string;
-};
-
-type DoctorInfo = {
-  uid: string;
-  name: string;
-  email: string;
-  phone: string;
-  seating?: string;
-  image?: string;
-};
+import { Doctor, Patient } from '@/shared';
 
 export type AppointmentType = Base & {
   aid: string;
   date: string | Date;
-  patient: PatientInfo;
-  doctor?: DoctorInfo;
+  patient: Patient;
+  doctor?: Doctor;
   status: AppointmentStatus;
   additionalInfo: {
     notes?: string;
@@ -79,8 +60,8 @@ export type ButtonConfig = {
   whileLoading?: string;
   visibilityRules: {
     statuses?: AppointmentType['status'][];
-    roles?: Role[];
-    custom?: (appointment: AppointmentType, role: Role) => boolean;
+    roles?: UserRole[];
+    custom?: (appointment: AppointmentType, role: UserRole) => boolean;
   };
   action: {
     type: 'store-action' | 'async-function' | 'navigation';

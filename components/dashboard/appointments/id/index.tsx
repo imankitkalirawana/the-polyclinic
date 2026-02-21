@@ -136,7 +136,7 @@ export default function Appointment({ aid }: { aid: string }) {
               <div className="flex items-start gap-4 pb-4">
                 <div className="shrink-0">
                   <Avatar
-                    src={appointment.patient.image}
+                    src={appointment.patient.image || ''}
                     name={appointment.patient.name}
                     size="lg"
                   />
@@ -145,7 +145,7 @@ export default function Appointment({ aid }: { aid: string }) {
                   <h3 className="pl-8 text-xl">{appointment.patient.name}</h3>
                   <p className="text-default-400 pl-8 text-sm">
                     <span className="text-gray-500">Patient ID: </span>
-                    {appointment.patient.uid}
+                    {appointment.patient.id}
                   </p>
 
                   {/* Patient Details using CellRenderer */}
@@ -221,7 +221,7 @@ export default function Appointment({ aid }: { aid: string }) {
                     <h3 className="text-large pl-6">{appointment.doctor?.name}</h3>
                     <p className="text-default-400 pl-6 text-sm">
                       <span className="text-default-400">Doctor ID: </span>
-                      {appointment.doctor?.uid}
+                      {appointment.doctor?.id}
                     </p>
 
                     {/* Patient Details using CellRenderer */}

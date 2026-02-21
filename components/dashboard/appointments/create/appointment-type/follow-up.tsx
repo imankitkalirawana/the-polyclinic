@@ -37,8 +37,8 @@ function PreviousAppointments({ appointments }: { appointments: AppointmentType[
   const handleRadioChange = useCallback(
     (value: string) => {
       const selectedAppointment = appointments.find((apt) => apt.aid.toString() === value);
-      if (selectedAppointment?.doctor?.uid) {
-        setValue('appointment.doctorId', selectedAppointment.doctor.uid);
+      if (selectedAppointment?.doctor?.id) {
+        setValue('appointment.doctorId', selectedAppointment.doctor.id);
       }
       setValue('appointment.previousAppointment', value);
     },
@@ -48,7 +48,7 @@ function PreviousAppointments({ appointments }: { appointments: AppointmentType[
   return (
     <div className="flex h-full flex-col p-4">
       <div className="flex flex-1 flex-col gap-2 overflow-hidden">
-        <h3 className="text-sm text-default-500">Previous Appointments</h3>
+        <h3 className="text-default-500 text-sm">Previous Appointments</h3>
 
         <SearchInput
           value={search}
@@ -76,7 +76,7 @@ function PreviousAppointments({ appointments }: { appointments: AppointmentType[
             ))}
           </RadioGroup>
         ) : (
-          <p className="text-sm text-default-500">
+          <p className="text-default-500 text-sm">
             {search ? `No appointments found for ${search}` : 'No appointments available'}
           </p>
         )}
@@ -100,7 +100,7 @@ export default function CreateAppointmentFollowUp() {
   if (!appointments || appointments.length === 0) {
     return (
       <div className="flex h-full flex-col p-4">
-        <p className="text-sm text-default-500">No previous appointments found</p>
+        <p className="text-default-500 text-sm">No previous appointments found</p>
       </div>
     );
   }

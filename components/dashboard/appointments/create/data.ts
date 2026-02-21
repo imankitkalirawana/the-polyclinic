@@ -1,4 +1,4 @@
-import { Role } from '@/services/common/user/user.constants';
+import { UserRole } from '@/shared';
 import { VerticalCollapsibleStepProps } from './vertical-steps';
 
 export const CREATE_APPOINTMENT_STEPS = [
@@ -69,11 +69,11 @@ export const BookQueueAppointmentSteps: Record<string, VerticalCollapsibleStepPr
   },
 };
 
-const stepExclusionByRole: Partial<Record<Role, string[]>> = {
-  [Role.PATIENT]: [BookQueueSteps.PATIENT_INFORMATION],
+const stepExclusionByRole: Partial<Record<UserRole, string[]>> = {
+  [UserRole.PATIENT]: [BookQueueSteps.PATIENT_INFORMATION],
 };
 
-export function getBookQueueStepsByRole(role: Role): VerticalCollapsibleStepProps[] {
+export function getBookQueueStepsByRole(role: UserRole): VerticalCollapsibleStepProps[] {
   const excludedSteps = stepExclusionByRole[role] ?? [];
 
   return Object.entries(BookQueueAppointmentSteps)
@@ -81,7 +81,7 @@ export function getBookQueueStepsByRole(role: Role): VerticalCollapsibleStepProp
     .map(([, step]) => step);
 }
 
-export function getFirstBookQueueStep(role: Role): BookQueueSteps {
+export function getFirstBookQueueStep(role: UserRole): BookQueueSteps {
   const steps = getBookQueueStepsByRole(role);
   const firstKey = steps[0]?.key;
   return firstKey ?? BookQueueSteps.PATIENT_INFORMATION;

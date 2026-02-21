@@ -1,5 +1,4 @@
 import { AppointmentQueueApi } from '@/services/client/appointment/queue/queue.api';
-import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
 import { RazorpayOptions, RazorpayPaymentResponse } from '@/types';
 import { loadRazorpay } from '@/utils/loadRazorpay';
 import { addToast, Alert, Button } from '@heroui/react';
@@ -13,7 +12,7 @@ export default function PaymentFooter() {
   const [status, setStatus] = useState<PaymentStatus>('idle');
   const [error, setError] = useState<string | null>(null);
   const isProcessingRef = useRef(false);
-  const form = useFormContext<CreateAppointmentQueueFormValues>();
+  const form = useFormContext();
 
   const appointment = form.watch('appointment');
 

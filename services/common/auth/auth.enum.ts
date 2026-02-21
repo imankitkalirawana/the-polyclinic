@@ -4,9 +4,3 @@ export enum AuthMethod {
   GOOGLE = 'GOOGLE',
   ANOTHER = 'ANOTHER',
 }
-
-export enum VerificationType {
-  REGISTRATION = 'REGISTRATION',
-  PASSWORD_RESET = 'PASSWORD_RESET',
-  VERIFICATION = 'VERIFICATION',
-}

@@ -1,4 +1,4 @@
-import { Role } from '@/services/common/user/user.constants';
+import { UserRole } from '@/shared';
 
 export interface NavItem {
   name: string;
@@ -6,7 +6,7 @@ export interface NavItem {
   icon?: string;
   subItems?: SubItems[];
   thumbnail?: string;
-  roles?: readonly Role[];
+  roles?: readonly UserRole[];
 }
 
 export interface SubItems {
@@ -19,5 +19,5 @@ export interface SubItem {
   href: string;
   description?: string;
   icon?: string;
-  roles?: readonly Role[];
+  roles?: readonly UserRole[];
 }

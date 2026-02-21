@@ -10,7 +10,6 @@ import {
   CreateAppointmentContentHeader,
 } from '../../../(common)';
 import { BookQueueSteps } from '@/components/dashboard/appointments/create/data';
-import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
 import DoctorCategories from './doctor-categories';
 
 export default function DoctorSelection() {
@@ -20,7 +19,7 @@ export default function DoctorSelection() {
   const debouncedSearch = useDebounce(search, 500);
 
   const { data: doctorsData } = useAllDoctors(debouncedSearch);
-  const form = useFormContext<CreateAppointmentQueueFormValues>();
+  const form = useFormContext();
   const setIndexedCache = useCacheStore((state) => state.setIndexedCache);
 
   const doctorId = form.watch('appointment.doctorId');

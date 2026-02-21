@@ -10,7 +10,7 @@ import {
   RegistrationRequest,
   SendOTPRequest,
   VerifyOTPRequest,
-} from './auth.types';
+} from '@/shared';
 
 export const useLogin = () => {
   const { setCookie } = useCookies();

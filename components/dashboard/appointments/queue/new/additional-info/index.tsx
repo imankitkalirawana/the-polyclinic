@@ -5,11 +5,10 @@ import {
 } from '../../../(common)';
 import { Button, Textarea } from '@heroui/react';
 import { BookQueueSteps } from '@/components/dashboard/appointments/create/data';
-import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
 import DateScroll from '../../../(common)/date-scroll';
 
 export default function AdditionalInfo() {
-  const form = useFormContext<CreateAppointmentQueueFormValues>();
+  const form = useFormContext();
   const notes = form.watch('appointment.notes');
   const appointmentDate = form.watch('appointment.appointmentDate');
 

@@ -4,13 +4,13 @@ import * as Yup from 'yup';
 import { create } from 'zustand';
 
 import { ActionType } from './types';
-import { PatientType } from '@/services/client/patient';
+import { Patient } from '@/shared';
 
 interface PatientStoreState {
-  selected: PatientType | null;
+  selected: Patient | null;
   action: ActionType | null;
   keys: Selection | undefined;
-  setSelected: (selected: PatientType | null) => void;
+  setSelected: (selected: Patient | null) => void;
   setAction: (action: ActionType | null) => void;
   setKeys: (keys: Selection) => void;
   resetState: () => void;

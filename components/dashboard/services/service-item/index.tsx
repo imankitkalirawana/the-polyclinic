@@ -12,7 +12,7 @@ import { convertMinutesToHoursAndMinutes } from '@/libs/utility';
 import { useServiceWithUID } from '@/services/client/service/service.query';
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { format } from 'date-fns';
-import { Role } from '@/services/common/user/user.constants';
+import { UserRole } from '@/shared';
 import { Session } from '@/types/session';
 
 const statusColorMap: Record<string, ChipProps['color']> = {
@@ -57,7 +57,7 @@ export default function ServiceViewItem({ uid, session }: { uid: string; session
 
         <div className="flex flex-col">
           <div className="my-2 flex items-center gap-2">
-            <p className="italic text-default-400 text-small">#{service.uniqueId}</p>
+            <p className="text-default-400 text-small italic">#{service.uniqueId}</p>
           </div>
           <h1 className="text-2xl font-semibold tracking-tight">{service.name}</h1>
           <h2 className="sr-only">Service information</h2>
@@ -68,9 +68,9 @@ export default function ServiceViewItem({ uid, session }: { uid: string; session
 
           <div className="mt-6 flex flex-col gap-1">
             {service.duration > 0 && (
-              <div className="mb-4 flex items-center gap-2 text-default-700">
+              <div className="text-default-700 mb-4 flex items-center gap-2">
                 <Icon icon="solar:clock-circle-broken" width={20} />
-                <p className="font-medium text-small">
+                <p className="text-small font-medium">
                   Done in approx. {convertMinutesToHoursAndMinutes(service.duration)}
                 </p>
               </div>
@@ -131,7 +131,7 @@ export default function ServiceViewItem({ uid, session }: { uid: string; session
               Book Appointment
             </Button>
             {session.user?.role &&
-              [Role.ADMIN, Role.RECEPTIONIST, Role.DOCTOR, Role.PATIENT].includes(
+              [UserRole.ADMIN, UserRole.RECEPTIONIST, UserRole.DOCTOR, UserRole.PATIENT].includes(
                 session.user?.role
               ) && (
                 <Tooltip content="Edit">

@@ -1,9 +1,13 @@
-export enum Role {
+export enum UserRole {
+  SUPER_ADMIN = 'SUPER_ADMIN',
+  MODERATOR = 'MODERATOR',
+  OPS = 'OPS',
   ADMIN = 'ADMIN',
   PATIENT = 'PATIENT',
   DOCTOR = 'DOCTOR',
   NURSE = 'NURSE',
   RECEPTIONIST = 'RECEPTIONIST',
+  GUEST = 'GUEST',
 }
 
 export enum UserStatus {

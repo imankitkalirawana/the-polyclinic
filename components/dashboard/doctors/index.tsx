@@ -22,7 +22,7 @@ import Link from 'next/link';
 import { CopyText } from '@/components/ui/copy';
 import ResetPasswordModal from '../users/ui/reset-password-modal';
 import DeleteUserModal from '../users/ui/delete-user-modal';
-import { Role } from '@/services/common/user/user.constants';
+import { UserRole } from '@/shared';
 import { useSession } from '@/libs/providers/session-provider';
 
 const INITIAL_VISIBLE_COLUMNS = [
@@ -69,7 +69,7 @@ export default function Doctors() {
         children: 'Edit',
         as: Link,
         href: `/dashboard/doctors/${doctor.id}/edit`,
-        roles: [Role.ADMIN],
+        roles: [UserRole.ADMIN],
       },
       {
         key: 'change-password',
@@ -78,7 +78,7 @@ export default function Doctors() {
         onPress: () => handleChangePassword(doctor.user_id),
         section: 'Danger Zone',
         className: 'text-warning',
-        roles: [Role.ADMIN],
+        roles: [UserRole.ADMIN],
       },
       {
         key: 'delete',
@@ -87,7 +87,7 @@ export default function Doctors() {
         onPress: () => handleDelete(doctor.user_id),
         section: 'Danger Zone',
         className: 'text-danger',
-        roles: [Role.ADMIN],
+        roles: [UserRole.ADMIN],
       },
     ];
   };

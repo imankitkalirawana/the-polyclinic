@@ -14,7 +14,7 @@ import {
   CreateAppointmentContentHeader,
   SearchInput,
 } from '@/components/dashboard/appointments/(common)';
-import { PatientType, useAllPatients } from '@/services/client/patient';
+import { useAllPatients } from '@/services/client/patient';
 import { useCacheStore } from '@/store';
 import { useFormContext } from 'react-hook-form';
 import Modal from '@/components/ui/modal';
@@ -26,19 +26,17 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { RenderUser } from '@/components/ui/static-data-table/cell-renderers';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { BookQueueSteps } from '@/components/dashboard/appointments/create/data';
-import { CreateAppointmentQueueFormValues } from '@/services/client/appointment/queue/queue.types';
-import EditPatientModal from './edit-patient';
 import { formatAge, formatGender } from '@/libs/utils';
+import { Patient } from '@/shared';
 
 export default function PatientSelection() {
   const [search, setSearch] = useState('');
-  const [selectedPatient, setSelectedPatient] = useState<PatientType | null>(null);
-  const [patientToEdit, setPatientToEdit] = useState<PatientType | null>(null);
+  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
 
   const debouncedSearch = useDebounce(search, 500);
 
   const { data: patients, isLoading, isRefetching } = useAllPatients(debouncedSearch);
-  const form = useFormContext<CreateAppointmentQueueFormValues>();
+  const form = useFormContext();
   const setIndexedCache = useCacheStore((state) => state.setIndexedCache);
 
   const patientId = form.watch('appointment.patientId');
@@ -115,9 +113,6 @@ export default function PatientSelection() {
             isSelected={patientId === patient.id}
             onSelect={handlePatientSelect}
             onView={setSelectedPatient}
-            onEdit={(patientRecord) => {
-              setPatientToEdit(patientRecord);
-            }}
           />
         ))}
       </div>
@@ -131,19 +126,14 @@ export default function PatientSelection() {
           }}
         />
       )} */}
-      <Modal
-        isOpen={!!selectedPatient}
-        onClose={() => setSelectedPatient(null)}
-        size="3xl"
-        title="Patient Details"
-        body={<ViewPatientBody patient={selectedPatient as PatientType} />}
-        hideCancelButton
-      />
-      {patientToEdit && (
-        <EditPatientModal
-          patient={patientToEdit}
-          isOpen={!!patientToEdit}
-          onClose={() => setPatientToEdit(null)}
+      {selectedPatient && (
+        <Modal
+          isOpen={!!selectedPatient}
+          onClose={() => setSelectedPatient(null)}
+          size="3xl"
+          title="Patient Details"
+          body={<ViewPatientBody patient={selectedPatient} />}
+          hideCancelButton
         />
       )}
     </CreateAppointmentContentContainer>
@@ -157,11 +147,11 @@ const PatientCard = ({
   onView,
   onEdit,
 }: {
-  patient: PatientType;
+  patient: Patient;
   isSelected: boolean;
   onSelect: (id: string) => void;
-  onView?: (patient: PatientType) => void;
-  onEdit?: (patient: PatientType) => void;
+  onView?: (patient: Patient) => void;
+  onEdit?: (patient: Patient) => void;
 }) => {
   return (
     <Card

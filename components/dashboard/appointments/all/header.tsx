@@ -21,7 +21,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { allowedRolesToCreateAppointment } from './data';
 import { View, views as Views } from './types';
 import { useKeyPress } from '@/hooks/useKeyPress';
-import { Role } from '@/services/common/user/user.constants';
+import { UserRole } from '@/shared';
 
 interface CalendarHeaderProps {
   currentDate: Date;
@@ -182,7 +182,7 @@ export function CalendarHeader({
             </SelectItem>
           )}
         </Select>
-        {allowedRolesToCreateAppointment.includes(user?.role || Role.PATIENT) && (
+        {allowedRolesToCreateAppointment.includes(user?.role || UserRole.PATIENT) && (
           <ButtonGroup size="sm">
             <Button
               color="primary"
@@ -191,7 +191,7 @@ export function CalendarHeader({
             >
               Book Appointment
             </Button>
-            {user?.role === Role.PATIENT && (
+            {user?.role === UserRole.PATIENT && (
               <Tooltip
                 content="Book an appointment with AI"
                 className="bg-linear-to-br from-blue-300/50 via-blue-500/50 via-40% to-purple-500/50 backdrop-blur-xs"

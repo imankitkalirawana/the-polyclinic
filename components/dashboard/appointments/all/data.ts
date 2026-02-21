@@ -1,4 +1,4 @@
-import { Role } from '@/services/common/user/user.constants';
+import { UserRole } from '@/shared';
 
 export const MAX_APPOINTMENTS_IN_CELL = 2;
 
@@ -33,4 +33,8 @@ export const weekdays = [
   },
 ];
 
-export const allowedRolesToCreateAppointment = [Role.ADMIN, Role.RECEPTIONIST, Role.PATIENT];
+export const allowedRolesToCreateAppointment = [
+  UserRole.ADMIN,
+  UserRole.RECEPTIONIST,
+  UserRole.PATIENT,
+];

@@ -25,7 +25,7 @@ import { TIMINGS } from '@/libs/config';
 import { cn } from '@heroui/react';
 import { useAppointmentStore } from '@/services/client/appointment/appointment.store';
 import { AppointmentType } from '@/services/client/appointment';
-import { Role } from '@/services/common/user/user.constants';
+import { UserRole } from '@/shared';
 
 interface WeekViewProps {
   appointments: AppointmentType[];
@@ -48,7 +48,7 @@ export function WeekView({ appointments, currentDate, onTimeSlotClick }: WeekVie
   const weekEnd = endOfWeek(currentDate);
   const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd });
   const isAllowedToCreateAppointment = allowedRolesToCreateAppointment.includes(
-    user?.role || Role.PATIENT
+    user?.role || UserRole.PATIENT
   );
 
   const { aid, setIsTooltipOpen } = useAppointmentStore();
@@ -75,13 +75,13 @@ export function WeekView({ appointments, currentDate, onTimeSlotClick }: WeekVie
   return (
     <div className="flex h-full flex-col">
       {/* Week header using Grid */}
-      <div className="grid grid-cols-[auto_repeat(7,1fr)] border-b border-divider">
+      <div className="border-divider grid grid-cols-[auto_repeat(7,1fr)] border-b">
         <div className="w-20 shrink-0 border-r" />
         {/* Empty top-left cell */}
         {weekDays.map((day) => (
           <div
             key={`header-${day.toISOString()}`}
-            className="flex flex-col items-center border-r border-divider p-2 text-center last:border-r-0"
+            className="border-divider flex flex-col items-center border-r p-2 text-center last:border-r-0"
           >
             <div className="text-default-500 text-small">{format(day, 'EEE')}</div>
             <DateChip
@@ -109,7 +109,7 @@ export function WeekView({ appointments, currentDate, onTimeSlotClick }: WeekVie
             <React.Fragment key={`hour-${hour}`}>
               {/* Time Label Cell */}
               <div
-                className="row-span-1 w-20 shrink-0 border-b border-r border-divider p-2 text-right text-default-500 text-small"
+                className="border-divider text-default-500 text-small row-span-1 w-20 shrink-0 border-r border-b p-2 text-right"
                 style={{ gridRowStart: hourIndex + 1, gridColumnStart: 1 }}
               >
                 {hour < 12 ? `${hour} AM` : hour === 12 ? '12 PM' : `${hour - 12} PM`}
@@ -123,7 +123,7 @@ export function WeekView({ appointments, currentDate, onTimeSlotClick }: WeekVie
                     key={`cell-${day.toISOString()}-${hour}`}
                     title={isHourDisabled ? 'Cannot create appointments in the past' : ''}
                     className={cn(
-                      'relative min-h-[80px] cursor-pointer overflow-hidden border-b border-r border-divider p-1',
+                      'border-divider relative min-h-[80px] cursor-pointer overflow-hidden border-r border-b p-1',
                       {
                         'last:border-r-0': dayIndex === weekDays.length - 1,
                         'cursor-not-allowed': isHourDisabled,
@@ -176,7 +176,7 @@ export function WeekView({ appointments, currentDate, onTimeSlotClick }: WeekVie
                         content={<AppointmentList appointments={dayAppointments} date={day} />}
                         onOpenChange={setIsTooltipOpen}
                       >
-                        <button className="truncate rounded-lg p-1 px-2 text-start text-tiny hover:bg-default-100">
+                        <button className="text-tiny hover:bg-default-100 truncate rounded-lg p-1 px-2 text-start">
                           {dayAppointments.length - MAX_APPOINTMENTS_IN_CELL} more
                         </button>
                       </Tooltip>

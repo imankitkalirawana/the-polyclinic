@@ -1,4 +1,4 @@
-import { PatientType } from './patient.types';
+import { Patient } from '@/shared';
 import { AppointmentType } from '../appointment';
 import { apiRequest } from '@/libs/axios';
 
@@ -6,7 +6,7 @@ export class PatientApi {
   private static API_BASE = '/patients';
 
   static async getAll(search?: string) {
-    return await apiRequest<PatientType[]>({
+    return await apiRequest<Patient[]>({
       url: this.API_BASE,
       params: {
         search,
@@ -18,7 +18,7 @@ export class PatientApi {
     if (!id) {
       return { success: false, message: 'ID is required', data: null };
     }
-    return await apiRequest<PatientType>({
+    return await apiRequest<Patient>({
       url: `${this.API_BASE}/${id}`,
     });
   }

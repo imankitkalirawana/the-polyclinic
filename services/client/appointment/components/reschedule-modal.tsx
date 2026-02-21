@@ -26,10 +26,10 @@ export default function RescheduleAppointment() {
   const [date, setDate] = useState<Date>(new Date(appointment?.date ?? ''));
 
   const renderBody = () => {
-    if (appointment?.doctor?.uid) {
+    if (appointment?.doctor?.id) {
       return (
         <SlotContent
-          doctorId={appointment.doctor.uid}
+          doctorId={appointment.doctor.id}
           selectedDate={date}
           onDateSelect={(date) => setDate(date)}
         />
@@ -81,7 +81,7 @@ export default function RescheduleAppointment() {
   return (
     <Modal
       isOpen
-      size={appointment?.doctor?.uid ? '5xl' : '3xl'}
+      size={appointment?.doctor?.id ? '5xl' : '3xl'}
       title="Reschedule Appointment"
       subtitle={
         user?.role === 'PATIENT'

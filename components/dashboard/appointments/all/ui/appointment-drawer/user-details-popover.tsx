@@ -3,7 +3,7 @@ import { renderChip, RenderUser } from '@/components/ui/static-data-table/cell-r
 import MinimalPlaceholder from '@/components/ui/minimal-placeholder';
 import { useUserWithID } from '@/services/common/user/user.query';
 import { Button, Card, CardBody, CardFooter, CardHeader, Link, Tooltip } from '@heroui/react';
-import { UserType } from '@/services/common/user/user.types';
+import { User } from '@/shared';
 
 export const UserDetailsPopover = ({
   name,
@@ -30,7 +30,7 @@ export const UserDetailsPopover = ({
   );
 };
 
-const UserDetailsPopoverContent = ({ user }: { user?: UserType | null }) => {
+const UserDetailsPopoverContent = ({ user }: { user?: User | null }) => {
   if (!user) return <MinimalPlaceholder message="User not found..." isLoading={false} />;
 
   return (
@@ -67,11 +67,11 @@ const UserDetailsPopoverContent = ({ user }: { user?: UserType | null }) => {
       </CardBody>
       <CardFooter className="gap-3">
         <div className="flex gap-1">
-          <p className="font-semibold text-default-600 text-small">4</p>
+          <p className="text-default-600 text-small font-semibold">4</p>
           <p className="text-default-500 text-small">Following</p>
         </div>
         <div className="flex gap-1">
-          <p className="font-semibold text-default-600 text-small">97.1K</p>
+          <p className="text-default-600 text-small font-semibold">97.1K</p>
           <p className="text-default-500 text-small">Followers</p>
         </div>
       </CardFooter>

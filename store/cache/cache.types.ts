@@ -1,11 +1,9 @@
-import { PatientType } from '@/services/client/patient';
 import { DoctorSpecialization, DoctorType } from '@/services/client/doctor';
 import { DepartmentType } from '@/services/client/department/department.types';
 import { ServiceType } from '@/services/client/service/service.types';
 import { DrugType } from '@/services/client/drug/drug.types';
 import { AppointmentType } from '@/services/client/appointment/appointment.types';
-import { AppointmentQueueType } from '@/services/client/appointment/queue/queue.types';
-import { UserType } from '@/services/common/user/user.types';
+import { AppointmentQueue, Patient, User } from '@/shared';
 
 /**
  * Cache Registry - Central type definition for all cacheable entities
@@ -18,34 +16,34 @@ import { UserType } from '@/services/common/user/user.types';
  */
 export interface CacheRegistry {
   // Collections (arrays)
-  patients: PatientType[];
+  patients: Patient[];
   doctors: DoctorType[];
   departments: DepartmentType[];
   services: ServiceType[];
   drugs: DrugType[];
   appointments: AppointmentType[];
-  appointmentQueues: AppointmentQueueType[];
-  users: UserType[];
+  appointmentQueues: AppointmentQueue[];
+  users: User[];
   specializations: DoctorSpecialization[];
   // Single entities (for selections, current items, etc.)
-  selectedPatient: PatientType | null;
+  selectedPatient: Patient | null;
   selectedDoctor: DoctorType | null;
   selectedDepartment: DepartmentType | null;
   selectedService: ServiceType | null;
   selectedDrug: DrugType | null;
   selectedAppointment: AppointmentType | null;
-  selectedAppointmentQueue: AppointmentQueueType | null;
-  selectedUser: UserType | null;
+  selectedAppointmentQueue: AppointmentQueue | null;
+  selectedUser: User | null;
 
   // Indexed entities (by ID)
-  patientById: Record<string, PatientType>;
+  patientById: Record<string, Patient>;
   doctorById: Record<string, DoctorType>;
   departmentById: Record<string, DepartmentType>;
   serviceById: Record<string, ServiceType>;
   drugById: Record<string, DrugType>;
   appointmentById: Record<string, AppointmentType>;
-  appointmentQueueById: Record<string, AppointmentQueueType>;
-  userById: Record<string, UserType>;
+  appointmentQueueById: Record<string, AppointmentQueue>;
+  userById: Record<string, User>;
 }
 
 /**

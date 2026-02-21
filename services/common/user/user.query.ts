@@ -1,8 +1,7 @@
-import { $FixMe } from '@/types';
-import { ResetPasswordRequest, UserFormValues } from './user.types';
 import { UserApi } from './user.api';
 import { useGenericMutation } from '@/services/useGenericMutation';
 import { useGenericQuery } from '@/services/useGenericQuery';
+import { CreateProfileDto, ResetPasswordDto } from '@/shared';
 
 export const useAllUsers = () =>
   useGenericQuery({
@@ -24,7 +23,7 @@ export const useLinkedUsers = () =>
 
 export const useResetPassword = () =>
   useGenericMutation({
-    mutationFn: ({ id, data }: { id: string; data: ResetPasswordRequest }) =>
+    mutationFn: ({ id, data }: { id: string; data: ResetPasswordDto }) =>
       UserApi.resetPassword(id, data),
   });
 
@@ -44,7 +43,7 @@ export const useUserProfileByID = (id?: string | null) =>
 
 export const useCreateUser = ({ showToast = true }: { showToast?: boolean } = {}) => {
   return useGenericMutation({
-    mutationFn: (data: UserFormValues) => UserApi.create(data),
+    mutationFn: (data: CreateProfileDto) => UserApi.create(data),
     invalidateAllQueries: true,
     showToast,
   });
@@ -52,7 +51,7 @@ export const useCreateUser = ({ showToast = true }: { showToast?: boolean } = {}
 
 export const useUpdateUser = () => {
   return useGenericMutation({
-    mutationFn: ({ id, data }: { id: string; data: $FixMe }) => UserApi.update(id, data),
+    mutationFn: ({ id, data }: { id: string; data: CreateProfileDto }) => UserApi.update(id, data),
     invalidateAllQueries: true,
   });
 };

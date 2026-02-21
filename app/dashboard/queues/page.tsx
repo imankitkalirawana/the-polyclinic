@@ -4,7 +4,7 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 import { loadSearchParams } from './search-params';
 import { SearchParams } from 'nuqs/server';
 import { getServerSession } from '@/libs/serverAuth';
-import { Role } from '@/services/common/user/user.constants';
+import { UserRole } from '@/shared';
 import DefaultQueueView from '@/components/dashboard/appointments/queue/views/default';
 import PatientQueueView from '@/components/dashboard/appointments/queue/views/patient';
 
@@ -16,8 +16,8 @@ export default async function QueuePage({ searchParams }: PageProps) {
   const { id, view, date } = await loadSearchParams(searchParams);
 
   const session = await getServerSession();
-  const isDoctor = session?.user?.role === Role.DOCTOR;
-  const isPatient = session?.user?.role === Role.PATIENT;
+  const isDoctor = session?.user?.role === UserRole.DOCTOR;
+  const isPatient = session?.user?.role === UserRole.PATIENT;
 
   const queryKey = isDoctor
     ? ['queue-for-doctor', session?.user?.integrated_user_id, id, date]

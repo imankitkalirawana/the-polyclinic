@@ -1,7 +1,7 @@
-import { PatientType } from '@/services/client/patient';
+import { Patient } from '@/shared';
 import { CellRenderer } from '@/components/ui/cell/rich-color/cell-renderer';
 
-const ViewPatientBody = ({ patient }: { patient: PatientType }) => {
+const ViewPatientBody = ({ patient }: { patient: Patient }) => {
   return (
     <div className="grid grid-cols-2 gap-4">
       <CellRenderer
@@ -17,7 +17,7 @@ const ViewPatientBody = ({ patient }: { patient: PatientType }) => {
         <CellRenderer
           icon="solar:user-bold-duotone"
           value={[
-            patient.gender || patient.age
+            patient.gender || patient.dob
               ? [patient.gender, patient.age].filter(Boolean).join(', ')
               : '',
           ]}

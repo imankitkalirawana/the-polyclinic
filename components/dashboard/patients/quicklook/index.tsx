@@ -8,7 +8,7 @@ import { permissions, sidebarContent } from './data';
 
 import QuickLook from '@/components/ui/dashboard/quicklook';
 import { ButtonProps, DropdownItemProps } from '@/components/ui/dashboard/quicklook/types';
-import { PatientType } from '@/services/client/patient';
+import { Patient } from '@/shared';
 
 export function UserQuickLook() {
   const { selected, setSelected, setAction, action } = usePatientStore();
@@ -24,7 +24,7 @@ export function UserQuickLook() {
         position: 'left',
         isIconOnly: true,
         onPress: () => {
-          const url = `/dashboard/users/${selected?.id}`;
+          const url = `/dashboard/users/${selected?.user_id}`;
           window.open(url, '_blank');
         },
       },
@@ -73,10 +73,10 @@ export function UserQuickLook() {
     [selected]
   );
 
-  const content = (patient: PatientType) => [
+  const content = (patient: Patient) => [
     {
       label: 'User ID',
-      value: () => patient.id,
+      value: () => patient.user_id,
       icon: 'solar:hashtag-circle-bold-duotone',
       classNames: { icon: 'text-purple-500 bg-purple-50' },
     },
